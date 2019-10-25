@@ -30,7 +30,8 @@
 
 abstract class Email {
 
-    public function send($data) {
+    //send email
+    static public function send($data) {
         $to = $data['to'];
         $subject = $data['subject'];
         $message = $data['message'];

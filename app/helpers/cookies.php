@@ -28,11 +28,13 @@
 * @author: N'Guessan Kouadio Elisée (eliseekn => eliseekn@gmail.com)
 */
 
+require_once "app/core/config.php";
+
 abstract class Cookies {
 
 	private $secure = isset($_SERVER["HTTPS"]);
 
-	public function set($data, $domain) {
+	static public function set($data) {
 		if (is_array($data)) {
             foreach ($data as $key => $value) {
     			set_cookie(
@@ -40,7 +42,7 @@ abstract class Cookies {
 					$value, //value
 					time() + 3600 * 24 * 7, //expire
 					"/", //path
-					$domain, //domain
+					WEB_DOMAIN, //domain
 					$this->$secure, //secure
 					true //http only
 				);
@@ -48,19 +50,19 @@ abstract class Cookies {
         }
 	}
 
-	public function unset($item) {
+	static public function unset($item) {
 		unset($_COOKIE[$item]);
 	}
 
-	public function get($item) {
+	static public function get($item) {
 		return $_COOKIE[$item];
 	}
 
-	public function exists($item) {
+	static public function exists($item) {
 		return isset($_COOKIE[$item]);
 	}
 
-	public function destroy() {
+	static public function destroy() {
 		unset($_COOKIE);
 	}
 }

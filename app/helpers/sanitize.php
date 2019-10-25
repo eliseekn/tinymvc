@@ -30,7 +30,8 @@
 
 abstract class Sanitize {
 
-    public function sanitize_input($input) {
+    //sanitize html and other scripting language
+    static public function sanitize_input($input) {
         $sanitized_input = stripslashes($input);
         $sanitized_input = strip_tags($sanitized_input);
         $sanitized_input = htmlentities($sanitized_input);
@@ -38,7 +39,8 @@ abstract class Sanitize {
         return $sanitized_input;
     }
 
-    public function sanitize_url($url) {
+    //sanitize url by encoding
+    static public function sanitize_url($url) {
         return urlencode($url);
     }
 }
