@@ -1,2 +1,2 @@
 # tinymvc
-A tiny PHP framework based on MVC architecture
+Just a tiny PHP framework based on MVC architecture

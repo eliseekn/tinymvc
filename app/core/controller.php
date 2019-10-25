@@ -28,21 +28,13 @@
 * @author: N'Guessan Kouadio Elisée (eliseekn => eliseekn@gmail.com)
 */
 
-require_once "app/core/config.php";
-require_once "app/core/router.php";
+require_once "config.php";
+require_once "view.php";
 
-//set error_reporting() and display_errors parameters
-//change application environnement settings in ./core/config.php
-if (APP_ENV === "development") {
-    ini_set('display_errors', 1);
-    ini_set('error_reporting', -1);
-} elseif (APP_ENV === "production") {
-    ini_set('display_errors', 0);
-    ini_set('error_reporting', 0);
-} else {
-    echo "The application environnement is not set properly.";
-    exit();
+class Controller {
+
+	//render page
+	public function render($page, array $data) {
+		View::render($page, $data);
+	}
 }
-
-//start routing
-$router = new Router();

@@ -28,21 +28,39 @@
 * @author: N'Guessan Kouadio Elisée (eliseekn => eliseekn@gmail.com)
 */
 
-require_once "app/core/config.php";
-require_once "app/core/router.php";
+abstract class Cookies {
 
-//set error_reporting() and display_errors parameters
-//change application environnement settings in ./core/config.php
-if (APP_ENV === "development") {
-    ini_set('display_errors', 1);
-    ini_set('error_reporting', -1);
-} elseif (APP_ENV === "production") {
-    ini_set('display_errors', 0);
-    ini_set('error_reporting', 0);
-} else {
-    echo "The application environnement is not set properly.";
-    exit();
+	private $secure = isset($_SERVER["HTTPS"]);
+
+	public function set($data, $domain) {
+		if (is_array($data)) {
+            foreach ($data as $key => $value) {
+    			set_cookie(
+					$key, //name
+					$value, //value
+					time() + 3600 * 24 * 7, //expire
+					"/", //path
+					$domain, //domain
+					$this->$secure, //secure
+					true //http only
+				);
+    		}
+        }
+	}
+
+	public function unset($item) {
+		unset($_COOKIE[$item]);
+	}
+
+	public function get($item) {
+		return $_COOKIE[$item];
+	}
+
+	public function exists($item) {
+		return isset($_COOKIE[$item]);
+	}
+
+	public function destroy() {
+		unset($_COOKIE);
+	}
 }
-
-//start routing
-$router = new Router();

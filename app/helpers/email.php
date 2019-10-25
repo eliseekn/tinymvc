@@ -28,21 +28,14 @@
 * @author: N'Guessan Kouadio Elisée (eliseekn => eliseekn@gmail.com)
 */
 
-require_once "app/core/config.php";
-require_once "app/core/router.php";
+abstract class Email {
 
-//set error_reporting() and display_errors parameters
-//change application environnement settings in ./core/config.php
-if (APP_ENV === "development") {
-    ini_set('display_errors', 1);
-    ini_set('error_reporting', -1);
-} elseif (APP_ENV === "production") {
-    ini_set('display_errors', 0);
-    ini_set('error_reporting', 0);
-} else {
-    echo "The application environnement is not set properly.";
-    exit();
+    public function send($data) {
+        $to = $data['to'];
+        $subject = $data['subject'];
+        $message = $data['message'];
+        $header = "From: " . $data['from'];
+
+        mail($to, $subject, $message, $header);
+    }
 }
-
-//start routing
-$router = new Router();

@@ -28,21 +28,39 @@
 * @author: N'Guessan Kouadio Elisée (eliseekn => eliseekn@gmail.com)
 */
 
-require_once "app/core/config.php";
-require_once "app/core/router.php";
+class Session {
 
-//set error_reporting() and display_errors parameters
-//change application environnement settings in ./core/config.php
-if (APP_ENV === "development") {
-    ini_set('display_errors', 1);
-    ini_set('error_reporting', -1);
-} elseif (APP_ENV === "production") {
-    ini_set('display_errors', 0);
-    ini_set('error_reporting', 0);
-} else {
-    echo "The application environnement is not set properly.";
-    exit();
+	private $started;
+
+	public function __construct() {
+		if (!$this->started) {
+			session_start();
+			$this->started = true;
+		}
+	}
+
+	public function set($data) {
+		if (is_array($data)) {
+            foreach ($data as $key => $value) {
+    			$_SESSION[$key] = $value;
+    		}
+        }
+	}
+
+	public function unset($item) {
+		unset($_SESSION[$item]);
+	}
+
+	public function get($item) {
+		return $_SESSION[$item];
+	}
+
+	public function exists($item) {
+		return isset($_SESSION[$item]);
+	}
+
+	public function destroy() {
+		session_unset();
+		session_destroy();
+	}
 }
-
-//start routing
-$router = new Router();

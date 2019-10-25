@@ -28,21 +28,21 @@
 * @author: N'Guessan Kouadio Elisée (eliseekn => eliseekn@gmail.com)
 */
 
-require_once "app/core/config.php";
-require_once "app/core/router.php";
+class Pagination {
 
-//set error_reporting() and display_errors parameters
-//change application environnement settings in ./core/config.php
-if (APP_ENV === "development") {
-    ini_set('display_errors', 1);
-    ini_set('error_reporting', -1);
-} elseif (APP_ENV === "production") {
-    ini_set('display_errors', 0);
-    ini_set('error_reporting', 0);
-} else {
-    echo "The application environnement is not set properly.";
-    exit();
+	public $total_pages;
+	public $first_item;
+	public $items_per_pages = 5;
+
+	public function __construct($page_id, $total_items) {
+		$this->total_pages = ceil($total_items / $this->items_per_pages);
+
+		if ($page_id < 1) {
+			$page_id = 1;
+		} elseif ($page_id > $this->total_pages) {
+			$page_id = $this->total_pages;
+		}
+
+		$this->first_item = ($page_id - 1) * $this->items_per_pages;
+	}
 }
-
-//start routing
-$router = new Router();

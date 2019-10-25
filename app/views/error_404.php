@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 
-<html lang="fr">
+<html lang="<?=WEB_LOCALE?>">
 	<head>
-		<title><?=$title?></title>
+		<title><?=$page_title?></title>
+
+		<base href="<?=WEB_ROOT . "/"?>">
 
 		<meta charset="utf-8">
-		<link rel="stylesheet" src="css/normalize.css">
 
 		<style type="text/css">
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
 			div {
 				text-align: center;
 			}
