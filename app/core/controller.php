@@ -28,13 +28,12 @@
 * @author: N'Guessan Kouadio Elisée (eliseekn => eliseekn@gmail.com)
 */
 
-require_once "config.php";
 require_once "view.php";
 
 class Controller {
 
 	//render page
-	public function render($page, array $data) {
+	public function render(string $page, array $data) {
 		View::render($page, $data);
 	}
 }

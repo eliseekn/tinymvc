@@ -30,19 +30,17 @@
 
 class Pagination {
 
-	public $total_pages;
-	public $first_item;
-	public $items_per_pages = 5;
+	public static function set(int $page_id, int $total_items, int $items_per_pages = 5) {
+		//get total number of pages
+		$total_pages = ceil($total_items / $this->items_per_pages);
 
-	public function __construct($page_id, $total_items) {
-		$this->total_pages = ceil($total_items / $this->items_per_pages);
-
+		//set right page id
 		if ($page_id < 1) {
 			$page_id = 1;
-		} elseif ($page_id > $this->total_pages) {
-			$page_id = $this->total_pages;
+		} elseif ($page_id > $total_pages) {
+			$page_id = $total_pages;
 		}
 
-		$this->first_item = ($page_id - 1) * $this->items_per_pages;
+		return [$page_id, $total_pages];
 	}
 }

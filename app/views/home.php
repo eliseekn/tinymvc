@@ -1,35 +1,10 @@
 <!DOCTYPE html>
-
-<html lang="<?=WEB_LOCALE?>">
+<html lang="en">
 	<head>
-		<title><?=$page_title?></title>
-
-		<base href="<?=WEB_ROOT . "/"?>">
-
 		<meta charset="utf-8">
+		<link rel="stylesheet" href="public/assets/css/style.css">
 
-		<style type="text/css">
-			* {
-				margin: 0;
-				padding: 0;
-				box-sizing: border-box;
-			}
-
-			div {
-				text-align: center;
-			}
-
-			h1 {
-				margin-top: 2em;
-				margin-bottom: 1em;
-				font-size: 2.5rem;
-			}
-
-			p {
-				line-height: 1.8;
-				font-size: 1.2rem;
-			}
-		</style>
+		<title><?=$page_title?></title>
 	</head>
 
 	<body>

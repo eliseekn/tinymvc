@@ -35,7 +35,7 @@ class Database {
 	private $connection;
 
 	//connect to database with defined parameters
-	public function __construct($db_host, $db_username, $db_password, $db_name = "") {
+	public function __construct(string $db_host, string $db_username, string $db_password, string $db_name = "") {
 		$this->connection = mysqli_connect($db_host, $db_username, $db_password, $db_name);
 
 		if (APP_ENV == "development") {
@@ -54,8 +54,8 @@ class Database {
 	}
 
 	//prepare and bind statement
-	public function prepare_query($query, array $args) {
-		$params = [];
+	private function prepare_query(string $query, array $args) {
+		$params = array();
 
 		$stmt = mysqli_stmt_init($this->connection);
 		if (!mysqli_stmt_prepare($stmt, $query)) {
@@ -79,8 +79,8 @@ class Database {
 			return $string;
 		}, '');
 
-        array_unshift($params, $types);
-        call_user_func_array([$stmt, 'mysqli_stmt_bind_param'], $params);
+		array_unshift($params, $types);
+        call_user_func_array([$stmt, 'bind_param'], $params); //must use bind_param instead of mysqli_stmt_bind_param -> eliseekn
 
 		mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
@@ -89,9 +89,13 @@ class Database {
         return $result;
     }
 
-	//execute query with prepared statement
-	public function execute($query, array $args) {
-		$query = $this->prepare_query($query, array $args);
+	//execute mysql query
+	public function execute_query(string $query, array $args = []) {
+		if (!empty($args)) {
+			$query = $this->prepare_query($query, $args);
+		} else {
+			$query = mysqli_query($this->connection, $query);
+		}
 
 		if (APP_ENV == "development") {
 			if (!$query) {
@@ -128,7 +132,7 @@ class Database {
 	}
 
 	//sql injection protection
-	public function safe_string($str) {
+	public function safe_string(string $str) {
 		return mysqli_real_escape_string($this->connection, $str);
 	}
 }

@@ -30,11 +30,11 @@
 
 require_once "app/core/config.php";
 
-abstract class Cookies {
+class Cookies {
 
-	private $secure = isset($_SERVER["HTTPS"]);
+	public static function set(array $data) {
+		$secure = isset($_SERVER["HTTPS"]) ? true : false;
 
-	static public function set($data) {
 		if (is_array($data)) {
             foreach ($data as $key => $value) {
     			set_cookie(
@@ -42,23 +42,20 @@ abstract class Cookies {
 					$value, //value
 					time() + 3600 * 24 * 7, //expire
 					"/", //path
-					WEB_DOMAIN, //domain
-					$this->$secure, //secure
-					true //http only
 				);
     		}
         }
 	}
 
-	static public function unset($item) {
+	public static function unset($item) {
 		unset($_COOKIE[$item]);
 	}
 
-	static public function get($item) {
+	public static function get($item) {
 		return $_COOKIE[$item];
 	}
 
-	static public function exists($item) {
+	public static function exists($item) {
 		return isset($_COOKIE[$item]);
 	}
 

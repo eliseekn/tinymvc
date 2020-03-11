@@ -28,10 +28,15 @@
 * @author: N'Guessan Kouadio Elisée (eliseekn => eliseekn@gmail.com)
 */
 
-abstract class View {
+class View {
 
-	static public function render($page, array $data) {
-		extract($data); //extract data
-		require_once "app/views/". $page  .".php"; //load view file
+	public static function render(string $page, array $data) {
+		//set data
+		if (is_array($data) && !empty($data)) {
+			extract($data);
+		}
+
+		//load page
+		require_once "app/views/". $page  .".php";
 	}
 }

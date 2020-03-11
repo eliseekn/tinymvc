@@ -30,36 +30,33 @@
 
 class Session {
 
-	private $started;
-
-	public function __construct() {
-		if (!$this->started) {
-			session_start();
-			$this->started = true;
-		}
-	}
-
-	public function set($data) {
+	public static function set($data) {
 		if (is_array($data)) {
+			session_start();
+
             foreach ($data as $key => $value) {
     			$_SESSION[$key] = $value;
     		}
         }
 	}
 
-	public function unset($item) {
-		unset($_SESSION[$item]);
-	}
-
-	public function get($item) {
+	public static function get($item) {
+		session_start();
 		return $_SESSION[$item];
 	}
 
-	public function exists($item) {
+	public static function unset($item) {
+		session_start();
+		unset($_SESSION[$item]);
+	}
+
+	public static function exists($item) {
+		session_start();
 		return isset($_SESSION[$item]);
 	}
 
-	public function destroy() {
+	public static function destroy() {
+		session_start();
 		session_unset();
 		session_destroy();
 	}

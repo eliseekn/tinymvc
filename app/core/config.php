@@ -29,19 +29,13 @@
 */
 
 //define root directory
-define("ROOT", dirname(dirname(__FILE__)));
+define("ROOT", "tinymvc");
 
 //define application configuration
-define("APP_ENV", "development"); //define application environnement (e.g: development or production)
-define("APP_ROOT", ROOT . "/app"); //define application root directory
-
-//define webpage configuration
-define("WEB_DOMAIN", "127.0.0.1"); //define website domain name
-define("WEB_ROOT", ROOT . "/public"); //define application base url (e.g: tinymvc)
-define("WEB_LOCALE", "en"); //define webpage local language (e.g: fr, es, de...)
+define("APP_ENV", "development"); 
 
 //define database configuration
 define("DB_HOST", "localhost");
 define("DB_USERNAME", "root");
 define("DB_PASSWORD", "eliseekn");
-define("DB_NAME", "tinymvc");
+define("DB_NAME", "blog");

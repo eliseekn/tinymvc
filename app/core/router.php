@@ -30,10 +30,10 @@
 
 class Router {
 
-    private $url = [];
-    private $params = [];
+    private $url = array();
+    private $params = array();
     private $controller = "home";
-    private $action = "index";
+    private $method = "index";
 
     public function __construct() {
         if (isset($_GET['url']) && !empty($_GET['url'])) {
@@ -56,17 +56,17 @@ class Router {
 
         require_once "app/controllers/" . $this->controller . ".php";
 
-        $controller = ucfirst(strtolower($this->controller)) . "Controller";
+        $controller = ucfirst($this->controller) . "Controller";
         $this->controller = new $controller();
 
         if (isset($this->url[1])) {
             if (method_exists($this->controller, $this->url[1])) {
-                $this->action = $this->url[1];
+                $this->method = $this->url[1];
                 unset($this->url[1]);
             }
         }
 
-        $this->params = $this->url ? $this->url : [];
+        $this->params = $this->url ? $this->url : array();
 
         if (!empty($_POST)) {
             foreach ($_POST as $key => $value) {
@@ -74,6 +74,6 @@ class Router {
             }
         }
 
-        call_user_func_array([$this->controller, $this->action], $this->params);
+        call_user_func_array([$this->controller, $this->method], $this->params);
     }
 }

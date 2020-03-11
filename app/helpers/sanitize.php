@@ -27,11 +27,10 @@
 *
 * @author: N'Guessan Kouadio Elisée (eliseekn => eliseekn@gmail.com)
 */
-
-abstract class Sanitize {
+class Sanitize {
 
     //sanitize html and other scripting language
-    static public function sanitize_input($input) {
+    public static function input($input) {
         $sanitized_input = stripslashes($input);
         $sanitized_input = strip_tags($sanitized_input);
         $sanitized_input = htmlentities($sanitized_input);
@@ -40,7 +39,7 @@ abstract class Sanitize {
     }
 
     //sanitize url by encoding
-    static public function sanitize_url($url) {
+    public static function url($url) {
         return urlencode($url);
     }
 }

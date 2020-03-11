@@ -28,10 +28,10 @@
 * @author: N'Guessan Kouadio Elisée (eliseekn => eliseekn@gmail.com)
 */
 
-abstract class Email {
+class Email {
 
     //send email
-    static public function send($data) {
+    public static function send($data) {
         $to = $data['to'];
         $subject = $data['subject'];
         $message = $data['message'];
