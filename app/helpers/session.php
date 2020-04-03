@@ -41,7 +41,6 @@ class Session {
 	}
 
 	public static function get($item) {
-		session_start();
 		return $_SESSION[$item];
 	}
 

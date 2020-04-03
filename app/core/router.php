@@ -28,14 +28,36 @@
 * @author: N'Guessan Kouadio Elisée (eliseekn => eliseekn@gmail.com)
 */
 
+require_once 'config.php';
+
 class Router {
 
     private $url = array();
     private $params = array();
-    private $controller = "home";
-    private $method = "index";
+    private $controller = 'home';
+    private $method = 'index';
 
-    public function __construct() {
+    public function load_core() {
+        require_once 'controller.php';
+        require_once 'model.php';
+        require_once 'view.php';
+        require_once 'router.php';
+        require_once 'database.php';
+    }
+
+    public function load_helpers(...$helpers) {
+        if (!empty($helpers)) {
+            foreach ($helpers as $helper) {
+                $helper = 'app/helpers/'. $helper .'.php';
+
+                if (file_exists($helper)) {
+                    require_once $helper;
+                }
+            }
+        }
+    }
+
+    public function dispatch() {
         if (isset($_GET['url']) && !empty($_GET['url'])) {
             $this->url = explode('/', $_GET['url']);
         }
@@ -45,18 +67,29 @@ class Router {
             unset($this->url[0]);
         }
 
-        if (!file_exists("app/controllers/" . $this->controller . ".php")) {
-            require_once "app/controllers/error.php";
+        if ($this->controller === 'plugins') {
+            if (isset($this->url[1])) {
+                $plugin_url = ROOT .'plugins/'. $this->url[1];
+
+                if (is_dir($plugin_url)) {
+                    header('Location: '. $plugin_url);
+                    exit();
+                }
+            }
+        }
+
+        if (!file_exists('app/controllers/'. $this->controller .'.php')) {
+            require_once 'app/controllers/error.php';
 
             $this->controller = new ErrorController();
-            $this->controller->error_404();
+            $this->controller->index();
 
             exit();
         }
 
-        require_once "app/controllers/" . $this->controller . ".php";
+        require_once 'app/controllers/'. $this->controller .'.php';
 
-        $controller = ucfirst($this->controller) . "Controller";
+        $controller = ucfirst($this->controller) .'Controller';
         $this->controller = new $controller();
 
         if (isset($this->url[1])) {

@@ -28,10 +28,9 @@
 * @author: N'Guessan Kouadio Elisée (eliseekn => eliseekn@gmail.com)
 */
 
-require_once "config.php";
-require_once "view.php";
-
 class Controller {
+
+	private $model;
 
 	//render page
 	public function render(string $page, array $data = []) {
@@ -40,6 +39,18 @@ class Controller {
 
 	//redirect function
 	public function redirect(string $page) {
-		header("Location: /". ROOT ."/". $page);
+		header('Location: '. ROOT . $page);
+	}
+
+	//load model
+	public function load_model(string $name) {
+		$model = 'app/models/'. $name .'.php';
+		
+		if (file_exists($model)) {
+			require_once $model;
+
+			$model = ucfirst($name) .'Model';
+        	return new $model();
+		}
 	}
 }

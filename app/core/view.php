@@ -37,6 +37,6 @@ class View {
 		}
 
 		//load page
-		require_once "app/views/". $page  .".php";
+		require_once 'app/views/'. $page  .'.php';
 	}
 }

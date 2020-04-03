@@ -28,12 +28,10 @@
 * @author: N'Guessan Kouadio Elisée (eliseekn => eliseekn@gmail.com)
 */
 
-require_once "app/core/config.php";
-
 class Cookies {
 
 	public static function set(array $data) {
-		$secure = isset($_SERVER["HTTPS"]) ? true : false;
+		$secure = isset($_SERVER['HTTPS']) ? true : false;
 
 		if (is_array($data)) {
             foreach ($data as $key => $value) {
@@ -41,7 +39,7 @@ class Cookies {
 					$key, //name
 					$value, //value
 					time() + 3600 * 24 * 7, //expire
-					"/", //path
+					'/', //path
 				);
     		}
         }

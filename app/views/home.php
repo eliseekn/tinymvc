@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-US">
 	<head>
 		<meta charset="utf-8">
-		<link rel="stylesheet" href="public/assets/css/style.css">
-
-		<title><?=$page_title?></title>
+		<link rel="stylesheet" href="<?= ROOT ."public/assets/css/style.css" ?>">
+		<meta name="description" content="<?= $page_description ?>">
+		<title><?= $page_title ?></title>
 	</head>
 
 	<body>

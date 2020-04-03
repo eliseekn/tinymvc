@@ -35,7 +35,7 @@ class Email {
         $to = $data['to'];
         $subject = $data['subject'];
         $message = $data['message'];
-        $header = "From: " . $data['from'];
+        $header = 'From: '. $data['from'];
 
         mail($to, $subject, $message, $header);
     }

@@ -28,12 +28,98 @@
 * @author: N'Guessan Kouadio Elisée (eliseekn => eliseekn@gmail.com)
 */
 
-require_once "config.php";
-require_once "database.php";
-
 class Model {
 
+	private $db;
+	private $query;
+	private $params = array();
+
+	//initialize class
 	public function __construct() {
 		$this->db = new Database(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
+	}
+
+	//generate sql query
+	public function select(string $column = '*') {
+		$this->query = ' SELECT $column ';
+		return $this;
+	}
+
+	public function from(string $table) {
+		$this->query = ' FROM $table ';
+		return $this;
+	}
+
+	public function where(string $column, string $value) {
+		$this->query = ' WHERE $column ? ';
+		$this->params[] = $value;
+		return $this;
+	}
+
+	public function order_by(string $column, string $direction) {
+		$this->query = ' ORDER BY $column $direction ';
+		return $this;
+	}
+
+	public function limit(int $limit, int $offset = 0) {
+		$this->query = ' LIMIT $limit';
+
+		if ($offset != 0) {
+			$this->query .= ', $offset';
+		}
+
+		return $this;
+	}
+
+	public function set(string $column, string $value) {
+		$this->query = ' SET $column ? ';
+		$this->params[] = $value;
+		return $this;
+	}
+	//
+
+	//execute sql insert query
+	public function insert(string $table, array $data) {
+		$this->query = 'INSERT INTO $table (';
+
+		foreach($data as $key => $value) {
+			$this->query .= '$key, ';
+		}
+
+		$this->query = rtrim($this->query, ', ');
+		$this->query .= ') VALUES (';
+
+		foreach($data as $key => $value) {
+			$this->query .= '?, ';
+			$this->params[] = $value;
+		}
+
+		$this->query = rtrim($this->query, ', ');
+
+		$query_result = $this->db->execute_query($this->query, $this->params);
+	}
+
+	//execute sql update query
+	public function update(string $table) {
+		$this->query = 'UPDATE $table ';
+	} 
+
+	//execute query and get result
+	public function fetch(): array {
+		$query_result = $this->db->execute_query($this->query, $this->params);
+		$result = $this->db->fetch_assoc($query_result);
+		return $result;
+	}
+
+	//execute query and get results as enumerated array
+	public function fetch_array(): array {
+		$query_result = $this->db->execute_query($this->query, $this->params);
+		$result_array = array();
+		
+		while ($row = $this->db->fetch_assoc($query_result)) {
+			$result_array[] = $row;
+		}
+
+		return $result_array;
 	}
 }

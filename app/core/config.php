@@ -29,13 +29,13 @@
 */
 
 //define root directory
-define("ROOT", "tinymvc");
+define('ROOT', 'http://localhost/tinymvc/');
 
 //define application configuration
-define("APP_ENV", "development"); 
+define('APP_ENV', 'development'); 
 
 //define database configuration
-define("DB_HOST", "localhost");
-define("DB_USERNAME", "root");
-define("DB_PASSWORD", "eliseekn");
-define("DB_NAME", "blog");
+define('DB_HOST', 'localhost');
+define('DB_USERNAME', 'root');
+define('DB_PASSWORD', 'eliseekn');
+define('DB_NAME', 'tinymvc');

@@ -28,24 +28,22 @@
 * @author: N'Guessan Kouadio Elisée (eliseekn => eliseekn@gmail.com)
 */
 
-require_once "config.php";
-
 class Database {
 
 	private $connection;
 
 	//connect to database with defined parameters
-	public function __construct(string $db_host, string $db_username, string $db_password, string $db_name = "") {
+	public function __construct(string $db_host, string $db_username, string $db_password, string $db_name = '') {
 		$this->connection = mysqli_connect($db_host, $db_username, $db_password, $db_name);
 
-		if (APP_ENV == "development") {
+		if (APP_ENV == 'development') {
 			if (mysqli_connect_errno()) {
 				die(mysqli_connect_error());
 			}
 		}
 
-		if (!mysqli_set_charset($this->connection, "utf8")) {
-			if (APP_ENV == "development") {
+		if (!mysqli_set_charset($this->connection, 'utf8')) {
+			if (APP_ENV == 'development') {
 				if (mysqli_connect_errno()) {
 					die(mysqli_connect_error());
 				}
@@ -63,24 +61,26 @@ class Database {
 			exit();
 		}
 
-		$types = array_reduce($args, function ($string, &$arg) use (&$params) {
-			$params[] = &$arg;
+		$types = array_reduce($args, 
+			function ($string, &$arg) use (&$params) {
+				$params[] = &$arg;
 
-			if (is_float($arg)) {
-				$string .= 'd';
-			} elseif (is_integer($arg)) {
-				$string .= 'i';
-			} elseif (is_string($arg)) {
-				$string .= 's';
-			} else {
-				$string .= 'b';
-			}
+				if (is_float($arg)) {
+					$string .= 'd';
+				} elseif (is_integer($arg)) {
+					$string .= 'i';
+				} elseif (is_string($arg)) {
+					$string .= 's';
+				} else {
+					$string .= 'b';
+				}
 
-			return $string;
-		}, '');
+				return $string;
+			}, 
+		'');
 
 		array_unshift($params, $types);
-        call_user_func_array([$stmt, 'bind_param'], $params); //must use bind_param instead of mysqli_stmt_bind_param -> eliseekn
+        call_user_func_array([$stmt, 'bind_param'], $params);
 
 		mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
@@ -92,47 +92,42 @@ class Database {
 	//execute mysql query
 	public function execute_query(string $query, array $args = []) {
 		if (!empty($args)) {
-			$query = $this->prepare_query($query, $args);
+			$query_result = $this->prepare_query($query, $args);
 		} else {
-			$query = mysqli_query($this->connection, $query);
+			$query_result = mysqli_query($this->connection, $query);
 		}
 
-		if (APP_ENV == "development") {
-			if (!$query) {
+		if (APP_ENV == 'development') {
+			if (!$query_result) {
 				die(mysqli_error($this->connection));
 			}
 		}
 
-		return $query;
+		return $query_result;
 	}
 
 	//fetch row as an associative array
-	public function fetch_row($query) {
-		return mysqli_fetch_row($query);
+	public function fetch_row($query_result) {
+		return mysqli_fetch_row($query_result);
 	}
 
 	//fetch row as an enumerated array
-	public function fetch_assoc($query) {
-		return mysqli_fetch_assoc($query);
-	}
-
-	//fetch row as both enumerated and associative array
-	public function fetch_array($query) {
-		return mysqli_fetch_array($query, MYSQL_BOTH);
+	public function fetch_assoc($query_result): array {
+		return mysqli_fetch_assoc($query_result);
 	}
 
 	//retrives rows count
-	public function num_rows($query) {
-		return mysqli_num_rows($query);
+	public function num_rows($query_result): int {
+		return mysqli_num_rows($query_result);
 	}
 
 	//get last inserted row id
-	public function insert_id() {
+	public function last_insert_id() {
 		return mysqli_insert_id($this->connection);
 	}
 
 	//sql injection protection
-	public function safe_string(string $str) {
+	public function escape_string(string $str): string  {
 		return mysqli_real_escape_string($this->connection, $str);
 	}
 }
