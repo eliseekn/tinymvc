@@ -25,7 +25,9 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 *
-* @author: N'Guessan Kouadio Elisée (eliseekn => eliseekn@gmail.com)
+* @author: N'Guessan Kouadio Elisée AKA eliseekn
+* @contact: eliseekn@gmail.com - https://eliseekn.netlify.app
+* @version: 1.0.0.0
 */
 
 class View {
