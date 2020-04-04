@@ -30,6 +30,7 @@
 * @version: 1.0.0.0
 */
 
+//manage cookies
 class Cookies {
 
 	public static function set(array $data) {

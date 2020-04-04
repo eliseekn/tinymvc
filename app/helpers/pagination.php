@@ -30,6 +30,7 @@
 * @version: 1.0.0.0
 */
 
+//generate pagination
 class Pagination {
 
 	public static function set(int $page_id, int $total_items, int $items_per_pages = 5) {
@@ -43,6 +44,7 @@ class Pagination {
 			$page_id = $total_pages;
 		}
 
+		//return pagination paramaters
 		return [$page_id, $total_pages];
 	}
 }

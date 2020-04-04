@@ -30,17 +30,20 @@
 * @version: 1.0.0.0
 */
 
-//main view class
-class View {
+//load helpers class
+class Helpers {
 
-	//display page content
-	public static function render(string $page, array $data = []) {
-		//set data variables
-		if (is_array($data) && !empty($data)) {
-			extract($data);
-		}
+    //get helpers name as array of string
+    public static function load(...$names) {
+        if (!empty($names)) {
+            foreach ($names as $name) {
+                $helper = 'app/helpers/'. $name .'.php';
 
-		//include page content
-		require_once 'app/views/'. $page  .'.php';
-	}
+                //include helper filename
+                if (file_exists($helper)) {
+                    require_once $helper;
+                }
+            }
+        }
+    }
 }

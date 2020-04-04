@@ -30,6 +30,7 @@
 * @version: 1.0.0.0
 */
 
+//manage user session
 class Session {
 
 	public static function set($data) {

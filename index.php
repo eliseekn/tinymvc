@@ -30,10 +30,18 @@
 * @version: 1.0.0.0
 */
 
+//include core files
+require_once 'app/core/config.php';
 require_once 'app/core/router.php';
+require_once 'app/core/helpers.php';
+require_once 'app/core/controller.php';
+require_once 'app/core/model.php';
+require_once 'app/core/view.php';
+require_once 'app/core/router.php';
+require_once 'app/core/database.php';
 
 //set error_reporting() and display_errors parameters
-//change application environment settings in ./core/config.php
+//change application environment settings in app/core/config.php
 if (APP_ENV === 'development') {
     ini_set('display_errors', 1);
     ini_set('error_reporting', -1);
@@ -45,8 +53,8 @@ if (APP_ENV === 'development') {
     exit();
 }
 
-//start routing
-$router = new Router();
-$router->load_core();
-$router->load_helpers('');
-$router->dispatch();
+//load helpers
+Helpers::load(''); //('session', 'cookie', ...)
+
+//dispatch $_GET request from .htaccess
+Router::dispatch();

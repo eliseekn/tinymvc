@@ -30,6 +30,9 @@
 * @version: 1.0.0.0
 */
 
+//reset execution timeout
+set_time_limit(0);
+
 //define root directory
 define('ROOT', 'http://localhost/tinymvc/');
 

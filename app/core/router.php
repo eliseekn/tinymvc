@@ -30,48 +30,29 @@
 * @version: 1.0.0.0
 */
 
-require_once 'config.php';
-
+//url routing and class loader
 class Router {
 
-    private $url = array();
-    private $params = array();
-    private $controller = 'home';
-    private $method = 'index';
+    private static $url = array();
+    private static $params = array();
+    private static $controller = 'home';
+    private static $method = 'index';
 
-    public function load_core() {
-        require_once 'controller.php';
-        require_once 'model.php';
-        require_once 'view.php';
-        require_once 'router.php';
-        require_once 'database.php';
-    }
-
-    public function load_helpers(...$helpers) {
-        if (!empty($helpers)) {
-            foreach ($helpers as $helper) {
-                $helper = 'app/helpers/'. $helper .'.php';
-
-                if (file_exists($helper)) {
-                    require_once $helper;
-                }
-            }
-        }
-    }
-
-    public function dispatch() {
+    public static function dispatch() {
+        //check for $_GET request
         if (isset($_GET['url']) && !empty($_GET['url'])) {
-            $this->url = explode('/', $_GET['url']);
+            self::$url = explode('/', $_GET['url']);
+        }
+        //retrieves controller name as first parameter
+        if (isset(self::$url[0])) {
+            self::$controller = self::$url[0];
+            unset(self::$url[0]);
         }
 
-        if (isset($this->url[0])) {
-            $this->controller = $this->url[0];
-            unset($this->url[0]);
-        }
-
-        if ($this->controller === 'plugins') {
-            if (isset($this->url[1])) {
-                $plugin_url = ROOT .'plugins/'. $this->url[1];
+        //redirect to plugins directory
+        if (self::$controller === 'plugins') {
+            if (isset(self::$url[1])) {
+                $plugin_url = ROOT .'plugins/'. self::$url[1];
 
                 if (is_dir($plugin_url)) {
                     header('Location: '. $plugin_url);
@@ -80,35 +61,42 @@ class Router {
             }
         }
 
-        if (!file_exists('app/controllers/'. $this->controller .'.php')) {
+        //return a 404 error if controller filename not found
+        if (!file_exists('app/controllers/'. self::$controller .'.php')) {
             require_once 'app/controllers/error.php';
 
-            $this->controller = new ErrorController();
-            $this->controller->index();
+            self::$controller = new ErrorController();
+            self::$controller->error_404();
 
             exit();
         }
 
-        require_once 'app/controllers/'. $this->controller .'.php';
+        //inclue controller filename
+        require_once 'app/controllers/'. self::$controller .'.php';
 
-        $controller = ucfirst($this->controller) .'Controller';
-        $this->controller = new $controller();
+        //load controller class
+        $controller = ucfirst(self::$controller) .'Controller';
+        self::$controller = new $controller();
 
-        if (isset($this->url[1])) {
-            if (method_exists($this->controller, $this->url[1])) {
-                $this->method = $this->url[1];
-                unset($this->url[1]);
+        //retrieves method name as second parameter
+        if (isset(self::$url[1])) {
+            if (method_exists(self::$controller, self::$url[1])) {
+                self::$method = self::$url[1];
+                unset(self::$url[1]);
             }
         }
 
-        $this->params = $this->url ? $this->url : array();
+        //set parameters
+        self::$params = self::$url ? self::$url : array();
 
+        //add $_POST request as parameter
         if (!empty($_POST)) {
             foreach ($_POST as $key => $value) {
-                $this->params[] = $value;
+                self::$params[] = $value;
             }
         }
 
-        call_user_func_array([$this->controller, $this->method], $this->params);
+        //execute controller with method and parameter
+        call_user_func_array([self::$controller, self::$method], self::$params);
     }
 }

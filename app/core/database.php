@@ -30,6 +30,7 @@
 * @version: 1.0.0.0
 */
 
+//execute sql queries
 class Database {
 
 	private $connection;
@@ -38,12 +39,14 @@ class Database {
 	public function __construct(string $db_host, string $db_username, string $db_password, string $db_name = '') {
 		$this->connection = mysqli_connect($db_host, $db_username, $db_password, $db_name);
 
+		//display error on connection fail
 		if (APP_ENV == 'development') {
 			if (mysqli_connect_errno()) {
 				die(mysqli_connect_error());
 			}
 		}
 
+		//display error on fail
 		if (!mysqli_set_charset($this->connection, 'utf8')) {
 			if (APP_ENV == 'development') {
 				if (mysqli_connect_errno()) {
@@ -114,7 +117,7 @@ class Database {
 	}
 
 	//fetch row as an enumerated array
-	public function fetch_assoc($query_result): array {
+	public function fetch_assoc($query_result) {
 		return mysqli_fetch_assoc($query_result);
 	}
 

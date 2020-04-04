@@ -30,6 +30,7 @@
 * @version: 1.0.0.0
 */
 
+//sanitize input from user for security
 class Sanitize {
 
     //sanitize html and other scripting language

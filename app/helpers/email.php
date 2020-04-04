@@ -30,6 +30,7 @@
 * @version: 1.0.0.0
 */
 
+//email sender
 class Email {
 
     //send email
@@ -39,6 +40,6 @@ class Email {
         $message = $data['message'];
         $header = 'From: '. $data['from'];
 
-        mail($to, $subject, $message, $header);
+        return mail($to, $subject, $message, $header);
     }
 }

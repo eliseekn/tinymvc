@@ -30,6 +30,7 @@
 * @version: 1.0.0.0
 */
 
+//main controller class
 class Controller {
 
 	private $model;
@@ -39,7 +40,7 @@ class Controller {
 		View::render($page, $data);
 	}
 
-	//redirect function
+	//redirect to page
 	public function redirect(string $page) {
 		header('Location: '. ROOT . $page);
 	}
