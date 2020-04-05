@@ -33,11 +33,15 @@
 //reset execution timeout
 set_time_limit(0);
 
-//define root directory
-define('ROOT', 'http://localhost/tinymvc/');
+//define application root directory
+define('WEB_ROOT', 'http://localhost/tinymvc/');
+define('DOCUMENT_ROOT', $_SERVER['DOCUMENT_ROOT'] .'/');
 
-//define application configuration
+//define environment configuration
 define('APP_ENV', 'development'); 
+
+//define logs root directory
+define('LOGS_ROOT', DOCUMENT_ROOT .'logs/');
 
 //define database configuration
 define('DB_HOST', 'localhost');

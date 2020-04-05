@@ -30,21 +30,15 @@
 * @version: 1.0.0.0
 */
 
-//generate pagination paramaters
-class Pagination {
+//display debug messages
+class Debbuger {
 
-	public static function set(int $page_id, int $total_items, int $items_per_pages = 5) {
-		//get total number of pages
-		$total_pages = ceil($total_items / $this->items_per_pages);
-
-		//set right page id
-		if ($page_id < 1) {
-			$page_id = 1;
-		} elseif ($page_id > $total_pages) {
-			$page_id = $total_pages;
-		}
-
-		//return pagination paramaters
-		return [$page_id, $total_pages];
+    //display readable information about variables and exit
+    //de => dump and exit
+	public static function de($data) {
+		echo '<pre>';
+        print_r($data);
+        echo '</pre>';
+        exit();
 	}
 }

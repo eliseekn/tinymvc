@@ -30,21 +30,15 @@
 * @version: 1.0.0.0
 */
 
-//generate pagination paramaters
-class Pagination {
+//write log messages to file
+class Logger {
 
-	public static function set(int $page_id, int $total_items, int $items_per_pages = 5) {
-		//get total number of pages
-		$total_pages = ceil($total_items / $this->items_per_pages);
-
-		//set right page id
-		if ($page_id < 1) {
-			$page_id = 1;
-		} elseif ($page_id > $total_pages) {
-			$page_id = $total_pages;
-		}
-
-		//return pagination paramaters
-		return [$page_id, $total_pages];
+    //type can be 'ERROR', 'WARNING' or 'INFORMATION'
+    //edit LOGS_ROOT in app/core/config.php
+	public static function log(string $type, string $message) {
+        $log = $type .': '. $message . PHP_EOL;
+        $date = date('m_d_Y', time());
+        $log_file = LOGS_ROOT .'logs_'. $date .'.txt';
+        file_put_contents($log_file, $log, FILE_APPEND | LOCK_EX);
 	}
 }
