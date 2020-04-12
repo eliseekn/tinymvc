@@ -30,73 +30,69 @@
 * @version: 1.0.0.0
 */
 
-//url routing and class loader
+//url routing and dispatching
 class Router {
 
-    private static $url = array();
-    private static $params = array();
-    private static $controller = 'home';
-    private static $method = 'index';
+    private $url = array();
+    private $params = array();
+    private $controller = 'home'; //default application controller
+    private $method = 'index'; //default controller method
 
-    public static function dispatch() {
-        //check for $_GET request
+    public function __construct() {
+        //get url parameters
         if (isset($_GET['url']) && !empty($_GET['url'])) {
-            self::$url = explode('/', $_GET['url']);
+            $this->url = explode('/', $_GET['url']);
         }
+    }
+
+    public function dispatch() {
         //retrieves controller name as first parameter
-        if (isset(self::$url[0])) {
-            self::$controller = self::$url[0];
-            unset(self::$url[0]);
+        if (isset($this->url[0])) {
+            $this->controller = $this->url[0];
+            unset($this->url[0]);
         }
 
         //redirect to plugins directory
-        if (self::$controller === 'plugins') {
-            if (isset(self::$url[1])) {
-                $plugin_url = ROOT .'plugins/'. self::$url[1];
+        if ($this->controller === 'plugins') {
+            if (isset($this->url[1])) {
+                $plugin = '../../plugins/'. $this->url[1];
 
-                if (is_dir($plugin_url)) {
-                    header('Location: '. $plugin_url);
+                if (is_dir($plugin)) {
+                    header('Location: '. $plugin);
                     exit();
                 }
             }
         }
 
+        //load controller class
+        $this->controller = load_controller($this->controller);
+
         //return a 404 error if controller filename not found
-        if (!file_exists('app/controllers/'. self::$controller .'.php')) {
-            require_once 'app/controllers/error.php';
-
-            self::$controller = new ErrorController();
-            self::$controller->error_404();
-
+        if ($this->controller === NULL) {
+            $error_controller = load_controller('error');
+            $error_controller->error_404();
             exit();
         }
 
-        //inclue controller filename
-        require_once 'app/controllers/'. self::$controller .'.php';
-
-        //load controller class
-        $controller = ucfirst(self::$controller) .'Controller';
-        self::$controller = new $controller();
-
         //retrieves method name as second parameter
-        if (isset(self::$url[1])) {
-            if (method_exists(self::$controller, self::$url[1])) {
-                self::$method = self::$url[1];
-                unset(self::$url[1]);
+        if (isset($this->url[1])) {
+            if (method_exists($this->controller, $this->url[1])) {
+                $this->method = $this->url[1];
+                unset($this->url[1]);
             }
         }
 
         //set parameters
-        self::$params = self::$url ? self::$url : array();
+        $this->params = $this->url ? $this->url : array();
 
-        //add $_POST request as parameter
+        //add $_POST request as parameters
         if (!empty($_POST)) {
             foreach ($_POST as $key => $value) {
-                self::$params[] = $value;
+                $this->params[] = $value;
             }
         }
 
         //execute controller with method and parameter
-        call_user_func_array([self::$controller, self::$method], self::$params);
+        call_user_func_array([$this->controller, $this->method], $this->params);
     }
 }

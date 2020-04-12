@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-US">
 	<head>
 		<meta charset="utf-8">
 		<link rel="stylesheet" href="<?= WEB_ROOT ."public/assets/css/style.css" ?>">
@@ -8,10 +8,6 @@
 	</head>
 
 	<body>
-		<div>
-			<h1>Error 404: <em>Page not found</em></h1>
-			<p>The page you've requested doesn't exists on this server.</p>
-			<p><a href="<?= WEB_ROOT ."home" ?>">Go back home</a></p>
-		</div>
+        <?= $page_content ?>
 	</body>
 </html>

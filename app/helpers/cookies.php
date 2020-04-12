@@ -31,36 +31,27 @@
 */
 
 //manage cookies
-class Cookies {
 
-	public static function set(array $data) {
-		$secure = isset($_SERVER['HTTPS']) ? true : false;
+//create cookie and set data
+function create_cookie(string $name, string $value) {
+	$secure = isset($_SERVER['HTTPS']) ? true : false;
 
-		if (is_array($data)) {
-            foreach ($data as $key => $value) {
-    			set_cookie(
-					$key, //name
-					$value, //value
-					time() + 3600 * 24 * 7, //expire
-					'/', //path
-				);
-    		}
-        }
-	}
+	set_cookie(
+		$name, //name
+		$value, //value
+		time() + 3600 * 24 * 7, //expire
+		'/', //path
+	);
+}
 
-	public static function unset($item) {
-		unset($_COOKIE[$item]);
-	}
+function remove_cookie($item) {
+	unset($_COOKIE[$item]);
+}
 
-	public static function get($item) {
-		return $_COOKIE[$item];
-	}
+function get_cookie($item) {
+	return $_COOKIE[$item];
+}
 
-	public static function exists($item) {
-		return isset($_COOKIE[$item]);
-	}
-
-	static public function destroy() {
-		unset($_COOKIE);
-	}
+function cookie_exists($item) {
+	return isset($_COOKIE[$item]);
 }

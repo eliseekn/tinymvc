@@ -31,19 +31,17 @@
 */
 
 //sanitize input from user for security
-class Sanitize {
 
-    //sanitize html and other scripting language
-    public static function input($input) {
-        $sanitized_input = stripslashes($input);
-        $sanitized_input = strip_tags($sanitized_input);
-        $sanitized_input = htmlentities($sanitized_input);
+//sanitize html and other scripting language
+function sanitize_input($input) {
+    $sanitized_input = stripslashes($input);
+    $sanitized_input = strip_tags($sanitized_input);
+    $sanitized_input = htmlentities($sanitized_input);
 
-        return $sanitized_input;
-    }
+    return $sanitized_input;
+}
 
-    //sanitize url by encoding
-    public static function url($url) {
-        return urlencode($url);
-    }
+//sanitize url by encoding
+function sanitize_url($url) {
+    return urlencode($url);
 }

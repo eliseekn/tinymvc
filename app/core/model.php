@@ -43,40 +43,65 @@ class Model {
 	}
 
 	//execute safe sql query
-	private function execute_query() {
+	public function execute_query() {
 		$params = array();
 
 		foreach ($this->params as $key => $value) {
 			$params[] = $this->db->escape_string($value);
 		}
 
-		$this->db->execute_query($this->query, $params);
+		$query_result = $this->db->execute_query($this->query, $params);
+		$this->params = array();
+
+		return $query_result;
 	}
 
 	//generate sql query string
 	public function select(string $column = '*') {
-		$this->query = " SELECT $column ";
+		$this->query = "SELECT $column";
 		return $this;
 	}
 
 	public function from(string $table) {
-		$this->query = " FROM $table ";
+		$this->query .= " FROM $table ";
 		return $this;
 	}
 
-	public function where(string $column, string $value) {
-		$this->query = " WHERE $column ? ";
+	public function where(string $column, string $operator, string $value) {
+		$this->query .= " WHERE $column $operator ? ";
+		$this->params[] = $value;
+		return $this;
+	}
+
+	public function and(string $column, string $operator, string $value) {
+		$this->query .= " AND $column $operator ? ";
+		$this->params[] = $value;
+		return $this;
+	}
+
+	public function or(string $column, string $operator, string $value) {
+		$this->query .= " OR $column $operator ? ";
 		$this->params[] = $value;
 		return $this;
 	}
 
 	public function order_by(string $column, string $direction) {
-		$this->query = " ORDER BY $column $direction ";
+		$this->query .= " ORDER BY $column $direction ";
+		return $this;
+	}
+
+	public function like(string $column, string $value) {
+		$this->query .= " WHERE $column LIKE '%$value%' ";
+		return $this;
+	}
+
+	public function or_like(string $column, string $value) {
+		$this->query .= " OR $column LIKE '%$value%' ";
 		return $this;
 	}
 
 	public function limit(int $limit, int $offset = 0) {
-		$this->query = " LIMIT $limit";
+		$this->query .= " LIMIT $limit";
 
 		if ($offset != 0) {
 			$this->query .= ", $offset";
@@ -85,33 +110,59 @@ class Model {
 		return $this;
 	}
 
-	public function set(string $column, string $value) {
-		$this->query = " SET $column ? ";
-		$this->params[] = $value;
+	public function inner_join(srting $table, string $first_column, string $second_column) {
+		$this->query .= " INNER JOIN $table ON $first_column = $second_column";
+		return $this;
+	}
+
+	public function left_join(srting $table, string $first_column, string $second_column) {
+		$this->query .= " LEFT JOIN $table ON $first_column = $second_column";
+		return $this;
+	}
+
+	public function right_join(srting $table, string $first_column, string $second_column) {
+		$this->query .= " RIGHT JOIN $table ON $first_column = $second_column";
+		return $this;
+	}
+
+	public function full_join(srting $table, string $first_column, string $second_column) {
+		$this->query .= " FULL JOIN $table ON $first_column = $second_column";
+		return $this;
+	}
+
+	public function set(array $items) {
+		$this->query .= " SET ";
+
+		foreach($items as $key => $value) {
+			$this->query .= "$key = ?, ";
+			$this->params[] = $value;
+		}
+
+		$this->query = rtrim($this->query, ', ');
 		return $this;
 	}
 	//
 
 	//execute sql insert query
-	public function insert(string $table, array $data): int {
+	public function insert(string $table, array $items): int {
 		$this->query = "INSERT INTO $table (";
 
-		foreach($data as $key => $value) {
+		foreach($items as $key => $value) {
 			$this->query .= "$key, ";
 		}
 
-		$this->query = rtrim($this->query, ',');
+		$this->query = rtrim($this->query, ', ');
 		$this->query .= ') VALUES (';
 
-		foreach($data as $key => $value) {
+		foreach($items as $key => $value) {
 			$this->query .= '?, ';
 			$this->params[] = $value;
 		}
 
 		$this->query = rtrim($this->query, ', ');
 		$this->query .= ')';
-
-		$query_result = $this->execute_query();
+		
+		$this->execute_query();
 
 		//return last insert id
 		return $this->db->last_insert_id();
@@ -119,32 +170,43 @@ class Model {
 
 	//execute sql update query
 	public function update(string $table) {
-		$this->query = 'UPDATE $table ';
+		$this->query = "UPDATE $table";
 		return $this;
-	} 
+	}
+
+	//execute sql delete query
+	public function delete() {
+		$this->query = 'DELETE';
+		return $this;
+	}
 
 	//execute query and get result
-	public function fetch(): array {
+	public function fetch() {
 		$query_result = $this->execute_query();
 		$result = $this->db->fetch_assoc($query_result);
 		return $result;
 	}
 
 	//execute query and get results as enumerated array
-	public function fetch_array(): array {
+	public function fetch_array() {
 		$query_result = $this->execute_query();
-		$result_array = array();
+		$results = array();
 		
 		while ($row = $this->db->fetch_assoc($query_result)) {
-			$result_array[] = $row;
+			$results[] = $row;
 		}
 
-		return $result_array;
+		return $results;
 	}
 
 	//retrieves number of rows
 	public function rows_count(): int {
 		$query_result = $this->execute_query();
-		return $this->db->mysqli_num_rows($query_result);
+		return $this->db->num_rows($query_result);
+	}
+
+	//retrieves query string
+	public function query_string() {
+		return $this->query;
 	}
 }

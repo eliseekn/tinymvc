@@ -32,13 +32,10 @@
 
 //include core files
 require_once 'app/core/config.php';
-require_once 'app/core/router.php';
-require_once 'app/core/helpers.php';
-require_once 'app/core/controller.php';
-require_once 'app/core/model.php';
-require_once 'app/core/view.php';
+require_once 'app/core/loader.php';
 require_once 'app/core/router.php';
 require_once 'app/core/database.php';
+require_once 'app/core/model.php';
 
 //set error_reporting() and display_errors parameters
 //change application environment settings in app/core/config.php
@@ -53,8 +50,9 @@ if (APP_ENV === 'development') {
     exit();
 }
 
-//load helpers
-Helpers::load(''); //('session', 'cookie', ...)
+//include necessaries helpers
+load_helpers('');
 
-//dispatch $_GET request from .htaccess
-Router::dispatch();
+//start routing url
+$router = new Router();
+$router->dispatch();

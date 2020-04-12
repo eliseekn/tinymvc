@@ -31,20 +31,25 @@
 */
 
 //generate pagination paramaters
-class Pagination {
 
-	public static function set(int $page_id, int $total_items, int $items_per_pages = 5) {
-		//get total number of pages
-		$total_pages = ceil($total_items / $this->items_per_pages);
+function generate_pagination(int $page, int $total_items, int $items_per_pages): array {
+	//get total number of pages
+	$total_pages = ceil($total_items / $items_per_pages);
 
-		//set right page id
-		if ($page_id < 1) {
-			$page_id = 1;
-		} elseif ($page_id > $total_pages) {
-			$page_id = $total_pages;
-		}
-
-		//return pagination paramaters
-		return [$page_id, $total_pages];
+	//set right page id
+	if ($page < 1) {
+		$page = 1;
+	} elseif ($page > $total_pages) {
+		$page = $total_pages;
 	}
+
+	//get list first item
+	$first_item = ($page - 1) * $total_pages;
+
+	//return pagination paramaters
+	return array(
+		'first_item' => $first_item,
+		'page' => $page, 
+		'total_pages' => $total_pages
+	);
 }

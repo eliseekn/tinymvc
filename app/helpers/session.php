@@ -30,36 +30,28 @@
 * @version: 1.0.0.0
 */
 
-//manage user session
-class Session {
+//manage sessions
 
-	public static function set($data) {
-		if (is_array($data)) {
-			session_start();
+//create session and set session data
+function create_session(string $name, $data) {
+	session_start();
+	$_SESSION[$name] = $data;
+}
 
-            foreach ($data as $key => $value) {
-    			$_SESSION[$key] = $value;
-    		}
-        }
-	}
+//get session data
+function get_session($name) {
+	session_start();
+	return $_SESSION[$name];
+}
 
-	public static function get($item) {
-		return $_SESSION[$item];
-	}
+//check session data
+function session_exists($name) {
+	session_start();
+	return isset($_SESSION[$name]);
+}
 
-	public static function unset($item) {
-		session_start();
-		unset($_SESSION[$item]);
-	}
-
-	public static function exists($item) {
-		session_start();
-		return isset($_SESSION[$item]);
-	}
-
-	public static function destroy() {
-		session_start();
-		session_unset();
-		session_destroy();
-	}
+//destroy session
+function destroy_session(string $name) {
+	session_start();
+	unset($_SESSION[$name]);
 }

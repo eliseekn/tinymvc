@@ -30,16 +30,13 @@
 * @version: 1.0.0.0
 */
 
-//email sender
-class Email {
+//send plain text email through built-in PHP mail function
 
-    //send email
-    public static function send($data) {
-        $to = $data['to'];
-        $subject = $data['subject'];
-        $message = $data['message'];
-        $header = 'From: '. $data['from'];
+function send_email($data) {
+    $to = $data['to'];
+    $subject = $data['subject'];
+    $message = $data['message'];
+    $header = 'From: '. $data['from'];
 
-        return mail($to, $subject, $message, $header);
-    }
+    return mail($to, $subject, $message, $header);
 }

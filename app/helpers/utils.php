@@ -30,17 +30,41 @@
 * @version: 1.0.0.0
 */
 
-//main view class
-class View {
+//miscellaneous utils functions
 
-	//display page content
-	public static function render(string $page, array $data = []) {
-		//set data variables
-		if (is_array($data) && !empty($data)) {
-			extract($data);
-		}
+//generate slug from string
+function generate_slug(string $str, string $separator = '-'): string {
+	$slug = preg_replace('/[^a-zA-Z0-9]/', $separator, $str);
+	$slug = strtolower(trim($slug, $separator));
+	$slug = preg_replace('/\-{2,}/', $separator, $slug);
+	return $slug;
+}
 
-		//include page content
-		require_once 'app/views/'. $page  .'.php';
-	}
+//generate exerpt from text
+function generate_exerpt(string $text, int $size = 290, string $end_string = '[...]'): string {
+	return mb_strimwidth($text, 0, $size, $end_string);
+}
+
+//write log messages to file
+//type can be 'ERROR', 'WARNING' or 'DEBUG' according to you
+//edit LOGS_ROOT in app/core/config.php
+function save_log(string $type, string $message) {
+	$log = $type .': '. $message . PHP_EOL;
+	$date = date('m_d_Y', time());
+	$log_file = LOGS_ROOT .'logs_'. $date .'.txt';
+	file_put_contents($log_file, $log, FILE_APPEND | LOCK_EX);
+}
+
+//dump variables and exit
+function dump_exit($data) {
+	echo '<pre>';
+	print_r($data);
+	echo '</pre>';
+	exit();
+}
+
+//redirect url
+function redirect(string $url) {
+	header('Location: '. WEB_ROOT . $url);
+	exit();
 }
