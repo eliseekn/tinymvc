@@ -26,7 +26,7 @@ function session_exists(string $name):bool {
 }
 
 //destroy session
-function destroy_session(string $name) {
+function close_session(string $name) {
 	session_start();
 	unset($_SESSION[$name]);
 }

@@ -40,18 +40,6 @@ class Router {
         $this->method = $this->url[1] ?? $this->method;
         unset($this->url[1]);
 
-        //redirect to plugins directory
-        if ($this->controller === 'plugins') {
-            if ($this->method !== 'index' && !empty($this->method)) {
-                $plugin = '../../plugins/'. $this->method;
-
-                if (is_dir($plugin)) {
-                    header('Location: '. $plugin);
-                    exit();
-                }
-            }
-        }
-
         //check custom routes for redirection
         if (!empty($this->routes)) {
             if (array_key_exists($this->controller, $this->routes)) {

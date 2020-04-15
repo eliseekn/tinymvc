@@ -12,8 +12,8 @@ function base_url(string $url): string {
     return WEB_ROOT . $url;
 }
 
-//redirect to url
-function redirect_url(string $url): void {
-	header('Location: '. base_url($url));
+//redirect to location
+function redirect(string $location): void {
+	header('Location: '. base_url($location));
 	exit();
 }

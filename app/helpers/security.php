@@ -26,7 +26,7 @@ function hash_string(string $str): string {
     return password_hash($str, PASSWORD_DEFAULT);
 }
 
-//check hashed string
-function check_hash(string $str, string $hash): bool {
+//compare hashed string with password_verify() PHP function
+function compare_hash(string $str, string $hash): bool {
     return password_verify($str, $hash);
 }
