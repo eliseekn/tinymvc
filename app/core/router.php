@@ -1,33 +1,10 @@
 <?php
-
 /**
-* TinyMVC
-*
-* MIT License
-*
-* Copyright (c) 2019, N'Guessan Kouadio Elisée
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy
-* of this software and associated documentation files (the "Software"), to deal
-* in the Software without restriction, including without limitation the rights
-* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-* copies of the Software, and to permit persons to whom the Software is
-* furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all
-* copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-* SOFTWARE.
-*
-* @author: N'Guessan Kouadio Elisée AKA eliseekn
-* @contact: eliseekn@gmail.com - https://eliseekn.netlify.app
-* @version: 1.0.0.0
+* Application => TinyMVC (PHP framework based on MVC architecture)
+* File        => router.php (application routing system)
+* Github      => https://github.com/eliseekn/tinymvc
+* Copyright   => 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+* Licence     => MIT (https://opensource.org/licenses/MIT)
 */
 
 //url routing and dispatching
@@ -35,27 +12,38 @@ class Router {
 
     private $url = array();
     private $params = array();
+    private $routes = array();
+    private $methods = array();
     private $controller = 'home'; //default application controller
     private $method = 'index'; //default controller method
 
+    //get uri parameters
     public function __construct() {
-        //get url parameters
-        if (isset($_GET['url']) && !empty($_GET['url'])) {
-            $this->url = explode('/', $_GET['url']);
-        }
+        $uri = filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL);
+        $uri = trim($uri, '/');
+        $uri = explode('/', $uri);
+        $this->url = array_slice($uri, 1, count($uri));
     }
+
+    //add custom routes for redirection
+    public function add_custom_route(string $custom_route, string $route, array $methods) {
+        $this->routes[$custom_route] = $route;
+        $this->methods[$custom_route] = $methods;
+    } 
 
     public function dispatch() {
         //retrieves controller name as first parameter
-        if (isset($this->url[0])) {
-            $this->controller = $this->url[0];
-            unset($this->url[0]);
-        }
+        $this->controller = $this->url[0] ?? $this->controller;
+        unset($this->url[0]);
+
+        //retrieves method name as second parameter
+        $this->method = $this->url[1] ?? $this->method;
+        unset($this->url[1]);
 
         //redirect to plugins directory
         if ($this->controller === 'plugins') {
-            if (isset($this->url[1])) {
-                $plugin = '../../plugins/'. $this->url[1];
+            if ($this->method !== 'index' && !empty($this->method)) {
+                $plugin = '../../plugins/'. $this->method;
 
                 if (is_dir($plugin)) {
                     header('Location: '. $plugin);
@@ -64,35 +52,33 @@ class Router {
             }
         }
 
-        //load controller class
-        $this->controller = load_controller($this->controller);
+        //check custom routes for redirection
+        if (!empty($this->routes)) {
+            if (array_key_exists($this->controller, $this->routes)) {
+                $methods = $this->methods[$this->controller];
+                $this->controller = $this->routes[$this->controller];
 
-        //return a 404 error if controller filename not found
-        if ($this->controller === NULL) {
+                if (array_key_exists($this->method, $methods)) {
+                    $this->method = $methods[$this->method];
+                }
+            }
+        }
+        
+        //load controller class
+        $controllerClass = load_controller($this->controller);
+
+        //return a 404 error if controller filename not found or method does not exists
+        if ($controllerClass === NULL || !method_exists($controllerClass, $this->method)) {
             $error_controller = load_controller('error');
             $error_controller->error_404();
             exit();
         }
 
-        //retrieves method name as second parameter
-        if (isset($this->url[1])) {
-            if (method_exists($this->controller, $this->url[1])) {
-                $this->method = $this->url[1];
-                unset($this->url[1]);
-            }
-        }
-
         //set parameters
-        $this->params = $this->url ? $this->url : array();
-
-        //add $_POST request as parameters
-        if (!empty($_POST)) {
-            foreach ($_POST as $key => $value) {
-                $this->params[] = $value;
-            }
-        }
-
+        $params = $this->url ?? array();
+        $this->params = isset($_POST) ? array_merge($params, array_values($_POST)) : $params ;
+        
         //execute controller with method and parameter
-        call_user_func_array([$this->controller, $this->method], $this->params);
+        call_user_func_array([$controllerClass, $this->method], $this->params);
     }
 }

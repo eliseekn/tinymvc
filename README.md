@@ -4,7 +4,7 @@
 TinyMVC is a tiny PHP framework based on MVC architecture.
 
 ## Installation
-1. Download your [TiniyMVC Framework](https://github.com/eliseekn/tinymvc) copy
+1. Download your [TiniyMVC](https://github.com/eliseekn/tinymvc) framework copy
 2. Move folder to your web server root (**www**)
 3. Grant **writing permissions** to this folder
 4. Setup configuration file (**app/core/config.php**)
@@ -15,7 +15,10 @@ TinyMVC is a tiny PHP framework based on MVC architecture.
 - PHP v7.2
 - Apache2 v2.4.29
 
+## Version
+- v1.1
+
 ## Author
-- N'Guessan Kouadio Elisée AKA **eliseekn**
+- N'Guessan Kouadio Elisée
 - eliseekn@gmail.com
 - https://eliseekn.netlify.app

@@ -1,33 +1,10 @@
 <?php
-
 /**
-* TinyMVC
-*
-* MIT License
-*
-* Copyright (c) 2019, N'Guessan Kouadio Elisée
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy
-* of this software and associated documentation files (the "Software"), to deal
-* in the Software without restriction, including without limitation the rights
-* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-* copies of the Software, and to permit persons to whom the Software is
-* furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all
-* copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-* SOFTWARE.
-*
-* @author: N'Guessan Kouadio Elisée AKA eliseekn
-* @contact: eliseekn@gmail.com - https://eliseekn.netlify.app
-* @version: 1.0.0.0
+* Application => TinyMVC (PHP framework based on MVC architecture)
+* File        => model.php (easy database management system)
+* Github      => https://github.com/eliseekn/tinymvc
+* Copyright   => 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+* Licence     => MIT (https://opensource.org/licenses/MIT)
 */
 
 //use database to execute sql queries
@@ -42,21 +19,8 @@ class Model {
 		$this->db = new Database(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
 	}
 
-	//execute safe sql query
-	public function execute_query() {
-		$params = array();
-
-		foreach ($this->params as $key => $value) {
-			$params[] = $this->db->escape_string($value);
-		}
-
-		$query_result = $this->db->execute_query($this->query, $params);
-		$this->params = array();
-
-		return $query_result;
-	}
-
 	//generate sql query string
+	//--start
 	public function select(string $column = '*') {
 		$this->query = "SELECT $column";
 		return $this;
@@ -141,7 +105,21 @@ class Model {
 		$this->query = rtrim($this->query, ', ');
 		return $this;
 	}
-	//
+	//--end
+
+	//execute safe sql query
+	public function execute_query() {
+		$params = array();
+
+		foreach ($this->params as $key => $value) {
+			$params[] = $this->db->escape_string($value);
+		}
+
+		$query_result = $this->db->execute_query($this->query, $params);
+		$this->params = array();
+
+		return $query_result;
+	}
 
 	//execute sql insert query
 	public function insert(string $table, array $items): int {
@@ -161,33 +139,33 @@ class Model {
 
 		$this->query = rtrim($this->query, ', ');
 		$this->query .= ')';
-		
+
 		$this->execute_query();
 
 		//return last insert id
 		return $this->db->last_insert_id();
 	}
 
-	//execute sql update query
+	//set sql update query
 	public function update(string $table) {
 		$this->query = "UPDATE $table";
 		return $this;
 	}
 
-	//execute sql delete query
+	//set sql delete query
 	public function delete() {
 		$this->query = 'DELETE';
 		return $this;
 	}
 
-	//execute query and get result
+	//execute query and retrieves results
 	public function fetch() {
 		$query_result = $this->execute_query();
 		$result = $this->db->fetch_assoc($query_result);
 		return $result;
 	}
 
-	//execute query and get results as enumerated array
+	//execute query and retrieves results recursively
 	public function fetch_array() {
 		$query_result = $this->execute_query();
 		$results = array();
@@ -199,13 +177,13 @@ class Model {
 		return $results;
 	}
 
-	//retrieves number of rows
+	//retrieves rows number
 	public function rows_count(): int {
 		$query_result = $this->execute_query();
 		return $this->db->num_rows($query_result);
 	}
 
-	//retrieves query string
+	//generate query string
 	public function query_string() {
 		return $this->query;
 	}
