@@ -26,6 +26,16 @@ class Model {
 		return $this;
 	}
 
+	public function select_as(string $column, string $column_alias) {
+		$this->query = "SELECT $column AS $column_alias";
+		return $this;
+	}
+
+	public function select_max(string $column) {
+		$this->query = "SELECT MAX($column)";
+		return $this;
+	}
+
 	public function from(string $table) {
 		$this->query .= " FROM $table ";
 		return $this;
@@ -183,8 +193,15 @@ class Model {
 		return $this->db->num_rows($query_result);
 	}
 
-	//generate query string
+	//return query string
 	public function query_string() {
 		return $this->query;
+	}
+	
+	//set custom sql query string
+	public function query(string $query, array $params = []) {
+		$this->query = $query;
+		$this->$params = $params;
+		return $this;
 	}
 }
