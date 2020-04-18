@@ -18,9 +18,12 @@ function log_message(string $type, string $message): void {
 }
 
 //dump variables and exit
-function dump_exit($data): void {
-	echo '<pre>';
-	print_r($data);
-	echo '</pre>';
+function dump_exit(...$data): void {
+	foreach ($data as $d) {
+		echo '<pre>';
+		print_r($d);
+		echo '</pre>';
+	}
+
 	exit();
 }
