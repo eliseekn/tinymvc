@@ -21,8 +21,14 @@ class Model {
 
 	//generate sql query string
 	//--start
-	public function select(string $column = '*') {
-		$this->query = "SELECT $column";
+	public function select(...$columns) {
+		$this->query = "SELECT ";
+
+		foreach($columns as $column) {
+			$this->query .= "$column, ";
+		}
+
+		$this->query = rtrim($this->query, ', ');
 		return $this;
 	}
 
@@ -79,22 +85,22 @@ class Model {
 		return $this;
 	}
 
-	public function inner_join(srting $table, string $first_column, string $second_column) {
+	public function inner_join(string $table, string $second_column, string $first_column) {
 		$this->query .= " INNER JOIN $table ON $first_column = $second_column";
 		return $this;
 	}
 
-	public function left_join(srting $table, string $first_column, string $second_column) {
+	public function left_join(string $table, string $second_column, string $first_column) {
 		$this->query .= " LEFT JOIN $table ON $first_column = $second_column";
 		return $this;
 	}
 
-	public function right_join(srting $table, string $first_column, string $second_column) {
+	public function right_join(string $table, string $second_column, string $first_column) {
 		$this->query .= " RIGHT JOIN $table ON $first_column = $second_column";
 		return $this;
 	}
 
-	public function full_join(srting $table, string $first_column, string $second_column) {
+	public function full_join(string $table, string $second_column, string $first_column) {
 		$this->query .= " FULL JOIN $table ON $first_column = $second_column";
 		return $this;
 	}

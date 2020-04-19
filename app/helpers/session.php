@@ -9,24 +9,36 @@
 
 //create session and set session data
 function create_session(string $name, $data) {
-	session_start();
+	if (session_status() == PHP_SESSION_NONE) { 
+		session_start();
+	}
+	
 	$_SESSION[$name] = $data;
 }
 
 //get session data
 function get_session(string $name) {
-	session_start();
+	if (session_status() == PHP_SESSION_NONE) { 
+		session_start();
+	}
+	
 	return $_SESSION[$name];
 }
 
 //check session data
 function session_exists(string $name):bool {
-	session_start();
+	if (session_status() == PHP_SESSION_NONE) { 
+		session_start();
+	}
+	
 	return isset($_SESSION[$name]);
 }
 
 //destroy session
 function close_session(string $name) {
-	session_start();
+	if (session_status() == PHP_SESSION_NONE) { 
+		session_start();
+	}
+	
 	unset($_SESSION[$name]);
 }
