@@ -31,11 +31,6 @@ class Model {
 		return $this;
 	}
 
-	public function select_max(string $column) {
-		$this->query = "SELECT MAX($column)";
-		return $this;
-	}
-
 	public function from(string $table) {
 		$this->query .= " FROM $table ";
 		return $this;
@@ -201,7 +196,7 @@ class Model {
 	//set custom sql query string
 	public function query(string $query, array $params = []) {
 		$this->query = $query;
-		$this->$params = $params;
+		$this->params = $params;
 		return $this;
 	}
 }
