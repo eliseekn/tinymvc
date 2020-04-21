@@ -23,8 +23,7 @@ function upload_file(string $field_name, string $destination, bool $multiple, &$
             for ($i = 0; $i < count($_FILES[$field_name]['name']); $i++) {
                 $origin = $_FILES[$field_name]['tmp_name'][$i];
                 $filename[] = basename($_FILES[$field_name]['name'][$i]);
-                $destination = DOCUMENT_ROOT . $destination . '/'. basename($_FILES[$field_name]['name'][$i]);
-                move_uploaded_file($origin, $destination);
+                move_uploaded_file($origin, DOCUMENT_ROOT . $destination . '/'. $filename[$i]);
             }
         }
 
