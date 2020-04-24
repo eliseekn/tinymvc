@@ -9,13 +9,17 @@
 
 //create cookie and set data
 function create_cookie(string $name, string $value) {
-	$secure = isset($_SERVER['HTTPS']) ? true : false;
+	$secure = isset($_SERVER['HTTPS']);
+	$expire = time() + (3600 * 24 * 30); //1 month
 
 	set_cookie(
 		$name, //name
 		$value, //value
-		time() + 3600 * 24 * 7, //expire
+		$expire, //expire
 		'/', //path
+		WEB_ROOT, //domain
+		$secure, //secure?
+		true, //HTTP only
 	);
 }
 

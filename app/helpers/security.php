@@ -16,11 +16,6 @@ function sanitize_input($input): string {
     return $sanitized_input;
 }
 
-//encoding url
-function encode_url($url): string {
-    return urlencode($url);
-}
-
 //hash string with password_hash() PHP function
 function hash_string(string $str): string {
     return password_hash($str, PASSWORD_DEFAULT);

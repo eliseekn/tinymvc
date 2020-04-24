@@ -22,7 +22,7 @@ class Model {
 	//generate sql query string
 	//--start
 	public function select(...$columns) {
-		$this->query = "SELECT ";
+		$this->query = 'SELECT ';
 
 		foreach($columns as $column) {
 			$this->query .= "$column, ";
@@ -32,8 +32,8 @@ class Model {
 		return $this;
 	}
 
-	public function select_as(string $column, string $column_alias) {
-		$this->query = "SELECT $column AS $column_alias";
+	public function select_as(string $column, string $alias) {
+		$this->query = "SELECT $column AS $alias";
 		return $this;
 	}
 
