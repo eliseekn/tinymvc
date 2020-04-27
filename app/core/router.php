@@ -52,7 +52,7 @@ class Router
     }
 
     /**
-     * load controller and methods
+     * load controller and method with parameters
      *
      * @return void
      */

@@ -258,14 +258,12 @@ class Model
 	 */
 	public function execute_query()
 	{
-		$params = array();
-
-		foreach ($this->params as $key => $value) {
-			$params[] = $this->db->escape_string($value);
-		}
+		$params = array_map(function ($value) {
+			return $this->db->escape_string($value);
+		}, array_values($this->params));
 
 		$query_result = $this->db->execute_query($this->query, $params);
-		$this->params = array();
+		$this->set_query_string('');
 
 		return $query_result;
 	}
