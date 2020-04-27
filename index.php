@@ -1,12 +1,19 @@
 <?php
+
 /**
-* Application => TinyMVC (PHP framework based on MVC architecture)
-* File        => index.php (main applicatin file)
-* Github      => https://github.com/eliseekn/tinymvc
-* Copyright   => 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
-* Licence     => MIT (https://opensource.org/licenses/MIT)
-*/
- 
+ * TinyMVC
+ * 
+ * PHP framework based on MVC architecture
+ * 
+ * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @license MIT (https://opensource.org/licenses/MIT)
+ * @link https://github.com/eliseekn/tinymvc
+ */
+
+/**
+ * Main application file
+ */
+
 //include core files
 require_once 'app/core/config.php';
 require_once 'app/core/loader.php';
@@ -37,7 +44,9 @@ $router = new Router();
 
 //add custom routes
 $router->add_custom_route(
-    'home', 'home', array(
+    'home',
+    'home',
+    array(
         '' => 'index'
     )
 );

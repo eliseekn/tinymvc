@@ -1,31 +1,46 @@
 <?php
-/**
-* Application => TinyMVC (PHP framework based on MVC architecture)
-* File        => pagination.php (pagination parameters generator)
-* Github      => https://github.com/eliseekn/tinymvc
-* Copyright   => 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
-* Licence     => MIT (https://opensource.org/licenses/MIT)
-*/
 
-//pagination parmeters generator
-function generate_pagination(int $page, int $total_items, int $items_per_pages): array {
+/**
+ * TinyMVC
+ * 
+ * PHP framework based on MVC architecture
+ * 
+ * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @license MIT (https://opensource.org/licenses/MIT)
+ * @link https://github.com/eliseekn/tinymvc
+ */
+
+/**
+ * Pagination parameters generator function
+ */
+
+/**
+ * pagination parameters generator
+ *
+ * @param  int $page
+ * @param  int $total_items
+ * @param  int $items_per_pages
+ * @return array
+ */
+function generate_pagination(int $page, int $total_items, int $items_per_pages): array
+{
 	//get total number of pages
 	$total_pages = ceil($total_items / $items_per_pages);
 
 	//set right page id
 	if ($page < 1) {
 		$page = 1;
-	} elseif ($page > $total_pages) {
+	} else if ($page > $total_pages) {
 		$page = $total_pages;
 	}
 
-	//get list first item
+	//get first item of page
 	$first_item = ($page - 1) * $total_pages;
 
-	//return pagination paramaters
+	//return paramaters
 	return array(
 		'first_item' => $first_item,
-		'page' => $page, 
+		'page' => $page,
 		'total_pages' => $total_pages
 	);
 }

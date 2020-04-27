@@ -1,24 +1,31 @@
 <?php
+
 /**
-* Application => TinyMVC (PHP framework based on MVC architecture)
-* File        => config.php (application configuration file)
-* Github      => https://github.com/eliseekn/tinymvc
-* Copyright   => 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
-* Licence     => MIT (https://opensource.org/licenses/MIT)
-*/
+ * TinyMVC
+ * 
+ * PHP framework based on MVC architecture
+ * 
+ * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @license MIT (https://opensource.org/licenses/MIT)
+ * @link https://github.com/eliseekn/tinymvc
+ */
+
+/**
+ * Application configuration file
+ */
 
 //reset execution timeout
 set_time_limit(0);
 
-//define root directory
-define('WEB_ROOT', 'http://localhost/tinymvc/'); //domain
-define('DOCUMENT_ROOT', $_SERVER['DOCUMENT_ROOT'] .'/'); //document directory full path
-define('LOGS_ROOT', DOCUMENT_ROOT .'logs/'); //logs directory
+//roots directory
+define('WEB_DOMAIN', 'http://localhost/tinymvc/'); //domain
+define('DOCUMENT_ROOT', $_SERVER['DOCUMENT_ROOT'] . '/'); //document directory full path
+define('LOGS_DIR', DOCUMENT_ROOT . 'logs/'); //logs directory
 
-//define environment configuration
-define('APP_ENV', 'development'); 
+//environment configuration
+define('APP_ENV', 'development');
 
-//define database configuration
+//database configuration
 define('DB_HOST', 'localhost');
 define('DB_USERNAME', 'root');
 define('DB_PASSWORD', 'eliseekn');

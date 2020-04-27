@@ -1,36 +1,71 @@
 <?php
-/**
-* Application => TinyMVC (PHP framework based on MVC architecture)
-* File        => cookies.php (users cookies management functions)
-* Github      => https://github.com/eliseekn/tinymvc
-* Copyright   => 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
-* Licence     => MIT (https://opensource.org/licenses/MIT)
-*/
 
-//create cookie and set data
-function create_cookie(string $name, string $value) {
+/**
+ * TinyMVC
+ * 
+ * PHP framework based on MVC architecture
+ * 
+ * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @license MIT (https://opensource.org/licenses/MIT)
+ * @link https://github.com/eliseekn/tinymvc
+ */
+
+/**
+ * Cookies management functions
+ */
+
+/**
+ * create cookie and set data
+ *
+ * @param  string $name
+ * @param  string $value
+ * @return bool
+ */
+function create_cookie(string $name, string $value): bool
+{
 	$secure = isset($_SERVER['HTTPS']);
 	$expire = time() + (3600 * 24 * 30); //1 month
 
-	set_cookie(
+	return setcookie(
 		$name, //name
 		$value, //value
 		$expire, //expire
 		'/', //path
-		WEB_ROOT, //domain
+		WEB_DOMAIN, //domain
 		$secure, //secure?
 		true, //HTTP only
 	);
 }
 
-function remove_cookie($item) {
-	unset($_COOKIE[$item]);
+/**
+ * return cookie data
+ *
+ * @param  string $name
+ * @return void
+ */
+function get_cookie(string $name)
+{
+	return $_COOKIE[$name];
 }
 
-function get_cookie($item) {
-	return $_COOKIE[$item];
+/**
+ * check if cookie exists
+ *
+ * @param  string $name
+ * @return bool
+ */
+function cookie_exists(string $name): bool
+{
+	return isset($_COOKIE[$name]);
 }
 
-function cookie_exists($item) {
-	return isset($_COOKIE[$item]);
+/**
+ * delete cookie by name
+ *
+ * @param  string $name
+ * @return void
+ */
+function delete_cookie(string $name)
+{
+	unset($_COOKIE[$name]);
 }

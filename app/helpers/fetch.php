@@ -1,16 +1,34 @@
 <?php
-/**
-* Application => TinyMVC (PHP framework based on MVC architecture)
-* File        => fetch.php (send HTTP requests using PHP curl function)
-* Github      => https://github.com/eliseekn/tinymvc
-* Copyright   => 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
-* Licence     => MIT (https://opensource.org/licenses/MIT)
-*/
 
-//https://niraeth.com/php-quick-function-for-asynchronous-multi-curl/
-//https://stackoverflow.com/questions/9183178/can-php-curl-retrieve-response-headers-and-body-in-a-single-request
-//https://www.codexworld.com/post-receive-json-data-using-php-curl/
-function fetch(string $method = 'post', array $urls, array $data = [], bool $is_json = false): array {
+/**
+ * TinyMVC
+ * 
+ * PHP framework based on MVC architecture
+ * 
+ * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @license MIT (https://opensource.org/licenses/MIT)
+ * @link https://github.com/eliseekn/tinymvc
+ */
+
+/**
+ * HTTP requests utils functions
+ */
+
+/**
+ * send HTTP requests using PHP curl function
+ *
+ * @param  string $method
+ * @param  array $urls
+ * @param  array $data
+ * @param  bool $is_json
+ * @return array
+ * 
+ * @link   https://niraeth.com/php-quick-function-for-asynchronous-multi-curl/
+ *         https://stackoverflow.com/questions/9183178/can-php-curl-retrieve-response-headers-and-body-in-a-single-request
+ *         https://www.codexworld.com/post-receive-json-data-using-php-curl/
+ */
+function fetch(string $method = 'post', array $urls, array $data = [], bool $is_json = false): array
+{
     $results = array();
     $headers = array();
     $curl_array = array();
@@ -31,17 +49,19 @@ function fetch(string $method = 'post', array $urls, array $data = [], bool $is_
                 $data = json_encode($data);
                 curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
             }
-    
+
             curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
         }
 
         //retrieves response headers 
-        curl_setopt($curl, CURLOPT_HEADERFUNCTION,
-            function($curl, $header) use (&$headers, $key) {
+        curl_setopt(
+            $curl,
+            CURLOPT_HEADERFUNCTION,
+            function ($curl, $header) use (&$headers, $key) {
                 $len = strlen($header);
                 $header = explode(':', $header, 2);
                 if (count($header) < 2) return $len;
-            
+
                 $headers[$key][strtolower(trim($header[0]))][] = trim($header[1]);
                 return $len;
             }
@@ -50,13 +70,13 @@ function fetch(string $method = 'post', array $urls, array $data = [], bool $is_
         curl_multi_add_handle($curl_multi, $curl);
     }
 
-    $i = null; 
+    $i = null;
 
     do {
         curl_multi_exec($curl_multi, $i);
     } while ($i);
 
-    //retrieves response content
+    //retrieves json response
     foreach ($curl_array as $key => $curl) {
         $result = curl_multi_getcontent($curl);
         $results[$key] = json_decode($result, true);
