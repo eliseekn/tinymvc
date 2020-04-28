@@ -56,27 +56,6 @@ function load_controller(string $name)
 }
 
 /**
- * load model by name
- *
- * @param  string $name
- * @return void
- */
-function load_model(string $name)
-{
-    $model = 'app/models/' . $name . '.php';
-
-    if (!file_exists($model)) {
-        return NULL;
-    }
-
-    //import model filename
-    require_once $model;
-
-    $model = ucfirst($name) . 'Model';
-    return new $model();
-}
-
-/**
  * load page template
  *
  * @param  string $template

@@ -20,6 +20,7 @@ require_once 'app/core/loader.php';
 require_once 'app/core/router.php';
 require_once 'app/core/database.php';
 require_once 'app/core/model.php';
+require_once 'app/core/controller.php';
 
 //set error_reporting() and display_errors parameters
 //change application environment settings in app/core/config.php
