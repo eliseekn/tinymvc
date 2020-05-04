@@ -17,8 +17,8 @@
 /**
  * sanitize html and other scripting language
  *
- * @param  string $input
- * @return string
+ * @param  string $input input string
+ * @return string returns safe string
  */
 function sanitize_input(string $input): string
 {
@@ -31,8 +31,8 @@ function sanitize_input(string $input): string
 /**
  * hash string with password_hash() PHP function
  *
- * @param  string $str
- * @return string
+ * @param  string $str string to be hashed
+ * @return string returns hashed string
  */
 function hash_string(string $str): string
 {
@@ -42,9 +42,9 @@ function hash_string(string $str): string
 /**
  * compare hashed string with password_verify() PHP function
  *
- * @param  string $str
- * @param  string $hash
- * @return bool
+ * @param  string $str string to be compared
+ * @param  string $hash hashed string 
+ * @return bool returns true or false
  */
 function compare_hash(string $str, string $hash): bool
 {

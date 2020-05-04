@@ -17,33 +17,21 @@
 /**
  * save log message to file
  *
- * @param  string $type
- * @param  string $message
+ * @param  int $type log message type
+ * @param  string $message message content
  * @return void
  */
 function save_log(string $type, string $message): void
 {
-	switch ($type) {
-		case -1:
-			$log = 'ERROR: ' . $message . PHP_EOL;
-			break;
-		case 0:
-			$log = 'WARNING: ' . $message . PHP_EOL;
-			break;
-		case 1:
-			$log = 'DEBUG: ' . $message . PHP_EOL;
-			break;
-	}
-
-	$current_date = date('m_d_Y', time());
-	$log_file = LOGS_DIR . 'logs_' . $current_date . '.txt';
+	$log = '[' . date('H:i:s', time()) . '] [' . $type . '] ' . $message . PHP_EOL;
+	$log_file = LOGS_DIR . 'logs_' . date('m_d_y', time()) . '.txt';
 	file_put_contents($log_file, $log, FILE_APPEND | LOCK_EX);
 }
 
 /**
  * print informations about variables and exit
  *
- * @param  mixed $data
+ * @param  mixed $data variables
  * @return void
  */
 function dump_exit(...$data): void

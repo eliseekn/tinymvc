@@ -17,7 +17,7 @@
 /**
  * load helpers by name
  *
- * @param  mixed $names
+ * @param  mixed $names names of helpers file as enumerated string
  * @return void
  */
 function load_helpers(...$names): void
@@ -37,7 +37,7 @@ function load_helpers(...$names): void
 /**
  * load controller by name
  *
- * @param  string $name
+ * @param  string $name name of controller file
  * @return void
  */
 function load_controller(string $name)
@@ -56,21 +56,40 @@ function load_controller(string $name)
 }
 
 /**
+ * load model by name
+ *
+ * @param  string $name name of model file
+ * @return void
+ */
+function load_model(string $name)
+{
+    $model = 'app/models/' . $name . '.php';
+
+    if (!file_exists($model)) {
+        return NULL;
+    }
+
+    //import model filename
+    require_once $model;
+
+    $model = ucfirst($name) . 'Model';
+    return new $model();
+}
+
+/**
  * load page template
  *
- * @param  string $template
- * @param  string $layout
- * @param  array $data
+ * @param  string $template name of template file
+ * @param  string $layout name of layout file
+ * @param  array $data variables to include in page
  * @return void
  */
 function load_template(string $template, string $layout, array $data = []): void
 {
     ob_start();
 
-    //set data variables
-    if (!empty($data)) {
-        extract($data);
-    }
+    //include variables in file
+    extract($data);
 
     //include page content
     require_once 'app/views/templates/' . $template  . '.php';
@@ -80,4 +99,15 @@ function load_template(string $template, string $layout, array $data = []): void
 
     //display all
     require_once 'app/views/layouts/' . $layout  . '.php';
+}
+
+/**
+ * load database and model classes
+ *
+ * @return void
+ */
+function load_database(): void
+{
+    require_once 'app/core/database.php';
+    require_once 'app/core/model.php';
 }

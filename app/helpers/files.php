@@ -17,11 +17,11 @@
 /**
  * manage single or multiple file upload
  *
- * @param  string $field_name
- * @param  string $destination
- * @param  bool $multiple
- * @param  mixed $filename
- * @return bool
+ * @param  string $field_name name of input file
+ * @param  string $destination destination directory absolute path
+ * @param  bool $multiple is multiple file uploaded?
+ * @param  mixed $filename returns actual uploaded filename
+ * @return bool returns true if success or false if failed
  */
 function upload_file(string $field_name, string $destination, bool $multiple, &$filename): bool
 {
@@ -33,13 +33,12 @@ function upload_file(string $field_name, string $destination, bool $multiple, &$
         if (!$multiple) {
             $origin = $_FILES[$field_name]['tmp_name'];
             $filename = basename($_FILES[$field_name]['name']);
-            $destination = DOCUMENT_ROOT . $destination . '/' . $filename;
-            move_uploaded_file($origin, $destination);
+            move_uploaded_file($origin, $destination . $filename);
         } else {
             for ($i = 0; $i < count($_FILES[$field_name]['name']); $i++) {
                 $origin = $_FILES[$field_name]['tmp_name'][$i];
                 $filename[] = basename($_FILES[$field_name]['name'][$i]);
-                move_uploaded_file($origin, DOCUMENT_ROOT . $destination . '/' . $filename[$i]);
+                move_uploaded_file($origin, $destination . $filename[$i]);
             }
         }
 
@@ -52,7 +51,7 @@ function upload_file(string $field_name, string $destination, bool $multiple, &$
 /**
  * remove entire directory and all it's content
  *
- * @param  string $dir
+ * @param  string $dir directory absolute path
  * @return void
  * 
  * @link https://stackoverflow.com/questions/3338123/how-do-i-recursively-delete-a-directory-and-its-entire-contents-files-sub-dir

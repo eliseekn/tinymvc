@@ -18,22 +18,22 @@
 require_once 'app/core/config.php';
 require_once 'app/core/loader.php';
 require_once 'app/core/router.php';
-require_once 'app/core/database.php';
-require_once 'app/core/model.php';
-require_once 'app/core/controller.php';
 
 //set error_reporting() and display_errors parameters
 //change application environment settings in app/core/config.php
-if (APP_ENV === 'development') {
+if (APP_ENV == 'development') {
     ini_set('display_errors', 1);
     ini_set('error_reporting', -1);
-} else if (APP_ENV === 'production') {
+} else if (APP_ENV == 'production') {
     ini_set('display_errors', 0);
     ini_set('error_reporting', 0);
 } else {
     echo 'The application environment is not set properly.';
     exit();
 }
+
+//load database
+load_database(); //comment this entire line if you are not going to use database
 
 //include necessaries helpers
 load_helpers(

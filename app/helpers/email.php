@@ -17,22 +17,18 @@
 /**
  * send email using built-in PHP mail function
  *
- * @param  string $content
- * @param  string $headers
- * @param  bool $html
- * @return bool
+ * @param  string $to email address of receiver
+ * @param  string $subject email subject
+ * @param  string $message email message content
+ * @param  string $headers additionnal headers as enumerated array
+ * @return bool returns true or false if email sent or not
  */
-function send_email(array $content, array $headers, bool $is_html = false): bool
+function send_email(string $to, string $subject, string $message, array $headers = []): bool
 {
-    if ($is_html) {
-        array_unshift($headers, 'MIME-Version: 1.0');
-        array_unshift($headers, 'Content-type: text/html; charset=UTF-8');
-    }
-
     return mail(
-        $content['to'],
-        $content['subject'],
-        $content['message'],
-        implode("\r\n", $headers)
+        $to,
+        $subject,
+        $message,
+        $headers
     );
 }

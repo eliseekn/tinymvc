@@ -17,8 +17,8 @@
 /**
  * create session and set session data
  *
- * @param  string $name
- * @param  mixed $data
+ * @param  string $name name of the session
+ * @param  mixed $data data to be stored
  * @return void
  */
 function create_session(string $name, $data): void
@@ -33,8 +33,8 @@ function create_session(string $name, $data): void
 /**
  * get session data
  *
- * @param  string $name
- * @return void
+ * @param  string $name name of the session
+ * @return mixed returns session stored data
  */
 function get_session(string $name)
 {
@@ -48,8 +48,8 @@ function get_session(string $name)
 /**
  * check if session exists
  *
- * @param  string $name
- * @return bool
+ * @param  string $name name of the session
+ * @return bool returns true or false
  */
 function session_exists(string $name): bool
 {
@@ -63,7 +63,7 @@ function session_exists(string $name): bool
 /**
  * delete session
  *
- * @param  string $name
+ * @param  string $name name of the session
  * @return void
  */
 function close_session(string $name): void

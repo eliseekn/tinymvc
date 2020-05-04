@@ -17,24 +17,49 @@
  */
 class Model
 {
-	private $db;
+	private $db_connection;
 	private $query;
-	private $params = array();
+	private $args = array();
 
 	/**
-	 * create new database instance
+	 * get database connection instance
 	 *
 	 * @return void
 	 */
 	public function __construct()
 	{
-		$this->db = new Database(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
+		//database connection instance
+		$db = Database::get_instance();
+		$this->db_connection = $db->connection();
+	}
+
+	/**
+	 * execute sql query
+	 *
+	 * @return mixed returns query result
+	 */
+	public function execute_query()
+	{
+		try {
+			$stmt = $this->db_connection->prepare(trim($this->query));
+			$stmt->execute($this->args);
+		} catch (PDOException $e) {
+			if (APP_ENV == 'development') {
+				die($e->getMessage());
+			}
+		}
+
+		//initialize query and args values
+		$this->set_query_string('');
+
+		//return query results
+		return $stmt;
 	}
 
 	/**
 	 * generate SELECT query
 	 *
-	 * @param  mixed $columns
+	 * @param  mixed $columns name of columns as enumerated string
 	 * @return void
 	 */
 	public function select(...$columns)
@@ -50,22 +75,9 @@ class Model
 	}
 
 	/**
-	 * generate SELECT AS query
-	 *
-	 * @param  string $columns
-	 * @param  string $alias
-	 * @return void
-	 */
-	public function select_as(string $column, string $alias)
-	{
-		$this->query = "SELECT $column AS $alias";
-		return $this;
-	}
-
-	/**
 	 * generate FROM query
 	 *
-	 * @param  string $table
+	 * @param  string $table name of table
 	 * @return void
 	 */
 	public function from(string $table)
@@ -77,53 +89,53 @@ class Model
 	/**
 	 * generate WHERE query
 	 *
-	 * @param  string $column
-	 * @param  string $operator
-	 * @param  string $value
+	 * @param  string $column column name
+	 * @param  string $operator comparaison operator (<, = and >)
+	 * @param  string $value element to be compared 
 	 * @return void
 	 */
 	public function where(string $column, string $operator, string $value)
 	{
 		$this->query .= " WHERE $column $operator ? ";
-		$this->params[] = $value;
+		$this->args[] = $value;
 		return $this;
 	}
 
 	/**
 	 * generate AND query
 	 *
-	 * @param  string $column
-	 * @param  string $operator
-	 * @param  string $value
+	 * @param  string $column column name
+	 * @param  string $operator comparaison operator (<, = and >)
+	 * @param  string $value element to be compared 
 	 * @return void
 	 */
 	public function and(string $column, string $operator, string $value)
 	{
 		$this->query .= " AND $column $operator ? ";
-		$this->params[] = $value;
+		$this->args[] = $value;
 		return $this;
 	}
 
 	/**
 	 * generate OR query
 	 *
-	 * @param  string $column
-	 * @param  string $operator
-	 * @param  string $value
+	 * @param  string $column column name
+	 * @param  string $operator comparaison operator (<, = and >)
+	 * @param  string $value element to be compared 
 	 * @return void
 	 */
 	public function or(string $column, string $operator, string $value)
 	{
 		$this->query .= " OR $column $operator ? ";
-		$this->params[] = $value;
+		$this->args[] = $value;
 		return $this;
 	}
 
 	/**
 	 * generate ORDER BY query
 	 *
-	 * @param  string $column
-	 * @param  string $direction
+	 * @param  string $column column name
+	 * @param  string $direction order direction ASC or DESC
 	 * @return void
 	 */
 	public function order_by(string $column, string $direction)
@@ -135,8 +147,8 @@ class Model
 	/**
 	 * generate LIKE query
 	 *
-	 * @param  string $column
-	 * @param  string $value
+	 * @param  string $column column name
+	 * @param  string $value element to be compared
 	 * @return void
 	 */
 	public function like(string $column, string $value)
@@ -148,8 +160,8 @@ class Model
 	/**
 	 * generate OR LIKE query
 	 *
-	 * @param  string $column
-	 * @param  string $value
+	 * @param  string $column column name
+	 * @param  string $value element to be compared
 	 * @return void
 	 */
 	public function or_like(string $column, string $value)
@@ -179,9 +191,9 @@ class Model
 	/**
 	 * generate INNER JOIN query
 	 *
-	 * @param  string $table
-	 * @param  string $second_column
-	 * @param  string $first_column
+	 * @param  string $table table name
+	 * @param  string $second_column second column name
+	 * @param  string $first_column first column name
 	 * @return void
 	 */
 	public function inner_join(string $table, string $second_column, string $first_column)
@@ -193,9 +205,9 @@ class Model
 	/**
 	 * generate LEFT JOIN query
 	 *
-	 * @param  string $table
-	 * @param  string $second_column
-	 * @param  string $first_column
+	 * @param  string $table table name
+	 * @param  string $second_column second column name
+	 * @param  string $first_column first column name
 	 * @return void
 	 */
 	public function left_join(string $table, string $second_column, string $first_column)
@@ -207,9 +219,9 @@ class Model
 	/**
 	 * generate RIGHT JOIN query
 	 *
-	 * @param  string $table
-	 * @param  string $second_column
-	 * @param  string $first_column
+	 * @param  string $table table name
+	 * @param  string $second_column second column name
+	 * @param  string $first_column first column name
 	 * @return void
 	 */
 	public function right_join(string $table, string $second_column, string $first_column)
@@ -221,9 +233,9 @@ class Model
 	/**
 	 * generate FULL JOIN query
 	 *
-	 * @param  string $table
-	 * @param  string $second_column
-	 * @param  string $first_column
+	 * @param  string $table table name
+	 * @param  string $second_column second column name
+	 * @param  string $first_column first column name
 	 * @return void
 	 */
 	public function full_join(string $table, string $second_column, string $first_column)
@@ -235,7 +247,7 @@ class Model
 	/**
 	 * generate SET query
 	 *
-	 * @param  array $items
+	 * @param  array $items columns to update
 	 * @return void
 	 */
 	public function set(array $items)
@@ -244,7 +256,7 @@ class Model
 
 		foreach ($items as $key => $value) {
 			$this->query .= "$key = ?, ";
-			$this->params[] = $value;
+			$this->args[] = $value;
 		}
 
 		$this->query = rtrim($this->query, ', ');
@@ -252,27 +264,10 @@ class Model
 	}
 
 	/**
-	 * execute safe sql query
-	 *
-	 * @return void
-	 */
-	public function execute_query()
-	{
-		$params = array_map(function ($value) {
-			return $this->db->escape_string($value);
-		}, array_values($this->params));
-
-		$query_result = $this->db->execute_query($this->query, $params);
-		$this->set_query_string('');
-
-		return $query_result;
-	}
-
-	/**
 	 * generate INSERT query
 	 *
-	 * @param  string $table
-	 * @param  array $items
+	 * @param  string $table table name
+	 * @param  array $items items to insert in columns
 	 * @return void
 	 */
 	public function insert(string $table, array $items)
@@ -288,7 +283,7 @@ class Model
 
 		foreach ($items as $key => $value) {
 			$this->query .= '?, ';
-			$this->params[] = $value;
+			$this->args[] = $value;
 		}
 
 		$this->query = rtrim($this->query, ', ');
@@ -300,7 +295,7 @@ class Model
 	/**
 	 * generate UPDATE query
 	 *
-	 * @param  string $table
+	 * @param  string $table table name
 	 * @return void
 	 */
 	public function update(string $table)
@@ -310,26 +305,26 @@ class Model
 	}
 
 	/**
-	 * generate DELETE query
-	 *
+	 * generate DELETE FROM query
+	 * 
+	 * @param  string $table table name
 	 * @return void
 	 */
-	public function delete()
+	public function delete_from(string $table)
 	{
-		$this->query = 'DELETE';
+		$this->query = "DELETE FROM $table";
 		return $this;
 	}
 
 	/**
 	 * execute query and retrieves results
 	 *
-	 * @return mixed
+	 * @return array
 	 */
-	public function fetch()
+	public function fetch(): array
 	{
 		$query_result = $this->execute_query();
-		$result = $this->db->fetch_assoc($query_result);
-		return $result;
+		return $query_result->fetch();
 	}
 
 	/**
@@ -340,13 +335,7 @@ class Model
 	public function fetch_array(): array
 	{
 		$query_result = $this->execute_query();
-		$results = array();
-
-		while ($row = $this->db->fetch_assoc($query_result)) {
-			$results[] = $row;
-		}
-
-		return $results;
+		return $query_result->fetchAll();
 	}
 
 	/**
@@ -357,17 +346,7 @@ class Model
 	public function rows_count(): int
 	{
 		$query_result = $this->execute_query();
-		return $this->db->num_rows($query_result);
-	}
-
-	/**
-	 * retrueves last inserted row id
-	 *
-	 * @return int
-	 */
-	public function insert_id(): int
-	{
-		return $this->db->last_insert_id();
+		return $query_result->rowCount();
 	}
 
 	/**
@@ -381,16 +360,16 @@ class Model
 	}
 
 	/**
-	 * set query string
+	 * set custom query string
 	 *
-	 * @param  string $query
-	 * @param  array $params
+	 * @param  string $query query string
+	 * @param  array $args query arguments
 	 * @return void
 	 */
-	public function set_query_string(string $query, array $params = [])
+	public function set_query_string(string $query, array $args = [])
 	{
 		$this->query = $query;
-		$this->params = $params;
+		$this->args = $args;
 		return $this;
 	}
 }

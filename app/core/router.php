@@ -19,13 +19,13 @@ class Router
 {
     private $url = array();
     private $params = array();
-    private $routes = array();
-    private $methods = array();
+    private $routes = array(); //custom routes
+    private $methods = array(); //custom methods
     private $controller = 'home'; //default application controller
     private $method = 'index'; //default controller method
 
     /**
-     * get uri parameters
+     * set url parameters form uri
      *
      * @return void
      */
@@ -40,9 +40,9 @@ class Router
     /**
      * add custom routes for redirection
      *
-     * @param  string $custom_route
-     * @param  string $route
-     * @param  string $methods
+     * @param  string $custom_route custom route controller name
+     * @param  string $route controller name
+     * @param  string $methods associated methods to controllers
      * @return void
      */
     public function add_custom_route(string $custom_route, string $route, array $methods): void
@@ -93,6 +93,12 @@ class Router
         $this->params = isset($_POST) ? array_merge($params, array_values($_POST)) : $params;
 
         //execute controller with method and parameter
-        call_user_func_array([$this->controller, $this->method], $this->params);
+        call_user_func_array(
+            array(
+                $this->controller,
+                $this->method
+            ),
+            $this->params
+        );
     }
 }

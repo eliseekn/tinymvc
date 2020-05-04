@@ -17,9 +17,9 @@
 /**
  * slug generator
  *
- * @param  string $str
- * @param  string $separator
- * @return string
+ * @param  string $str original string
+ * @param  string $separator words separator
+ * @return string returns generated slug
  */
 function generate_slug(string $str, string $separator = '-'): string
 {
@@ -32,10 +32,10 @@ function generate_slug(string $str, string $separator = '-'): string
 /**
  * exerpt generator
  *
- * @param  string $text
- * @param  int $size
- * @param  string $end_string
- * @return string
+ * @param  string $text original text
+ * @param  int $size size of the exerpt
+ * @param  string $end_string content of end string
+ * @return string returns generated exerpt
  */
 function generate_exerpt(string $text, int $size = 290, string $end_string = '[...]'): string
 {

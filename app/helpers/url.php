@@ -15,24 +15,24 @@
  */
 
 /**
- * generate abosulte url path
+ * generate abosulte url
  *
- * @param  string $url
- * @return string
+ * @param  string $url controller and method names
+ * @return string returns absolute url
  */
-function base_url(string $url): string
+function absolute_url(string $url): string
 {
 	return WEB_DOMAIN . $url;
 }
 
 /**
- * redirect to location
+ * redirect to another location
  *
- * @param  mixed $location
+ * @param  mixed $location controller and method names
  * @return void
  */
-function redirect(string $location): void
+function redirect_to(string $location): void
 {
-	header('Location: ' . base_url($location));
+	header('Location: ' . absolute_url($location));
 	exit();
 }

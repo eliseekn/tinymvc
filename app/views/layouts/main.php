@@ -3,14 +3,16 @@
 
 <head>
 	<meta charset="utf-8">
-	<link rel="stylesheet" href="<?= base_url('public/assets/css/style.css') ?>">
 	<meta name="description" content="<?= $page_description ?>">
+	<link rel="stylesheet" href="<?= absolute_url('public/assets/css/style.css') ?>">
 	<title><?= $page_title ?></title>
 </head>
 
 <body>
 
-	<?= $page_content ?>
+	<div>
+		<?= $page_content ?>
+	</div>
 
 </body>
 

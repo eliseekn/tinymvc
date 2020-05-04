@@ -17,9 +17,9 @@
 /**
  * create cookie and set data
  *
- * @param  string $name
- * @param  string $value
- * @return bool
+ * @param  string $name cookie name
+ * @param  string $value cookie value content
+ * @return bool returns true or false
  */
 function create_cookie(string $name, string $value): bool
 {
@@ -32,7 +32,7 @@ function create_cookie(string $name, string $value): bool
 		$expire, //expire
 		'/', //path
 		WEB_DOMAIN, //domain
-		$secure, //secure?
+		$secure, //is secure?
 		true, //HTTP only
 	);
 }
@@ -40,7 +40,7 @@ function create_cookie(string $name, string $value): bool
 /**
  * return cookie data
  *
- * @param  string $name
+ * @param  string $name cookie name
  * @return void
  */
 function get_cookie(string $name)
@@ -51,8 +51,8 @@ function get_cookie(string $name)
 /**
  * check if cookie exists
  *
- * @param  string $name
- * @return bool
+ * @param  string $name cookie name
+ * @return bool returns true or false
  */
 function cookie_exists(string $name): bool
 {
@@ -62,7 +62,7 @@ function cookie_exists(string $name): bool
 /**
  * delete cookie by name
  *
- * @param  string $name
+ * @param  string $name cookie name
  * @return void
  */
 function delete_cookie(string $name)
