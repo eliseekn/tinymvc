@@ -23,3 +23,7 @@ define('DOCUMENT_ROOT', $_SERVER['DOCUMENT_ROOT'] . '/'); //document directory f
 
 //environment configuration
 define('APP_ENV', 'development');
+
+//defaults controller and action
+define('DEFAULT_CONTROLLER', 'home');
+define('DEFAULT_ACTION', 'action');

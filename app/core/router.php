@@ -21,8 +21,8 @@ class Router
     private $params = array();
     private $routes = array(); //custom routes
     private $actions = array(); //custom actions
-    private $controller = 'home'; //default application controller
-    private $action = 'index'; //default controller action
+    private $controller = DEFAULT_CONTROLLER; //default application controller
+    private $action = DEFAULT_ACTION; //default controller action
 
     /**
      * set url parameters form uri

@@ -332,7 +332,7 @@ class Model
 	 *
 	 * @return array
 	 */
-	public function fetch_array(): array
+	public function fetch_all(): array
 	{
 		$query_result = $this->execute_query();
 		return $query_result->fetchAll();

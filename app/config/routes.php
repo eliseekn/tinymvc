@@ -14,6 +14,5 @@
   * Routes configuration
   */
 
-//add custom routes for controllers and actions 
-//ex: $routes['home/'] = 'home/index'; $routes['posts/slug'] = 'posts/index';
+//add custom routes for controllers and actions
 $routes = array();

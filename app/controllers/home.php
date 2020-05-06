@@ -8,8 +8,8 @@ class HomeController
 			'home',
 			'main',
 			array(
-				'page_title' => 'TinyMVC - Just a tiny PHP Framework based on MVC architecture',
-				'page_description' => 'TinyMVC is a PHP Framework based on MVC architecture'
+				'page_title' => 'TinyMVC - Just a PHP framework based on MVC architecture',
+				'page_description' => 'TinyMVC is a PHP framework based on MVC architecture'
 			)
 		);
 	}
