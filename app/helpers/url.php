@@ -17,7 +17,7 @@
 /**
  * generate abosulte url
  *
- * @param  string $url controller and method names
+ * @param  string $url controller and actions names
  * @return string returns absolute url
  */
 function absolute_url(string $url): string
@@ -28,7 +28,7 @@ function absolute_url(string $url): string
 /**
  * redirect to another location
  *
- * @param  mixed $location controller and method names
+ * @param  mixed $location controller and actions names
  * @return void
  */
 function redirect_to(string $location): void

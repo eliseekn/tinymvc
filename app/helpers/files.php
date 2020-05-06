@@ -17,28 +17,28 @@
 /**
  * manage single or multiple file upload
  *
- * @param  string $field_name name of input file
- * @param  string $destination destination directory absolute path
+ * @param  string $field name of the input file tag
+ * @param  string $destination absolute path file destination directory without trailing slash
  * @param  bool $multiple is multiple file uploaded?
  * @param  mixed $filename returns actual uploaded filename
  * @return bool returns true if success or false if failed
  */
-function upload_file(string $field_name, string $destination, bool $multiple, &$filename): bool
+function upload_file(string $field, string $destination, bool $multiple, &$filename): bool
 {
-    if (empty($_FILES[$field_name]['name'])) {
+    if (empty($_FILES[$field]['name'])) {
         return false;
     }
 
     try {
         if (!$multiple) {
-            $origin = $_FILES[$field_name]['tmp_name'];
-            $filename = basename($_FILES[$field_name]['name']);
-            move_uploaded_file($origin, $destination . $filename);
+            $origin = $_FILES[$field]['tmp_name'];
+            $filename = basename($_FILES[$field]['name']);
+            move_uploaded_file($origin, $destination . '/' . $filename);
         } else {
-            for ($i = 0; $i < count($_FILES[$field_name]['name']); $i++) {
-                $origin = $_FILES[$field_name]['tmp_name'][$i];
-                $filename[] = basename($_FILES[$field_name]['name'][$i]);
-                move_uploaded_file($origin, $destination . $filename[$i]);
+            for ($i = 0; $i < count($_FILES[$field]['name']); $i++) {
+                $origin = $_FILES[$field]['tmp_name'][$i];
+                $filename[] = basename($_FILES[$field]['name'][$i]);
+                move_uploaded_file($origin, $destination . '/' . $filename[$i]);
             }
         }
 

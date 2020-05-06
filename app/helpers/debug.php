@@ -17,14 +17,15 @@
 /**
  * save log message to file
  *
+ * @param  string $destination absolute path logs destination directory without trailing slash
  * @param  int $type log message type
  * @param  string $message message content
  * @return void
  */
-function save_log(string $type, string $message): void
+function save_log(string $destination, string $type, string $message): void
 {
 	$log = '[' . date('H:i:s', time()) . '] [' . $type . '] ' . $message . PHP_EOL;
-	$log_file = LOGS_DIR . 'logs_' . date('m_d_y', time()) . '.txt';
+	$log_file = $destination . '/logs_' . date('m_d_y', time()) . '.txt';
 	file_put_contents($log_file, $log, FILE_APPEND | LOCK_EX);
 }
 

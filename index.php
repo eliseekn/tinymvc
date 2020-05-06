@@ -15,7 +15,11 @@
  */
 
 //include core files
-require_once 'app/core/config.php';
+require_once 'app/config/app.php';
+require_once 'app/config/database.php';
+require_once 'app/config/routes.php';
+require_once 'app/core/database.php';
+require_once 'app/core/model.php';
 require_once 'app/core/loader.php';
 require_once 'app/core/router.php';
 
@@ -32,25 +36,13 @@ if (APP_ENV == 'development') {
     exit();
 }
 
-//load database
-load_database(); //comment this entire line if you are not going to use database
-
 //include necessaries helpers
 load_helpers(
-    'url'
+    'url',
+    'debug'
 );
 
 //start url routing
 $router = new Router();
-
-//add custom routes
-$router->add_custom_route(
-    'home',
-    'home',
-    array(
-        '' => 'index'
-    )
-);
-
-//dispath parameters
-$router->dispatch();
+$router->add_custom_routes($routes); //add custom routes
+$router->dispatch(); //dispatch parameters
