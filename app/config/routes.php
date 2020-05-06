@@ -11,8 +11,7 @@
  */
 
  /**
-  * Routes configuration
+  * Add custom routes for redirection
   */
 
-//add custom routes for controllers and actions
 $routes = array();

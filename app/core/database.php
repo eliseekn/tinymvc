@@ -17,7 +17,18 @@
  */
 class Database
 {
+	/**
+	 * database class instance
+	 * 
+	 * @var mixed
+	 */
 	private static $instance = null;
+
+	/**
+	 * database connection instance
+	 *
+	 * @var mixed
+	 */
 	private $connection;
 
 	/**
@@ -39,7 +50,7 @@ class Database
 			$this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 			$this->connection->setAttribute(PDO::ATTR_ORACLE_NULLS, PDO::NULL_EMPTY_STRING);
 		} catch (PDOException $e) {
-			if (APP_ENV == 'development') {
+			if (DISPLAY_ERRORS == true) {
 				die($e->getMessage()); //display error if connection failed
 			}
 		}

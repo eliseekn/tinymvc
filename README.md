@@ -277,5 +277,9 @@ load_helpers(
 
 ***Note:*** You can add and use your own helpers as TinyMVC is extensible.
 
+# Errors
+
+You can enable errors display by handle ```APP_ENV``` constant in ```app/core/app.php``` file. 
+
 # Demo application
 Check ```demo``` folder for a demo application 

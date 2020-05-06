@@ -16,13 +16,48 @@
  * Application routing system
  */
 class Router
-{
+{    
+    /**
+     * routing url
+     *
+     * @var array
+     */
     private $url = array();
+        
+    /**
+     * action params
+     *
+     * @var array
+     */
     private $params = array();
-    private $routes = array(); //custom routes
-    private $actions = array(); //custom actions
-    private $controller = DEFAULT_CONTROLLER; //default application controller
-    private $action = DEFAULT_ACTION; //default controller action
+        
+    /**
+     * custom routes
+     *
+     * @var array
+     */
+    private $routes = array();
+        
+    /**
+     * custom actions
+     *
+     * @var array
+     */
+    private $actions = array();
+        
+    /**
+     * url controller
+     *
+     * @var mixed
+     */
+    private $controller;
+
+    /**
+     * url action
+     *
+     * @var mixed
+     */
+    private $action;
 
     /**
      * set url parameters form uri
@@ -68,11 +103,11 @@ class Router
     public function dispatch(): void
     {
         //retrieves controller name as first parameter
-        $this->controller = $this->url[0] ?? $this->controller;
+        $this->controller = $this->url[0] ?? DEFAULT_CONTROLLER;
         unset($this->url[0]);
 
         //retrieves action name as second parameter
-        $this->action = $this->url[1] ?? $this->action;
+        $this->action = $this->url[1] ?? DEFAULT_ACTION;
         unset($this->url[1]);
 
         //check custom routes for redirection

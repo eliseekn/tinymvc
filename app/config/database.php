@@ -14,9 +14,32 @@
  * Database configuration
  */
 
+/**
+ * database driver 
+ */
 define('DB_DRIVER', 'mysql');
+
+/**
+ * database connection charset 
+ */
 define('DB_CHARSET', 'utf8');
+
+/**
+ * database connection host 
+ */
 define('DB_HOST', 'localhost');
+
+/**
+ * database connection username 
+ */
 define('DB_USERNAME', '');
+
+/**
+ * database connection password 
+ */
 define('DB_PASSWORD', '');
+
+/**
+ * database name 
+ */
 define('DB_NAME', 'tinymvc');

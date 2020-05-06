@@ -44,7 +44,7 @@ class Model
 			$stmt = $this->db_connection->prepare(trim($this->query));
 			$stmt->execute($this->args);
 		} catch (PDOException $e) {
-			if (APP_ENV == 'development') {
+			if (DISPLAY_ERRORS == true) {
 				die($e->getMessage());
 			}
 		}

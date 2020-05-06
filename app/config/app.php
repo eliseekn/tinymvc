@@ -14,16 +14,32 @@
  * Application configuration
  */
 
-//reset execution timeout
+/**
+ * reset execution timeout
+ */
 set_time_limit(0);
 
-//roots directory
-define('WEB_DOMAIN', 'http://localhost/tinymvc/'); //domain
+/**
+ * web domain
+ */
+define('WEB_DOMAIN', 'http://localhost/tinymvc/');
+
+/**
+ * absolute application path
+ */
 define('DOCUMENT_ROOT', $_SERVER['DOCUMENT_ROOT'] . '/'); //document directory full path
 
-//environment configuration
-define('APP_ENV', 'development');
+/**
+ * errors display configuration
+ */
+define('DISPLAY_ERRORS', true);
 
-//defaults controller and action
+/**
+ * default router controller
+ */
 define('DEFAULT_CONTROLLER', 'home');
+
+/**
+ * default router action
+ */
 define('DEFAULT_ACTION', 'index');
