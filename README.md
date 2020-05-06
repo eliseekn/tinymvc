@@ -23,7 +23,7 @@ TinyMVC is a PHP framework based on MVC architecture that helps you build easly 
 app/config
 ```
 
-3\. Setup web server (for nginx only)
+3\. Setup web server
 
 For ***Apache*** server, edit your ```.htaccess``` with the following lines: 
 
@@ -100,8 +100,8 @@ class HomeController
     public function index(): void
     {
         load_template(
-            'home', //view template file 
-            'main', //view layout file
+            'home', //template file 
+            'main', //layout file
             array('page_title' => 'My home page') //optional variables to be passed  
         );
     }
@@ -159,10 +159,14 @@ $posts = $this->select('*') //select all columns
     ->limit(5, 2) //add limit and offset
     ->fetch(); //return one row
 
+//----
+
 $posts = $this->select('*')
     ->from('posts')
     ->order_by('id', 'DESC') //order row by ASC or DESC
     ->fetch_all(); //return all rows
+
+//----
 
 $posts = $this->select('*')
     ->from('posts')
@@ -170,12 +174,16 @@ $posts = $this->select('*')
     ->and('title', '=', $title) //add AND query. You can use also or_like
     ->fetch_all();
 
+//----
+
 $posts = $this->select(
     'posts.*', 
     'users.name') //select many column
         ->from('posts')
         ->inner_join('users', 'posts.user_id', 'users.id') //inner join posts and users tables. You can use also left_join, right_join, full_join
         ->fetch_all();
+
+//----
 
 $posts = $this->select('*')
     ->from('posts')

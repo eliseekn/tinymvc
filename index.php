@@ -38,8 +38,7 @@ if (APP_ENV == 'development') {
 
 //include necessaries helpers
 load_helpers(
-    'url',
-    'debug'
+    'url'
 );
 
 //start url routing

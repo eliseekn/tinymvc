@@ -26,4 +26,4 @@ define('APP_ENV', 'development');
 
 //defaults controller and action
 define('DEFAULT_CONTROLLER', 'home');
-define('DEFAULT_ACTION', 'action');
+define('DEFAULT_ACTION', 'index');
