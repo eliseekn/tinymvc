@@ -277,5 +277,5 @@ load_helpers(
 
 ***Note:*** You can add and use your own helpers as TinyMVC is extensible.
 
-# Hello world!
+# Demo application
 Check ```demo``` folder for a demo application 
