@@ -1,6 +1,6 @@
 # TinyMVC
 
-TinyMVC is a PHP framework based on MVC architecture that helps you build easly and quickly powerful PHP web applications and RESTful API.
+TinyMVC is a PHP framework based on MVC architecture that helps you build easly and quickly powerful web applications and RESTful API.
 
 ## Requirements
 ```PHP v7.2 or greater```
