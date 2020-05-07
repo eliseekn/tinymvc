@@ -57,7 +57,7 @@ $routes['administration/'] = 'admin/index';
 $routes['posts/slug'] = 'posts/index';
 ```
 
-***Note:*** GET and POST requests methods are handle by default. Contents of POST requests are set as routing parameters. Don't set parameters in routes, they are added to controller class method (action).
+***Note:*** Don't set parameters in routes, they are added to controller class method (action).
 
 # Controllers
 
