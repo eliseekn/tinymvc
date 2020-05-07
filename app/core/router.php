@@ -110,6 +110,9 @@ class Router
         $this->action = $this->url[1] ?? DEFAULT_ACTION;
         unset($this->url[1]);
 
+        //set rest of url as parameters
+        $this->params = $this->url ?? array();
+
         //check custom routes for redirection
         if (!empty($this->routes)) {
             if (array_key_exists($this->controller, $this->routes)) {
@@ -131,10 +134,6 @@ class Router
             $error_controller->error_404();
             exit();
         }
-
-        //set parameters
-        //$params = $this->url ?? array();
-        $this->params = $this->url ?? array(); //isset($_POST) ? array_merge($params, array_values($_POST)) : $params;
 
         //execute controller with action and parameter
         call_user_func_array(
