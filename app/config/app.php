@@ -7,7 +7,7 @@
  * 
  * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
- * @link https://github.com/eliseekn/tinymvc
+ * @link https://github.com/eliseekn/TinyMVC
  */
 
 /**
@@ -27,19 +27,9 @@ define('WEB_DOMAIN', 'http://localhost/tinymvc/');
 /**
  * absolute application path
  */
-define('DOCUMENT_ROOT', $_SERVER['DOCUMENT_ROOT'] . '/'); //document directory full path
+define('DOCUMENT_ROOT', $_SERVER['DOCUMENT_ROOT'] . '/');
 
 /**
  * errors display configuration
  */
 define('DISPLAY_ERRORS', true);
-
-/**
- * default router controller
- */
-define('DEFAULT_CONTROLLER', 'home');
-
-/**
- * default router action
- */
-define('DEFAULT_ACTION', 'index');

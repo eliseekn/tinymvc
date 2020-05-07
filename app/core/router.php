@@ -7,7 +7,7 @@
  * 
  * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
- * @link https://github.com/eliseekn/tinymvc
+ * @link https://github.com/eliseekn/TinyMVC
  */
 
 /**
@@ -60,7 +60,7 @@ class Router
     private $action;
 
     /**
-     * set url parameters form uri
+     * set url parameters from uri
      *
      * @return void
      */
@@ -126,15 +126,15 @@ class Router
         $this->controller = load_controller($this->controller);
 
         //return a 404 error if controller filename not found or action does not exists
-        if ($this->controller === NULL || !method_exists($this->controller, $this->action)) {
+        if ($this->controller === null || !method_exists($this->controller, $this->action)) {
             $error_controller = load_controller('error');
             $error_controller->error_404();
             exit();
         }
 
         //set parameters
-        $params = $this->url ?? array();
-        $this->params = isset($_POST) ? array_merge($params, array_values($_POST)) : $params;
+        //$params = $this->url ?? array();
+        $this->params = $this->url ?? array(); //isset($_POST) ? array_merge($params, array_values($_POST)) : $params;
 
         //execute controller with action and parameter
         call_user_func_array(

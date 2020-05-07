@@ -15,7 +15,7 @@ TinyMVC is a PHP framework based on MVC architecture that helps you build easly 
 
 1\. Download your TinyMVC framework copy
 
-[Download](https://github.com/eliseekn/TinyMVC)
+[Download](https://github.com/eliseekn/TinyMVC/archive/master.zip)
 
 2\. Setup configuration files
 
@@ -45,6 +45,8 @@ server {
 }
 ```
 
+***Note:*** You must give ```write permission``` to extracted folder if you are going to build a blog like application.
+
 # Routing
 
 Default routes are set by default whith controllers file class with associated actions. You can add custom routes in ```app/config/routes.php``` that redirects to these defaults routes, like this:
@@ -55,7 +57,7 @@ $routes['administration/'] = 'admin/index';
 $routes['posts/slug'] = 'posts/index';
 ```
 
-***Note:*** HTTP GET and POST requests methods are handle by default. Body content of POST method is adding as parameters to action controller. 
+***Note:*** GET and POST requests methods are handle by default. Contents of POST requests are set as routing parameters. Don't set parameters in routes, they are added to controller class method (action).
 
 # Controllers
 
@@ -64,7 +66,7 @@ class with the action name in lowercase. See the example below:
 
 ```php
 /**
- * controller class of home.php
+ * controller class from app/controllers/home.php
  */
 class HomeController
 {
@@ -88,7 +90,7 @@ Views files are stored in ```app/views``` folder. Views are separated in two sub
 
 ```php
 /**
- * controller class of home.php
+ * controller class from app/controllers/home.php
  */
 class HomeController
 {
@@ -108,17 +110,39 @@ class HomeController
 }
 ```
 
-***Note:*** Layouts and templates names are according to you. But don't add file extension ```.php``` when using 
-```load_template``` function.
+***Note:*** Layouts and templates names are according to you. But don't need to add file extension ```.php``` when using ```load_template``` function. Be sure to add ```$page_content``` variable into layout view file to 
+load template view page. See example below:
+
+```html
+<?php //layout page ?>
+
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title><?= $page_title ?></title>
+</head>
+
+<body>
+
+	<?= $page_content ?> <!-- template file content -->
+
+</body>
+
+</html>
+```
 
 # Models
 
 Models files are stored in ```app/models``` folder. You can edit database configuration in ```app/config/database.php```. To create a ```model```, create a file with your model name in lowercase. Then in your model file, create a class with the name of your model in first letter uppercase following by the word ```Model```. 
-The class is extended from ```Model``` (see **Model class** for more infos). See the example below:
+The class is extended from ```Model``` (see **Model** class in **app/core/model.php** for more infos). See the example below:
 
 ```php
 /**
- * model class of posts.php
+ * model class from app/controllers/posts.php
  */
 class PostsModel extends Model
 {
@@ -146,49 +170,84 @@ class PostsModel extends Model
 }
 ```
 
+You can load a ```model``` it's filename without ```.php``` extension. Use the ```load_model``` function located in ```app/core/loader```. See example below:
+
+```php
+/**
+ * controller class from app/controllers/posts.php
+ */
+class PostsController
+{
+    /**
+     * initialize class and load models
+     * 
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->posts = load_model('posts'); //loads PostsModel class from app/models/posts.php
+        $this->comments = load_model('comments'); //loads CommentsModel class from app/models/comments.php
+    }
+
+    /**
+     * manage posts page display
+     * 
+     * @return void
+     */
+    public function index(): void
+    {
+        load_template(
+            'posts',
+            'main',
+            array(
+                'page_title' => 'My posts page',
+                'posts' => $this->posts->get_all(),
+                'comments' => $this->comments->get_all() 
+            ) //optional variables to be passed  
+        );
+    }
+}
+```
+
 # Model
 
-Class model help you manage easily operations to database. This class use chaining functons method to generate 
-and execute safe sql query. Model class is stored in ```app/core/model.php``` file. How it's work:
+```Model``` class help you manage easily operations to database. This class use chaining functons method to generate and execute safe sql query. Model class is stored in ```app/core/model.php``` file. How it's work?
 
 1\. Select data queries
 
 ```php
+//select first row from posts table 
 $posts = $this->select('*') //select all columns
     ->from('posts') //table name
-    ->limit(5, 2) //add limit and offset
     ->fetch(); //return one row
 
-//----
-
+//select all rows from posts table from range 2-5, order them by id in descending 
 $posts = $this->select('*')
     ->from('posts')
     ->order_by('id', 'DESC') //order row by ASC or DESC
+    ->limit(5, 2) //add limit and offset
     ->fetch_all(); //return all rows
 
-//----
-
+//select all rows from posts table, where id is is equal to $id and title to $title
 $posts = $this->select('*')
     ->from('posts')
-    ->where('id', '=', $id) //where columnn name id is equal to $id (you can use < or > too)
-    ->and('title', '=', $title) //add AND query. You can use also or_like
+    ->where('id', '=', $id) //you can use < or >
+    ->and('title', '=', $title) //you can use also or
     ->fetch_all();
 
-//----
-
+//perform a inner join select query
 $posts = $this->select(
     'posts.*', 
     'users.name') //select many column
         ->from('posts')
-        ->inner_join('users', 'posts.user_id', 'users.id') //inner join posts and users tables. You can use also left_join, right_join, full_join
+        ->inner_join('users', 'posts.user_id', 'users.id') //you can use also left_join, right_join, full_join
         ->fetch_all();
 
-//----
-
+//perform a like and or like select query
 $posts = $this->select('*')
     ->from('posts')
-    ->like('title', $query) //user LIKE query
-    ->or_like('content', $query) //user OR LIKE query
+    ->like('title', $query) //LIKE query
+    ->or_like('content', $query) //OR LIKE query
     ->fetch_all()
 ```
 
@@ -207,8 +266,7 @@ $this->insert(
 3\. Update data qurey
 
 ```php
-$this->update(
-    'posts', //table name
+$this->update('posts') //table name
     ->set(
         array(
             'title' => $title,
@@ -233,7 +291,6 @@ $this->delete_from('posts') //delete from table name
 $total_posts = $this->select('*')
     ->from('posts')
     ->rows_count();
-
 ```
 
 5\. Get and set query string
@@ -255,9 +312,48 @@ $this->set_query_stirng(
 )->execute_query();
 ```
 
+# HttpRequests and HttpResponses
+
+```HttpRequests``` and ```HttpResponses``` are located in ```app/core/http.php``` file. ```HttpRequests``` helps you manage ```HEADERS```, ```GET```, ```POST``` and ```RAW data``` sent from HTTP requests. ```HttpResponses``` helps you send HTTP responses with ```HEADERS```, ```BODY``` and ```STATUS CODE``` responses. How it's work?
+
+```php
+/**
+ * controller class from app/controllers/admin.php
+ */
+class AdminController
+{
+    /**
+     * initialize class and load models
+     * 
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->admin = load_model('admin'); //loads AdminModel class from app/models/admin.php
+    }
+
+    /**
+     * manage admin login
+     * 
+     * @return void
+     */
+    public function login(): void
+    {
+        $username = HttpRequests::post('username');
+        $password = HttpRequests::post('password');
+
+        if ($this->admin->login($username, $password)) { //check if user exists in database
+            redirect_to('dashboard');
+        } else {
+            redirect_to('login');
+        }
+    }
+}
+```
+
 # Helpers
 
-TinyMVC comes with a set of utils functions that extends the use of the framework. Helpers files are stored in ```app/helpers``` folder. You can load an helper file you need in your application by loading it via ```load_helpers``` funciton in file ```index.php```. See the example below:
+TinyMVC comes with a set of utils functions that extends the use of the framework. Helpers files are stored in ```app/helpers``` folder. You can load an helper file you need in your application by loading it via ```load_helpers``` funciton (located in ```app/core/loaders```) in file ```index.php```. See the example below:
 
 ```php
 //in index.php file
@@ -267,7 +363,7 @@ load_helpers(
     'email', //send email
     'files', //set of files utils functions
     'pagination', //generate pagination parameters
-    'request', //send HTTP post and get requests
+    'curl', //send HTTP post and get requests with curl
     'security', //set of security utils functions
     'session', //manage sessions
     'url', //set of url utils functions
@@ -275,11 +371,19 @@ load_helpers(
 );
 ```
 
-***Note:*** You can add and use your own helpers as TinyMVC is extensible.
+***Note:*** You can create and use your own helpers file as TinyMVC is extensible.
 
 # Errors
 
-You can enable errors display by handle ```APP_ENV``` constant in ```app/core/app.php``` file. 
+You can enable or disable errors display with the ```DISPLAY_ERRORS``` constant in ```app/core/app.php``` file. The ```404``` error display is handled by ```error_404``` action of ```ErrorController``` class. You can customize the ```Error 404``` page located in ```app/views/templates/error_404.php```.
+
+# Public
+
+The public folder contains scripts and images files. 
 
 # Demo application
-Check ```demo``` folder for a demo application 
+See ```demo``` folder for a demo application.
+
+# Contribution
+
+Feel free to contribute to this project by opening a pull request. Thanks :)

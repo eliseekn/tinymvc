@@ -7,11 +7,11 @@
  * 
  * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
- * @link https://github.com/eliseekn/tinymvc
+ * @link https://github.com/eliseekn/TinyMVC
  */
 
 /**
- * HTTP requests utils functions
+ * Curl HTTP requests
  */
 
 /**
@@ -24,7 +24,7 @@
  *         https://stackoverflow.com/questions/9183178/can-php-curl-retrieve-response-headers-and-body-in-a-single-request
  *         https://www.codexworld.com/post-receive-json-data-using-php-curl/
  */
-function get(array $urls): array
+function curl_get(array $urls): array
 {
     $results = array();
     $headers = array();
@@ -74,7 +74,7 @@ function get(array $urls): array
     //return response
     return array(
         'headers' => $headers,
-        'response' => $results
+        'body' => $results
     );
 }
 
@@ -90,7 +90,7 @@ function get(array $urls): array
  *         https://stackoverflow.com/questions/9183178/can-php-curl-retrieve-response-headers-and-body-in-a-single-request
  *         https://www.codexworld.com/post-receive-json-data-using-php-curl/
  */
-function post(array $urls, array $data, bool $is_json = false): array
+function curl_post(array $urls, array $data, bool $is_json = false): array
 {
     $results = array();
     $headers = array();
@@ -148,6 +148,6 @@ function post(array $urls, array $data, bool $is_json = false): array
     //return response
     return array(
         'headers' => $headers,
-        'response' => $results
+        'body' => $results
     );
 }

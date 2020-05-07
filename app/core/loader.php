@@ -7,7 +7,7 @@
  * 
  * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
- * @link https://github.com/eliseekn/tinymvc
+ * @link https://github.com/eliseekn/TinyMVC
  */
 
 /**
@@ -17,10 +17,10 @@
 /**
  * load helpers by name
  *
- * @param  mixed $names names of helpers file as enumerated string
+ * @param  string $names names of helpers file as enumerated string
  * @return void
  */
-function load_helpers(...$names): void
+function load_helpers(string ...$names): void
 {
     if (!empty($names)) {
         foreach ($names as $name) {
@@ -45,10 +45,10 @@ function load_controller(string $name)
     $controller = 'app/controllers/' . $name . '.php';
 
     if (!file_exists($controller)) {
-        return NULL;
+        return null;
     }
 
-    //import controller filename
+    //include controller filename
     require_once $controller;
 
     $controller = ucfirst($name) . 'Controller';
@@ -66,10 +66,10 @@ function load_model(string $name)
     $model = 'app/models/' . $name . '.php';
 
     if (!file_exists($model)) {
-        return NULL;
+        return null;
     }
 
-    //import model filename
+    //include model filename
     require_once $model;
 
     $model = ucfirst($name) . 'Model';
@@ -88,26 +88,15 @@ function load_template(string $template, string $layout, array $data = []): void
 {
     ob_start();
 
-    //include variables in file
+    //include variables into file
     extract($data);
 
-    //include page content
+    //load page template
     require_once 'app/views/templates/' . $template  . '.php';
 
     //retrieves page content
     $page_content = ob_get_clean();
 
-    //display all
+    //display page layout
     require_once 'app/views/layouts/' . $layout  . '.php';
-}
-
-/**
- * load database and model classes
- *
- * @return void
- */
-function load_database(): void
-{
-    require_once 'app/core/database.php';
-    require_once 'app/core/model.php';
 }

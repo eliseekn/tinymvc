@@ -7,7 +7,7 @@
  * 
  * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
- * @link https://github.com/eliseekn/tinymvc
+ * @link https://github.com/eliseekn/TinyMVC
  */
 
 /**
@@ -62,7 +62,7 @@ function remove_dir(string $dir): void
         $objects = scandir($dir);
 
         foreach ($objects as $object) {
-            if ($object != "." && $object != "..") {
+            if ($object != '.' && $object != '..') {
                 if (
                     is_dir($dir . DIRECTORY_SEPARATOR . $object) &&
                     !is_link($dir . DIRECTORY_SEPARATOR . $object)

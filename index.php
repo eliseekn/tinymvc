@@ -7,7 +7,7 @@
  * 
  * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
- * @link https://github.com/eliseekn/tinymvc
+ * @link https://github.com/eliseekn/TinyMVC
  */
 
 /**
@@ -22,6 +22,7 @@ require_once 'app/core/database.php';
 require_once 'app/core/model.php';
 require_once 'app/core/loader.php';
 require_once 'app/core/router.php';
+require_once 'app/core/http.php';
 
 //set errors display
 if (DISPLAY_ERRORS == true) {
@@ -40,4 +41,4 @@ load_helpers(
 //start url routing
 $router = new Router();
 $router->add_custom_routes($routes); //add custom routes
-$router->dispatch(); //dispatch parameters
+$router->dispatch(); //dispatch routes parameters
