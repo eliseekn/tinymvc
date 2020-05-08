@@ -76,7 +76,7 @@ class HttpResponses
      * @param  int $code response status code
      * @return void
      */
-    public static function send(array $headers, $body, int $code): void
+    public static function send(array $headers = [], $body = null, int $code = 200): void
     {
         //send response status code
         http_response_code($code);

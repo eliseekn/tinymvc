@@ -396,8 +396,8 @@ You can enable or disable errors display with the ```DISPLAY_ERRORS``` constant 
 
 The public folder contains styles, scripts and images files. 
 
-# Demos application
-See ```demos``` folder for a demos application.
+# Demo application
+See ```demo``` folder for a demo application.
 
 # Contribution
 
