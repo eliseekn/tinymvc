@@ -53,7 +53,7 @@ server {
 
 Main application configuration is located in ```app/config/app.php```. You can define the applicatin root folder. See the example below:
 
-```
+```php
 //define application base path to server root
 define('APP_ROOT', '/');
 
