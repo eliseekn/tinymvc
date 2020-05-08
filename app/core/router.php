@@ -67,9 +67,9 @@ class Router
     public function __construct()
     {
         $uri = filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL);
-        $uri = trim($uri, '/');
-        $uri = explode('/', $uri);
-        $this->url = array_slice($uri, 1, count($uri));
+        $uri = explode('/', trim($uri, '/'));
+        $root_uri = explode('/', trim(APP_ROOT, '/'));
+        $this->url = $uri === $root_uri ? array() : array_slice($uri, count($root_uri), count($uri));
     }
 
     /**

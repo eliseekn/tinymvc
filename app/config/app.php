@@ -15,14 +15,14 @@
  */
 
 /**
- * reset execution timeout
+ * define application root folder. Set to '/' for server root
  */
-set_time_limit(0);
+define('APP_ROOT', '/tinymvc/');
 
 /**
- * web domain
+ * domain url
  */
-define('WEB_DOMAIN', 'http://localhost/tinymvc/');
+define('WEB_DOMAIN', 'http://localhost' . APP_ROOT);
 
 /**
  * absolute application path
@@ -33,3 +33,8 @@ define('DOCUMENT_ROOT', $_SERVER['DOCUMENT_ROOT'] . '/');
  * errors display configuration
  */
 define('DISPLAY_ERRORS', true);
+
+/**
+ * remove PHP maximum execution time 
+ */
+set_time_limit(0);

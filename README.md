@@ -47,9 +47,23 @@ server {
 
 ***Note:*** You must give ```write permission``` to extracted folder if you are going to build a blog like application.
 
-# Routing
+# Configuration
 
-Default routes are set with controllers files class and associated actions. You can add custom routes in ```app/config/routes.php``` that redirects to these defaults routes. See the example below:
+## Application
+
+Main application configuration is located in ```app/config/app.php```. You can define the applicatin root folder. See the example below:
+
+```
+//define application base path to server root
+define('APP_ROOT', '/');
+
+//define application base path to a subfolder
+define('APP_ROOT', '/tinymvc/');
+```
+
+## Routing
+
+Routes configuration file is located in ```app/config/routes.php```. Default routes are set with controllers files class and associated actions. You can set the defaults controller and action names. Add your custom routes  using ```$routes``` variable. See the example below:
 
 ```php
 $routes['home/'] = 'home/index';
@@ -58,6 +72,10 @@ $routes['posts/slug'] = 'posts/index';
 ```
 
 ***Note:*** Parameters are added automatically to controller class's action name.
+
+## Database
+
+Database configuration file is located in ```app/config/database.php```.
 
 # Controllers
 
@@ -134,7 +152,7 @@ class HomeController
 
 # Models
 
-Models files are stored in ```app/models```. You can edit database configuration in ```app/config/database.php```. To create a ```model```, create a file with the model name in lowercase. Then inside the model file, create a class with the model name following by the word ```Model```. The class name must be first letter uppercase. The class is extended from ```Model``` (see **Model** class in **app/core/model.php** for more infos). See the example below:
+Models files are stored in ```app/models```. To create a ```model```, create a file with the model name in lowercase. Then inside the model file, create a class with the model name following by the word ```Model```. The class name must be first letter uppercase. The class is extended from ```Model``` (see **Model** class in **app/core/model.php** for more infos). See the example below:
 
 ```php
 /**
@@ -310,7 +328,7 @@ $this->set_query_string(
 
 # HttpRequests and HttpResponses
 
-```HttpRequests``` and ```HttpResponses``` class are located in ```app/core/http.php```. ```HttpRequests``` helps you manage ```headers```, ```GET```, ```POST``` and ```raw data``` sent from HTTP requests. ```HttpResponses``` helps you send HTTP responses with ```headers```, ```body``` and ```status code``` responses. See the example below:
+```HttpRequests``` and ```HttpResponses``` class are located in ```app/core/http.php```. ```HttpRequests``` helps you manage ```headers```, ```GET```, ```POST``` and ```raw data``` sent from HTTP requests. ```HttpResponses``` helps you send HTTP responses with ```headers```, ```body``` and ```status code```. See the example below:
 
 ```php
 /**

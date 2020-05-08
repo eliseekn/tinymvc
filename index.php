@@ -35,10 +35,11 @@ if (DISPLAY_ERRORS == true) {
 
 //include necessaries helpers
 load_helpers(
-    'url'
+    'url',
+    'debug'
 );
 
-//start url routing
+//start routing system
 $router = new Router();
-$router->add_custom_routes($routes); //add custom routes
-$router->dispatch(); //dispatch routes parameters
+$router->add_custom_routes($routes);
+$router->dispatch();

@@ -22,7 +22,7 @@
  */
 function absolute_url(string $url): string
 {
-	return WEB_DOMAIN . $url;
+	return substr(WEB_DOMAIN, -1) == '/' ? WEB_DOMAIN . $url : WEB_DOMAIN . '/' . $url;
 }
 
 /**
