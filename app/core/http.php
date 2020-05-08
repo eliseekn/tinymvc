@@ -64,7 +64,7 @@ class HttpRequests
 /**
  * HttpResponses
  * 
- * Handle HTTP responses
+ * Send HTTP responses
  */
 class HttpResponses
 {    

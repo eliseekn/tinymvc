@@ -49,7 +49,7 @@ server {
 
 # Routing
 
-Default routes are set by default whith controllers file class with associated actions. You can add custom routes in ```app/config/routes.php``` that redirects to these defaults routes, like this:
+Default routes are set with controllers files class and associated actions. You can add custom routes in ```app/config/routes.php``` that redirects to these defaults routes. See the example below:
 
 ```php
 $routes['home/'] = 'home/index';
@@ -57,16 +57,15 @@ $routes['administration/'] = 'admin/index';
 $routes['posts/slug'] = 'posts/index';
 ```
 
-***Note:*** Don't set parameters in routes, they are added to controller class method (action).
+***Note:*** Parameters are added automatically to controller class's action name.
 
 # Controllers
 
-Controllers files are stored in ```app/controllers``` folder. To create a ```controller```, create a file with your controller name in lowercase. Then in your controller file, create a class with the name of your controller in first letter uppercase following by the word ```Controller```. To add an action, just create a method to your 
-class with the action name in lowercase. See the example below:
+Controllers files are stored in ```app/controllers```. To create a ```controller```, create a file with the controller name in lowercase. Then inside the controller file, create a class using the controller name following by the word ```Controller```. The class name must be first letter uppercase. To add an action, just create a method with a name in lowercase. See the example below:
 
 ```php
 /**
- * controller class from app/controllers/home.php
+ * controller class of app/controllers/home.php
  */
 class HomeController
 {
@@ -85,12 +84,11 @@ class HomeController
 
 # Views
 
-Views files are stored in ```app/views``` folder. Views are separated in two subfolders, ```layouts``` and 
-```templates```. To display a view file, use the function ```load_template``` located in ```app/core/loader.php```. See the example below:
+Views files are stored in ```app/views```. Views are separated into, ```layouts``` and ```templates```. To render a view page, use the function ```load_template``` located in ```app/core/loader.php```. See the example below:
 
 ```php
 /**
- * controller class from app/controllers/home.php
+ * controller class of app/controllers/home.php
  */
 class HomeController
 {
@@ -110,8 +108,7 @@ class HomeController
 }
 ```
 
-***Note:*** Layouts and templates names are according to you. But don't need to add file extension ```.php``` when using ```load_template``` function. Be sure to add ```$page_content``` variable into layout view file to 
-load template view page. See example below:
+***Note:*** You must add the ```$page_content``` variable into layout page to include template page. See the example below:
 
 ```html
 <?php //layout page ?>
@@ -137,12 +134,11 @@ load template view page. See example below:
 
 # Models
 
-Models files are stored in ```app/models``` folder. You can edit database configuration in ```app/config/database.php```. To create a ```model```, create a file with your model name in lowercase. Then in your model file, create a class with the name of your model in first letter uppercase following by the word ```Model```. 
-The class is extended from ```Model``` (see **Model** class in **app/core/model.php** for more infos). See the example below:
+Models files are stored in ```app/models```. You can edit database configuration in ```app/config/database.php```. To create a ```model```, create a file with the model name in lowercase. Then inside the model file, create a class with the model name following by the word ```Model```. The class name must be first letter uppercase. The class is extended from ```Model``` (see **Model** class in **app/core/model.php** for more infos). See the example below:
 
 ```php
 /**
- * model class from app/controllers/posts.php
+ * model class of app/controllers/posts.php
  */
 class PostsModel extends Model
 {
@@ -170,11 +166,11 @@ class PostsModel extends Model
 }
 ```
 
-You can load a ```model``` it's filename without ```.php``` extension. Use the ```load_model``` function located in ```app/core/loader```. See example below:
+You can load a ```model``` by using the ```load_model``` function located in ```app/core/loader```. See the example below:
 
 ```php
 /**
- * controller class from app/controllers/posts.php
+ * controller class of app/controllers/posts.php
  */
 class PostsController
 {
@@ -185,8 +181,8 @@ class PostsController
      */
     public function __construct()
     {
-        $this->posts = load_model('posts'); //loads PostsModel class from app/models/posts.php
-        $this->comments = load_model('comments'); //loads CommentsModel class from app/models/comments.php
+        $this->posts = load_model('posts'); //loads PostsModel class of app/models/posts.php
+        $this->comments = load_model('comments'); //loads CommentsModel class of app/models/comments.php
     }
 
     /**
@@ -194,15 +190,15 @@ class PostsController
      * 
      * @return void
      */
-    public function index(): void
+    public function index(string $slug): void
     {
         load_template(
             'posts',
             'main',
             array(
                 'page_title' => 'My posts page',
-                'posts' => $this->posts->get_all(),
-                'comments' => $this->comments->get_all() 
+                'posts' => $this->posts->get_posts($slug),
+                'comments' => $this->comments->get_all($slug) 
             ) //optional variables to be passed  
         );
     }
@@ -211,7 +207,7 @@ class PostsController
 
 # Model
 
-```Model``` class help you manage easily operations to database. This class use chaining functons method to generate and execute safe sql query. Model class is stored in ```app/core/model.php``` file. How it's work?
+```Model``` class help you manage easily operations to database. This class use chaining functons method to generate and execute safe sql queries. This class is stored in ```app/core/model.php```. See the example below:
 
 1\. Select data queries
 
@@ -302,11 +298,11 @@ $query_string = $this->select('*')
     ->get_query_string();
 
 //set custom query string without arguments
-$this->set_query_stirng('SELECT * FROM posts');
+$this->set_query_string('SELECT * FROM posts');
     ->fetch_all();
 
 //set custom query string with arguments
-$this->set_query_stirng(
+$this->set_query_string(
     'INSERT FROM posts (title, content) VALUES (?, ?)', 
     array($title, $content)
 )->execute_query();
@@ -314,11 +310,11 @@ $this->set_query_stirng(
 
 # HttpRequests and HttpResponses
 
-```HttpRequests``` and ```HttpResponses``` are located in ```app/core/http.php``` file. ```HttpRequests``` helps you manage ```HEADERS```, ```GET```, ```POST``` and ```RAW data``` sent from HTTP requests. ```HttpResponses``` helps you send HTTP responses with ```HEADERS```, ```BODY``` and ```STATUS CODE``` responses. How it's work?
+```HttpRequests``` and ```HttpResponses``` class are located in ```app/core/http.php```. ```HttpRequests``` helps you manage ```headers```, ```GET```, ```POST``` and ```raw data``` sent from HTTP requests. ```HttpResponses``` helps you send HTTP responses with ```headers```, ```body``` and ```status code``` responses. See the example below:
 
 ```php
 /**
- * controller class from app/controllers/admin.php
+ * controller class of app/controllers/admin.php
  */
 class AdminController
 {
@@ -329,7 +325,7 @@ class AdminController
      */
     public function __construct()
     {
-        $this->admin = load_model('admin'); //loads AdminModel class from app/models/admin.php
+        $this->admin = load_model('admin'); //loads AdminModel class of app/models/admin.php
     }
 
     /**
@@ -353,10 +349,11 @@ class AdminController
 
 # Helpers
 
-TinyMVC comes with a set of utils functions that extends the use of the framework. Helpers files are stored in ```app/helpers``` folder. You can load an helper file you need in your application by loading it via ```load_helpers``` funciton (located in ```app/core/loaders```) in file ```index.php```. See the example below:
+TinyMVC comes with a set of utils functions that extends the use of the framework. Helpers files are stored in ```app/helpers```. You can load an helper by using ```load_helpers``` function located in ```app/core/loaders```. See the example below:
 
 ```php
 //in index.php file
+
 load_helpers(
     'cookies', //manage cookies
     'debug', //set of debug utils functions
@@ -371,15 +368,15 @@ load_helpers(
 );
 ```
 
-***Note:*** You can create and use your own helpers file as TinyMVC is extensible.
+***Note:*** You can create and use your own helpers.
 
 # Errors
 
-You can enable or disable errors display with the ```DISPLAY_ERRORS``` constant in ```app/core/app.php``` file. The ```404``` error display is handled by ```error_404``` action of ```ErrorController``` class. You can customize the ```Error 404``` page located in ```app/views/templates/error_404.php```.
+You can enable or disable errors display with the ```DISPLAY_ERRORS``` constant in ```app/core/app.php```. The ```404``` error display is handled by ```error_404``` action of ```ErrorController``` class. You can customize the ```Error 404``` page located in ```app/views/templates/error_404.php```.
 
 # Public
 
-The public folder contains scripts and images files. 
+The public folder contains styles, scripts and images files. 
 
 # Demo application
 See ```demo``` folder for a demo application.

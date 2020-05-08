@@ -18,7 +18,7 @@
 class Router
 {    
     /**
-     * routing url
+     * route url
      *
      * @var array
      */
@@ -129,7 +129,7 @@ class Router
         $this->controller = load_controller($this->controller);
 
         //return a 404 error if controller filename not found or action does not exists
-        if ($this->controller === null || !method_exists($this->controller, $this->action)) {
+        if (is_null($this->controller) || !method_exists($this->controller, $this->action)) {
             $error_controller = load_controller('error');
             $error_controller->error_404();
             exit();
