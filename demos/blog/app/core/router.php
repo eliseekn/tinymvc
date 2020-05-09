@@ -90,8 +90,12 @@ class Router
             $controller = explode('/', $route)[0];
             $action = explode('/', $route)[1];
 
-            $this->routes[$custom_controller] = $controller;
-            $this->actions[$custom_controller] = array($custom_action => $action);
+            if (array_key_exists($custom_controller, $this->routes)) {
+                $this->actions[$custom_controller][$custom_action] = $action;
+            } else {
+                $this->routes[$custom_controller] = $controller;
+                $this->actions[$custom_controller] = array($custom_action => $action);
+            }
         }
     }
 

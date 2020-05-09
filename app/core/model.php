@@ -324,7 +324,8 @@ class Model
 	public function fetch(): array
 	{
 		$query_result = $this->execute_query();
-		return $query_result->fetch();
+		$data = $query_result->fetch();
+		return is_array($data) ? $data : array();
 	}
 
 	/**
@@ -335,7 +336,8 @@ class Model
 	public function fetch_all(): array
 	{
 		$query_result = $this->execute_query();
-		return $query_result->fetchAll();
+		$data = $query_result->fetchAll();
+		return is_array($data) ? $data : array();
 	}
 
 	/**

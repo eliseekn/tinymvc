@@ -33,7 +33,7 @@ function create_cookie(string $name, string $value): bool
 		'/', //path
 		WEB_DOMAIN, //domain
 		$secure, //is secure?
-		true, //HTTP only
+		true //HTTP only
 	);
 }
 
