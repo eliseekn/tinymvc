@@ -328,7 +328,9 @@ $this->set_query_string(
 
 # HttpRequests and HttpResponses
 
-```HttpRequests``` and ```HttpResponses``` class are located in ```app/core/http.php```. ```HttpRequests``` helps you manage ```headers```, ```GET```, ```POST``` and ```raw data``` sent from HTTP requests. ```HttpResponses``` helps you send HTTP responses with ```headers```, ```body``` and ```status code```. See the example below:
+```HttpRequests``` and ```HttpResponses``` class are located in ```app/core/http.php```. ```HttpRequests``` helps you manage ```headers```, ```GET```, ```POST``` and ```raw data``` sent from HTTP requests.
+
+```HttpResponses``` helps you send HTTP responses with ```headers```, ```body``` and ```status code```. See the example below:
 
 ```php
 /**
@@ -390,7 +392,9 @@ load_helpers(
 
 # Errors and Debugging
 
-You can enable or disable errors display with the ```DISPLAY_ERRORS``` constant in ```app/core/app.php```. The ```404``` error display page is handled by ```error_404``` action of ```ErrorController``` class. You can customize the ```Error 404``` page located in ```app/views/templates/error_404.php```. You can easily debug your code by using the ```dump_exit``` and ```save_log``` functions located in ```app/helpers/debug.php```.
+You can enable or disable errors display with the ```DISPLAY_ERRORS``` constant in ```app/core/app.php```. The ```404``` error display page is handled by ```error_404``` action of ```ErrorController``` class. You can customize the ```Error 404``` page located in ```app/views/templates/error_404.php```.
+
+You can easily debug your code by using the ```dump_exit``` and ```save_log``` functions located in ```app/helpers/debug.php```.
 
 # Public
 
