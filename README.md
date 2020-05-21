@@ -161,7 +161,7 @@ Models files are stored in ```app/models```. To create a ```model```, create a f
 class PostsModel extends Model
 {
     /**
-     * initialize parent
+     * instantiates parent
      * 
      * @return void
      */
@@ -193,7 +193,7 @@ You can load a ```model``` by using the ```load_model``` function located in ```
 class PostsController
 {
     /**
-     * initialize class and load models
+     * instantiates class and load models
      * 
      * @return void
      */
@@ -339,7 +339,7 @@ $this->set_query_string(
 class AdminController
 {
     /**
-     * initialize class and load models
+     * instantiates class and load models
      * 
      * @return void
      */

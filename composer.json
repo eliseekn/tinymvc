@@ -1,0 +1,38 @@
+{
+    "name": "eliseekn/tinymvc",
+    "description": "PHP framework based on MVC architecture",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "eliseekn",
+            "email": "eliseekn@gmail.com"
+        }
+    ],
+    "autoload": {
+        "files": [
+            "framework/Helpers/Cookies.php",
+            "framework/Helpers/Curl.php",
+            "framework/Helpers/Debug.php",
+            "framework/Helpers/Email.php",
+            "framework/Helpers/Files.php",
+            "framework/Helpers/Pagination.php",
+            "framework/Helpers/Security.php",
+            "framework/Helpers/Session.php",
+            "framework/Helpers/Url.php",
+            "framework/Helpers/Utils.php"
+        ],
+        "psr-4": {
+            "App\\" : "app/",
+            "Framework\\" : "framework/"
+        }
+    },
+    "require": {
+        "php": "^7.2",
+        "league/plates": "^3.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5",
+        "fzaninotto/faker": "^1.9"
+    }
+}

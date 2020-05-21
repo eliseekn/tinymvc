@@ -10,36 +10,25 @@
  * @link https://github.com/eliseekn/TinyMVC
  */
 
+use Framework\Http\Middleware;
+use Framework\Http\Route;
+
 /**
  * Main application file
  */
 
-//include core and configuration files
-require_once 'app/config/app.php';
-require_once 'app/config/database.php';
-require_once 'app/config/routes.php';
-require_once 'app/core/database.php';
-require_once 'app/core/model.php';
-require_once 'app/core/loader.php';
-require_once 'app/core/router.php';
-require_once 'app/core/http.php';
+//include composer autoloader
+require 'vendor/autoload.php';
 
-//set errors display
-if (DISPLAY_ERRORS == true) {
-    ini_set('display_errors', 1);
-    ini_set('error_reporting', -1);
-} else {
-    ini_set('display_errors', 0);
-    ini_set('error_reporting', 0);
-}
+//load configurations files
+require 'config/app.php';
+require 'config/env.php';
+require 'config/database.php';
+require 'config/routes.php';
+require 'config/middlewares.php';
 
-//include necessaries helpers
-load_helpers(
-    'url',
-    'debug'
-);
+dump_exit(Route::$routes, Route::$names, Middleware::$names, Middleware::$middlewares);
 
 //start routing system
-$router = new Router();
-$router->add_custom_routes($routes);
+$router = new \Framework\Http\Router();
 $router->dispatch();
