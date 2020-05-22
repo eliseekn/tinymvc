@@ -85,10 +85,12 @@ class Router
     public function __construct()
     {
         $this->request = new Request();
+        create_session('current_url', $this->request->getUri());
 
         $uri = filter_var($this->request->getUri(), FILTER_SANITIZE_URL);
         $uri = explode('/', trim($uri, '/'));
         $root = explode('/', trim(APP_ROOT, '/'));
+        
         $this->url = $uri === $root ? [] : array_slice($uri, count($root), count($uri));
     }
     
@@ -118,6 +120,39 @@ class Router
                 $this->methods[$custom_controller] = [strtoupper(trim($method))];
             }
         }
+    }
+
+    /**
+     * redirect to route
+     *
+     * @param  string $name route name or Controller@action
+     * @param  array $params parameters 
+     * @return void
+     */
+    public static function redirectToRoute(string $name, array $params = []): void
+    {
+        $params = empty($params) ? '' : implode('/', $params);
+
+        if (array_key_exists($name, Route::$names)) {
+            $route = Route::$names[$name];
+        }
+        
+        if (isset($route) && in_array($route, Route::$routes, true)) {
+            $url = array_search($route, Route::$routes, true);
+            $url = str_replace(['GET /', 'POST /', 'PUT /', 'DELETE /', 'PATCH /', 'OPTIONS /', 'ANY /'], '', $url);
+            $url = empty($params) ? $url : '/' . $params;
+            redirect_to($url);
+        } 
+
+        if (in_array($name, Route::$routes, true)) {
+            $url = array_search($name, Route::$routes, true);
+            $url = str_replace(['GET /', 'POST /', 'PUT /', 'DELETE /', 'PATCH /', 'OPTIONS /', 'ANY /'], '', $url);
+            $url = empty($params) ? $url : '/' . $params;
+            redirect_to($url);
+        }
+
+        //route not found
+        View::render('error_404');
     }
     
     /**
@@ -165,18 +200,10 @@ class Router
             View::render('error_404');
         }
 
-        //check if middlewares is set for this controller and action
-        if (Middleware::middlewareExists($this->controller, $this->action)) {
-            Middleware::first($this->controller, $this->action);
-        } else {
-            //execute controller with action and parameter
-            call_user_func_array(
-                [
-                    new $this->controller,
-                    $this->action
-                ],
-                $this->params
-            );
-        }
+        //check for middlewares to execute
+        Middleware::check($this->controller . '@' . $this->action);
+
+        //execute controller with action and parameter
+        call_user_func_array([new $this->controller(), $this->action], $this->params);
     }
 }

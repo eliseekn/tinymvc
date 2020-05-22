@@ -39,6 +39,17 @@ class UsersModel extends Model
     }
     
     /**
+     * get user row
+     *
+     * @param  string $email email address
+     * @return void
+     */
+    public function get(string $email)
+    {
+        return $this->findSingle('email', '=', $email);
+    }
+
+    /**
      * checks if user is registered
      *
      * @param  string $email email address of user
@@ -47,19 +58,7 @@ class UsersModel extends Model
      */
     public function isRegistered(string $email, string $password): bool
     {
-        $user = $this->findWhere('email', '=', $email)->single();
-        return empty($user) ? false : compare_hash($user->password, $password);
-    }
-    
-    /**
-     * get user role
-     *
-     * @param  string $email email address of user
-     * @return string
-     */
-    public function getRole(string $email): string
-    {
-        $user = $this->findWhere('email', '=', $email)->single();
-        return $user->role;
+        $user = $this->get($email);
+        return is_object($user) ? compare_hash($password, $user->password) : false;
     }
 }

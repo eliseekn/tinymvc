@@ -14,14 +14,13 @@ namespace App\Middlewares;
 
 use Framework\Http\Router;
 use Framework\Http\Middleware;
-use Framework\Http\Request;
 
 /**
- * CsrfTokenValidator
+ * CheckSessionToAdmin
  * 
- * CSRF token validator
+ * Check for user with administrator role session
  */
-class CsrfTokenValidator extends Middleware
+class CheckSessionToAdmin extends Middleware
 {    
     /**
      * handle function
@@ -30,11 +29,14 @@ class CsrfTokenValidator extends Middleware
      */
     public function handle()
     {
-        $request = new Request();
-        $csrf_token = $request->postQuery('csrf_token');
+        $user = get_session('logged_user');
 
-        if (!is_valid_csrf_token($csrf_token)) {
+        if (empty($user)) {
             Router::redirectToRoute('login.page');
+        }
+
+        if ($user->role !== 'administrator') {
+            Router::redirectToRoute('home');
         }
     }
 }

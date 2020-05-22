@@ -150,7 +150,7 @@ class Migration
     ) {
         $this->query .= "$name TIMESTAMP";
         $this->query .= $null ? ' NULL' : ' NOT NULL';
-        $this->query .= empty($default) ? '' : " DEFAULT '$default'";
+        $this->query .= empty($default) ? '' : " DEFAULT $default";
         $this->query .= ', ';
 
         return $this;

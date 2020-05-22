@@ -10,7 +10,12 @@ class Model
      * @var string
      */
     private $table = ''; 
-
+    
+    /**
+     * data to insert or update in table
+     *
+     * @var array
+     */
     private $data = [];
     
     /**
@@ -32,59 +37,56 @@ class Model
     }
     
     /**
-     * findId
+     * find row by id column
      *
      * @param  mixed $id
      * @return void
      */
     public function find(int $id)
     {
-        return $this->findWhere('id', '=', $id);
+        return $this->findSingle('id', '=', $id);
     }
     
     /**
-     * findWhere
+     * find row with where clause and get single row
      *
-     * @param  mixed $column
-     * @param  mixed $operator
-     * @param  mixed $value
+     * @param  string $column name of column
+     * @param  string $operator operator
+     * @param  string $value value to check
      * @return void
      */
-    public function findWhere(string $column, string $operator, string $value)
+    public function findSingle(string $column, string $operator, string $value)
     {
         $this->QB->select('*')
             ->from($this->table)
             ->where($column, $operator, $value);
-        
-        return $this;
+
+        return (object) $this->QB->fetchSingle();
+    }
+
+    /**
+     * find row with where clause and get all rows
+     *
+     * @param  string $column name of column
+     * @param  string $operator operator
+     * @param  string $value value to check
+     * @return void
+     */
+    public function findAll(string $column, string $operator, string $value)
+    {
+        $this->QB->select('*')
+            ->from($this->table)
+            ->where($column, $operator, $value);
+
+        return (object) $this->QB->fetchAll();
     }
     
     /**
-     * retrieves single row
+     * delete with where clause
      *
-     * @return void
-     */
-    public function single()
-    {
-        return (object) $this->Qb->fetchSingle();
-    } 
-        
-    /**
-     * retrieves all rows
-     *
-     * @return void
-     */
-    public function all()
-    {
-        return (object) $this->Qb->fetchAll();
-    }
-        
-    /**
-     * deleteWhere
-     *
-     * @param  mixed $column
-     * @param  mixed $operator
-     * @param  mixed $value
+     * @param  string $column name of column
+     * @param  string $operator operator
+     * @param  string $value value to check
      * @return void
      */
     public function delete(int $id)
@@ -96,9 +98,9 @@ class Model
     }
     
     /**
-     * setData
+     * set data to update or insert
      *
-     * @param  mixed $data
+     * @param  array $data data value
      * @return void
      */
     public function setData(array $data)
@@ -108,7 +110,7 @@ class Model
     }
     
     /**
-     * update
+     * update 
      *
      * @param  mixed $id
      * @return void

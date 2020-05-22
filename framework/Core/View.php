@@ -34,4 +34,9 @@ class View
         echo $engine->render($template, $data);
         exit();
     }
+
+    public static function flashMessage(string $name, array $content)
+    {
+
+    }
 }

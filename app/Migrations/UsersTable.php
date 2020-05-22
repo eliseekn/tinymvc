@@ -33,6 +33,7 @@ class UsersTable extends Migration
             ->addString('name')
             ->addString('email')
             ->addString('password')
+            ->addString('role')
             ->addTimestamp('created_at')
             ->create();
     }

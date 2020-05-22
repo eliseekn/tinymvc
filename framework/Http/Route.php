@@ -139,10 +139,16 @@ class Route
         return $this;
     }
 
-    public function setMiddlewares(array $middlewares): void
+    /**
+     * set route name
+     * 
+     * @param  string $name name of route
+     * @return mixed
+     */
+    public function useMiddlewares(array $middlewares)
     {
-        $route = key(array_slice(self::$routes, -1, 1, true));
-        $route = array_search(self::$routes[$route], self::$names, true);
-        Middleware::setRoute($route, $middlewares);
+        $route = key(array_slice(self::$names, -1, 1, true));
+        //self::$names[$name] = self::$routes[$route];
+        Middleware::add($route, $middlewares);
     }
 }

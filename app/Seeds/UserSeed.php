@@ -34,7 +34,8 @@ class UserSeed extends Seeder
         $this->insert('users', [
             'name' => $faker->name,
             'email' => $faker->email,
-            'password' => hash_string('password')
+            'password' => hash_string('password'),
+            'role' => 'user'
         ]);
     }
 }

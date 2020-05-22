@@ -16,5 +16,5 @@ use Framework\Http\Middleware;
  * Set routes paths
  */
 Middleware::setName('csrf', 'CsrfTokenValidator');
-Middleware::setName('role', 'CheckUserRole');
-Middleware::setName('auth', 'AuthentificateUser');
+Middleware::setName('login', 'CheckSessionToLogin');
+Middleware::setName('admin', 'CheckSessionToAdmin');

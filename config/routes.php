@@ -16,5 +16,7 @@ use Framework\Http\Route;
  * Set routes paths
  */
 Route::get('/', 'HomeController@index');
-Route::get('/home', 'HomeController@index')->setName('home')->setMiddlewares(['csrf', 'auth']);
-Route::get('/post/add', 'PostsController@add')->setName('post.add')->setMiddlewares(['auth', 'role']);
+Route::get('/home', 'HomeController@index')->setName('home');
+Route::get('/login', 'UserController@index')->setName('login.page')->useMiddlewares(['login']);
+Route::post('/user/login', 'UserController@login')->setName('user.login')->useMiddlewares(['csrf']);
+Route::get('/admin', 'AdminController@index')->setName('admin')->useMiddlewares(['admin']);

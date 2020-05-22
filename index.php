@@ -1,5 +1,8 @@
 <?php
 
+use Framework\Http\Route;
+use Framework\Http\Middleware;
+
 /**
  * TinyMVC
  * 
@@ -9,9 +12,6 @@
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/TinyMVC
  */
-
-use Framework\Http\Middleware;
-use Framework\Http\Route;
 
 /**
  * Main application file
@@ -27,7 +27,7 @@ require 'config/database.php';
 require 'config/routes.php';
 require 'config/middlewares.php';
 
-dump_exit(Route::$routes, Route::$names, Middleware::$names, Middleware::$middlewares);
+//dump_exit(Route::$routes, Route::$names, Middleware::$names, Middleware::$middlewares);
 
 //start routing system
 $router = new \Framework\Http\Router();

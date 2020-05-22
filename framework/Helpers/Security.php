@@ -56,12 +56,12 @@ function compare_hash(string $str, string $hash): bool
  *
  * @return string returns token value
  */
-function generate_crsf_token(): string
+function generate_csrf_token(): string
 {
     $csrf_token = bin2hex(random_bytes(32));
-    create_session('crsf_token', $csrf_token);
+    create_session('csrf_token', $csrf_token);
 
-    return $csrf_token;
+    return '<input type="hidden" name="csrf_token" value="' . $csrf_token . '">';
 }
 
 /**

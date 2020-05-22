@@ -35,7 +35,7 @@ function getSeed(string $seed)
 {
     $seed = 'App\Seeds\\' . $seed;
 
-    if (!class_exists($seed) || !method_exists($seed, 'seed')) {
+    if (!class_exists($seed) || !method_exists($seed, 'sow')) {
         print('[-] Invalid seed class "' . $seed . '"' . PHP_EOL);
         exit();
     }
@@ -157,7 +157,11 @@ if (array_key_exists('migration', $options) && array_key_exists('delete', $optio
 }
 
 //rollback migration
-if (array_key_exists('migration', $options) && array_key_exists('rollback', $options)) {
+if (
+    array_key_exists('migration', $options) &&
+    array_key_exists('rollback', $options) &&
+    !array_key_exists('seed', $options)
+) {
     if ($options['migration'] !== 'all') {
         $migration = getMigration($options['migration']);
         $migration->rollback();
@@ -207,7 +211,7 @@ if (
         foreach ($objects as $object) {
             if ($object != '.' && $object != '..') {
                 $seeder = explode('.', basename($object))[0];
-                $seeder = getSeed($options['seed']);
+                $seeder = getSeed($seeder);
                 $seeder->sow();
             }
         }
@@ -228,7 +232,7 @@ if (array_key_exists('seed', $options)) {
         foreach ($objects as $object) {
             if ($object != '.' && $object != '..') {
                 $seed = explode('.', basename($object))[0];
-                $seed = getSeed($options['seed']);
+                $seed = getSeed($seeder);
                 $seed->sow();
             }
         }

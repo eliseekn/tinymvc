@@ -13,15 +13,21 @@
 namespace Framework\Http;
 
 use Framework\Core\View;
-use Framework\Core\Controller;
 
 /**
  * Middleware
  * 
- * Handle middlewares
+ * Events handlers
  */
 class Middleware
 {
+    /**
+     * routes middlewares
+     * 
+     * @var array
+     */
+    public static $middlewares = [];
+
     /**
      * middlewares names
      * 
@@ -30,20 +36,14 @@ class Middleware
     public static $names = [];
 
     /**
-     * middlewares route and classnames
-     * 
-     * @var array
-     */
-    public static $middlewares = [];
-    
-    /**
      * execute middleware
      *
      * @param  string $middleware name of middleware
      * @return void
      */
-    private function executeMiddleware(string $middleware): void
+    public static function execute(string $middleware): void
     {
+        $middleware = self::$names[$middleware]; 
         $middleware = 'App\Middlewares\\' . $middleware;
 
         //return a 404 error if controller filename not found or action does not exists
@@ -56,10 +56,28 @@ class Middleware
     }
     
     /**
-     * set middlewate name
+     * execute middlewares associated to a given route
+     *
+     * @param  string $route name of route
+     * @return void
+     */
+    public static function check(string $route): void
+    {
+        $route = explode('\\', $route)[2];
+        $route = array_search($route, Route::$names, true);
+
+        if (array_key_exists($route, self::$middlewares)) {
+            foreach (self::$middlewares[$route] as $middleware) {
+                self::execute($middleware);
+            }
+        }
+    }
+
+    /**
+     * set middleware name
      *
      * @param  string $name name of middleware
-     * @param  string $middleware middleware classname
+     * @param  string $middleware middleware class
      * @return void
      */
     public static function setName(string $name, string $middleware): void
@@ -68,70 +86,14 @@ class Middleware
     }
     
     /**
-     * set middleware to route
+     * add middlewares to route
      *
-     * @param  string $route name of route
-     * @param  array $middlewares middlewares names
+     * @param  mixed $route
+     * @param  mixed $middlewares
      * @return void
      */
-    public static function setRoute(string $route, array $middlewares): void
+    public static function add(string $route, array $middlewares): void
     {
         self::$middlewares[$route] = $middlewares;
-    }
-    
-    /**
-     * check if middlewares is set for a route
-     *
-     * @param  string $controller name of controller
-     * @param  string $action name of action
-     * @return bool
-     */
-    public static function middlewareExists(string $controller, string $action): bool
-    {
-        $route = array_search($controller . '@' . $action, Route::$names, true);
-        return array_key_exists($route, self::$middlewares);
-    }
-    
-    /**
-     * execute first middleware of a route
-     *
-     * @param  string $route name of route
-     * @return bool|void returns false if middleware not found
-     */
-    public static function first(string $controller, string $action): void
-    {
-        $route = array_search($controller . '@' . $action, Route::$names, true);
-        $middleware = self::$middlewares[$route];
-        $middleware = self::$names[$middleware];
-        $this->executeMiddleware($middleware);
-    }
-
-    /**
-     * execute next middleware
-     *
-     * @return void
-     */
-    public function next(): void
-    {
-        $middleware = get_class($this);
-        $name = array_search($middleware, self::$names, true);
-        $route = array_search($name, self::$middlewares, true);
-        $key = array_search($name, self::$middlewares[$route], true);
-        $next_middleware = self::$middlewares[$route][$key + 1];
-        $middleware = self::$names[$next_middleware];
-        $this->executeMiddleware($middleware);
-    }
-
-    /**
-     * redirect to controller
-     *
-     * @return void
-     */
-    public function end(): void
-    {
-        $middleware = get_class($this);
-        $name = array_search($middleware, self::$names, true);
-        $route = array_search($name, self::$middlewares, true);
-        Controller::redirectToRoute($route);
     }
 }
