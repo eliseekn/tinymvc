@@ -174,7 +174,7 @@ class Router
         }
 
         //load controller class
-        $this->controller = 'App\Controllers\\' . $this->controller;
+        $this->controller = 'App\Http\Controllers\\' . $this->controller;
 
         //return a 404 error if controller filename not found or action does not exists
         if (!class_exists($this->controller) || !method_exists($this->controller, $this->action)) {

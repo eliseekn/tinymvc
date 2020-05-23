@@ -78,13 +78,11 @@ function close_session(string $name): void
 /**
  * get flash message
  *
- * @param  string $title message title
  * @return mixed returns message content
  */
-function get_flash_message(string $title)
+function get_flash_messages()
 {
-	$flash_message = get_session('flash_message');
-	$content = $flash_message[$title] ?? '';
-	close_session('flash_message');
-	return $content;
+	$flash_message = get_session('flash_messages');
+	close_session('flash_messages');
+	return $flash_message;
 }

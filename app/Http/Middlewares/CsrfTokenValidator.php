@@ -1,17 +1,16 @@
 <?php
 
-namespace App\Middlewares;
+namespace App\Http\Middlewares;
 
 use Framework\Http\Request;
 use Framework\Http\Redirect;
-use Framework\Core\Middleware;
 
 /**
- * LoginInputValidator
+ * CsrfTokenValidator
  * 
- * Login input fields validator
+ * CSRF token validator
  */
-class LoginInputValidator extends Middleware
+class CsrfTokenValidator
 {    
     /**
      * handle function
@@ -24,7 +23,7 @@ class LoginInputValidator extends Middleware
         $csrf_token = $request->postQuery('csrf_token');
 
         if (!is_valid_csrf_token($csrf_token)) {
-            Redirect::toRoute('login.page')->withMessage('', '');
+            Redirect::toRoute('login.page')->only();
         }
     }
 }

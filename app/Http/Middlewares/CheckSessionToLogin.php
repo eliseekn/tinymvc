@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Middlewares;
+namespace App\Http\Middlewares;
 
 use Framework\Http\Redirect;
-use Framework\Core\Middleware;
 
 /**
  * CheckSessionToLogin
  * 
  * Check for user logged session
  */
-class CheckSessionToLogin extends Middleware
+class CheckSessionToLogin
 {    
     /**
      * handle function

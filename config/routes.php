@@ -17,7 +17,17 @@ use Framework\Core\Route;
  */
 Route::get('/', 'HomeController@index');
 Route::get('/home', 'HomeController@index')->setName('home');
-Route::get('/login', 'UserController@index')->setName('login.page')->useMiddlewares(['login']);
-Route::post('/user/login', 'UserController@login')->setName('user.login')->useMiddlewares(['csrf']);
+
+Route::get('/login', 'UserController@index')
+    ->setName('login.page')
+    ->useMiddlewares(['login_session']);
+
+Route::post('/user/login', 'UserController@login')
+    ->setName('user.login')
+    ->useMiddlewares(['csrf_validator', 'login_validator']);
+
 Route::get('/user/logout', 'UserController@logout')->setName('user.logout');
-Route::get('/admin', 'AdminController@index')->setName('admin')->useMiddlewares(['admin']);
+
+Route::get('/admin', 'AdminController@index')
+    ->setName('admin')
+    ->useMiddlewares(['admin_session']);

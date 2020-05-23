@@ -1,7 +1,7 @@
 <?php
 
-use Framework\Http\Route;
-use Framework\Http\Middleware;
+use Framework\Core\Route;
+use Framework\Core\Middleware;
 
 /**
  * TinyMVC

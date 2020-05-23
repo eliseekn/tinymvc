@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Http\Controllers;
 
-use App\Models\UsersModel;
 use Framework\Http\Request;
 use Framework\Http\Redirect;
 use Framework\Core\Controller;
+use App\Database\Models\UsersModel;
 
 /**
  * UserController
@@ -40,7 +40,7 @@ class UserController extends Controller
 			Redirect::toRoute('admin')->only();
 		}
 
-		Redirect::toRoute('login.page')->withMessage('login_failed', 'Incorect username or/and password');
+		Redirect::toRoute('login.page')->withMessage('login_failed', 'Incorect username or/and password.');
 	}
 
 	public function logout(): void

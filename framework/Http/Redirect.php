@@ -88,9 +88,9 @@ class Redirect
      * @param  string $content content of message
      * @return void
      */
-    public function withMessage(string $title, string $content): void
+    public function withMessage(string $title, $content): void
     {
-        create_session('flash_message', [
+        create_session('flash_messages', [
             $title => $content
         ]);
 

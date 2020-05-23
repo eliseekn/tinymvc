@@ -20,7 +20,7 @@ require __DIR__ . DIRECTORY_SEPARATOR . '../config/env.php';
 //get migration class instance
 function getMigration(string $migration)
 {
-    $migration = 'App\Migrations\\' . $migration;
+    $migration = 'App\Database\Migrations\\' . $migration;
 
     if (!class_exists($migration) || !method_exists($migration, 'migrate')) {
         print('[-] Invalid migration class "' . $migration . '"' . PHP_EOL);
@@ -33,7 +33,7 @@ function getMigration(string $migration)
 //get seed class instance
 function getSeed(string $seed)
 {
-    $seed = 'App\Seeds\\' . $seed;
+    $seed = 'App\Database\Seeds\\' . $seed;
 
     if (!class_exists($seed) || !method_exists($seed, 'sow')) {
         print('[-] Invalid seed class "' . $seed . '"' . PHP_EOL);

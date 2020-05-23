@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Seeds;
+namespace App\Database\Seeds;
 
 use Faker\Factory;
 use Framework\ORM\Seeder;

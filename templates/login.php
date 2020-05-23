@@ -15,9 +15,21 @@
         <div class="container" style="width: 400px">
             <h1 class="display-4 py-3 text-center">Login</h1>
 
-            <?php if (session_has('flash_message')) { ?>
+            <?php if (session_has('flash_messages')) { ?>
                 <div class="alert alert-danger" role="alert">
-                    <?= get_flash_message('login_failed') ?>
+                    <?php
+                        $flash_messages = get_flash_messages('flash_messages');
+
+                        foreach ($flash_messages as $flash_message) {
+                            if (is_array($flash_message)) {
+                                foreach ($flash_message as $error_message) {
+                                    echo $error_message . '<br>';
+                                };
+                            } else {
+                                echo $flash_message . '<br>';
+                            }
+                        }
+                    ?>
                 </div>
             <?php } ?>
 
@@ -26,11 +38,11 @@
                     <?= generate_csrf_token() ?>
                     
                     <div class="form-group">
-                        <input type="text" name="email" placeholder="Email address" class="form-control" required>
+                        <input type="text" name="email" placeholder="Email address" class="form-control">
                     </div>
 
                     <div class="form-group">
-                        <input type="password" name="password" placeholder="Password" class="form-control" required>
+                        <input type="password" name="password" placeholder="Password" class="form-control">
                     </div>
 
                     <button type="submit" class="btn btn-lg btn-dark">Submit</button>

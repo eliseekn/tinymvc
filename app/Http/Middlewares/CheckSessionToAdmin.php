@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Middlewares;
+namespace App\Http\Middlewares;
 
 use Framework\Http\Redirect;
-use Framework\Core\Middleware;
 
 /**
  * CheckSessionToAdmin
  * 
  * Check for user with administrator role session
  */
-class CheckSessionToAdmin extends Middleware
+class CheckSessionToAdmin
 {    
     /**
      * handle function

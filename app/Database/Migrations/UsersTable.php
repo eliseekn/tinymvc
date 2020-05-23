@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Migrations;
+namespace App\Database\Migrations;
 
 use Framework\ORM\Migration;
 
