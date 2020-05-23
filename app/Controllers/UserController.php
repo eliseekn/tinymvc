@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Controllers;
 
 use Framework\Http\Request;
 use Framework\Http\Redirect;

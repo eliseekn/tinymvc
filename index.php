@@ -1,8 +1,5 @@
 <?php
 
-use Framework\Core\Route;
-use Framework\Core\Middleware;
-
 /**
  * TinyMVC
  * 
@@ -26,8 +23,6 @@ require 'config/env.php';
 require 'config/database.php';
 require 'config/routes.php';
 require 'config/middlewares.php';
-
-//dump_exit(Route::$routes, Route::$names, Middleware::$names, Middleware::$middlewares);
 
 //start routing system
 $router = new \Framework\Core\Router();

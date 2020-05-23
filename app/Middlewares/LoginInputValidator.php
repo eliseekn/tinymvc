@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Middlewares;
+namespace App\Middlewares;
 
-use App\Http\Requests\LoginRequest;
+use App\Requests\LoginRequest;
 use Framework\Http\Redirect;
 
 /**

@@ -42,7 +42,7 @@ class Middleware
     public static function execute(string $middleware): void
     {
         $middleware = self::$names[$middleware]; 
-        $middleware = 'App\Http\Middlewares\\' . $middleware;
+        $middleware = 'App\Middlewares\\' . $middleware;
 
         //return a 404 error if controller filename not found or action does not exists
         if (!class_exists($middleware) || !method_exists($middleware, 'handle')) {
@@ -61,7 +61,6 @@ class Middleware
      */
     public static function check(string $route): void
     {
-        $route = explode('\\', $route)[3];
         $route = array_search($route, Route::$names, true);
 
         if (array_key_exists($route, self::$middlewares)) {

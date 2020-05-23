@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Middlewares;
+namespace App\Middlewares;
 
 use Framework\Http\Request;
 use Framework\Http\Redirect;

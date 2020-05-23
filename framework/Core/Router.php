@@ -22,11 +22,11 @@ use Framework\Http\Request;
 class Router
 {
     /**
-     * route url
+     * route uri
      *
      * @var array
      */
-    protected $url = [];
+    protected $uri = [];
 
     /**
      * url action
@@ -85,14 +85,23 @@ class Router
     public function __construct()
     {
         $this->request = new Request();
-
+        $this->parseURI();
+    }
+    
+    /**
+     * parse requested uri
+     *
+     * @return void
+     */
+    private function parseURI(): void
+    {
         $uri = filter_var($this->request->getUri(), FILTER_SANITIZE_URL);
         $uri = explode('/', trim($uri, '/'));
         $root = explode('/', trim(ROOT_FOLDER, '/'));
         
-        $this->url = $uri === $root ? [] : array_slice($uri, count($root), count($uri));
+        $this->uri = $uri === $root ? [] : array_slice($uri, count($root), count($uri));
 
-        $current_url = implode('/', $this->url);
+        $current_url = implode('/', $this->uri);
         $browsing_history = get_session('browsing_history');
 
         if (empty($browsing_history)) {
@@ -133,25 +142,22 @@ class Router
     }
 
     /**
-     * load controller and action with parameters
+     * match routes, controller and methods
      *
      * @return void
      */
-    public function dispatch(): void
+    private function matchRoutes(): void
     {
-        //set routes
-        $this->setRoutes();
-
         //retrieves controller name as first parameter
-        $this->controller = $this->url[0] ?? '';
-        unset($this->url[0]);
+        $this->controller = $this->uri[0] ?? '';
+        unset($this->uri[0]);
 
         //retrieves action name as second parameter
-        $this->action = $this->url[1] ?? '';
-        unset($this->url[1]);
+        $this->action = $this->uri[1] ?? '';
+        unset($this->uri[1]);
 
         //set rest of url as parameters
-        $this->params = $this->url ?? [];
+        $this->params = $this->uri ?? [];
 
         //check routes for redirection
         if (array_key_exists($this->controller, $this->routes)) {
@@ -172,12 +178,26 @@ class Router
                 }
             }
         }
+    }
 
-        //load controller class
-        $this->controller = 'App\Http\Controllers\\' . $this->controller;
+    /**
+     * load controller and action with parameters
+     *
+     * @return void
+     */
+    public function dispatch(): void
+    {
+        //set routes
+        $this->setRoutes();
+
+        //mathc routes
+        $this->matchRoutes();
+
+        //load controller
+        $controller = 'App\Controllers\\' . $this->controller;
 
         //return a 404 error if controller filename not found or action does not exists
-        if (!class_exists($this->controller) || !method_exists($this->controller, $this->action)) {
+        if (!class_exists($controller) || !method_exists($controller, $this->action)) {
             View::render('error_404');
         }
 
@@ -185,6 +205,6 @@ class Router
         Middleware::check($this->controller . '@' . $this->action);
 
         //execute controller with action and parameter
-        call_user_func_array([new $this->controller(), $this->action], $this->params);
+        call_user_func_array([new $controller(), $this->action], $this->params);
     }
 }

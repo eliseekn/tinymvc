@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Requests;
 
 use Framework\Http\Request;
 use GUMP;
