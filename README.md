@@ -55,10 +55,10 @@ Main application configuration is located in ```app/config/app.php```. You can d
 
 ```php
 //define application base path to server root
-define('APP_ROOT', '/');
+define('ROOT_FOLDER', '/');
 
 //define application base path to a subfolder
-define('APP_ROOT', '/tinymvc/');
+define('ROOT_FOLDER', '/tinymvc/');
 ```
 
 ## Routing

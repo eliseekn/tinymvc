@@ -10,7 +10,7 @@
  * @link https://github.com/eliseekn/TinyMVC
  */
 
-use Framework\Http\Route;
+use Framework\Core\Route;
 
 /**
  * Set routes paths
@@ -19,4 +19,5 @@ Route::get('/', 'HomeController@index');
 Route::get('/home', 'HomeController@index')->setName('home');
 Route::get('/login', 'UserController@index')->setName('login.page')->useMiddlewares(['login']);
 Route::post('/user/login', 'UserController@login')->setName('user.login')->useMiddlewares(['csrf']);
+Route::get('/user/logout', 'UserController@logout')->setName('user.logout');
 Route::get('/admin', 'AdminController@index')->setName('admin')->useMiddlewares(['admin']);

@@ -10,9 +10,9 @@
  * @link https://github.com/eliseekn/TinyMVC
  */
 
-namespace Framework\Http;
+namespace Framework\Core;
 
-use Framework\Core\View;
+use Framework\Http\Request;
 
 /**
  * Router
@@ -85,13 +85,23 @@ class Router
     public function __construct()
     {
         $this->request = new Request();
-        create_session('current_url', $this->request->getUri());
 
         $uri = filter_var($this->request->getUri(), FILTER_SANITIZE_URL);
         $uri = explode('/', trim($uri, '/'));
-        $root = explode('/', trim(APP_ROOT, '/'));
+        $root = explode('/', trim(ROOT_FOLDER, '/'));
         
         $this->url = $uri === $root ? [] : array_slice($uri, count($root), count($uri));
+
+        $current_url = implode('/', $this->url);
+        $browsing_history = get_session('browsing_history');
+
+        if (empty($browsing_history)) {
+            $browsing_history = [$current_url];
+        } else {
+            $browsing_history[] = $current_url;
+        }
+
+        create_session('browsing_history', $browsing_history);
     }
     
     /**
@@ -105,7 +115,7 @@ class Router
         if (empty(Route::$routes)) {
             View::render('error_404');
         }
-        
+
         foreach (Route::$routes as $custom_route => $route) {
             list($method, $custom_controller) = explode('/', $custom_route);
             $custom_action = count(explode('/', $custom_route)) > 2 ? explode('/', $custom_route)[2] : '';
@@ -113,48 +123,15 @@ class Router
 
             if (array_key_exists($custom_controller, $this->routes)) {
                 $this->actions[$custom_controller][$custom_action] = $action;
-                $this->methods[$custom_controller][] = strtoupper(trim($method));
+                $this->methods[$action][] = strtoupper(trim($method));
             } else {
                 $this->routes[$custom_controller] = $controller;
                 $this->actions[$custom_controller] = [$custom_action => $action];
-                $this->methods[$custom_controller] = [strtoupper(trim($method))];
+                $this->methods[$action] = [strtoupper(trim($method))];
             }
         }
     }
 
-    /**
-     * redirect to route
-     *
-     * @param  string $name route name or Controller@action
-     * @param  array $params parameters 
-     * @return void
-     */
-    public static function redirectToRoute(string $name, array $params = []): void
-    {
-        $params = empty($params) ? '' : implode('/', $params);
-
-        if (array_key_exists($name, Route::$names)) {
-            $route = Route::$names[$name];
-        }
-        
-        if (isset($route) && in_array($route, Route::$routes, true)) {
-            $url = array_search($route, Route::$routes, true);
-            $url = str_replace(['GET /', 'POST /', 'PUT /', 'DELETE /', 'PATCH /', 'OPTIONS /', 'ANY /'], '', $url);
-            $url = empty($params) ? $url : '/' . $params;
-            redirect_to($url);
-        } 
-
-        if (in_array($name, Route::$routes, true)) {
-            $url = array_search($name, Route::$routes, true);
-            $url = str_replace(['GET /', 'POST /', 'PUT /', 'DELETE /', 'PATCH /', 'OPTIONS /', 'ANY /'], '', $url);
-            $url = empty($params) ? $url : '/' . $params;
-            redirect_to($url);
-        }
-
-        //route not found
-        View::render('error_404');
-    }
-    
     /**
      * load controller and action with parameters
      *
@@ -178,17 +155,21 @@ class Router
 
         //check routes for redirection
         if (array_key_exists($this->controller, $this->routes)) {
-            if ($this->methods[$this->controller][0] !== 'ANY') {
-                if ($this->request->getMethod() !== $this->methods[$this->controller][0]) {
-                    View::render('error_404');
-                }
-            }
-
             $actions = $this->actions[$this->controller];
             $this->controller = $this->routes[$this->controller];
 
             if (array_key_exists($this->action, $actions)) {
                 $this->action = $actions[$this->action];
+
+                if (array_key_exists($this->action, $this->methods)) {
+                    $method = $this->methods[$this->action];
+
+                    if ($method[0] !== 'ANY') {
+                        if ($this->request->getMethod() !== $method[0]) {
+                            View::render('error_404');
+                        }
+                    }
+                }
             }
         }
 

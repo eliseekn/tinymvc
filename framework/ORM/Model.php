@@ -89,7 +89,7 @@ class Model
      * @param  string $value value to check
      * @return void
      */
-    public function delete(int $id)
+    public function delete(int $id): void
     {
         $this->QB->deleteFrom($this->table)
             ->where('id', '=', $id)
@@ -115,7 +115,7 @@ class Model
      * @param  mixed $id
      * @return void
      */
-    public function update(int $id)
+    public function update(int $id): void
     {
         $this->QB->update($this->table)
             ->set($this->data)
@@ -128,7 +128,7 @@ class Model
      *
      * @return void
      */
-    public function save()
+    public function save(): void
     {
         $this->QB->insert($this->table, $this->data)
             ->executeQuery();

@@ -12,8 +12,6 @@
 
 namespace Framework\Core;
 
-use Framework\Http\Route;
-
 /**
  * Controller
  * 

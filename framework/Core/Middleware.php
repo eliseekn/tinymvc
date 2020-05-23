@@ -10,9 +10,7 @@
  * @link https://github.com/eliseekn/TinyMVC
  */
 
-namespace Framework\Http;
-
-use Framework\Core\View;
+namespace Framework\Core;
 
 /**
  * Middleware

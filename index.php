@@ -30,5 +30,5 @@ require 'config/middlewares.php';
 //dump_exit(Route::$routes, Route::$names, Middleware::$names, Middleware::$middlewares);
 
 //start routing system
-$router = new \Framework\Http\Router();
+$router = new \Framework\Core\Router();
 $router->dispatch();

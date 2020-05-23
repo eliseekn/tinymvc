@@ -1,19 +1,9 @@
 <?php
 
-/**
- * TinyMVC
- * 
- * PHP framework based on MVC architecture
- * 
- * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
- * @license MIT (https://opensource.org/licenses/MIT)
- * @link https://github.com/eliseekn/TinyMVC
- */
-
 namespace App\Middlewares;
 
-use Framework\Http\Router;
-use Framework\Http\Middleware;
+use Framework\Http\Redirect;
+use Framework\Core\Middleware;
 
 /**
  * CheckSessionToAdmin
@@ -32,11 +22,11 @@ class CheckSessionToAdmin extends Middleware
         $user = get_session('logged_user');
 
         if (empty($user)) {
-            Router::redirectToRoute('login.page');
+            Redirect::toRoute('login.page')->only();
         }
 
         if ($user->role !== 'administrator') {
-            Router::redirectToRoute('home');
+            Redirect::back()->only();
         }
     }
 }

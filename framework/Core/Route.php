@@ -10,7 +10,7 @@
  * @link https://github.com/eliseekn/TinyMVC
  */
 
-namespace Framework\Http;
+namespace Framework\Core;
 
 /**
  * Route

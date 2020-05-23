@@ -15,10 +15,10 @@
  */
 
 //define application root folder. Set to '/' for server root
-define('APP_ROOT', '/tinymvc/');
+define('ROOT_FOLDER', '/tinymvc/');
 
 //domain url
-define('WEB_DOMAIN', 'http://localhost' . APP_ROOT);
+define('WEB_DOMAIN', 'http://localhost' . ROOT_FOLDER);
 
 //absolute application path
 define('DOCUMENT_ROOT', $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR);

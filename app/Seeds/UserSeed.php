@@ -1,15 +1,5 @@
 <?php
 
-/**
- * TinyMVC
- * 
- * PHP framework based on MVC architecture
- * 
- * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
- * @license MIT (https://opensource.org/licenses/MIT)
- * @link https://github.com/eliseekn/TinyMVC
- */
-
 namespace App\Seeds;
 
 use Faker\Factory;
@@ -34,8 +24,8 @@ class UserSeed extends Seeder
         $this->insert('users', [
             'name' => $faker->name,
             'email' => $faker->email,
-            'password' => hash_string('password'),
-            'role' => 'user'
+            'password' => hash_string('admin'),
+            'role' => 'administrator'
         ]);
     }
 }

@@ -10,7 +10,7 @@
  * @link https://github.com/eliseekn/TinyMVC
  */
 
-use Framework\Http\Middleware;
+use Framework\Core\Middleware;
 
 /**
  * Set routes paths

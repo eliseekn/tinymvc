@@ -1,20 +1,10 @@
 <?php
 
-/**
- * TinyMVC
- * 
- * PHP framework based on MVC architecture
- * 
- * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
- * @license MIT (https://opensource.org/licenses/MIT)
- * @link https://github.com/eliseekn/TinyMVC
- */
-
 namespace App\Controllers;
 
 use App\Models\UsersModel;
-use Framework\Http\Router;
 use Framework\Http\Request;
+use Framework\Http\Redirect;
 use Framework\Core\Controller;
 
 /**
@@ -37,19 +27,25 @@ class UserController extends Controller
 		]);
 	}
 
-	public function login()
+	public function login(): void
 	{
 		$request = new Request();
         $email = $request->postQuery('email');
 		$password = $request->postQuery('password');
 		
-        $user = new UsersModel();
+		$user = new UsersModel();
 
         if ($user->isRegistered($email, $password)) {
 			create_session('logged_user', $user->get($email));
-            Router::redirectToRoute('admin');
+			Redirect::toRoute('admin')->only();
 		}
 
-		Router::redirectToRoute('login.page');
+		Redirect::toRoute('login.page')->withMessage('login_failed', 'Incorect username or/and password');
+	}
+
+	public function logout(): void
+	{
+		close_session('logged_user');
+		Redirect::toRoute('home')->only();
 	}
 }

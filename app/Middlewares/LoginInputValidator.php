@@ -7,11 +7,11 @@ use Framework\Http\Redirect;
 use Framework\Core\Middleware;
 
 /**
- * CsrfTokenValidator
+ * LoginInputValidator
  * 
- * CSRF token validator
+ * Login input fields validator
  */
-class CsrfTokenValidator extends Middleware
+class LoginInputValidator extends Middleware
 {    
     /**
      * handle function
@@ -24,7 +24,7 @@ class CsrfTokenValidator extends Middleware
         $csrf_token = $request->postQuery('csrf_token');
 
         if (!is_valid_csrf_token($csrf_token)) {
-            Redirect::toRoute('login.page')->only();
+            Redirect::toRoute('login.page')->withMessage('', '');
         }
     }
 }
