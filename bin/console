@@ -43,6 +43,9 @@ function getSeed(string $seed)
     return new $seed();
 }
 
+$migrations_folder = 'app' . DIRECTORY_SEPARATOR . 'Database' . DIRECTORY_SEPARATOR . 'Migrations';
+$seeds_folder = 'app' . DIRECTORY_SEPARATOR . 'Database' . DIRECTORY_SEPARATOR . 'Seeds';
+
 //get command line arguments
 $options = getopt('', ['migration::', 'seed::', 'clear::', 'delete::', 'rollback::']);
 
@@ -57,7 +60,7 @@ if (
         $migration = getMigration($options['migration']);
         $migration->migrate();
     } else {
-        $objects = scandir('app' . DIRECTORY_SEPARATOR . 'Migrations');
+        $objects = scandir($migrations_folder);
 
         foreach ($objects as $object) {
             if ($object != '.' && $object != '..') {
@@ -84,7 +87,7 @@ if (
         $migration = getMigration($options['migration']);
         $migration->migrate();
     } else {
-        $objects = scandir('app' . DIRECTORY_SEPARATOR . 'Migrations');
+        $objects = scandir($migrations_folder);
 
         foreach ($objects as $object) {
             if ($object != '.' && $object != '..') {
@@ -99,7 +102,7 @@ if (
         $seed = getSeed($options['seed']);
         $seed->sow();
     } else {
-        $objects = scandir('app' . DIRECTORY_SEPARATOR . 'Seeders');
+        $objects = scandir($seeds_folder);
 
         foreach ($objects as $object) {
             if ($object != '.' && $object != '..') {
@@ -120,7 +123,7 @@ if (array_key_exists('migration', $options) && array_key_exists('clear', $option
         $migration = getMigration($options['migration']);
         $migration->clear();
     } else {
-        $objects = scandir('app' . DIRECTORY_SEPARATOR . 'Migrations');
+        $objects = scandir($migrations_folder);
 
         foreach ($objects as $object) {
             if ($object != '.' && $object != '..') {
@@ -141,7 +144,7 @@ if (array_key_exists('migration', $options) && array_key_exists('delete', $optio
         $migration = getMigration($options['migration']);
         $migration->delete();
     } else {
-        $objects = scandir('app' . DIRECTORY_SEPARATOR . 'Migrations');
+        $objects = scandir($migrations_folder);
 
         foreach ($objects as $object) {
             if ($object != '.' && $object != '..') {
@@ -166,7 +169,7 @@ if (
         $migration = getMigration($options['migration']);
         $migration->rollback();
     } else {
-        $objects = scandir('app' . DIRECTORY_SEPARATOR . 'Migrations');
+        $objects = scandir($migrations_folder);
 
         foreach ($objects as $object) {
             if ($object != '.' && $object != '..') {
@@ -191,7 +194,7 @@ if (
         $migration = getMigration($options['migration']);
         $migration->rollback();
     } else {
-        $objects = scandir('app' . DIRECTORY_SEPARATOR . 'Migrations');
+        $objects = scandir($migrations_folder);
 
         foreach ($objects as $object) {
             if ($object != '.' && $object != '..') {
@@ -206,7 +209,7 @@ if (
         $seed = getSeed($options['seed']);
         $seeder->sow();
     } else {
-        $objects = scandir('app' . DIRECTORY_SEPARATOR . 'Seeds');
+        $objects = scandir($seeds_folder);
 
         foreach ($objects as $object) {
             if ($object != '.' && $object != '..') {
@@ -227,7 +230,7 @@ if (array_key_exists('seed', $options)) {
         $seed = getSeed($options['seed']);
         $seed->sow();
     } else {
-        $objects = scandir('app' . DIRECTORY_SEPARATOR . 'Seeds');
+        $objects = scandir($seeds_folder);
 
         foreach ($objects as $object) {
             if ($object != '.' && $object != '..') {

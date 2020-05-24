@@ -15,7 +15,7 @@ use Framework\Core\Middleware;
 /**
  * Set routes paths
  */
-Middleware::setName('csrf_validator', 'CsrfTokenValidator');
-Middleware::setName('login_session', 'CheckSessionToLogin');
-Middleware::setName('admin_session', 'CheckSessionToAdmin');
-Middleware::setName('login_validator', 'LoginInputValidator');
+Middleware::setName('CsrfTokenValidator', 'csrf_validator');
+Middleware::setName('CheckSessionToLogin', 'auth_session');
+Middleware::setName('CheckSessionToAdmin', 'admin_session');
+Middleware::setName('LoginInputValidator', 'auth_validator');

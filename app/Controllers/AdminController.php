@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use Framework\Core\Controller;
+use Framework\Http\Response;
 
 /**
  * AdminController
@@ -18,6 +19,6 @@ class AdminController extends Controller
 	 */
 	public function index(): void
 	{
-		echo 'This is adminitration page';
+		Response::send([], 'This is admin page')->andStop();
 	}
 }

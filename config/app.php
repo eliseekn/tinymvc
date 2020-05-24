@@ -14,8 +14,8 @@
  * Application main configuration
  */
 
-//define application root folder. Set to '/' for server root
-define('ROOT_FOLDER', '/tinymvc/');
+//define application root folder. Leave empty for server root
+define('ROOT_FOLDER', '/tinymvc');
 
 //domain url
 define('WEB_DOMAIN', 'http://localhost' . ROOT_FOLDER);

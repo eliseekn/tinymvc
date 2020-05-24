@@ -61,8 +61,6 @@ class Middleware
      */
     public static function check(string $route): void
     {
-        $route = array_search($route, Route::$names, true);
-
         if (array_key_exists($route, self::$middlewares)) {
             foreach (self::$middlewares[$route] as $middleware) {
                 self::execute($middleware);
@@ -73,11 +71,11 @@ class Middleware
     /**
      * set middleware name
      *
-     * @param  string $name name of middleware
      * @param  string $middleware middleware class
+     * @param  string $name name of middleware
      * @return void
      */
-    public static function setName(string $name, string $middleware): void
+    public static function setName(string $middleware, string $name): void
     {
         self::$names[$name] = $middleware; 
     }

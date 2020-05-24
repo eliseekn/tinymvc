@@ -24,6 +24,4 @@ require 'config/database.php';
 require 'config/routes.php';
 require 'config/middlewares.php';
 
-//start routing system
-$router = new \Framework\Core\Router();
-$router->dispatch();
+new \Framework\Core\Router();

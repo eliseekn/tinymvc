@@ -27,7 +27,7 @@ class Response
      * @param  int $code response status code
      * @return void
      */
-    public static function send(array $headers, $body, int $code = 200): void
+    public static function send(array $headers, $body, int $code = 200)
     {
         //send response status code
         http_response_code($code);
@@ -44,6 +44,8 @@ class Response
             header('Content-Length: ' . strlen($body));
             echo $body;
         }
+
+        return new self();
     }
 
     /**
@@ -54,7 +56,7 @@ class Response
      * @param  int $code response status code
      * @return void
      */
-    public static function sendJson(array $headers, array $body, int $code = 200): void
+    public static function sendJson(array $headers, array $body, int $code = 200)
     {
         if (!is_array($body) || !empty($body)) {
             return;
@@ -78,5 +80,17 @@ class Response
         header('Content-Length: ' . strlen($body));
 
         echo $body;
+
+        return new self();
+    }
+    
+    /**
+     * stop script execution
+     *
+     * @return void
+     */
+    public function andStop(): void
+    {
+        exit();
     }
 }

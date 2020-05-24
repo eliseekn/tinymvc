@@ -21,7 +21,7 @@ class CheckSessionToAdmin
         $user = get_session('logged_user');
 
         if (empty($user)) {
-            Redirect::toRoute('login.page')->only();
+            Redirect::toRoute('auth_page')->only();
         }
 
         if ($user->role !== 'administrator') {

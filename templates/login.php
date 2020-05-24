@@ -34,7 +34,7 @@
             <?php } ?>
 
             <div class="card shadow p-5">
-                <form method="post" action="<?= absolute_url('user/login') ?>">
+                <form method="post" action="<?= absolute_url('/user/login') ?>">
                     <?= generate_csrf_token() ?>
                     
                     <div class="form-group">

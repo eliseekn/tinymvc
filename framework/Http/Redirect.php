@@ -1,12 +1,27 @@
 <?php
 
+/**
+ * TinyMVC
+ * 
+ * PHP framework based on MVC architecture
+ * 
+ * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @license MIT (https://opensource.org/licenses/MIT)
+ * @link https://github.com/eliseekn/TinyMVC
+ */
+
 namespace Framework\Http;
 
 use Framework\Core\View;
 use Framework\Core\Route;
 
+/**
+ * Redirect
+ * 
+ * Redirection class
+ */
 class Redirect
-{    
+{
     /**
      * url to redirect
      *
@@ -23,30 +38,40 @@ class Redirect
      */
     public static function toRoute(string $name, array $params = [])
     {
-        $methods = ['GET /', 'POST /', 'PUT /', 'DELETE /', 'PATCH /', 'OPTIONS /', 'ANY /'];
         $params = empty($params) ? '' : implode('/', $params);
 
-        if (array_key_exists($name, Route::$names)) {
-            $route = Route::$names[$name];
+        //search key from value in a multidimensional array
+        //https://www.php.net/manual/en/function.array-search.php
+        $url = array_search(
+            $name,
+            array_map(
+                function ($val) {
+                    return $val['name'];
+                },
+                Route::$routes
+            )
+        );
 
-            if (in_array($route, Route::$routes, true)) {
-                $url = array_search($route, Route::$routes, true);
-                $url = str_replace($methods, '', $url);
-                self::$redirect_url = empty($params) ? $url : $url . '/' . $params;
-            } else {
+        if (empty($url)) {
+            $url = array_search(
+                $name,
+                array_map(
+                    function ($val) {
+                        return $val['controller'];
+                    },
+                    Route::$routes
+                )
+            );
+
+            if (empty($url)) {
                 View::render('error_404');
             }
-        } else if (in_array($name, Route::$routes, true)) {
-            $url = array_search($name, Route::$routes, true);
-            $url = str_replace($methods, '', $url);
-            self::$redirect_url = empty($params) ? $url : $url . '/' . $params;
-        } else {
-            View::render('error_404');
         }
 
+        self::$redirect_url = empty($params) ? $url : $url . '/' . $params;
         return new self();
     }
-    
+
     /**
      * go to previous page
      *
@@ -64,7 +89,7 @@ class Redirect
 
         return new self();
     }
-    
+
     /**
      * refresh page
      *
@@ -80,7 +105,7 @@ class Redirect
 
         return new self();
     }
-    
+
     /**
      * redirects with session flash message
      *
@@ -96,7 +121,7 @@ class Redirect
 
         redirect_to(self::$redirect_url);
     }
-    
+
     /**
      * redirects without session flash message
      *

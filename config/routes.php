@@ -15,19 +15,51 @@ use Framework\Core\Route;
 /**
  * Set routes paths
  */
-Route::get('/', 'HomeController@index');
-Route::get('/home', 'HomeController@index')->setName('home');
 
-Route::get('/login', 'UserController@index')
-    ->setName('login.page')
-    ->useMiddlewares(['login_session']);
+Route::add('/', [
+    'method' => 'GET',
+    'controller' => 'HomeController@index',
+    'name' => 'home'
+]);
 
-Route::post('/user/login', 'UserController@login')
-    ->setName('user.login')
-    ->useMiddlewares(['csrf_validator', 'login_validator']);
+Route::add('/home', [
+    'method' => 'GET',
+    'controller' => 'HomeController@index',
+    'name' => 'home'
+]);
 
-Route::get('/user/logout', 'UserController@logout')->setName('user.logout');
+Route::add('/login', [
+    'method' => 'GET',
+    'controller' => 'UserController@index',
+    'name' => 'auth_page',
+    'middlewares' => ['auth_session']
+]);
 
-Route::get('/admin', 'AdminController@index')
-    ->setName('admin')
-    ->useMiddlewares(['admin_session']);
+Route::add('/user/login', [
+    'method' => 'POST',
+    'controller' => 'UserController@login',
+    'name' => 'auth_action',
+    'middlewares' => [
+        'csrf_validator', 
+        'auth_validator'
+    ]
+]);
+
+Route::add('/user/logout', [
+    'method' => 'GET',
+    'controller' => 'UserController@logout',
+    'name' => 'logout'
+]);
+
+Route::add('/admin', [
+    'method' => 'GET',
+    'controller' => 'AdminController@index',
+    'name' => 'admin',
+    'middlewares' => ['admin_session']
+]);
+
+Route::add('/post/{slug:str}', [
+    'method' => 'GET',
+    'controller' => 'PostController@index',
+    'name' => 'post'
+]);

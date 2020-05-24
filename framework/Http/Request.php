@@ -18,28 +18,28 @@ namespace Framework\Http;
  * Handle HTTP requests
  */
 class Request
-{    
+{
     /**
      * url to send request
      *
      * @var string
      */
     protected $url;
-        
+
     /**
      * response request
      *
      * @var string
      */
     protected $response = [];
-    
+
     /**
      * $_FILES request
      *
      * @var array
      */
     protected $file = [];
-    
+
     /**
      * instantiates class with url for request to send
      *
@@ -65,7 +65,7 @@ class Request
             return empty($field) ? $_SERVER : $_SERVER[$field] ?? '';
         }
     }
-    
+
     /**
      * retrieves request get method
      *
@@ -109,7 +109,7 @@ class Request
         $this->file = $_FILES[$field] ?? [];
         return $this;
     }
-    
+
     /**
      * move uploaded file
      *
@@ -132,7 +132,7 @@ class Request
     {
         return $this->getHeaders('REQUEST_METHOD');
     }
-    
+
     /**
      * retrieves uri request
      *
@@ -142,7 +142,7 @@ class Request
     {
         return $this->getHeaders('REQUEST_URI');
     }
-    
+
     /**
      * send request to url
      *
@@ -156,7 +156,7 @@ class Request
         $this->response = curl($method, [$this->url], $data, $json_data);
         return $this;
     }
-    
+
     /**
      * get response body
      *

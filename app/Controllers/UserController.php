@@ -40,7 +40,7 @@ class UserController extends Controller
 			Redirect::toRoute('admin')->only();
 		}
 
-		Redirect::toRoute('login.page')->withMessage('login_failed', 'Incorect username or/and password.');
+		Redirect::toRoute('auth_page')->withMessage('login_failed', 'Incorect username or/and password.');
 	}
 
 	public function logout(): void

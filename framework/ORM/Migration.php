@@ -188,7 +188,7 @@ class Migration
      */
     public function truncateTable(string $name): void
     {
-        $this->query = "TRUNCATE IF EXISTS $name";
+        $this->query = "TRUNCATE $name";
         $this->executeQuery();
     }
 }
