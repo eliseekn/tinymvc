@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="The page you have requested does not exists on this server">
-    <link rel="stylesheet" href="<?= absolute_url('/public/assets/css/style.css') ?>">
+    <link rel="stylesheet" href="<?= absolute_url('/public/assets/css/main.css') ?>">
     <title>Error 404 - Page not found</title>
 </head>
 

@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Database\Models\PostsModel;
 use Framework\Core\Controller;
 
 /**
@@ -18,9 +19,12 @@ class HomeController extends Controller
 	 */
 	public function index(): void
 	{
+		$posts = new PostsModel();
+
 		$this->renderView('home', [
-			'page_title' => 'TinyMVC - Just a PHP framework based on MVC architecture',
-			'page_description' => 'TinyMVC is a PHP framework based on MVC architecture'
+			'page_title' => 'The Mount Everest Blog',
+			'page_description' => 'Blog about mountaineering',
+			'posts' => $posts->paginate(5)
 		]);
 	}
 }

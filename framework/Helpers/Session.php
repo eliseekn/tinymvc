@@ -76,6 +76,20 @@ function close_session(string $name): void
 }
 
 /**
+ * create flash message
+ *
+ * @param  string $title title of message
+ * @param  string $content content of message
+ * @return void
+ */
+function create_flash_message(string $title, $content): void
+{
+	create_session('flash_messages', [
+		$title => $content
+	]);
+}
+
+/**
  * get flash message
  *
  * @return mixed returns message content

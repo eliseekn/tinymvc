@@ -138,9 +138,21 @@ class Request
      *
      * @return mixed
      */
-    public function getUri()
+    public function getURI()
     {
-        return $this->getHeaders('REQUEST_URI');
+        $uri = $this->getHeaders('REQUEST_URI');
+        $uri = str_replace(ROOT_FOLDER, '', $uri); //remove root subfolder if exists 
+
+        //looks for "?page=" or something
+        if (strpos($uri, '?')) {
+            $uri = substr($uri, strpos($uri, '/'), strpos($uri, '?'));
+            
+            if ($uri !== '/') {
+                $uri = rtrim($uri, '/');
+            }
+        }
+
+        return $uri;
     }
 
     /**

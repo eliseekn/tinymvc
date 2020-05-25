@@ -30,7 +30,9 @@ function generate_pagination(int $page, int $total_items, int $items_per_pages):
 	//set right page id
 	if ($page < 1) {
 		$page = 1;
-	} else if ($page > $total_pages) {
+	}
+	
+	if ($page > $total_pages) {
 		$page = $total_pages;
 	}
 

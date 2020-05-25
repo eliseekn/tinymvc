@@ -23,8 +23,8 @@
  */
 function generate_slug(string $str, string $separator = '-'): string
 {
-	$slug = preg_replace('/[^a-zA-Z0-9]/', $separator, $str);
-	$slug = strtolower(trim($slug, $separator));
+	$slug = strtolower(trim($str, $separator));
+	$slug = preg_replace('/[^a-zA-Z0-9]/', $separator, $slug);
 	$slug = preg_replace('/\-{2,}/', $separator, $slug);
 	return $slug;
 }

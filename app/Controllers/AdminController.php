@@ -19,6 +19,6 @@ class AdminController extends Controller
 	 */
 	public function index(): void
 	{
-		Response::send([], 'This is admin page')->andStop();
+		Response::send([], 'This is admin page');
 	}
 }

@@ -2,6 +2,8 @@
 
 namespace Framework\ORM;
 
+use Framework\Http\Request;
+
 class Model
 {    
     /**
@@ -9,21 +11,23 @@ class Model
      *
      * @var string
      */
-    private $table = ''; 
+    protected $table = ''; 
     
     /**
      * data to insert or update in table
      *
      * @var array
      */
-    private $data = [];
+    protected $data = [];
     
     /**
      * query builder instance
      *
      * @var mixed
      */
-    private $QB;
+    protected $QB;
+
+    protected $request;
 
     /**
      * instantiates class
@@ -34,6 +38,7 @@ class Model
     {
         $this->QB = new QueryBuilder();
         $this->table = $table;
+        $this->request = new Request();
     }
     
     /**
@@ -48,7 +53,7 @@ class Model
     }
     
     /**
-     * find row with where clause and get single row
+     * fetch single row
      *
      * @param  string $column name of column
      * @param  string $operator operator
@@ -57,36 +62,92 @@ class Model
      */
     public function findSingle(string $column, string $operator, string $value)
     {
-        $this->QB->select('*')
+        return (object) $this->QB->select('*')
             ->from($this->table)
-            ->where($column, $operator, $value);
-
-        return (object) $this->QB->fetchSingle();
+            ->where($column, $operator, $value)
+            ->fetchSingle();
     }
 
     /**
-     * find row with where clause and get all rows
+     * fetch all rows
+     *
+     * @param  string $direction DESC or ASC
+     * @return void
+     */
+    public function findAll(string $direction = 'DESC')
+    {
+        return (object) $this->QB->select('*')
+            ->from($this->table)
+            ->orderBy('id', $direction)
+            ->fetchAll();
+    }
+
+    /**
+     * find rows with where clause
      *
      * @param  string $column name of column
      * @param  string $operator operator
      * @param  string $value value to check
+     * @param  string $direction DESC or ASC
      * @return void
      */
-    public function findAll(string $column, string $operator, string $value)
+    public function findAllWhere(string $column, string $operator, string $value, string $direction = 'DESC')
     {
-        $this->QB->select('*')
+        return (object) $this->QB->select('*')
             ->from($this->table)
-            ->where($column, $operator, $value);
+            ->where($column, $operator, $value)
+            ->orderBy('id', $direction)
+            ->fetchAll();
+    }
 
-        return (object) $this->QB->fetchAll();
+    /**
+     * find rows with limit clause
+     *
+     * @param  int $limit
+     * @param  int $offset
+     * @param  string $direction DESC or ASC
+     * @return void
+     */
+    public function findRange(int $limit, int $offset, string $direction = 'DESC')
+    {
+        return (object) $this->QB->select('*')
+            ->from($this->table)
+            ->orderBy('id', $direction)
+            ->limit($limit, $offset)
+            ->fetchAll();
+    }
+
+    /**
+     * find rows with limit and where clauses
+     *
+     * @param  int $limit
+     * @param  int $offset
+     * @param  string $column name of column
+     * @param  string $operator operator
+     * @param  string $value value to check
+     * @param  string $direction DESC or ASC
+     * @return void
+     */
+    public function findRangeWhere(
+        int $limit,
+        int $offset,
+        string $column,
+        string $operator,
+        string $value,
+        string $direction = 'DESC'
+    ) {
+        return (object) $this->QB->select('*')
+            ->from($this->table)
+            ->where($column, $operator, $value)
+            ->orderBy('id', $direction)
+            ->limit($limit, $offset)
+            ->fetchAll();
     }
     
     /**
-     * delete with where clause
+     * delete row
      *
-     * @param  string $column name of column
-     * @param  string $operator operator
-     * @param  string $value value to check
+     * @param  int $id row id
      * @return void
      */
     public function delete(int $id): void
@@ -112,7 +173,7 @@ class Model
     /**
      * update 
      *
-     * @param  mixed $id
+     * @param  int $id row id
      * @return void
      */
     public function update(int $id): void
@@ -132,5 +193,38 @@ class Model
     {
         $this->QB->insert($this->table, $this->data)
             ->executeQuery();
+    }
+    
+    /**
+     * generate pagination
+     *
+     * @param  mixed $page current page
+     * @param  mixed $items_per_pages
+     * @return array
+     */
+    public function paginate(int $items_per_pages)
+    {
+        $page = empty($this->request->getQuery('page')) ? 1 : (int) $this->request->getQuery('page');
+
+        $total_items = $this->QB->select('*')
+            ->from($this->table)
+            ->rowsCount();
+
+        $pagination = generate_pagination($page, $total_items, $items_per_pages);
+        $items = $this->findRange($items_per_pages, $pagination['first_item']);
+
+        dump_exit(count((array) $items), $pagination['first_item']);
+
+        //convert array to class
+        $items = array_map(
+            function ($val) {
+                return (object) $val;
+            },
+            (array) $items
+        );
+
+        
+
+        return new Paginator($items, $pagination);
     }
 }

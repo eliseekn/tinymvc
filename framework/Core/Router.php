@@ -55,8 +55,7 @@ class Router
      */
     private function parseURI(): void
     {
-        $uri = filter_var($this->request->getUri(), FILTER_SANITIZE_URL);
-        $this->uri = str_replace(ROOT_FOLDER, '', $uri);
+        $this->uri = filter_var($this->request->getURI(), FILTER_SANITIZE_URL);
     }
     
     /**
@@ -89,8 +88,8 @@ class Router
             foreach ($routes as $route => $data) {
                 $route = preg_replace('/{([a-z]+):([^\}]+)}/i', '$2', $route);
                 $route = preg_replace(['/\bstr\b/', '/\bint\b/'], ['([a-zA-Z0-9-]+)', '(\d+)'], $route);
-                $pattern = '#^'.$route.'$#';
-                
+                $pattern = '#^' . $route . '$#';
+
                 if (preg_match($pattern, $this->uri, $params)) {
                     array_shift($params);
     
@@ -105,12 +104,16 @@ class Router
 
                             //execute controller with action and parameter
                             call_user_func_array([new $controller(), $action], array_values($params));
+                        } else {
+                            View::render('error_404');
                         }
                     }
                 }
             }
-        }
 
-        View::render('error_404');
+            View::render('error_404');
+        } else {
+            View::render('error_404');
+        }
     }
 }

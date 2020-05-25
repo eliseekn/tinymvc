@@ -115,15 +115,12 @@ class Redirect
      */
     public function withMessage(string $title, $content): void
     {
-        create_session('flash_messages', [
-            $title => $content
-        ]);
-
+        create_flash_message($title, $content);
         redirect_to(self::$redirect_url);
     }
 
     /**
-     * redirects without session flash message
+     * redirects only
      *
      * @return void
      */

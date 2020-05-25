@@ -161,7 +161,7 @@ class QueryBuilder
 	 */
 	public function orderBy(string $column, string $direction)
 	{
-		$this->query .= " ORDER BY $column $direction ";
+		$this->query .= " ORDER BY $column " . strtoupper($direction);
 		return $this;
 	}
 
