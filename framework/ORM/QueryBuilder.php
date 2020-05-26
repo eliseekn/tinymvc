@@ -198,11 +198,11 @@ class QueryBuilder
 	 * @param  int $offset
 	 * @return void
 	 */
-	public function limit(int $limit, int $offset = 0)
+	public function limit(int $limit, ?int $offset = null)
 	{
 		$this->query .= " LIMIT $limit";
 
-		if ($offset != 0) {
+		if (!is_null($offset)) {
 			$this->query .= ", $offset";
 		}
 

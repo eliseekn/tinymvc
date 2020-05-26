@@ -1,7 +1,6 @@
 <?php $this->layout('layouts/admin', [
     'page_title' => $page_title,
-    'page_description' => $page_description,
-    'header_title' => $page_title
+    'page_description' => $page_description
 ]) ?>
 
 <?php $this->start('page_content') ?>
@@ -35,7 +34,7 @@
                 <td>
                     <img 
                         src="<?= absolute_url('/public/assets/img/posts/' . $post->image) ?>" 
-                        alt="Feautured image"
+                        alt="Featured image"
                         class="img-fluid">
                 </td>
                 <td>
@@ -52,8 +51,8 @@
                     </a>
                 </td>
                 <td>
-                    <a id="remove-post" data-post-id="<?= $post->id ?>" href="#">
-                        Remove post
+                    <a id="delete-post" data-post-id="<?= $post->id ?>" href="#">
+                        Delete post
                     </a>
                 </td>
             </tr>

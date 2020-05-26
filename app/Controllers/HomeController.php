@@ -21,7 +21,7 @@ class HomeController extends Controller
 	{
 		$posts = new PostsModel();
 
-		$this->renderView('blog/home', [
+		$this->renderView('home', [
 			'page_title' => 'The Mount Everest Blog',
 			'page_description' => 'Blog about mountaineering',
 			'posts' => $posts->paginate(3)

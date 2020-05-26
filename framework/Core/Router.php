@@ -92,12 +92,12 @@ class Router
 
                 if (preg_match($pattern, $this->uri, $params)) {
                     array_shift($params);
-    
+
                     if (preg_match('/' . strtoupper($data['method']) . '/', $this->request->getMethod())) {
                         list($controller, $action) = explode('@', $data['controller']);
                         $controller = 'App\Controllers\\' . $controller;
 
-                        //return a 404 error if controller filename not found or action does not exists
+                        //chekc if controller class and method exist
                         if (class_exists($controller) && method_exists($controller, $action)) {
                             //check for middlewares to execute
                             Middleware::check($data['controller']);
@@ -105,15 +105,15 @@ class Router
                             //execute controller with action and parameter
                             call_user_func_array([new $controller(), $action], array_values($params));
                         } else {
-                            View::render('error_404');
+                            View::render('404');
                         }
                     }
                 }
             }
 
-            View::render('error_404');
+            View::render('404');
         } else {
-            View::render('error_404');
+            View::render('404');
         }
     }
 }

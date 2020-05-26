@@ -44,9 +44,9 @@ class Middleware
         $middleware = self::$names[$middleware]; 
         $middleware = 'App\Middlewares\\' . $middleware;
 
-        //return a 404 error if controller filename not found or action does not exists
+        //check if middleware class exists
         if (!class_exists($middleware) || !method_exists($middleware, 'handle')) {
-            View::render('error_404');
+            View::render('404');
         }
 
         $middleware = new $middleware();

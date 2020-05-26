@@ -8,6 +8,30 @@
     <meta name="description" content="The page you have requested does not exists on this server">
     <link rel="stylesheet" href="<?= absolute_url('/public/assets/css/main.css') ?>">
     <title>Error 404 - Page not found</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: sans-serif;
+        }
+
+        div {
+            text-align: center;
+            padding: 5em 0;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: .5em;
+        }
+
+        p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+        }
+    </style>
 </head>
 
 <body>

@@ -25,24 +25,17 @@
 function generate_pagination(int $page, int $total_items, int $items_per_pages): array
 {
 	//get total number of pages
-	$total_pages = ceil($total_items / $items_per_pages);
-
-	//set right page id
-	if ($page < 1) {
-		$page = 1;
-	}
-	
-	if ($page > $total_pages) {
-		$page = $total_pages;
-	}
+	$total_pages = $items_per_pages > 0 ? ceil($total_items / $items_per_pages) : 1;
 
 	//get first item of page
-	$first_item = ($page - 1) * $total_pages;
+	$first_item = ($page - 1) * $items_per_pages;
 
 	//return paramaters
-	return array(
+	return [
 		'first_item' => $first_item,
+		'total_items' => $total_items,
+		'items_per_pages' => $items_per_pages,
 		'page' => $page,
 		'total_pages' => $total_pages
-	);
+	];
 }

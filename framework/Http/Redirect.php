@@ -64,7 +64,7 @@ class Redirect
             );
 
             if (empty($url)) {
-                View::render('error_404');
+                View::render('404');
             }
         }
 

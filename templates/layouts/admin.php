@@ -16,8 +16,8 @@
         <h1 class="mb-3 text-center">Administration</h1>
         
         <div class="text-center py-3">
-            <a href="<?= absolute_url('/dashboard/posts') ?>" class="btn btn-lg btn-dark">Posts</a>
-            <a href="<?= absolute_url('/dashboard/comments') ?>" class="btn btn-lg btn-dark mx-2">Comments</a>
+            <a href="<?= absolute_url('/admin/posts') ?>" class="btn btn-lg btn-dark">Posts</a>
+            <a href="<?= absolute_url('/admin/comments') ?>" class="btn btn-lg btn-dark mx-2">Comments</a>
             <a href="<?= absolute_url('/') ?>" class="btn btn-lg btn-dark mr-2">Go back home</a>
             <a href="<?= absolute_url('/user/logout') ?>" class="btn btn-lg btn-dark">Logout</a>
         </div>
@@ -39,7 +39,7 @@
                     </button>
                 </div>
 
-                <form method="post" action="<?= absolute_url('post/add') ?>" enctype="multipart/form-data">
+                <form method="post" action="<?= absolute_url('/post/add') ?>" enctype="multipart/form-data">
                     <div class="modal-body">
                         <div class="form-group">
                             <input 

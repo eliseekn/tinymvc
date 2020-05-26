@@ -1,5 +1,5 @@
 //dashboard url
-var dashboard = "http://127.0.0.1:8000/"
+var dashboard = "http://localhost/tinymvc/"
 
 //post data with fetch api
 async function postData(url, data = null) {
@@ -18,8 +18,8 @@ async function postData(url, data = null) {
 
 document.addEventListener('DOMContentLoaded', () => {
 	//manage posts
-	if (document.querySelectorAll('#remove-post')) {
-		document.querySelectorAll('#remove-post').forEach(element => {
+	if (document.querySelectorAll('#delete-post')) {
+		document.querySelectorAll('#delete-post').forEach(element => {
 			element.addEventListener('click', event => {
 				event.preventDefault()
 
@@ -77,8 +77,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	//manage comments
-	if (document.querySelectorAll('#remove-comment')) {
-		document.querySelectorAll('#remove-comment').forEach(element => {
+	if (document.querySelectorAll('#delete-comment')) {
+		document.querySelectorAll('#delete-comment').forEach(element => {
 			element.addEventListener('click', event => {
 				event.preventDefault()
 

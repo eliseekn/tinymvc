@@ -36,7 +36,7 @@ class AdminController extends Controller
 		$this->renderView('admin/comments', [
             'page_title' => 'The Mount Everest Blog - Dashboard | Comments',
             'page_description' => 'Posts administration dashboard',
-            'comments' => $comments->paginate(3)
+            'comments' => $comments->paginate(10)
         ]);
 	}
 }

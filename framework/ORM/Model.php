@@ -27,7 +27,12 @@ class Model
      * @var mixed
      */
     protected $QB;
-
+    
+    /**
+     * request instance variable
+     *
+     * @var mixed
+     */
     protected $request;
 
     /**
@@ -252,7 +257,46 @@ class Model
             ->rowsCount();
 
         $pagination = generate_pagination($page, $total_items, $items_per_pages);
-        $items = $this->findRange($items_per_pages, $pagination['first_item']);
+
+        $items = $items_per_pages > 0 ? 
+            $this->findRange($pagination['first_item'], $items_per_pages) :
+            $this->findAll();
+
+        return new Paginator($items, $pagination);
+    }
+
+    /**
+     * generate pagination with where clause
+     *
+     * @param  int $items_per_pages
+     * @param  string $column name of column
+     * @param  string $operator operator
+     * @param  string $value value to check
+     * @return mixed returns new paginator class
+     */
+    public function paginateWhere(
+        int $items_per_pages,
+        string $column,
+        string $operator,
+        string $value
+    ) {
+        $page = empty($this->request->getQuery('page')) ? 1 : (int) $this->request->getQuery('page');
+
+        $total_items = $this->QB->select('*')
+            ->from($this->table)
+            ->rowsCount();
+
+        $pagination = generate_pagination($page, $total_items, $items_per_pages);
+
+        $items = $items_per_pages > 0 ? 
+            $this->findRangeWhere(
+                $items_per_pages,
+                $pagination['first_item'],
+                $column,
+                $operator,
+                $value
+            ) : 
+            $this->findAllWhere($column, $operator, $value);
 
         return new Paginator($items, $pagination);
     }

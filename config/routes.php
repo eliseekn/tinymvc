@@ -54,6 +54,12 @@ Route::add('/post/replaceImage/{postId:int}', [
     'name' => 'post_edit'
 ]);
 
+Route::add('/post/delete/{id:int}', [
+    'method' => 'GET',
+    'controller' => 'PostController@delete',
+    'name' => 'poost_delete'
+]);
+
 //admin routes
 Route::add('/admin', [
     'method' => 'GET',

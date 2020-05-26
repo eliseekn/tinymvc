@@ -37,7 +37,7 @@ class UserController extends Controller
 
         if ($user->isRegistered($email, $password)) {
 			create_session('logged_user', $user->get($email));
-			Redirect::toRoute('admin')->only();
+			Redirect::toRoute('admin_posts')->only();
 		}
 
 		Redirect::toRoute('auth_page')->withMessage('login_failed', 'Incorect username or/and password.');

@@ -31,7 +31,7 @@ class PostController extends Controller
 	{
 		$post = $this->posts->get($slug);
 
-		$this->renderView('blog/post', [
+		$this->renderView('post', [
 			'page_title' => 'The Mount Everest Blog | ' . $post->title,
 			'header_title' => 'The Mount Everest Blog',
             'page_description' => 'Blog about mountaineering',
@@ -85,7 +85,7 @@ class PostController extends Controller
 	{
 		$post = $this->posts->find($id);
 		unlink(absolute_path('tinymvc/public/assets/img/posts/' . $post->image));
-		$this->posts->delete();
+		$this->posts->delete($id);
 
 		Redirect::back()->only();
 	}

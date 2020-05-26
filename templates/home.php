@@ -17,7 +17,7 @@
                     <img 
                         src="<?= absolute_url('/public/assets/img/posts/' . $post->image) ?>" 
                         class="card-img-top" 
-                        alt="Post image">
+                        alt="Featured image">
                     
                     <div class="card-body">
                         <h2 class="card-title post-title"><?= $post->title ?></h2>
