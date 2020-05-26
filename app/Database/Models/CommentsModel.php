@@ -5,18 +5,18 @@ namespace App\Database\Models;
 use Framework\ORM\Model;
 
 /**
- * PostsModel
+ * CommentsModel
  * 
- * Posts model class
+ * Comments model class
  */
-class PostsModel extends Model
+class CommentsModel extends Model
 {    
     /**
      * name of table
      *
      * @var string
      */
-    protected $table = 'posts';
+    protected $table = 'comments';
 
     /**
      * instantiates class
@@ -34,8 +34,8 @@ class PostsModel extends Model
      * @param  string $slug post slug
      * @return void
      */
-    public function get(string $slug)
+    public function get(int $post_id)
     {
-        return $this->findSingle('slug', '=', $slug);
+        return $this->findAllWhere('post_id', '=', $post_id);
     }
 }

@@ -19,3 +19,4 @@ Middleware::setName('CsrfTokenValidator', 'csrf_validator');
 Middleware::setName('CheckSessionToLogin', 'auth_session');
 Middleware::setName('CheckSessionToAdmin', 'admin_session');
 Middleware::setName('LoginInputValidator', 'auth_validator');
+Middleware::setName('CommentInputValidator', 'comment_validator');

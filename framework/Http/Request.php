@@ -12,6 +12,8 @@
 
 namespace Framework\Http;
 
+use Framework\Support\Uploader;
+
 /**
  * Requests
  * 
@@ -32,13 +34,6 @@ class Request
      * @var string
      */
     protected $response = [];
-
-    /**
-     * $_FILES request
-     *
-     * @var array
-     */
-    protected $file = [];
 
     /**
      * instantiates class with url for request to send
@@ -106,21 +101,8 @@ class Request
      */
     public function getFile(string $field)
     {
-        $this->file = $_FILES[$field] ?? [];
-        return $this;
-    }
-
-    /**
-     * move uploaded file
-     *
-     * @param  string $destination file destination
-     * @param  string|null $filename uploaded filename
-     * @return bool returns true or false
-     */
-    public function moveTo(string $destination, ?string $filename = null): bool
-    {
-        $filename = is_null($filename) ? basename($this->file['name']) : $filename;
-        return move_uploaded_file($this->file['tmp_name'], $destination . DIRECTORY_SEPARATOR . $filename);
+        $file = $_FILES[$field] ?? [];
+        return new Uploader($file);
     }
 
     /**

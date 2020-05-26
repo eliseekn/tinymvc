@@ -1,6 +1,6 @@
 <?php
 
-namespace Framework\ORM;
+namespace Framework\Support;
 
 use Framework\Http\Request;
 

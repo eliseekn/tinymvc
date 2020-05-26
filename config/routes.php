@@ -16,6 +16,7 @@ use Framework\Core\Route;
  * Set routes paths
  */
 
+ //home routes
 Route::add('/', [
     'method' => 'GET',
     'controller' => 'HomeController@index',
@@ -28,6 +29,54 @@ Route::add('/home', [
     'name' => 'home'
 ]);
 
+//post routes
+Route::add('/post/{slug:str}', [
+    'method' => 'GET',
+    'controller' => 'PostController@index',
+    'name' => 'post'
+]);
+
+Route::add('/post/add', [
+    'method' => 'POST',
+    'controller' => 'PostController@add',
+    'name' => 'post_add'
+]);
+
+Route::add('/post/edit/{id:int}', [
+    'method' => 'POST',
+    'controller' => 'PostController@edit',
+    'name' => 'post_edit'
+]);
+
+Route::add('/post/replaceImage/{postId:int}', [
+    'method' => 'POST',
+    'controller' => 'PostController@replaceImage',
+    'name' => 'post_edit'
+]);
+
+//admin routes
+Route::add('/admin', [
+    'method' => 'GET',
+    'controller' => 'AdminController@posts',
+    'name' => 'admin_posts',
+    'middlewares' => ['admin_session']
+]);
+
+Route::add('/admin/posts', [
+    'method' => 'GET',
+    'controller' => 'AdminController@posts',
+    'name' => 'admin_posts',
+    'middlewares' => ['admin_session']
+]);
+
+Route::add('/admin/comments', [
+    'method' => 'GET',
+    'controller' => 'AdminController@comments',
+    'name' => 'admin_comments',
+    'middlewares' => ['admin_session']
+]);
+
+//user routes
 Route::add('/login', [
     'method' => 'GET',
     'controller' => 'UserController@index',
@@ -39,10 +88,7 @@ Route::add('/user/login', [
     'method' => 'POST',
     'controller' => 'UserController@login',
     'name' => 'auth_action',
-    'middlewares' => [
-        'csrf_validator', 
-        'auth_validator'
-    ]
+    'middlewares' => ['csrf_validator', 'auth_validator']
 ]);
 
 Route::add('/user/logout', [
@@ -51,15 +97,16 @@ Route::add('/user/logout', [
     'name' => 'logout'
 ]);
 
-Route::add('/admin', [
-    'method' => 'GET',
-    'controller' => 'AdminController@index',
-    'name' => 'admin',
-    'middlewares' => ['admin_session']
+//comments routes
+Route::add('/comment/add/{postId:int}', [
+    'method' => 'POST',
+    'controller' => 'CommentController@add',
+    'name' => 'comment_add',
+    'middlewares' => ['comment_validator']
 ]);
 
-Route::add('/post/{slug:str}', [
+Route::add('/comment/delete/{id:int}', [
     'method' => 'GET',
-    'controller' => 'PostController@index',
-    'name' => 'post'
+    'controller' => 'CommentController@delete',
+    'name' => 'comment_delete'
 ]);

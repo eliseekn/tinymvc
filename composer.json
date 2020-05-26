@@ -11,16 +11,16 @@
     ],
     "autoload": {
         "files": [
-            "framework/Helpers/Cookies.php",
-            "framework/Helpers/Curl.php",
-            "framework/Helpers/Debug.php",
-            "framework/Helpers/Email.php",
-            "framework/Helpers/Files.php",
-            "framework/Helpers/Pagination.php",
-            "framework/Helpers/Security.php",
-            "framework/Helpers/Session.php",
-            "framework/Helpers/Url.php",
-            "framework/Helpers/Utils.php"
+            "framework/Support/Helpers/Cookies.php",
+            "framework/Support/Helpers/Curl.php",
+            "framework/Support/Helpers/Debug.php",
+            "framework/Support/Helpers/Email.php",
+            "framework/Support/Helpers/Files.php",
+            "framework/Support/Helpers/Pagination.php",
+            "framework/Support/Helpers/Security.php",
+            "framework/Support/Helpers/Session.php",
+            "framework/Support/Helpers/Url.php",
+            "framework/Support/Helpers/Utils.php"
         ],
         "psr-4": {
             "App\\" : "app/",

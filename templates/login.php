@@ -24,7 +24,7 @@
                             if (is_array($flash_message)) {
                                 foreach ($flash_message as $error_message) {
                                     echo $error_message . '<br>';
-                                };
+                                }
                             } else {
                                 echo $flash_message . '<br>';
                             }
@@ -38,7 +38,7 @@
                     <?= generate_csrf_token() ?>
                     
                     <div class="form-group">
-                        <input type="text" name="email" placeholder="Email address" class="form-control">
+                        <input type="email" name="email" placeholder="Email address" class="form-control">
                     </div>
 
                     <div class="form-group">

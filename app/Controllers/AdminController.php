@@ -2,8 +2,9 @@
 
 namespace App\Controllers;
 
+use App\Database\Models\CommentsModel;
 use Framework\Core\Controller;
-use Framework\Http\Response;
+use App\Database\Models\PostsModel;
 
 /**
  * AdminController
@@ -17,8 +18,25 @@ class AdminController extends Controller
 	 *
 	 * @return void
 	 */
-	public function index(): void
+	public function posts(): void
 	{
-		Response::send([], 'This is admin page');
+		$posts = new PostsModel();
+
+		$this->renderView('admin/posts', [
+            'page_title' => 'The Mount Everest Blog - Dashboard | Posts',
+            'page_description' => 'Posts administration dashboard',
+            'posts' => $posts->paginate(3)
+        ]);
+	}
+
+	public function comments(): void
+	{
+		$comments = new CommentsModel();
+
+		$this->renderView('admin/comments', [
+            'page_title' => 'The Mount Everest Blog - Dashboard | Comments',
+            'page_description' => 'Posts administration dashboard',
+            'comments' => $comments->paginate(3)
+        ]);
 	}
 }

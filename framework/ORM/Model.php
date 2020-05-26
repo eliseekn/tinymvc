@@ -3,6 +3,7 @@
 namespace Framework\ORM;
 
 use Framework\Http\Request;
+use Framework\Support\Paginator;
 
 class Model
 {    
@@ -76,10 +77,20 @@ class Model
      */
     public function findAll(string $direction = 'DESC')
     {
-        return (object) $this->QB->select('*')
+        $items = $this->QB->select('*')
             ->from($this->table)
             ->orderBy('id', $direction)
             ->fetchAll();
+
+        //convert array to class
+        $items = array_map(
+            function ($val) {
+                return (object) $val;
+            },
+            (array) $items
+        );
+
+        return (object) $items;
     }
 
     /**
@@ -93,11 +104,21 @@ class Model
      */
     public function findAllWhere(string $column, string $operator, string $value, string $direction = 'DESC')
     {
-        return (object) $this->QB->select('*')
+        $items = $this->QB->select('*')
             ->from($this->table)
             ->where($column, $operator, $value)
             ->orderBy('id', $direction)
             ->fetchAll();
+
+        //convert array to class
+        $items = array_map(
+            function ($val) {
+                return (object) $val;
+            },
+            (array) $items
+        );
+
+        return (object) $items;
     }
 
     /**
@@ -110,11 +131,21 @@ class Model
      */
     public function findRange(int $limit, int $offset, string $direction = 'DESC')
     {
-        return (object) $this->QB->select('*')
+        $items = $this->QB->select('*')
             ->from($this->table)
             ->orderBy('id', $direction)
             ->limit($limit, $offset)
             ->fetchAll();
+        
+        //convert array to class
+        $items = array_map(
+            function ($val) {
+                return (object) $val;
+            },
+            (array) $items
+        );
+
+        return (object) $items;
     }
 
     /**
@@ -136,12 +167,22 @@ class Model
         string $value,
         string $direction = 'DESC'
     ) {
-        return (object) $this->QB->select('*')
+        $items = $this->QB->select('*')
             ->from($this->table)
             ->where($column, $operator, $value)
             ->orderBy('id', $direction)
             ->limit($limit, $offset)
             ->fetchAll();
+        
+        //convert array to class
+        $items = array_map(
+            function ($val) {
+                return (object) $val;
+            },
+            (array) $items
+        );
+
+        return (object) $items;
     }
     
     /**
@@ -200,7 +241,7 @@ class Model
      *
      * @param  mixed $page current page
      * @param  mixed $items_per_pages
-     * @return array
+     * @return mixed returns paginator class
      */
     public function paginate(int $items_per_pages)
     {
@@ -212,18 +253,6 @@ class Model
 
         $pagination = generate_pagination($page, $total_items, $items_per_pages);
         $items = $this->findRange($items_per_pages, $pagination['first_item']);
-
-        dump_exit(count((array) $items), $pagination['first_item']);
-
-        //convert array to class
-        $items = array_map(
-            function ($val) {
-                return (object) $val;
-            },
-            (array) $items
-        );
-
-        
 
         return new Paginator($items, $pagination);
     }

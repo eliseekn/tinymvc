@@ -15,7 +15,7 @@
             <article class="col mb-5">
                 <div class="card">
                     <img 
-                        src="<?= $post->image ?>" 
+                        src="<?= absolute_url('/public/assets/img/posts/' . $post->image) ?>" 
                         class="card-img-top" 
                         alt="Post image">
                     

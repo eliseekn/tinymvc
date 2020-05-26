@@ -87,7 +87,7 @@ class Router
         if (!empty($routes)) {
             foreach ($routes as $route => $data) {
                 $route = preg_replace('/{([a-z]+):([^\}]+)}/i', '$2', $route);
-                $route = preg_replace(['/\bstr\b/', '/\bint\b/'], ['([a-zA-Z0-9-]+)', '(\d+)'], $route);
+                $route = preg_replace(['/\bstr\b/', '/\bint\b/', '/\ball\b/'], ['([a-zA-Z0-9-]+)', '(\d+)', '([^/]+)'], $route);
                 $pattern = '#^' . $route . '$#';
 
                 if (preg_match($pattern, $this->uri, $params)) {
