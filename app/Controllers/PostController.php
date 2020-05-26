@@ -46,10 +46,10 @@ class PostController extends Controller
 		$image->moveTo(absolute_path('tinymvc/public/assets/img/posts'));
 
 		$this->posts->setData([
-			'title' => $this->request->postQuery('title'),
-			'slug' => generate_slug($this->request->postQuery('title')),
+			'title' => $this->request->getInput('title'),
+			'slug' => generate_slug($this->request->getInput('title')),
 			'image' => $image->getOriginalFilename(),
-			'content' => $this->request->postQuery('content')
+			'content' => $this->request->getInput('content')
 		])->save();
 
 		Redirect::back()->only();
@@ -58,9 +58,9 @@ class PostController extends Controller
 	public function edit(int $id): void
 	{
 		$this->posts->setData([
-			'title' => $this->request->postQuery('title'),
-			'slug' => generate_slug($this->request->postQuery('title')),
-			'content' => $this->request->postQuery('content')
+			'title' => $this->request->getInput('title'),
+			'slug' => generate_slug($this->request->getInput('title')),
+			'content' => $this->request->getInput('content')
 		])->update($id);
 
 		Redirect::back()->only();

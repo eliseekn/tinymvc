@@ -12,7 +12,11 @@
 
 namespace Framework\Core;
 
+use Exception;
 use Framework\Http\Request;
+use Framework\Http\Response;
+use Framework\Exceptions\RoutesNotDefineException;
+use Framework\Exceptions\ControllerNotFoundException;
 
 /**
  * Router
@@ -45,7 +49,12 @@ class Router
         $this->request = new Request();
         $this->parseURI();
         $this->addSessionHistory();
-        $this->dispatch(Route::$routes);
+        
+        try {
+            $this->dispatch(Route::$routes);
+        } catch (Exception $e) {
+            exit($e->getMessage());
+        }
     }
     
     /**
@@ -105,15 +114,15 @@ class Router
                             //execute controller with action and parameter
                             call_user_func_array([new $controller(), $action], array_values($params));
                         } else {
-                            View::render('404');
+                            throw new ControllerNotFoundException($data['controller']);
                         }
                     }
                 }
             }
 
-            View::render('404');
+            Response::send([], 'The page you have requested does not exists on this server.', 404);
         } else {
-            View::render('404');
+            throw new RoutesNotDefineException();
         }
     }
 }

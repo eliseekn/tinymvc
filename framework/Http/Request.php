@@ -78,7 +78,7 @@ class Request
      * @param  string $field name of $_POST array field
      * @return mixed returns field value or array or empty string
      */
-    public function postQuery(string $field = '')
+    public function getInput(string $field = '')
     {
         return empty($field) ? $_POST : $_POST[$field] ?? '';
     }
@@ -118,9 +118,9 @@ class Request
     /**
      * retrieves uri request
      *
-     * @return mixed
+     * @return string
      */
-    public function getURI()
+    public function getURI(): string
     {
         $uri = $this->getHeaders('REQUEST_URI');
         $uri = str_replace(ROOT_FOLDER, '', $uri); //remove root subfolder if exists 
@@ -135,6 +135,30 @@ class Request
         }
 
         return $uri;
+    }
+    
+    /**
+     * set $_POST query
+     *
+     * @param  string $field name of field
+     * @param  mixed $value
+     * @return void
+     */
+    public function setInput(string $field, $value): void
+    {
+        $_POST[$field] = $value;
+    }
+    
+    /**
+     * set $_GET query
+     *
+     * @param  string $field name of field
+     * @param  mixed $value
+     * @return void
+     */
+    public function setQuery(string $field, $value): void
+    {
+        $_GET[$field] = $value;
     }
 
     /**

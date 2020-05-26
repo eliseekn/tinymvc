@@ -27,7 +27,7 @@ function generate_pagination(int $page, int $total_items, int $items_per_pages):
 	//get total number of pages
 	$total_pages = $items_per_pages > 0 ? ceil($total_items / $items_per_pages) : 1;
 
-	//get first item of page
+	//get first item of page (offset)
 	$first_item = ($page - 1) * $items_per_pages;
 
 	//return paramaters

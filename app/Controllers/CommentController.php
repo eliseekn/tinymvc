@@ -17,8 +17,8 @@ class CommentController extends Controller
     public function add(int $post_id)
     {
         $request = new Request();
-        $author = $request->postQuery('author');
-        $content = $request->postQuery('content');
+        $author = $request->getInput('author');
+        $content = $request->getInput('content');
         
         $this->comments->setData([
             'post_id' => $post_id,

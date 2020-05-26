@@ -130,7 +130,7 @@ class QueryBuilder
 	 * @param  string $value element to be compared 
 	 * @return void
 	 */
-	public function andWhere(string $column, string $operator, string $value)
+	public function and(string $column, string $operator, string $value)
 	{
 		$this->query .= " AND $column $operator ? ";
 		$this->args[] = $value;
@@ -145,7 +145,7 @@ class QueryBuilder
 	 * @param  string $value element to be compared 
 	 * @return void
 	 */
-	public function orWhere(string $column, string $operator, string $value)
+	public function or(string $column, string $operator, string $value)
 	{
 		$this->query .= " OR $column $operator ? ";
 		$this->args[] = $value;

@@ -46,7 +46,7 @@ class CommentRequest extends Request
      */
     public function validate()
     {
-        $is_valid = GUMP::is_valid($this->postQuery(), $this->rules(), $this->messages());
+        $is_valid = GUMP::is_valid($this->getInput(), $this->rules(), $this->messages());
         return $is_valid === true ? '' : $is_valid;
     } 
 }

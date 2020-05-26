@@ -31,7 +31,6 @@ class View
     public static function render(string $template, array $data = []): void
     {
         $engine = new Engine('templates');
-        echo $engine->render($template, $data);
-        exit();
+        exit($engine->render($template, $data));
     }
 }

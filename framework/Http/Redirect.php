@@ -14,6 +14,7 @@ namespace Framework\Http;
 
 use Framework\Core\View;
 use Framework\Core\Route;
+use Framework\Exceptions\RouteNotFoundException;
 
 /**
  * Redirect
@@ -64,7 +65,7 @@ class Redirect
             );
 
             if (empty($url)) {
-                View::render('404');
+                throw new RouteNotFoundException($name);
             }
         }
 
@@ -110,7 +111,7 @@ class Redirect
      * redirects with session flash message
      *
      * @param  string $title title of message
-     * @param  string $content content of message
+     * @param  mixed $content content of message
      * @return void
      */
     public function withMessage(string $title, $content): void

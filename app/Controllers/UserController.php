@@ -30,8 +30,8 @@ class UserController extends Controller
 	public function login(): void
 	{
 		$request = new Request();
-        $email = $request->postQuery('email');
-		$password = $request->postQuery('password');
+        $email = $request->getInput('email');
+		$password = $request->getInput('password');
 		
 		$user = new UsersModel();
 

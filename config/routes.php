@@ -16,7 +16,7 @@ use Framework\Core\Route;
  * Set routes paths
  */
 
- //home routes
+//home routes
 Route::add('/', [
     'method' => 'GET',
     'controller' => 'HomeController@index',
@@ -39,13 +39,15 @@ Route::add('/post/{slug:str}', [
 Route::add('/post/add', [
     'method' => 'POST',
     'controller' => 'PostController@add',
-    'name' => 'post_add'
+    'name' => 'post_add',
+    'middlewares' => ['sanitize_input']
 ]);
 
 Route::add('/post/edit/{id:int}', [
     'method' => 'POST',
     'controller' => 'PostController@edit',
-    'name' => 'post_edit'
+    'name' => 'post_edit',
+    'middlewares' => ['sanitize_input']
 ]);
 
 Route::add('/post/replaceImage/{postId:int}', [
@@ -94,7 +96,11 @@ Route::add('/user/login', [
     'method' => 'POST',
     'controller' => 'UserController@login',
     'name' => 'auth_action',
-    'middlewares' => ['csrf_validator', 'auth_validator']
+    'middlewares' => [
+        'csrf_validator', 
+        'sanitize_input',  
+        'auth_validator'
+    ]
 ]);
 
 Route::add('/user/logout', [
@@ -108,7 +114,10 @@ Route::add('/comment/add/{postId:int}', [
     'method' => 'POST',
     'controller' => 'CommentController@add',
     'name' => 'comment_add',
-    'middlewares' => ['comment_validator']
+    'middlewares' => [
+        'sanitize_input',  
+        'comment_validator'
+    ]
 ]);
 
 Route::add('/comment/delete/{id:int}', [
