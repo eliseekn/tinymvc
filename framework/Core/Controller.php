@@ -22,7 +22,7 @@ class Controller
     /**
      * get template name
      *
-     * @param  string $template template name to load
+     * @param  string $template template to display
      * @return void
      */
     public function renderView(string $template, array $data = [])

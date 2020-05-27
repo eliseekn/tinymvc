@@ -18,10 +18,11 @@
 require 'vendor/autoload.php';
 
 //load configurations files
-require 'config/app.php';
-require 'config/env.php';
-require 'config/database.php';
-require 'config/routes.php';
-require 'config/middlewares.php';
+require_once 'config/app.php';
+require_once 'config/env.php';
+require_once 'config/database.php';
+require_once 'config/routes.php';
+require_once 'config/middlewares.php';
+
 
 new \Framework\Core\Router();

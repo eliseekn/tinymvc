@@ -42,7 +42,7 @@ function get_session(string $name)
 		session_start();
 	}
 
-	return session_has($name) ? $_SESSION[$name] : '';
+	return $_SESSION[$name] ?? '';
 }
 
 /**
@@ -79,7 +79,7 @@ function close_session(string $name): void
  * create flash message
  *
  * @param  string $title title of message
- * @param  string $content content of message
+ * @param  mixed $content content of message
  * @return void
  */
 function create_flash_message(string $title, $content): void

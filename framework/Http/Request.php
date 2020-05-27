@@ -24,27 +24,16 @@ class Request
     /**
      * url to send request
      *
-     * @var string
+     * @var array
      */
-    protected $url;
+    protected static $urls = [];
 
     /**
      * response request
      *
      * @var string
      */
-    protected $response = [];
-
-    /**
-     * instantiates class with url for request to send
-     *
-     * @param  string $url url to send request
-     * @return void
-     */
-    public function __construct(string $url = '')
-    {
-        $this->url = $url;
-    }
+    protected static $response = [];
 
     /**
      * retrieves request headers
@@ -54,8 +43,8 @@ class Request
      */
     public function getHeaders(string $field = '')
     {
-        if (!empty($this->url)) {
-            return empty($field) ? $this->response['headers'] : $this->response['headers'][$field] ?? '';
+        if (!empty(self::$urls)) {
+            return empty($field) ? self::$response['headers'] : self::$response['headers'][$field] ?? '';
         } else {
             return empty($field) ? $_SERVER : $_SERVER[$field] ?? '';
         }
@@ -97,7 +86,7 @@ class Request
      * retrieves request file
      *
      * @param  string $field name of $_FILES array field
-     * @return array returns array value
+     * @return mixed returns new uploader class instance
      */
     public function getFile(string $field)
     {
@@ -126,7 +115,7 @@ class Request
         $uri = str_replace(ROOT_FOLDER, '', $uri); //remove root subfolder if exists 
 
         //looks for "?page=" or something
-        if (strpos($uri, '?')) {
+        if (strpos($uri, '?') !== false) {
             $uri = substr($uri, strpos($uri, '/'), strpos($uri, '?'));
             
             if ($uri !== '/') {
@@ -134,7 +123,8 @@ class Request
             }
         }
 
-        return $uri;
+        //return sanitized url
+        return filter_var($uri, FILTER_SANITIZE_URL) ===  false ? $uri : filter_var($uri, FILTER_SANITIZE_URL);
     }
     
     /**
@@ -169,10 +159,11 @@ class Request
      * @param  bool $json_data send data in json format (only for POST request)
      * @return mixed
      */
-    public function sendRequest(string $method, ?array $data = null, bool $json_data = false)
+    public static function send(string $method, array $urls, $headers = [], ?array $data = null, bool $json_data = false)
     {
-        $this->response = curl($method, [$this->url], $data, $json_data);
-        return $this;
+        self::$urls = $urls;
+        self::$response = curl($method, self::$urls, $headers, $data, $json_data);
+        return new self();
     }
 
     /**
@@ -182,6 +173,6 @@ class Request
      */
     public function getBody()
     {
-        return $this->response['body'];
+        return self::$response['body'];
     }
 }

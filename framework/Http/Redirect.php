@@ -12,7 +12,6 @@
 
 namespace Framework\Http;
 
-use Framework\Core\View;
 use Framework\Core\Route;
 use Framework\Exceptions\RouteNotFoundException;
 
@@ -84,7 +83,7 @@ class Redirect
 
         if (!empty($browsing_history)) {
             $current_url = end($browsing_history);
-            $key = array_search($current_url, $browsing_history);
+            $key = array_search($current_url, $browsing_history); 
             self::$redirect_url = $browsing_history[$key - 1];
         }
 

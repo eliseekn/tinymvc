@@ -13,6 +13,7 @@
 namespace Framework\Core;
 
 use Exception;
+use Framework\Core\View;
 use Framework\Http\Request;
 use Framework\Http\Response;
 use Framework\Exceptions\RoutesNotDefineException;
@@ -47,7 +48,7 @@ class Router
     public function __construct()
     {
         $this->request = new Request();
-        $this->parseURI();
+        $this->uri = $this->request->getURI();
         $this->addSessionHistory();
         
         try {
@@ -55,16 +56,6 @@ class Router
         } catch (Exception $e) {
             exit($e->getMessage());
         }
-    }
-    
-    /**
-     * parse requested uri
-     *
-     * @return void
-     */
-    private function parseURI(): void
-    {
-        $this->uri = filter_var($this->request->getURI(), FILTER_SANITIZE_URL);
     }
     
     /**
@@ -120,7 +111,12 @@ class Router
                 }
             }
 
-            Response::send([], 'The page you have requested does not exists on this server.', 404);
+            //send 404 response
+            if (isset(ERRORS_PAGE['404']) && !empty(ERRORS_PAGE['404'])) {
+                View::error(ERRORS_PAGE['404']);
+            } else {
+                Response::send([], 'The page you have requested does not exists on this server.', 404);
+            }
         } else {
             throw new RoutesNotDefineException();
         }

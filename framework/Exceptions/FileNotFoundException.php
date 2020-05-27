@@ -15,20 +15,20 @@ namespace Framework\Exceptions;
 use Exception;
 
 /**
- * RoutesNotDefineException
+ * FileNotFoundException
  * 
- * Exception that occurs when no route set in configuration 
+ * Exception that occurs when a file is not found
  */
-class RoutesNotDefineException extends Exception
+class FileNotFoundException extends Exception
 {    
     /**
      * __construct
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(string $filename)
     {
-        $this->message = $this->stylish('No route defines in <b>"config/routes.php"</b>.');
+        $this->message = $this->stylish('File <b>' . $filename . '</b> not found on this server.');
     }
     
     /**

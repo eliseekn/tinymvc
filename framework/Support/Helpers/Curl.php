@@ -28,10 +28,15 @@
  *         https://www.codexworld.com/post-receive-json-data-using-php-curl/
  *         https://stackoverflow.com/questions/13420952/php-curl-delete-request
  */
-function curl(string $method, array $urls, ?array $data = null, bool $json_data = false): array
-{
+function curl(
+    string $method,
+    array $urls,
+    array $headers = [],
+    ?array $data = null,
+    bool $json_data = false
+): array {
     $results = [];
-    $headers = [];
+    $response_headers = [];
     $curl_array = [];
     $curl_multi = curl_multi_init(); //init multiple curl processing
 
@@ -52,23 +57,28 @@ function curl(string $method, array $urls, ?array $data = null, bool $json_data 
         //set data
         if (!is_null($data)) {
             if ($json_data) {
-                curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
                 $data = json_encode($data);
+                $headers[] = 'Content-Type: application/json';
             }
     
             curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        }
+
+        //set headers
+        if (!empty($headers)) {
+            curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         }
         
         //retrieves response headers 
         curl_setopt(
             $curl,
             CURLOPT_HEADERFUNCTION,
-            function ($curl, $header) use (&$headers, $key) {
+            function ($curl, $header) use (&$response_headers, $key) {
                 $len = strlen($header);
                 $header = explode(':', $header, 2);
                 if (count($header) < 2) return $len;
 
-                $headers[$key][strtolower(trim($header[0]))][] = trim($header[1]);
+                $response_headers[$key][strtolower(trim($header[0]))][] = trim($header[1]);
                 return $len;
             }
         );
@@ -92,7 +102,7 @@ function curl(string $method, array $urls, ?array $data = null, bool $json_data 
 
     //return response
     return [
-        'headers' => $headers,
+        'headers' => $response_headers,
         'body' => $results
     ];
 }

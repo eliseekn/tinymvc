@@ -90,8 +90,8 @@ class Middleware
     /**
      * add middlewares to route
      *
-     * @param  mixed $route
-     * @param  mixed $middlewares
+     * @param  string $route name of route
+     * @param  array $middlewares
      * @return void
      */
     public static function add(string $route, array $middlewares): void

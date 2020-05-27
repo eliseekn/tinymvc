@@ -37,12 +37,10 @@ function save_log(string $destination, string $type, string $message): void
  * @param  mixed $data variables
  * @return void
  */
-function dump_exit(...$data): void
+function dump_vars(...$data): void
 {
 	foreach ($data as $d) {
-		echo '<pre>';
-		print_r($d);
-		echo '</pre>';
+		krumo($d);
 	}
 
 	exit();

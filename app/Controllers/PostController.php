@@ -7,6 +7,7 @@ use App\Database\Models\PostsModel;
 use Framework\Core\Controller;
 use Framework\Http\Redirect;
 use Framework\Http\Request;
+use Framework\Support\Storage;
 
 /**
  * PostController
@@ -43,14 +44,15 @@ class PostController extends Controller
 	public function add(): void
 	{
 		$image = $this->request->getFile('image');
-		$image->moveTo(absolute_path('tinymvc/public/assets/img/posts'));
-
-		$this->posts->setData([
-			'title' => $this->request->getInput('title'),
-			'slug' => generate_slug($this->request->getInput('title')),
-			'image' => $image->getOriginalFilename(),
-			'content' => $this->request->getInput('content')
-		])->save();
+		
+		if ($image->moveTo('assets/img/posts')) {
+			$this->posts->setData([
+				'title' => $this->request->getInput('title'),
+				'slug' => slugify($this->request->getInput('title')),
+				'image' => $image->getOriginalFilename(),
+				'content' => $this->request->getInput('content')
+			])->save();
+		}
 
 		Redirect::back()->only();
 	}
@@ -59,7 +61,7 @@ class PostController extends Controller
 	{
 		$this->posts->setData([
 			'title' => $this->request->getInput('title'),
-			'slug' => generate_slug($this->request->getInput('title')),
+			'slug' => slugify($this->request->getInput('title')),
 			'content' => $this->request->getInput('content')
 		])->update($id);
 
@@ -69,14 +71,16 @@ class PostController extends Controller
 	public function replaceImage(int $post_id): void
 	{
 		$post = $this->posts->find($post_id);
-		unlink(absolute_path('tinymvc/public/assets/img/posts/' . $post->image));
-
-		$image = $this->request->getFile('image');
-		$image->moveTo(absolute_path('tinymvc/public/assets/img/posts'));
-
-		$this->posts->setData([
-			'image' => $image->getOriginalFilename()
-		])->update($post_id);
+		
+		if (Storage::deleteFile('assets/img/posts/' . $post->image)) {
+			$image = $this->request->getFile('image');
+			
+			if (!$image->moveTo('assets/img/posts')) {
+				$this->posts->setData([
+					'image' => $image->getOriginalFilename()
+				])->update($post_id);
+			}
+		}
 
 		Redirect::back()->only();
 	}
@@ -84,9 +88,11 @@ class PostController extends Controller
 	public function delete(int $id): void
 	{
 		$post = $this->posts->find($id);
-		unlink(absolute_path('tinymvc/public/assets/img/posts/' . $post->image));
-		$this->posts->delete($id);
 
+		if (Storage::deleteFile('assets/img/posts/' . $post->image)) {
+			$this->posts->delete($id);
+		}
+		
 		Redirect::back()->only();
 	}
 }

@@ -24,7 +24,7 @@ class Migration
 	 *
 	 * @var string
 	 */
-    private $query;
+    private $query = '';
     
     /**
      * execute sql query
@@ -161,7 +161,7 @@ class Migration
      *
      * @return void
      */
-    public function create()
+    public function create(): void
     {
         $this->query = rtrim($this->query, ', ');
         $this->query .= ')';
@@ -171,7 +171,7 @@ class Migration
     /**
      * drop table if exists
      *
-     * @param  string $name table name
+     * @param  string $name name of table
      * @return void
      */
     public function dropTable(string $name): void
@@ -183,7 +183,7 @@ class Migration
     /**
      * truncate table if exists
      *
-     * @param  string $name table name
+     * @param  string $name name of table
      * @return void
      */
     public function truncateTable(string $name): void

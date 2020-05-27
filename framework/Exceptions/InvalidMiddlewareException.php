@@ -28,6 +28,23 @@ class InvalidMiddlewareException extends Exception
      */
     public function __construct(string $middleware)
     {
-        $this->message = 'Middleware name <b>' . $middleware . '</b> not found in <b>"config/middlewares.php"</b>.';
+        $this->message = $this->stylish('Middleware name <b>' . $middleware . '</b> not found in <b>"config/middlewares.php"</b>.');
+    }
+    
+    /**
+     * apply style to exception message
+     *
+     * @param  string $message
+     * @return string
+     */
+    private function stylish(string $message): string
+    {
+        $str = '<div style="padding:.5em;">';
+        $str .= '<div style="color: #721c24; background-color: #f8d7da; border-color: #721c24; border: 1px solid #721c24; border-radius: .25rem; padding: .75rem 1.25rem; margin-bottom: 1rem;">';
+        $str .= $message;
+        $str .= '</div>';
+        $str .= '</div>';
+
+        return $str;
     }
 }

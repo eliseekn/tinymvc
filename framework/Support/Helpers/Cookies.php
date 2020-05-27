@@ -45,7 +45,7 @@ function create_cookie(string $name, string $value): bool
  */
 function get_cookie(string $name)
 {
-	return cookie_has($name) ? $_COOKIE[$name] : '';
+	return $_COOKIE[$name] ?? '';
 }
 
 /**

@@ -15,13 +15,13 @@
  */
 
 /**
- * slug generator
+ * generate slug from text
  *
  * @param  string $str original string
  * @param  string $separator words separator
  * @return string returns generated slug
  */
-function generate_slug(string $str, string $separator = '-'): string
+function slugify(string $str, string $separator = '-'): string
 {
 	$slug = strtolower(trim($str, $separator));
 	$slug = preg_replace('/[^a-zA-Z0-9]/', $separator, $slug);

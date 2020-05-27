@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Database\Models\PostsModel;
 use Framework\Core\Controller;
+use Framework\Http\Request;
 
 /**
  * HomeController

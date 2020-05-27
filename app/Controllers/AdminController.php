@@ -23,7 +23,7 @@ class AdminController extends Controller
 		$posts = new PostsModel();
 
 		$this->renderView('admin/posts', [
-            'page_title' => 'The Mount Everest Blog - Dashboard | Posts',
+            'page_title' => 'The Mount Everest Blog - Administration',
             'page_description' => 'Posts administration dashboard',
             'posts' => $posts->paginate(3)
         ]);
@@ -34,7 +34,7 @@ class AdminController extends Controller
 		$comments = new CommentsModel();
 
 		$this->renderView('admin/comments', [
-            'page_title' => 'The Mount Everest Blog - Dashboard | Comments',
+            'page_title' => 'The Mount Everest Blog - Administration',
             'page_description' => 'Posts administration dashboard',
             'comments' => $comments->paginate(10)
         ]);

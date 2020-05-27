@@ -17,60 +17,20 @@ use Framework\Core\Route;
  */
 
 //home routes
-Route::add('/', [
+Route::group([
+    '/' => [],
+    '/home' => []
+])->by([
     'method' => 'GET',
     'controller' => 'HomeController@index',
     'name' => 'home'
-]);
-
-Route::add('/home', [
-    'method' => 'GET',
-    'controller' => 'HomeController@index',
-    'name' => 'home'
-]);
-
-//post routes
-Route::add('/post/{slug:str}', [
-    'method' => 'GET',
-    'controller' => 'PostController@index',
-    'name' => 'post'
-]);
-
-Route::add('/post/add', [
-    'method' => 'POST',
-    'controller' => 'PostController@add',
-    'name' => 'post_add',
-    'middlewares' => ['sanitize_input']
-]);
-
-Route::add('/post/edit/{id:int}', [
-    'method' => 'POST',
-    'controller' => 'PostController@edit',
-    'name' => 'post_edit',
-    'middlewares' => ['sanitize_input']
-]);
-
-Route::add('/post/replaceImage/{postId:int}', [
-    'method' => 'POST',
-    'controller' => 'PostController@replaceImage',
-    'name' => 'post_edit'
-]);
-
-Route::add('/post/delete/{id:int}', [
-    'method' => 'GET',
-    'controller' => 'PostController@delete',
-    'name' => 'poost_delete'
 ]);
 
 //admin routes
-Route::add('/admin', [
-    'method' => 'GET',
-    'controller' => 'AdminController@posts',
-    'name' => 'admin_posts',
-    'middlewares' => ['admin_session']
-]);
-
-Route::add('/admin/posts', [
+Route::group([
+    '/admin' => [],
+    '/admin/posts' => []
+])->by([
     'method' => 'GET',
     'controller' => 'AdminController@posts',
     'name' => 'admin_posts',
@@ -84,12 +44,47 @@ Route::add('/admin/comments', [
     'middlewares' => ['admin_session']
 ]);
 
+//post routes
+Route::group([
+    '/post/{slug:str}' => [
+        'controller' => 'PostController@index'
+    ],
+    '/post/delete/{id:int}' => [
+        'controller' => 'PostController@delete'
+    ],
+])->by([
+    'method' => 'GET'
+]);
+
+Route::group([
+    '/post/add' => [
+        'controller' => 'PostController@add',
+    ],
+    '/post/edit/{id:int}' => [
+        'controller' => 'PostController@edit'
+    ]
+])->by([
+    'method' => 'POST',
+    'middlewares' => ['sanitize_input']
+]);
+
+Route::add('/post/replaceImage/{postId:int}', [
+    'method' => 'POST',
+    'controller' => 'PostController@replaceImage'
+]);
+
 //user routes
-Route::add('/login', [
-    'method' => 'GET',
-    'controller' => 'UserController@index',
-    'name' => 'auth_page',
-    'middlewares' => ['auth_session']
+Route::group([
+    '/login' => [
+        'controller' => 'UserController@index',
+        'name' => 'auth_page',
+        'middlewares' => ['auth_session']
+    ],
+    '/user/logout'=> [
+        'controller' => 'UserController@logout'
+    ]
+])->by([
+    'method' => 'GET'
 ]);
 
 Route::add('/user/login', [
@@ -103,17 +98,10 @@ Route::add('/user/login', [
     ]
 ]);
 
-Route::add('/user/logout', [
-    'method' => 'GET',
-    'controller' => 'UserController@logout',
-    'name' => 'logout'
-]);
-
 //comments routes
 Route::add('/comment/add/{postId:int}', [
     'method' => 'POST',
     'controller' => 'CommentController@add',
-    'name' => 'comment_add',
     'middlewares' => [
         'sanitize_input',  
         'comment_validator'
@@ -122,6 +110,5 @@ Route::add('/comment/add/{postId:int}', [
 
 Route::add('/comment/delete/{id:int}', [
     'method' => 'GET',
-    'controller' => 'CommentController@delete',
-    'name' => 'comment_delete'
+    'controller' => 'CommentController@delete'
 ]);

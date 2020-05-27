@@ -12,6 +12,10 @@
  * @link https://github.com/eliseekn/TinyMVC
  */
 
+/**
+ * Application console interface
+ */
+
 require __DIR__ . DIRECTORY_SEPARATOR . '../vendor/autoload.php';
 require __DIR__ . DIRECTORY_SEPARATOR . '../config/app.php';
 require __DIR__ . DIRECTORY_SEPARATOR . '../config/database.php';
@@ -23,8 +27,7 @@ function getMigration(string $migration)
     $migration = 'App\Database\Migrations\\' . $migration;
 
     if (!class_exists($migration) || !method_exists($migration, 'migrate')) {
-        print('[-] Invalid migration class "' . $migration . '"' . PHP_EOL);
-        exit();
+        exit('[-] Invalid migration class "' . $migration . '"' . PHP_EOL);
     }
 
     return new $migration();
@@ -36,29 +39,41 @@ function getSeed(string $seed)
     $seed = 'App\Database\Seeds\\' . $seed;
 
     if (!class_exists($seed) || !method_exists($seed, 'sow')) {
-        print('[-] Invalid seed class "' . $seed . '"' . PHP_EOL);
-        exit();
+        exit('[-] Invalid seed class "' . $seed . '"' . PHP_EOL);
     }
 
     return new $seed();
 }
 
+//set migrations and seeds folders paths
 $migrations_folder = 'app' . DIRECTORY_SEPARATOR . 'Database' . DIRECTORY_SEPARATOR . 'Migrations';
 $seeds_folder = 'app' . DIRECTORY_SEPARATOR . 'Database' . DIRECTORY_SEPARATOR . 'Seeds';
 
 //get command line arguments
-$options = getopt('', ['migration::', 'seed::', 'clear::', 'delete::', 'rollback::']);
+$options = getopt('', ['help::', 'migration::', 'seed::', 'clear::', 'delete::', 'rollback::']);
 
-//do migration
+//handle command line arguments
 if (
     array_key_exists('migration', $options) &&
+    !array_key_exists('seed', $options) &&
     !array_key_exists('clear', $options) &&
     !array_key_exists('delete', $options) &&
     !array_key_exists('rollback', $options)
 ) {
     if ($options['migration'] !== 'all') {
-        $migration = getMigration($options['migration']);
-        $migration->migrate();
+        $migration = $options['migration'];
+
+        if (strpos($migration, ',') === false) {
+            $migration = getMigration($migration);
+            $migration->migrate();
+        } else {
+            $migrations = explode(',', $migration);
+
+            foreach ($migrations as $migration) {
+                $migration = getMigration($migration);
+                $migration->migrate();
+            }
+        }
     } else {
         $objects = scandir($migrations_folder);
 
@@ -71,12 +86,8 @@ if (
         }
     }
 
-    print('[+] Done' . PHP_EOL);
-    exit();
-}
-
-//do migration and seeds
-if (
+    exit('[+] Operations done successfully.' . PHP_EOL);
+} else if (
     array_key_exists('migration', $options) &&
     array_key_exists('seed', $options) &&
     !array_key_exists('clear', $options) &&
@@ -84,8 +95,19 @@ if (
     !array_key_exists('rollback', $options)
 ) {
     if ($options['migration'] !== 'all') {
-        $migration = getMigration($options['migration']);
-        $migration->migrate();
+        $migration = $options['migration'];
+
+        if (strpos($migration, ',') === false) {
+            $migration = getMigration($migration);
+            $migration->migrate();
+        } else {
+            $migrations = explode(',', $migration);
+
+            foreach ($migrations as $migration) {
+                $migration = getMigration($migration);
+                $migration->migrate();
+            }
+        }
     } else {
         $objects = scandir($migrations_folder);
 
@@ -99,29 +121,147 @@ if (
     }
 
     if ($options['seed'] !== 'all') {
-        $seed = getSeed($options['seed']);
-        $seed->sow();
+        $seed = $options['seed'];
+
+        if (strpos($seed, ',') === false) {
+            $seed = $seed = getSeed($seed);
+            $seed->sow();
+        } else {
+            $seeds = explode(',', $seed);
+
+            foreach ($seeds as $seed) {
+                $seed = getSeed($seed);
+                $seed->sow();
+            }
+        }
     } else {
         $objects = scandir($seeds_folder);
 
         foreach ($objects as $object) {
             if ($object != '.' && $object != '..') {
                 $seed = explode('.', basename($object))[0];
-                $seed = getSeed($options['seed']);
+                $seed = $seed = getSeed($seed);
                 $seed->sow();
             }
         }
     }
 
-    print('[+] Done' . PHP_EOL);
-    exit();
-}
-
-//clear table
-if (array_key_exists('migration', $options) && array_key_exists('clear', $options)) {
+    exit('[+] Operations done successfully.' . PHP_EOL);
+} else if (
+    array_key_exists('migration', $options) &&
+    array_key_exists('seed', $options) &&
+    array_key_exists('rollback', $options) &&
+    !array_key_exists('clear', $options) &&
+    !array_key_exists('delete', $options)
+) {
     if ($options['migration'] !== 'all') {
-        $migration = getMigration($options['migration']);
-        $migration->clear();
+        $migration = $options['migration'];
+
+        if (strpos($migration, ',') === false) {
+            $migration = getMigration($migration);
+            $migration->rollback();
+        } else {
+            $migrations = explode(',', $migration);
+
+            foreach ($migrations as $migration) {
+                $migration = getMigration($migration);
+                $migration->rollback();
+            }
+        }
+    } else {
+        $objects = scandir($migrations_folder);
+
+        foreach ($objects as $object) {
+            if ($object != '.' && $object != '..') {
+                $migration = explode('.', basename($object))[0];
+                $migration = getMigration($migration);
+                $migration->rollback();
+            }
+        }
+    }
+
+    if ($options['seed'] !== 'all') {
+        $seed = $options['seed'];
+
+        if (strpos($seed, ',') === false) {
+            $seed = $seed = getSeed($seed);
+            $seed->sow();
+        } else {
+            $seeds = explode(',', $seed);
+
+            foreach ($seeds as $seed) {
+                $seed = getSeed($seed);
+                $seed->sow();
+            }
+        }
+    } else {
+        $objects = scandir($seeds_folder);
+
+        foreach ($objects as $object) {
+            if ($object != '.' && $object != '..') {
+                $seed = explode('.', basename($object))[0];
+                $seed = getSeed($seed);
+                $seed->sow();
+            }
+        }
+    }
+
+    exit('[+] Operations done successfully.' . PHP_EOL);
+} else if (
+    array_key_exists('migration', $options) &&
+    array_key_exists('rollback', $options) &&
+    !array_key_exists('seed', $options) &&
+    !array_key_exists('clear', $options) &&
+    !array_key_exists('delete', $options)
+) {
+    if ($options['migration'] !== 'all') {
+        $migration = $options['migration'];
+
+        if (strpos($migration, ',') === false) {
+            $migration = getMigration($migration);
+            $migration->rollback();
+        } else {
+            $migrations = explode(',', $migration);
+
+            foreach ($migrations as $migration) {
+                $migration = getMigration($migration);
+                $migration->rollback();
+            }
+        }
+    } else {
+        $objects = scandir($migrations_folder);
+
+        foreach ($objects as $object) {
+            if ($object != '.' && $object != '..') {
+                $migration = explode('.', basename($object))[0];
+                $migration = getMigration($migration);
+                $migration->rollback();
+            }
+        }
+    }
+
+    exit('[+] Operations done successfully.' . PHP_EOL);
+} else if (
+    array_key_exists('migration', $options) &&
+    array_key_exists('clear', $options) &&
+    !array_key_exists('rollback', $options) &&
+    !array_key_exists('seed', $options) &&
+    !array_key_exists('delete', $options)
+) {
+    if ($options['migration'] !== 'all') {
+        $migration = $options['migration'];
+
+        if (strpos($migration, ',') === false) {
+            $migration = getMigration($migration);
+            $migration->clear();
+        } else {
+            $migrations = explode(',', $migration);
+
+            foreach ($migrations as $migration) {
+                $migration = getMigration($migration);
+                $migration->clear();
+            }
+        }
     } else {
         $objects = scandir($migrations_folder);
 
@@ -134,15 +274,28 @@ if (array_key_exists('migration', $options) && array_key_exists('clear', $option
         }
     }
 
-    print('[+] Done' . PHP_EOL);
-    exit();
-}
-
-//delete table
-if (array_key_exists('migration', $options) && array_key_exists('delete', $options)) {
+    exit('[+] Operations done successfully.' . PHP_EOL);
+} else if (
+    array_key_exists('migration', $options) &&
+    array_key_exists('delete', $options) &&
+    !array_key_exists('clear', $options) &&
+    !array_key_exists('rollback', $options) &&
+    !array_key_exists('seed', $options)
+) {
     if ($options['migration'] !== 'all') {
-        $migration = getMigration($options['migration']);
-        $migration->delete();
+        $migration = $options['migration'];
+
+        if (strpos($migration, ',') === false) {
+            $migration = getMigration($migration);
+            $migration->delete();
+        } else {
+            $migrations = explode(',', $migration);
+
+            foreach ($migrations as $migration) {
+                $migration = getMigration($migration);
+                $migration->delete();
+            }
+        }
     } else {
         $objects = scandir($migrations_folder);
 
@@ -155,80 +308,28 @@ if (array_key_exists('migration', $options) && array_key_exists('delete', $optio
         }
     }
 
-    print('[+] Done' . PHP_EOL);
-    exit();
-}
-
-//rollback migration
-if (
-    array_key_exists('migration', $options) &&
-    array_key_exists('rollback', $options) &&
-    !array_key_exists('seed', $options)
+    exit('[+] Operations done successfully.' . PHP_EOL);
+} else if (
+    array_key_exists('seed', $options) &&
+    !array_key_exists('migration', $options) &&
+    !array_key_exists('delete', $options) &&
+    !array_key_exists('clear', $options) &&
+    !array_key_exists('rollback', $options)
 ) {
-    if ($options['migration'] !== 'all') {
-        $migration = getMigration($options['migration']);
-        $migration->rollback();
-    } else {
-        $objects = scandir($migrations_folder);
-
-        foreach ($objects as $object) {
-            if ($object != '.' && $object != '..') {
-                $migration = explode('.', basename($object))[0];
-                $migration = getMigration($migration);
-                $migration->rollback();
-            }
-        }
-    }
-
-    print('[+] Done' . PHP_EOL);
-    exit();
-}
-
-//migration rollback and seed
-if (
-    array_key_exists('migration', $options) &&
-    array_key_exists('rollback', $options) &&
-    array_key_exists('seed', $options)
-) {
-    if ($options['migration'] !== 'all') {
-        $migration = getMigration($options['migration']);
-        $migration->rollback();
-    } else {
-        $objects = scandir($migrations_folder);
-
-        foreach ($objects as $object) {
-            if ($object != '.' && $object != '..') {
-                $migration = explode('.', basename($object))[0];
-                $migration = getMigration($migration);
-                $migration->rollback();
-            }
-        }
-    }
-
     if ($options['seed'] !== 'all') {
-        $seed = getSeed($options['seed']);
-        $seeder->sow();
-    } else {
-        $objects = scandir($seeds_folder);
+        $seed = $options['seed'];
 
-        foreach ($objects as $object) {
-            if ($object != '.' && $object != '..') {
-                $seeder = explode('.', basename($object))[0];
-                $seeder = getSeed($seeder);
-                $seeder->sow();
+        if (strpos($seed, ',') === false) {
+            $seed = $seed = getSeed($seed);
+            $seed->sow();
+        } else {
+            $seeds = explode(',', $seed);
+
+            foreach ($seeds as $seed) {
+                $seed = getSeed($seed);
+                $seed->sow();
             }
         }
-    }
-
-    print('[+] Done' . PHP_EOL);
-    exit();
-}
-
-//do seed
-if (array_key_exists('seed', $options)) {
-    if ($options['seed'] !== 'all') {
-        $seed = getSeed($options['seed']);
-        $seed->sow();
     } else {
         $objects = scandir($seeds_folder);
 
@@ -241,8 +342,23 @@ if (array_key_exists('seed', $options)) {
         }
     }
 
-    print('[+] Done' . PHP_EOL);
-    exit();
+    exit('[+] Operations done successfully.' . PHP_EOL);
+} else if (array_key_exists('help', $options)) {
+    $help_message = '[+] Commands list:' . PHP_EOL;
+    $help_message .= '      --migration=all                             Migrate all tables' . PHP_EOL;
+    $help_message .= '      --migration=UsersTable                      Migrate UsersTable only' . PHP_EOL;
+    $help_message .= '      --migration=UsersTable,CommentsTable        Migrate UsersTable and CommentsTable only' . PHP_EOL;
+    $help_message .= '      --migration=UsersTable --clear              Truncate UsersTable only' . PHP_EOL;
+    $help_message .= '      --migration=all --clear                     Truncate all tables' . PHP_EOL;
+    $help_message .= '      --migration=UsersTable,PostsTable --delete  Drop UsersTable and PostsTable only' . PHP_EOL;
+    $help_message .= '      --migration=all --delete                    Drop all tables' . PHP_EOL;
+    $help_message .= '      --seed=all                                  Insert all seeds' . PHP_EOL;
+    $help_message .= '      --seed=UserSeed                             Insert UserSeed only' . PHP_EOL;
+    $help_message .= '      --seed=UserSeed,CommentSeed                 Insert UserSeed and CommentSeed only' . PHP_EOL;
+    $help_message .= '      --migration=all --seed=all                  Migrate all tables and insert all seeds' . PHP_EOL;
+    $help_message .= '      --migration=all --rollback                  Revert migrations for all tables' . PHP_EOL;
+    $help_message .= '      --migration=all --rollback --seed=all       Revert migrations for all tables and insert all seeds' . PHP_EOL;
+    exit($help_message);
+} else {
+    exit('[-] Invalid command line arguments, print "--help" for commands list' . PHP_EOL);
 }
-
-print('[-] Invalid command line arguments' . PHP_EOL);
