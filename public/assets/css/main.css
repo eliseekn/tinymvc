@@ -1,27 +1,21 @@
-header {
-	padding: 10em 0;
-	background: 
-		linear-gradient(
-			rgba(0, 17, 43, 0.65), 
-			rgba(0, 17, 43, 0.65)
-		), url("/tinymvc/public/assets/img/header.jpg");
-	background-size: cover;
-	background-position: center;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
 }
 
-footer {
-	background-color: #00112bff;
-	padding: 10em 0;
+div {
+    text-align: center;
+    padding: 5em 0;
 }
 
-.post-title {
-	font-size: 2.5rem;
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: .5em;
 }
 
-.social-icons {
-	font-size: 4rem;
-}
-
-a:hover {
-	text-decoration: none;
+p {
+    font-size: 1.2rem;
+    line-height: 1.8;
 }

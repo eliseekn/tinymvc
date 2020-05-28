@@ -5,18 +5,18 @@ namespace App\Database\Models;
 use Framework\ORM\Model;
 
 /**
- * PostsModel
+ * ExampleModel
  * 
- * Posts model class
+ * Example model class
  */
-class PostsModel extends Model
+class ExampleModel extends Model
 {    
     /**
      * name of table
      *
      * @var string
      */
-    protected $table = 'posts';
+    protected $table = 'name_of_table';
 
     /**
      * instantiates class
@@ -27,15 +27,15 @@ class PostsModel extends Model
     {
         parent::__construct($this->table);
     }
-
+    
     /**
-     * get post row by slug
+     * get row
      *
-     * @param  string $slug post slug
-     * @return void
+     * @param  string $email
+     * @return mixed
      */
-    public function get(string $slug)
+    public function get(string $email)
     {
-        return $this->findSingle('slug', '=', $slug);
+        return $this->findSingle('email', '=', $email);
     }
 }

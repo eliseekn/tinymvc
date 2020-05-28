@@ -5,11 +5,11 @@ namespace App\Database\Migrations;
 use Framework\ORM\Migration;
 
 /**
- * CommentsTable
+ * ExampleTable
  * 
- * Migration of comments table
+ * Migration of example table
  */
-class CommentsTable extends Migration
+class UsersTable extends Migration
 {    
     /**
      * create table
@@ -18,13 +18,13 @@ class CommentsTable extends Migration
      */
     public function migrate(): void
     {
-        $this->table('comments')
+        $this->table('name_of_table')
             ->addPrimaryKey('id')
-            ->addInteger('post_id')
-            ->addString('author')
-            ->addText('content')
+            ->addString('username')
+            ->addString('email')
+            ->addString('password')
+            ->addString('role')
             ->addTimestamp('created_at')
-            ->addTimestamp('updated_at')
             ->create();
     }
     
@@ -35,7 +35,7 @@ class CommentsTable extends Migration
      */
     public function clear(): void
     {
-        $this->truncateTable('comments');
+        $this->truncateTable('name_of_table');
     }
     
     /**
@@ -45,7 +45,7 @@ class CommentsTable extends Migration
      */
     public function delete(): void
     {
-        $this->dropTable('comments');
+        $this->dropTable('name_of_table');
     }
     
     /**

@@ -6,14 +6,14 @@ use Faker\Factory;
 use Framework\ORM\Seeder;
 
 /**
- * UserSeed
+ * ExampleSeed
  * 
- * Insert new user row
+ * Insert new row
  */
-class UserSeed extends Seeder
+class ExampleSeed extends Seeder
 {
     /**
-     * insert user row
+     * insert row
      *
      * @return void
      */
@@ -21,10 +21,10 @@ class UserSeed extends Seeder
     {
         $faker = Factory::create('en_US');
 
-        $this->insert('users', [
-            'name' => $faker->name,
+        $this->insert('name_of_table', [
+            'username' => $faker->name,
             'email' => $faker->email,
-            'password' => hash_string('admin'),
+            'password' => hash_string('administrator'),
             'role' => 'administrator'
         ]);
     }

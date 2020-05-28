@@ -23,7 +23,7 @@ class CsrfTokenValidator
         $csrf_token = $request->getInput('csrf_token');
 
         if (!is_valid_csrf_token($csrf_token)) {
-            Redirect::toRoute('auth_page')->only();
+            Redirect::back()->withMessage('csrf_token_error', 'Invalid csrf token.');
         }
     }
 }
