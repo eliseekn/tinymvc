@@ -43,8 +43,8 @@ class Route
         if (!empty($data)) {
             self::$routes[$route] = $data;
 
-            if (isset($data['controller']) && isset($data['middlewares'])) {
-                Middleware::add($data['controller'], $data['middlewares']);
+            if (isset($data['handler']) && isset($data['middlewares'])) {
+                Middleware::add($data['handler'], $data['middlewares']);
             }
         }
     }
@@ -53,7 +53,7 @@ class Route
      * group routes
      *
      * @param  array $routes
-     * @return void
+     * @return mixed
      */
     public static function group(array $routes)
     {

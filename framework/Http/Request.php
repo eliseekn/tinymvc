@@ -83,15 +83,29 @@ class Request
     }
 
     /**
-     * retrieves request file
+     * retrieves $_FILES request
      *
      * @param  string $field name of $_FILES array field
-     * @return mixed returns new uploader class instance
+     * @return array returns array of uploader class instance
      */
-    public function getFile(string $field)
+    public function getFile(string $field): array
     {
-        $file = $_FILES[$field] ?? [];
-        return new Uploader($file);
+        $uploaders = [];
+
+        if (isset($_FILES[$field]) && !empty($_FILES[$field])) {
+            $files_count = is_array($_FILES[$field]['tmp_name']) ? count($_FILES[$field]['tmp_name']) : 1;
+
+            for ($i = 0; $i < $files_count; $i ++) {
+                $uploaders[] = new Uploader([
+                    'name' => $_FILES[$field]['name'][$i],
+                    'tmp_name' => $_FILES[$field]['tmp_name'][$i],
+                    'size' => $_FILES[$field]['size'][$i],
+                    'type' => $_FILES[$field]['type'][$i]
+                ]);
+            }
+        }
+        
+        return $uploaders;
     }
 
     /**
@@ -169,7 +183,7 @@ class Request
     /**
      * get response body
      *
-     * @return void
+     * @return mixed
      */
     public function getBody()
     {

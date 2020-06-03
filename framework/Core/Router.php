@@ -16,7 +16,7 @@ use Exception;
 use Framework\Core\View;
 use Framework\Http\Request;
 use Framework\Http\Response;
-use Framework\Exceptions\RoutesNotDefineException;
+use Framework\Exceptions\RoutesNotDefinedException;
 use Framework\Exceptions\ControllerNotFoundException;
 
 /**
@@ -87,25 +87,30 @@ class Router
         if (!empty($routes)) {
             foreach ($routes as $route => $data) {
                 $route = preg_replace('/{([a-z]+):([^\}]+)}/i', '$2', $route);
-                $route = preg_replace(['/\bstr\b/', '/\bint\b/', '/\ball\b/'], ['([a-zA-Z0-9-]+)', '(\d+)', '([^/]+)'], $route);
+                $route = preg_replace(['/\bstr\b/', '/\bint\b/', '/\ball\b/'], ['([a-zA-Z-_]+)', '(\d+)', '([^/]+)'], $route);
                 $pattern = '#^' . $route . '$#';
 
                 if (preg_match($pattern, $this->uri, $params)) {
                     array_shift($params);
 
                     if (preg_match('/' . strtoupper($data['method']) . '/', $this->request->getMethod())) {
-                        list($controller, $action) = explode('@', $data['controller']);
+                        if (is_callable($data['handler'])) {
+                            call_user_func_array($data['handler'], array_values($params));
+                            exit();
+                        } 
+                        
+                        list($controller, $action) = explode('@', $data['handler']);
                         $controller = 'App\Controllers\\' . $controller;
 
                         //chekc if controller class and method exist
                         if (class_exists($controller) && method_exists($controller, $action)) {
                             //check for middlewares to execute
-                            Middleware::check($data['controller']);
+                            Middleware::check($data['handler']);
 
                             //execute controller with action and parameter
                             call_user_func_array([new $controller(), $action], array_values($params));
                         } else {
-                            throw new ControllerNotFoundException($data['controller']);
+                            throw new ControllerNotFoundException($data['handler']);
                         }
                     }
                 }
@@ -118,7 +123,7 @@ class Router
                 Response::send([], 'The page you have requested does not exists on this server.', 404);
             }
         } else {
-            throw new RoutesNotDefineException();
+            throw new RoutesNotDefinedException();
         }
     }
 }

@@ -17,8 +17,8 @@
 //remove PHP maximum execution time 
 set_time_limit(0);
 
-//set errors display
-if (DISPLAY_ERRORS == true) {
+//exceptions handler
+if (DISPLAY_ERRORS === true) {
     ini_set('display_errors', 1);
     ini_set('error_reporting', -1);
 } else {

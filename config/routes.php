@@ -11,16 +11,15 @@
  */
 
 use Framework\Core\Route;
+use Framework\Core\View;
 
 /**
  * Set routes paths
  */
 
-Route::group([
-    '/' => [],
-    '/home' => []
-])->by([
+Route::add('/', [
     'method' => 'GET',
-    'controller' => 'HomeController@index',
-    'name' => 'home'
+    'handler' => function() {
+        View::render('home');
+    }
 ]);

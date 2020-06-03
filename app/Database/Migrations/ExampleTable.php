@@ -7,10 +7,19 @@ use Framework\ORM\Migration;
 /**
  * ExampleTable
  * 
- * Migration of example table
  */
-class UsersTable extends Migration
+class ExampleTable extends Migration
 {    
+    /**
+     * __construct
+     *
+     * @return void
+     */
+    public function  __construct()
+    {
+        $this->table = 'name_of_table';
+    }
+
     /**
      * create table
      *
@@ -18,12 +27,12 @@ class UsersTable extends Migration
      */
     public function migrate(): void
     {
-        $this->table('name_of_table')
+        $this->table($this->table)
             ->addPrimaryKey('id')
             ->addString('username')
             ->addString('email')
             ->addString('password')
-            ->addString('role')
+            ->addString('role', 255, false, false, 'user')
             ->addTimestamp('created_at')
             ->create();
     }
@@ -33,9 +42,9 @@ class UsersTable extends Migration
      *
      * @return void
      */
-    public function clear(): void
+    public function empty(): void
     {
-        $this->truncateTable('name_of_table');
+        $this->truncateTable($this->table);
     }
     
     /**
@@ -45,7 +54,7 @@ class UsersTable extends Migration
      */
     public function delete(): void
     {
-        $this->dropTable('name_of_table');
+        $this->dropTable($this->table);
     }
     
     /**

@@ -23,27 +23,16 @@
  */
 function create_cookie(string $name, string $value): bool
 {
-	$secure = isset($_SERVER['HTTPS']);
-	$expire = time() + (3600 * 24 * 30); //1 month
-
-	return setcookie(
-		$name, //name
-		$value, //value
-		$expire, //expire
-		'/', //path
-		WEB_DOMAIN, //domain
-		$secure, //is secure?
-		true //HTTP only
-	);
+	return setcookie($name, $value, time() + (3600 * 24 * 30), '/');
 }
 
 /**
  * return cookie data
  *
  * @param  string $name cookie name
- * @return void
+ * @return string
  */
-function get_cookie(string $name)
+function get_cookie(string $name): string
 {
 	return $_COOKIE[$name] ?? '';
 }
@@ -65,7 +54,7 @@ function cookie_has(string $name): bool
  * @param  string $name cookie name
  * @return void
  */
-function delete_cookie(string $name)
+function delete_cookie(string $name): bool
 {
-	unset($_COOKIE[$name]);
+	return setcookie($name, '', time() - 3600, '/');
 }

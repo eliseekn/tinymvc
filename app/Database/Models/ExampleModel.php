@@ -7,7 +7,6 @@ use Framework\ORM\Model;
 /**
  * ExampleModel
  * 
- * Example model class
  */
 class ExampleModel extends Model
 {    
@@ -34,7 +33,7 @@ class ExampleModel extends Model
      * @param  string $email
      * @return mixed
      */
-    public function get(string $email)
+    public function findByEmail(string $email)
     {
         return $this->findSingle('email', '=', $email);
     }

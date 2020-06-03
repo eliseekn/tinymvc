@@ -65,8 +65,8 @@ class Model
     /**
      * find row by id column
      *
-     * @param  mixed $id
-     * @return void
+     * @param  int $id
+     * @return mixed
      */
     public function find(int $id)
     {
@@ -79,7 +79,7 @@ class Model
      * @param  string $column name of column
      * @param  string $operator operator
      * @param  string $value value to check
-     * @return void
+     * @return mixed
      */
     public function findSingle(string $column, string $operator, string $value)
     {
@@ -88,12 +88,24 @@ class Model
             ->where($column, $operator, $value)
             ->fetchSingle();
     }
+    
+    /**
+     * fetch single row with custom query
+     *
+     * @param  string $query query string
+     * @return mixed
+     */
+    public function findSingleQuery(string $query, array $args = [])
+    {
+        return (object) $this->QB->setQuery($query, $args)
+            ->fetchSingle();
+    }
 
     /**
      * fetch all rows
      *
      * @param  string $direction DESC or ASC
-     * @return void
+     * @return mixed
      */
     public function findAll(string $direction = 'DESC')
     {
@@ -101,6 +113,27 @@ class Model
             ->from($this->table)
             ->orderBy('id', $direction)
             ->fetchAll();
+
+        //convert array to class
+        $items = array_map(
+            function ($val) {
+                return (object) $val;
+            },
+            (array) $items
+        );
+
+        return (object) $items;
+    }
+    
+    /**
+     * fetch all rows with custom query
+     *
+     * @param  string $query query string
+     * @return mixed
+     */
+    public function findAllQuery(string $query, array $args = [])
+    {
+        $items = $this->QB->setQuery($query, $args)->fetchAll();
 
         //convert array to class
         $items = array_map(
@@ -120,7 +153,7 @@ class Model
      * @param  string $operator operator
      * @param  string $value value to check
      * @param  string $direction DESC or ASC
-     * @return void
+     * @return mixed
      */
     public function findAllWhere(string $column, string $operator, string $value, string $direction = 'DESC')
     {
@@ -147,7 +180,7 @@ class Model
      * @param  int $limit
      * @param  int $offset
      * @param  string $direction DESC or ASC
-     * @return void
+     * @return mixed
      */
     public function findRange(int $limit, int $offset, string $direction = 'DESC')
     {
@@ -177,7 +210,7 @@ class Model
      * @param  string $operator operator
      * @param  string $value value to check
      * @param  string $direction DESC or ASC
-     * @return void
+     * @return mixed
      */
     public function findRangeWhere(
         int $limit,
@@ -206,6 +239,22 @@ class Model
     }
     
     /**
+     * delete row with WHERE clause
+     *
+     * @param  string $column name of column
+     * @param  string $operator operator
+     * @param  string $value value to check
+     * @return void
+     */
+    public function deleteWhere(string $column, string $operator, string $value): void
+    {
+        $this->QB->deleteFrom($this->table)
+            ->where($column, $operator, $value)
+            ->limit(1)
+            ->executeQuery();
+    }
+    
+    /**
      * delete row
      *
      * @param  int $id row id
@@ -213,17 +262,14 @@ class Model
      */
     public function delete(int $id): void
     {
-        $this->QB->deleteFrom($this->table)
-            ->where('id', '=', $id)
-            ->limit(1)
-            ->executeQuery();
+        $this->deleteWhere('id', '=', $id);
     }
     
     /**
      * set data to update or insert
      *
      * @param  array $data data value
-     * @return void
+     * @return mixed
      */
     public function setData(array $data)
     {
@@ -261,7 +307,7 @@ class Model
      *
      * @param  mixed $page current page
      * @param  mixed $items_per_pages
-     * @return mixed returns paginator class
+     * @return mixed returns new paginator class instance
      */
     public function paginate(int $items_per_pages)
     {
@@ -287,7 +333,7 @@ class Model
      * @param  string $column name of column
      * @param  string $operator operator
      * @param  string $value value to check
-     * @return mixed returns new paginator class
+     * @return mixed returns new paginator class instance
      */
     public function paginateWhere(
         int $items_per_pages,
@@ -305,8 +351,8 @@ class Model
 
         $items = $items_per_pages > 0 ? 
             $this->findRangeWhere(
-                $items_per_pages,
                 $pagination['first_item'],
+                $items_per_pages,
                 $column,
                 $operator,
                 $value
@@ -314,5 +360,24 @@ class Model
             $this->findAllWhere($column, $operator, $value);
 
         return new Paginator($items, $pagination);
+    }
+
+    /**
+     * generate pagination with custom query
+     *
+     * @param  int $items_per_pages
+     * @param  array $pagination pagination parameters
+     * @return mixed returns new paginator class instance
+     */
+    public function paginateQuery(array $items, array $pagination) {
+        //convert array to class
+        $items = array_map(
+            function ($val) {
+                return (object) $val;
+            },
+            (array) $items
+        );
+        
+        return new Paginator((object) $items, $pagination);
     }
 }

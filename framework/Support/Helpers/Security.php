@@ -24,7 +24,7 @@ function sanitize_string(string $str): string
 {
     $sanitized_str = stripslashes($str);
     $sanitized_str = strip_tags($sanitized_str);
-    $sanitized_str = htmlentities($sanitized_str);
+    $sanitized_str = htmlspecialchars($sanitized_str);
     return $sanitized_str;
 }
 

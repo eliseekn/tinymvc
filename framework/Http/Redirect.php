@@ -28,13 +28,25 @@ class Redirect
      * @var string
      */
     private static $redirect_url = '';
+    
+    /**
+     * redirect to url 
+     *
+     * @param  string $url url to redirect to
+     * @return mixed
+     */
+    public function toUrl(string $url)
+    {
+        self::$redirect_url = $url;
+        return new self();
+    }
 
     /**
      * redirect to route
      *
      * @param  string $name route name or Controller@action
      * @param  array $params parameters 
-     * @return void
+     * @return mixed
      */
     public static function toRoute(string $name, array $params = [])
     {
@@ -75,7 +87,7 @@ class Redirect
     /**
      * go to previous page
      *
-     * @return void
+     * @return mixed
      */
     public static function back()
     {
@@ -93,7 +105,7 @@ class Redirect
     /**
      * refresh page
      *
-     * @return void
+     * @return mixed
      */
     public static function refresh()
     {

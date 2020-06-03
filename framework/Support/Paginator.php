@@ -54,7 +54,7 @@ class Paginator
         $this->items = $items;
 
         //add items as properties
-        foreach ($items as $key => $value) {
+        foreach ($this->items as $key => $value) {
             $this->{$key} = $value;
         }
 
@@ -168,5 +168,16 @@ class Paginator
     public function nextPageUrl(): string
     {
         return absolute_url($this->request->getURI() . '?page=' . $this->nextPage());
+    }
+    
+    /**
+     * generate page url
+     *
+     * @param  int $page page id
+     * @return string
+     */
+    public function pageUrl(int $page): string
+    {
+        return absolute_url($this->request->getURI() . '?page=' . $page);
     }
 }

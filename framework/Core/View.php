@@ -49,7 +49,7 @@ class View
     public static function error(string $template, int $status_code = 404): void
     {
         if (!file_exists('templates' . DIRECTORY_SEPARATOR . 'errors' . DIRECTORY_SEPARATOR . $template . '.php')) {
-            throw new FileNotFoundException(DOCUMENT_ROOT . 'templates' . DIRECTORY_SEPARATOR . 'errors' . DIRECTORY_SEPARATOR . $template . '.php' . '.php');
+            throw new FileNotFoundException(DOCUMENT_ROOT . 'templates' . DIRECTORY_SEPARATOR . 'errors' . DIRECTORY_SEPARATOR . $template . '.php');
         }
 
         $engine = new Engine('templates' . DIRECTORY_SEPARATOR . 'errors');

@@ -15,7 +15,7 @@ namespace Framework\Support;
 /**
  * Uploader
  * 
- * Manage uploaded files
+ * Manage uploaded file
  */
 class Uploader
 {    
@@ -24,7 +24,14 @@ class Uploader
      *
      * @var array
      */
-    protected $file = [];
+    public $file = [];
+    
+    /**
+     * filename destination path
+     *
+     * @var string
+     */
+    public $filepath = '';
     
     /**
      * __construct
@@ -38,7 +45,7 @@ class Uploader
     }
     
     /**
-     * getOriginalFilename
+     * get original filename
      *
      * @return string
      */
@@ -48,7 +55,7 @@ class Uploader
     }
     
     /**
-     * getTempFilename
+     * get temp filename
      *
      * @return string
      */
@@ -58,7 +65,7 @@ class Uploader
     }
         
     /**
-     * getFileType
+     * get file type
      *
      * @return string
      */
@@ -68,7 +75,7 @@ class Uploader
     }
         
     /**
-     * getFileExtension
+     * get file extension
      *
      * @return string
      */
@@ -78,7 +85,7 @@ class Uploader
     }
         
     /**
-     * getFileSize
+     * get file size
      *
      * @return int
      */
@@ -90,18 +97,14 @@ class Uploader
     /**
      * move uploaded file
      *
-     * @param  string $destination file destination
-     * @param  string|null $filename uploaded filename
-     * @return bool returns true or false
+     * @param  string $destination
+     * @param  string|null $filename
+     * @return bool
      */
     public function moveTo(string $destination, ?string $filename = null): bool
     {
         $filename = is_null($filename) ? $this->getOriginalFilename() : $filename;
-
-        if (!empty($filename)) {
-            return Storage::moveFile($this->getTempFilename(), $destination . DIRECTORY_SEPARATOR . $filename);
-        }
-
-        return false;
+        $this->filepath = $destination . DIRECTORY_SEPARATOR . $filename;
+        return Storage::moveFile($this->getTempFilename(), $this->filepath);
     }
 }

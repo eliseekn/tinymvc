@@ -25,7 +25,7 @@ class Controller
      * @param  string $template template to display
      * @return void
      */
-    public function renderView(string $template, array $data = [])
+    public function renderView(string $template, array $data = []): void
     {
         View::render($template, $data);
     }

@@ -8,7 +8,6 @@ use GUMP;
 /**
  * ExampleValidator
  * 
- * Example of $_POST requests field validator with GUMP package
  */
 class ExampleValidator extends Request
 {
@@ -36,8 +35,8 @@ class ExampleValidator extends Request
         return [
             'username' => [
                 'required' => 'Username is required.',
-                'alpha_numeric' => 'Username must contains alphanumeric characters only',
-                'max_len,8' => 'Username cannot contains more than 8 characters'
+                'alpha_numeric' => 'Username must contains alphanumeric characters only.',
+                'max_len' => 'Username cannot contains more than 8 characters.'
             ],
             'email' => [
                 'required' => 'Email address is required.',
@@ -45,7 +44,7 @@ class ExampleValidator extends Request
             ],
             'password' => [
                 'required' => 'Password is required.',
-                'between_len,8;15' => 'Password must contains between 8 and 15 characters'
+                'between_len' => 'Password must contains between 8 and 15 characters.'
             ]
         ];
     }

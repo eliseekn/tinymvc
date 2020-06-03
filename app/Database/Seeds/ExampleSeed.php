@@ -8,7 +8,6 @@ use Framework\ORM\Seeder;
 /**
  * ExampleSeed
  * 
- * Insert new row
  */
 class ExampleSeed extends Seeder
 {
@@ -24,8 +23,7 @@ class ExampleSeed extends Seeder
         $this->insert('name_of_table', [
             'username' => $faker->name,
             'email' => $faker->email,
-            'password' => hash_string('administrator'),
-            'role' => 'administrator'
+            'password' => hash_string('administrator')
         ]);
     }
 }

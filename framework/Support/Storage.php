@@ -27,20 +27,20 @@ class Storage
      * @param  bool $recursive create folders recursively
      * @return bool
      */
-    public static function createDir(string $pathname, int $mode = 0777, bool $recursive = false): bool
+    public static function createDir(string $pathname, bool $recursive = false, int $mode = 0777): bool
     {
         return mkdir(PUBLIC_STORAGE . $pathname, $mode, $recursive);
     }
     
     /**
-     * create new file
+     * create new file or write into
      *
      * @param  string $filename name of file
      * @param  mixed $content content of file
-     * @param  bool $append overwrite or not file content
+     * @param  bool $append write content at the end of the file
      * @return bool
      */
-    public static function createFile(string $filename, $content, bool $append = false): bool
+    public static function writeFile(string $filename, $content, bool $append = false): bool
     {
         $flag = $append ? FILE_APPEND | LOCK_EX : 0;
         $success = file_put_contents(PUBLIC_STORAGE . $filename, $content, $flag);
@@ -50,7 +50,7 @@ class Storage
     /**
      * copy file
      *
-     * @param  string $filename nameo of file
+     * @param  string $filename name of file
      * @param  string $destination destination path of file
      * @return bool
      */
@@ -60,9 +60,21 @@ class Storage
     } 
     
     /**
+     * rename file
+     *
+     * @param  string $oldname old name of file
+     * @param  string $newname new name of file
+     * @return bool
+     */
+    public static function renameFile(string $oldname, string $newname): bool
+    {
+        return rename(PUBLIC_STORAGE . $oldname, PUBLIC_STORAGE . $newname);
+    } 
+    
+    /**
      * move file
      *
-     * @param  string $filename nameo of file
+     * @param  string $filename name of file
      * @param  string $destination destination path of file
      * @return bool
      */
