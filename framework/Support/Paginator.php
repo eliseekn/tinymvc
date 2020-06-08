@@ -133,6 +133,26 @@ class Paginator
     }
     
     /**
+     * check if pagination has previous page
+     *
+     * @return bool
+     */
+    public function hasLess(): bool
+    {
+        return $this->currentPage() > 1;
+    }
+    
+    /**
+     * check if pagination has next page
+     *
+     * @return bool
+     */
+    public function hasMore(): bool
+    {
+        return $this->currentPage() < $this->totalPages();
+    }
+    
+    /**
      * returns total pages
      *
      * @return int

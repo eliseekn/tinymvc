@@ -5,9 +5,6 @@ namespace App\Database\Seeds;
 use Faker\Factory;
 use Framework\ORM\Seeder;
 
-/**
- * ExampleSeed
- */
 class ExampleSeed
 {     
     /**
@@ -15,21 +12,20 @@ class ExampleSeed
      *
      * @var string
      */
-    protected $table = 'name_of_table';
+    protected static $table = 'name_of_table';
 
     /**
      * insert row
      *
      * @return void
      */
-    public function insert(): void
+    public static function insert(): void
     {
-        $faker = Factory::create('en_US');
+        $faker = Factory::create();
 
-        Seeder::insert($this->table, [
-            'username' => $faker->name,
+        Seeder::insert(self::$table, [
             'email' => $faker->email,
-            'password' => hash_string('administrator')
+            'password' => hash_string('password')
         ]);
     }
 }

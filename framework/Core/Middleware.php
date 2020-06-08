@@ -55,8 +55,7 @@ class Middleware
             throw new Exception('Middleware "' . $middleware . '" not found.');
         }
 
-        $middleware = new $middleware();
-        $middleware->handle();
+        $middleware::handle();
     }
     
     /**
@@ -77,8 +76,8 @@ class Middleware
     /**
      * set middleware name
      *
-     * @param  string $middleware middleware class
-     * @param  string $name name of middleware
+     * @param  string $middleware
+     * @param  string $name given name to middleware
      * @return void
      */
     public static function setName(string $middleware, string $name): void

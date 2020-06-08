@@ -4,9 +4,6 @@ namespace App\Controllers;
 
 use Framework\Core\View;
 
-/**
- * ExampleController
- */
 class ExampleController
 {
 	/**

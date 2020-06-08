@@ -31,7 +31,7 @@ class Migration
      *
      * @return void
      */
-    private function executeQuery(): void
+    private static function executeQuery(): void
     {
         QueryBuilder::DB()->setQuery(self::$query);
         QueryBuilder::DB()->executeQuery();
@@ -210,7 +210,7 @@ class Migration
     {
         self::$query = rtrim(self::$query, ', ');
         self::$query .= ')';
-        $this->executeQuery();
+        static::executeQuery();
     }
 
     /**
@@ -222,18 +222,6 @@ class Migration
     public static function dropTable(string $name): void
     {
         self::$query = "DROP TABLE IF EXISTS $name";
-        $this->executeQuery();
-    }
-
-    /**
-     * truncate table
-     *
-     * @param  string $name name of table
-     * @return void
-     */
-    public static function truncateTable(string $name): void
-    {
-        self::$query = "TRUNCATE $name";
-        $this->executeQuery();
+        static::executeQuery();
     }
 }

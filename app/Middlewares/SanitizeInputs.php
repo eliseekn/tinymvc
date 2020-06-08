@@ -16,10 +16,10 @@ class SanitizeInputs
      * 
      * @return void
      */
-    public function handle(): void
+    public static function handle(): void
     {
         foreach (Request::getInput() as $key => $value) {
-            Request::setInput($key, sanitize_string($value));
+            Request::setInput($key, escape($value));
         }
     }
 }

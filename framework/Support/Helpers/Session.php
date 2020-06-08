@@ -15,6 +15,19 @@
  */
 
 /**
+ * start session
+ *
+ * @return void
+ */
+function start_session(): void
+{
+	if (session_status() === PHP_SESSION_NONE) {
+		session_start();
+  		setcookie(session_name(), session_id(), time() + SESSION_LIFETIME);
+	}
+}
+
+/**
  * create session and set session data
  *
  * @param  string $name name of the session
@@ -23,11 +36,7 @@
  */
 function create_session(string $name, $data): void
 {
-	if (session_status() === PHP_SESSION_NONE) {
-		session_start();
-  		setcookie(session_name(), session_id(), time() + SESSION_LIFETIME);
-	}
-
+	start_session();
 	$_SESSION[$name] = $data;
 }
 
@@ -39,11 +48,7 @@ function create_session(string $name, $data): void
  */
 function get_session(string $name)
 {
-	if (session_status() === PHP_SESSION_NONE) {
-		session_start();
-  		setcookie(session_name(), session_id(), time() + SESSION_LIFETIME);
-	}
-
+	start_session();
 	return $_SESSION[$name] ?? '';
 }
 
@@ -55,35 +60,27 @@ function get_session(string $name)
  */
 function session_has(string $name): bool
 {
-	if (session_status() === PHP_SESSION_NONE) {
-		session_start();
-  		setcookie(session_name(), session_id(), time() + SESSION_LIFETIME);
-	}
-
+	start_session();
 	return isset($_SESSION[$name]);
 }
 
 /**
  * delete session
  *
- * @param  string $name name of the session
+ * @param  string $name
  * @return void
  */
 function close_session(string $name): void
 {
-	if (session_status() === PHP_SESSION_NONE) {
-		session_start();
-  		setcookie(session_name(), session_id(), time() + SESSION_LIFETIME);
-	}
-
+	start_session();
 	unset($_SESSION[$name]);
 }
 
 /**
  * create flash message
  *
- * @param  string $title title of message
- * @param  mixed $content content of message
+ * @param  string $title
+ * @param  mixed $content
  * @return void
  */
 function create_flash_message(string $title, $content): void
@@ -94,13 +91,13 @@ function create_flash_message(string $title, $content): void
 }
 
 /**
- * get flash message
+ * get flash message content
  *
  * @return mixed returns message content
  */
 function get_flash_messages()
 {
-	$flash_message = get_session('flash_messages');
+	$flash_messages = get_session('flash_messages');
 	close_session('flash_messages');
-	return $flash_message;
+	return $flash_messages;
 }

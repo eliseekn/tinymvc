@@ -38,7 +38,6 @@ class Router
      */
     public function __construct()
     {
-        $this->uri = Request::getURI();
         $this->addSessionHistory();
         
         try {
@@ -58,16 +57,16 @@ class Router
         $browsing_history = get_session('browsing_history');
 
         if (empty($browsing_history)) {
-            $browsing_history = [$this->uri];
+            $browsing_history = [Request::getURI()];
         } else {
-            $browsing_history[] = $this->uri;
+            $browsing_history[] = Request::getURI();
         }
 
         create_session('browsing_history', $browsing_history);
     }
     
     /**
-     * match routes and execute controllers
+     * match routes and execute handlers
      *
      * @param  array $routes routes
      * @return void
@@ -80,7 +79,7 @@ class Router
                 $route = preg_replace(['/\bstr\b/', '/\bint\b/', '/\ball\b/'], ['([a-zA-Z-_]+)', '(\d+)', '([^/]+)'], $route);
                 $pattern = '#^' . $route . '$#';
 
-                if (preg_match($pattern, $this->uri, $params)) {
+                if (preg_match($pattern, Request::getURI(), $params)) {
                     array_shift($params);
 
                     if (preg_match('/' . strtoupper($options['method']) . '/', Request::getMethod())) {

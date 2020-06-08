@@ -17,7 +17,7 @@ class CsrfTokenValidator
      *
      * @return void
      */
-    public function handle()
+    public static function handle()
     {
         if (!is_valid_csrf_token(Request::getInput('csrf_token'))) {
             Response::send([], 'You do not have permission to access this page.', 403);

@@ -72,13 +72,13 @@ class Request
      */
     public static function getFile(string $field): array
     {
-        $uploaders = [];
+        $files = [];
 
         if (isset($_FILES[$field]) && !empty($_FILES[$field])) {
-            $files_count = is_array($_FILES[$field]['tmp_name']) ? count($_FILES[$field]['tmp_name']) : 1;
+            $count = is_array($_FILES[$field]['tmp_name']) ? count($_FILES[$field]['tmp_name']) : 1;
 
-            for ($i = 0; $i < $files_count; $i ++) {
-                $uploaders[] = new Uploader([
+            for ($i = 0; $i < $count; $i++) {
+                $files[] = new Uploader([
                     'name' => $_FILES[$field]['name'][$i],
                     'tmp_name' => $_FILES[$field]['tmp_name'][$i],
                     'size' => $_FILES[$field]['size'][$i],
@@ -87,7 +87,7 @@ class Request
             }
         }
         
-        return $uploaders;
+        return $files;
     }
 
     /**
@@ -97,20 +97,20 @@ class Request
      */
     public static function getMethod()
     {
-        return $this->getHeaders('REQUEST_METHOD');
+        return self::getHeaders('REQUEST_METHOD');
     }
 
     /**
-     * retrieves uri request
+     * retrieves requested uri
      *
      * @return string
      */
     public static function getURI(): string
     {
-        $uri = $this->getHeaders('REQUEST_URI');
+        $uri = self::getHeaders('REQUEST_URI');
         $uri = str_replace(ROOT_FOLDER, '', $uri); //remove root subfolder if exists 
 
-        //looks for "?page=" or something
+        //looks for "?page=" or something like and remove it from uri
         if (strpos($uri, '?') !== false) {
             $uri = substr($uri, strpos($uri, '/'), strpos($uri, '?'));
             
@@ -120,7 +120,7 @@ class Request
         }
 
         //return sanitized url
-        return filter_var($uri, FILTER_SANITIZE_URL) ===  false ? $uri : filter_var($uri, FILTER_SANITIZE_URL);
+        return filter_var($uri, FILTER_SANITIZE_URL) === false ? $uri : filter_var($uri, FILTER_SANITIZE_URL);
     }
     
     /**

@@ -5,10 +5,6 @@ namespace App\Validators;
 use GUMP;
 use Framework\Http\Request;
 
-/**
- * ExampleValidator
- * 
- */
 class ExampleValidator
 {
     /**
@@ -16,47 +12,33 @@ class ExampleValidator
      *
      * @return array
      */
-    public function rules(): array
+    private static function rules(): array
     {
         return [
-            'username' => 'required|alpha_numeric|max_len,8',
-            'email' => 'required|valid_email',
-            'password' => 'required|between_len,8;15'
+            //
         ];
     }
     
     /**
-     * messages
+     * errors messages
      *
      * @return array
      */
-    public function messages(): array
+    private static function messages(): array
     {
         return [
-            'username' => [
-                'required' => 'Username is required.',
-                'alpha_numeric' => 'Username must contains alphanumeric characters only.',
-                'max_len' => 'Username cannot contains more than 8 characters.'
-            ],
-            'email' => [
-                'required' => 'Email address is required.',
-                'valid_email' => 'Invalid email address format.'
-            ],
-            'password' => [
-                'required' => 'Password is required.',
-                'between_len' => 'Password must contains between 8 and 15 characters.'
-            ]
+            //
         ];
     }
     
     /**
-     * validate
+     * validate request inputs
      *
-     * @return void
+     * @return string|array returns empty sting or array of errors messages 
      */
-    public function validate()
+    public static function validate()
     {
-        $is_valid = GUMP::is_valid(Request::getInput(), $this->rules(), $this->messages());
+        $is_valid = GUMP::is_valid(Request::getInput(), self::rules(), self::messages());
         return $is_valid === true ? '' : $is_valid;
     } 
 }

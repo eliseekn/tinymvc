@@ -4,9 +4,6 @@ namespace App\Database\Models;
 
 use Framework\ORM\Model;
 
-/**
- * ExampleModel
- */
 class ExampleModel extends Model
 {    
     /**
@@ -14,7 +11,7 @@ class ExampleModel extends Model
      *
      * @var string
      */
-    protected $table = 'users';
+    protected $table = 'name_of_table';
 
     /**
      * instantiates class
@@ -24,16 +21,5 @@ class ExampleModel extends Model
     public function __construct()
     {
         parent::__construct($this->table);
-    }
-    
-    /**
-     * get row
-     *
-     * @param  string $email
-     * @return mixed
-     */
-    public function findByEmail(string $email)
-    {
-        return $this->findWhere('email', '=', $email);
     }
 }

@@ -4,9 +4,6 @@ namespace App\Database\Migrations;
 
 use Framework\ORM\Migration;
 
-/**
- * ExampleTable
- */
 class ExampleTable
 {         
     /**
@@ -14,33 +11,22 @@ class ExampleTable
      *
      * @var string
      */
-    protected $table = 'name_of_table';
+    protected static $table = 'name_of_table';
 
     /**
      * create table
      *
      * @return void
      */
-    public function migrate(): void
+    public static function migrate(): void
     {
-        Migration::table($this->table)
+        Migration::table(self::$table)
             ->addPrimaryKey()
-            ->addString('username')
-            ->addString('email', false, true)
+            ->addString('email', 255, false, true)
             ->addString('password')
-            ->addString('role', 255, false, false, 'user')
             ->addTimestamp('created_at')
+            ->addTimestamp('updated_at')
             ->create();
-    }
-    
-    /**
-     * truncate table
-     *
-     * @return void
-     */
-    public function empty(): void
-    {
-        Migration::truncateTable($this->table);
     }
     
     /**
@@ -48,9 +34,9 @@ class ExampleTable
      *
      * @return void
      */
-    public function delete(): void
+    public static function delete(): void
     {
-        Migration::dropTable($this->table);
+        Migration::dropTable(self::$table);
     }
     
     /**
@@ -58,9 +44,9 @@ class ExampleTable
      *
      * @return void
      */
-    public function rollBack(): void
+    public static function rollBack(): void
     {
-        $this->delete();
-        $this->migrate();
+        self::delete();
+        self::migrate();
     }
 }

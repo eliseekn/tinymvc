@@ -15,17 +15,17 @@
  */
 
 /**
- * sanitize html and other scripting language
+ * escape html and others scripting languages
  *
- * @param  string $str string to sanitize
- * @return string returns sanitized string
+ * @param  string $str string to escape
+ * @return string returns escaped string
  */
-function sanitize_string(string $str): string
+function escape(string $str): string
 {
-    $sanitized_str = stripslashes($str);
-    $sanitized_str = strip_tags($sanitized_str);
-    $sanitized_str = htmlspecialchars($sanitized_str);
-    return $sanitized_str;
+    $str = stripslashes($str);
+    $str = strip_tags($str);
+    $str = htmlspecialchars($str);
+    return $str;
 }
 
 /**
