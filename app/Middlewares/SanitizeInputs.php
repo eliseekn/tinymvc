@@ -18,11 +18,8 @@ class SanitizeInputs
      */
     public function handle(): void
     {
-        $request = new Request();
-        $queries = $request->getInput();
-
-        foreach ($queries as $key => $value) {
-            $request->setInput($key, sanitize_string($value));
+        foreach (Request::getInput() as $key => $value) {
+            Request::setInput($key, sanitize_string($value));
         }
     }
 }

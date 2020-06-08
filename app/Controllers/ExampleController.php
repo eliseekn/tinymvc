@@ -2,13 +2,12 @@
 
 namespace App\Controllers;
 
-use Framework\Core\Controller;
+use Framework\Core\View;
 
 /**
  * ExampleController
- * 
  */
-class ExampleController extends Controller
+class ExampleController
 {
 	/**
 	 * display a page
@@ -17,6 +16,6 @@ class ExampleController extends Controller
 	 */
 	public function index(): void
 	{
-		$this->renderView('name_of_page', []);
+		View::render('name_of_page', []);
 	}
 }

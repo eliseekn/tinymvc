@@ -29,7 +29,7 @@ define('PUBLIC_STORAGE', DOCUMENT_ROOT . trim(ROOT_FOLDER, '/') . DIRECTORY_SEPA
 //errors display configuration
 define('DISPLAY_ERRORS', true);
 
-//session lifetime
+//session lifetime in seconds
 define('SESSION_LIFETIME', 3600);
 
 //custom errors page

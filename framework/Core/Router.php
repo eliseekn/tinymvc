@@ -16,8 +16,6 @@ use Exception;
 use Framework\Core\View;
 use Framework\Http\Request;
 use Framework\Http\Response;
-use Framework\Exceptions\RoutesNotDefinedException;
-use Framework\Exceptions\ControllerNotFoundException;
 
 /**
  * Router
@@ -34,21 +32,13 @@ class Router
     protected $uri = '';
 
     /**
-     * request class instance
-     *
-     * @var mixed
-     */
-    protected $request;
-
-    /**
      * set url parameters from uri
      *
      * @return void
      */
     public function __construct()
     {
-        $this->request = new Request();
-        $this->uri = $this->request->getURI();
+        $this->uri = Request::getURI();
         $this->addSessionHistory();
         
         try {
@@ -85,7 +75,7 @@ class Router
     private function dispatch(array $routes): void
     {
         if (!empty($routes)) {
-            foreach ($routes as $route => $data) {
+            foreach ($routes as $route => $options) {
                 $route = preg_replace('/{([a-z]+):([^\}]+)}/i', '$2', $route);
                 $route = preg_replace(['/\bstr\b/', '/\bint\b/', '/\ball\b/'], ['([a-zA-Z-_]+)', '(\d+)', '([^/]+)'], $route);
                 $pattern = '#^' . $route . '$#';
@@ -93,24 +83,24 @@ class Router
                 if (preg_match($pattern, $this->uri, $params)) {
                     array_shift($params);
 
-                    if (preg_match('/' . strtoupper($data['method']) . '/', $this->request->getMethod())) {
-                        if (is_callable($data['handler'])) {
-                            call_user_func_array($data['handler'], array_values($params));
+                    if (preg_match('/' . strtoupper($options['method']) . '/', Request::getMethod())) {
+                        if (is_callable($options['handler'])) {
+                            call_user_func_array($options['handler'], array_values($params));
                             exit();
-                        } 
+                        }
                         
-                        list($controller, $action) = explode('@', $data['handler']);
+                        list($controller, $action) = explode('@', $options['handler']);
                         $controller = 'App\Controllers\\' . $controller;
 
                         //chekc if controller class and method exist
                         if (class_exists($controller) && method_exists($controller, $action)) {
                             //check for middlewares to execute
-                            Middleware::check($data['handler']);
+                            Middleware::check($options['handler']);
 
                             //execute controller with action and parameter
                             call_user_func_array([new $controller(), $action], array_values($params));
                         } else {
-                            throw new ControllerNotFoundException($data['handler']);
+                            throw new Exception('Handler "' . $$options['handler'] . '" not found.');
                         }
                     }
                 }
@@ -118,12 +108,12 @@ class Router
 
             //send 404 response
             if (isset(ERRORS_PAGE['404']) && !empty(ERRORS_PAGE['404'])) {
-                View::error(ERRORS_PAGE['404']);
+                View::render(ERRORS_PAGE['404'], [], 404);
             } else {
                 Response::send([], 'The page you have requested does not exists on this server.', 404);
             }
         } else {
-            throw new RoutesNotDefinedException();
+            throw new Exception('No route defines in configuration.');
         }
     }
 }

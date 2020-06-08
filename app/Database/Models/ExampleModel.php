@@ -6,7 +6,6 @@ use Framework\ORM\Model;
 
 /**
  * ExampleModel
- * 
  */
 class ExampleModel extends Model
 {    
@@ -15,7 +14,7 @@ class ExampleModel extends Model
      *
      * @var string
      */
-    protected $table = 'name_of_table';
+    protected $table = 'users';
 
     /**
      * instantiates class
@@ -35,6 +34,6 @@ class ExampleModel extends Model
      */
     public function findByEmail(string $email)
     {
-        return $this->findSingle('email', '=', $email);
+        return $this->findWhere('email', '=', $email);
     }
 }

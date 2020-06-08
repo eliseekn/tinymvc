@@ -22,32 +22,14 @@ use Framework\Support\Uploader;
 class Request
 {
     /**
-     * url to send request
-     *
-     * @var array
-     */
-    protected static $urls = [];
-
-    /**
-     * response request
-     *
-     * @var string
-     */
-    protected static $response = [];
-
-    /**
      * retrieves request headers
      *
      * @param  string $field name of $_SERVER array field
      * @return mixed returns field value or empty string
      */
-    public function getHeaders(string $field = '')
+    public static function getHeaders(string $field = '')
     {
-        if (!empty(self::$urls)) {
-            return empty($field) ? self::$response['headers'] : self::$response['headers'][$field] ?? '';
-        } else {
-            return empty($field) ? $_SERVER : $_SERVER[$field] ?? '';
-        }
+        return empty($field) ? $_SERVER : $_SERVER[$field] ?? '';
     }
 
     /**
@@ -56,7 +38,7 @@ class Request
      * @param  string $field name of $_GET array field
      * @return mixed returns field value or array or empty string
      */
-    public function getQuery(string $field = '')
+    public static function getQuery(string $field = '')
     {
         return empty($field) ? $_GET : $_GET[$field] ?? '';
     }
@@ -67,7 +49,7 @@ class Request
      * @param  string $field name of $_POST array field
      * @return mixed returns field value or array or empty string
      */
-    public function getInput(string $field = '')
+    public static function getInput(string $field = '')
     {
         return empty($field) ? $_POST : $_POST[$field] ?? '';
     }
@@ -77,7 +59,7 @@ class Request
      *
      * @return mixed data content or false
      */
-    public function getRawData()
+    public static function getRawData()
     {
         return file_get_contents('php://input');
     }
@@ -88,7 +70,7 @@ class Request
      * @param  string $field name of $_FILES array field
      * @return array returns array of uploader class instance
      */
-    public function getFile(string $field): array
+    public static function getFile(string $field): array
     {
         $uploaders = [];
 
@@ -113,7 +95,7 @@ class Request
      *
      * @return mixed
      */
-    public function getMethod()
+    public static function getMethod()
     {
         return $this->getHeaders('REQUEST_METHOD');
     }
@@ -123,7 +105,7 @@ class Request
      *
      * @return string
      */
-    public function getURI(): string
+    public static function getURI(): string
     {
         $uri = $this->getHeaders('REQUEST_URI');
         $uri = str_replace(ROOT_FOLDER, '', $uri); //remove root subfolder if exists 
@@ -148,7 +130,7 @@ class Request
      * @param  mixed $value
      * @return void
      */
-    public function setInput(string $field, $value): void
+    public static function setInput(string $field, $value): void
     {
         $_POST[$field] = $value;
     }
@@ -160,33 +142,8 @@ class Request
      * @param  mixed $value
      * @return void
      */
-    public function setQuery(string $field, $value): void
+    public static function setQuery(string $field, $value): void
     {
         $_GET[$field] = $value;
-    }
-
-    /**
-     * send request to url
-     *
-     * @param  string $method method name
-     * @param  mixed $data data to send
-     * @param  bool $json_data send data in json format (only for POST request)
-     * @return mixed
-     */
-    public static function send(string $method, array $urls, $headers = [], ?array $data = null, bool $json_data = false)
-    {
-        self::$urls = $urls;
-        self::$response = curl($method, self::$urls, $headers, $data, $json_data);
-        return new self();
-    }
-
-    /**
-     * get response body
-     *
-     * @return mixed
-     */
-    public function getBody()
-    {
-        return self::$response['body'];
     }
 }

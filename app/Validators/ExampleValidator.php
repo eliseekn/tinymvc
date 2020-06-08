@@ -2,14 +2,14 @@
 
 namespace App\Validators;
 
-use Framework\Http\Request;
 use GUMP;
+use Framework\Http\Request;
 
 /**
  * ExampleValidator
  * 
  */
-class ExampleValidator extends Request
+class ExampleValidator
 {
     /**
      * rules
@@ -56,7 +56,7 @@ class ExampleValidator extends Request
      */
     public function validate()
     {
-        $is_valid = GUMP::is_valid($this->getInput(), $this->rules(), $this->messages());
+        $is_valid = GUMP::is_valid(Request::getInput(), $this->rules(), $this->messages());
         return $is_valid === true ? '' : $is_valid;
     } 
 }

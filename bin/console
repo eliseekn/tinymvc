@@ -38,7 +38,7 @@ function getSeed(string $seed)
 {
     $seed = 'App\Database\Seeds\\' . $seed;
 
-    if (!class_exists($seed) || !method_exists($seed, 'sow')) {
+    if (!class_exists($seed) || !method_exists($seed, 'insert')) {
         exit('[-] Invalid seed class "' . $seed . '"' . PHP_EOL);
     }
 
@@ -125,13 +125,13 @@ if (
 
         if (strpos($seed, ',') === false) {
             $seed = $seed = getSeed($seed);
-            $seed->sow();
+            $seed->insert();
         } else {
             $seeds = explode(',', $seed);
 
             foreach ($seeds as $seed) {
                 $seed = getSeed($seed);
-                $seed->sow();
+                $seed->insert();
             }
         }
     } else {
@@ -141,7 +141,7 @@ if (
             if ($object != '.' && $object != '..') {
                 $seed = explode('.', basename($object))[0];
                 $seed = $seed = getSeed($seed);
-                $seed->sow();
+                $seed->insert();
             }
         }
     }
@@ -185,13 +185,13 @@ if (
 
         if (strpos($seed, ',') === false) {
             $seed = $seed = getSeed($seed);
-            $seed->sow();
+            $seed->insert();
         } else {
             $seeds = explode(',', $seed);
 
             foreach ($seeds as $seed) {
                 $seed = getSeed($seed);
-                $seed->sow();
+                $seed->insert();
             }
         }
     } else {
@@ -201,7 +201,7 @@ if (
             if ($object != '.' && $object != '..') {
                 $seed = explode('.', basename($object))[0];
                 $seed = getSeed($seed);
-                $seed->sow();
+                $seed->insert();
             }
         }
     }
@@ -321,13 +321,13 @@ if (
 
         if (strpos($seed, ',') === false) {
             $seed = $seed = getSeed($seed);
-            $seed->sow();
+            $seed->insert();
         } else {
             $seeds = explode(',', $seed);
 
             foreach ($seeds as $seed) {
                 $seed = getSeed($seed);
-                $seed->sow();
+                $seed->insert();
             }
         }
     } else {
@@ -337,7 +337,7 @@ if (
             if ($object != '.' && $object != '..') {
                 $seed = explode('.', basename($object))[0];
                 $seed = getSeed($seed);
-                $seed->sow();
+                $seed->insert();
             }
         }
     }

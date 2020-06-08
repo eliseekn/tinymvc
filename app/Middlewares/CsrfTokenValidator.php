@@ -19,10 +19,7 @@ class CsrfTokenValidator
      */
     public function handle()
     {
-        $request = new Request();
-        $csrf_token = $request->getInput('csrf_token');
-
-        if (!is_valid_csrf_token($csrf_token)) {
+        if (!is_valid_csrf_token(Request::getInput('csrf_token'))) {
             Response::send([], 'You do not have permission to access this page.', 403);
         }
     }

@@ -133,10 +133,28 @@ class Storage
      *
      * @param  string $pathname
      * @return void
+     * @link https://stackoverflow.com/questions/3338123/how-do-i-recursively-delete-a-directory-and-its-entire-contents-files-sub-dir
      */
     public static function deleteDir(string $pathname): void
     {
-        remove_dir(PUBLIC_STORAGE . $pathname);
+        if (is_dir(PUBLIC_STORAGE . $pathname)) {
+            $objects = scandir(PUBLIC_STORAGE . $pathname);
+    
+            foreach ($objects as $object) {
+                if ($object != '.' && $object != '..') {
+                    if (
+                        is_dir(PUBLIC_STORAGE . $pathname . DIRECTORY_SEPARATOR . $object) &&
+                        !is_link(PUBLIC_STORAGE . $pathname . DIRECTORY_SEPARATOR . $object)
+                    ) {
+                        self::deleteDir(PUBLIC_STORAGE . $pathname . DIRECTORY_SEPARATOR . $object);
+                    } else {
+                        unlink(PUBLIC_STORAGE . $pathname . DIRECTORY_SEPARATOR . $object);
+                    }
+                }
+            }
+    
+            rmdir(PUBLIC_STORAGE . $pathname);
+        }
     }
     
     /**

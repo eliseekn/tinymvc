@@ -25,10 +25,5 @@
  */
 function send_email(string $to, string $subject, string $message, array $headers = []): bool
 {
-    return mail(
-        $to,
-        $subject,
-        $message,
-        $headers
-    );
+    return mail($to, $subject, $message, $headers);
 }

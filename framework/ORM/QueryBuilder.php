@@ -26,32 +26,34 @@ class QueryBuilder
 	 *
 	 * @var mixed
 	 */
-	protected $db;
+	protected static $db;
 		
 	/**
 	 * sql query string
 	 *
 	 * @var string
 	 */
-	protected $query;
+	protected static $query;
 		
 	/**
 	 * sql query arguments
 	 *
 	 * @var array
 	 */
-	protected $args = [];
+	protected static $args = [];
 
 	/**
 	 * get database connection instance
 	 *
 	 * @return void
 	 */
-	public function __construct()
+	public static function DB()
 	{
 		//database connection instance
 		$db = Database::getInstance();
-		$this->db = $db->getConnection();
+		self::$db = $db->getConnection();
+
+		return new self();
 	}
 
 	/**
@@ -62,8 +64,8 @@ class QueryBuilder
 	public function executeQuery()
 	{
 		try {
-			$stmt = $this->db->prepare(trim($this->query));
-			$stmt->execute($this->args);
+			$stmt = self::$db->prepare(trim(self::$query));
+			$stmt->execute(self::$args);
 		} catch (PDOException $e) {
 			if (DISPLAY_ERRORS == true) {
 				die($e->getMessage());
@@ -85,13 +87,13 @@ class QueryBuilder
 	 */
 	public function select(string ...$columns)
 	{
-		$this->query = 'SELECT ';
+		self::$query = 'SELECT ';
 
 		foreach ($columns as $column) {
-			$this->query .= "$column, ";
+			self::$query .= "$column, ";
 		}
 
-		$this->query = rtrim($this->query, ', ');
+		self::$query = rtrim(self::$query, ', ');
 		return $this;
 	}
 
@@ -103,7 +105,7 @@ class QueryBuilder
 	 */
 	public function from(string $table)
 	{
-		$this->query .= " FROM $table ";
+		self::$query .= " FROM $table ";
 		return $this;
 	}
 
@@ -117,8 +119,8 @@ class QueryBuilder
 	 */
 	public function where(string $column, string $operator, string $value)
 	{
-		$this->query .= " WHERE $column $operator ? ";
-		$this->args[] = $value;
+		self::$query .= " WHERE $column $operator ? ";
+		self::$args[] = $value;
 		return $this;
 	}
 
@@ -132,8 +134,8 @@ class QueryBuilder
 	 */
 	public function having(string $column, string $operator, string $value)
 	{
-		$this->query .= " HAVING $column $operator ? ";
-		$this->args[] = $value;
+		self::$query .= " HAVING $column $operator ? ";
+		self::$args[] = $value;
 		return $this;
 	}
 
@@ -147,8 +149,8 @@ class QueryBuilder
 	 */
 	public function and(string $column, string $operator, string $value)
 	{
-		$this->query .= " AND $column $operator ? ";
-		$this->args[] = $value;
+		self::$query .= " AND $column $operator ? ";
+		self::$args[] = $value;
 		return $this;
 	}
 
@@ -162,8 +164,8 @@ class QueryBuilder
 	 */
 	public function or(string $column, string $operator, string $value)
 	{
-		$this->query .= " OR $column $operator ? ";
-		$this->args[] = $value;
+		self::$query .= " OR $column $operator ? ";
+		self::$args[] = $value;
 		return $this;
 	}
 
@@ -176,7 +178,7 @@ class QueryBuilder
 	 */
 	public function orderBy(string $column, string $direction)
 	{
-		$this->query .= " ORDER BY $column " . strtoupper($direction);
+		self::$query .= " ORDER BY $column " . strtoupper($direction);
 		return $this;
 	}
 
@@ -188,7 +190,7 @@ class QueryBuilder
 	 */
 	public function groupBy(string $column)
 	{
-		$this->query .= " GROUP BY $column ";
+		self::$query .= " GROUP BY $column ";
 		return $this;
 	}
 
@@ -201,8 +203,8 @@ class QueryBuilder
 	 */
 	public function like(string $column, string $value)
 	{
-		$this->query .= " WHERE $column LIKE '%?%' ";
-		$this->args[] = $value;
+		self::$query .= " WHERE $column LIKE '%?%' ";
+		self::$args[] = $value;
 		return $this;
 	}
 
@@ -215,8 +217,8 @@ class QueryBuilder
 	 */
 	public function orLike(string $column, string $value)
 	{
-		$this->query .= " OR $column LIKE '%?%' ";
-		$this->args[] = $value;
+		self::$query .= " OR $column LIKE '%?%' ";
+		self::$args[] = $value;
 		return $this;
 	}
 
@@ -229,10 +231,10 @@ class QueryBuilder
 	 */
 	public function limit(int $limit, ?int $offset = null)
 	{
-		$this->query .= " LIMIT $limit";
+		self::$query .= " LIMIT $limit";
 
 		if (!is_null($offset)) {
-			$this->query .= ", $offset";
+			self::$query .= ", $offset";
 		}
 
 		return $this;
@@ -248,7 +250,7 @@ class QueryBuilder
 	 */
 	public function innerJoin(string $table, string $second_column, string $first_column)
 	{
-		$this->query .= " INNER JOIN $table ON $first_column = $second_column";
+		self::$query .= " INNER JOIN $table ON $first_column = $second_column";
 		return $this;
 	}
 
@@ -262,7 +264,7 @@ class QueryBuilder
 	 */
 	public function leftJoin(string $table, string $second_column, string $first_column)
 	{
-		$this->query .= " LEFT JOIN $table ON $first_column = $second_column";
+		self::$query .= " LEFT JOIN $table ON $first_column = $second_column";
 		return $this;
 	}
 
@@ -276,7 +278,7 @@ class QueryBuilder
 	 */
 	public function rightJoin(string $table, string $second_column, string $first_column)
 	{
-		$this->query .= " RIGHT JOIN $table ON $first_column = $second_column";
+		self::$query .= " RIGHT JOIN $table ON $first_column = $second_column";
 		return $this;
 	}
 
@@ -290,7 +292,7 @@ class QueryBuilder
 	 */
 	public function fullJoin(string $table, string $second_column, string $first_column)
 	{
-		$this->query .= " FULL JOIN $table ON $first_column = $second_column";
+		self::$query .= " FULL JOIN $table ON $first_column = $second_column";
 		return $this;
 	}
 
@@ -302,14 +304,14 @@ class QueryBuilder
 	 */
 	public function set(array $items)
 	{
-		$this->query .= " SET ";
+		self::$query .= " SET ";
 
 		foreach ($items as $key => $value) {
-			$this->query .= "$key = ?, ";
-			$this->args[] = $value;
+			self::$query .= "$key = ?, ";
+			self::$args[] = $value;
 		}
 
-		$this->query = rtrim($this->query, ', ');
+		self::$query = rtrim(self::$query, ', ');
 		return $this;
 	}
 
@@ -322,22 +324,22 @@ class QueryBuilder
 	 */
 	public function insert(string $table, array $items)
 	{
-		$this->query = "INSERT INTO $table (";
+		self::$query = "INSERT INTO $table (";
 
 		foreach ($items as $key => $value) {
-			$this->query .= "$key, ";
+			self::$query .= "$key, ";
 		}
 
-		$this->query = rtrim($this->query, ', ');
-		$this->query .= ') VALUES (';
+		self::$query = rtrim(self::$query, ', ');
+		self::$query .= ') VALUES (';
 
 		foreach ($items as $key => $value) {
-			$this->query .= '?, ';
-			$this->args[] = $value;
+			self::$query .= '?, ';
+			self::$args[] = $value;
 		}
 
-		$this->query = rtrim($this->query, ', ');
-		$this->query .= ')';
+		self::$query = rtrim(self::$query, ', ');
+		self::$query .= ')';
 
 		return $this;
 	}
@@ -350,7 +352,7 @@ class QueryBuilder
 	 */
 	public function update(string $table)
 	{
-		$this->query = "UPDATE $table";
+		self::$query = "UPDATE $table";
 		return $this;
 	}
 
@@ -362,7 +364,7 @@ class QueryBuilder
 	 */
 	public function deleteFrom(string $table)
 	{
-		$this->query = "DELETE FROM $table";
+		self::$query = "DELETE FROM $table";
 		return $this;
 	}
 
@@ -402,13 +404,23 @@ class QueryBuilder
 	}
 
 	/**
+	 * retrieves last inserted id
+	 *
+	 * @return int
+	 */
+	public function lastInsertedId(): int
+	{
+		return $this->db->lastInsertId();
+	}
+
+	/**
 	 * returns query string
 	 *
 	 * @return string
 	 */
 	public function getQuery(): string
 	{
-		return $this->query;
+		return self::$query;
 	}
 
 	/**
@@ -420,8 +432,8 @@ class QueryBuilder
 	 */
 	public function setQuery(string $query, array $args = [])
 	{
-		$this->query = $query;
-		$this->args = $args;
+		self::$query = $query;
+		self::$args = $args;
 		return $this;
 	}
 }

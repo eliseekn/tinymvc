@@ -24,7 +24,7 @@ class Migration
 	 *
 	 * @var string
 	 */
-    private $query = '';
+    protected static $query = '';
     
     /**
      * execute sql query
@@ -33,9 +33,8 @@ class Migration
      */
     private function executeQuery(): void
     {
-        $QB = new QueryBuilder();
-        $QB->setQuery($this->query);
-        $QB->executeQuery();
+        QueryBuilder::DB()->setQuery(self::$query);
+        QueryBuilder::DB()->executeQuery();
     }
 
     /**
@@ -44,39 +43,71 @@ class Migration
      * @param  string $name name of table
      * @return mixed
      */
-    public function table(string $name)
+    public static function table(string $name)
     {
-        $this->query = "CREATE TABLE $name (";
-        return $this;
+        self::$query = "CREATE TABLE $name (";
+        return new self();
     }
     
     /**
      * generate primary key and autoincrement column query
      *
+     * @param  string $name name of column
      * @return mixed
      */
-    public function addPrimaryKey(string $name) {
-        $this->query .= "$name INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
+    public function addPrimaryKey(string $name = 'id') {
+        self::$query .= "$name INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
         return $this;
     }
 
     /**
      * add column of type integer
      *
+     * @param  string $name name of column
+     * @param  int $length value length
+     * @param  bool $null null or not
+     * @param  bool $unique set column as unique
+     * @param  string|null $default default column value
      * @return mixed
      */
-    public function addInteger(
+    public function addInt(
         string $name, 
-        int $size = 11, 
+        int $length = 11, 
         bool $null = false, 
         bool $unique = false, 
         ?int $default = null
     ) {
-        $this->query .= "$name INT($size)";
-        $this->query .= $null ? ' NULL' : ' NOT NULL';
-        $this->query .= $unique ? ' UNIQUE' : '';
-        $this->query .= !isset($default) ? '' : " DEFAULT $default";
-        $this->query .= ', ';
+        self::$query .= "$name INT($length)";
+        self::$query .= $null ? ' NULL' : ' NOT NULL';
+        self::$query .= $unique ? ' UNIQUE' : '';
+        self::$query .= !isset($default) ? '' : " DEFAULT $default";
+        self::$query .= ', ';
+
+        return $this;
+    }
+
+    /**
+     * add column of type small integer
+     *
+     * @param  string $name name of column
+     * @param  int $length value length
+     * @param  bool $null null or not
+     * @param  bool $unique set column as unique
+     * @param  string|null $default default column value
+     * @return mixed
+     */
+    public function addSmallInt(
+        string $name, 
+        int $length = 6, 
+        bool $null = false, 
+        bool $unique = false, 
+        ?int $default = null
+    ) {
+        self::$query .= "$name SMALLINT($length)";
+        self::$query .= $null ? ' NULL' : ' NOT NULL';
+        self::$query .= $unique ? ' UNIQUE' : '';
+        self::$query .= !isset($default) ? '' : " DEFAULT $default";
+        self::$query .= ', ';
 
         return $this;
     }
@@ -84,20 +115,25 @@ class Migration
     /**
      * add column of type string
      *
+     * @param  string $name name of column
+     * @param  int $length value length
+     * @param  bool $null null or not
+     * @param  bool $unique set column as unique
+     * @param  string $default default column value
      * @return mixed
      */
     public function addString(
         string $name, 
-        int $size = 255, 
+        int $length = 255, 
         bool $null = false, 
         bool $unique = false, 
         string $default = ''
     ) {
-        $this->query .= "$name VARCHAR($size)";
-        $this->query .= $null ? ' NULL' : ' NOT NULL';
-        $this->query .= $unique ? ' UNIQUE' : '';
-        $this->query .= empty($default) ? '' : " DEFAULT '$default'";
-        $this->query .= ', ';
+        self::$query .= "$name VARCHAR($length)";
+        self::$query .= $null ? ' NULL' : ' NOT NULL';
+        self::$query .= $unique ? ' UNIQUE' : '';
+        self::$query .= empty($default) ? '' : " DEFAULT '$default'";
+        self::$query .= ', ';
 
         return $this;
     }
@@ -105,6 +141,9 @@ class Migration
     /**
      * add column of type text
      *
+     * @param  string $name name of column
+     * @param  bool $null null or not
+     * @param  string $default default column value
      * @return mixed
      */
     public function addText(
@@ -112,10 +151,10 @@ class Migration
         bool $null = false, 
         string $default = ''
     ) {
-        $this->query .= "$name TEXT";
-        $this->query .= $null ? ' NULL' : ' NOT NULL';
-        $this->query .= empty($default) ? '' : " DEFAULT '$default'";
-        $this->query .= ', ';
+        self::$query .= "$name TEXT";
+        self::$query .= $null ? ' NULL' : ' NOT NULL';
+        self::$query .= empty($default) ? '' : " DEFAULT '$default'";
+        self::$query .= ', ';
 
         return $this;
     }
@@ -123,6 +162,9 @@ class Migration
     /**
      * add column of type longtext
      *
+     * @param  string $name name of column
+     * @param  bool $null null or not
+     * @param  string $default default column value
      * @return mixed
      */
     public function addLongText(
@@ -130,10 +172,10 @@ class Migration
         bool $null = false, 
         string $default = ''
     ) {
-        $this->query .= "$name LONGTEXT";
-        $this->query .= $null ? ' NULL' : ' NOT NULL';
-        $this->query .= empty($default) ? '' : " DEFAULT '$default'";
-        $this->query .= ', ';
+        self::$query .= "$name LONGTEXT";
+        self::$query .= $null ? ' NULL' : ' NOT NULL';
+        self::$query .= empty($default) ? '' : " DEFAULT '$default'";
+        self::$query .= ', ';
 
         return $this;
     }
@@ -141,6 +183,9 @@ class Migration
     /**
      * add column of type timestamp
      *
+     * @param  string $name name of column
+     * @param  bool $null null or not
+     * @param  string $default default column value
      * @return mixed
      */
     public function addTimestamp(
@@ -148,10 +193,10 @@ class Migration
         bool $null = false, 
         string $default = 'CURRENT_TIMESTAMP'
     ) {
-        $this->query .= "$name TIMESTAMP";
-        $this->query .= $null ? ' NULL' : ' NOT NULL';
-        $this->query .= empty($default) ? '' : " DEFAULT $default";
-        $this->query .= ', ';
+        self::$query .= "$name TIMESTAMP";
+        self::$query .= $null ? ' NULL' : ' NOT NULL';
+        self::$query .= empty($default) ? '' : " DEFAULT $default";
+        self::$query .= ', ';
 
         return $this;
     }
@@ -163,8 +208,8 @@ class Migration
      */
     public function create(): void
     {
-        $this->query = rtrim($this->query, ', ');
-        $this->query .= ')';
+        self::$query = rtrim(self::$query, ', ');
+        self::$query .= ')';
         $this->executeQuery();
     }
 
@@ -174,21 +219,21 @@ class Migration
      * @param  string $name name of table
      * @return void
      */
-    public function dropTable(string $name): void
+    public static function dropTable(string $name): void
     {
-        $this->query = "DROP TABLE IF EXISTS $name";
+        self::$query = "DROP TABLE IF EXISTS $name";
         $this->executeQuery();
     }
 
     /**
-     * truncate table if exists
+     * truncate table
      *
      * @param  string $name name of table
      * @return void
      */
-    public function truncateTable(string $name): void
+    public static function truncateTable(string $name): void
     {
-        $this->query = "TRUNCATE $name";
+        self::$query = "TRUNCATE $name";
         $this->executeQuery();
     }
 }

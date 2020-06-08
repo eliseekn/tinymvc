@@ -7,20 +7,26 @@ use Framework\ORM\Seeder;
 
 /**
  * ExampleSeed
- * 
  */
-class ExampleSeed extends Seeder
-{
+class ExampleSeed
+{     
+    /**
+     * name of table
+     *
+     * @var string
+     */
+    protected $table = 'name_of_table';
+
     /**
      * insert row
      *
      * @return void
      */
-    public function sow(): void
+    public function insert(): void
     {
         $faker = Factory::create('en_US');
 
-        $this->insert('name_of_table', [
+        Seeder::insert($this->table, [
             'username' => $faker->name,
             'email' => $faker->email,
             'password' => hash_string('administrator')

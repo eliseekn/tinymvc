@@ -34,17 +34,19 @@ class Route
     protected static $tmp_routes = [];
 
     /**
-     * add route path
+     * add route
      *
+     * @param  string $route
+     * @param  array $options
      * @return void
      */
-    public static function add(string $route, array $data): void
+    public static function add(string $route, array $options): void
     {
-        if (!empty($data)) {
-            self::$routes[$route] = $data;
+        if (!empty($options)) {
+            self::$routes[$route] = $options;
 
-            if (isset($data['handler']) && isset($data['middlewares'])) {
-                Middleware::add($data['handler'], $data['middlewares']);
+            if (isset($options['handler']) && isset($options['middlewares'])) {
+                Middleware::add($options['handler'], $options['middlewares']);
             }
         }
     }
@@ -62,15 +64,15 @@ class Route
     }
     
     /**
-     * by
+     * parameters to group by
      *
-     * @param  array $data
+     * @param  array $options
      * @return void
      */
-    public function by(array $data): void
+    public function by(array $options): void
     {
-        foreach (self::$tmp_routes as $route => $tmp_data) {
-            self::add($route, array_merge($tmp_data, $data));
+        foreach (self::$tmp_routes as $route => $tmp_options) {
+            self::add($route, array_merge($tmp_options, $options));
         }
     }
 }

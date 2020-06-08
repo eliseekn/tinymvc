@@ -26,9 +26,9 @@ class Seeder
      * @param  array $data data to insert
      * @return void
      */
-    public function insert(string $table, array $data): void
+    public static function insert(string $table, array $data): void
     {
-        $QB = new QueryBuilder();
-        $QB->insert($table, $data)->executeQuery();
+        QueryBuilder::DB()->insert($table, $data)
+            ->executeQuery();
     }
 }

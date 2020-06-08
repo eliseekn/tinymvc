@@ -15,7 +15,6 @@
             "framework/Support/Helpers/Curl.php",
             "framework/Support/Helpers/Debug.php",
             "framework/Support/Helpers/Email.php",
-            "framework/Support/Helpers/Files.php",
             "framework/Support/Helpers/Pagination.php",
             "framework/Support/Helpers/Security.php",
             "framework/Support/Helpers/Session.php",

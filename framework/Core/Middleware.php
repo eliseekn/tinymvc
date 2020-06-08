@@ -12,8 +12,7 @@
 
 namespace Framework\Core;
 
-use Framework\Exceptions\InvalidMiddlewareException;
-use Framework\Exceptions\MiddlewareNotFoundException;
+use Exception;
 
 /**
  * Middleware
@@ -45,7 +44,7 @@ class Middleware
     public static function execute(string $middleware): void
     {
         if (!isset(self::$names[$middleware])) {
-            throw new InvalidMiddlewareException($middleware);
+            throw new Exception('Invalid middleware name "' . $middleware . '".');
         }
 
         $middleware = self::$names[$middleware]; 
@@ -53,7 +52,7 @@ class Middleware
 
         //check if middleware class exists
         if (!class_exists($middleware) || !method_exists($middleware, 'handle')) {
-            throw new MiddlewareNotFoundException($middleware);
+            throw new Exception('Middleware "' . $middleware . '" not found.');
         }
 
         $middleware = new $middleware();

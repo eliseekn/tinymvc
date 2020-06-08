@@ -24,10 +24,10 @@ define('DB_CHARSET', 'utf8');
 define('DB_HOST', 'localhost');
 
 //database username 
-define('DB_USERNAME', '');
+define('DB_USERNAME', 'root');
 
 //database password 
-define('DB_PASSWORD', '');
+define('DB_PASSWORD', 'eliseekn');
 
 //database name 
-define('DB_NAME', '');
+define('DB_NAME', 'test');

@@ -44,33 +44,24 @@ class Model
     protected $QB;
     
     /**
-     * request instance variable
-     *
-     * @var mixed
-     */
-    protected $request;
-
-    /**
      * instantiates class
      *
      * @return void
      */
     public function __construct(string $table)
     {
-        $this->QB = new QueryBuilder();
         $this->table = $table;
-        $this->request = new Request();
     }
     
     /**
-     * find row by id column
+     * find row by column id
      *
      * @param  int $id
      * @return mixed
      */
     public function find(int $id)
     {
-        return $this->findSingle('id', '=', $id);
+        return $this->findWhere('id', '=', $id);
     }
     
     /**
@@ -81,9 +72,9 @@ class Model
      * @param  string $value value to check
      * @return mixed
      */
-    public function findSingle(string $column, string $operator, string $value)
+    public function findWhere(string $column, string $operator, string $value)
     {
-        return (object) $this->QB->select('*')
+        return (object) QueryBuilder::DB()->select('*')
             ->from($this->table)
             ->where($column, $operator, $value)
             ->fetchSingle();
@@ -93,25 +84,26 @@ class Model
      * fetch single row with custom query
      *
      * @param  string $query query string
+     * @param  array $args
      * @return mixed
      */
     public function findSingleQuery(string $query, array $args = [])
     {
-        return (object) $this->QB->setQuery($query, $args)
+        return (object) QueryBuilder::DB()->setQuery($query, $args)
             ->fetchSingle();
     }
 
     /**
      * fetch all rows
      *
-     * @param  string $direction DESC or ASC
+     * @param  string $order DESC or ASC
      * @return mixed
      */
-    public function findAll(string $direction = 'DESC')
+    public function findAll(string $order = 'DESC')
     {
-        $items = $this->QB->select('*')
+        $items = QueryBuilder::DB()->select('*')
             ->from($this->table)
-            ->orderBy('id', $direction)
+            ->orderBy('id', $order)
             ->fetchAll();
 
         //convert array to class
@@ -129,11 +121,13 @@ class Model
      * fetch all rows with custom query
      *
      * @param  string $query query string
+     * @param  array $args
      * @return mixed
      */
     public function findAllQuery(string $query, array $args = [])
     {
-        $items = $this->QB->setQuery($query, $args)->fetchAll();
+        $items = QueryBuilder::DB()->setQuery($query, $args)
+            ->fetchAll();
 
         //convert array to class
         $items = array_map(
@@ -152,15 +146,15 @@ class Model
      * @param  string $column name of column
      * @param  string $operator operator
      * @param  string $value value to check
-     * @param  string $direction DESC or ASC
+     * @param  string $order DESC or ASC
      * @return mixed
      */
-    public function findAllWhere(string $column, string $operator, string $value, string $direction = 'DESC')
+    public function findAllWhere(string $column, string $operator, string $value, string $order = 'DESC')
     {
-        $items = $this->QB->select('*')
+        $items = QueryBuilder::DB()->select('*')
             ->from($this->table)
             ->where($column, $operator, $value)
-            ->orderBy('id', $direction)
+            ->orderBy('id', $order)
             ->fetchAll();
 
         //convert array to class
@@ -179,14 +173,14 @@ class Model
      *
      * @param  int $limit
      * @param  int $offset
-     * @param  string $direction DESC or ASC
+     * @param  string $order DESC or ASC
      * @return mixed
      */
-    public function findRange(int $limit, int $offset, string $direction = 'DESC')
+    public function findRange(int $limit, int $offset, string $order = 'DESC')
     {
-        $items = $this->QB->select('*')
+        $items = QueryBuilder::DB()->select('*')
             ->from($this->table)
-            ->orderBy('id', $direction)
+            ->orderBy('id', $order)
             ->limit($limit, $offset)
             ->fetchAll();
         
@@ -209,7 +203,7 @@ class Model
      * @param  string $column name of column
      * @param  string $operator operator
      * @param  string $value value to check
-     * @param  string $direction DESC or ASC
+     * @param  string $order DESC or ASC
      * @return mixed
      */
     public function findRangeWhere(
@@ -218,12 +212,12 @@ class Model
         string $column,
         string $operator,
         string $value,
-        string $direction = 'DESC'
+        string $order = 'DESC'
     ) {
-        $items = $this->QB->select('*')
+        $items = QueryBuilder::DB()->select('*')
             ->from($this->table)
             ->where($column, $operator, $value)
-            ->orderBy('id', $direction)
+            ->orderBy('id', $order)
             ->limit($limit, $offset)
             ->fetchAll();
         
@@ -248,7 +242,7 @@ class Model
      */
     public function deleteWhere(string $column, string $operator, string $value): void
     {
-        $this->QB->deleteFrom($this->table)
+        QueryBuilder::DB()->deleteFrom($this->table)
             ->where($column, $operator, $value)
             ->limit(1)
             ->executeQuery();
@@ -285,35 +279,34 @@ class Model
      */
     public function update(int $id): void
     {
-        $this->QB->update($this->table)
+        QueryBuilder::DB()->update($this->table)
             ->set($this->data)
             ->where('id', '=', $id)
             ->executeQuery();
     }
     
     /**
-     * save
+     * insert
      *
      * @return void
      */
-    public function save(): void
+    public function insert(): void
     {
-        $this->QB->insert($this->table, $this->data)
+        QueryBuilder::DB()->insert($this->table, $this->data)
             ->executeQuery();
     }
     
     /**
      * generate pagination
      *
-     * @param  mixed $page current page
      * @param  mixed $items_per_pages
      * @return mixed returns new paginator class instance
      */
     public function paginate(int $items_per_pages)
     {
-        $page = empty($this->request->getQuery('page')) ? 1 : (int) $this->request->getQuery('page');
+        $page = empty(Request::getQuery('page')) ? 1 : (int) Request::getQuery('page');
 
-        $total_items = $this->QB->select('*')
+        $total_items = QueryBuilder::DB()->select('*')
             ->from($this->table)
             ->rowsCount();
 
@@ -341,9 +334,9 @@ class Model
         string $operator,
         string $value
     ) {
-        $page = empty($this->request->getQuery('page')) ? 1 : (int) $this->request->getQuery('page');
+        $page = empty(Request::getQuery('page')) ? 1 : (int) Request::getQuery('page');
 
-        $total_items = $this->QB->select('*')
+        $total_items = QueryBuilder::DB()->select('*')
             ->from($this->table)
             ->rowsCount();
 

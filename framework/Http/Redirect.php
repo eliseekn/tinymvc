@@ -12,8 +12,8 @@
 
 namespace Framework\Http;
 
+use Exception;
 use Framework\Core\Route;
-use Framework\Exceptions\RouteNotFoundException;
 
 /**
  * Redirect
@@ -27,7 +27,7 @@ class Redirect
      *
      * @var string
      */
-    private static $redirect_url = '';
+    protected static $redirect_url = '';
     
     /**
      * redirect to url 
@@ -76,7 +76,7 @@ class Redirect
             );
 
             if (empty($url)) {
-                throw new RouteNotFoundException($name);
+                throw new Exception('Route "' . $name . '" not found.');
             }
         }
 

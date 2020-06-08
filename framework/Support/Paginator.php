@@ -36,13 +36,6 @@ class Paginator
     protected $pagination = [];
     
     /**
-     * request instance variable
-     *
-     * @var mixed
-     */
-    protected $request;
-        
-    /**
      * instantiates class
      *
      * @param  mixed $items database items
@@ -59,7 +52,6 @@ class Paginator
         }
 
         $this->pagination = $pagination;
-        $this->request = new Request();
     }
     
     /**
@@ -157,7 +149,7 @@ class Paginator
      */
     public function previousPageUrl(): string
     {
-        return absolute_url($this->request->getURI() . '?page=' . $this->previousPage());
+        return absolute_url(Request::getURI() . '?page=' . $this->previousPage());
     }
     
     /**
@@ -167,7 +159,7 @@ class Paginator
      */
     public function nextPageUrl(): string
     {
-        return absolute_url($this->request->getURI() . '?page=' . $this->nextPage());
+        return absolute_url(Request::getURI() . '?page=' . $this->nextPage());
     }
     
     /**
@@ -178,6 +170,6 @@ class Paginator
      */
     public function pageUrl(int $page): string
     {
-        return absolute_url($this->request->getURI() . '?page=' . $page);
+        return absolute_url(Request::getURI() . '?page=' . $page);
     }
 }
