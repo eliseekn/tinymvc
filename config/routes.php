@@ -20,6 +20,6 @@ use Framework\Core\View;
 Route::add('/', [
     'method' => 'GET',
     'handler' => function() {
-        View::render('home');
+        View::render('welcome');
     }
 ]);

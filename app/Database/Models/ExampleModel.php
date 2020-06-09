@@ -11,15 +11,5 @@ class ExampleModel extends Model
      *
      * @var string
      */
-    protected $table = 'name_of_table';
-
-    /**
-     * instantiates class
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct($this->table);
-    }
+    protected static $table = 'name_of_table';
 }

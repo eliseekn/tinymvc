@@ -22,13 +22,6 @@ use Exception;
 class Client
 {
     /**
-     * url to send request
-     *
-     * @var array
-     */
-    protected static $urls = [];
-
-    /**
      * response request
      *
      * @var string
@@ -50,13 +43,11 @@ class Client
         ?array $data = null,
         bool $json_data = false
     ) {
-        self::$urls = $urls;
-
-        if (empty(self::$urls)) {
+        if (empty($urls)) {
             throw new Exception('Cannot send HTTP request to empty url.');
         }
 
-        self::$response = curl($method, self::$urls, $headers, $data, $json_data);
+        self::$response = curl($method, $urls, $headers, $data, $json_data);
         return new self();
     }
 

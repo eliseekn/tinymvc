@@ -20,14 +20,7 @@ use Framework\Http\Request;
  * Generate pagination from database 
  */
 class Paginator
-{    
-    /**
-     * database items
-     *
-     * @var mixed
-     */
-    protected $items;
-
+{
     /**
      * generated pagination array
      *
@@ -39,29 +32,17 @@ class Paginator
      * instantiates class
      *
      * @param  mixed $items database items
-     * @param  array $pagination
+     * @param  array $pagination pagination parameters
      * @return void
      */
     public function __construct($items, array $pagination)
     {
-        $this->items = $items;
+        $this->pagination = $pagination;
 
         //add items as properties
-        foreach ($this->items as $key => $value) {
+        foreach ($items as $key => $value) {
             $this->{$key} = $value;
         }
-
-        $this->pagination = $pagination;
-    }
-    
-    /**
-     * get database items
-     *
-     * @return mixed
-     */
-    public function getItems()
-    {
-        return $this->items;
     }
     
     /**
@@ -133,7 +114,7 @@ class Paginator
     }
     
     /**
-     * check if pagination has previous page
+     * check if pagination has less pages
      *
      * @return bool
      */
@@ -143,7 +124,7 @@ class Paginator
     }
     
     /**
-     * check if pagination has next page
+     * check if pagination has more pages
      *
      * @return bool
      */

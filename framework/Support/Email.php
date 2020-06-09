@@ -1,7 +1,22 @@
 <?php
 
+/**
+ * TinyMVC
+ * 
+ * PHP framework based on MVC architecture
+ * 
+ * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @license MIT (https://opensource.org/licenses/MIT)
+ * @link https://github.com/eliseekn/TinyMVC
+ */
+
 namespace Framework\Support;
 
+/**
+ * Email
+ * 
+ * Email support
+ */
 class Email
 {   
     /**
@@ -100,6 +115,30 @@ class Email
     }
     
     /**
+     * set from address
+     *
+     * @param  mixed $from
+     * @return mixed
+     */
+    public function from(string $from)
+    {
+        self::addHeader('From', $from);
+        return $this;
+    }
+    
+    /**
+     * set reply-to address
+     *
+     * @param  mixed $reply_to
+     * @return mixed
+     */
+    public function replyTo(string $reply_to)
+    {
+        self::addHeader('Reply-To', $reply_to);
+        return $this;
+    }
+    
+    /**
      * set email subject
      *
      * @param  mixed $subject
@@ -120,30 +159,6 @@ class Email
     public function message(string $message)
     {
         self::$message = $message;
-        return $this;
-    }
-    
-    /**
-     * set from address
-     *
-     * @param  mixed $from
-     * @return mixed
-     */
-    public function setFrom(string $from)
-    {
-        self::addHeader('From', $from);
-        return $this;
-    }
-    
-    /**
-     * set reply-to address
-     *
-     * @param  mixed $reply_to
-     * @return mixed
-     */
-    public function replyTo(string $reply_to)
-    {
-        self::addHeader('Reply-To', $reply_to);
         return $this;
     }
     

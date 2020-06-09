@@ -23,7 +23,7 @@ class Seeder
      * insert data in table
      *
      * @param  string $table name of table
-     * @param  array $data data to insert
+     * @param  array $data
      * @return void
      */
     public static function insert(string $table, array $data): void

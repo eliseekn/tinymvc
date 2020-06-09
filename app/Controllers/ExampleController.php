@@ -13,6 +13,8 @@ class ExampleController
 	 */
 	public function index(): void
 	{
-		View::render('name_of_page', []);
+		View::render('name_of_page', [
+			//
+		]);
 	}
 }

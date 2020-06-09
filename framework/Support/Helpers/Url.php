@@ -14,25 +14,29 @@
  * Miscellaneous URL utils functions
  */
 
-/**
- * generate abosulte url
- *
- * @param  string $url
- * @return string
- */
-function absolute_url(string $url): string
-{
-	return WEB_DOMAIN . $url;
+if (!function_exists('absolute_url')) {
+	/**
+	 * generate abosulte url
+	 *
+	 * @param  string $url
+	 * @return string
+	 */
+	function absolute_url(string $url): string
+	{
+		return WEB_DOMAIN . $url;
+	}
 }
 
-/**
- * redirect to another location
- *
- * @param  string $location
- * @return void
- */
-function redirect_to(string $location): void
-{
-	header('Location: ' . absolute_url($location));
-	exit();
+if (!function_exists('redirect_to')) {
+	/**
+	 * redirect to another location
+	 *
+	 * @param  string $location
+	 * @return void
+	 */
+	function redirect_to(string $location): void
+	{
+		header('Location: ' . absolute_url($location));
+		exit();
+	}
 }
