@@ -105,7 +105,7 @@ class QueryBuilder
 	 */
 	public function from(string $table)
 	{
-		self::$query .= " FROM $table ";
+		self::$query .= " FROM " . DB_PREFIX . "$table ";
 		return $this;
 	}
 
@@ -250,7 +250,7 @@ class QueryBuilder
 	 */
 	public function innerJoin(string $table, string $second_column, string $first_column)
 	{
-		self::$query .= " INNER JOIN $table ON $first_column = $second_column";
+		self::$query .= " INNER JOIN " . DB_PREFIX . "$table ON $first_column = $second_column";
 		return $this;
 	}
 
@@ -264,7 +264,7 @@ class QueryBuilder
 	 */
 	public function leftJoin(string $table, string $second_column, string $first_column)
 	{
-		self::$query .= " LEFT JOIN $table ON $first_column = $second_column";
+		self::$query .= " LEFT JOIN " . DB_PREFIX . "$table ON $first_column = $second_column";
 		return $this;
 	}
 
@@ -278,7 +278,7 @@ class QueryBuilder
 	 */
 	public function rightJoin(string $table, string $second_column, string $first_column)
 	{
-		self::$query .= " RIGHT JOIN $table ON $first_column = $second_column";
+		self::$query .= " RIGHT JOIN " . DB_PREFIX . "$table ON $first_column = $second_column";
 		return $this;
 	}
 
@@ -292,7 +292,7 @@ class QueryBuilder
 	 */
 	public function fullJoin(string $table, string $second_column, string $first_column)
 	{
-		self::$query .= " FULL JOIN $table ON $first_column = $second_column";
+		self::$query .= " FULL JOIN " . DB_PREFIX . "$table ON $first_column = $second_column";
 		return $this;
 	}
 
@@ -324,7 +324,7 @@ class QueryBuilder
 	 */
 	public function insert(string $table, array $items)
 	{
-		self::$query = "INSERT INTO $table (";
+		self::$query = "INSERT INTO " . DB_PREFIX . "$table (";
 
 		foreach ($items as $key => $value) {
 			self::$query .= "$key, ";
@@ -352,7 +352,7 @@ class QueryBuilder
 	 */
 	public function update(string $table)
 	{
-		self::$query = "UPDATE $table";
+		self::$query = "UPDATE " . DB_PREFIX . "$table";
 		return $this;
 	}
 
@@ -364,32 +364,30 @@ class QueryBuilder
 	 */
 	public function deleteFrom(string $table)
 	{
-		self::$query = "DELETE FROM $table";
+		self::$query = "DELETE FROM " . DB_PREFIX . "$table";
 		return $this;
 	}
 
 	/**
 	 * execute query and retrieves one row result
 	 *
-	 * @return array
+	 * @return mixed
 	 */
-	public function fetchSingle(): array
+	public function fetchSingle()
 	{
 		$query_result = $this->executeQuery();
-		$data = $query_result->fetch();
-		return is_array($data) ? $data : [];
+		return $query_result->fetch();
 	}
 
 	/**
 	 * execute query and retrieves all results
 	 *
-	 * @return array
+	 * @return mixed
 	 */
-	public function fetchAll(): array
+	public function fetchAll()
 	{
 		$query_result = $this->executeQuery();
-		$data = $query_result->fetchAll();
-		return is_array($data) ? $data : [];
+		return (object) $query_result->fetchAll();
 	}
 
 	/**
@@ -397,7 +395,7 @@ class QueryBuilder
 	 *
 	 * @return int
 	 */
-	public function rowsCount(): int
+	public function count(): int
 	{
 		$query_result = $this->executeQuery();
 		return $query_result->rowCount();

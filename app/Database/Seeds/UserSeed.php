@@ -5,14 +5,14 @@ namespace App\Database\Seeds;
 use Faker\Factory;
 use Framework\ORM\Seeder;
 
-class ExampleSeed
+class UserSeed
 {     
     /**
      * name of table
      *
      * @var string
      */
-    protected static $table = 'name_of_table';
+    protected static $table = 'users';
 
     /**
      * insert row

@@ -17,8 +17,7 @@ use Framework\Core\View;
  * Set routes paths
  */
 
-Route::add('/', [
-    'method' => 'GET',
+Route::get('/', [
     'handler' => function() {
         View::render('welcome');
     }

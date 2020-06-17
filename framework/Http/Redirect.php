@@ -35,7 +35,7 @@ class Redirect
      * @param  string $url url to redirect to
      * @return mixed
      */
-    public function toUrl(string $url)
+    public static function toUrl(string $url)
     {
         self::$redirect_url = $url;
         return new self();

@@ -15,11 +15,11 @@ namespace Framework\Support;
 use Framework\Http\Request;
 
 /**
- * Paginator
+ * Pager
  * 
  * Generate pagination from database 
  */
-class Paginator
+class Pager
 {
     /**
      * generated pagination array

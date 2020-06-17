@@ -99,7 +99,7 @@ class Router
                             //execute controller with action and parameter
                             call_user_func_array([new $controller(), $action], array_values($params));
                         } else {
-                            throw new Exception('Handler "' . $$options['handler'] . '" not found.');
+                            throw new Exception('Handler "' . $options['handler'] . '" not found.');
                         }
                     }
                 }

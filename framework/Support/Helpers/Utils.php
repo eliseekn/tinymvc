@@ -77,23 +77,3 @@ if (!function_exists('random_string')) {
 		return substr(str_shuffle($chars), 0, $size);
 	}
 }
-
-if (!function_exists('array_to_object')) {	
-	/**
-	 * convert multidimensional array to object
-	 *
-	 * @param  array $arr array to convert
-	 * @return mixed
-	 */
-	function array_to_object(array $arr)
-	{
-		$arr = array_map(
-            function ($val) {
-                return (object) $val;
-            },
-            (array) $arr
-		);
-		
-		return (object) $arr;
-	}
-}

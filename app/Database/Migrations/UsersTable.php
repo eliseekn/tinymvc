@@ -4,14 +4,14 @@ namespace App\Database\Migrations;
 
 use Framework\ORM\Migration;
 
-class ExampleTable
+class UsersTable
 {         
     /**
      * name of table
      *
      * @var string
      */
-    protected static $table = 'name_of_table';
+    protected static $table = 'users';
 
     /**
      * create table
@@ -24,6 +24,7 @@ class ExampleTable
             ->addPrimaryKey()
             ->addString('email', 255, false, true)
             ->addString('password')
+            ->addString('role', 255, false, false, 'user')
             ->addTimestamp('created_at')
             ->addTimestamp('updated_at')
             ->create();

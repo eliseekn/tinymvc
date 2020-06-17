@@ -13,7 +13,7 @@
 namespace Framework\ORM;
 
 use Framework\Http\Request;
-use Framework\Support\Paginator;
+use Framework\Support\Pager;
 
 /**
  * Model
@@ -50,7 +50,7 @@ class Model
      */
     public static function findWhere(string $column, string $operator, string $value)
     {
-        return (object) QueryBuilder::DB()->select('*')
+        return QueryBuilder::DB()->select('*')
             ->from(static::$table)
             ->where($column, $operator, $value)
             ->fetchSingle();
@@ -64,12 +64,10 @@ class Model
      */
     public static function findAll(array $order = ['id', 'DESC'])
     {
-        $items = QueryBuilder::DB()->select('*')
+        return QueryBuilder::DB()->select('*')
             ->from(static::$table)
             ->orderBy($order[0], $order[1])
             ->fetchAll();
-
-        return array_to_object($items);
     }
 
     /**
@@ -87,13 +85,11 @@ class Model
         string $value,
         array $order = ['id', 'DESC']
     ) {
-        $items = QueryBuilder::DB()->select('*')
+        return QueryBuilder::DB()->select('*')
             ->from(static::$table)
             ->where($column, $operator, $value)
             ->orderBy($order[0], $order[1])
             ->fetchAll();
-
-        return array_to_object($items);
     }
 
     /**
@@ -101,18 +97,16 @@ class Model
      *
      * @param  int $limit
      * @param  int $offset
-     * @param  array $order order by column and direction DESC or ASC
+     * @param  array $order_by order by column and direction DESC or ASC
      * @return mixed
      */
-    public static function findRange(int $limit, int $offset, array $order = ['id', 'DESC'])
+    public static function findRange(int $limit, int $offset, array $order_by = ['id', 'DESC'])
     {
-        $items = QueryBuilder::DB()->select('*')
+        return QueryBuilder::DB()->select('*')
             ->from(static::$table)
-            ->orderBy($order[0], $order[1])
+            ->orderBy($order_by[0], $order_by[1])
             ->limit($limit, $offset)
             ->fetchAll();
-        
-        return array_to_object($items);
     }
 
     /**
@@ -123,7 +117,7 @@ class Model
      * @param  string $column name of column
      * @param  string $operator operator
      * @param  string $value value to check
-     * @param  array $order order by column and direction DESC or ASC
+     * @param  array $order_by order by column and direction DESC or ASC
      * @return mixed
      */
     public static function findRangeWhere(
@@ -132,16 +126,14 @@ class Model
         string $column,
         string $operator,
         string $value,
-        array $order = ['id', 'DESC']
+        array $order_by = ['id', 'DESC']
     ) {
-        $items = QueryBuilder::DB()->select('*')
+        return QueryBuilder::DB()->select('*')
             ->from(static::$table)
             ->where($column, $operator, $value)
-            ->orderBy($order[0], $order[1])
+            ->orderBy($order_by[0], $order_by[1])
             ->limit($limit, $offset)
             ->fetchAll();
-
-        return array_to_object($items);
     }
     
     /**
@@ -215,10 +207,10 @@ class Model
      * generate pagination
      *
      * @param  mixed $items_per_pages
-     * @param  array $order order by column and direction DESC or ASC
-     * @return mixed returns new paginator class instance
+     * @param  array $order_by order by column and direction DESC or ASC
+     * @return mixed returns new pager class instance
      */
-    public static function paginate(int $items_per_pages, array $order = ['id', 'DESC'])
+    public static function paginate(int $items_per_pages, array $order_by = ['id', 'DESC'])
     {
         $page = empty(Request::getQuery('page')) ? 1 : Request::getQuery('page');
 
@@ -229,10 +221,10 @@ class Model
         $pagination = generate_pagination($page, $total_items, $items_per_pages);
 
         $items = $items_per_pages > 0 ? 
-            self::findRange($pagination['first_item'], $items_per_pages, $order) :
-            self::findAll($order);
+            self::findRange($pagination['first_item'], $items_per_pages, $order_by) :
+            self::findAll($order_by);
 
-        return new Paginator($items, $pagination);
+        return new Pager($items, $pagination);
     }
 
     /**
@@ -242,15 +234,15 @@ class Model
      * @param  string $column name of column
      * @param  string $operator operator
      * @param  string $value value to check
-     * @param  array $order order by column and direction DESC or ASC
-     * @return mixed returns new paginator class instance
+     * @param  array $order_by order by column and direction DESC or ASC
+     * @return mixed returns new pager class instance
      */
     public static function paginateWhere(
         int $items_per_pages,
         string $column,
         string $operator,
         string $value,
-        array $order = ['id', 'DESC']
+        array $order_by = ['id', 'DESC']
     ) {
         $page = empty(Request::getQuery('page')) ? 1 : Request::getQuery('page');
 
@@ -268,10 +260,10 @@ class Model
                 $column,
                 $operator,
                 $value,
-                $order
+                $order_by
             ) : 
-            self::findAllWhere($column, $operator, $value, $order);
+            self::findAllWhere($column, $operator, $value, $order_by);
 
-        return new Paginator($items, $pagination);
+        return new Pager($items, $pagination);
     }
 }

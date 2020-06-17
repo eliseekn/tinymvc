@@ -10,6 +10,8 @@
  * @link https://github.com/eliseekn/TinyMVC
  */
 
+use Framework\Core\Route;
+
 /**
  * Main application file
  */

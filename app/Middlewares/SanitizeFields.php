@@ -5,11 +5,11 @@ namespace App\Middlewares;
 use Framework\Http\Request;
 
 /**
- * SanitizeInputs
+ * SanitizeFields
  * 
- * Sanitize post request
+ * Sanitize post fields
  */
-class SanitizeInputs
+class SanitizeFields
 {
     /**
      * handle function
@@ -18,8 +18,8 @@ class SanitizeInputs
      */
     public static function handle(): void
     {
-        foreach (Request::getInput() as $key => $value) {
-            Request::setInput($key, escape($value));
+        foreach (Request::getField() as $field => $value) {
+            Request::setField($field, escape($value));
         }
     }
 }

@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use Framework\Core\View;
 
-class ExampleController
+class HomeController
 {
 	/**
 	 * display a page

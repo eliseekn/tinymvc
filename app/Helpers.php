@@ -10,11 +10,7 @@
  * @link https://github.com/eliseekn/TinyMVC
  */
 
-use Framework\Core\Middleware;
-
 /**
- * Set middlewares names
+ * Write your custom helpers functions here
  */
-
-Middleware::setName('ValidateCsrfToken', 'csrf');
-Middleware::setName('SanitizeFields', 'sanitize');
+ 

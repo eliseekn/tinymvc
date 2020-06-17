@@ -45,7 +45,7 @@ class Migration
      */
     public static function table(string $name)
     {
-        self::$query = "CREATE TABLE $name (";
+        self::$query = "CREATE TABLE " . DB_PREFIX . "$name (";
         return new self();
     }
     
@@ -80,7 +80,7 @@ class Migration
         self::$query .= "$name INT($length)";
         self::$query .= $null ? ' NULL' : ' NOT NULL';
         self::$query .= $unique ? ' UNIQUE' : '';
-        self::$query .= !isset($default) ? '' : " DEFAULT $default";
+        self::$query .= is_null($default) ? '' : " DEFAULT $default";
         self::$query .= ', ';
 
         return $this;
@@ -106,7 +106,7 @@ class Migration
         self::$query .= "$name SMALLINT($length)";
         self::$query .= $null ? ' NULL' : ' NOT NULL';
         self::$query .= $unique ? ' UNIQUE' : '';
-        self::$query .= !isset($default) ? '' : " DEFAULT $default";
+        self::$query .= is_null($default) ? '' : " DEFAULT $default";
         self::$query .= ', ';
 
         return $this;
@@ -127,12 +127,12 @@ class Migration
         int $length = 255, 
         bool $null = false, 
         bool $unique = false, 
-        string $default = ''
+        ?string $default = null
     ) {
         self::$query .= "$name VARCHAR($length)";
         self::$query .= $null ? ' NULL' : ' NOT NULL';
         self::$query .= $unique ? ' UNIQUE' : '';
-        self::$query .= empty($default) ? '' : " DEFAULT '$default'";
+        self::$query .= is_null($default) ? '' : " DEFAULT '$default'";
         self::$query .= ', ';
 
         return $this;
@@ -143,17 +143,11 @@ class Migration
      *
      * @param  string $name name of column
      * @param  bool $null null or not
-     * @param  string $default default column value
      * @return mixed
      */
-    public function addText(
-        string $name, 
-        bool $null = false, 
-        string $default = ''
-    ) {
+    public function addText(string $name, bool $null = false) {
         self::$query .= "$name TEXT";
         self::$query .= $null ? ' NULL' : ' NOT NULL';
-        self::$query .= empty($default) ? '' : " DEFAULT '$default'";
         self::$query .= ', ';
 
         return $this;
@@ -164,17 +158,11 @@ class Migration
      *
      * @param  string $name name of column
      * @param  bool $null null or not
-     * @param  string $default default column value
      * @return mixed
      */
-    public function addLongText(
-        string $name, 
-        bool $null = false, 
-        string $default = ''
-    ) {
+    public function addLongText(string $name, bool $null = false) {
         self::$query .= "$name LONGTEXT";
         self::$query .= $null ? ' NULL' : ' NOT NULL';
-        self::$query .= empty($default) ? '' : " DEFAULT '$default'";
         self::$query .= ', ';
 
         return $this;
@@ -195,7 +183,7 @@ class Migration
     ) {
         self::$query .= "$name TIMESTAMP";
         self::$query .= $null ? ' NULL' : ' NOT NULL';
-        self::$query .= empty($default) ? '' : " DEFAULT $default";
+        self::$query .= !empty($default) ? '' : " DEFAULT $default";
         self::$query .= ', ';
 
         return $this;
@@ -210,7 +198,7 @@ class Migration
     {
         self::$query = rtrim(self::$query, ', ');
         self::$query .= ')';
-        static::executeQuery();
+        self::executeQuery();
     }
 
     /**
@@ -221,7 +209,7 @@ class Migration
      */
     public static function dropTable(string $name): void
     {
-        self::$query = "DROP TABLE IF EXISTS $name";
-        static::executeQuery();
+        self::$query = "DROP TABLE IF EXISTS " . DB_PREFIX . "$name";
+        self::executeQuery();
     }
 }

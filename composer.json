@@ -11,6 +11,7 @@
     ],
     "autoload": {
         "files": [
+            "app/Helpers.php",
             "framework/Support/Helpers/Cookies.php",
             "framework/Support/Helpers/Curl.php",
             "framework/Support/Helpers/Debug.php",

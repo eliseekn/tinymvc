@@ -4,12 +4,12 @@ namespace App\Database\Models;
 
 use Framework\ORM\Model;
 
-class ExampleModel extends Model
+class UsersModel extends Model
 {    
     /**
      * name of table
      *
      * @var string
      */
-    protected static $table = 'name_of_table';
+    protected static $table = 'users';
 }

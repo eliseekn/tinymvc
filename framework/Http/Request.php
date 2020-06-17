@@ -49,7 +49,7 @@ class Request
      * @param  string $field name of $_POST array field
      * @return mixed returns field value or array or empty string
      */
-    public static function getInput(string $field = '')
+    public static function getField(string $field = '')
     {
         return empty($field) ? $_POST : $_POST[$field] ?? '';
     }
@@ -130,7 +130,7 @@ class Request
      * @param  mixed $value
      * @return void
      */
-    public static function setInput(string $field, $value): void
+    public static function setField(string $field, $value): void
     {
         $_POST[$field] = $value;
     }

@@ -15,7 +15,7 @@ namespace Framework\Support;
 /**
  * Email
  * 
- * Email support
+ * Email sender manager
  */
 class Email
 {   

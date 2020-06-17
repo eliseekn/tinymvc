@@ -31,3 +31,6 @@ define('DB_PASSWORD', '');
 
 //database name 
 define('DB_NAME', '');
+
+//database tables prefix
+define('DB_PREFIX', '');
