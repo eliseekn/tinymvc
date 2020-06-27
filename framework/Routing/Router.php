@@ -10,10 +10,10 @@
  * @link https://github.com/eliseekn/TinyMVC
  */
 
-namespace Framework\Core;
+namespace Framework\Routing;
 
 use Exception;
-use Framework\Core\View;
+use Framework\Routing\View;
 use Framework\Http\Request;
 use Framework\Http\Response;
 
@@ -76,7 +76,7 @@ class Router
         if (!empty($routes)) {
             foreach ($routes as $route => $options) {
                 $route = preg_replace('/{([a-z]+):([^\}]+)}/i', '$2', $route);
-                $route = preg_replace(['/\bstr\b/', '/\bint\b/', '/\ball\b/'], ['([a-zA-Z-_]+)', '(\d+)', '([^/]+)'], $route);
+                $route = preg_replace(['/\bstr\b/', '/\bint\b/', '/\bany\b/'], ['([a-zA-Z-_]+)', '(\d+)', '([^/]+)'], $route);
                 $pattern = '#^' . $route . '$#';
 
                 if (preg_match($pattern, Request::getURI(), $params)) {

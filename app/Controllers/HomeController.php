@@ -2,18 +2,18 @@
 
 namespace App\Controllers;
 
-use Framework\Core\View;
+use Framework\Routing\View;
 
 class HomeController
 {
 	/**
-	 * display a page
+	 * display home page
 	 *
 	 * @return void
 	 */
 	public function index(): void
 	{
-		View::render('name_of_page', [
+		View::render('index', [
 			//
 		]);
 	}

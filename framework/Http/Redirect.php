@@ -13,7 +13,7 @@
 namespace Framework\Http;
 
 use Exception;
-use Framework\Core\Route;
+use Framework\Routing\Route;
 
 /**
  * Redirect
@@ -148,6 +148,28 @@ class Redirect
     {
         create_flash_message($title, $content);
         redirect_to(self::$redirect_url);
+    }
+
+    /**
+     * redirects with error flash message
+     *
+     * @param  mixed $content content of message
+     * @return void
+     */
+    public function withError($content): void
+    {
+        self::withMessage('error', $content);
+    }
+
+    /**
+     * redirects with success flash message
+     *
+     * @param  mixed $content content of message
+     * @return void
+     */
+    public function withSuccess($content): void
+    {
+        self::withMessage('success', $content);
     }
 
     /**

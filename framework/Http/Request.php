@@ -27,7 +27,7 @@ class Request
      * @param  string $field name of $_SERVER array field
      * @return mixed returns field value or empty string
      */
-    public static function getHeaders(string $field = '')
+    public static function getHeader(string $field = '')
     {
         return empty($field) ? $_SERVER : $_SERVER[$field] ?? '';
     }
@@ -97,7 +97,7 @@ class Request
      */
     public static function getMethod()
     {
-        return self::getHeaders('REQUEST_METHOD');
+        return self::getHeader('REQUEST_METHOD');
     }
 
     /**
@@ -107,7 +107,7 @@ class Request
      */
     public static function getURI(): string
     {
-        $uri = self::getHeaders('REQUEST_URI');
+        $uri = self::getHeader('REQUEST_URI');
         $uri = str_replace(ROOT_FOLDER, '', $uri); //remove root subfolder if exists 
 
         //looks for "?page=" or something like and remove it from uri

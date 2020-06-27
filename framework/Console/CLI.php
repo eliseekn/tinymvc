@@ -24,14 +24,14 @@ class CLI
      *
      * @var string
      */
-    protected static $migrations = 'app' . DIRECTORY_SEPARATOR . 'Database' . DIRECTORY_SEPARATOR . 'Migrations';
+    protected static $migrations = __DIR__ . DIRECTORY_SEPARATOR . '../../app' . DIRECTORY_SEPARATOR . 'Database' . DIRECTORY_SEPARATOR . 'Migrations';
     
     /**
      * seeds folder
      *
      * @var string
      */
-    protected static $seeds = 'app' . DIRECTORY_SEPARATOR . 'Database' . DIRECTORY_SEPARATOR . 'Seeds';
+    protected static $seeds =  __DIR__ . DIRECTORY_SEPARATOR . '../../app' . DIRECTORY_SEPARATOR . 'Database' . DIRECTORY_SEPARATOR . 'Seeds';
     
     /**
      * print help message

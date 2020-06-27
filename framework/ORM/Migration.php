@@ -33,8 +33,8 @@ class Migration
      */
     private static function executeQuery(): void
     {
-        QueryBuilder::DB()->setQuery(self::$query);
-        QueryBuilder::DB()->executeQuery();
+        Query::DB()->setQuery(self::$query);
+        Query::DB()->executeQuery();
     }
 
     /**
@@ -183,7 +183,7 @@ class Migration
     ) {
         self::$query .= "$name TIMESTAMP";
         self::$query .= $null ? ' NULL' : ' NOT NULL';
-        self::$query .= !empty($default) ? '' : " DEFAULT $default";
+        self::$query .= empty($default) ? '' : " DEFAULT $default";
         self::$query .= ', ';
 
         return $this;

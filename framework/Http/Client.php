@@ -32,14 +32,16 @@ class Client
      * send request to url
      *
      * @param  string $method method name
+     * @param  array $urls
+     * @param  array $hedears
      * @param  array|null $data data to send
-     * @param  bool $json_data send data in json format (only for POST request)
+     * @param  bool $json_data send data in json format
      * @return mixed
      */
     public static function send(
-        string $method = 'GET',
+        string $method,
         array $urls,
-        $headers = [],
+        array $headers = [],
         ?array $data = null,
         bool $json_data = false
     ) {
@@ -52,12 +54,48 @@ class Client
     }
 
     /**
+     * send GET request
+     *
+     * @param  array $urls
+     * @param  array $hedears
+     * @param  array|null $data data to send
+     * @param  bool $json_data send data in json
+     * @return mixed
+     */
+    public static function get(
+        array $urls,
+        array $headers = [],
+        ?array $data = null,
+        bool $json_data = false
+    ) {
+        return self::send('GET', $urls, $headers, $data, $json_data);
+    }
+
+    /**
+     * send POST request
+     *
+     * @param  array $urls
+     * @param  array $hedears
+     * @param  array|null $data data to send
+     * @param  bool $json_data send data in json format
+     * @return mixed
+     */
+    public static function post(
+        array $urls,
+        array $headers = [],
+        ?array $data = null,
+        bool $json_data = false
+    ) {
+        return self::send('POST', $urls, $headers, $data, $json_data);
+    }
+
+    /**
      * retrieves request headers
      *
      * @param  string $field name of $_SERVER array field
      * @return mixed returns field value or empty string
      */
-    public function getHeaders(string $field = '')
+    public function getHeader(string $field = '')
     {
         return empty($field) ? self::$response['headers'] : self::$response['headers'][$field] ?? '';
     }

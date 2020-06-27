@@ -35,7 +35,7 @@ class Authenticate
      * @param  string $credential
      * @return bool
      */
-    public static function check(string $credential = 'email'): bool
+    public static function attempt(string $credential = 'email'): bool
     {
         $user = UsersModel::findWhere($credential, '=', Request::getField($credential));
 
@@ -55,15 +55,28 @@ class Authenticate
             create_cookie('user', Request::getField($credential));
         }
 
+        //reset attempts
+        self::$attempts = 0;
+
         return true;
+    }
+
+    /**
+     * check is user is authenticated
+     *
+     * @return bool
+     */
+    public static function check(): bool
+    {
+        return session_has('user');
     }
     
     /**
      * get user data
      *
-     * @return void
+     * @return mixed
      */
-    public static function getUser(): string
+    public static function getUser()
     {
         return get_session('user');
     }

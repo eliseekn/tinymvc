@@ -7,7 +7,7 @@ use Framework\Http\Request;
 /**
  * SanitizeFields
  * 
- * Sanitize post fields
+ * Sanitize form fields
  */
 class SanitizeFields
 {

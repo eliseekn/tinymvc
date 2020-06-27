@@ -10,8 +10,6 @@
  * @link https://github.com/eliseekn/TinyMVC
  */
 
-use Framework\Core\Route;
-
 /**
  * Main application file
  */
@@ -26,4 +24,4 @@ require_once 'config/database.php';
 require_once 'config/routes.php';
 require_once 'config/middlewares.php';
 
-new \Framework\Core\Router();
+new \Framework\Routing\Router();

@@ -10,11 +10,13 @@
  * @link https://github.com/eliseekn/TinyMVC
  */
 
-use Framework\Core\Middleware;
+use Framework\Routing\Middleware;
 
 /**
  * Set middlewares names
  */
 
-Middleware::setName('ValidateCsrfToken', 'csrf');
+Middleware::setName('CsrfProtection', 'csrf');
 Middleware::setName('SanitizeFields', 'sanitize');
+Middleware::setName('AdminSession', 'admin');
+Middleware::setName('Authentication', 'auth');

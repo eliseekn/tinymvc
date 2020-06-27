@@ -15,11 +15,11 @@ namespace Framework\ORM;
 use PDOException;
 
 /**
- * QueryBuilder
+ * Query
  * 
  * Database management system
  */
-class QueryBuilder
+class Query
 {	
 	/**
 	 * database instance
@@ -80,6 +80,30 @@ class QueryBuilder
 	}
 
 	/**
+	 * returns query string
+	 *
+	 * @return string
+	 */
+	public function getQuery(): string
+	{
+		return self::$query;
+	}
+
+	/**
+	 * set custom query string
+	 *
+	 * @param  string $query query string
+	 * @param  array $args query arguments
+	 * @return mixed
+	 */
+	public function setQuery(string $query, array $args = [])
+	{
+		self::$query = $query;
+		self::$args = $args;
+		return $this;
+	}
+
+	/**
 	 * generate SELECT query
 	 *
 	 * @param  string $columns name of columns as enumerated string
@@ -100,7 +124,7 @@ class QueryBuilder
 	/**
 	 * generate FROM query
 	 *
-	 * @param  string $table name of table
+	 * @param  string $table
 	 * @return mixed
 	 */
 	public function from(string $table)
@@ -112,9 +136,9 @@ class QueryBuilder
 	/**
 	 * generate WHERE query
 	 *
-	 * @param  string $column column name
-	 * @param  string $operator comparaison operator (<, = and >)
-	 * @param  string $value element to be compared 
+	 * @param  string $column
+	 * @param  string $operator (<, =, >, IN or NOT IN)
+	 * @param  string $value
 	 * @return mixed
 	 */
 	public function where(string $column, string $operator, string $value)
@@ -125,11 +149,71 @@ class QueryBuilder
 	}
 
 	/**
+	 * generate WHERE = query
+	 *
+	 * @param  string $column
+	 * @param  string $value
+	 * @return mixed
+	 */
+	public function whereEqual(string $column, string $value)
+	{
+		return $this->where($column, '=', $value);
+	}
+
+	/**
+	 * generate WHERE > query
+	 *
+	 * @param  string $column
+	 * @param  string $value
+	 * @return mixed
+	 */
+	public function whereGreater(string $column, string $value)
+	{
+		return $this->where($column, '>', $value);
+	}
+
+	/**
+	 * generate WHERE < query
+	 *
+	 * @param  string $column
+	 * @param  string $value
+	 * @return mixed
+	 */
+	public function whereLower(string $column, string $value)
+	{
+		return $this->where($column, '<', $value);
+	}
+
+	/**
+	 * generate WHERE NOT IN query
+	 *
+	 * @param  string $column
+	 * @param  string $value
+	 * @return mixed
+	 */
+	public function whereNotIn(string $column, string $value)
+	{
+		return $this->where($column, 'NOT IN', $value);
+	}
+
+	/**
+	 * generate WHERE IN query
+	 *
+	 * @param  string $column
+	 * @param  string $value
+	 * @return mixed
+	 */
+	public function whereIn(string $column, string $value)
+	{
+		return $this->where($column, 'IN', $value);
+	}
+
+	/**
 	 * generate HAVING query
 	 *
-	 * @param  string $column column name
-	 * @param  string $operator comparaison operator (<, = and >)
-	 * @param  string $value element to be compared 
+	 * @param  string $column
+	 * @param  string $operator (<, =, >, IN or NOT IN)
+	 * @param  string $value
 	 * @return mixed
 	 */
 	public function having(string $column, string $operator, string $value)
@@ -142,9 +226,9 @@ class QueryBuilder
 	/**
 	 * generate AND query
 	 *
-	 * @param  string $column column name
-	 * @param  string $operator comparaison operator (<, = and >)
-	 * @param  string $value element to be compared 
+	 * @param  string $column
+	 * @param  string $operator (<, =, >, IN or NOT IN)
+	 * @param  string $value
 	 * @return mixed
 	 */
 	public function and(string $column, string $operator, string $value)
@@ -157,9 +241,9 @@ class QueryBuilder
 	/**
 	 * generate OR query
 	 *
-	 * @param  string $column column name
-	 * @param  string $operator comparaison operator (<, = and >)
-	 * @param  string $value element to be compared 
+	 * @param  string $column
+	 * @param  string $operator (<, =, >, IN or NOT IN)
+	 * @param  string $value
 	 * @return mixed
 	 */
 	public function or(string $column, string $operator, string $value)
@@ -172,8 +256,8 @@ class QueryBuilder
 	/**
 	 * generate ORDER BY query
 	 *
-	 * @param  string $column column name
-	 * @param  string $direction order direction ASC or DESC
+	 * @param  string $column
+	 * @param  string $direction direction order ASC or DESC
 	 * @return mixed
 	 */
 	public function orderBy(string $column, string $direction)
@@ -185,7 +269,7 @@ class QueryBuilder
 	/**
 	 * generate GROUP BY query
 	 *
-	 * @param  string $column column name
+	 * @param  string $column
 	 * @return mixed
 	 */
 	public function groupBy(string $column)
@@ -197,8 +281,8 @@ class QueryBuilder
 	/**
 	 * generate LIKE query
 	 *
-	 * @param  string $column column name
-	 * @param  string $value element to be compared
+	 * @param  string $column
+	 * @param  string $value
 	 * @return mixed
 	 */
 	public function like(string $column, string $value)
@@ -211,8 +295,8 @@ class QueryBuilder
 	/**
 	 * generate OR LIKE query
 	 *
-	 * @param  string $column column name
-	 * @param  string $value element to be compared
+	 * @param  string $column
+	 * @param  string $value
 	 * @return mixed
 	 */
 	public function orLike(string $column, string $value)
@@ -243,9 +327,9 @@ class QueryBuilder
 	/**
 	 * generate INNER JOIN query
 	 *
-	 * @param  string $table table name
-	 * @param  string $second_column second column name
-	 * @param  string $first_column first column name
+	 * @param  string $table
+	 * @param  string $second_column
+	 * @param  string $first_column
 	 * @return mixed
 	 */
 	public function innerJoin(string $table, string $second_column, string $first_column)
@@ -257,9 +341,9 @@ class QueryBuilder
 	/**
 	 * generate LEFT JOIN query
 	 *
-	 * @param  string $table table name
-	 * @param  string $second_column second column name
-	 * @param  string $first_column first column name
+	 * @param  string $table
+	 * @param  string $second_column
+	 * @param  string $first_column
 	 * @return mixed
 	 */
 	public function leftJoin(string $table, string $second_column, string $first_column)
@@ -271,9 +355,9 @@ class QueryBuilder
 	/**
 	 * generate RIGHT JOIN query
 	 *
-	 * @param  string $table table name
-	 * @param  string $second_column second column name
-	 * @param  string $first_column first column name
+	 * @param  string $table
+	 * @param  string $second_column
+	 * @param  string $first_column
 	 * @return mixed
 	 */
 	public function rightJoin(string $table, string $second_column, string $first_column)
@@ -285,9 +369,9 @@ class QueryBuilder
 	/**
 	 * generate FULL JOIN query
 	 *
-	 * @param  string $table table name
-	 * @param  string $second_column second column name
-	 * @param  string $first_column first column name
+	 * @param  string $table
+	 * @param  string $second_column
+	 * @param  string $first_column
 	 * @return mixed
 	 */
 	public function fullJoin(string $table, string $second_column, string $first_column)
@@ -299,7 +383,7 @@ class QueryBuilder
 	/**
 	 * generate SET query
 	 *
-	 * @param  array $items columns to update
+	 * @param  array $items
 	 * @return mixed
 	 */
 	public function set(array $items)
@@ -318,8 +402,8 @@ class QueryBuilder
 	/**
 	 * generate INSERT query
 	 *
-	 * @param  string $table table name
-	 * @param  array $items items to insert in columns
+	 * @param  string $table
+	 * @param  array $items
 	 * @return mixed
 	 */
 	public function insert(string $table, array $items)
@@ -347,7 +431,7 @@ class QueryBuilder
 	/**
 	 * generate UPDATE query
 	 *
-	 * @param  string $table table name
+	 * @param  string $table
 	 * @return mixed
 	 */
 	public function update(string $table)
@@ -359,7 +443,7 @@ class QueryBuilder
 	/**
 	 * generate DELETE FROM query
 	 * 
-	 * @param  string $table table name
+	 * @param  string $table
 	 * @return mixed
 	 */
 	public function deleteFrom(string $table)
@@ -409,29 +493,5 @@ class QueryBuilder
 	public function lastInsertedId(): int
 	{
 		return $this->db->lastInsertId();
-	}
-
-	/**
-	 * returns query string
-	 *
-	 * @return string
-	 */
-	public function getQuery(): string
-	{
-		return self::$query;
-	}
-
-	/**
-	 * set custom query string
-	 *
-	 * @param  string $query query string
-	 * @param  array $args query arguments
-	 * @return mixed
-	 */
-	public function setQuery(string $query, array $args = [])
-	{
-		self::$query = $query;
-		self::$args = $args;
-		return $this;
 	}
 }

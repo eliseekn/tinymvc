@@ -22,6 +22,7 @@ class UsersTable
     {
         Migration::table(self::$table)
             ->addPrimaryKey()
+            ->addString('name')
             ->addString('email', 255, false, true)
             ->addString('password')
             ->addString('role', 255, false, false, 'user')

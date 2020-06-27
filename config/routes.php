@@ -10,8 +10,8 @@
  * @link https://github.com/eliseekn/TinyMVC
  */
 
-use Framework\Core\Route;
-use Framework\Core\View;
+use Framework\Routing\Route;
+use Framework\Routing\View;
 
 /**
  * Set routes paths
@@ -19,6 +19,17 @@ use Framework\Core\View;
 
 Route::get('/', [
     'handler' => function() {
-        View::render('welcome');
+        View::render('index');
     }
+]);
+
+Route::get('/admin', [
+    'handler' => 'Admin\AdminController@index',
+    'name' => 'admin',
+    'middlewares' => [
+        'csrf',
+        'sanitize',
+        'auth',
+        'admin'
+    ]
 ]);

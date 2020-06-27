@@ -28,7 +28,7 @@ class Seeder
      */
     public static function insert(string $table, array $data): void
     {
-        QueryBuilder::DB()->insert($table, $data)
+        Query::DB()->insert($table, $data)
             ->executeQuery();
     }
 }

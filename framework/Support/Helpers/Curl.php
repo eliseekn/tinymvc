@@ -21,9 +21,8 @@ if (!function_exists('curl')) {
      * @param  string $method request method
      * @param  array $urls urls to connect
      * @param  array $data data to send
-     * @param  bool $json_data send json data or not
+     * @param  bool $json_data send data in json format
      * @return array returns headers and body reponse
-     * 
      * @link   https://niraeth.com/php-quick-function-for-asynchronous-multi-curl/
      *         https://stackoverflow.com/questions/9183178/can-php-curl-retrieve-response-headers-and-body-in-a-single-request
      *         https://www.codexworld.com/post-receive-json-data-using-php-curl/

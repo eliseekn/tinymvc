@@ -6,11 +6,11 @@ use Framework\Http\Request;
 use Framework\Http\Response;
 
 /**
- * ValidateCsrfToken
+ * CsrfProtection
  * 
  * CSRF token validator
  */
-class ValidateCsrfToken
+class CsrfProtection
 {    
     /**
      * handle function
