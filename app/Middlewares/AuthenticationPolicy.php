@@ -20,7 +20,11 @@ class AuthenticationPolicy
     public static function handle()
     {
         if (Authenticate::check()) {
-            Redirect::toUrl('/admin')->only();
+            if (Authenticate::getUser()->role === 'admin') {
+                Redirect::toUrl('/admin')->only();
+            } else {
+                Redirect::toUrl('/')->only();
+            }
         }
     }
 }

@@ -39,7 +39,7 @@
                         <a class="nav-link text-white" href="<?= absolute_url('/') ?>">Go home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-danger ml-3" href="<?= absolute_url('/admin/logout') ?>">Log out</a>
+                        <a class="btn btn-danger ml-3" href="<?= absolute_url('/logout') ?>">Log out</a>
                     </li>
                 </ul>
             </nav>

@@ -68,6 +68,10 @@ class UsersController
 			Redirect::back()->withError('Failed to update user. This user does not exists in database.');
 		}
 
+		if (UsersModel::exists('email', Request::getField('email'))) {
+			Redirect::back()->withError('Failed to update user. This email address is already used by another user.');
+		}
+
 		$data = [
             'name' => Request::getField('name'),
             'email' => Request::getField('email'),
@@ -78,8 +82,6 @@ class UsersController
 		if (!empty(Request::getField('password'))) {
 			$data['password'] = hash_string(Request::getField('password'));
 		}
-
-		//dump_vars($data);
 
 		UsersModel::update($id, $data);
         Redirect::back()->withSuccess('The user has been updated successfully.');

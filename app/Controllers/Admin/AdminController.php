@@ -21,33 +21,4 @@ class AdminController
 			'users' => UsersModel::paginate(50, ['name', 'ASC'])
 		]);
 	}
-
-	/**
-	 * authenticate user
-	 * 
-	 * @return void
-	 */
-	public function authenticate(): void
-	{
-		LoginForm::validate([
-			'redirect' => 'back'
-		]);
-
-		if (Authenticate::attempt()) {
-			Redirect::toUrl('/admin')->only();
-		} else {
-			Redirect::back()->withError('Invalid email address and/or password.');
-		}
-	}
-	
-	/**
-	 * logout
-	 *
-	 * @return void
-	 */
-	public function logout(): void
-	{
-		Authenticate::logout();
-		Redirect::toUrl('/')->only();
-	}
 }

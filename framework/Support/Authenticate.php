@@ -63,6 +63,33 @@ class Authenticate
     }
 
     /**
+     * authenticate new user
+     *
+     * @param  array $credentials
+     * @param  string $credential
+     * @return bool
+     */
+    public static function new(array $credentials, string $credential = 'email'): bool
+    {
+        if (UsersModel::exists($credential, Request::getField($credential))) {
+            return false;
+        }
+
+        foreach ($credentials as $credential) {
+            if (array_key_exists($credential, Request::getField())) {
+                $data[$credential] = Request::getField($credential);
+            }
+        }
+
+        if (isset($data)) {
+            UsersModel::insert($data);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * check is user session
      *
      * @return bool

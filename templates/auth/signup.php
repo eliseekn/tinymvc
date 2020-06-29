@@ -1,11 +1,11 @@
-<?php $this->layout('password/layout', [
-    'page_title' => 'Reset password',
-    'page_description' => 'Reset password page'
+<?php $this->layout('auth/layout', [
+    'page_title' => 'Sign up',
+    'page_description' => 'Sign up page'
 ]) ?>
 
 <?php $this->start('page_content') ?>
 
-<h1 class="py-3 text-center">Reset password</h1>
+<h1 class="py-3 text-center">Sign up</h1>
 
 <?php if (session_has('flash_messages')) { ?>
 
@@ -30,14 +30,20 @@
 <?php } ?>
 
 <div class="card shadow p-4">
-    <form method="post" action="<?= absolute_url('/password/new') ?>">
+    <form method="post" action="<?= absolute_url('/register') ?>">
+
         <div class="form-group">
-            <label for="email">Email address</label>
-            <input type="email" id="email" name="email" class="form-control" value="<?= $email ?>">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" name="name" id="name">
         </div>
 
         <div class="form-group">
-            <label for="password">New password</label>
+            <label for="email">Email address</label>
+            <input type="email" id="email" name="email" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
 
             <div class="d-flex align-items-center">
                 <input type="password" id="password" name="password" class="form-control">

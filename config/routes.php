@@ -17,12 +17,47 @@ use Framework\Routing\Route;
  * Set routes paths
  */
 
+//home route
 Route::get('/', [
     'handler' => function() {
         View::render('index');
     }
 ]);
 
+//authentication routes
+Route::get('/login', [
+    'handler' => function() {
+        View::render('auth/login');
+    },
+    'middlewares' => [
+        'remember',
+        'auth'
+    ]
+]);
+
+Route::get('/signup', [
+    'handler' =>  function() {
+        View::render('auth/signup');
+    },
+    'middlewares' => [
+        'remember',
+        'auth'
+    ]
+]);
+
+Route::get('/logout', [
+    'handler' => 'AuthenticationController@logout'
+]);
+
+Route::post('/authenticate', [
+    'handler' => 'AuthenticationController@authenticate'
+]);
+
+Route::post('/register', [
+    'handler' => 'AuthenticationController@register'
+]);
+
+//admin routes
 Route::get('/admin', [
     'handler' => function() {
         View::render('admin/index');
@@ -31,24 +66,6 @@ Route::get('/admin', [
         'remember',
         'admin'
     ]
-]);
-
-Route::get('/admin/login', [
-    'handler' => function() {
-        View::render('admin/login');
-    },
-    'middlewares' => [
-        'remember',
-        'auth'
-    ]
-]);
-
-Route::get('/admin/logout', [
-    'handler' => 'Admin\AdminController@logout'
-]);
-
-Route::post('/admin/authenticate', [
-    'handler' => 'Admin\AdminController@authenticate'
 ]);
 
 Route::get('/admin/users/add', [
