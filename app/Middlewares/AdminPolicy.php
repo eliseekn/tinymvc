@@ -21,7 +21,7 @@ class AdminPolicy
     public static function handle()
     {
         if (!Authenticate::check()) {
-            Redirect::toUrl('/admin/login')->withError('You must be authenticated first.');
+            Redirect::toUrl('/admin/login')->withError('You must be logged first.');
         }
         
         if (Authenticate::getUser()->role !== 'admin') {

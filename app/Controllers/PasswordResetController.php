@@ -28,7 +28,7 @@ class PasswordResetController
 			->subject('Password reset notification')
 			->message('
 				<p>You are receiving this email because we received a password reset request for your account. Click the button below to reset your password:</p>
-				<p><a href="' . absolute_url('/password/reset/' . $token) . '">' . absolute_url('/password/reset/' . $token) . '</a></p>
+				<p><a href="' . absolute_url('/password/reset?token=' . $token) . '">' . absolute_url('/password/reset?token=' . $token) . '</a></p>
 				<p>If you did not request a password reset, no further action is required.</p>
 			')
 			->asHtml()
@@ -49,24 +49,22 @@ class PasswordResetController
 	/**
 	 * reset
 	 *
-	 * @param  string $email
-	 * @param  string $token
 	 * @return void
 	 */
-	public function reset(string $email, string $token): void
+	public function reset(): void
 	{
-		if (!PasswordResetModel::exists($email, $token)) {
-			Response::send([], '', 403);
+		/* if (!PasswordResetModel::exists(Request::getQuery('email'), Request::getQuery('token'))) {
+			Response::send([], 'This password reset link is invalid. This user do not exists in database.', 403);
 		}
 
-		if (PasswordResetModel::findWhere('email', $email)->expires < date('Y-m-d H:i:s')) {
-			Response::send([], '', 403);
+		if (PasswordResetModel::findWhere('email', Request::getQuery('email'))->expires < date('Y-m-d H:i:s')) {
+			Response::send([], 'This password reset link is expired. Please retrieves a new one.', 403);
 		}
 
-		PasswordResetModel::deleteWhere('email', $email);
+		PasswordResetModel::deleteWhere('email', Request::getQuery('email')); */
 		
-		View::render('password/reset', [
-			'email' => $email
+		View::render('password/new', [
+			'email' => Request::getQuery('email')
 		]);
 	}
 	

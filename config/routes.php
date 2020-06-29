@@ -101,14 +101,12 @@ Route::get('/admin/users/delete/{id:num}', [
 
 Route::get('/password/forgot', [
     'handler' => function() {
-        View::render('password/forgot');
+        View::render('password/reset');
     }
 ]);
 
-Route::get('/password/reset/{token:any}', [
-    'handler' => function() {
-        View::render('password/reset');
-    }
+Route::get('/password/reset', [
+    'handler' => 'PasswordResetController@reset'
 ]);
 
 Route::get('/password/notify', [
