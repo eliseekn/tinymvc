@@ -75,16 +75,24 @@ class Router
     {
         if (!empty($routes)) {
             foreach ($routes as $route => $options) {
-                $route = preg_replace('/{([a-z]+):([^\}]+)}/i', '$2', $route);
-                $route = preg_replace(['/\bstr\b/', '/\bint\b/', '/\bany\b/'], ['([a-zA-Z-_]+)', '(\d+)', '([^/]+)'], $route);
-                $pattern = '#^' . $route . '$#';
+                $pattern = preg_replace('/{([a-zA-Z-_]+):([^\}]+)}/i', '$2', $route);
+                $pattern = preg_replace('/{([a-zA-Z-_]+):([^\}]+)}?/i', '$2', $pattern);
+                $pattern = preg_replace('/\bstr\b/', '([a-zA-Z-_]+)', $pattern);
+                $pattern = preg_replace('/\bnum\b/', '(\d+)', $pattern);
+                $pattern = preg_replace('/\bany\b/', '([^/]+)', $pattern);
+                $pattern = '#^' . $pattern . '$#';
 
                 if (preg_match($pattern, Request::getURI(), $params)) {
                     array_shift($params);
 
                     if (preg_match('/' . strtoupper($options['method']) . '/', Request::getMethod())) {
                         if (is_callable($options['handler'])) {
+                            //check for middlewares to execute
+                            Middleware::check($route);
+
+                            //execute
                             call_user_func_array($options['handler'], array_values($params));
+                            
                             exit();
                         }
                         
@@ -94,7 +102,7 @@ class Router
                         //chekc if controller class and method exist
                         if (class_exists($controller) && method_exists($controller, $action)) {
                             //check for middlewares to execute
-                            Middleware::check($options['handler']);
+                            Middleware::check($route);
 
                             //execute controller with action and parameter
                             call_user_func_array([new $controller(), $action], array_values($params));

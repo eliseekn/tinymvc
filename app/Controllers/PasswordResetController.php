@@ -1,0 +1,86 @@
+<?php
+
+namespace App\Controllers;
+
+use Framework\Http\Request;
+use Framework\Routing\View;
+use Framework\Http\Redirect;
+use Framework\Http\Response;
+use Framework\Support\Email;
+use App\Database\Models\UsersModel;
+use App\Database\Models\PasswordResetModel;
+
+class PasswordResetController
+{
+	/**
+	 * send reset password email notification
+	 *
+	 * @return void
+	 */
+	public function notify(): void
+	{
+		$token = random_string(20, true);
+		$expires = strtotime('+1 hour', strtotime(date('Y-m-d H:i:s')));
+
+		if (Email::to(Request::getField('email'))
+			->from(EMAIL_FROM)
+			->replyTo(EMAIL_REPLY_TO)
+			->subject('Password reset notification')
+			->message('
+				<p>You are receiving this email because we received a password reset request for your account. Click the button below to reset your password:</p>
+				<p><a href="' . absolute_url('/password/reset/' . $token) . '">' . absolute_url('/password/reset/' . $token) . '</a></p>
+				<p>If you did not request a password reset, no further action is required.</p>
+			')
+			->asHtml()
+			->send()
+		) {
+			PasswordResetModel::insert([
+				'email' => Request::getField('email'),
+				'token' => $token,
+				'expires' => date('Y-m-d H:i:s', $expires)
+			]);
+
+			Redirect::back()->withSuccess('Your password reset link have been sumbitted successfuly. You can check your email box now.');
+		} else {
+			Redirect::back()->withError('Failed to send paswword reset link to your email address.');
+		}
+	}
+	
+	/**
+	 * reset
+	 *
+	 * @param  string $email
+	 * @param  string $token
+	 * @return void
+	 */
+	public function reset(string $email, string $token): void
+	{
+		if (!PasswordResetModel::exists($email, $token)) {
+			Response::send([], '', 403);
+		}
+
+		if (PasswordResetModel::findWhere('email', $email)->expires < date('Y-m-d H:i:s')) {
+			Response::send([], '', 403);
+		}
+
+		PasswordResetModel::deleteWhere('email', $email);
+		
+		View::render('password/reset', [
+			'email' => $email
+		]);
+	}
+	
+	/**
+	 * set new user password
+	 *
+	 * @return void
+	 */
+	public function new(): void
+	{
+		UsersModel::update(UsersModel::findWhere('email', Request::getField('email'))->id, [
+			'password' => hash_string(Request::getField('password'))
+		]);
+		
+        Redirect::back()->withSuccess('Your password has been resetted successfully.');
+	}
+}

@@ -18,5 +18,6 @@ use Framework\Routing\Middleware;
 
 Middleware::setName('CsrfProtection', 'csrf');
 Middleware::setName('SanitizeFields', 'sanitize');
-Middleware::setName('AdminSession', 'admin');
-Middleware::setName('Authentication', 'auth');
+Middleware::setName('AdminPolicy', 'admin');
+Middleware::setName('RememberUser', 'remember');
+Middleware::setName('AuthenticationPolicy', 'auth');

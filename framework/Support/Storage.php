@@ -35,8 +35,8 @@ class Storage
     /**
      * create new file or write into
      *
-     * @param  string $filename name of file
-     * @param  mixed $content content of file
+     * @param  string $filename
+     * @param  mixed $content
      * @param  bool $append write content at the end of the file
      * @return bool
      */
@@ -50,8 +50,8 @@ class Storage
     /**
      * copy file
      *
-     * @param  string $filename name of file
-     * @param  string $destination destination path of file
+     * @param  string $filename
+     * @param  string $destination
      * @return bool
      */
     public static function copyFile(string $filename, string $destination): bool
@@ -62,8 +62,8 @@ class Storage
     /**
      * rename file
      *
-     * @param  string $oldname old name of file
-     * @param  string $newname new name of file
+     * @param  string $oldname
+     * @param  string $newname
      * @return bool
      */
     public static function renameFile(string $oldname, string $newname): bool
@@ -74,8 +74,8 @@ class Storage
     /**
      * move file
      *
-     * @param  string $filename name of file
-     * @param  string $destination destination path of file
+     * @param  string $filename
+     * @param  string $destination
      * @return bool
      */
     public static function moveFile(string $filename, string $destination): bool
@@ -86,7 +86,7 @@ class Storage
     /**
      * get file content
      *
-     * @param  string $filename name of file
+     * @param  string $filename
      * @return string
      */
     public static function readFile(string $filename): string
@@ -98,7 +98,7 @@ class Storage
     /**
      * check if file exists
      *
-     * @param  string $filename name of file
+     * @param  string $filename
      * @return bool
      */
     public static function isFile(string $filename): bool
@@ -162,7 +162,7 @@ class Storage
     /**
      * get list of files
      *
-     * @param  string $pathname name of path
+     * @param  string $pathname
      * @return array
      */
     public static function getFiles(string $pathname): array
@@ -182,7 +182,7 @@ class Storage
     /**
      * get list of folders
      *
-     * @param  mixed $pathname name of path
+     * @param  mixed $pathname
      * @return array
      */
     public static function getFolders(string $pathname): array

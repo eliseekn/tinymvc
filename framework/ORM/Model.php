@@ -37,7 +37,7 @@ class Model
      */
     public static function find(int $id)
     {
-        return self::findWhere('id', '=', $id);
+        return self::findWhere('id', $id);
     }
     
     /**
@@ -46,12 +46,12 @@ class Model
      * @param  array $order
      * @return mixed
      */
-    public static function findFrist(array $order = ['id', 'DESC'])
+    public static function findFirst(array $order = ['id', 'DESC'])
     {
         return Query::DB()
             ->select('*')
             ->from(static::$table)
-            ->whereEqual('id', Query::DB()->lastInsertedId())
+            ->whereEquals('id', Query::DB()->lastInsertedId())
             ->orderBy($order[0], $order[1])
             ->fetchSingle();
     }
@@ -60,16 +60,15 @@ class Model
      * fetch single row
      *
      * @param  string $column
-     * @param  string $operator (<, =, >, IN or NOT IN)
      * @param  string $value
      * @return mixed
      */
-    public static function findWhere(string $column, string $operator, string $value)
+    public static function findWhere(string $column, string $value)
     {
         return Query::DB()
             ->select('*')
             ->from(static::$table)
-            ->whereEqual($column, $value)
+            ->whereEquals($column, $value)
             ->fetchSingle();
     }
 
@@ -104,7 +103,7 @@ class Model
         return Query::DB()
             ->select('*')
             ->from(static::$table)
-            ->whereEqual($column, $value)
+            ->whereEquals($column, $value)
             ->orderBy($order[0], $order[1])
             ->fetchAll();
     }
@@ -159,7 +158,7 @@ class Model
         return Query::DB()
             ->select('*')
             ->from(static::$table)
-            ->whereEqual($column, $value)
+            ->whereEquals($column, $value)
             ->orderBy($order_by[0], $order_by[1])
             ->limit($limit, $offset)
             ->fetchAll();
@@ -194,7 +193,7 @@ class Model
     {
         Query::DB()
             ->deleteFrom(static::$table)
-            ->whereEqual($column, $value)
+            ->whereEquals($column, $value)
             ->executeQuery();
     }
     
@@ -206,7 +205,7 @@ class Model
      */
     public static function delete(int $id): void
     {
-        self::deleteWhere('id', '=', $id);
+        self::deleteWhere('id', $id);
     }
     
     /**
@@ -222,7 +221,7 @@ class Model
         Query::DB()
             ->update(static::$table)
             ->set($data)
-            ->whereEqual($column, $value)
+            ->whereEquals($column, $value)
             ->executeQuery();
     }
     
@@ -233,7 +232,7 @@ class Model
      * @param  array $data
      * @return void
      */
-    public function update(int $id, array $data): void
+    public static function update(int $id, array $data): void
     {
         self::updateWhere('id', $id, $data);
     }
@@ -244,7 +243,7 @@ class Model
      * @param  array $data data to insert
      * @return void
      */
-    public function insert(array $data): void
+    public static function insert(array $data): void
     {
         Query::DB()
             ->insert(static::$table, $data)
@@ -296,7 +295,7 @@ class Model
         $total_items = Query::DB()
             ->select('*')
             ->from(static::$table)
-            ->whereEqual($column, $value)
+            ->whereEquals($column, $value)
             ->count();
 
         $pagination = generate_pagination($page, $total_items, $items_per_pages);

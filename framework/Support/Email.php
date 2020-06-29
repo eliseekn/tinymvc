@@ -101,7 +101,7 @@ class Email
     /**
      * set to addresses
      *
-     * @param  mixed $to
+     * @param  string $to array of strings
      * @return mixed
      */
     public static function to(string ...$to)
@@ -117,7 +117,7 @@ class Email
     /**
      * set from address
      *
-     * @param  mixed $from
+     * @param  string $from
      * @return mixed
      */
     public function from(string $from)
@@ -129,7 +129,7 @@ class Email
     /**
      * set reply-to address
      *
-     * @param  mixed $reply_to
+     * @param  string $reply_to
      * @return mixed
      */
     public function replyTo(string $reply_to)
@@ -141,7 +141,7 @@ class Email
     /**
      * set email subject
      *
-     * @param  mixed $subject
+     * @param  string $subject
      * @return mixed
      */
     public function subject(string $subject)
@@ -153,7 +153,7 @@ class Email
     /**
      * set message content
      *
-     * @param  mixed $from
+     * @param  string $from
      * @return mixed
      */
     public function message(string $message)
@@ -165,7 +165,7 @@ class Email
     /**
      * add cc field
      *
-     * @param  mixed $cc Cc addresses
+     * @param  string $cc array of strings
      * @return mixed
      */
     public function addCC(string ...$cc)
@@ -181,7 +181,7 @@ class Email
     /**
      * add bcc field
      *
-     * @param  mixed $bcc Bcc addresses
+     * @param  string $bcc array of strings
      * @return mixed
      */
     public function addBCC(string ...$bcc)

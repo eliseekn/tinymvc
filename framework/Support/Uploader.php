@@ -93,6 +93,26 @@ class Uploader
     {
         return $this->file['size'] ?? 0;
     }
+        
+    /**
+     * convert file size from byte to KB or MB
+     *
+     * @return int
+     */
+    public function getFileSizeToString(): string
+    {
+        if ($this->getFileSize() === 0) {
+            return '';
+        }
+
+        $bytes = $this->getFileSize() / 1024;
+
+		if ($bytes > 1024) {
+			return number_format($bytes/1024, 1) . ' MB';
+		} else {
+			return number_format($bytes, 1) . ' KB';
+		}
+    }
 
     /**
      * move uploaded file

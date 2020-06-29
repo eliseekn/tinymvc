@@ -42,11 +42,11 @@ class Route
      */
     public static function add(string $route, array $options): void
     {
-        if (!empty($options)) {
+        if (!empty($route) && !empty($options)) {
             self::$routes[$route] = $options;
 
-            if (isset($options['handler']) && isset($options['middlewares'])) {
-                Middleware::add($options['handler'], $options['middlewares']);
+            if (isset($options['middlewares'])) {
+                Middleware::add($route, $options['middlewares']);
             }
         }
     }
@@ -151,7 +151,7 @@ class Route
      */
     public static function any(string $route, array $options): void
     {
-        $options = array_merge(['method' => 'GET|HEAD|POST|DELETE|OPTION|PATCH'], $options);
+        $options = array_merge(['method' => 'GET|HEAD|POST|PUT|DELETE|OPTION|PATCH'], $options);
         self::add($route, $options);
     }
 

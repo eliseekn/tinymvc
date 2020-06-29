@@ -144,6 +144,16 @@ class Pager
     }
 
     /**
+     * generate first page url
+     *
+     * @return string
+     */
+    public function firstPageUrl(): string
+    {
+        return absolute_url(Request::getURI() . '?page=1');
+    }
+
+    /**
      * generate previous page url
      *
      * @return string
@@ -161,6 +171,16 @@ class Pager
     public function nextPageUrl(): string
     {
         return absolute_url(Request::getURI() . '?page=' . $this->nextPage());
+    }
+
+    /**
+     * generate last page url
+     *
+     * @return string
+     */
+    public function lastPageUrl(): string
+    {
+        return absolute_url(Request::getURI() . '?page=' . $this->totalPages());
     }
     
     /**

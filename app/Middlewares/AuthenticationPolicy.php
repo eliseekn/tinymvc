@@ -6,11 +6,11 @@ use Framework\Http\Redirect;
 use Framework\Support\Authenticate;
 
 /**
- * Authentication
+ * AuthenticationPolicy
  * 
- * Check if user is connected
+ * Check if user is authenticated
  */
-class Authentication
+class AuthenticationPolicy
 {    
     /**
      * handle function
@@ -19,8 +19,8 @@ class Authentication
      */
     public static function handle()
     {
-        if (!Authenticate::check()) {
-            Redirect::toRoute('login')->withError('You must be authenticated first.');
+        if (Authenticate::check()) {
+            Redirect::toUrl('/admin')->only();
         }
     }
 }

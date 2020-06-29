@@ -37,7 +37,7 @@ class Authenticate
      */
     public static function attempt(string $credential = 'email'): bool
     {
-        $user = UsersModel::findWhere($credential, '=', Request::getField($credential));
+        $user = UsersModel::findWhere($credential, Request::getField($credential));
 
         if (!isset($user->password)) {
             self::$attempts++;
@@ -47,12 +47,13 @@ class Authenticate
         if (!compare_hash(Request::getField('password'), $user->password)) {
             self::$attempts++;
             return false;
-        } 
+        }
         
         create_session('user', $user);
             
         if (!empty(Request::getField('remember'))) {
-            create_cookie('user', Request::getField($credential));
+            $credential = Encryption::encrypt(Request::getField($credential));
+            create_cookie('user', $credential);
         }
 
         //reset attempts
@@ -62,13 +63,23 @@ class Authenticate
     }
 
     /**
-     * check is user is authenticated
+     * check is user session
      *
      * @return bool
      */
     public static function check(): bool
     {
         return session_has('user');
+    }
+
+    /**
+     * check is user cookie
+     *
+     * @return bool
+     */
+    public static function checkRemember(): bool
+    {
+        return cookie_has('user');
     }
     
     /**

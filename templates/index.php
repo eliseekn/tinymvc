@@ -6,7 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="TinyMVC is a PHP framework based on MVC architecture">
-    <title>TinyMVC - Just a PHP framework based on MVC architecture</title>
+
+    <title>TinyMVC | Just a PHP framework based on MVC architecture</title>
 
     <style>
         * {

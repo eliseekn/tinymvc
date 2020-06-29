@@ -33,7 +33,7 @@ class Query
 	 *
 	 * @var string
 	 */
-	protected static $query;
+	protected static $query = '';
 		
 	/**
 	 * sql query arguments
@@ -84,9 +84,12 @@ class Query
 	 *
 	 * @return string
 	 */
-	public function getQuery(): string
+	public function getQuery(): array
 	{
-		return self::$query;
+		return [
+			self::$query,
+			self::$args
+		];
 	}
 
 	/**
@@ -155,7 +158,7 @@ class Query
 	 * @param  string $value
 	 * @return mixed
 	 */
-	public function whereEqual(string $column, string $value)
+	public function whereEquals(string $column, string $value)
 	{
 		return $this->where($column, '=', $value);
 	}
@@ -492,6 +495,6 @@ class Query
 	 */
 	public function lastInsertedId(): int
 	{
-		return $this->db->lastInsertId();
+		return self::$db->lastInsertId();
 	}
 }

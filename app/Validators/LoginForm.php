@@ -4,7 +4,7 @@ namespace App\Validators;
 
 use Framework\Support\Validation;
 
-class LoginFields extends Validation
+class LoginForm extends Validation
 {
     /**
      * rules

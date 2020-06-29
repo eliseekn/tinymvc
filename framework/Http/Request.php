@@ -24,7 +24,7 @@ class Request
     /**
      * retrieves request headers
      *
-     * @param  string $field name of $_SERVER array field
+     * @param  string $field
      * @return mixed returns field value or empty string
      */
     public static function getHeader(string $field = '')
@@ -35,7 +35,7 @@ class Request
     /**
      * retrieves request get method
      *
-     * @param  string $field name of $_GET array field
+     * @param  string $field
      * @return mixed returns field value or array or empty string
      */
     public static function getQuery(string $field = '')
@@ -46,7 +46,7 @@ class Request
     /**
      * retrieves request post method
      *
-     * @param  string $field name of $_POST array field
+     * @param  string $field
      * @return mixed returns field value or array or empty string
      */
     public static function getField(string $field = '')
@@ -67,7 +67,7 @@ class Request
     /**
      * retrieves $_FILES request
      *
-     * @param  string $field name of $_FILES array field
+     * @param  string $field
      * @return array returns array of uploader class instance
      */
     public static function getFile(string $field): array

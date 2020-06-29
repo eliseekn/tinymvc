@@ -12,9 +12,9 @@
 
 namespace Framework\Support;
 
-use Framework\Http\Redirect;
 use GUMP;
 use Framework\Http\Request;
+use Framework\Http\Redirect;
 
 /**
  * Validation
@@ -40,14 +40,25 @@ class Validation
     /**
      * validate fields 
      *
+     * @param  array|null $reditcet
      * @return void
      */
-    public static function validate(): void
+    public static function validate(?array $redirect = null): void
     {
         $error_messages = GUMP::is_valid(Request::getField(), static::$rules, static::$error_messages);
 
         if (is_array($error_messages)) {
-            Redirect::back()->withError($error_messages);
+            if (!is_null($redirect)) {
+                foreach ($redirect as $key => $value) {
+                    switch ($value) {
+                        case 'back':
+                            Redirect::back()->withError($error_messages);
+                            break;
+                        default:
+                            Redirect::toUrl($value)->withError($error_messages);
+                    }
+                }
+            }
         }
     }
 }

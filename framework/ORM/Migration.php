@@ -113,6 +113,56 @@ class Migration
     }
 
     /**
+     * add column of type big integer
+     *
+     * @param  string $name name of column
+     * @param  int $length value length
+     * @param  bool $null null or not
+     * @param  bool $unique set column as unique
+     * @param  string|null $default default column value
+     * @return mixed
+     */
+    public function addBigInt(
+        string $name, 
+        int $length = 20, 
+        bool $null = false, 
+        bool $unique = false, 
+        ?int $default = null
+    ) {
+        self::$query .= "$name BIGINT($length)";
+        self::$query .= $null ? ' NULL' : ' NOT NULL';
+        self::$query .= $unique ? ' UNIQUE' : '';
+        self::$query .= is_null($default) ? '' : " DEFAULT $default";
+        self::$query .= ', ';
+
+        return $this;
+    }
+
+    /**
+     * add column of type char
+     *
+     * @param  string $name name of column
+     * @param  bool $null null or not
+     * @param  bool $unique set column as unique
+     * @param  string $default default column value
+     * @return mixed
+     */
+    public function addChar(
+        string $name, 
+        bool $null = false, 
+        bool $unique = false, 
+        ?string $default = null
+    ) {
+        self::$query .= "$name CHAR(1)";
+        self::$query .= $null ? ' NULL' : ' NOT NULL';
+        self::$query .= $unique ? ' UNIQUE' : '';
+        self::$query .= is_null($default) ? '' : " DEFAULT '$default'";
+        self::$query .= ', ';
+
+        return $this;
+    }
+
+    /**
      * add column of type string
      *
      * @param  string $name name of column
@@ -184,6 +234,21 @@ class Migration
         self::$query .= "$name TIMESTAMP";
         self::$query .= $null ? ' NULL' : ' NOT NULL';
         self::$query .= empty($default) ? '' : " DEFAULT $default";
+        self::$query .= ', ';
+
+        return $this;
+    }
+
+    /**
+     * add column of type boolean
+     *
+     * @param  string $name name of column
+     * @param  bool $null null or not
+     * @return mixed
+     */
+    public function addBoolean(string $name, bool $null = false) {
+        self::$query .= "$name TINYINT(1)";
+        self::$query .= $null ? ' NULL' : ' NOT NULL';
         self::$query .= ', ';
 
         return $this;
