@@ -5,18 +5,46 @@
 
 <?php $this->start('page_content') ?>
 
-<?php if (session_has('flash_messages')) { ?>
+<?php
+if (session_has('flash_messages')) :
+    $flash_messages = get_flash_messages('flash_messages');
 
-<div class="alert alert-success alert-dismissible show" role="alert">
+    if (isset($flash_messages['success'])) :
+?>
+    <div class="alert alert-success alert-dismissible show" role="alert">
 
-    <?php foreach (get_flash_messages('flash_messages') as $flash_message) : echo $flash_message . '<br>'; endforeach; ?>
+        <?php foreach ($flash_messages as $flash_message) : echo $flash_message . '<br>'; endforeach; ?>
 
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
 
-<?php } ?>
+<?php else : ?>
+
+    <div class="alert alert-danger alert-dismissible show" role="alert">
+
+        <?php
+        foreach ($flash_messages as $flash_message) :
+            if (is_array($flash_message)) :
+                foreach ($flash_message as $error_message) :
+                    echo $error_message . '<br>';
+                endforeach;
+            else :
+                echo $flash_message . '<br>';
+            endif;
+        endforeach
+        ?>
+
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+<?php
+    endif;
+endif
+?>
 
 <div class="card">
     <div class="card-header">

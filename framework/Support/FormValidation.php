@@ -17,11 +17,11 @@ use Framework\Http\Request;
 use Framework\Http\Redirect;
 
 /**
- * Validation
+ * FormValidation
  * 
  * Form fields validation
  */
-class Validation
+class FormValidation
 {
     /**
      * rules

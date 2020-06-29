@@ -18,21 +18,21 @@ if (!function_exists('create_cookie')) {
 	/**
 	 * create cookie and set value
 	 *
-	 * @param  string $name name of cookie
-	 * @param  string $value cookie value content
-	 * @param  int $expire expire time in seconds (default 1 hour)
+	 * @param  string $name
+	 * @param  string $value
+	 * @param  int $expires in seconds (default 1 hour)
 	 * @param  string $domain
-	 * @param  bool $secure secure cookie
+	 * @param  bool $secure
 	 * @return bool
 	 */
 	function create_cookie(
 		string $name,
 		string $value,
-		int $expire = 3600,
+		int $expires = 3600,
 		string $domain = '',
 		bool $secure = false
 	): bool {
-		return setcookie($name, $value, time() + $expire, '/', $domain, $secure, true);
+		return setcookie($name, $value, time() + $expires, '/', $domain, $secure, true);
 	}
 }
 
@@ -40,7 +40,7 @@ if (!function_exists('get_cookie')) {
 	/**
 	 * return cookie value
 	 *
-	 * @param  string $name name of cookie
+	 * @param  string $name
 	 * @return string
 	 */
 	function get_cookie(string $name): string
@@ -53,7 +53,7 @@ if (!function_exists('cookie_has')) {
 	/**
 	 * check if cookie exists
 	 *
-	 * @param  string $name name of cookie
+	 * @param  string $name
 	 * @return bool
 	 */
 	function cookie_has(string $name): bool
@@ -66,7 +66,7 @@ if (!function_exists('delete_cookie')) {
 	/**
 	 * delete cookie by name
 	 *
-	 * @param  string $name name of cookie
+	 * @param  string $name
 	 * @return void
 	 */
 	function delete_cookie(string $name): bool

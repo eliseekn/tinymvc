@@ -10,8 +10,8 @@
  * @link https://github.com/eliseekn/TinyMVC
  */
 
-use Framework\Routing\Route;
 use Framework\Routing\View;
+use Framework\Routing\Route;
 
 /**
  * Set routes paths

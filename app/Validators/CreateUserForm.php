@@ -4,7 +4,7 @@ namespace App\Validators;
 
 use Framework\Support\FormValidation;
 
-class LoginForm extends FormValidation
+class CreateUserForm extends FormValidation
 {
     /**
      * rules
@@ -12,6 +12,7 @@ class LoginForm extends FormValidation
      * @var array
      */
     protected static $rules = [
+        'name' => 'required',
         'email' => 'required|valid_email',
         'password' => 'required'
     ];

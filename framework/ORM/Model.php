@@ -39,21 +39,17 @@ class Model
     {
         return self::findWhere('id', $id);
     }
-    
+
     /**
-     * find first row from order
+     * check if row exists
      *
-     * @param  array $order
-     * @return mixed
+     * @param  string $column
+     * @param  string $value
+     * @return bool
      */
-    public static function findFirst(array $order = ['id', 'DESC'])
+    public static function exists(string $column, string $value): bool
     {
-        return Query::DB()
-            ->select('*')
-            ->from(static::$table)
-            ->whereEquals('id', Query::DB()->lastInsertedId())
-            ->orderBy($order[0], $order[1])
-            ->fetchSingle();
+        return isset(self::findWhere($column, $value)->$column);
     }
     
     /**

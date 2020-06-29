@@ -40,3 +40,6 @@ define('SESSION_LIFETIME', 3600);
 define('ERRORS_PAGE', [
     '404' => ''
 ]);
+
+//encryption key
+define('ENC_KEY', 'BIu5sSkxjVzqiMlHFcX42WpEK3ahUyLG9DQNogZJnmYwArT10R');

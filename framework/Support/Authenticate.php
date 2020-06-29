@@ -37,12 +37,12 @@ class Authenticate
      */
     public static function attempt(string $credential = 'email'): bool
     {
-        $user = UsersModel::findWhere($credential, Request::getField($credential));
-
-        if (!isset($user->password)) {
+        if (!UsersModel::exists($credential, Request::getField($credential))) {
             self::$attempts++;
             return false;
         }
+
+        $user = UsersModel::findWhere($credential, Request::getField($credential));
 
         if (!compare_hash(Request::getField('password'), $user->password)) {
             self::$attempts++;
@@ -53,7 +53,7 @@ class Authenticate
             
         if (!empty(Request::getField('remember'))) {
             $credential = Encryption::encrypt(Request::getField($credential));
-            create_cookie('user', $credential);
+            create_cookie('user', $credential, 3600 * 24 * 30);
         }
 
         //reset attempts

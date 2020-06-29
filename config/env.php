@@ -17,9 +17,6 @@
 //remove PHP maximum execution time 
 set_time_limit(0);
 
-//encryption/decryption key
-define('ENC_KEY', 'BIu5sSkxjVzqiMlHFcX42WpEK3ahUyLG9DQNogZJnmYwArT10R');
-
 //exceptions handler
 if (DISPLAY_ERRORS === true) {
     ini_set('display_errors', 1);

@@ -29,6 +29,10 @@ class Response
      */
     public static function send(array $headers, $body, int $code = 200): void
     {
+        if (is_null($body)) {
+            return;
+        }
+        
         //send response status code
         http_response_code($code);
 
@@ -39,13 +43,11 @@ class Response
             }
         }
 
-        //send response body
-        if (!is_null($body)) {
-            header('Content-Length: ' . strlen($body));
-            echo $body;
-        }
+        //set content length header
+        header('Content-Length: ' . strlen($body));
 
-        exit();
+        //send response body
+        exit($body);
     }
 
     /**
@@ -58,7 +60,7 @@ class Response
      */
     public static function sendJson(array $headers, array $body, int $code = 200): void
     {
-        if (!is_array($body) || !empty($body)) {
+        if (empty($body)) {
             return;
         }
 

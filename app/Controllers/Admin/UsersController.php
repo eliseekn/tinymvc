@@ -6,6 +6,8 @@ use Framework\Http\Request;
 use Framework\Routing\View;
 use Framework\Http\Redirect;
 use App\Database\Models\UsersModel;
+use App\Validators\CreateUserForm;
+use App\Validators\UpdateUserForm;
 
 class UsersController
 {
@@ -17,14 +19,12 @@ class UsersController
 	 */
 	public function edit(int $id): void
 	{
-		$user = UsersModel::find($id);
-
-		if (empty($user)) {
+		if (!UsersModel::exists('id', $id)) {
 			Redirect::back()->withError('Failed to get user infos. This user does not exists in database.');
 		}
 
 		View::render('admin/users/edit', [
-			'user' => $user
+			'user' => UsersModel::find($id)
 		]);
 	}
 
@@ -35,7 +35,11 @@ class UsersController
 	 */
 	public function create(): void
 	{
-		if (!empty(UsersModel::findWhere('email', Request::getField('email')))) {
+		CreateUserForm::validate([
+			'redirect' => 'back'
+		]);
+
+		if (UsersModel::exists('email', Request::getField('email'))) {
 			Redirect::back()->withError('Failed to create user. This user already exists in database.');
 		}
 
@@ -56,7 +60,11 @@ class UsersController
 	 */
 	public function update(int $id): void
 	{
-		if (empty(UsersModel::find($id))) {
+		UpdateUserForm::validate([
+			'redirect' => 'back'
+		]);
+
+		if (!UsersModel::exists('id', $id)) {
 			Redirect::back()->withError('Failed to update user. This user does not exists in database.');
 		}
 
@@ -71,6 +79,8 @@ class UsersController
 			$data['password'] = hash_string(Request::getField('password'));
 		}
 
+		//dump_vars($data);
+
 		UsersModel::update($id, $data);
         Redirect::back()->withSuccess('The user has been updated successfully.');
     }
@@ -83,7 +93,7 @@ class UsersController
 	 */
 	public function delete(int $id): void
 	{
-		if (empty(UsersModel::find($id))) {
+		if (!UsersModel::exists('id', $id)) {
 			Redirect::back()->withError('Failed to delete user. This user does not exists in database.');
 		}
 

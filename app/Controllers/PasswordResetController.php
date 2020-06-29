@@ -7,6 +7,7 @@ use Framework\Routing\View;
 use Framework\Http\Redirect;
 use Framework\Http\Response;
 use Framework\Support\Email;
+use App\Validators\LoginForm;
 use App\Database\Models\UsersModel;
 use App\Database\Models\PasswordResetModel;
 
@@ -53,7 +54,7 @@ class PasswordResetController
 	 */
 	public function reset(): void
 	{
-		/* if (!PasswordResetModel::exists(Request::getQuery('email'), Request::getQuery('token'))) {
+		if (!PasswordResetModel::exists(Request::getQuery('email'), Request::getQuery('token'))) {
 			Response::send([], 'This password reset link is invalid. This user do not exists in database.', 403);
 		}
 
@@ -61,7 +62,7 @@ class PasswordResetController
 			Response::send([], 'This password reset link is expired. Please retrieves a new one.', 403);
 		}
 
-		PasswordResetModel::deleteWhere('email', Request::getQuery('email')); */
+		PasswordResetModel::deleteWhere('email', Request::getQuery('email'));
 		
 		View::render('password/new', [
 			'email' => Request::getQuery('email')
@@ -75,6 +76,10 @@ class PasswordResetController
 	 */
 	public function new(): void
 	{
+		LoginForm::validate([
+			'redirect' => 'back'
+		]);
+
 		UsersModel::update(UsersModel::findWhere('email', Request::getField('email'))->id, [
 			'password' => hash_string(Request::getField('password'))
 		]);
