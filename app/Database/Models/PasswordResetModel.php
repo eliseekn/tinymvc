@@ -15,19 +15,19 @@ class PasswordResetModel extends Model
     protected static $table = 'password_reset';
     
     /**
-     * check if password reset actin exists
+     * check if password reset is valid
      *
      * @param  string $email
      * @param  string $token
-     * @return bool
+     * @return mixed
      */
-    public static function exists(string $email, string $token): bool
+    public static function valid(string $email, string $token)
     {
-        return empty(Query::DB()
+        return Query::DB()
             ->select('*')
             ->from(static::$table)
             ->whereEquals('email', $email)
             ->and('token', '=', $token)
-            ->fetchSingle());
+            ->fetchSingle();
     }
 }

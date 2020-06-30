@@ -2,11 +2,9 @@
 
 namespace App\Middlewares;
 
-use App\Database\Models\UsersModel;
-use Framework\Http\Redirect;
-use Framework\Http\Response;
-use Framework\Support\Authenticate;
 use Framework\Support\Encryption;
+use App\Database\Models\UsersModel;
+use Framework\Support\Authenticate;
 
 /**
  * RememberUser

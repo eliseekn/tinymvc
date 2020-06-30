@@ -3,10 +3,7 @@
 namespace App\Controllers\Admin;
 
 use Framework\Routing\View;
-use Framework\Http\Redirect;
-use App\Validators\LoginForm;
 use App\Database\Models\UsersModel;
-use Framework\Support\Authenticate;
 
 class AdminController
 {

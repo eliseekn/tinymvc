@@ -54,8 +54,8 @@ class PasswordResetController
 	 */
 	public function reset(): void
 	{
-		if (!PasswordResetModel::exists(Request::getQuery('email'), Request::getQuery('token'))) {
-			Response::send([], 'This password reset link is invalid. This user do not exists in database.', 403);
+		if (PasswordResetModel::valid(Request::getQuery('email'), Request::getQuery('token')) === false) {
+			Response::send([], 'This password reset link is invalid.', 403);
 		}
 
 		if (PasswordResetModel::findWhere('email', Request::getQuery('email'))->expires < date('Y-m-d H:i:s')) {

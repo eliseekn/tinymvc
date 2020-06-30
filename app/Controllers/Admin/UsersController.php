@@ -5,9 +5,9 @@ namespace App\Controllers\Admin;
 use Framework\Http\Request;
 use Framework\Routing\View;
 use Framework\Http\Redirect;
-use App\Database\Models\UsersModel;
 use App\Validators\CreateUserForm;
 use App\Validators\UpdateUserForm;
+use App\Database\Models\UsersModel;
 
 class UsersController
 {

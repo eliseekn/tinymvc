@@ -24,13 +24,13 @@ define('DB_CHARSET', 'utf8');
 define('DB_HOST', 'localhost');
 
 //database username 
-define('DB_USERNAME', 'root');
+define('DB_USERNAME', '');
 
 //database password 
-define('DB_PASSWORD', 'eliseekn');
+define('DB_PASSWORD', '');
 
 //database name 
-define('DB_NAME', 'blog');
+define('DB_NAME', '');
 
 //database tables prefix
 define('DB_PREFIX', '');

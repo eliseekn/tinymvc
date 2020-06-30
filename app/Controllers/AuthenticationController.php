@@ -2,10 +2,10 @@
 
 namespace App\Controllers;
 
+use Framework\Http\Request;
 use Framework\Http\Redirect;
 use App\Validators\LoginForm;
 use App\Validators\RegisterForm;
-use Framework\Http\Request;
 use Framework\Support\Authenticate;
 
 /**
