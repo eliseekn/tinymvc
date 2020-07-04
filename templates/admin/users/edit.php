@@ -100,7 +100,7 @@ endif
         </div>
 
         <div class="card-footer">
-            <input type="submit" class="btn btn-primary mr-2" value="Update user">
+            <button type="submit" class="btn btn-primary mr-2">Update user</button>
             <a href="<?= absolute_url('/admin/users') ?>" class="btn btn-secondary">Cancel</a>
         </div>
     </form>

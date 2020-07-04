@@ -24,7 +24,7 @@ class Uploader
      *
      * @var array
      */
-    public $file = [];
+    private $file = [];
     
     /**
      * filename destination path
@@ -32,6 +32,13 @@ class Uploader
      * @var string
      */
     public $filepath = '';
+
+    /**
+     * allowed file extensions
+     * 
+     * @var array
+     */
+    public $allowed_extensions = [];
     
     /**
      * __construct
@@ -39,9 +46,10 @@ class Uploader
      * @param  array $file
      * @return void
      */
-    public function __construct(array $file)
+    public function __construct(array $file, array $allowed_extensions)
     {
         $this->file = $file;
+        $this->allowed_extensions = $allowed_extensions;
     }
     
     /**
@@ -81,7 +89,31 @@ class Uploader
      */
     public function getFileExtension(): string
     {
-        return empty($this->getOriginalFilename()) ? '' : explode('.', $this->getOriginalFilename())[1];
+        return empty($this->getOriginalFilename()) ? '' : strpos('.', $this->getOriginalFilename()) > 0 ? explode('.', $this->getOriginalFilename())[1] : '';
+    }
+        
+    /**
+     * check if file extension is allowed
+     *
+     * @return bool
+     */
+    public function isAllowed(): bool
+    {
+        if (empty($this->allowed_extensions)) {
+            return true;
+        }
+
+        return in_array(strtolower($this->getFileExtension()), $this->allowed_extensions);
+    }
+        
+    /**
+     * check if file is uploaded
+     *
+     * @return bool
+     */
+    public function isUploaded(): bool
+    {
+        return is_uploaded_file($this->getTempFilename());
     }
         
     /**

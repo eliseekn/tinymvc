@@ -24,6 +24,10 @@ Route::get('/', [
     }
 ]);
 
+Route::get('/home', [
+    'handler' => 'HomeController@index'
+]);
+
 //authentication routes
 Route::get('/login', [
     'handler' => function() {
@@ -69,9 +73,7 @@ Route::get('/admin', [
 ]);
 
 Route::get('/admin/users/add', [
-    'handler' => function() {
-        View::render('admin/users/add');
-    },
+    'handler' => 'Admin\UsersController@add',
     'middlewares' => [
         'admin'
     ]
@@ -109,13 +111,21 @@ Route::post('/admin/users/update/{id:num}', [
     ]
 ]);
 
-Route::get('/admin/users/delete/{id:num}', [
+Route::get('/admin/users/delete/{id:num}?', [
     'handler' => 'Admin\UsersController@delete',
     'middlewares' => [
         'admin'
     ]
 ]);
 
+Route::post('/admin/users/delete/', [
+    'handler' => 'Admin\UsersController@delete',
+    'middlewares' => [
+        'admin'
+    ]
+]);
+
+//password forgot routes
 Route::get('/password/forgot', [
     'handler' => function() {
         View::render('password/reset');

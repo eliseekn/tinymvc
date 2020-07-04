@@ -8,9 +8,21 @@ use Framework\Http\Redirect;
 use App\Validators\CreateUserForm;
 use App\Validators\UpdateUserForm;
 use App\Database\Models\UsersModel;
+use Framework\Http\Response;
 
 class UsersController
 {
+
+	/**
+	 * display add user page
+	 * 
+	 * @return void
+	 */
+	public function add(): void
+	{
+		View::render('admin/users/add');
+	}
+	
 	/**
 	 * display edit user page
 	 * 
@@ -46,7 +58,8 @@ class UsersController
 	    UsersModel::insert([
             'name' => Request::getField('name'),
             'email' => Request::getField('email'),
-            'password' => hash_string(Request::getField('password'))
+            'password' => hash_string(Request::getField('password')),
+			'role' => Request::getField('role')
         ]);
 
         Redirect::back()->withSuccess('The user has been created successfully.');
@@ -68,10 +81,6 @@ class UsersController
 			Redirect::back()->withError('Failed to update user. This user does not exists in database.');
 		}
 
-		if (UsersModel::exists('email', Request::getField('email'))) {
-			Redirect::back()->withError('Failed to update user. This email address is already used by another user.');
-		}
-
 		$data = [
             'name' => Request::getField('name'),
             'email' => Request::getField('email'),
@@ -90,16 +99,27 @@ class UsersController
 	/**
 	 * delete user
 	 *
-     * @param  int $id
+     * @param  int|null $id
 	 * @return void
 	 */
-	public function delete(int $id): void
+	public function delete(?int $id = null): void
 	{
-		if (!UsersModel::exists('id', $id)) {
-			Redirect::back()->withError('Failed to delete user. This user does not exists in database.');
-		}
+		if (!is_null($id)) {
+			if (!UsersModel::exists('id', $id)) {
+				Redirect::back()->withError('Failed to delete user. This user does not exists in database.');
+			}
+	
+			UsersModel::delete($id);
+			Redirect::back()->withSuccess('The user has been deleted successfully.');
+		} else {
+			$users_id = json_decode(Request::getRawData('items'), true);
+			$users_id = $users_id['items'];
 
-        UsersModel::delete($id);
-        Redirect::back()->withSuccess('The user has been deleted successfully.');
+			foreach ($users_id as $id) {
+				UsersModel::delete($id);
+			}
+			
+			create_flash_message('success', 'The user has been deleted successfully.');
+		}
     }
 }

@@ -68,9 +68,28 @@ class Request
      * retrieves $_FILES request
      *
      * @param  string $field
+     * @param  array $allowed_extensions
+     * @return mixed
+     */
+    public static function getFile(string $field, array $allowed_extensions = []): Uploader
+    {
+        return new Uploader([
+            'name' => $_FILES[$field]['name'],
+            'tmp_name' => $_FILES[$field]['tmp_name'],
+            'size' => $_FILES[$field]['size'],
+            'type' => $_FILES[$field]['type'],
+            'error' => $_FILES[$field]['error']
+        ], $allowed_extensions);
+    }
+
+    /**
+     * retrieves $_FILES for multiple files request
+     *
+     * @param  string $field
+     * @param  array $allowed_extensions
      * @return array returns array of uploader class instance
      */
-    public static function getFile(string $field): array
+    public static function getFileMultiple(string $field, array $allowed_extensions = []): array
     {
         $files = [];
 
@@ -82,8 +101,9 @@ class Request
                     'name' => $_FILES[$field]['name'][$i],
                     'tmp_name' => $_FILES[$field]['tmp_name'][$i],
                     'size' => $_FILES[$field]['size'][$i],
-                    'type' => $_FILES[$field]['type'][$i]
-                ]);
+                    'type' => $_FILES[$field]['type'][$i],
+                    'error' => $_FILES[$field]['error'][$i]
+                ], $allowed_extensions);
             }
         }
         

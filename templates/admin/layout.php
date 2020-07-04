@@ -61,6 +61,8 @@
     <script defer src="<?= absolute_url('/public/js/components/tables.js') ?>"></script>
     <script defer src="<?= absolute_url('/public/js/components/password.js') ?>"></script>
     <script defer src="<?= absolute_url('/public/js/components/confirm.js') ?>"></script>
+    <script defer src="<?= absolute_url('/public/js/components/loading.js') ?>"></script>
+    <script defer src="<?= absolute_url('/public/js/components/delete.js') ?>"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {

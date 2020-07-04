@@ -253,7 +253,7 @@ class Model
      * @param  array $order_by direction order ASC or DESC
      * @return mixed returns new pager class instance
      */
-    public static function paginate(int $items_per_pages, array $order_by = ['id', 'DESC'])
+    public static function paginate(int $items_per_pages, array $order_by = ['id', 'DESC']): Pager
     {
         $page = empty(Request::getQuery('page')) ? 1 : Request::getQuery('page');
 
@@ -285,7 +285,7 @@ class Model
         string $column,
         string $value,
         array $order_by = ['id', 'DESC']
-    ) {
+    ): Pager {
         $page = empty(Request::getQuery('page')) ? 1 : Request::getQuery('page');
 
         $total_items = Query::DB()

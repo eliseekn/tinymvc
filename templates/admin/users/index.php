@@ -56,7 +56,7 @@ endif
     </div>
 
     <div class="card-body">
-        <div class="input-group mb-3">
+        <div class="input-group mb-5">
             <div class="input-group-prepend">
                 <div class="input-group-text">
                     <li class="fa fa-search"></li>
@@ -66,10 +66,23 @@ endif
             <input type="search" class="form-control" id="filter" placeholder="Filter results">
         </div>
 
+        <div class="d-flex align-items-center justify-content-end mb-3">
+            <button class="btn btn-danger ml-3" id="bulk-delete" data-url="<?= absolute_url('/admin/users/delete/') ?>">
+                <i class="fa fa-trash"></i> Bulk delete
+            </button>
+        </div>
+
         <div class="table-responsive">
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
+                        <th scope="col">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="select-all">
+                                <label class="custom-control-label" for="select-all"></label>
+                            </div>
+                        </th>
+
                         <th scope="col"><i class="fa fa-sort"></i> ID</th>
                         <th scope="col"><i class="fa fa-sort"></i> Name</th>
                         <th scope="col"><i class="fa fa-sort"></i> Email</th>
@@ -84,6 +97,19 @@ endif
                     <?php foreach ($users as $user) : ?>
 
                     <tr>
+                        <td>
+
+                            <?php if ($user->role !== 'admin') : ?>
+
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="<?= $user->id ?>" data-user-id="<?= $user->id ?>">
+                                <label class="custom-control-label" for="<?= $user->id ?>"></label>
+                            </div>
+
+                            <?php endif ?>
+
+                        </td>
+
                         <th><?= $user->id ?></th>
                         <td><?= $user->name ?></td>
                         <td><?= $user->email ?></td>
@@ -91,13 +117,24 @@ endif
                         <td><?= $user->created_at ?></td>
 
                         <td>
+
+                            <?php if ($user->role !== 'admin' || $user->id === get_session('user')->id) : ?>
+
                             <a class="btn text-primary" href="<?= absolute_url('/admin/users/edit/' . $user->id) ?>">
                                 <i class="fa fa-edit"></i>
                             </a>
 
-                            <button class="btn text-danger" onclick="confirmDelete('Are you sure you want to delete this user?', '<?= absolute_url('/admin/users/delete/' . $user->id) ?>')">
+                            <?php if ($user->id !== get_session('user')->id) : ?>
+
+                            <button class="btn text-danger" onclick="confirmDelete(this, 'Are you sure you want to delete this user?', '<?= absolute_url('/admin/users/delete/' . $user->id) ?>')">
                                 <i class="fa fa-trash-alt"></i>
                             </button>
+
+                            <?php 
+                                endif;
+                            endif 
+                            ?>
+
                         </td>
                     </tr>
 

@@ -40,3 +40,16 @@ if (!function_exists('redirect_to')) {
 		exit();
 	}
 }
+
+if (!function_exists('current_url')) {
+	/**
+	 * get current url
+	 *
+	 * @return string
+	 * @link   https://stackoverflow.com/questions/6768793/get-the-full-url-in-php#6768831
+	 */
+	function current_url(): string
+	{
+		return 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}/{$_SERVER['REQUEST_URI']}";
+	}
+}

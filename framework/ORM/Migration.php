@@ -52,7 +52,7 @@ class Migration
     /**
      * generate primary key and autoincrement column query
      *
-     * @param  string $name name of column
+     * @param  string $name
      * @return mixed
      */
     public function addPrimaryKey(string $name = 'id') {
@@ -63,11 +63,11 @@ class Migration
     /**
      * add column of type integer
      *
-     * @param  string $name name of column
-     * @param  int $length value length
-     * @param  bool $null null or not
-     * @param  bool $unique set column as unique
-     * @param  string|null $default default column value
+     * @param  string $name
+     * @param  int $length
+     * @param  bool $null
+     * @param  bool $unique
+     * @param  int|null $default
      * @return mixed
      */
     public function addInt(
@@ -89,11 +89,11 @@ class Migration
     /**
      * add column of type small integer
      *
-     * @param  string $name name of column
-     * @param  int $length value length
-     * @param  bool $null null or not
-     * @param  bool $unique set column as unique
-     * @param  string|null $default default column value
+     * @param  string $name
+     * @param  int $length
+     * @param  bool $null
+     * @param  bool $unique
+     * @param  int|null $default
      * @return mixed
      */
     public function addSmallInt(
@@ -115,11 +115,11 @@ class Migration
     /**
      * add column of type big integer
      *
-     * @param  string $name name of column
-     * @param  int $length value length
-     * @param  bool $null null or not
-     * @param  bool $unique set column as unique
-     * @param  string|null $default default column value
+     * @param  string $name
+     * @param  int $length
+     * @param  bool $null
+     * @param  bool $unique
+     * @param  int|null $default
      * @return mixed
      */
     public function addBigInt(
@@ -141,10 +141,10 @@ class Migration
     /**
      * add column of type char
      *
-     * @param  string $name name of column
-     * @param  bool $null null or not
-     * @param  bool $unique set column as unique
-     * @param  string $default default column value
+     * @param  string $name
+     * @param  bool $null
+     * @param  bool $unique
+     * @param  string|null $default
      * @return mixed
      */
     public function addChar(
@@ -165,11 +165,11 @@ class Migration
     /**
      * add column of type string
      *
-     * @param  string $name name of column
-     * @param  int $length value length
-     * @param  bool $null null or not
-     * @param  bool $unique set column as unique
-     * @param  string $default default column value
+     * @param  string $name
+     * @param  int $length
+     * @param  bool $null
+     * @param  bool $unique
+     * @param  string|null $default
      * @return mixed
      */
     public function addString(
@@ -191,8 +191,8 @@ class Migration
     /**
      * add column of type text
      *
-     * @param  string $name name of column
-     * @param  bool $null null or not
+     * @param  string $name
+     * @param  bool $null
      * @return mixed
      */
     public function addText(string $name, bool $null = false) {
@@ -206,8 +206,8 @@ class Migration
     /**
      * add column of type longtext
      *
-     * @param  string $name name of column
-     * @param  bool $null null or not
+     * @param  string $name
+     * @param  bool $null
      * @return mixed
      */
     public function addLongText(string $name, bool $null = false) {
@@ -221,9 +221,9 @@ class Migration
     /**
      * add column of type timestamp
      *
-     * @param  string $name name of column
-     * @param  bool $null null or not
-     * @param  string $default default column value
+     * @param  string $name
+     * @param  bool $null
+     * @param  string $default
      * @return mixed
      */
     public function addTimestamp(
@@ -242,13 +242,15 @@ class Migration
     /**
      * add column of type boolean
      *
-     * @param  string $name name of column
-     * @param  bool $null null or not
+     * @param  string $name
+     * @param  bool $null
+     * @param  int|null $default
      * @return mixed
      */
-    public function addBoolean(string $name, bool $null = false) {
+    public function addBoolean(string $name, bool $null = false, ?int $default = null) {
         self::$query .= "$name TINYINT(1)";
         self::$query .= $null ? ' NULL' : ' NOT NULL';
+        self::$query .= is_null($default) ? '' : " DEFAULT '$default'";
         self::$query .= ', ';
 
         return $this;

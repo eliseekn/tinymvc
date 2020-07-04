@@ -15,7 +15,16 @@
     <div class="d-flex align-items-center justify-content-center min-vh-100">
         <div class="container" style="width: 400px">
 
-            <h1 class="py-3 text-center">Forgot password</h1>
+            <h1 class="text-center">Forgot password</h1>
+            
+            <div class="card my-3 mb-5">
+				<div class="card-body">
+					<p class="card-text">
+						Enter the email address associated with your account.
+						We will send you a link to this email address to reset your password.
+					</p>
+				</div>
+			</div>
 
             <?php
             if (session_has('flash_messages')) :
