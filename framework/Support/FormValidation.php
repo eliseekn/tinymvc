@@ -13,8 +13,8 @@
 namespace Framework\Support;
 
 use GUMP;
-use Framework\Http\Request;
-use Framework\Http\Redirect;
+use Framework\HTTP\Request;
+use Framework\HTTP\Redirect;
 
 /**
  * FormValidation

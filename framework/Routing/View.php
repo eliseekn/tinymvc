@@ -14,7 +14,7 @@ namespace Framework\Routing;
 
 use Exception;
 use League\Plates\Engine;
-use Framework\Http\Response;
+use Framework\HTTP\Response;
 
 /**
  * View

@@ -2,10 +2,10 @@
 
 namespace App\Controllers;
 
-use Framework\Http\Request;
+use Framework\HTTP\Request;
 use Framework\Routing\View;
-use Framework\Http\Redirect;
-use Framework\Http\Response;
+use Framework\HTTP\Redirect;
+use Framework\HTTP\Response;
 use Framework\Support\Email;
 use App\Validators\LoginForm;
 use App\Database\Models\UsersModel;
@@ -23,17 +23,19 @@ class PasswordResetController
 		$token = random_string(20, true);
 		$expires = strtotime('+1 hour', strtotime(date('Y-m-d H:i:s')));
 
-		if (Email::to(Request::getField('email'))
-			->from(EMAIL_FROM)
-			->replyTo(EMAIL_REPLY_TO)
-			->subject('Password reset notification')
-			->message('
-				<p>You are receiving this email because we received a password reset request for your account. Click the button below to reset your password:</p>
-				<p><a href="' . absolute_url('/password/reset?token=' . $token) . '">' . absolute_url('/password/reset?token=' . $token) . '</a></p>
-				<p>If you did not request a password reset, no further action is required.</p>
-			')
-			->asHtml()
-			->send()
+		if (
+			Email::new()
+				->to(Request::getField('email'))
+				->from('webmaster@yellior.ci', 'Yellior Webmaster')
+				->replyTo('webmaster@yellior.ci', 'Yellior Webmaster')
+				->subject('Password reset notification')
+				->message('
+					<p>You are receiving this email because we received a password reset request for your account. Click the button below to reset your password:</p>
+					<p><a href="' . absolute_url('/password/reset?token=' . $token) . '">' . absolute_url('/password/reset?token=' . $token) . '</a></p>
+					<p>If you did not request a password reset, no further action is required.</p>
+				')
+				->asHTML()
+				->send()
 		) {
 			PasswordResetModel::insert([
 				'email' => Request::getField('email'),
@@ -41,7 +43,7 @@ class PasswordResetController
 				'expires' => date('Y-m-d H:i:s', $expires)
 			]);
 
-			Redirect::back()->withSuccess('Your password reset link have been sumbitted successfuly. You can check your email box now.');
+			Redirect::back()->withSuccess('Your password reset link has been sumbitted successfuly. You can check your email box now.');
 		} else {
 			Redirect::back()->withError('Failed to send paswword reset link to your email address.');
 		}

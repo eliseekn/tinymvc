@@ -2,13 +2,12 @@
 
 namespace App\Controllers\Admin;
 
-use Framework\Http\Request;
+use Framework\HTTP\Request;
 use Framework\Routing\View;
-use Framework\Http\Redirect;
+use Framework\HTTP\Redirect;
 use App\Validators\CreateUserForm;
 use App\Validators\UpdateUserForm;
 use App\Database\Models\UsersModel;
-use Framework\Http\Response;
 
 class UsersController
 {
@@ -112,7 +111,7 @@ class UsersController
 			UsersModel::delete($id);
 			Redirect::back()->withSuccess('The user has been deleted successfully.');
 		} else {
-			$users_id = json_decode(Request::getRawData('items'), true);
+			$users_id = json_decode(Request::getRawData(), true);
 			$users_id = $users_id['items'];
 
 			foreach ($users_id as $id) {

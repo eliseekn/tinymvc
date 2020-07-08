@@ -14,8 +14,8 @@ namespace Framework\Routing;
 
 use Exception;
 use Framework\Routing\View;
-use Framework\Http\Request;
-use Framework\Http\Response;
+use Framework\HTTP\Request;
+use Framework\HTTP\Response;
 
 /**
  * Router

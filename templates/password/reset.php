@@ -17,8 +17,8 @@
 
             <h1 class="text-center">Forgot password</h1>
             
-            <div class="card my-3 mb-5">
-				<div class="card-body">
+            <div class="card my-3 mb-3">
+				<div class="card-body bg-light">
 					<p class="card-text">
 						Enter the email address associated with your account.
 						We will send you a link to this email address to reset your password.

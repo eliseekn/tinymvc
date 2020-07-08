@@ -474,7 +474,7 @@ class Query
 	public function fetchAll()
 	{
 		$query_result = $this->executeQuery();
-		return (object) $query_result->fetchAll();
+		return $query_result->fetchAll();
 	}
 
 	/**

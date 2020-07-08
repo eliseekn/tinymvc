@@ -8,6 +8,20 @@ use App\Database\Models\UsersModel;
 class AdminController
 {
 	/**
+	 * display admin dashboard page
+	 *
+	 * @return void
+	 */
+	public function index(): void
+	{
+		View::render('admin/index', [
+			'users' => UsersModel::findAll(),
+			'online_users' => UsersModel::findAllWhere('online', 1),
+			'latest_user' => UsersModel::findFirstOf(1)
+		]);
+	}
+
+	/**
 	 * display users page
 	 *
 	 * @return void

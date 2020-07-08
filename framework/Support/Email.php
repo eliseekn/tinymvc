@@ -12,208 +12,133 @@
 
 namespace Framework\Support;
 
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\PHPMailer;
+
 /**
  * Email
  * 
- * Email sender manager
+ * Email sender
  */
 class Email
-{   
+{
     /**
-    * to addresses
-    *
-    * @var string
-    */
-    protected static $to = '';
-    
-    /**
-    * from address
-    *
-    * @var string
-    */
-    protected static $from = '';
+     * PHPMailer variable instance
+     * 
+     * @var mixed
+     */
+    protected static $mail;
 
     /**
-     * cc addresses
+     * setup PHPMailer
      *
-     * @var string
-     */
-    protected static $cc = '';
-
-    /**
-     * bcc addresses
-     *
-     * @var string
-     */
-    protected static $bcc = '';
-
-    /**
-     * subject
-     *
-     * @var string
-     */
-    protected static $subject = '';
-
-    /**
-     * message
-     *
-     * @var string
-     */
-    protected static $message = '';
-
-    /**
-     * headers
-     *
-     * @var array
-     */
-    protected static $headers = [];
-    
-    /**
-     * clear all fields
-     *
-     * @return void
-     */
-    private static function clearFields(): void
-    {
-        self::$to = '';
-        self::$cc = '';
-        self::$bcc = '';
-        self::$from = '';
-        self::$subject = '';
-        self::$message = '';
-        self::$headers = [];
-    }
-    
-    /**
-     * add email header
-     *
-     * @param  mixed $key
-     * @param  mixed $value
-     * @return void
-     */
-    private static function addHeader(string $key, string $value): void
-    {
-        self::$headers[] = [
-            $key => $value 
-        ];
-    }
-    
-    /**
-     * set to addresses
-     *
-     * @param  string $to array of strings
      * @return mixed
      */
-    public static function to(string ...$to)
+    public static function new()
     {
-        foreach ($to as $t) {
-            self::$to .= $t . ', ';
+        self::$mail = new PHPMailer();
+        self::$mail->Debugoutput = 'error_log';
+        self::$mail->CharSet = PHPMailer::CHARSET_UTF8;
+        
+        if (strtolower(MAILER['transport']) !== 'smtp') {
+            self::$mail->isSendmail();
+        } else {
+            self::$mail->SMTPDebug = SMTP::DEBUG_SERVER;
+            self::$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            self::$mail->isSMTP();
+            self::$mail->SMTPAuth = true;
+            self::$mail->Host = MAILER['host'];
+            self::$mail->Port = MAILER['port'];
+            self::$mail->Username = MAILER['username'];
+            self::$mail->Password = MAILER['password'];
         }
 
-        self::$to = rtrim(', ', self::$to);
         return new self();
     }
     
     /**
-     * set from address
+     * to
      *
-     * @param  string $from
+     * @param  string $address
+     * @param  string $name
      * @return mixed
      */
-    public function from(string $from)
+    public function to(string $address, string $name = '')
     {
-        self::addHeader('From', $from);
+        self::$mail->addAddress($address, $name);
         return $this;
     }
-    
+
     /**
-     * set reply-to address
+     * from
      *
-     * @param  string $reply_to
+     * @param  string $address
+     * @param  string $name
      * @return mixed
      */
-    public function replyTo(string $reply_to)
+    public function from(string $address, string $name = '')
     {
-        self::addHeader('Reply-To', $reply_to);
+        self::$mail->setFrom($address, $name);
         return $this;
     }
-    
+
     /**
-     * set email subject
+     * reply to
+     *
+     * @param  string $address
+     * @param  string $name
+     * @return mixed
+     */
+    public function replyTo(string $address, string $name = '')
+    {
+        self::$mail->addReplyTo($address, $name);
+        return $this;
+    }
+
+    /**
+     * subject
      *
      * @param  string $subject
      * @return mixed
      */
     public function subject(string $subject)
     {
-        self::$subject = $subject;
+        self::$mail->Subject = $subject;
         return $this;
     }
-    
+
     /**
-     * set message content
+     * message
      *
-     * @param  string $from
+     * @param  string $message
      * @return mixed
      */
     public function message(string $message)
     {
-        self::$message = $message;
+        self::$mail->Body = $message;
         return $this;
     }
-    
-    /**
-     * add cc field
-     *
-     * @param  string $cc array of strings
-     * @return mixed
-     */
-    public function addCC(string ...$cc)
-    {
-        foreach ($cc as $t) {
-            self::$cc .= $t . ', ';
-        }
 
-        self::$cc = 'Cc: ' . rtrim(', ', self::$cc);
-        return $this;
-    }
-    
     /**
-     * add bcc field
-     *
-     * @param  string $bcc array of strings
-     * @return mixed
-     */
-    public function addBCC(string ...$bcc)
-    {
-        foreach ($bcc as $t) {
-            self::$bcc .= $t . ', ';
-        }
-
-        self::$bcc = 'Bcc: ' . rtrim(', ', self::$bcc);
-        return $this;
-    }
-    
-    /**
-     * set content as plain text
-     *
-     * @return mixed
-     */
-    public function asPlainText()
-    {
-        self::addHeader('Content-Type', 'text/plain; charset=utf-8');
-        return $this;
-    }
-    
-    /**
-     * set content as html
+     * set email format to HTML
      *
      * @return mixed
      */
     public function asHTML()
     {
-        self::addHeader('MIME-Version', '1.0');
-        self::addHeader('Content-type', 'text/html; charset=iso-8859-1');
+        self::$mail->IsHTML(true);
+        return $this;
+    }
+
+    /**
+     * add attachment
+     *
+     * @param  string $attachment
+     * @return mixed
+     */
+    public function addAttachment(string $attachment)
+    {
+        self::$mail->addAttachment($attachment);
         return $this;
     }
     
@@ -224,9 +149,6 @@ class Email
      */
     public function send(): bool
     {
-        $result = mail(self::$to, self::$subject, self::$message, self::$headers);
-        self::clearFields();
-
-        return $result;
+        return self::$mail->send();
     }
 }

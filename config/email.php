@@ -11,8 +11,13 @@
  */
 
 /**
- * Email infos configuration
+ * Email configuration
  */
 
-define('EMAIL_FROM', 'Admin <admin@mail.com>');
-define('EMAIL_REPLY_TO', 'admin@mail.com');
+define('MAILER', [
+    'transport' => 'smtp', //or sendmail
+    'host' => 'localhost',
+    'port' => 25,
+    'username' => '',
+    'password' => ''
+]);

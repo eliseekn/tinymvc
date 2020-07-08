@@ -2,8 +2,9 @@
 
 namespace App\Controllers;
 
-use Framework\Http\Request;
-use Framework\Http\Redirect;
+use App\Database\Models\UsersModel;
+use Framework\HTTP\Request;
+use Framework\HTTP\Redirect;
 use App\Validators\LoginForm;
 use App\Validators\RegisterForm;
 use Framework\Support\Authenticate;
@@ -28,7 +29,7 @@ class AuthenticationController
 
 		if (!Authenticate::attempt()) {
             Redirect::back()->withError('Invalid email address and/or password.');
-        } 
+        }
         
         if (Authenticate::getUser()->role === 'admin') {
             Redirect::toUrl('/admin')->only();

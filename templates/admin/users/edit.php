@@ -47,8 +47,8 @@ endif
 ?>
 
 <div class="card">
-    <div class="card-header">
-        <h3 class="mb-0">Edit user</h3>
+    <div class="card-header bg-dark">
+        <h3 class="mb-0 text-white">Edit user</h3>
     </div>
 
     <form method="post" action="<?= absolute_url('/admin/users/update/' . $user->id) ?>">

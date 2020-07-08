@@ -10,7 +10,7 @@
  * @link https://github.com/eliseekn/TinyMVC
  */
 
-namespace Framework\Http;
+namespace Framework\HTTP;
 
 use Framework\Support\Uploader;
 
@@ -89,7 +89,7 @@ class Request
      * @param  array $allowed_extensions
      * @return array returns array of uploader class instance
      */
-    public static function getFileMultiple(string $field, array $allowed_extensions = []): array
+    public static function getMultipleFiles(string $field, array $allowed_extensions = []): array
     {
         $files = [];
 

@@ -26,6 +26,7 @@ class UsersTable
             ->addString('email', 255, false, true)
             ->addString('password')
             ->addString('role', 255, false, false, 'user')
+            ->addBoolean('online', false, 0)
             ->addTimestamp('created_at')
             ->addTimestamp('updated_at')
             ->create();

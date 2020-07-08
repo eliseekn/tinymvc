@@ -14,14 +14,17 @@
 
 <body>
     <div class="d-flex" id="wrapper">
-        <div class="bg-light border-light border-right" id="sidebar-wrapper">
+        <div class="bg-light border-light border-right min-vh-100" id="sidebar-wrapper">
             <div class="sidebar-heading bg-dark">
-                <a href="<?= absolute_url('/admin') ?>" class="text-light">
+                <span class="text-light">
                     <i class="fa fa-cogs"></i> Administration
-                </a>
+                </span>
             </div>
 
             <div class="list-group list-group-flush">
+                <a href="<?= absolute_url('/admin') ?>" class="list-group-item list-group-item-action bg-light">
+                    <i class="fa fa-dot-circle"></i> Dashboard
+                </a>
                 <a href="<?= absolute_url('/admin/users') ?>" class="list-group-item list-group-item-action bg-light">
                     <i class="fa fa-dot-circle"></i> Users
                 </a>
@@ -29,14 +32,22 @@
         </div>
 
         <div id="page-content-wrapper">
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
                 <button class="btn btn-light" id="sidebar-toggler">
                     <i class="fa fa-angle-left"></i>
                 </button>
+                    
+                <div class="d-flex align-items-center ml-auto">
+                    <span class="btn rounded-circle text-white bg-info mr-2">
+                        <?= strtoupper(get_session('user')->name[0]) ?>
+                    </span>
+
+                    <span class="text-white">Welcome, <em><?= get_session('user')->name ?></em>!</span>
+                </div>
 
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="<?= absolute_url('/') ?>">Go home</a>
+                        <a class="nav-link text-white" href="<?= absolute_url('/') ?>" target="_blank">View site</a>
                     </li>
                     <li class="nav-item">
                         <a class="btn btn-danger ml-3" href="<?= absolute_url('/logout') ?>">Log out</a>

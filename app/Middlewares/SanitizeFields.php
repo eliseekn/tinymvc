@@ -2,7 +2,7 @@
 
 namespace App\Middlewares;
 
-use Framework\Http\Request;
+use Framework\HTTP\Request;
 
 /**
  * SanitizeFields

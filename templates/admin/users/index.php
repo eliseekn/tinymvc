@@ -47,8 +47,8 @@ endif
 ?>
 
 <div class="card">
-    <div class="card-header d-flex align-items-center justify-content-between">
-        <h3 class="mb-0">Users</h3>
+    <div class="card-header bg-dark d-flex align-items-center justify-content-between">
+        <h3 class="mb-0 text-white">Users</h3>
         
         <a href="<?= absolute_url('/admin/users/add') ?>" class="btn btn-primary">
             <i class="fa fa-plus"></i> Add new user

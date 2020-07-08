@@ -12,7 +12,7 @@
 
 namespace Framework\Support;
 
-use Framework\Http\Request;
+use Framework\HTTP\Request;
 use App\Database\Models\UsersModel;
 
 /**
@@ -48,6 +48,10 @@ class Authenticate
             self::$attempts++;
             return false;
         }
+
+        UsersModel::update($user->id, [
+            'online' => 1
+        ]);
         
         create_session('user', $user);
             

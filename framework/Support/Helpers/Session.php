@@ -31,10 +31,10 @@ if (!function_exists('start_session')) {
 
 if (!function_exists('create_session')) {
 	/**
-	 * create session and set session data
+	 * create session data
 	 *
-	 * @param  string $name name of the session
-	 * @param  mixed $data data to be stored
+	 * @param  string $name
+	 * @param  mixed $data
 	 * @return void
 	 */
 	function create_session(string $name, $data): void
@@ -48,7 +48,7 @@ if (!function_exists('get_session')) {
 	/**
 	 * get session data
 	 *
-	 * @param  string $name name of the session
+	 * @param  string $name
 	 * @return mixed returns session stored data
 	 */
 	function get_session(string $name)
@@ -62,7 +62,7 @@ if (!function_exists('session_has')) {
 	/**
 	 * check if session exists
 	 *
-	 * @param  string $name name of the session
+	 * @param  string $name
 	 * @return bool returns true or false
 	 */
 	function session_has(string $name): bool

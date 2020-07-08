@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             document.querySelectorAll('table input[type=checkbox]').forEach(element => {
                 if (element.id !== 'select-all' && element.checked) {
-                    items.push(element.dataset.userId)
+                    items.push(element.dataset.id)
                 }
             })
 

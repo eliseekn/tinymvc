@@ -63,15 +63,14 @@ Route::post('/register', [
 
 //admin routes
 Route::get('/admin', [
-    'handler' => function() {
-        View::render('admin/index');
-    },
+    'handler' => 'Admin\AdminController@index',
     'middlewares' => [
         'remember',
         'admin'
     ]
 ]);
 
+///users routes
 Route::get('/admin/users/add', [
     'handler' => 'Admin\UsersController@add',
     'middlewares' => [

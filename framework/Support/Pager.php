@@ -12,7 +12,7 @@
 
 namespace Framework\Support;
 
-use Framework\Http\Request;
+use Framework\HTTP\Request;
 
 /**
  * Pager
@@ -186,7 +186,7 @@ class Pager
     /**
      * generate page url
      *
-     * @param  int $page page id
+     * @param  int $page
      * @return string
      */
     public function pageUrl(int $page): string

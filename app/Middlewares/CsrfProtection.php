@@ -2,8 +2,8 @@
 
 namespace App\Middlewares;
 
-use Framework\Http\Request;
-use Framework\Http\Response;
+use Framework\HTTP\Request;
+use Framework\HTTP\Response;
 
 /**
  * CsrfProtection

@@ -12,7 +12,7 @@
 
 namespace Framework\ORM;
 
-use Framework\Http\Request;
+use Framework\HTTP\Request;
 use Framework\Support\Pager;
 
 /**
@@ -88,19 +88,16 @@ class Model
      *
      * @param  string $column
      * @param  string $value
-     * @param  array $order direction order ASC or DESC
+     * @param  array $order_by direction order ASC or DESC
      * @return mixed
      */
-    public static function findAllWhere(
-        string $column,
-        string $value,
-        array $order = ['id', 'DESC']
-    ) {
+    public static function findAllWhere(string $column, string $value, array $order_by = ['id', 'DESC'])
+    {
         return Query::DB()
             ->select('*')
             ->from(static::$table)
             ->whereEquals($column, $value)
-            ->orderBy($order[0], $order[1])
+            ->orderBy($order_by[0], $order_by[1])
             ->fetchAll();
     }
 
@@ -212,7 +209,7 @@ class Model
      * @param  array $data
      * @return void
      */
-    public function updateWhere(string $column, string $value, array $data): void
+    public static function updateWhere(string $column, string $value, array $data): void
     {
         Query::DB()
             ->update(static::$table)

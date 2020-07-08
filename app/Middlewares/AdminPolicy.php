@@ -2,8 +2,8 @@
 
 namespace App\Middlewares;
 
-use Framework\Http\Redirect;
-use Framework\Http\Response;
+use Framework\HTTP\Redirect;
+use Framework\HTTP\Response;
 use Framework\Support\Authenticate;
 
 /**

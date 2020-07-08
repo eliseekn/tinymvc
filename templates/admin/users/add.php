@@ -47,9 +47,8 @@ endif
 ?>
 
 <div class="card">
-
-    <div class="card-header">
-        <h3 class="mb-0">New user</h3>
+    <div class="card-header bg-dark">
+        <h3 class="mb-0 text-white">New user</h3>
     </div>
 
     <form method="post" action="<?= absolute_url('/admin/users/create') ?>">
