@@ -80,7 +80,11 @@ class Storage
      */
     public static function moveFile(string $filename, string $destination): bool
     {
-        return move_uploaded_file($filename, PUBLIC_STORAGE . $destination);
+        if (is_uploaded_file($filename)) {
+            return move_uploaded_file($filename, PUBLIC_STORAGE . $destination);
+        } else {
+            return self::renameFile($filename, $destination);
+        }
     }
     
     /**
@@ -103,7 +107,7 @@ class Storage
      */
     public static function isFile(string $filename): bool
     {
-        return file_exists(PUBLIC_STORAGE . $filename);
+        return is_file(PUBLIC_STORAGE . $filename);
     }
 
     /**
@@ -182,7 +186,7 @@ class Storage
     /**
      * get list of folders
      *
-     * @param  mixed $pathname
+     * @param  string $pathname
      * @return array
      */
     public static function getFolders(string $pathname): array

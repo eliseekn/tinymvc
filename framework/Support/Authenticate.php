@@ -75,19 +75,20 @@ class Authenticate
      */
     public static function new(array $credentials, string $credential = 'email'): bool
     {
-        if (UsersModel::exists($credential, Request::getField($credential))) {
-            return false;
-        }
-
-        foreach ($credentials as $credential) {
-            if (array_key_exists($credential, Request::getField())) {
-                $data[$credential] = Request::getField($credential);
+        if (!UsersModel::exists($credential, Request::getField($credential))) {
+            
+            if (!empty($credentials)) {
+                foreach ($credentials as $credential) {
+                    if (array_key_exists($credential, Request::getField())) {
+                        $data[$credential] = Request::getField($credential);
+                    }
+                }
+            
+                if (isset($data) && !empty($data)) {
+                    UsersModel::insert($data);
+                    return true;
+                }
             }
-        }
-
-        if (isset($data)) {
-            UsersModel::insert($data);
-            return true;
         }
 
         return false;
@@ -128,9 +129,13 @@ class Authenticate
      *
      * @return void
      */
-    public static function logout()
+    public static function logout(): void
     {
         if (session_has('user')) {
+            UsersModel::update(get_session('user')->id, [
+                'online' => 0
+            ]);
+        
             close_session('user');
         }
 

@@ -71,7 +71,7 @@ class Model
     /**
      * fetch all rows
      *
-     * @param  array $order direction order ASC or DESC
+     * @param  array $order (ASC or DESC)
      * @return mixed
      */
     public static function findAll(array $order = ['id', 'DESC'])
@@ -88,7 +88,7 @@ class Model
      *
      * @param  string $column
      * @param  string $value
-     * @param  array $order_by direction order ASC or DESC
+     * @param  array $order_by (ASC or DESC)
      * @return mixed
      */
     public static function findAllWhere(string $column, string $value, array $order_by = ['id', 'DESC'])
@@ -106,7 +106,7 @@ class Model
      *
      * @param  int $limit
      * @param  int $offset
-     * @param  array $order_by direction order ASC or DESC
+     * @param  array $order_by (ASC or DESC)
      * @return mixed
      */
     public static function findRange(int $limit, int $offset, array $order_by = ['id', 'DESC'])
@@ -123,7 +123,7 @@ class Model
      * find range rows
      *
      * @param  int $limit
-     * @param  array $order_by direction order ASC or DESC
+     * @param  array $order_by (ASC or DESC)
      * @return mixed
      */
     public static function findFirstOf(int $limit, array $order_by = ['id', 'DESC'])
@@ -138,7 +138,7 @@ class Model
      * @param  int $offset
      * @param  string $column
      * @param  string $value
-     * @param  array $order_by direction order ASC or DESC
+     * @param  array $order_by (ASC or DESC)
      * @return mixed
      */
     public static function findRangeWhere(
@@ -163,7 +163,7 @@ class Model
      * @param  int $limit
      * @param  string $column
      * @param  string $value
-     * @param  array $order_by direction order ASC or DESC
+     * @param  array $order_by (ASC or DESC)
      * @return mixed
      */
     public static function findFirstOfWhere(
@@ -247,7 +247,7 @@ class Model
      * generate pagination
      *
      * @param  mixed $items_per_pages
-     * @param  array $order_by direction order ASC or DESC
+     * @param  array $order_by (ASC or DESC)
      * @return mixed returns new pager class instance
      */
     public static function paginate(int $items_per_pages, array $order_by = ['id', 'DESC']): Pager
@@ -274,7 +274,7 @@ class Model
      * @param  int $items_per_pages
      * @param  string $column
      * @param  string $value
-     * @param  array $order_by direction order ASC or DESC
+     * @param  array $order_by (ASC or DESC)
      * @return mixed returns new pager class instance
      */
     public static function paginateWhere(

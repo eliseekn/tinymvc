@@ -80,9 +80,9 @@ class Query
 	}
 
 	/**
-	 * returns query string
+	 * returns query string and arguments
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function getQuery(): array
 	{
@@ -260,7 +260,7 @@ class Query
 	 * generate ORDER BY query
 	 *
 	 * @param  string $column
-	 * @param  string $direction direction order ASC or DESC
+	 * @param  string $direction (ASC or DESC)
 	 * @return mixed
 	 */
 	public function orderBy(string $column, string $direction)

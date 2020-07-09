@@ -110,7 +110,7 @@ endif
 
                         </td>
 
-                        <th><?= $user->id ?></th>
+                        <td><?= $user->id ?></td>
                         <td><?= $user->name ?></td>
                         <td><?= $user->email ?></td>
                         <td><?= $user->role ?></td>

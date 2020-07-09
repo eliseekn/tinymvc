@@ -14,7 +14,7 @@
  * Application main configuration
  */
 
-//define application root folder. Leave empty for server root
+//define application root folder. Leave empty for www root
 define('ROOT_FOLDER', '/tinymvc');
 
 //domain url
@@ -36,9 +36,10 @@ define('DISPLAY_ERRORS', true);
 //session lifetime in seconds
 define('SESSION_LIFETIME', 3600);
 
-//custom errors page
+//errors page
 define('ERRORS_PAGE', [
-    '404' => ''
+    '404' => 'errors/404',
+    '403' => 'errors/403'
 ]);
 
 //encryption key

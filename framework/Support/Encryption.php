@@ -15,7 +15,7 @@ namespace Framework\Support;
 /**
  * Encryption
  * 
- * String encryption/decryption
+ * String encryption/decryption cipher
  */
 class Encryption
 {    

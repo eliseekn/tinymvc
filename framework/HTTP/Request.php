@@ -146,7 +146,7 @@ class Request
     /**
      * set $_POST query
      *
-     * @param  string $field name of field
+     * @param  string $field
      * @param  mixed $value
      * @return void
      */
@@ -158,7 +158,7 @@ class Request
     /**
      * set $_GET query
      *
-     * @param  string $field name of field
+     * @param  string $field
      * @param  mixed $value
      * @return void
      */

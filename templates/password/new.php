@@ -14,10 +14,9 @@
 <body>
     <div class="d-flex align-items-center justify-content-center min-vh-100">
         <div class="container" style="width: 400px">
-
             <h1 class="py-3 text-center">Reset password</h1>
 
-            <?php if (session_has('flash_messages')) { ?>
+            <?php if (session_has('flash_messages')) : ?>
 
                 <div class="alert alert-danger" role="alert">
 
@@ -37,7 +36,7 @@
 
                 </div>
 
-            <?php } ?>
+            <?php endif ?>
 
             <div class="card shadow p-4">
                 <form method="post" action="<?= absolute_url('/password/new') ?>">

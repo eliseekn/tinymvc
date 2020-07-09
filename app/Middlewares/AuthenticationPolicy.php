@@ -17,7 +17,7 @@ class AuthenticationPolicy
      *
      * @return void
      */
-    public static function handle()
+    public static function handle(): void
     {
         if (Authenticate::check()) {
             if (Authenticate::getUser()->role === 'admin') {

@@ -31,7 +31,7 @@ class Client
     /**
      * send request to url
      *
-     * @param  string $method method name
+     * @param  string $method
      * @param  array $urls
      * @param  array $hedears
      * @param  array|null $data data to send
@@ -182,7 +182,7 @@ class Client
     /**
      * retrieves request headers
      *
-     * @param  string $field name of $_SERVER array field
+     * @param  string $field
      * @return mixed returns field value or empty string
      */
     public function getHeader(string $field = '')

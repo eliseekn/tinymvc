@@ -14,10 +14,12 @@
  * Email configuration
  */
 
-define('MAILER', [
+define('EMAIL', [
     'transport' => 'smtp', //or sendmail
     'host' => 'localhost',
     'port' => 25,
     'username' => '',
-    'password' => ''
+    'password' => '',
+    'from' => 'admin@mail.com',
+    'name' => 'Admin'
 ]);

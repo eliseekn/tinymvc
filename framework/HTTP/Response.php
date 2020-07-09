@@ -22,8 +22,8 @@ class Response
     /**
      * send HTTP response
      *
-     * @param  array $headers response headers
-     * @param  mixed $body response body
+     * @param  array $headers
+     * @param  mixed $body
      * @param  int $code response status code
      * @return void
      */
@@ -53,8 +53,8 @@ class Response
     /**
      * send HTTP response with json body
      *
-     * @param  array $headers response headers
-     * @param  mixed $body response body
+     * @param  array $headers
+     * @param  mixed $body
      * @param  int $code response status code
      * @return void
      */

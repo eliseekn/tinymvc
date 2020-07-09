@@ -18,7 +18,7 @@ class RememberUser
      *
      * @return void
      */
-    public static function handle()
+    public static function handle(): void
     {
         if (Authenticate::checkRemember()) {
             $user = UsersModel::findWhere('email', Encryption::decrypt(get_cookie('user')));

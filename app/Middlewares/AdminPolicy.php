@@ -2,6 +2,7 @@
 
 namespace App\Middlewares;
 
+use Framework\Routing\View;
 use Framework\HTTP\Redirect;
 use Framework\HTTP\Response;
 use Framework\Support\Authenticate;
@@ -18,14 +19,19 @@ class AdminPolicy
      *
      * @return void
      */
-    public static function handle()
+    public static function handle(): void
     {
         if (!Authenticate::check()) {
             Redirect::toUrl('/login')->withError('You must be logged first.');
         }
         
         if (Authenticate::getUser()->role !== 'admin') {
-            Response::send([], 'You do not have permission to access this page.', 403);
+            //send 403 response
+            if (isset(ERRORS_PAGE['403']) && !empty(ERRORS_PAGE['403'])) {
+                View::render(ERRORS_PAGE['403'], [], 403);
+            } else {
+                Response::send([], 'You do not have permission to access this page.', 404);
+            }
         }
     }
 }

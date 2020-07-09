@@ -18,8 +18,8 @@ if (!function_exists('escape')) {
 	/**
      * escape html and others scripting languages
      *
-     * @param  string $str string to escape
-     * @return string returns escaped string
+     * @param  string $str
+     * @return string
      */
     function escape(string $str): string
     {
@@ -35,7 +35,7 @@ if (!function_exists('hash_string')) {
      * hash string with password_hash() PHP function
      *
      * @param  string $str string to be hashed
-     * @return string returns hashed string
+     * @return string
      */
     function hash_string(string $str): string
     {
@@ -47,9 +47,9 @@ if (!function_exists('compare_hash')) {
     /**
      * compare hashed string with password_verify() PHP function
      *
-     * @param  string $str string to be compared
+     * @param  string $str
      * @param  string $hash hashed string 
-     * @return bool returns true or false
+     * @return bool
      */
     function compare_hash(string $str, string $hash): bool
     {

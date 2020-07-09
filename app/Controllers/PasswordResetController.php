@@ -26,8 +26,8 @@ class PasswordResetController
 		if (
 			Email::new()
 				->to(Request::getField('email'))
-				->from('webmaster@yellior.ci', 'Yellior Webmaster')
-				->replyTo('webmaster@yellior.ci', 'Yellior Webmaster')
+				->from(EMAIL['from'], EMAIL['name'])
+            	->replyTo(EMAIL['from'], EMAIL['name'])
 				->subject('Password reset notification')
 				->message('
 					<p>You are receiving this email because we received a password reset request for your account. Click the button below to reset your password:</p>
@@ -57,11 +57,11 @@ class PasswordResetController
 	public function reset(): void
 	{
 		if (PasswordResetModel::valid(Request::getQuery('email'), Request::getQuery('token')) === false) {
-			Response::send([], 'This password reset link is invalid.', 403);
+			Response::send([], 'This password reset link is invalid.');
 		}
 
 		if (PasswordResetModel::findWhere('email', Request::getQuery('email'))->expires < date('Y-m-d H:i:s')) {
-			Response::send([], 'This password reset link is expired. Please retrieves a new one.', 403);
+			Response::send([], 'This password reset link expired. Please retrieves a new one.');
 		}
 
 		PasswordResetModel::deleteWhere('email', Request::getQuery('email'));

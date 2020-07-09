@@ -36,21 +36,21 @@ class Email
      */
     public static function new()
     {
-        self::$mail = new PHPMailer();
+        self::$mail = new PHPMailer(true);
         self::$mail->Debugoutput = 'error_log';
         self::$mail->CharSet = PHPMailer::CHARSET_UTF8;
         
-        if (strtolower(MAILER['transport']) !== 'smtp') {
+        if (strtolower(EMAIL['transport']) !== 'smtp') {
             self::$mail->isSendmail();
         } else {
             self::$mail->SMTPDebug = SMTP::DEBUG_SERVER;
             self::$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             self::$mail->isSMTP();
             self::$mail->SMTPAuth = true;
-            self::$mail->Host = MAILER['host'];
-            self::$mail->Port = MAILER['port'];
-            self::$mail->Username = MAILER['username'];
-            self::$mail->Password = MAILER['password'];
+            self::$mail->Host = EMAIL['host'];
+            self::$mail->Port = EMAIL['port'];
+            self::$mail->Username = EMAIL['username'];
+            self::$mail->Password = EMAIL['password'];
         }
 
         return new self();

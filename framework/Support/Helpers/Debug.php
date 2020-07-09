@@ -20,8 +20,8 @@ if (!function_exists('write_log')) {
     /**
 	 * save log message to file
 	 *
-	 * @param  string $folder logs folder name
-	 * @param  int $type log message type
+	 * @param  string $folder
+	 * @param  int $type (INFOS, ERROR, DEBUG...)
 	 * @param  string $message 
 	 * @return void
 	 */
@@ -37,7 +37,7 @@ if (!function_exists('dump_vars')) {
     /**
 	 * print informations about variables and exit
 	 *
-	 * @param  mixed $data variables
+	 * @param  mixed $data
 	 * @return void
 	 */
 	function dump_vars(...$data): void

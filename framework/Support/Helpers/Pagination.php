@@ -18,9 +18,9 @@ if (!function_exists('generate_pagination')) {
 	/**
 	 * pagination parameters generator
 	 *
-	 * @param  int $page actual page id
-	 * @param  int $total_items count of all items
-	 * @param  int $items_per_pages items count per pages
+	 * @param  int $page
+	 * @param  int $total_items
+	 * @param  int $items_per_pages
 	 * @return array returns pagination parameters
 	 */
 	function generate_pagination(int $page, int $total_items, int $items_per_pages): array
