@@ -51,7 +51,7 @@
                         <a class="nav-link text-white" href="<?= absolute_url('/') ?>" target="_blank">View site</a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-danger ml-lg-3" href="<?= absolute_url('/logout') ?>">Log out</a>
+                        <a class="btn btn-danger ml-lg-2" href="<?= absolute_url('/logout') ?>">Log out</a>
                     </li>
                 </ul>
             </nav>

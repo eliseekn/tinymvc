@@ -102,7 +102,7 @@ endif
                             <?php if ($user->role !== 'admin') : ?>
 
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="<?= $user->id ?>" data-user-id="<?= $user->id ?>">
+                                <input type="checkbox" class="custom-control-input" id="<?= $user->id ?>" data-id="<?= $user->id ?>">
                                 <label class="custom-control-label" for="<?= $user->id ?>"></label>
                             </div>
 

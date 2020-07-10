@@ -16,8 +16,7 @@ class AdminController
 	{
 		View::render('admin/index', [
 			'users' => UsersModel::findAll(),
-			'online_users' => UsersModel::findAllWhere('online', 1),
-			'latest_user' => UsersModel::findFirstOf(1)
+			'online_users' => UsersModel::findAllWhere('online', 1)
 		]);
 	}
 
