@@ -40,10 +40,10 @@
                     
                 <div class="d-flex align-items-center ml-auto">
                     <span class="btn rounded-circle text-white bg-info mr-2">
-                        <?= strtoupper(get_session('user')->name[0]) ?>
+                        <?= strtoupper(get_session(APP_NAME . '_user')->name[0]) ?>
                     </span>
 
-                    <span class="text-white">Welcome, <em><?= get_session('user')->name ?></em>!</span>
+                    <span class="text-white">Welcome, <em><?= get_session(APP_NAME . '_user')->name ?></em>!</span>
                 </div>
 
                 <ul class="navbar-nav ml-auto">

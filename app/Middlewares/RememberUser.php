@@ -21,10 +21,10 @@ class RememberUser
     public static function handle(): void
     {
         if (Authenticate::checkRemember()) {
-            $user = UsersModel::findWhere('email', Encryption::decrypt(get_cookie('user')));
+            $user = UsersModel::findWhere('email', Encryption::decrypt(get_cookie(APP_NAME . '_user')));
 
             if (!empty($user)) {
-                create_session('user', $user);
+                create_session(APP_NAME . '_user', $user);
             }
         }
         

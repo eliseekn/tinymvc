@@ -91,7 +91,7 @@ endif
                             <label class="custom-control-label" for="admin">Admin</label>
                         </div>
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input class="custom-control-input" type="radio" name="role" id="user" value="user" <?php if ($user->role === 'user') : echo 'checked'; endif ?>>
+                            <input class="custom-control-input" type="radio" name="role" id="user" value="user" <?php if ($user->role === APP_NAME . '_user') : echo 'checked'; endif ?>>
                             <label class="custom-control-label" for="user">User</label>
                         </div>
                     </div>

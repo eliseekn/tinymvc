@@ -53,11 +53,11 @@ class Authenticate
             'online' => 1
         ]);
         
-        create_session('user', $user);
+        create_session(APP_NAME . '_user', $user);
             
         if (!empty(Request::getField('remember'))) {
             $credential = Encryption::encrypt(Request::getField($credential));
-            create_cookie('user', $credential, 3600 * 24 * 365);
+            create_cookie(APP_NAME . '_user', $credential, 3600 * 24 * 365);
         }
 
         //reset attempts
@@ -100,7 +100,7 @@ class Authenticate
      */
     public static function check(): bool
     {
-        return session_has('user');
+        return session_has(APP_NAME . '_user');
     }
 
     /**
@@ -110,7 +110,7 @@ class Authenticate
      */
     public static function checkRemember(): bool
     {
-        return cookie_has('user');
+        return cookie_has(APP_NAME . '_user');
     }
     
     /**
@@ -120,7 +120,7 @@ class Authenticate
      */
     public static function getUser()
     {
-        return get_session('user');
+        return get_session(APP_NAME . '_user');
     }
     
     /**
@@ -130,16 +130,16 @@ class Authenticate
      */
     public static function logout(): void
     {
-        if (session_has('user')) {
-            UsersModel::update(get_session('user')->id, [
+        if (session_has(APP_NAME . '_user')) {
+            UsersModel::update(get_session(APP_NAME . '_user')->id, [
                 'online' => 0
             ]);
         
-            close_session('user');
+            close_session(APP_NAME . '_user');
         }
 
-        if (cookie_has('user')) {
-            delete_cookie('user');
+        if (cookie_has(APP_NAME . '_user')) {
+            delete_cookie(APP_NAME . '_user');
         }
     }
 }

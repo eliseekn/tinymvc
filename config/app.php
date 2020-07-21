@@ -14,6 +14,9 @@
  * Application main configuration
  */
 
+//define application name
+define('APP_NAME', 'tinymvc');
+
 //define application root folder. Leave empty for www root
 define('ROOT_FOLDER', '/tinymvc');
 

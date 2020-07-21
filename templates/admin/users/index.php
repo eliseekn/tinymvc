@@ -118,13 +118,13 @@ endif
 
                         <td>
 
-                            <?php if ($user->role !== 'admin' || $user->id === get_session('user')->id) : ?>
+                            <?php if ($user->role !== 'admin' || $user->id === get_session(APP_NAME . '_user')->id) : ?>
 
                             <a class="btn text-primary" href="<?= absolute_url('/admin/users/edit/' . $user->id) ?>">
                                 <i class="fa fa-edit"></i>
                             </a>
 
-                            <?php if ($user->id !== get_session('user')->id) : ?>
+                            <?php if ($user->id !== get_session(APP_NAME . '_user')->id) : ?>
 
                             <button class="btn text-danger" onclick="confirmDelete(this, 'Are you sure you want to delete this user?', '<?= absolute_url('/admin/users/delete/' . $user->id) ?>')">
                                 <i class="fa fa-trash-alt"></i>
