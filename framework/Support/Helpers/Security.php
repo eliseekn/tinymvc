@@ -72,7 +72,7 @@ if (!function_exists('generate_csrf_token')) {
             create_session('csrf_token', $csrf_token);
         }
 
-        return '<input type="hidden" name="csrf_token" value="' . $csrf_token . '">';
+        return '<input type="hidden" name="csrf_token" id="csrf_token" value="' . $csrf_token . '">';
     }
 }
 

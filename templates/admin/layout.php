@@ -80,7 +80,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             //toggle sidebar
             document.querySelector('#sidebar-toggler').addEventListener('click', event => {
-                event.preventDefault()
                 document.querySelector('#wrapper').classList.toggle('toggled')
 
                 if (document.querySelector('#wrapper').classList.contains('toggled')) {

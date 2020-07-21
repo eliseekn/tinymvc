@@ -58,7 +58,7 @@ if (!function_exists('cookie_has')) {
 	 */
 	function cookie_has(string $name): bool
 	{
-		return isset($_COOKIE[$name]);
+		return array_key_exists($name, $_COOKIE);
 	}
 }
 

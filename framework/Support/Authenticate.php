@@ -57,7 +57,7 @@ class Authenticate
             
         if (!empty(Request::getField('remember'))) {
             $credential = Encryption::encrypt(Request::getField($credential));
-            create_cookie('user', $credential, 3600 * 24 * 30);
+            create_cookie('user', $credential, 3600 * 24 * 365);
         }
 
         //reset attempts
@@ -76,7 +76,6 @@ class Authenticate
     public static function new(array $credentials, string $credential = 'email'): bool
     {
         if (!UsersModel::exists($credential, Request::getField($credential))) {
-            
             if (!empty($credentials)) {
                 foreach ($credentials as $credential) {
                     if (array_key_exists($credential, Request::getField())) {

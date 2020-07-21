@@ -20,7 +20,7 @@ class PasswordResetController
 	 */
 	public function notify(): void
 	{
-		$token = random_string(20, true);
+		$token = random_string(50, true);
 		$expires = strtotime('+1 hour', strtotime(date('Y-m-d H:i:s')));
 
 		if (
@@ -31,7 +31,7 @@ class PasswordResetController
 				->subject('Password reset notification')
 				->message('
 					<p>You are receiving this email because we received a password reset request for your account. Click the button below to reset your password:</p>
-					<p><a href="' . absolute_url('/password/reset?token=' . $token) . '">' . absolute_url('/password/reset?token=' . $token) . '</a></p>
+					<p><a href="' . absolute_url('/password/reset?email=' . Request::getField('email') . '&token=' . $token) . '">' . absolute_url('/password/reset?email=' . Request::getField('email') . '&token=' . $token) . '</a></p>
 					<p>If you did not request a password reset, no further action is required.</p>
 				')
 				->asHTML()

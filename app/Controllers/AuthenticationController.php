@@ -61,7 +61,7 @@ class AuthenticationController
             ->replyTo(EMAIL['from'], EMAIL['name'])
 			->subject('Welcome')
             ->message('
-                <p>Hello,</p> <br>
+                <p>Hello,</p>
                 <p>Congratulations, your account has been successfully created.</p>
             ')
 			->asHTML()

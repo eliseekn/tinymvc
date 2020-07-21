@@ -135,7 +135,7 @@ Route::get('/password/reset', [
     'handler' => 'PasswordResetController@reset'
 ]);
 
-Route::get('/password/notify', [
+Route::post('/password/notify', [
     'handler' => 'PasswordResetController@notify'
 ]);
 
