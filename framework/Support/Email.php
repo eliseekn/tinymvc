@@ -30,11 +30,13 @@ class Email
     protected static $mail;
 
     /**
-     * setup PHPMailer
+     * setup PHPMailer and set address 
      *
+     * @param  string $address
+     * @param  string $name
      * @return mixed
      */
-    public static function new()
+    public static function to(string $address, string $name = '')
     {
         self::$mail = new PHPMailer(true);
         self::$mail->Debugoutput = 'error_log';
@@ -53,20 +55,8 @@ class Email
             self::$mail->Password = EMAIL['password'];
         }
 
-        return new self();
-    }
-    
-    /**
-     * to
-     *
-     * @param  string $address
-     * @param  string $name
-     * @return mixed
-     */
-    public function to(string $address, string $name = '')
-    {
         self::$mail->addAddress($address, $name);
-        return $this;
+        return new self();
     }
 
     /**

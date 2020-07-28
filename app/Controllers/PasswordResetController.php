@@ -24,8 +24,7 @@ class PasswordResetController
 		$expires = strtotime('+1 hour', strtotime(date('Y-m-d H:i:s')));
 
 		if (
-			Email::new()
-				->to(Request::getField('email'))
+			Email::to(Request::getField('email'))
 				->from(EMAIL['from'], EMAIL['name'])
             	->replyTo(EMAIL['from'], EMAIL['name'])
 				->subject('Password reset notification')

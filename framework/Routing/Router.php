@@ -38,7 +38,7 @@ class Router
      */
     public function __construct()
     {
-        $this->addSessionHistory();
+        $this->addBrowsingHistory();
         
         try {
             $this->dispatch(Route::$routes);
@@ -52,9 +52,9 @@ class Router
      *
      * @return void
      */
-    private function addSessionHistory(): void
+    private function addBrowsingHistory(): void
     {
-        $browsing_history = get_session('browsing_history');
+        $browsing_history = get_browsing_history();
 
         if (empty($browsing_history)) {
             $browsing_history = [Request::getURI()];
@@ -62,7 +62,7 @@ class Router
             $browsing_history[] = Request::getURI();
         }
 
-        create_session('browsing_history', $browsing_history);
+        create_browsing_history($browsing_history);
     }
     
     /**
@@ -92,7 +92,6 @@ class Router
 
                             //execute
                             call_user_func_array($options['handler'], array_values($params));
-                            
                             exit();
                         }
                         

@@ -6,40 +6,40 @@
 <?php $this->start('page_content') ?>
 
 <?php
-if (session_has('flash_messages')) :
-    $flash_messages = get_flash_messages('flash_messages');
+if (session_has_flash_messages()) :
+    $flash_messages = get_flash_messages();
 
     if (isset($flash_messages['success'])) :
 ?>
-    <div class="alert alert-success alert-dismissible show" role="alert">
+        <div class="alert alert-success alert-dismissible show" role="alert">
 
-        <?php foreach ($flash_messages as $flash_message) : echo $flash_message . '<br>'; endforeach; ?>
+            <?php foreach ($flash_messages as $flash_message) : echo $flash_message . '<br>'; endforeach; ?>
 
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
 
-<?php else : ?>
+    <?php else : ?>
 
-    <div class="alert alert-danger alert-dismissible show" role="alert">
+        <div class="alert alert-danger alert-dismissible show" role="alert">
 
-        <?php
-        foreach ($flash_messages as $flash_message) :
-            if (is_array($flash_message)) :
-                foreach ($flash_message as $error_message) :
-                    echo $error_message . '<br>';
-                endforeach;
-            else :
-                echo $flash_message . '<br>';
-            endif;
-        endforeach
-        ?>
+            <?php
+            foreach ($flash_messages as $flash_message) :
+                if (is_array($flash_message)) :
+                    foreach ($flash_message as $error_message) :
+                        echo $error_message . '<br>';
+                    endforeach;
+                else :
+                    echo $flash_message . '<br>';
+                endif;
+            endforeach
+            ?>
 
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
 
 <?php
     endif;
@@ -48,27 +48,24 @@ endif
 
 <div class="card">
     <div class="card-header bg-dark d-flex align-items-center justify-content-between">
-        <h3 class="mb-0 text-white">Users</h3>
-        
-        <a href="<?= absolute_url('/admin/users/add') ?>" class="btn btn-primary">
-            <i class="fa fa-plus"></i> Add new user
-        </a>
+        <p class="mb-0 text-white lead">Users</p>
+        <a href="<?= absolute_url('/admin/users/add') ?>" class="btn btn-primary">Add user</a>
     </div>
 
     <div class="card-body">
         <div class="input-group mb-5">
             <div class="input-group-prepend">
-                <div class="input-group-text">
+                <div class="input-group-text bg-white">
                     <li class="fa fa-search"></li>
                 </div>
             </div>
 
-            <input type="search" class="form-control" id="filter" placeholder="Filter results">
+            <input type="search" class="form-control border-left-0" id="filter" placeholder="Filter results">
         </div>
 
         <div class="d-flex align-items-center justify-content-end mb-3">
             <button class="btn btn-danger ml-3" id="bulk-delete" data-url="<?= absolute_url('/admin/users/delete/') ?>">
-                <i class="fa fa-trash"></i> Bulk delete
+                Bulk delete
             </button>
         </div>
 
@@ -118,13 +115,13 @@ endif
 
                         <td>
 
-                            <?php if ($user->role !== 'admin' || $user->id === get_session(APP_NAME . '_user')->id) : ?>
+                            <?php if ($user->role !== 'admin' || $user->id === get_user_session()->id) : ?>
 
                             <a class="btn text-primary" href="<?= absolute_url('/admin/users/edit/' . $user->id) ?>">
                                 <i class="fa fa-edit"></i>
                             </a>
 
-                            <?php if ($user->id !== get_session(APP_NAME . '_user')->id) : ?>
+                            <?php if ($user->id !== get_user_session()->id) : ?>
 
                             <button class="btn text-danger" onclick="confirmDelete(this, 'Are you sure you want to delete this user?', '<?= absolute_url('/admin/users/delete/' . $user->id) ?>')">
                                 <i class="fa fa-trash-alt"></i>
@@ -146,7 +143,7 @@ endif
     </div>
 
     <div class="card-footer d-flex align-items-center justify-content-between">
-        <p class="lead mb-0">
+        <p class="mb-0">
             Total result(s): <span class="font-weight-bold"><?= $users->getTotalItems() ?></span>
         </p>
 
@@ -156,9 +153,7 @@ endif
                 <?php if ($users->hasLess()) : ?>
 
                 <li class="page-item">
-                    <a class="page-link" href="<?= $users->previousPageUrl() ?>">
-                        Previous
-                    </a>
+                    <a class="page-link" href="<?= $users->previousPageUrl() ?>">Previous</a>
                 </li>
 
                 <?php 
@@ -180,9 +175,7 @@ endif
                 ?>
 
                 <li class="page-item">
-                    <a class="page-link" href="<?= $users->nextPageUrl() ?>">
-                        Next
-                    </a>
+                    <a class="page-link" href="<?= $users->nextPageUrl() ?>">Next</a>
                 </li>
 
                 <?php endif ?>

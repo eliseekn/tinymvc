@@ -41,7 +41,7 @@ class Middleware
      * @param  string $middleware name of middleware
      * @return void
      */
-    public static function execute(string $middleware): void
+    private static function execute(string $middleware): void
     {
         if (!isset(self::$names[$middleware])) {
             throw new Exception('Invalid middleware name "' . $middleware . '".');

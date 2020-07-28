@@ -29,20 +29,20 @@ Route::get('/home', [
 ]);
 
 //authentication routes
-Route::get('/login', [
-    'handler' => function() {
-        View::render('auth/login');
-    },
-    'middlewares' => [
-        'remember',
-        'auth'
-    ]
-]);
+Route::group([
+    '/login' => [
+        'handler' => function() {
+            View::render('auth/login');
+        }
+    ],
 
-Route::get('/signup', [
-    'handler' =>  function() {
-        View::render('auth/signup');
-    },
+    '/signup' => [
+        'handler' => function() {
+            View::render('auth/signup');
+        }
+    ]
+])->by([
+    'method' => 'GET',
     'middlewares' => [
         'remember',
         'auth'
@@ -62,57 +62,28 @@ Route::post('/register', [
 ]);
 
 //admin routes
-Route::get('/admin', [
-    'handler' => 'Admin\AdminController@index',
+Route::group([
+    '/admin' => ['handler' => 'Admin\AdminController@index'],
+    '/admin/users' => ['handler' => 'Admin\AdminController@users'],
+    '/admin/users/add' => ['handler' => 'Admin\UsersController@add'],
+    '/admin/users/edit/{id:num}' => ['handler' => 'Admin\UsersController@edit'],
+    '/admin/users/delete/{id:num}?' => ['handler' => 'Admin\UsersController@delete']
+])->by([
+    'method' => 'GET',
     'middlewares' => [
         'remember',
         'admin'
     ]
 ]);
 
-///users routes
-Route::get('/admin/users/add', [
-    'handler' => 'Admin\UsersController@add',
-    'middlewares' => [
-        'admin'
-    ]
-]);
-
-Route::get('/admin/users', [
-    'handler' => 'Admin\AdminController@users',
-    'middlewares' => [
-        'admin'
-    ]
-]);
-
-Route::get('/admin/users/edit/{id:num}', [
-    'handler' => 'Admin\UsersController@edit',
-    'middlewares' => [
-        'admin'
-    ]
-]);
-
-Route::post('/admin/users/create', [
-    'handler' => 'Admin\UsersController@create',
+Route::group([
+    '/admin/users/create' => ['handler' => 'Admin\UsersController@create'],
+    '/admin/users/update/{id:num}' => ['handler' => 'Admin\UsersController@update']
+])->by([
+    'method' => 'POST',
     'middlewares' => [
         'csrf',
         'sanitize',
-        'admin'
-    ]
-]);
-
-Route::post('/admin/users/update/{id:num}', [
-    'handler' => 'Admin\UsersController@update',
-    'middlewares' => [
-        'csrf',
-        'sanitize',
-        'admin'
-    ]
-]);
-
-Route::get('/admin/users/delete/{id:num}?', [
-    'handler' => 'Admin\UsersController@delete',
-    'middlewares' => [
         'admin'
     ]
 ]);

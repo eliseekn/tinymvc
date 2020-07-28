@@ -58,7 +58,7 @@ if (!function_exists('cookie_has')) {
 	 */
 	function cookie_has(string $name): bool
 	{
-		return array_key_exists($name, $_COOKIE);
+		return isset($_COOKIE[$name]);
 	}
 }
 
@@ -72,5 +72,55 @@ if (!function_exists('delete_cookie')) {
 	function delete_cookie(string $name): bool
 	{
 		return setcookie($name, '', time() - 3600, '/');
+	}
+}
+
+if (!function_exists('create_user_cookie')) {
+	/**
+	 * create user cookie
+	 *
+	 * @param  string $value
+	 * @return bool
+	 */
+	function create_user_cookie(string $value): bool 
+	{
+		return create_cookie(APP_NAME . '_user', $value, 3600 * 24 * 365);
+	}
+}
+
+if (!function_exists('get_user_cookie')) {
+	/**
+	 * return user cookie
+	 *
+	 * @param  string $name
+	 * @return string
+	 */
+	function get_user_cookie(): string
+	{
+		return get_cookie(APP_NAME . '_user');
+	}
+}
+
+if (!function_exists('cookie_has_user')) {
+	/**
+	 * check if user cookie exists
+	 *
+	 * @return bool
+	 */
+	function cookie_has_user(): bool
+	{
+		return cookie_has(APP_NAME . '_user');
+	}
+}
+
+if (!function_exists('delete_user_cookie')) {
+	/**
+	 * delete user cookie
+	 *
+	 * @return void
+	 */
+	function delete_user_cookie(): bool
+	{
+		delete_cookie(APP_NAME . '_user');
 	}
 }

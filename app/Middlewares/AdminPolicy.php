@@ -30,7 +30,7 @@ class AdminPolicy
             if (isset(ERRORS_PAGE['403']) && !empty(ERRORS_PAGE['403'])) {
                 View::render(ERRORS_PAGE['403'], [], 403);
             } else {
-                Response::send([], 'You do not have permission to access this page.', 404);
+                Response::send([], 'You do not have permission to access this page.', 403);
             }
         }
     }

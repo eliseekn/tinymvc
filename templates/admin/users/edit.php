@@ -6,40 +6,40 @@
 <?php $this->start('page_content') ?>
 
 <?php
-if (session_has('flash_messages')) :
-    $flash_messages = get_flash_messages('flash_messages');
+if (session_has_flash_messages()) :
+    $flash_messages = get_flash_messages();
 
     if (isset($flash_messages['success'])) :
 ?>
-    <div class="alert alert-success alert-dismissible show" role="alert">
+        <div class="alert alert-success alert-dismissible show" role="alert">
 
-        <?php foreach ($flash_messages as $flash_message) : echo $flash_message . '<br>'; endforeach; ?>
+            <?php foreach ($flash_messages as $flash_message) : echo $flash_message . '<br>'; endforeach; ?>
 
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
 
-<?php else : ?>
+    <?php else : ?>
 
-    <div class="alert alert-danger alert-dismissible show" role="alert">
+        <div class="alert alert-danger alert-dismissible show" role="alert">
 
-        <?php
-        foreach ($flash_messages as $flash_message) :
-            if (is_array($flash_message)) :
-                foreach ($flash_message as $error_message) :
-                    echo $error_message . '<br>';
-                endforeach;
-            else :
-                echo $flash_message . '<br>';
-            endif;
-        endforeach
-        ?>
+            <?php
+            foreach ($flash_messages as $flash_message) :
+                if (is_array($flash_message)) :
+                    foreach ($flash_message as $error_message) :
+                        echo $error_message . '<br>';
+                    endforeach;
+                else :
+                    echo $flash_message . '<br>';
+                endif;
+            endforeach
+            ?>
 
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
 
 <?php
     endif;
@@ -47,9 +47,7 @@ endif
 ?>
 
 <div class="card">
-    <div class="card-header bg-dark">
-        <h3 class="mb-0 text-white">Edit user</h3>
-    </div>
+    <div class="card-header bg-dark text-white lead">Edit user</div>
 
     <form method="post" action="<?= absolute_url('/admin/users/update/' . $user->id) ?>">
         
@@ -91,7 +89,7 @@ endif
                             <label class="custom-control-label" for="admin">Admin</label>
                         </div>
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input class="custom-control-input" type="radio" name="role" id="user" value="user" <?php if ($user->role === APP_NAME . '_user') : echo 'checked'; endif ?>>
+                            <input class="custom-control-input" type="radio" name="role" id="user" value="user" <?php if ($user->role === 'user') : echo 'checked'; endif ?>>
                             <label class="custom-control-label" for="user">User</label>
                         </div>
                     </div>

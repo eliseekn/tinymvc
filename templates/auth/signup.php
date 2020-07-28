@@ -14,27 +14,27 @@
 <body>
     <div class="d-flex align-items-center justify-content-center min-vh-100">
         <div class="container" style="width: 400px">
-
             <h1 class="py-3 text-center">Sign up</h1>
 
-            <?php if (session_has('flash_messages')) : ?>
+            <?php if (session_has_flash_messages()) : ?>
 
-                <div class="alert alert-danger" role="alert">
+                <div class="alert alert-danger alert-dismissible show" role="alert">
 
-                    <?php
-                    $flash_messages = get_flash_messages('flash_messages');
+                <?php
+                foreach ($flash_messages as $flash_message) :
+                    if (is_array($flash_message)) :
+                        foreach ($flash_message as $error_message) :
+                            echo $error_message . '<br>';
+                        endforeach;
+                    else :
+                        echo $flash_message . '<br>';
+                    endif;
+                endforeach
+                ?>
 
-                    foreach ($flash_messages as $flash_message) {
-                        if (is_array($flash_message)) {
-                            foreach ($flash_message as $error_message) {
-                                echo $error_message . '<br>';
-                            }
-                        } else {
-                            echo $flash_message . '<br>';
-                        }
-                    }
-                    ?>
-
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
 
             <?php endif ?>

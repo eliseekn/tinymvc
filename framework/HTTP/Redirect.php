@@ -110,12 +110,11 @@ class Redirect
      */
     public static function back()
     {
-        $browsing_history = get_session('browsing_history');
+        $browsing_history = get_browsing_history();
 
         if (!empty($browsing_history)) {
-            $current_url = end($browsing_history);
-            $key = array_search($current_url, $browsing_history); 
-            self::$redirect_url = $browsing_history[$key - 1];
+            end($browsing_history);
+            self::$redirect_url = prev($browsing_history);
         }
 
         return new self();
@@ -128,7 +127,7 @@ class Redirect
      */
     public static function refresh()
     {
-        $browsing_history = get_session('browsing_history');
+        $browsing_history = get_browsing_history();
 
         if (!empty($browsing_history)) {
             self::$redirect_url = end($browsing_history);
@@ -146,7 +145,7 @@ class Redirect
      */
     public function withMessage(string $title, $content): void
     {
-        create_flash_message($title, $content);
+        create_flash_messages($title, $content);
         redirect_to(self::$redirect_url);
     }
 

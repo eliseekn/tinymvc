@@ -18,15 +18,14 @@
             <h1 class="py-3 text-center">Log in</h1>
 
             <?php
-            if (session_has('flash_messages')) :
-                $flash_messages = get_flash_messages('flash_messages');
+            if (session_has_flash_messages()) :
+                $flash_messages = get_flash_messages();
 
                 if (isset($flash_messages['success'])) :
             ?>
                     <div class="alert alert-success alert-dismissible show" role="alert">
 
-                        <?php foreach ($flash_messages as $flash_message) : echo $flash_message . '<br>';
-                        endforeach; ?>
+                        <?php foreach ($flash_messages as $flash_message) : echo $flash_message . '<br>'; endforeach; ?>
 
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -81,9 +80,9 @@
                         </div>
                     </div>
 
-                    <div class="d-flex justify-content-between">
+                    <div class="d-flex flex-column flex-lg-row justify-content-lg-between justify-content-center mb-3 mb-lg-0 mx-auto">
                         <div class="form-group custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input" id="remember" name="remember" checked>
+                            <input type="checkbox" class="custom-control-input" id="remember" name="remember">
                             <label class="custom-control-label" for="remember">Remember me</label>
                         </div>
 

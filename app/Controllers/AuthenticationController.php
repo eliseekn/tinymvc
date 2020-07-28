@@ -55,8 +55,7 @@ class AuthenticationController
             Redirect::back()->withError('The email address provided is already used by another user.');
         }
 
-        Email::new()
-            ->to(Request::getField('email'))
+        Email::to(Request::getField('email'))
             ->from(EMAIL['from'], EMAIL['name'])
             ->replyTo(EMAIL['from'], EMAIL['name'])
 			->subject('Welcome')

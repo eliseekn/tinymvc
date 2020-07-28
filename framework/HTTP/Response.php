@@ -29,7 +29,7 @@ class Response
      */
     public static function send(array $headers, $body, int $code = 200): void
     {
-        if (is_null($body)) {
+        if (!isset($body)) {
             return;
         }
         

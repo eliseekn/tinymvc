@@ -17,9 +17,12 @@
             font-family: sans-serif;
         }
 
-        div {
-            text-align: center;
+        .container {
+            max-width: 960px;
+            width: 90%;
+            margin: 0 auto;
             padding: 5em 0;
+            text-align: center;
         }
 
         h1 {
@@ -36,7 +39,7 @@
 
 <body>
 
-    <div>
+    <div class="container">
         <h1>Error 404: <em>Page not found</em></h1>
         <p>The page you've requested doesn't exists on this server.</p>
         <p><a href="<?= absolute_url('/') ?>">Go back home</a></p>

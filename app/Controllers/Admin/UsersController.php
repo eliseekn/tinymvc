@@ -11,7 +11,6 @@ use App\Database\Models\UsersModel;
 
 class UsersController
 {
-
 	/**
 	 * display add user page
 	 * 
@@ -118,7 +117,7 @@ class UsersController
 				UsersModel::delete($id);
 			}
 			
-			create_flash_message('success', 'The user has been deleted successfully.');
+			create_flash_messages('success', 'The users has been deleted successfully.');
 		}
     }
 }

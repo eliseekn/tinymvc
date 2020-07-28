@@ -26,16 +26,14 @@
 			</div>
 
             <?php
-            if (session_has('flash_messages')) :
-                $flash_messages = get_flash_messages('flash_messages');
+            if (session_has_flash_messages()) :
+                $flash_messages = get_flash_messages();
 
                 if (isset($flash_messages['success'])) :
             ?>
-
                     <div class="alert alert-success alert-dismissible show" role="alert">
 
-                        <?php foreach ($flash_messages as $flash_message) : echo $flash_message . '<br>';
-                        endforeach; ?>
+                        <?php foreach ($flash_messages as $flash_message) : echo $flash_message . '<br>'; endforeach; ?>
 
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -75,7 +73,7 @@
                         <input type="email" id="email" name="email" class="form-control">
                     </div>
 
-                    <input type="submit" class="btn btn-primary loading w-100" value="Submit">
+                    <button type="submit" class="btn btn-primary loading w-100">Submit</button>
                 </form>
             </div>
 
