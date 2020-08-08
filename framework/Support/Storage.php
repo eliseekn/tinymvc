@@ -80,11 +80,7 @@ class Storage
      */
     public static function moveFile(string $filename, string $destination): bool
     {
-        if (is_uploaded_file($filename)) {
-            return move_uploaded_file($filename, PUBLIC_STORAGE . $destination);
-        } else {
-            return self::renameFile($filename, $destination);
-        }
+        return self::renameFile($filename, $destination);
     }
     
     /**

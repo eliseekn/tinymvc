@@ -25,11 +25,19 @@ class AuthenticationController
 	{
 		LoginForm::validate([
 			'redirect' => 'back'
-		]);
+        ]);
 
 		if (!Authenticate::attempt()) {
-            Redirect::back()->withError('Invalid email address and/or password.');
+            if (AUTH_ATTEMPTS !== 0 && Authenticate::getAttempts() > AUTH_ATTEMPTS) {
+                create_session('auth_attempts_timeout', strtotime('+' . AUTH_ATTEMPTS_TIMEOUT . ' minute', strtotime(date('Y-m-d H:i:s'))));
+                Redirect::back()->withError('Authentication attempts exceeded. <br> Wait ' . AUTH_ATTEMPTS_TIMEOUT . ' minute(s) and refresh the page to try again');
+            } else {
+                Redirect::back()->withError('Invalid email address and/or password');
+            }
         }
+
+        //disable authentication lock
+        close_session('auth_attempts_timeout');
         
         if (Authenticate::getUser()->role === 'admin') {
             Redirect::toUrl('/admin')->only();
@@ -52,7 +60,7 @@ class AuthenticationController
         Request::setField('password', hash_string(Request::getField('password')));
 
         if (!Authenticate::new(['name', 'email', 'password'])) {
-            Redirect::back()->withError('The email address provided is already used by another user.');
+            Redirect::back()->withError('The email address provided is already used by another user');
         }
 
         Email::to(Request::getField('email'))
@@ -66,7 +74,7 @@ class AuthenticationController
 			->asHTML()
 			->send();
 
-        Redirect::toUrl('/login')->withSuccess('You have been registered successfully. Log in now with your credentials.');
+        Redirect::toUrl('/login')->withSuccess('You have been registered successfully. Log in now with your credentials');
     }
 	
 	/**

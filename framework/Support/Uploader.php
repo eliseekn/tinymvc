@@ -81,7 +81,7 @@ class Uploader
     {
         return $this->file['type'] ?? '';
     }
-        
+    
     /**
      * get file extension
      *
@@ -89,12 +89,12 @@ class Uploader
      */
     public function getFileExtension(): string
     {
-        if (empty($this->getOriginalFilename())) {
+        if (empty($this->getOriginalFilename()) || strpos($this->getOriginalFilename(), '.') === false) {
             return '';
         }
 
         $file = explode('.', $this->getOriginalFilename());
-        return $file === false ? '' : $file[1];
+        return $file === false ? '' : end($file);
     }
         
     /**
@@ -104,11 +104,7 @@ class Uploader
      */
     public function isAllowed(): bool
     {
-        if (empty($this->allowed_extensions)) {
-            return true;
-        }
-
-        return in_array(strtolower($this->getFileExtension()), $this->allowed_extensions);
+        return empty($this->allowed_extensions) ? true : in_array(strtolower($this->getFileExtension()), $this->allowed_extensions);
     }
         
     /**
@@ -138,7 +134,7 @@ class Uploader
      */
     public function getFileSizeToString(): string
     {
-        if ($this->getFileSize() === 0) {
+        if ($this->getFileSize() <= 0) {
             return '';
         }
 
@@ -158,10 +154,10 @@ class Uploader
      * @param  string|null $filename
      * @return bool
      */
-    public function moveTo(string $destination, ?string $filename = null): bool
+    public function moveFile(string $destination, ?string $filename = null): bool
     {
         $filename = is_null($filename) ? $this->getOriginalFilename() : $filename;
         $this->filepath = $destination . DIRECTORY_SEPARATOR . $filename;
-        return Storage::moveFile($this->getTempFilename(), $this->filepath);
+        return move_uploaded_file($this->getTempFilename(), PUBLIC_STORAGE . $this->filepath);
     }
 }

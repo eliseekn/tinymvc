@@ -21,11 +21,10 @@ class CsrfProtection
     public static function handle(): void
     {
         if (!is_valid_csrf_token(Request::getField('csrf_token'))) {
-            //send 403 response
             if (isset(ERRORS_PAGE['403']) && !empty(ERRORS_PAGE['403'])) {
                 View::render(ERRORS_PAGE['403'], [], 403);
             } else {
-                Response::send([], 'You do not have permission to access this page.', 403);
+                Response::send([], 'You do not have permission to access this page', 403);
             }
         }
     }

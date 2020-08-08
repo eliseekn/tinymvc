@@ -150,17 +150,6 @@ class Redirect
     }
 
     /**
-     * redirects with error flash message
-     *
-     * @param  mixed $content content of message
-     * @return void
-     */
-    public function withError($content): void
-    {
-        self::withMessage('error', $content);
-    }
-
-    /**
      * redirects with success flash message
      *
      * @param  mixed $content content of message
@@ -169,6 +158,39 @@ class Redirect
     public function withSuccess($content): void
     {
         self::withMessage('success', $content);
+    }
+
+    /**
+     * redirects with error flash message
+     *
+     * @param  mixed $content content of message
+     * @return void
+     */
+    public function withError($content): void
+    {
+        self::withMessage('danger', $content);
+    }
+
+    /**
+     * redirects with success flash message
+     *
+     * @param  mixed $content content of message
+     * @return void
+     */
+    public function withWarning($content): void
+    {
+        self::withMessage('warning', $content);
+    }
+
+    /**
+     * redirects with success flash message
+     *
+     * @param  mixed $content content of message
+     * @return void
+     */
+    public function withInfo($content): void
+    {
+        self::withMessage('primary', $content);
     }
 
     /**

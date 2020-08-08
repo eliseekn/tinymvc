@@ -46,7 +46,7 @@ class Client
         bool $json_data = false
     ) {
         if (empty($urls)) {
-            throw new Exception('Cannot send HTTP request to empty url.');
+            throw new Exception('Cannot send HTTP request to empty url');
         }
 
         self::$response = curl($method, $urls, $headers, $data, $json_data);

@@ -30,7 +30,7 @@ class UsersController
 	public function edit(int $id): void
 	{
 		if (!UsersModel::exists('id', $id)) {
-			Redirect::back()->withError('Failed to get user infos. This user does not exists in database.');
+			Redirect::back()->withError('This user does not exists in database');
 		}
 
 		View::render('admin/users/edit', [
@@ -50,7 +50,7 @@ class UsersController
 		]);
 
 		if (UsersModel::exists('email', Request::getField('email'))) {
-			Redirect::back()->withError('Failed to create user. This user already exists in database.');
+			Redirect::back()->withError('This email address already exists in database');
 		}
 
 	    UsersModel::insert([
@@ -60,7 +60,7 @@ class UsersController
 			'role' => Request::getField('role')
         ]);
 
-        Redirect::back()->withSuccess('The user has been created successfully.');
+        Redirect::back()->withSuccess('The user has been created successfully');
     }
     
 	/**
@@ -76,7 +76,7 @@ class UsersController
 		]);
 
 		if (!UsersModel::exists('id', $id)) {
-			Redirect::back()->withError('Failed to update user. This user does not exists in database.');
+			Redirect::back()->withError('This user does not exists in database');
 		}
 
 		$data = [
@@ -91,7 +91,7 @@ class UsersController
 		}
 
 		UsersModel::update($id, $data);
-        Redirect::back()->withSuccess('The user has been updated successfully.');
+        Redirect::back()->withSuccess('The user has been updated successfully');
     }
 
 	/**
@@ -104,11 +104,11 @@ class UsersController
 	{
 		if (!is_null($id)) {
 			if (!UsersModel::exists('id', $id)) {
-				Redirect::back()->withError('Failed to delete user. This user does not exists in database.');
+				Redirect::back()->withError('This user does not exists in database');
 			}
 	
 			UsersModel::delete($id);
-			Redirect::back()->withSuccess('The user has been deleted successfully.');
+			Redirect::back()->withSuccess('The user has been deleted successfully');
 		} else {
 			$users_id = json_decode(Request::getRawData(), true);
 			$users_id = $users_id['items'];
@@ -117,7 +117,7 @@ class UsersController
 				UsersModel::delete($id);
 			}
 			
-			create_flash_messages('success', 'The users has been deleted successfully.');
+			create_flash_messages('success', 'The selected users have been deleted successfully');
 		}
     }
 }

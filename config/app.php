@@ -44,6 +44,3 @@ define('ERRORS_PAGE', [
     '404' => 'errors/404',
     '403' => 'errors/403'
 ]);
-
-//encryption key
-define('ENC_KEY', 'BIu5sSkxjVzqiMlHFcX42WpEK3ahUyLG9DQNogZJnmYwArT10R');

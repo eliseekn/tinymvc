@@ -42,9 +42,9 @@ class PasswordResetController
 				'expires' => date('Y-m-d H:i:s', $expires)
 			]);
 
-			Redirect::back()->withSuccess('Your password reset link has been sumbitted successfuly. You can check your email box now.');
+			Redirect::back()->withSuccess('Your password reset link has been sumbitted successfuly. <br> You can check your email box now');
 		} else {
-			Redirect::back()->withError('Failed to send paswword reset link to your email address.');
+			Redirect::back()->withError('Failed to send paswword reset link to your email address');
 		}
 	}
 	
@@ -56,11 +56,11 @@ class PasswordResetController
 	public function reset(): void
 	{
 		if (PasswordResetModel::valid(Request::getQuery('email'), Request::getQuery('token')) === false) {
-			Response::send([], 'This password reset link is invalid.');
+			Response::send([], 'This password reset link is invalid');
 		}
 
 		if (PasswordResetModel::findWhere('email', Request::getQuery('email'))->expires < date('Y-m-d H:i:s')) {
-			Response::send([], 'This password reset link expired. Please retrieves a new one.');
+			Response::send([], 'This password reset link expired. Please retrieves a new one');
 		}
 
 		PasswordResetModel::deleteWhere('email', Request::getQuery('email'));
@@ -85,6 +85,6 @@ class PasswordResetController
 			'password' => hash_string(Request::getField('password'))
 		]);
 		
-        Redirect::back()->withSuccess('Your password has been resetted successfully.');
+		Redirect::toUrl('/login')->withSuccess('Your password has been resetted successfully');
 	}
 }

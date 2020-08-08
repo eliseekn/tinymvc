@@ -57,9 +57,9 @@ class Router
         $browsing_history = get_browsing_history();
 
         if (empty($browsing_history)) {
-            $browsing_history = [Request::getURI()];
+            $browsing_history = [Request::getFullUri()];
         } else {
-            $browsing_history[] = Request::getURI();
+            $browsing_history[] = Request::getFullUri();
         }
 
         create_browsing_history($browsing_history);
@@ -116,10 +116,10 @@ class Router
             if (isset(ERRORS_PAGE['404']) && !empty(ERRORS_PAGE['404'])) {
                 View::render(ERRORS_PAGE['404'], [], 404);
             } else {
-                Response::send([], 'The page you have requested does not exists on this server.', 404);
+                Response::send([], 'The page you have requested does not exists on this server', 404);
             }
         } else {
-            throw new Exception('No route defines in configuration.');
+            throw new Exception('No route defines in configuration');
         }
     }
 }

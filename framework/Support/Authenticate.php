@@ -21,13 +21,16 @@ use App\Database\Models\UsersModel;
  * Manage user authentication
  */
 class Authenticate
-{    
+{
     /**
-     * authencation attempts count
+     * return authentication attempts count
      *
-     * @var int
+     * @return int
      */
-    public static $attempts = 0;
+    public static function getAttempts(): int
+    {
+        return get_session('auth_attempts') ?? 0;
+    }
     
     /**
      * check user credential
@@ -37,15 +40,19 @@ class Authenticate
      */
     public static function attempt(string $credential = 'email'): bool
     {
+        $auth_attempts = get_session('auth_attempts') ?? 0;
+
         if (!UsersModel::exists($credential, Request::getField($credential))) {
-            self::$attempts++;
+            $auth_attempts++;
+            create_session('auth_attempts', $auth_attempts);
             return false;
         }
 
         $user = UsersModel::findWhere($credential, Request::getField($credential));
 
         if (!compare_hash(Request::getField('password'), $user->password)) {
-            self::$attempts++;
+            $auth_attempts++;
+            create_session('auth_attempts', $auth_attempts);
             return false;
         }
 
@@ -59,8 +66,8 @@ class Authenticate
             create_user_cookie(Encryption::encrypt(Request::getField($credential)));
         }
 
-        //reset attempts
-        self::$attempts = 0;
+        //reset authentication attempts
+        close_session('auth_attempts');
 
         return true;
     }

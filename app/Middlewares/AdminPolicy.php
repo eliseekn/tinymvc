@@ -22,15 +22,14 @@ class AdminPolicy
     public static function handle(): void
     {
         if (!Authenticate::check()) {
-            Redirect::toUrl('/login')->withError('You must be logged first.');
+            Redirect::toUrl('/login')->withError('You must be logged first to access this page');
         }
         
         if (Authenticate::getUser()->role !== 'admin') {
-            //send 403 response
             if (isset(ERRORS_PAGE['403']) && !empty(ERRORS_PAGE['403'])) {
                 View::render(ERRORS_PAGE['403'], [], 403);
             } else {
-                Response::send([], 'You do not have permission to access this page.', 403);
+                Response::send([], 'You do not have permission to access this page', 403);
             }
         }
     }

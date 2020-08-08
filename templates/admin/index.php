@@ -7,7 +7,13 @@
 
 <div class="card-columns">
     <div class="card">
-        <div class="card-header bg-dark text-white lead">Users</div>
+        <div class="card-header d-flex justify-content-between align-items-center bg-dark lead">
+            <span class="text-white">Users</span>
+
+            <a href="<?= absolute_url('/admin/users') ?>">
+                <i class="fa fa-dot-circle text-white"></i>
+            </a>
+        </div>
 
         <div class="card-body">
             <p class="card-text">Total: <span class="font-weight-bold"><?= count($users) ?></span></p>

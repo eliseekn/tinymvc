@@ -121,14 +121,25 @@ class Request
     }
 
     /**
-     * retrieves requested uri
+     * retrieves full requested uri
+     *
+     * @return string
+     */
+    public static function getFullUri(): string
+    {
+        $uri = self::getHeader('REQUEST_URI');
+        $uri = str_replace(ROOT_FOLDER, '', $uri); //remove root subfolder if exists 
+        return $uri;
+    }
+
+    /**
+     * retrieves partial requested uri
      *
      * @return string
      */
     public static function getURI(): string
     {
-        $uri = self::getHeader('REQUEST_URI');
-        $uri = str_replace(ROOT_FOLDER, '', $uri); //remove root subfolder if exists 
+        $uri = self::getFullUri();
 
         //looks for "?page=" or something like and remove it from uri
         if (strpos($uri, '?') !== false) {

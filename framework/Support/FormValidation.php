@@ -53,7 +53,6 @@ class FormValidation
                     switch ($value) {
                         case 'back':
                             Redirect::back()->withError($error_messages);
-                            break;
                         default:
                             Redirect::toUrl($value)->withError($error_messages);
                     }

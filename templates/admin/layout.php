@@ -9,14 +9,13 @@
     <meta name="description" content="<?= $page_description ?>">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" href="<?= absolute_url('/public/css/admin.css') ?>">
-
     <title><?= $page_title ?></title>
 </head>
 
 <body>
     <div class="d-flex" id="wrapper">
         <div class="bg-light border-light border-right min-vh-100" id="sidebar-wrapper">
-            <div class="sidebar-heading bg-dark">
+            <div class="sidebar-title bg-dark">
                 <a href="<?= absolute_url('/admin') ?>" class="text-light">
                     <i class="fa fa-home"></i> Dashboard
                 </a>
@@ -31,33 +30,24 @@
 
         <div id="page-content-wrapper">
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
-                <button class="btn btn-light" id="sidebar-toggler">
-                    <i class="fa fa-angle-left"></i>
+                <button class="btn btn-light" id="sidebar-toggler" title="Toggle sidebar">
+                    <i class="fa fa-bars"></i>
                 </button>
-                    
-                <div class="d-flex align-items-center ml-auto">
-                    <span class="btn rounded-circle text-white bg-info mr-2">
-                        <?= strtoupper(get_user_session()->name[0]) ?>
-                    </span>
 
-                    <span class="text-white">Welcome, <em><?= get_user_session()->name ?></em>!</span>
+                <div class="ml-auto">
+                    <span class="text-white">Welcome, <em><?= explode(' ', get_user_session()->name)[0] ?></em>!</span>
                 </div>
 
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="<?= absolute_url('/') ?>" target="_blank">View site</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-danger ml-lg-2" href="<?= absolute_url('/logout') ?>">Log out</a>
+                        <a class="btn btn-danger" href="<?= absolute_url('/logout') ?>">Log out</a>
                     </li>
                 </ul>
             </nav>
 
             <div class="container-fluid p-4">
                 <div class="mt-3">
-
                     <?= $this->section('page_content') ?>
-
                 </div>
             </div>
         </div>
@@ -67,10 +57,9 @@
     <script defer src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script defer src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-    <script defer src="<?= absolute_url('/public/js/components/password.js') ?>"></script>
-    <script defer src="<?= absolute_url('/public/js/components/confirm.js') ?>"></script>
-    <script defer src="<?= absolute_url('/public/js/components/loading.js') ?>"></script>
-    <script defer src="<?= absolute_url('/public/js/components/admin.js') ?>"></script>
+    <script defer src="<?= absolute_url('/public/js/components/password-toggler.js') ?>"></script>
+    <script defer src="<?= absolute_url('/public/js/components/loading-button.js') ?>"></script>
+    <script defer src="<?= absolute_url('/public/js/admin.js') ?>"></script>
 </body>
 
 </html>

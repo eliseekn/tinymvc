@@ -24,6 +24,7 @@ require_once 'config/database.php';
 require_once 'config/routes.php';
 require_once 'config/middlewares.php';
 require_once 'config/email.php';
+require_once 'config/security.php';
 
 //start routing
 new \Framework\Routing\Router();
