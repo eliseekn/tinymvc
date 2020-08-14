@@ -12,50 +12,15 @@
 
 namespace Framework\Console;
 
+use Framework\Support\Storage;
+
 /**
  * CLI
  * 
  * Manage migrations and seeds from command line interface
  */
 class CLI
-{    
-    /**
-     * migrations folder
-     *
-     * @var string
-     */
-    protected static $migrations = __DIR__ . DIRECTORY_SEPARATOR . '../../app' . DIRECTORY_SEPARATOR . 'Database' . DIRECTORY_SEPARATOR . 'Migrations';
-    
-    /**
-     * seeds folder
-     *
-     * @var string
-     */
-    protected static $seeds =  __DIR__ . DIRECTORY_SEPARATOR . '../../app' . DIRECTORY_SEPARATOR . 'Database' . DIRECTORY_SEPARATOR . 'Seeds';
-    
-    /**
-     * print help message
-     *
-     * @return void
-     */
-    private static function helpMessage(): void
-    {
-        $help_message = '[+] Commands list:' . PHP_EOL;
-        $help_message .= '  --migration=all                             Migrate all tables' . PHP_EOL;
-        $help_message .= '  --migration=UsersTable                      Migrate UsersTable only' . PHP_EOL;
-        $help_message .= '  --migration=UsersTable,CommentsTable        Migrate UsersTable and CommentsTable only' . PHP_EOL;
-        $help_message .= '  --migration=UsersTable,PostsTable --delete  Drop UsersTable and PostsTable only' . PHP_EOL;
-        $help_message .= '  --migration=all --delete                    Drop all tables' . PHP_EOL;
-        $help_message .= '  --seed=all                                  Insert all seeds' . PHP_EOL;
-        $help_message .= '  --seed=UserSeed                             Insert UserSeed only' . PHP_EOL;
-        $help_message .= '  --seed=UserSeed,CommentSeed                 Insert UserSeed and CommentSeed only' . PHP_EOL;
-        $help_message .= '  --migration=all --seed=all                  Migrate all tables and insert all seeds' . PHP_EOL;
-        $help_message .= '  --migration=all --rollback                  Revert migrates for all tables' . PHP_EOL;
-        $help_message .= '  --migration=all --rollback --seed=all       Revert migrates for all tables and insert all seeds' . PHP_EOL;
-        
-        exit($help_message);
-    }
-    
+{
     /**
      * check migration class
      *
@@ -93,7 +58,7 @@ class CLI
     /**
      * parseCommands
      *
-     * @param  mixed $options
+     * @param  array $options
      * @return void
      */
     public static function parseCommands(array $options)
@@ -119,19 +84,13 @@ class CLI
                     }
                 }
             } else {
-                $objects = scandir(self::$migrations);
-        
-                foreach ($objects as $object) {
-                    if ($object != '.' && $object != '..') {
-                        $table = explode('.', basename($object))[0];
-                        $table = self::checkMigration($table);
-                        $table::migrate();
-                    }
+                foreach (Storage::path('migrations')->getFiles() as $file) {
+                    $table = explode('.', $file)[0];
+                    $table = self::checkMigration($table);
+                    $table::migrate();
                 }
             }
-        
-            exit('[+] Operations done successfully.' . PHP_EOL);
-        } 
+        }
         
         else if (
             array_key_exists('migration', $options) &&
@@ -154,14 +113,10 @@ class CLI
                     }
                 }
             } else {
-                $objects = scandir(self::$migrations);
-        
-                foreach ($objects as $object) {
-                    if ($object != '.' && $object != '..') {
-                        $table = explode('.', basename($object))[0];
-                        $table = self::checkMigration($table);
-                        $table::migrate();
-                    }
+                foreach (Storage::path('migrations')->getFiles() as $file) {
+                    $table = explode('.', $file)[0];
+                    $table = self::checkMigration($table);
+                    $table::migrate();
                 }
             }
         
@@ -180,18 +135,12 @@ class CLI
                     }
                 }
             } else {
-                $objects = scandir(self::$seeds);
-        
-                foreach ($objects as $object) {
-                    if ($object != '.' && $object != '..') {
-                        $seed = explode('.', basename($object))[0];
-                        $seed = self::checkSeed($seed);
-                        $seed::insert();
-                    }
+                foreach (Storage::path('seeds')->getFiles() as $file) {
+                    $seed = explode('.', $file)[0];
+                    $seed = self::checkSeed($seed);
+                    $seed::insert();
                 }
             }
-        
-            exit('[+] Operations done successfully.' . PHP_EOL);
         } 
         
         else if (
@@ -215,14 +164,10 @@ class CLI
                     }
                 }
             } else {
-                $objects = scandir(self::$migrations);
-        
-                foreach ($objects as $object) {
-                    if ($object != '.' && $object != '..') {
-                        $table = explode('.', basename($object))[0];
-                        $table = self::checkMigration($table);
-                        $table::rollback();
-                    }
+                foreach (Storage::path('migrations')->getFiles() as $file) {
+                    $table = explode('.', $file)[0];
+                    $table = self::checkMigration($table);
+                    $table::rollback();
                 }
             }
         
@@ -241,18 +186,12 @@ class CLI
                     }
                 }
             } else {
-                $objects = scandir(self::$seeds);
-        
-                foreach ($objects as $object) {
-                    if ($object != '.' && $object != '..') {
-                        $seed = explode('.', basename($object))[0];
-                        $seed = self::checkSeed($seed);
-                        $seed::insert();
-                    }
+                foreach (Storage::path('seeds')->getFiles() as $file) {
+                    $seed = explode('.', $file)[0];
+                    $seed = self::checkSeed($seed);
+                    $seed::insert();
                 }
             }
-        
-            exit('[+] Operations done successfully.' . PHP_EOL);
         } 
         
         else if (
@@ -276,18 +215,12 @@ class CLI
                     }
                 }
             } else {
-                $objects = scandir(self::$migrations);
-        
-                foreach ($objects as $object) {
-                    if ($object != '.' && $object != '..') {
-                        $table = explode('.', basename($object))[0];
-                        $table = self::checkMigration($table);
-                        $table::rollback();
-                    }
+                foreach (Storage::path('migrations')->getFiles() as $file) {
+                    $table = explode('.', $file)[0];
+                    $table = self::checkMigration($table);
+                    $table::rollback();
                 }
             }
-        
-            exit('[+] Operations done successfully.' . PHP_EOL);
         } 
         
         else if (
@@ -311,18 +244,12 @@ class CLI
                     }
                 }
             } else {
-                $objects = scandir(self::$migrations);
-        
-                foreach ($objects as $object) {
-                    if ($object != '.' && $object != '..') {
-                        $table = explode('.', basename($object))[0];
-                        $table = self::checkMigration($table);
-                        $table::delete();
-                    }
+                foreach (Storage::path('migrations')->getFiles() as $file) {
+                    $table = explode('.', $file)[0];
+                    $table = self::checkMigration($table);
+                    $table::delete();
                 }
             }
-        
-            exit('[+] Operations done successfully.' . PHP_EOL);
         } 
         
         else if (
@@ -346,26 +273,38 @@ class CLI
                     }
                 }
             } else {
-                $objects = scandir(self::$seeds);
-        
-                foreach ($objects as $object) {
-                    if ($object != '.' && $object != '..') {
-                        $seed = explode('.', basename($object))[0];
-                        $seed = self::checkSeed($seed);
-                        $seed::insert();
-                    }
+                foreach (Storage::path('seeds')->getFiles() as $file) {
+                    $seed = explode('.', $file)[0];
+                    $seed = self::checkSeed($seed);
+                    $seed::insert();
                 }
             }
-        
-            exit('[+] Operations done successfully.' . PHP_EOL);
-        } 
+        }
         
         else if (array_key_exists('help', $options)) {
-            self::helpMessage();
+            $help_message = '[+] Commands list:' . PHP_EOL;
+            $help_message .= PHP_EOL;
+            $help_message .= '      --migration=all                             Migrate all tables' . PHP_EOL;
+            $help_message .= '      --migration=UsersTable                      Migrate UsersTable only' . PHP_EOL;
+            $help_message .= '      --migration=UsersTable,CommentsTable        Migrate UsersTable and CommentsTable only' . PHP_EOL;
+            $help_message .= '      --migration=UsersTable,PostsTable --delete  Drop UsersTable and PostsTable only' . PHP_EOL;
+            $help_message .= '      --migration=all --delete                    Drop all tables' . PHP_EOL;
+            $help_message .= PHP_EOL;
+            $help_message .= '      --seed=all                                  Insert all seeds' . PHP_EOL;
+            $help_message .= '      --seed=UserSeed                             Insert UserSeed only' . PHP_EOL;
+            $help_message .= '      --seed=UserSeed,CommentSeed                 Insert UserSeed and CommentSeed only' . PHP_EOL;
+            $help_message .= PHP_EOL;
+            $help_message .= '      --migration=all --seed=all                  Migrate all tables and insert all seeds' . PHP_EOL;
+            $help_message .= '      --migration=all --rollback                  Revert all tables migration' . PHP_EOL;
+            $help_message .= '      --migration=all --rollback --seed=all       Revert all tables migration and insert all seeds' . PHP_EOL;
+            
+            exit($help_message);
         } 
         
         else {
             exit('[-] Invalid command line arguments, print "--help" for commands list' . PHP_EOL);
         }
+        
+        exit('[+] Operations done successfully.' . PHP_EOL);
     }
 }

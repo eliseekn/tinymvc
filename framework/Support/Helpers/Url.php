@@ -23,7 +23,7 @@ if (!function_exists('absolute_url')) {
 	 */
 	function absolute_url(string $url): string
 	{
-		return WEB_DOMAIN . $url;
+		return APP_DOMAIN . $url;
 	}
 }
 

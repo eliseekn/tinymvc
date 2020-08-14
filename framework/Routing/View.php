@@ -15,6 +15,7 @@ namespace Framework\Routing;
 use Exception;
 use League\Plates\Engine;
 use Framework\HTTP\Response;
+use Framework\Support\Storage;
 
 /**
  * View
@@ -32,8 +33,8 @@ class View
      */
     public static function render(string $template, array $data = [], int $status_code = 200): void
     {
-        if (!file_exists('templates' . DIRECTORY_SEPARATOR . $template . '.php')) {
-            throw new Exception('File "' . DOCUMENT_ROOT . 'templates' . DIRECTORY_SEPARATOR . $template . '" not found.');
+        if (!Storage::path('templates')->isFile($template . '.php')) {
+            throw new Exception('File "' . STORAGE['templates'] . $template . '.php" not found.');
         }
 
         $engine = new Engine('templates');

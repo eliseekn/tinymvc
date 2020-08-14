@@ -20,6 +20,25 @@ namespace Framework\Support;
 class Storage
 {
     /**
+     * storage path
+     * 
+     * @var string
+     */
+    protected static $path = '';
+    
+    /**
+     * set storage path
+     *
+     * @param  string $path
+     * @return mixed
+     */
+    public static function path(string $path)
+    {
+        self::$path = STORAGE[$path] ?? '';
+        return new self();
+    }
+
+    /**
      * create new directory
      *
      * @param  string $pathname
@@ -27,9 +46,9 @@ class Storage
      * @param  bool $recursive create folders recursively
      * @return bool
      */
-    public static function createDir(string $pathname, bool $recursive = false, int $mode = 0777): bool
+    public function createDir(string $pathname, bool $recursive = false, int $mode = 0777): bool
     {
-        return mkdir(PUBLIC_STORAGE . $pathname, $mode, $recursive);
+        return mkdir(self::$path . $pathname, $mode, $recursive);
     }
     
     /**
@@ -40,11 +59,23 @@ class Storage
      * @param  bool $append write content at the end of the file
      * @return bool
      */
-    public static function writeFile(string $filename, $content, bool $append = false): bool
+    public function writeFile(string $filename, $content, bool $append = false): bool
     {
         $flag = $append ? FILE_APPEND | LOCK_EX : 0;
-        $success = file_put_contents(PUBLIC_STORAGE . $filename, $content, $flag);
+        $success = file_put_contents(self::$path . $filename, $content, $flag);
         return $success === false ? false : true;
+    }
+    
+    /**
+     * get file content
+     *
+     * @param  string $filename
+     * @return string
+     */
+    public function readFile(string $filename): string
+    {
+        $data = file_get_contents(self::$path . $filename);
+        return $data === false ? '' : $data;
     }
     
     /**
@@ -54,9 +85,9 @@ class Storage
      * @param  string $destination
      * @return bool
      */
-    public static function copyFile(string $filename, string $destination): bool
+    public function copyFile(string $filename, string $destination): bool
     {
-        return copy($filename, PUBLIC_STORAGE . $destination);
+        return copy($filename, $destination);
     } 
     
     /**
@@ -66,9 +97,9 @@ class Storage
      * @param  string $newname
      * @return bool
      */
-    public static function renameFile(string $oldname, string $newname): bool
+    public function renameFile(string $oldname, string $newname): bool
     {
-        return rename(PUBLIC_STORAGE . $oldname, PUBLIC_STORAGE . $newname);
+        return rename($oldname, $newname);
     } 
     
     /**
@@ -78,21 +109,9 @@ class Storage
      * @param  string $destination
      * @return bool
      */
-    public static function moveFile(string $filename, string $destination): bool
+    public function moveFile(string $filename, string $destination): bool
     {
         return self::renameFile($filename, $destination);
-    }
-    
-    /**
-     * get file content
-     *
-     * @param  string $filename
-     * @return string
-     */
-    public static function readFile(string $filename): string
-    {
-        $data = file_get_contents($filename);
-        return $data === false ? '' : $data;
     }
     
     /**
@@ -101,9 +120,9 @@ class Storage
      * @param  string $filename
      * @return bool
      */
-    public static function isFile(string $filename): bool
+    public function isFile(string $filename): bool
     {
-        return is_file(PUBLIC_STORAGE . $filename);
+        return is_file(self::$path . $filename);
     }
 
     /**
@@ -112,9 +131,9 @@ class Storage
      * @param  string $pathname
      * @return bool
      */
-    public static function isDir(string $pathname): bool
+    public function isDir(string $pathname): bool
     {
-        return is_dir(PUBLIC_STORAGE . $pathname);
+        return is_dir(self::$path . $pathname);
     }
     
     /**
@@ -123,9 +142,9 @@ class Storage
      * @param  string $filename
      * @return bool
      */
-    public static function deleteFile(string $filename): bool
+    public function deleteFile(string $filename): bool
     {
-        return unlink(PUBLIC_STORAGE . $filename);
+        return unlink(self::$path . $filename);
     }
     
     /**
@@ -135,16 +154,16 @@ class Storage
      * @return bool
      * @link https://stackoverflow.com/questions/3338123/how-do-i-recursively-delete-a-directory-and-its-entire-contents-files-sub-dir
      */
-    public static function deleteDir(string $pathname): bool
+    public function deleteDir(string $pathname): bool
     {
         if (self::isDir($pathname)) {
-            $objects = scandir(PUBLIC_STORAGE . $pathname);
+            $objects = scandir(self::$path . $pathname);
     
             foreach ($objects as $object) {
                 if ($object != '.' && $object != '..') {
                     if (
                         self::isDir($pathname . DIRECTORY_SEPARATOR . $object) &&
-                        !is_link(PUBLIC_STORAGE . $pathname . DIRECTORY_SEPARATOR . $object)
+                        !is_link(self::$path . $pathname . DIRECTORY_SEPARATOR . $object)
                     ) {
                         self::deleteDir($pathname . DIRECTORY_SEPARATOR . $object);
                     } else {
@@ -153,7 +172,7 @@ class Storage
                 }
             }
     
-            return rmdir(PUBLIC_STORAGE . $pathname);
+            return rmdir(self::$path . $pathname);
         }
 
         return false;
@@ -165,10 +184,10 @@ class Storage
      * @param  string $pathname
      * @return array
      */
-    public static function getFiles(string $pathname): array
+    public function getFiles(string $pathname = ''): array
     {
         $results = [];
-        $objects = scandir(PUBLIC_STORAGE . $pathname);
+        $objects = scandir(self::$path . $pathname);
 
         foreach ($objects as $object) {
             if ($object != '.' && $object != '..' && self::isFile($object)) {
@@ -185,10 +204,10 @@ class Storage
      * @param  string $pathname
      * @return array
      */
-    public static function getFolders(string $pathname): array
+    public function getFolders(string $pathname = ''): array
     {
         $results = [];
-        $objects = scandir(PUBLIC_STORAGE . $pathname);
+        $objects = scandir(self::$path . $pathname);
 
         foreach ($objects as $object) {
             if ($object != '.' && $object != '..' && self::isDir($object)) {

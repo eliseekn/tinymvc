@@ -128,7 +128,7 @@ class Request
     public static function getFullUri(): string
     {
         $uri = self::getHeader('REQUEST_URI');
-        $uri = str_replace(ROOT_FOLDER, '', $uri); //remove root subfolder if exists 
+        $uri = str_replace(APP_FOLDER, '', $uri); //remove app folder if exists 
         return $uri;
     }
 

@@ -43,11 +43,11 @@ class UsersTable
     }
     
     /**
-     * roll back actions
+     * rollback actions
      *
      * @return void
      */
-    public static function rollBack(): void
+    public static function rollback(): void
     {
         self::delete();
         self::migrate();
