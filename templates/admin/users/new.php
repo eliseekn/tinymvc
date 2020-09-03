@@ -1,14 +1,19 @@
-<?php $this->layout('admin/layout', [
+<?php 
+$this->layout('admin/layout', [
     'page_title' => 'New user | Administration',
-    'page_description' => 'Add new user page'
-]) ?>
+    'page_description' => 'New user page'
+]) 
+?>
 
 <?php $this->start('page_content') ?>
 
-<?php if (session_has_flash_messages()) : $this->insert('partials/flash', [
+<?php 
+if (session_has_flash_messages()) : 
+    $this->insert('partials/flash', [
         'messages' => get_flash_messages()
     ]);
-endif ?>
+endif 
+?>
 
 <div class="card">
     <div class="card-header bg-dark text-white lead">New user</div>
@@ -48,11 +53,11 @@ endif ?>
                     <legend class="col-form-label col-sm-2 pt-0">Role</legend>
                     <div class="col-sm-10">
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input class="custom-control-input" type="radio" name="role" id="admin" value="admin" checked>
+                            <input class="custom-control-input" type="radio" name="role" id="admin" value="admin">
                             <label class="custom-control-label" for="admin">Admin</label>
                         </div>
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input class="custom-control-input" type="radio" name="role" id="user" value="user">
+                            <input class="custom-control-input" type="radio" name="role" id="user" value="user" checked>
                             <label class="custom-control-label" for="user">User</label>
                         </div>
                     </div>
@@ -61,7 +66,8 @@ endif ?>
         </div>
 
         <div class="card-footer">
-            <button type="submit" class="btn btn-primary loading mr-2">Create</button>
+            <button type="submit" class="btn btn-primary loading">Create</button>
+            <button type="reset" class="btn btn-secondary mx-2">Reset</button>
             <a href="<?= absolute_url('/admin/users') ?>" class="btn btn-secondary">Cancel</a>
         </div>
     </form>

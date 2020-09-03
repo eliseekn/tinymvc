@@ -1,14 +1,19 @@
-<?php $this->layout('admin/layout', [
+<?php 
+$this->layout('admin/layout', [
     'page_title' => 'Edit user | Administration',
     'page_description' => 'Edit user page'
-]) ?>
+]) 
+?>
 
 <?php $this->start('page_content') ?>
 
-<?php if (session_has_flash_messages()) : $this->insert('partials/flash', [
+<?php 
+if (session_has_flash_messages()) : 
+    $this->insert('partials/flash', [
         'messages' => get_flash_messages()
     ]);
-endif ?>
+endif 
+?>
 
 <div class="card">
     <div class="card-header bg-dark text-white lead">Edit user</div>
@@ -61,7 +66,8 @@ endif ?>
         </div>
 
         <div class="card-footer">
-            <button type="submit" class="btn btn-primary loading mr-2">Update</button>
+            <button type="submit" class="btn btn-primary loading">Update</button>
+            <button type="reset" class="btn btn-secondary mx-2">Reset</button>
             <a href="<?= absolute_url('/admin/users') ?>" class="btn btn-secondary">Cancel</a>
         </div>
     </form>

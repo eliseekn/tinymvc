@@ -15,10 +15,13 @@
         <div class="container" style="width: 400px">
             <h1 class="py-3 text-center">Sign up</h1>
 
-            <?php if (session_has_flash_messages()) : $this->insert('partials/flash', [
+            <?php 
+            if (session_has_flash_messages()) : 
+                $this->insert('partials/flash', [
                     'messages' => get_flash_messages()
                 ]);
-            endif ?>
+            endif 
+            ?>
 
             <div class="card shadow p-4">
                 <form method="post" action="<?= absolute_url('/register') ?>">

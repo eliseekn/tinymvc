@@ -5,8 +5,6 @@ namespace App\Middlewares;
 use Framework\HTTP\Request;
 
 /**
- * SanitizeFields
- * 
  * Sanitize form fields
  */
 class SanitizeFields

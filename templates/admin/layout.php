@@ -15,13 +15,14 @@
 <body>
     <div class="d-flex" id="wrapper">
         <div class="bg-light border-light border-right min-vh-100" id="sidebar-wrapper">
-            <div class="sidebar-title bg-dark">
-                <a href="<?= absolute_url('/admin') ?>" class="text-light">
-                    <i class="fa fa-home"></i> Dashboard
-                </a>
+            <div class="sidebar-title bg-dark text-light">
+                Administration
             </div>
 
             <div class="list-group list-group-flush">
+                <a href="<?= absolute_url('/admin') ?>" class="list-group-item list-group-item-action bg-light">
+                    <i class="fa fa-home"></i> Dashboard
+                </a>
                 <a href="<?= absolute_url('/admin/users') ?>" class="list-group-item list-group-item-action bg-light">
                     <i class="fa fa-dot-circle"></i> Users
                 </a>
@@ -59,6 +60,7 @@
     <script defer src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     <script defer src="<?= absolute_url('/public/js/components/password-toggler.js') ?>"></script>
     <script defer src="<?= absolute_url('/public/js/components/loading-button.js') ?>"></script>
+    <script defer src="<?= absolute_url('/public/js/components/upload-modal.js') ?>"></script>
     <script defer src="<?= absolute_url('/public/js/admin.js') ?>"></script>
 </body>
 

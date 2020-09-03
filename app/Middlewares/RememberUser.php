@@ -7,8 +7,6 @@ use App\Database\Models\UsersModel;
 use Framework\Support\Authenticate;
 
 /**
- * RememberUser
- * 
  * Check for user cookie
  */
 class RememberUser

@@ -12,13 +12,30 @@ use App\Database\Models\UsersModel;
 class UsersController
 {
 	/**
-	 * display add user page
+	 * display new user page
 	 * 
 	 * @return void
 	 */
-	public function add(): void
+	public function new(): void
 	{
-		View::render('admin/users/add');
+		View::render('admin/users/new');
+	}
+	
+	/**
+	 * display view user page
+	 * 
+	 * @param  int $id
+	 * @return void
+	 */
+	public function view(int $id): void
+	{
+		if (!UsersModel::exists('id', $id)) {
+			Redirect::back()->withError('This user does not exists');
+		}
+
+		View::render('admin/users/view', [
+			'user' => UsersModel::find($id)
+		]);
 	}
 	
 	/**
@@ -30,7 +47,7 @@ class UsersController
 	public function edit(int $id): void
 	{
 		if (!UsersModel::exists('id', $id)) {
-			Redirect::back()->withError('This user does not exists in database');
+			Redirect::back()->withError('This user does not exists');
 		}
 
 		View::render('admin/users/edit', [
@@ -50,7 +67,7 @@ class UsersController
 		]);
 
 		if (UsersModel::exists('email', Request::getField('email'))) {
-			Redirect::back()->withError('This email address already exists in database');
+			Redirect::back()->withError('This email address already exists');
 		}
 
 	    UsersModel::insert([
@@ -76,7 +93,7 @@ class UsersController
 		]);
 
 		if (!UsersModel::exists('id', $id)) {
-			Redirect::back()->withError('This user does not exists in database');
+			Redirect::back()->withError('This user does not exists');
 		}
 
 		$data = [
@@ -104,7 +121,7 @@ class UsersController
 	{
 		if (!is_null($id)) {
 			if (!UsersModel::exists('id', $id)) {
-				Redirect::back()->withError('This user does not exists in database');
+				Redirect::back()->withError('This user does not exists');
 			}
 	
 			UsersModel::delete($id);
@@ -119,5 +136,65 @@ class UsersController
 			
 			create_flash_messages('success', 'The selected users have been deleted successfully');
 		}
-    }
+	}
+
+	/**
+	 * import users data
+	 *
+	 * @return void
+	 * @link https://www.php.net/manual/en/function.str-getcsv.php
+	 */
+	public function import(): void
+	{
+		$file = Request::getFile('file', ['csv']);
+
+		if (!$file->isAllowed()) {
+			Redirect::back()->withError('Only file of type extension ".csv" are allowed');
+		}
+
+		if (!$file->isUploaded()) {
+			Redirect::back()->withError('Failed to import users data');
+		}
+
+		$csv = array_map('str_getcsv', file($file->getTempFilename()));
+
+		array_walk($csv, function(&$a) use ($csv) {
+			$a = array_combine($csv[0], $a);
+		});
+
+		//remove header
+		array_shift($csv);
+
+		foreach ($csv as $row) {
+			UsersModel::insert([
+				'name' => $row['Name'],
+				'email' => $row['Email'],
+				'password' => hash_string($row['Password'])
+			]);
+		}
+
+		Redirect::back()->withSuccess('The users have been imported successfully');
+	}
+		
+	/**
+	 * export users data
+	 *
+	 * @return void
+	 * @link https://www.php.net/manual/en/function.fputcsv.php
+	 */
+	public function export(): void
+	{
+		foreach (UsersModel::findAll(['name', 'ASC']) as $users) {
+			$data[] = [
+				$users->name, 
+				$users->email, 
+				$users->role, 
+				$users->created_at
+			];
+		}
+
+		generate_csv('users.csv', $data, [
+			'Name', 'Email', 'Role', 'Created at'
+		]);
+	}
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Authentication;
 
 use Framework\HTTP\Request;
 use Framework\HTTP\Redirect;

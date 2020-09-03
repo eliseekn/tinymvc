@@ -7,8 +7,6 @@ use Framework\Routing\View;
 use Framework\HTTP\Response;
 
 /**
- * CsrfProtection
- * 
  * CSRF token validator
  */
 class CsrfProtection

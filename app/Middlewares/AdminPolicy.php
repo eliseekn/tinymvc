@@ -8,8 +8,6 @@ use Framework\HTTP\Response;
 use Framework\Support\Authenticate;
 
 /**
- * AdminPolicy
- * 
  * Check if user has admin role
  */
 class AdminPolicy

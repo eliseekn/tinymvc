@@ -1,7 +1,9 @@
-<?php $this->layout('admin/layout', [
+<?php 
+$this->layout('admin/layout', [
     'page_title' => 'TinyMVC | Administration dashboard',
     'page_description' => 'TinyMVC administration dashboard'
-]) ?>
+]) 
+?>
 
 <?php $this->start('page_content') ?>
 

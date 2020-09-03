@@ -6,8 +6,6 @@ use Framework\HTTP\Redirect;
 use Framework\Support\Authenticate;
 
 /**
- * AuthenticationPolicy
- * 
  * Check if user is authenticated
  */
 class AuthenticationPolicy
