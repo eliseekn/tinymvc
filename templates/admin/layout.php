@@ -16,7 +16,7 @@
     <div class="d-flex" id="wrapper">
         <div class="bg-light border-light border-right min-vh-100" id="sidebar-wrapper">
             <div class="sidebar-title bg-dark text-light">
-                Administration
+                <i class="fa fa-cogs"></i> Administration
             </div>
 
             <div class="list-group list-group-flush">
@@ -31,7 +31,7 @@
 
         <div id="page-content-wrapper">
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
-                <button class="btn btn-light" id="sidebar-toggler" title="Toggle sidebar">
+                <button class="btn border-light text-light" id="sidebar-toggler" title="Toggle sidebar">
                     <i class="fa fa-bars"></i>
                 </button>
 
@@ -47,9 +47,7 @@
             </nav>
 
             <div class="container-fluid p-4">
-                <div class="mt-3">
-                    <?= $this->section('page_content') ?>
-                </div>
+                <?= $this->section('page_content') ?>
             </div>
         </div>
     </div>

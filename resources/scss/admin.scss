@@ -20,7 +20,7 @@ a {
             margin-left: 0;
 
             @media (min-width: 768px) {
-                margin-left: -15em;
+                margin-left: -20em;
             }
         }
     }
@@ -38,7 +38,7 @@ a {
     }
 
     .list-group {
-        width: 15em;
+        width: 20em;
     }
 
     @media (min-width: 768px) {
@@ -55,11 +55,12 @@ a {
     }
 }
 
-.table > tbody > tr > td {
-	vertical-align: middle;
-}
+.table {
+    thead th {
+        cursor: pointer;
+    }
 
-.table tbody tr th {
-    vertical-align: middle;
-    cursor: pointer;
+    th, td {
+        vertical-align: middle;
+    }
 }

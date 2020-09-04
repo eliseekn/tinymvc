@@ -7,6 +7,22 @@ $this->layout('admin/layout', [
 
 <?php $this->start('page_content') ?>
 
+<nav class="d-flex justify-content-end">
+    <ol class="breadcrumb bg-white">
+        <li class="breadcrumb-item">
+            <a href="<?= absolute_url('/admin') ?>">
+                <i class="fa fa-home"></i> Dashboard
+            </a>
+        </li>
+
+        <li class="breadcrumb-item">
+            <a href="<?= absolute_url('/admin/users') ?>">Users</a>
+        </li>
+
+        <li class="breadcrumb-item active" aria-current="page">Edit</li>
+    </ol>
+</nav>
+
 <?php 
 if (session_has_flash_messages()) : 
     $this->insert('partials/flash', [
