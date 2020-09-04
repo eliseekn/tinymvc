@@ -39,6 +39,10 @@ a {
 
     .list-group {
         width: 20em;
+
+        @media (max-width: 768px) {
+            width: 15em;
+        }
     }
 
     @media (min-width: 768px) {
