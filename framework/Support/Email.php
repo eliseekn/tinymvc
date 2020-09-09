@@ -118,11 +118,12 @@ class Email
      * add attachment
      *
      * @param  string $attachment
+     * @param  string $filename
      * @return mixed
      */
-    public function addAttachment(string $attachment)
+    public function addAttachment(string $attachment, string $filename = '')
     {
-        self::$mail->addAttachment($attachment);
+        self::$mail->addAttachment($attachment, $filename);
         return $this;
     }
     

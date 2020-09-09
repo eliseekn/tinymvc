@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="en_US">
 
 <head>
     <meta charset="utf-8">
@@ -17,7 +17,7 @@
     <div class="d-flex" id="wrapper">
         <div class="bg-light border-light border-right min-vh-100" id="sidebar-wrapper">
             <div class="sidebar-title bg-dark text-light">
-                <i class="fa fa-cogs"></i> Administration
+                <i class="fa fa-cog"></i> Administration
             </div>
 
             <div class="list-group list-group-flush">
@@ -25,7 +25,7 @@
                     <i class="fa fa-home"></i> Dashboard
                 </a>
                 <a href="<?= absolute_url('/admin/users') ?>" class="list-group-item list-group-item-action bg-light">
-                    <i class="fa fa-dot-circle"></i> Users
+                    <i class="fa fa-dot-circle <?php if (is_current_page('users')) : echo 'text-primary'; endif ?>"></i> Users
                 </a>
             </div>
         </div>

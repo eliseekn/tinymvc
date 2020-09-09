@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
- * @license MIT (https://opensource.org/licenses/MIT)
- * @link https://github.com/eliseekn/TinyMVC
- */
-
 namespace App\Helpers;
 
 use Framework\HTTP\Request;
@@ -13,9 +7,6 @@ use Framework\HTTP\Redirect;
 use Framework\Support\Encryption;
 use App\Database\Models\UsersModel;
 
-/**
- * User authentication helper
- */
 class AuthHelper
 {
     /**

@@ -31,7 +31,7 @@ class View
             throw new Exception('File "' . STORAGE['templates'] . $template . '.php" not found.');
         }
 
-        $engine = new Engine('templates');
+        $engine = new Engine(STORAGE['templates']);
         Response::send([], $engine->render($template, $data), $status_code);
     }
 }

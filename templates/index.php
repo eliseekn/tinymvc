@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="en_US">
 
 <head>
     <meta charset="utf-8">
@@ -16,16 +16,29 @@
         <h1 class="font-weight-bold display-4">TinyMVC</h1>
 
         <p class="lead mt-4" style="line-height: 1.8">
-            Just a PHP framework based on MVC architecture <br>
-            <a href="https://github.com/eliseekn/TinyMVC">https://github.com/eliseekn/TinyMVC</a> <br>
-            Copyright © 2019-2020 - <span class="font-weight-bold">N'Guessan Kouadio Elisée</span> (eliseekn@gmail.com)
+            Just a PHP framework based on MVC architecture that helps you <br> build easly and quickly powerful web applications and RESTful API
         </p>
 
         <div class="mt-5">
-            <a href="<?= absolute_url('/login') ?>" class="btn btn-primary">Log in</a>
-            <a href="<?= absolute_url('/signup') ?>" class="ml-3 btn btn-primary">Register</a>
+            <a href="<?= absolute_url('/admin') ?>" class="ml-3 btn btn-primary">
+            <i class="fa fa-cog"></i> Administration
+            </a>
         </div>
+
+        <hr class="my-5 pb-5 w-25">
+
+        <span>
+            <a href="https://github.com/eliseekn/TinyMVC" class="btn btn-dark">
+                <i class="fab fa-github"></i> Github
+            </a>
+            
+            <a href="<?= absolute_url('/docs') ?>" class="ml-3 btn btn-success">
+                <i class="fa fa-book"></i> Documentation
+            </a>
+        </span>
     </div>
+
+    <script defer src="https://use.fontawesome.com/releases/v5.13.0/js/all.js"></script>
 
 </body>
 

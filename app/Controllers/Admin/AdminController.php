@@ -8,7 +8,7 @@ use App\Database\Models\UsersModel;
 class AdminController
 {
 	/**
-	 * display admin dashboard page
+	 * display dashboard page
 	 *
 	 * @return void
 	 */

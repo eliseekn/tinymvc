@@ -49,3 +49,16 @@ if (!function_exists('current_url')) {
 		return 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
 	}
 }
+
+if (!function_exists('is_current_page')) {	
+	/**
+	 * check if current url contains string
+	 *
+	 * @param  mixed $page
+	 * @return bool
+	 */
+	function is_current_page(string $page): bool
+	{
+		return preg_match('/' . $page . '/', current_url());
+	}
+}

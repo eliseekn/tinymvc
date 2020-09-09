@@ -36,6 +36,11 @@ endif
 
     <div class="card-body">
         <div class="form-group row">
+            <label for="name" class="col-sm-2 col-form-label">ID</label>
+            <div class="col-form-label col-sm-10 font-weight-bold"><?= $user->id ?></div>
+        </div>
+
+        <div class="form-group row">
             <label for="name" class="col-sm-2 col-form-label">Name</label>
             <div class="col-form-label col-sm-10 font-weight-bold"><?= $user->name ?></div>
         </div>

@@ -29,8 +29,8 @@ class EmailHelper
     /**
      * send password reset token link notification
      *
-     * @param  mixed $address
-     * @param  mixed $token
+     * @param  string $address
+     * @param  string $token
      * @return bool
      */
     public static function sendToken(string $address, string $token): bool
