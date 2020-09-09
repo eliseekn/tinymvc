@@ -14,11 +14,17 @@
 
     <div class="container mt-5 p-5 text-center">
         <h1 class="font-weight-bold display-4">TinyMVC</h1>
+
         <p class="lead mt-4" style="line-height: 1.8">
             Just a PHP framework based on MVC architecture <br>
             <a href="https://github.com/eliseekn/TinyMVC">https://github.com/eliseekn/TinyMVC</a> <br>
             Copyright © 2019-2020 - <span class="font-weight-bold">N'Guessan Kouadio Elisée</span> (eliseekn@gmail.com)
         </p>
+
+        <div class="mt-5">
+            <a href="<?= absolute_url('/login') ?>" class="btn btn-primary">Log in</a>
+            <a href="<?= absolute_url('/signup') ?>" class="ml-3 btn btn-primary">Register</a>
+        </div>
     </div>
 
 </body>

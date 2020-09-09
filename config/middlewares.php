@@ -16,4 +16,4 @@ Middleware::setName('CsrfProtection', 'csrf');
 Middleware::setName('SanitizeFields', 'sanitize');
 Middleware::setName('AdminPolicy', 'admin');
 Middleware::setName('RememberUser', 'remember');
-Middleware::setName('AuthenticationPolicy', 'auth');
+Middleware::setName('AuthPolicy', 'auth');

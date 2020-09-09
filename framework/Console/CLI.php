@@ -61,7 +61,7 @@ class CLI
             array_key_exists('migration', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('delete', $options) &&
-            !array_key_exists('rollback', $options)
+            !array_key_exists('reset', $options)
         ) {
             if ($options['migration'] !== 'all') {
                 $table = $options['migration'];
@@ -90,7 +90,7 @@ class CLI
             array_key_exists('migration', $options) &&
             array_key_exists('seed', $options) &&
             !array_key_exists('delete', $options) &&
-            !array_key_exists('rollback', $options)
+            !array_key_exists('reset', $options)
         ) {
             if ($options['migration'] !== 'all') {
                 $table = $options['migration'];
@@ -140,7 +140,7 @@ class CLI
         else if (
             array_key_exists('migration', $options) &&
             array_key_exists('seed', $options) &&
-            array_key_exists('rollback', $options) &&
+            array_key_exists('reset', $options) &&
             !array_key_exists('delete', $options)
         ) {
             if ($options['migration'] !== 'all') {
@@ -148,20 +148,20 @@ class CLI
         
                 if (strpos($table, ',') === false) {
                     $table = self::checkMigration($table);
-                    $table::rollback();
+                    $table::reset();
                 } else {
                     $tables = explode(',', $table);
         
                     foreach ($tables as $table) {
                         $table = self::checkMigration($table);
-                        $table::rollback();
+                        $table::reset();
                     }
                 }
             } else {
                 foreach (Storage::path('migrations')->getFiles() as $file) {
                     $table = explode('.', $file)[0];
                     $table = self::checkMigration($table);
-                    $table::rollback();
+                    $table::reset();
                 }
             }
         
@@ -190,7 +190,7 @@ class CLI
         
         else if (
             array_key_exists('migration', $options) &&
-            array_key_exists('rollback', $options) &&
+            array_key_exists('reset', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('delete', $options)
         ) {
@@ -199,20 +199,20 @@ class CLI
         
                 if (strpos($table, ',') === false) {
                     $table = self::checkMigration($table);
-                    $table::rollback();
+                    $table::reset();
                 } else {
                     $tables = explode(',', $table);
         
                     foreach ($tables as $table) {
                         $table = self::checkMigration($table);
-                        $table::rollback();
+                        $table::reset();
                     }
                 }
             } else {
                 foreach (Storage::path('migrations')->getFiles() as $file) {
                     $table = explode('.', $file)[0];
                     $table = self::checkMigration($table);
-                    $table::rollback();
+                    $table::reset();
                 }
             }
         } 
@@ -220,7 +220,7 @@ class CLI
         else if (
             array_key_exists('migration', $options) &&
             array_key_exists('delete', $options) &&
-            !array_key_exists('rollback', $options) &&
+            !array_key_exists('reset', $options) &&
             !array_key_exists('seed', $options)
         ) {
             if ($options['migration'] !== 'all') {
@@ -250,7 +250,7 @@ class CLI
             array_key_exists('seed', $options) &&
             !array_key_exists('migration', $options) &&
             !array_key_exists('delete', $options) &&
-            !array_key_exists('rollback', $options)
+            !array_key_exists('reset', $options)
         ) {
             if ($options['seed'] !== 'all') {
                 $seed = $options['seed'];
@@ -289,8 +289,8 @@ class CLI
             $help_message .= '      --seed=UserSeed,CommentSeed                 Insert UserSeed and CommentSeed only' . PHP_EOL;
             $help_message .= PHP_EOL;
             $help_message .= '      --migration=all --seed=all                  Migrate all tables and insert all seeds' . PHP_EOL;
-            $help_message .= '      --migration=all --rollback                  Revert all tables migration' . PHP_EOL;
-            $help_message .= '      --migration=all --rollback --seed=all       Revert all tables migration and insert all seeds' . PHP_EOL;
+            $help_message .= '      --migration=all --reset                  Revert all tables migration' . PHP_EOL;
+            $help_message .= '      --migration=all --reset --seed=all       Revert all tables migration and insert all seeds' . PHP_EOL;
             
             exit($help_message);
         } 

@@ -11,6 +11,7 @@
 </head>
 
 <body>
+
     <div class="d-flex align-items-center justify-content-center min-vh-100">
         <div class="container" style="width: 400px">
             <h1 class="py-3 text-center">Reset password</h1>
@@ -54,6 +55,7 @@
     <script defer src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     <script defer src="<?= absolute_url('/public/js/components/password-toggler.js') ?>"></script>
     <script defer src="<?= absolute_url('/public/js/components/loading-button.js') ?>"></script>
+    
 </body>
 
 </html>

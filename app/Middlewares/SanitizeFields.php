@@ -16,7 +16,7 @@ class SanitizeFields
      */
     public static function handle(): void
     {
-        foreach (Request::getField() as $field => $value) {
+        foreach (Request::getFields() as $field => $value) {
             Request::setField($field, escape($value));
         }
     }

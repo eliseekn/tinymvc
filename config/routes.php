@@ -24,17 +24,17 @@ Route::get('/home', [
     'handler' => 'HomeController@index'
 ]);
 
-//authentication routes
+//auth routes
 Route::group([
     '/login' => [
         'handler' => function() {
-            View::render('authentication/login');
+            View::render('auth/login');
         }
     ],
 
     '/signup' => [
         'handler' => function() {
-            View::render('authentication/signup');
+            View::render('auth/signup');
         }
     ]
 ])->by([
@@ -46,15 +46,15 @@ Route::group([
 ]);
 
 Route::get('/logout', [
-    'handler' => 'Authentication\AuthenticationController@logout'
+    'handler' => 'Auth\AuthController@logout'
 ]);
 
 Route::post('/authenticate', [
-    'handler' => 'Authentication\AuthenticationController@authenticate'
+    'handler' => 'Auth\AuthController@authenticate'
 ]);
 
 Route::post('/register', [
-    'handler' => 'Authentication\AuthenticationController@register'
+    'handler' => 'Auth\AuthController@register'
 ]);
 
 //admin routes
@@ -109,13 +109,13 @@ Route::get('/password/forgot', [
 ]);
 
 Route::get('/password/reset', [
-    'handler' => 'Authentication\PasswordResetController@reset'
+    'handler' => 'Auth\PasswordResetController@reset'
 ]);
 
 Route::post('/password/notify', [
-    'handler' => 'Authentication\PasswordResetController@notify'
+    'handler' => 'Auth\PasswordResetController@notify'
 ]);
 
 Route::post('/password/new', [
-    'handler' => 'Authentication\PasswordResetController@new'
+    'handler' => 'Auth\PasswordResetController@new'
 ]);

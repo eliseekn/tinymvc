@@ -1,15 +1,17 @@
 <?php
 
-namespace App\Controllers\Authentication;
+namespace App\Controllers\Auth;
 
 use Framework\HTTP\Request;
 use Framework\Routing\View;
 use Framework\HTTP\Redirect;
 use Framework\HTTP\Response;
 use Framework\Support\Email;
-use App\Validators\LoginForm;
+use App\Requests\LoginRequest;
 use App\Database\Models\UsersModel;
 use App\Database\Models\PasswordResetModel;
+use App\Helpers\EmailHelper;
+use App\Requests\AuthRequest;
 
 class PasswordResetController
 {
@@ -23,20 +25,8 @@ class PasswordResetController
 		$token = random_string(50, true);
 		$expires = strtotime('+1 hour', strtotime(date('Y-m-d H:i:s')));
 
-		if (
-			Email::to(Request::getField('email'))
-				->from(EMAIL['from'], EMAIL['name'])
-            	->replyTo(EMAIL['from'], EMAIL['name'])
-				->subject('Password reset notification')
-				->message('
-					<p>You are receiving this email because we received a password reset request for your account. Click the button below to reset your password:</p>
-					<p><a href="' . absolute_url('/password/reset?email=' . Request::getField('email') . '&token=' . $token) . '">' . absolute_url('/password/reset?email=' . Request::getField('email') . '&token=' . $token) . '</a></p>
-					<p>If you did not request a password reset, no further action is required.</p>
-				')
-				->asHTML()
-				->send()
-		) {
-			PasswordResetModel::insert([
+		if (EmailHelper::sendToken(Request::getField('email'), $token)) {
+			PasswordResetModel::create([
 				'email' => Request::getField('email'),
 				'token' => $token,
 				'expires' => date('Y-m-d H:i:s', $expires)
@@ -49,7 +39,7 @@ class PasswordResetController
 	}
 	
 	/**
-	 * reset
+	 * reset password
 	 *
 	 * @return void
 	 */
@@ -77,9 +67,11 @@ class PasswordResetController
 	 */
 	public function new(): void
 	{
-		LoginForm::validate([
-			'redirect' => 'back'
-		]);
+		$validate = AuthRequest::validate(Request::getFields());
+        
+        if (is_array($validate)) {
+            Redirect::back()->withError($validate);
+        }
 
 		UsersModel::update(UsersModel::findWhere('email', Request::getField('email'))->id, [
 			'password' => hash_string(Request::getField('password'))

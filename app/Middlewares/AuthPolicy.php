@@ -2,13 +2,13 @@
 
 namespace App\Middlewares;
 
+use App\Helpers\AuthHelper;
 use Framework\HTTP\Redirect;
-use Framework\Support\Authenticate;
 
 /**
  * Check if user is authenticated
  */
-class AuthenticationPolicy
+class AuthPolicy
 {    
     /**
      * handle function
@@ -17,8 +17,8 @@ class AuthenticationPolicy
      */
     public static function handle(): void
     {
-        if (Authenticate::check()) {
-            if (Authenticate::getUser()->role === 'admin') {
+        if (AuthHelper::checkSession()) {
+            if (AuthHelper::getSession()->role === 'admin') {
                 Redirect::toUrl('/admin')->only();
             } else {
                 Redirect::toUrl('/')->only();

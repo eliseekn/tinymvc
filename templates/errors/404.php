@@ -14,6 +14,7 @@
 
     <div class="container mt-5 p-5 text-center">
         <h1 class="font-weight-bold display-4">Error 404: <em>Page not found</em></h1>
+        
         <p class="lead mt-4" style="line-height: 1.8">
             The page you've requested doesn't exists. <br>
             <a href="<?= absolute_url('/') ?>">Go back home</a>

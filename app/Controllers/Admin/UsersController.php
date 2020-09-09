@@ -5,8 +5,8 @@ namespace App\Controllers\Admin;
 use Framework\HTTP\Request;
 use Framework\Routing\View;
 use Framework\HTTP\Redirect;
-use App\Validators\CreateUserForm;
-use App\Validators\UpdateUserForm;
+use App\Requests\CreateUserRequest;
+use App\Requests\UpdateUserRequest;
 use App\Database\Models\UsersModel;
 
 class UsersController
@@ -62,15 +62,17 @@ class UsersController
 	 */
 	public function create(): void
 	{
-		CreateUserForm::validate([
-			'redirect' => 'back'
-		]);
+		$validate = CreateUserRequest::validate(Request::getFields());
+        
+        if (is_array($validate)) {
+            Redirect::back()->withError($validate);
+        }
 
 		if (UsersModel::exists('email', Request::getField('email'))) {
 			Redirect::back()->withError('This email address already exists');
 		}
 
-	    UsersModel::insert([
+	    UsersModel::create([
             'name' => Request::getField('name'),
             'email' => Request::getField('email'),
             'password' => hash_string(Request::getField('password')),
@@ -88,9 +90,11 @@ class UsersController
 	 */
 	public function update(int $id): void
 	{
-		UpdateUserForm::validate([
-			'redirect' => 'back'
-		]);
+		$validate = UpdateUserRequest::validate(Request::getFields());
+        
+        if (is_array($validate)) {
+            Redirect::back()->withError($validate);
+        }
 
 		if (!UsersModel::exists('id', $id)) {
 			Redirect::back()->withError('This user does not exists');
@@ -166,7 +170,7 @@ class UsersController
 		array_shift($csv);
 
 		foreach ($csv as $row) {
-			UsersModel::insert([
+			UsersModel::create([
 				'name' => $row['Name'],
 				'email' => $row['Email'],
 				'password' => hash_string($row['Password'])

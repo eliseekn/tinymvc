@@ -14,6 +14,7 @@
 
     <div class="container mt-5 p-5 text-center">
         <h1 class="font-weight-bold display-4">Error 403: <em>Forbidden</em></h1>
+        
         <p class="lead mt-4" style="line-height: 1.8">
             You do not have permission to access this page. <br>
             <a href="<?= absolute_url('/') ?>">Go back home</a>

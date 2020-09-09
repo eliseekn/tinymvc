@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Validators;
+namespace App\Requests;
 
-use Framework\Support\FormValidation;
+use Framework\Support\Validator;
 
-class CreateUserForm extends FormValidation
+class UpdateUserRequest extends Validator
 {
     /**
      * rules
@@ -13,8 +13,7 @@ class CreateUserForm extends FormValidation
      */
     protected static $rules = [
         'name' => 'required',
-        'email' => 'required|valid_email',
-        'password' => 'required'
+        'email' => 'required|valid_email'
     ];
 
     /**

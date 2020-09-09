@@ -26,7 +26,7 @@ class Redirect
     /**
      * redirect to url 
      *
-     * @param  string $url url to redirect to
+     * @param  string $url
      * @return mixed
      */
     public static function toUrl(string $url)
@@ -38,8 +38,8 @@ class Redirect
     /**
      * redirect to route
      *
-     * @param  string $name route name
-     * @param  array $params parameters 
+     * @param  string $name
+     * @param  array $params
      * @return mixed
      */
     public static function toRoute(string $name, array $params = [])
@@ -69,18 +69,18 @@ class Redirect
     /**
      * redirect to handler
      *
-     * @param  string $name handler name (ex: Controller@action)
-     * @param  array $params parameters 
+     * @param  string $handler
+     * @param  array $params
      * @return mixed
      */
-    public static function toHandler(string $name, array $params = [])
+    public static function toHandler(string $handler, array $params = [])
     {
         $params = empty($params) ? '' : implode('/', $params);
 
         //search key from value in a multidimensional array
         //https://www.php.net/manual/en/function.array-search.php
         $url = array_search(
-            $name,
+            $handler,
             array_map(
                 function ($val) {
                     return $val['handler'];
@@ -90,7 +90,7 @@ class Redirect
         );
 
         if (empty($url)) {
-            throw new Exception('Handler "' . $name . '" not found.');
+            throw new Exception('Handler "' . $handler . '" not found.');
         }
 
         self::$redirect_url = empty($params) ? $url : $url . '/' . $params;
@@ -146,45 +146,45 @@ class Redirect
     /**
      * redirects with success flash message
      *
-     * @param  mixed $content content of message
+     * @param  mixed $message
      * @return void
      */
-    public function withSuccess($content): void
+    public function withSuccess($message): void
     {
-        self::withMessage('success', $content);
+        $this->withMessage('success', $message);
     }
 
     /**
      * redirects with error flash message
      *
-     * @param  mixed $content content of message
+     * @param  mixed $message
      * @return void
      */
-    public function withError($content): void
+    public function withError($message): void
     {
-        self::withMessage('danger', $content);
+        $this->withMessage('danger', $message);
     }
 
     /**
      * redirects with success flash message
      *
-     * @param  mixed $content content of message
+     * @param  mixed $message
      * @return void
      */
-    public function withWarning($content): void
+    public function withWarning($message): void
     {
-        self::withMessage('warning', $content);
+        $this->withMessage('warning', $message);
     }
 
     /**
      * redirects with success flash message
      *
-     * @param  mixed $content content of message
+     * @param  mixed $message
      * @return void
      */
-    public function withInfo($content): void
+    public function withInfo($message): void
     {
-        self::withMessage('primary', $content);
+        $this->withMessage('primary', $message);
     }
 
     /**

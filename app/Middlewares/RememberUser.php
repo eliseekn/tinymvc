@@ -2,9 +2,9 @@
 
 namespace App\Middlewares;
 
+use App\Helpers\AuthHelper;
 use Framework\Support\Encryption;
 use App\Database\Models\UsersModel;
-use Framework\Support\Authenticate;
 
 /**
  * Check for user cookie
@@ -18,7 +18,7 @@ class RememberUser
      */
     public static function handle(): void
     {
-        if (Authenticate::checkRemember()) {
+        if (AuthHelper::checkCookie()) {
             $user = UsersModel::findWhere('email', Encryption::decrypt(get_user_cookie()));
 
             if (!empty($user)) {

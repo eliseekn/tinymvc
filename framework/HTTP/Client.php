@@ -116,7 +116,7 @@ class Client
         ?array $data = null,
         bool $json_data = false
     ) {
-        return self::send('POST', $urls, $headers, $data, $json_data);
+        return self::send('PUT', $urls, $headers, $data, $json_data);
     }
 
     /**
@@ -174,18 +174,28 @@ class Client
     }
 
     /**
-     * retrieves request headers
+     * retrieves single response header
+     *
+     * @return mixed
+     */
+    public function getHeaders()
+    {
+        return self::$response['headers'];
+    }
+
+    /**
+     * retrieves response headers
      *
      * @param  string $field
      * @return mixed returns field value or empty string
      */
-    public function getHeader(string $field = '')
+    public function getHeader(string $field): string
     {
-        return empty($field) ? self::$response['headers'] : self::$response['headers'][$field] ?? '';
+        return $this->getHeaders()[$field];
     }
 
     /**
-     * get response body
+     * retrieves response body
      *
      * @return mixed
      */

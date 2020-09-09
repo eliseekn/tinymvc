@@ -16,42 +16,97 @@ use Framework\Support\Uploader;
 class Request
 {
     /**
-     * retrieves request headers
+     * retrieves headers
+     *
+     * @return array returns headers
+     */
+    public static function getHeaders(): array
+    {
+        return $_SERVER;
+    }
+    
+    /**
+     * retrieves single header value
      *
      * @param  string $field
-     * @return mixed returns field value or empty string
+     * @return string returns header value
      */
-    public static function getHeader(string $field = '')
+    public static function getHeader(string $field): string
     {
-        return empty($field) ? $_SERVER : $_SERVER[$field] ?? '';
+        return self::getHeaders()[$field] ?? '';
     }
 
     /**
-     * retrieves request get method
+     * retrieves queries
      *
-     * @param  string $field
-     * @return mixed returns field value or array or empty string
+     * @return array returns queries
      */
-    public static function getQuery(string $field = '')
+    public static function getQueries(): array
     {
-        return empty($field) ? $_GET : $_GET[$field] ?? '';
+        return $_GET;
     }
 
     /**
-     * retrieves request post method
+     * retrieves single query value
      *
      * @param  string $field
-     * @return mixed returns field value or array or empty string
+     * @return string returns query value
      */
-    public static function getField(string $field = '')
+    public static function getQuery(string $field): string
     {
-        return empty($field) ? $_POST : $_POST[$field] ?? '';
+        return self::getQueries()[$field] ?? '';
+    }
+    
+    /**
+     * set query value
+     *
+     * @param  string $field
+     * @param  mixed $value
+     * @return void
+     */
+    public static function setQuery(string $field, $value): void
+    {
+        $_GET[$field] = $value;
     }
 
     /**
-     * retrieves raw data from requests
+     * retrieves post fields
      *
-     * @return mixed data content or false
+     * @param  string $field
+     * @return array returns post fields
+     */
+    public static function getFields(): array
+    {
+        return $_POST;
+    }
+
+    /**
+     * retrieves single post field
+     *
+     * @param  string $field
+     * @return mixed returns field value
+     */
+    public static function getField(string $field): string
+    {
+        return self::getFields()[$field] ?? '';
+    }
+    
+    /**
+     * set field value
+     *
+     * @param  string $field
+     * @param  mixed $value
+     * @return void
+     */
+    public static function setField(string $field, $value): void
+    {
+        $_POST[$field] = $value;
+    }
+
+    /**
+     * retrieves raw data
+     *
+     * @return mixed
      */
     public static function getRawData()
     {
@@ -59,11 +114,11 @@ class Request
     }
 
     /**
-     * retrieves $_FILES request
+     * retrieves single file
      *
      * @param  string $field
      * @param  array $allowed_extensions
-     * @return mixed
+     * @return mixed returns uploader instance
      */
     public static function getFile(string $field, array $allowed_extensions = []): Uploader
     {
@@ -77,13 +132,13 @@ class Request
     }
 
     /**
-     * retrieves $_FILES for multiple files request
+     * retrieves multiple files
      *
      * @param  string $field
      * @param  array $allowed_extensions
-     * @return array returns array of uploader class instance
+     * @return array returns array of uploader instance
      */
-    public static function getMultipleFiles(string $field, array $allowed_extensions = []): array
+    public static function getFiles(string $field, array $allowed_extensions = []): array
     {
         $files = [];
 
@@ -107,19 +162,19 @@ class Request
     /**
      * retrieves request method
      *
-     * @return mixed
+     * @return string
      */
-    public static function getMethod()
+    public static function getMethod(): string
     {
         return self::getHeader('REQUEST_METHOD');
     }
 
     /**
-     * retrieves full requested uri
+     * retrieves full uri
      *
      * @return string
      */
-    public static function getFullUri(): string
+    public static function getFullURI(): string
     {
         $uri = self::getHeader('REQUEST_URI');
         $uri = str_replace(APP_FOLDER, '', $uri); //remove app folder if exists 
@@ -127,13 +182,13 @@ class Request
     }
 
     /**
-     * retrieves partial requested uri
+     * retrieves partial uri
      *
      * @return string
      */
     public static function getURI(): string
     {
-        $uri = self::getFullUri();
+        $uri = self::getFullURI();
 
         //looks for "?page=" or something like and remove it from uri
         if (strpos($uri, '?') !== false) {
@@ -146,29 +201,5 @@ class Request
 
         //return sanitized url
         return filter_var($uri, FILTER_SANITIZE_URL) === false ? $uri : filter_var($uri, FILTER_SANITIZE_URL);
-    }
-    
-    /**
-     * set $_POST query
-     *
-     * @param  string $field
-     * @param  mixed $value
-     * @return void
-     */
-    public static function setField(string $field, $value): void
-    {
-        $_POST[$field] = $value;
-    }
-    
-    /**
-     * set $_GET query
-     *
-     * @param  string $field
-     * @param  mixed $value
-     * @return void
-     */
-    public static function setQuery(string $field, $value): void
-    {
-        $_GET[$field] = $value;
     }
 }

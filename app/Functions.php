@@ -7,5 +7,5 @@
  */
 
 /**
- * Write your custom helpers functions here
+ * Write your custom functions here
  */

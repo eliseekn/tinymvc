@@ -10,7 +10,7 @@
  * Main application file
  */
 
-//include composer autoloader
+//import composer autoloader
 require 'vendor/autoload.php';
 
 //load configurations files

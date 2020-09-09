@@ -28,18 +28,20 @@ endif
 ?>
 
 <div class="card">
-    <div class="card-header bg-dark d-flex align-items-center justify-content-between">
-        <p class="mb-0 text-white lead">Users</p>
+    <div class="card-header bg-dark">
+        <div class="d-flex flex-lg-row flex-sm-column align-items-lg-center justify-content-lg-between">
+            <span class="text-white lead">Users</span>
 
-        <span>
-            <a href="<?= absolute_url('/admin/users/new') ?>" class="btn btn-primary">New</a>
-            <upload-modal action="<?= absolute_url('/admin/users/import') ?>"></upload-modal>
-            <a href="<?= absolute_url('/admin/users/export') ?>" class="btn btn-primary mx-2">Export</a>
+            <span>
+                <a href="<?= absolute_url('/admin/users/new') ?>" class="btn btn-primary">New</a>
+                <upload-modal action="<?= absolute_url('/admin/users/import') ?>"></upload-modal>
+                <a href="<?= absolute_url('/admin/users/export') ?>" class="btn btn-primary mx-2">Export</a>
 
-            <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('/admin/users/delete/') ?>">
-                Bulk delete
-            </button>
-        </span>
+                <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('/admin/users/delete/') ?>">
+                    Bulk delete
+                </button>
+            </span>
+        </div>
     </div>
 
     <div class="card-body">
@@ -135,9 +137,7 @@ endif
     </div>
 
     <div class="card-footer d-flex align-items-center justify-content-between">
-        <p class="mb-0">
-            Total result(s): <span class="font-weight-bold"><?= $users->getTotalItems() ?></span>
-        </p>
+        <span>Total result(s): <span class="font-weight-bold"><?= $users->getTotalItems() ?></span></span>
 
         <?php
         $this->insert('partials/pagination', [

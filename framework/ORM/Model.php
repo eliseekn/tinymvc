@@ -24,17 +24,6 @@ class Model
     protected static $table = '';
 
     /**
-     * find row by column id
-     *
-     * @param  int $id
-     * @return mixed
-     */
-    public static function find(int $id)
-    {
-        return self::findWhere('id', $id);
-    }
-
-    /**
      * check if row exists
      *
      * @param  string $column
@@ -44,6 +33,33 @@ class Model
     public static function exists(string $column, string $value): bool
     {
         return isset(self::findWhere($column, $value)->$column);
+    }
+
+    /**
+     * find row by column id
+     *
+     * @param  int $id
+     * @return mixed
+     */
+    public static function find(int $id)
+    {
+        return self::findWhere('id', $id);
+    }
+    
+    /**
+     * find row or create if not exists
+     *
+     * @param  int $id
+     * @param  array $data
+     * @return mixed
+     */
+    public static function findOrCreate(int $id, array $data)
+    {
+        if (self::exists('id', $id)) {
+            return self::find($id);
+        } else {
+            self::create($data);
+        }
     }
     
     /**
@@ -227,10 +243,10 @@ class Model
     /**
      * insert data
      *
-     * @param  array $data data to insert
+     * @param  array $data
      * @return void
      */
-    public static function insert(array $data): void
+    public static function create(array $data): void
     {
         Query::DB()
             ->insert(static::$table, $data)

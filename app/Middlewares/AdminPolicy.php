@@ -2,10 +2,10 @@
 
 namespace App\Middlewares;
 
+use App\Helpers\AuthHelper;
 use Framework\Routing\View;
 use Framework\HTTP\Redirect;
 use Framework\HTTP\Response;
-use Framework\Support\Authenticate;
 
 /**
  * Check if user has admin role
@@ -19,11 +19,11 @@ class AdminPolicy
      */
     public static function handle(): void
     {
-        if (!Authenticate::check()) {
+        if (!AuthHelper::checkSession()) {
             Redirect::toUrl('/login')->withError('You must be logged first to access this page');
         }
         
-        if (Authenticate::getUser()->role !== 'admin') {
+        if (AuthHelper::getSession()->role !== 'admin') {
             if (isset(ERRORS_PAGE['403']) && !empty(ERRORS_PAGE['403'])) {
                 View::render(ERRORS_PAGE['403'], [], 403);
             } else {

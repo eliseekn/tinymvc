@@ -13,6 +13,7 @@
 </head>
 
 <body>
+
     <div class="d-flex" id="wrapper">
         <div class="bg-light border-light border-right min-vh-100" id="sidebar-wrapper">
             <div class="sidebar-title bg-dark text-light">
@@ -60,6 +61,7 @@
     <script defer src="<?= absolute_url('/public/js/components/loading-button.js') ?>"></script>
     <script defer src="<?= absolute_url('/public/js/components/upload-modal.js') ?>"></script>
     <script defer src="<?= absolute_url('/public/js/admin.js') ?>"></script>
+    
 </body>
 
 </html>
