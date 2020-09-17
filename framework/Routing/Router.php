@@ -69,38 +69,37 @@ class Router
     {
         if (!empty($routes)) {
             foreach ($routes as $route => $options) {
-                $pattern = preg_replace('/{([a-zA-Z-_]+):([^\}]+)}/i', '$2', $route);
-                $pattern = preg_replace('/{([a-zA-Z-_]+):([^\}]+)}?/i', '$2', $pattern);
-                $pattern = preg_replace('/\bstr\b/', '([a-zA-Z-_]+)', $pattern);
-                $pattern = preg_replace('/\bnum\b/', '(\d+)', $pattern);
-                $pattern = preg_replace('/\bany\b/', '([^/]+)', $pattern);
-                $pattern = '#^' . $pattern . '$#';
+                if (preg_match('/' . strtoupper($options['method']) . '/', Request::getMethod())) {
+                    $pattern = preg_replace('/{([a-zA-Z-_]+):([^\}]+)}/i', '$2', $route);
+                    $pattern = preg_replace('/{([a-zA-Z-_]+):([^\}]+)}?/i', '$2', $pattern);
+                    $pattern = preg_replace('/\bstr\b/', '([a-zA-Z-_]+)', $pattern);
+                    $pattern = preg_replace('/\bnum\b/', '(\d+)', $pattern);
+                    $pattern = preg_replace('/\bany\b/', '([^/]+)', $pattern);
+                    $pattern = '#^' . $pattern . '$#';
 
-                if (preg_match($pattern, Request::getURI(), $params)) {
-                    array_shift($params);
+                    if (preg_match($pattern, Request::getURI(), $params)) {
+                        array_shift($params);
 
-                    if (preg_match('/' . strtoupper($options['method']) . '/', Request::getMethod())) {
                         if (is_callable($options['handler'])) {
                             //check for middlewares to execute
                             Middleware::check($route);
 
-                            //execute
+                            //execute function
                             call_user_func_array($options['handler'], array_values($params));
-                            exit();
-                        }
-                        
-                        list($controller, $action) = explode('@', $options['handler']);
-                        $controller = 'App\Controllers\\' . $controller;
-
-                        //chekc if controller class and method exist
-                        if (class_exists($controller) && method_exists($controller, $action)) {
-                            //check for middlewares to execute
-                            Middleware::check($route);
-
-                            //execute controller with action and parameter
-                            call_user_func_array([new $controller(), $action], array_values($params));
                         } else {
-                            throw new Exception('Handler "' . $options['handler'] . '" not found.');
+                            list($controller, $action) = explode('@', $options['handler']);
+                            $controller = 'App\Controllers\\' . $controller;
+
+                            //chekc if controller class and method exist
+                            if (class_exists($controller) && method_exists($controller, $action)) {
+                                //check for middlewares to execute
+                                Middleware::check($route);
+
+                                //execute controller with action and parameter
+                                call_user_func_array([new $controller(), $action], array_values($params));
+                            } else {
+                                throw new Exception('Handler "' . $options['handler'] . '" not found.');
+                            }
                         }
                     }
                 }

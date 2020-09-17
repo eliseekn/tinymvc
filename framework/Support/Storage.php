@@ -31,6 +31,16 @@ class Storage
         self::$path = STORAGE[$path] ?? '';
         return new self();
     }
+    
+    /**
+     * get current storage path
+     *
+     * @return string
+     */
+    public function get(): string
+    {
+        return self::$path;
+    }
 
     /**
      * create new directory
@@ -105,7 +115,7 @@ class Storage
      */
     public function moveFile(string $filename, string $destination): bool
     {
-        return self::renameFile($filename, $destination);
+        return $this->renameFile($filename, $destination);
     }
     
     /**
@@ -150,18 +160,18 @@ class Storage
      */
     public function deleteDir(string $pathname): bool
     {
-        if (self::isDir($pathname)) {
+        if ($this->isDir($pathname)) {
             $objects = scandir(self::$path . $pathname);
     
             foreach ($objects as $object) {
                 if ($object != '.' && $object != '..') {
                     if (
-                        self::isDir($pathname . DIRECTORY_SEPARATOR . $object) &&
+                        $this->isDir($pathname . DIRECTORY_SEPARATOR . $object) &&
                         !is_link(self::$path . $pathname . DIRECTORY_SEPARATOR . $object)
                     ) {
-                        self::deleteDir($pathname . DIRECTORY_SEPARATOR . $object);
+                        $this->deleteDir($pathname . DIRECTORY_SEPARATOR . $object);
                     } else {
-                        self::deleteFile($pathname . DIRECTORY_SEPARATOR . $object);
+                        $this->deleteFile($pathname . DIRECTORY_SEPARATOR . $object);
                     }
                 }
             }
@@ -184,7 +194,7 @@ class Storage
         $objects = scandir(self::$path . $pathname);
 
         foreach ($objects as $object) {
-            if ($object != '.' && $object != '..' && self::isFile($object)) {
+            if ($object != '.' && $object != '..' && $this->isFile($object)) {
                 $results[] = basename($object);
             }
         }
@@ -204,7 +214,7 @@ class Storage
         $objects = scandir(self::$path . $pathname);
 
         foreach ($objects as $object) {
-            if ($object != '.' && $object != '..' && self::isDir($object)) {
+            if ($object != '.' && $object != '..' && $this->isDir($object)) {
                 $results[] = basename($object);
             }
         }

@@ -16,7 +16,7 @@ class AuthHelper
      */
     public static function getAttempts(): int
     {
-        return get_session('auth_attempts') ?? 0;
+        return session_has('auth_attempts') ? get_session('auth_attempts') : 0;
     }
     
     /**
@@ -24,9 +24,9 @@ class AuthHelper
      *
      * @return void
      */
-    private static function setAttemps(): void
+    private static function setAttempts(): void
     {
-        $auth_attempts = get_session('auth_attempts') ?? 0;
+        $auth_attempts = self::getAttempts() + 1;
         create_session('auth_attempts', $auth_attempts);
     }
 
@@ -37,11 +37,7 @@ class AuthHelper
      */
     private static function checkCredentials($user): bool
     {
-        if ($user !== false && compare_hash(Request::getField('password'), $user->password)) {
-            return true;
-        }
-
-        return false;
+        return $user !== false && compare_hash(Request::getField('password'), $user->password);
     }
     
     /**
@@ -54,11 +50,11 @@ class AuthHelper
         $user = UsersModel::findWhere('email', Request::getField('email'));
 
         if (!self::checkCredentials($user)) {
-            self::setAttemps();
+            self::setAttempts();
 
-            if (AUTH_ATTEMPTS !== 0 && AuthHelper::getAttempts() > AUTH_ATTEMPTS) {
+            if (AUTH_ATTEMPTS !== 0 && self::getAttempts() > AUTH_ATTEMPTS) {
                 create_session('auth_attempts_timeout', strtotime('+' . AUTH_ATTEMPTS_TIMEOUT . ' minute', strtotime(date('Y-m-d H:i:s'))));
-                Redirect::back()->withError('Authentication attempts exceeded. <br> Wait ' . AUTH_ATTEMPTS_TIMEOUT . ' minute(s) and refresh the page to try again');
+                Redirect::back()->only();
             } else {
                 Redirect::back()->withError('Invalid email address and/or password');
             }
@@ -82,11 +78,11 @@ class AuthHelper
     }
 
     /**
-     * authenticate new user
+     * store new user
      *
      * @return bool
      */
-    public static function new(): bool
+    public static function store(): bool
     {
         if (UsersModel::exists('email', Request::getField('email'))) {
             return false;

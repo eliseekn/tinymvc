@@ -9,6 +9,7 @@ use Framework\HTTP\Redirect;
 use Framework\Support\Email;
 use App\Requests\AuthRequest;
 use App\Requests\RegisterRequest;
+use Framework\Support\Validator;
 
 /**
  * Manage user authentication
@@ -28,9 +29,7 @@ class AuthController
             Redirect::back()->withError($validate);
         }
 
-		$auth = AuthHelper::authenticate();
-
-        if ($auth->role === 'admin') {
+        if (AuthHelper::authenticate()->role === 'admin') {
             Redirect::toUrl('/admin')->only();
         } else {
             Redirect::toUrl('/')->only();
@@ -50,7 +49,7 @@ class AuthController
             Redirect::back()->withError($validate);
         }
 
-        if (!AuthHelper::new()) {
+        if (!AuthHelper::store()) {
             Redirect::back()->withError('The email address is already used by another user');
         }
 

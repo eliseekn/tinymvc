@@ -21,8 +21,9 @@ $this->layout('admin/layout', [
 
 <?php
 if (session_has_flash_messages()) :
-    $this->insert('partials/flash', [
-        'messages' => get_flash_messages()
+    $this->insert('partials/notifications', [
+        'messages' => get_flash_messages(),
+        'display' => 'toast'
     ]);
 endif
 ?>
@@ -37,7 +38,7 @@ endif
                 <upload-modal action="<?= absolute_url('/admin/users/import') ?>"></upload-modal>
                 <a href="<?= absolute_url('/admin/users/export') ?>" class="btn btn-primary mx-2">Export</a>
 
-                <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('/admin/users/delete/') ?>">
+                <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('/admin/users/delete') ?>">
                     Bulk delete
                 </button>
             </span>
@@ -113,15 +114,15 @@ endif
 
                                 <?php if ($user->role !== 'admin' || $user->id === get_user_session()->id) : ?>
 
-                                    <a class="btn text-primary" href="<?= absolute_url('/admin/users/edit/' . $user->id) ?>" title="Edit item">
-                                        <i class="fa fa-edit"></i>
-                                    </a>
+                                <a class="btn text-primary" href="<?= absolute_url('/admin/users/edit/' . $user->id) ?>" title="Edit item">
+                                    <i class="fa fa-edit"></i>
+                                </a>
 
-                                    <?php if ($user->id !== get_user_session()->id) : ?>
+                                <?php if ($user->id !== get_user_session()->id) : ?>
 
-                                        <button class="btn text-danger delete-item" onclick="confirmDelete(this)" data-redirect="<?= absolute_url('/admin/users/delete/' . $user->id) ?>" title="Delete item">
-                                            <i class="fa fa-trash-alt"></i>
-                                        </button>
+                                <button class="btn text-danger delete-item" onclick="confirmDelete(this)" data-redirect="<?= absolute_url('/admin/users/delete/' . $user->id) ?>" title="Delete item">
+                                    <i class="fa fa-trash-alt"></i>
+                                </button>
 
                                 <?php
                                     endif;

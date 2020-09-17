@@ -28,10 +28,10 @@ class View
     public static function render(string $template, array $data = [], int $status_code = 200): void
     {
         if (!Storage::path('templates')->isFile($template . '.php')) {
-            throw new Exception('File "' . STORAGE['templates'] . $template . '.php" not found.');
+            throw new Exception('File "' . Storage::path('templates')->get() . $template . '.php" not found.');
         }
 
-        $engine = new Engine(STORAGE['templates']);
+        $engine = new Engine(Storage::path('templates')->get());
         Response::send([], $engine->render($template, $data), $status_code);
     }
 }

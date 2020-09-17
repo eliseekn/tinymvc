@@ -54,7 +54,7 @@ if (!function_exists('is_current_page')) {
 	/**
 	 * check if current url contains string
 	 *
-	 * @param  mixed $page
+	 * @param  string $page
 	 * @return bool
 	 */
 	function is_current_page(string $page): bool

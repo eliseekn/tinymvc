@@ -77,7 +77,7 @@ class UsersController
             'email' => Request::getField('email'),
             'password' => hash_string(Request::getField('password')),
 			'role' => Request::getField('role')
-        ]);
+		]);
 
         Redirect::back()->withSuccess('The user has been created successfully');
     }
@@ -129,7 +129,7 @@ class UsersController
 			}
 	
 			UsersModel::delete($id);
-			Redirect::back()->withSuccess('The user has been deleted successfully');
+			create_flash_messages('success', 'The user has been deleted successfully');
 		} else {
 			$users_id = json_decode(Request::getRawData(), true);
 			$users_id = $users_id['items'];

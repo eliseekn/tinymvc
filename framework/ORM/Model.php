@@ -241,16 +241,18 @@ class Model
     }
     
     /**
-     * insert data
+     * insert new data
      *
      * @param  array $data
-     * @return void
+     * @return int returns inserted element id
      */
-    public static function create(array $data): void
+    public static function create(array $data): int
     {
         Query::DB()
             ->insert(static::$table, $data)
             ->executeQuery();
+
+        return Query::DB()->lastInsertedId();
     }
     
     /**

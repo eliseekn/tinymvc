@@ -64,7 +64,7 @@ Route::group([
     '/admin/users/new' => ['handler' => 'Admin\UsersController@new'],
     '/admin/users/edit/{id:num}' => ['handler' => 'Admin\UsersController@edit'],
     '/admin/users/view/{id:num}' => ['handler' => 'Admin\UsersController@view'],
-    '/admin/users/delete/{id:num}?' => ['handler' => 'Admin\UsersController@delete'],
+    '/admin/users/delete/{id:num}' => ['handler' => 'Admin\UsersController@delete'],
     '/admin/users/export' => ['handler' => 'Admin\UsersController@export']
 ])->by([
     'method' => 'GET',
@@ -74,8 +74,11 @@ Route::group([
     ]
 ]);
 
-Route::post('/admin/users/import', [
-    'handler' => 'Admin\UsersController@import',
+Route::group([
+    '/admin/users/delete' => ['handler' => 'Admin\UsersController@delete'],
+    '/admin/users/import' => ['handler' => 'Admin\UsersController@import']
+])->by([
+    'method' => 'POST',
     'middlewares' => [
         'remember',
         'admin'
@@ -90,13 +93,6 @@ Route::group([
     'middlewares' => [
         'csrf',
         'sanitize',
-        'admin'
-    ]
-]);
-
-Route::post('/admin/users/delete/', [
-    'handler' => 'Admin\UsersController@delete',
-    'middlewares' => [
         'admin'
     ]
 ]);

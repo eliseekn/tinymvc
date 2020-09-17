@@ -25,8 +25,9 @@ $this->layout('admin/layout', [
 
 <?php 
 if (session_has_flash_messages()) : 
-    $this->insert('partials/flash', [
-        'messages' => get_flash_messages()
+    $this->insert('partials/notifications', [
+        'messages' => get_flash_messages(),
+        'display' => 'toast'
     ]);
 endif 
 ?>

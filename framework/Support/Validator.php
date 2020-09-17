@@ -33,12 +33,12 @@ class Validator
      * validate fields 
      *
      * @param  array $fields
-     * @return bool
+     * @return bool|array
      */
-    public static function validate(array $fields, ?array $rules = null, ?array $messages = null): bool
+    public static function validate(array $fields, array $rules = [], array $messages = [])
     {
-        $validators = $rules ?? static::$rules;
-        $fields_error_messages = $messages ?? static::$messages;
+        $validators = empty($rules) ? static::$rules : $rules;
+        $fields_error_messages = empty($messages) ? static::$messages : $$messages;
         return GUMP::is_valid($fields, $validators, $fields_error_messages);
     }
 }

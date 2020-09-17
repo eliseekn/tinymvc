@@ -60,6 +60,8 @@
     <script defer src="<?= absolute_url('/public/js/components/password-toggler.js') ?>"></script>
     <script defer src="<?= absolute_url('/public/js/components/loading-button.js') ?>"></script>
     <script defer src="<?= absolute_url('/public/js/components/upload-modal.js') ?>"></script>
+    <script defer src="<?= absolute_url('/public/js/components/alert-modal.js') ?>"></script>
+    <script defer src="<?= absolute_url('/public/js/components/alert-toast.js') ?>"></script>
     <script defer src="<?= absolute_url('/public/js/admin.js') ?>"></script>
     
 </body>

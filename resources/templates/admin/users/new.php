@@ -1,7 +1,7 @@
 <?php 
 $this->layout('admin/layout', [
-    'page_title' => 'Edit user | Administration',
-    'page_description' => 'Edit user page'
+    'page_title' => 'New user | Administration',
+    'page_description' => 'New user page'
 ]) 
 ?>
 
@@ -19,41 +19,42 @@ $this->layout('admin/layout', [
             <a href="<?= absolute_url('/admin/users') ?>">Users</a>
         </li>
 
-        <li class="breadcrumb-item active" aria-current="page">Edit</li>
+        <li class="breadcrumb-item active" aria-current="page">New</li>
     </ol>
 </nav>
 
 <?php 
 if (session_has_flash_messages()) : 
-    $this->insert('partials/flash', [
-        'messages' => get_flash_messages()
+    $this->insert('partials/notifications', [
+        'messages' => get_flash_messages(),
+        'display' => 'toast'
     ]);
 endif 
 ?>
 
 <div class="card">
-    <div class="card-header bg-dark text-white lead">Edit user</div>
+    <div class="card-header bg-dark text-white lead">New user</div>
 
-    <form method="post" action="<?= absolute_url('/admin/users/update/' . $user->id) ?>">
+    <form method="post" action="<?= absolute_url('/admin/users/create') ?>">
         <?= generate_csrf_token() ?>
 
         <div class="card-body">
             <div class="form-group row">
                 <label for="name" class="col-sm-2 col-form-label">Name</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="name" id="name" value="<?= $user->name ?>">
+                    <input type="text" class="form-control" name="name" id="name">
                 </div>
             </div>
 
             <div class="form-group row">
                 <label for="username" class="col-sm-2 col-form-label">Email address</label>
                 <div class="col-sm-10">
-                    <input type="email" class="form-control" name="email" id="email" value="<?= $user->email ?>">
+                    <input type="email" class="form-control" name="email" id="email">
                 </div>
             </div>
 
             <div class="form-group row">
-                <label for="password" class="col-sm-2 col-form-label">New password</label>
+                <label for="password" class="col-sm-2 col-form-label">Password</label>
 
                 <div class="d-flex align-items-center col-sm-10">
                     <input type="password" id="password" name="password" class="form-control">
@@ -69,11 +70,11 @@ endif
                     <legend class="col-form-label col-sm-2 pt-0">Role</legend>
                     <div class="col-sm-10">
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input class="custom-control-input" type="radio" name="role" id="admin" value="admin" <?php if ($user->role === 'admin') : echo 'checked'; endif ?>>
+                            <input class="custom-control-input" type="radio" name="role" id="admin" value="admin">
                             <label class="custom-control-label" for="admin">Admin</label>
                         </div>
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input class="custom-control-input" type="radio" name="role" id="user" value="user" <?php if ($user->role === 'user') : echo 'checked'; endif ?>>
+                            <input class="custom-control-input" type="radio" name="role" id="user" value="user" checked>
                             <label class="custom-control-label" for="user">User</label>
                         </div>
                     </div>
@@ -82,7 +83,7 @@ endif
         </div>
 
         <div class="card-footer">
-            <button type="submit" class="btn btn-primary loading">Update</button>
+            <button type="submit" class="btn btn-primary loading">Create</button>
             <button type="reset" class="btn btn-secondary mx-2">Reset</button>
             <a href="<?= absolute_url('/admin/users') ?>" class="btn btn-secondary">Cancel</a>
         </div>
