@@ -1,11 +1,16 @@
 {
-  "name": "tinymvc",
-  "version": "1.0.0",
-  "main": "index.js",
-  "repository": "https://github.com/eliseekn/tinymvc",
-  "author": "N'Guessan Kouadio Elisée <eliseekn@gmail.com>",
-  "license": "MIT",
-  "devDependencies": {
-    "parcel-bundler": "^1.12.4"
-  }
+	"name": "tinymvc",
+	"version": "1.0.0",
+	"main": "index.js",
+	"repository": "https://github.com/eliseekn/tinymvc",
+	"author": "N'Guessan Kouadio Elisée <eliseekn@gmail.com>",
+	"license": "MIT",
+	"scripts": {
+		"parcel-watch": "parcel watch resources/ui/js/app.js -d public/js",
+		"sass-watch" : "sass --watch resources/scss:public/css --style=compressed",
+		"parcel-build": "parcel build resources/ui/js/app.js -d public/js"
+	},
+	"devDependencies": {
+		"parcel-bundler": "^1.12.4"
+	}
 }
