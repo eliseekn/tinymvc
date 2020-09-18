@@ -69,11 +69,9 @@ endif
     </div>
 
     <div class="card-footer">
-        <a href="<?= absolute_url('/admin/users/edit/' . $user->id) ?>" class="btn btn-primary">Edit</a>
-        <button class="btn btn-danger mx-2" onclick="confirmDelete(this)" data-redirect="<?= absolute_url('/admin/users/delete/' . $user->id) ?>" title="Delete item">
-            Delete
-        </button>
-        <a href="<?= absolute_url('/admin/users') ?>" class="btn btn-secondary">Cancel</a>
+        <a href="<?= absolute_url('/admin/users/edit/' . $user->id) ?>" class="btn btn-primary mr-2">Edit</a>
+        <confirm-delete type="text" content="Delete" action="<?= absolute_url('/admin/users/delete/' . $user->id) ?>" redirect="<?= current_url() ?>"></confirm-delete>
+        <a href="<?= absolute_url('/admin/users') ?>" class="btn btn-secondary ml-2">Cancel</a>
     </div>
 </div>
 

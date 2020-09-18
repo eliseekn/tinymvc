@@ -46,4 +46,4 @@ class AlertModal extends HTMLElement {
     }
 }
 
-window.customElements.define('alert-modal', AlertModal)
+export default AlertModal

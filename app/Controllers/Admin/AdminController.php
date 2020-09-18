@@ -28,7 +28,7 @@ class AdminController
 	public function users(): void
 	{
 		View::render('admin/users/index', [
-			'users' => UsersModel::paginate(50, ['name', 'ASC'])
+			'users' => UsersModel::paginate(3, ['name', 'ASC'])
 		]);
 	}
 }

@@ -21,17 +21,17 @@ class View
     /**
      * display view page
      *
-     * @param  string $template template name
-     * @param  array $data data to include
+     * @param  string $view
+     * @param  array $data
      * @return void
      */
-    public static function render(string $template, array $data = [], int $status_code = 200): void
+    public static function render(string $view, array $data = [], int $status_code = 200): void
     {
-        if (!Storage::path('templates')->isFile($template . '.php')) {
-            throw new Exception('File "' . Storage::path('templates')->get() . $template . '.php" not found.');
+        if (!Storage::path('views')->isFile($view . '.php')) {
+            throw new Exception('File "' . Storage::path('views')->get() . $view . '.php" not found.');
         }
 
-        $engine = new Engine(Storage::path('templates')->get());
-        Response::send([], $engine->render($template, $data), $status_code);
+        $engine = new Engine(Storage::path('views')->get());
+        Response::send([], $engine->render($view, $data), $status_code);
     }
 }

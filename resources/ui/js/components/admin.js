@@ -1,16 +1,3 @@
-//confirm delete single table item
-function confirmDelete(target) {
-    const innerHTML = target.innerHTML
-    target.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>'
-
-    if (window.confirm('Are you sure you want to delete this user?')) {
-        fetch(target.dataset.redirect, {method: 'delete'})
-            .then(() => window.location.reload())
-    }
-    
-    target.innerHTML = innerHTML
-}
-
 document.addEventListener('DOMContentLoaded', () => {
     //toggle sidebar
     document.querySelector('#sidebar-toggler').addEventListener('click', event => {

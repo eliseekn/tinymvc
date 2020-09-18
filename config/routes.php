@@ -20,9 +20,7 @@ Route::get('/', [
     }
 ]);
 
-Route::get('/home', [
-    'handler' => 'HomeController@index'
-]);
+Route::get('/home', ['handler' => 'HomeController@index']);
 
 //auth routes
 Route::group([
@@ -45,17 +43,9 @@ Route::group([
     ]
 ]);
 
-Route::get('/logout', [
-    'handler' => 'Auth\AuthController@logout'
-]);
-
-Route::post('/authenticate', [
-    'handler' => 'Auth\AuthController@authenticate'
-]);
-
-Route::post('/register', [
-    'handler' => 'Auth\AuthController@register'
-]);
+Route::get('/logout', ['handler' => 'Auth\AuthController@logout']);
+Route::post('/authenticate', ['handler' => 'Auth\AuthController@authenticate']);
+Route::post('/register', ['handler' => 'Auth\AuthController@register']);
 
 //admin routes
 Route::group([
@@ -64,7 +54,6 @@ Route::group([
     '/admin/users/new' => ['handler' => 'Admin\UsersController@new'],
     '/admin/users/edit/{id:num}' => ['handler' => 'Admin\UsersController@edit'],
     '/admin/users/view/{id:num}' => ['handler' => 'Admin\UsersController@view'],
-    '/admin/users/delete/{id:num}' => ['handler' => 'Admin\UsersController@delete'],
     '/admin/users/export' => ['handler' => 'Admin\UsersController@export']
 ])->by([
     'method' => 'GET',
@@ -73,6 +62,8 @@ Route::group([
         'admin'
     ]
 ]);
+
+Route::delete('/admin/users/delete/{id:num}', ['handler' => 'Admin\UsersController@delete']);
 
 Route::group([
     '/admin/users/delete' => ['handler' => 'Admin\UsersController@delete'],
@@ -104,14 +95,6 @@ Route::get('/password/forgot', [
     }
 ]);
 
-Route::get('/password/reset', [
-    'handler' => 'Auth\PasswordResetController@reset'
-]);
-
-Route::post('/password/notify', [
-    'handler' => 'Auth\PasswordResetController@notify'
-]);
-
-Route::post('/password/new', [
-    'handler' => 'Auth\PasswordResetController@new'
-]);
+Route::get('/password/reset', ['handler' => 'Auth\PasswordResetController@reset']);
+Route::post('/password/notify', ['handler' => 'Auth\PasswordResetController@notify']);
+Route::post('/password/new', ['handler' => 'Auth\PasswordResetController@new']);

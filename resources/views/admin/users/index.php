@@ -120,9 +120,7 @@ endif
 
                                 <?php if ($user->id !== get_user_session()->id) : ?>
 
-                                <button class="btn text-danger delete-item" onclick="confirmDelete(this)" data-redirect="<?= absolute_url('/admin/users/delete/' . $user->id) ?>" title="Delete item">
-                                    <i class="fa fa-trash-alt"></i>
-                                </button>
+                                <confirm-delete type="icon" content='<i class="fa fa-trash-alt"></i>' action="<?= absolute_url('/admin/users/delete/' . $user->id) ?>" redirect="<?= current_url()?>"></confirm-delete>
 
                                 <?php
                                     endif;

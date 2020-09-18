@@ -50,4 +50,4 @@ class UploadModal extends HTMLElement {
     }
 }
 
-window.customElements.define('upload-modal', UploadModal)
+export default UploadModal
