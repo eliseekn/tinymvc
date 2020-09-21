@@ -6,6 +6,9 @@
  * @link https://github.com/eliseekn/TinyMVC
  */
 
+use Configula\ConfigFactory;
+use Framework\HTTP\Response;
+
 /**
  * Miscellaneous utils functions
  */
@@ -87,12 +90,21 @@ if (!function_exists('generate_csv')) {
 	function generate_csv(string $filename, array $data, ?array $headers = null, ?string $output = null): void
 	{
 		if (is_null($output)) {
-    		header("Content-Description: File Transfer");
+    		/* header("Content-Description: File Transfer");
 			header('Content-Type: text/csv');
 			header('Content-Disposition: attachment; filename="' . $filename . '"');
 			header("Cache-Control: no-cache");
 			header("Pragma: no-cache");
-			header("Expires: 0");
+			header("Expires: 0"); */
+			Response::sendHeaders([
+				'Content-Description' => 'File Transfer',
+				'Content-Type' => 'text/csv',
+				'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+				'Cache-Control' => 'no-cache',
+				'Pragma' => 'no-cache',
+				'Expires' => '0'
+			]);
+
 			$handle = fopen('php://output', 'w');
 		} else {
 			$handle = fopen($output, 'w');
@@ -110,5 +122,19 @@ if (!function_exists('generate_csv')) {
 		fclose($handle);
 
 		exit();
+	}
+}
+
+if (!function_exists('config')) {	
+	/**
+	 * read configuration
+	 *
+	 * @param  string $path
+	 * @return mixed
+	 */
+	function config(string $path = '')
+	{
+		$config = ConfigFactory::loadPath(APP_ROOT . 'config' . DIRECTORY_SEPARATOR . 'app.php');
+		return $config($path, '');
 	}
 }

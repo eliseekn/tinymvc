@@ -39,7 +39,7 @@ class Migration
      */
     public static function table(string $name)
     {
-        self::$query = "CREATE TABLE " . DB_PREFIX . "$name (";
+        self::$query = "CREATE TABLE " . config('database.table_prefix') . "$name (";
         return new self();
     }
     
@@ -270,7 +270,7 @@ class Migration
      */
     public static function dropTable(string $name): void
     {
-        self::$query = "DROP TABLE IF EXISTS " . DB_PREFIX . "$name";
+        self::$query = "DROP TABLE IF EXISTS " . config('database.table_prefix') . "$name";
         self::executeQuery();
     }
 }

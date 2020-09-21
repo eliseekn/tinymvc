@@ -7,20 +7,60 @@
  */
 
 /**
- * Application main configuration
+ * Application configuration
  */
 
-//define application name
-define('APP_NAME', 'tinymvc');
+$config = [
+    'app' => [
+        'name' => 'tinymvc',
+        'folder' => '/tinymvc',
+        'url' => 'http://localhost/tinymvc'
+    ],
 
-//define application folder name, leave empty for www folder
-define('APP_FOLDER', '/tinymvc');
+    'database' => [
+        'charset' => 'utf8',
+        'host' => 'localhost',
+        'name' => 'test',
+        'username' => 'root',
+        'password' => 'root',
+        'table_prefix' => ''
+    ],
 
-//define absolute application path
-define('APP_ROOT', __DIR__ . DIRECTORY_SEPARATOR . '../');
+    'mailer' => [
+        'host' => 'localhost',
+        'port' => 25,
+        'username' => '',
+        'password' => '',
+        'from' => 'admin@mail.com',
+        'name' => 'Admin'
+    ],
 
-//define application domain url
-define('APP_DOMAIN', 'http://localhost' . APP_FOLDER);
+    'errors' => [
+        'display' => true,
 
-//define session lifetime, in seconds
-define('SESSION_LIFETIME', 3600);
+        'views' => [
+            '404' => 'errors' . DIRECTORY_SEPARATOR . '404',
+            '403' => 'errors' . DIRECTORY_SEPARATOR . '404'
+        ]
+    ],
+
+    'security' => [
+        'enc_key' => base64_encode('write_something_here_to_generate_a_single_encryption_key'),
+
+        'auth' => [
+            'max_attempts' => 5,
+            'unlock_timeout' => 1
+        ]
+    ],
+
+    'storage' => [
+        'public' => APP_ROOT . 'public' . DIRECTORY_SEPARATOR,
+        'views' => APP_ROOT . 'resources' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR,
+        'migrations' => APP_ROOT . 'app' . DIRECTORY_SEPARATOR . 'Database' . DIRECTORY_SEPARATOR . 'Migrations' . DIRECTORY_SEPARATOR,
+        'seeds' => APP_ROOT . 'app' . DIRECTORY_SEPARATOR . 'Database' . DIRECTORY_SEPARATOR . 'Seeds' . DIRECTORY_SEPARATOR
+    ],
+
+    'session' => [
+        'lifetime' => 3600
+    ]
+];

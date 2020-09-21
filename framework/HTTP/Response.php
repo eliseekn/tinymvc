@@ -58,9 +58,6 @@ class Response
             return;
         }
 
-        //send response status code
-        http_response_code($code);
-
         //send response headers
         if (!empty($headers)) {
             foreach ($headers as $name => $value) {
@@ -77,5 +74,16 @@ class Response
 
         //send response body and exit
         exit($body);
+    }
+
+    public static function sendHeaders(array $headers, int $code = 200): void
+    {
+        //send response status code
+        http_response_code($code);
+
+        //send response headers
+        foreach ($headers as $name => $value) {
+            header($name . ': ' . $value);
+        }
     }
 }

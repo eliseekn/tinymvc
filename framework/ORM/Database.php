@@ -38,13 +38,15 @@ class Database
 	private function __construct()
 	{
 		try {
-			$this->connection = new PDO('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=' . DB_CHARSET, DB_USERNAME, DB_PASSWORD);
+			$dsn = 'mysql:host=' . config('database.host') . ';dbname=' . config('database.name') . ';charset=' . config('database.charset');
+
+			$this->connection = new PDO($dsn, config('database.username'), config('database.password'));
 			$this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 			$this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
 			$this->connection->setAttribute(PDO::ATTR_ORACLE_NULLS, PDO::NULL_EMPTY_STRING);
 		} catch (PDOException $e) {
-			if (DISPLAY_ERRORS == true) {
+			if (config('errors.display') == true) {
 				die($e->getMessage());
 			}
 		}

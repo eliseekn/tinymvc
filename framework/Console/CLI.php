@@ -289,8 +289,8 @@ class CLI
             $help_message .= '      --seed=UserSeed,CommentSeed                 Insert UserSeed and CommentSeed only' . PHP_EOL;
             $help_message .= PHP_EOL;
             $help_message .= '      --migration=all --seed=all                  Migrate all tables and insert all seeds' . PHP_EOL;
-            $help_message .= '      --migration=all --reset                  Revert all tables migration' . PHP_EOL;
-            $help_message .= '      --migration=all --reset --seed=all       Revert all tables migration and insert all seeds' . PHP_EOL;
+            $help_message .= '      --migration=all --reset                     Revert all tables migration' . PHP_EOL;
+            $help_message .= '      --migration=all --reset --seed=all          Revert all tables migration and insert all seeds' . PHP_EOL;
             
             exit($help_message);
         } 

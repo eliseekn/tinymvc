@@ -61,7 +61,7 @@ class Query
 			$stmt = self::$db->prepare(trim(self::$query));
 			$stmt->execute(self::$args);
 		} catch (PDOException $e) {
-			if (DISPLAY_ERRORS == true) {
+			if (config('errors.display') == true) {
 				die($e->getMessage());
 			}
 		}
@@ -126,7 +126,7 @@ class Query
 	 */
 	public function from(string $table)
 	{
-		self::$query .= " FROM " . DB_PREFIX . "$table ";
+		self::$query .= " FROM " . config('database.table_prefix') . "$table ";
 		return $this;
 	}
 
@@ -331,7 +331,7 @@ class Query
 	 */
 	public function innerJoin(string $table, string $second_column, string $first_column)
 	{
-		self::$query .= " INNER JOIN " . DB_PREFIX . "$table ON $first_column = $second_column";
+		self::$query .= " INNER JOIN " . config('database.table_prefix') . "$table ON $first_column = $second_column";
 		return $this;
 	}
 
@@ -345,7 +345,7 @@ class Query
 	 */
 	public function leftJoin(string $table, string $second_column, string $first_column)
 	{
-		self::$query .= " LEFT JOIN " . DB_PREFIX . "$table ON $first_column = $second_column";
+		self::$query .= " LEFT JOIN " . config('database.table_prefix') . "$table ON $first_column = $second_column";
 		return $this;
 	}
 
@@ -359,7 +359,7 @@ class Query
 	 */
 	public function rightJoin(string $table, string $second_column, string $first_column)
 	{
-		self::$query .= " RIGHT JOIN " . DB_PREFIX . "$table ON $first_column = $second_column";
+		self::$query .= " RIGHT JOIN " . config('database.table_prefix') . "$table ON $first_column = $second_column";
 		return $this;
 	}
 
@@ -373,7 +373,7 @@ class Query
 	 */
 	public function fullJoin(string $table, string $second_column, string $first_column)
 	{
-		self::$query .= " FULL JOIN " . DB_PREFIX . "$table ON $first_column = $second_column";
+		self::$query .= " FULL JOIN " . config('database.table_prefix') . "$table ON $first_column = $second_column";
 		return $this;
 	}
 
@@ -405,7 +405,7 @@ class Query
 	 */
 	public function insert(string $table, array $items)
 	{
-		self::$query = "INSERT INTO " . DB_PREFIX . "$table (";
+		self::$query = "INSERT INTO " . config('database.table_prefix') . "$table (";
 
 		foreach ($items as $key => $value) {
 			self::$query .= "$key, ";
@@ -433,7 +433,7 @@ class Query
 	 */
 	public function update(string $table)
 	{
-		self::$query = "UPDATE " . DB_PREFIX . "$table";
+		self::$query = "UPDATE " . config('database.table_prefix') . "$table";
 		return $this;
 	}
 
@@ -445,7 +445,7 @@ class Query
 	 */
 	public function deleteFrom(string $table)
 	{
-		self::$query = "DELETE FROM " . DB_PREFIX . "$table";
+		self::$query = "DELETE FROM " . config('database.table_prefix') . "$table";
 		return $this;
 	}
 

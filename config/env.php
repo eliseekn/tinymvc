@@ -10,11 +10,14 @@
  * Set application environnement
  */
 
+//application root path
+define('APP_ROOT', __DIR__  . DIRECTORY_SEPARATOR . '../');
+
 //remove PHP maximum execution time 
 set_time_limit(0);
 
 //exceptions handler
-if (DISPLAY_ERRORS === true) {
+if (config('errors.display') === true) {
     ini_set('display_errors', 1);
     ini_set('error_reporting', -1);
 } else {

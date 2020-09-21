@@ -24,8 +24,8 @@ class AdminPolicy
         }
         
         if (AuthHelper::getSession()->role !== 'admin') {
-            if (isset(ERRORS_PAGE['403']) && !empty(ERRORS_PAGE['403'])) {
-                View::render(ERRORS_PAGE['403'], [], 403);
+            if (!empty(config('errors.views.403'))) {
+                View::render(config('errors.views.403'), [], 403);
             } else {
                 Response::send([], 'You do not have permission to access this page', 403);
             }

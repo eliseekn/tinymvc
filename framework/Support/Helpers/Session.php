@@ -20,7 +20,7 @@ if (!function_exists('start_session')) {
 	{
 		if (session_status() === PHP_SESSION_NONE) {
 			session_start();
-			setcookie(session_name(), session_id(), time() + SESSION_LIFETIME);
+			setcookie(session_name(), session_id(), time() + config('session.lifetime'));
 		}
 	}
 }
@@ -158,7 +158,7 @@ if (!function_exists('create_user_session')) {
 	 */
 	function create_user_session($data): void
 	{
-		create_session(APP_NAME . '_user', $data);
+		create_session(config('app.name') . '_user', $data);
 	}
 }
 
@@ -170,7 +170,7 @@ if (!function_exists('get_user_session')) {
 	 */
 	function get_user_session()
 	{
-		return get_session(APP_NAME . '_user');
+		return get_session(config('app.name') . '_user');
 	}
 }
 
@@ -182,7 +182,7 @@ if (!function_exists('session_has_user')) {
 	 */
 	function session_has_user()
 	{
-		return session_has(APP_NAME . '_user');
+		return session_has(config('app.name') . '_user');
 	}
 }
 
@@ -194,6 +194,6 @@ if (!function_exists('close_user_session')) {
 	 */
 	function close_user_session()
 	{
-		return close_session(APP_NAME . '_user');
+		return close_session(config('app.name') . '_user');
 	}
 }

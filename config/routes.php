@@ -13,6 +13,13 @@ use Framework\Routing\Route;
  * Set routes paths
  */
 
+//docs route
+Route::get('/docs', [
+    'handler' => function() {
+        View::render('docs/index');
+    }
+]);
+
 //home route
 Route::get('/', [
     'handler' => function() {

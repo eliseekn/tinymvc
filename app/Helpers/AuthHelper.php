@@ -52,8 +52,8 @@ class AuthHelper
         if (!self::checkCredentials($user)) {
             self::setAttempts();
 
-            if (AUTH_ATTEMPTS !== 0 && self::getAttempts() > AUTH_ATTEMPTS) {
-                create_session('auth_attempts_timeout', strtotime('+' . AUTH_ATTEMPTS_TIMEOUT . ' minute', strtotime(date('Y-m-d H:i:s'))));
+            if (config('security.auth.max_attempts') !== 0 && self::getAttempts() > config('security.auth.max_attempts')) {
+                create_session('auth_attempts_timeout', strtotime('+' . config('security.auth.unlock_timeout') . ' minute', strtotime(date('Y-m-d H:i:s'))));
                 Redirect::back()->only();
             } else {
                 Redirect::back()->withError('Invalid email address and/or password');

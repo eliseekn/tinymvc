@@ -19,7 +19,7 @@ if (!function_exists('absolute_url')) {
 	 */
 	function absolute_url(string $url): string
 	{
-		return APP_DOMAIN . $url;
+		return config('app.url') . $url;
 	}
 }
 

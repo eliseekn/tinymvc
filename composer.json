@@ -30,7 +30,8 @@
         "php": "^7.2",
         "league/plates": "^3.3",
         "wixel/gump": "^1.11",
-        "phpmailer/phpmailer": "^6.1"
+        "phpmailer/phpmailer": "^6.1",
+        "caseyamcl/configula": "^3.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5",

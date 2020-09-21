@@ -1,27 +1,19 @@
 <?php 
 $this->layout('admin/layout', [
-    'page_title' => 'New user | Administration',
-    'page_description' => 'New user page'
+    'page_title' => 'New user | Administration'
 ]) 
 ?>
 
 <?php $this->start('page_content') ?>
 
-<nav class="d-flex justify-content-end">
-    <ol class="breadcrumb bg-white">
-        <li class="breadcrumb-item">
-            <a href="<?= absolute_url('/admin') ?>">
-                <i class="fa fa-home"></i> Dashboard
-            </a>
-        </li>
-
-        <li class="breadcrumb-item">
-            <a href="<?= absolute_url('/admin/users') ?>">Users</a>
-        </li>
-
-        <li class="breadcrumb-item active" aria-current="page">New</li>
-    </ol>
-</nav>
+<?php
+$this->insert('partials/breadcrumb', [
+    'items' => [
+        'Users' => absolute_url('/admin/users'),
+        'New' => ''
+    ]
+]);
+?>
 
 <?php 
 if (session_has_flash_messages()) : 

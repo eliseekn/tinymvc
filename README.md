@@ -3,9 +3,39 @@
 TinyMVC is a PHP framework based on MVC architecture that helps you build easly and quickly powerful web applications and RESTful API.
 
 ## Requirements
-```PHP v7.2 or greater```
+```
+PHP >= 7.2
+MySQL >= 14.14
+Node >= 12
+```
 
-```MySQL v14.14 or greater```
+## Installation
+
+1\. Download your TinyMVC framework copy [here](https://github.com/eliseekn/TinyMVC/archive/master.zip)
+
+2\. Setup your web server configuration
+
+For ***Apache*** server, edit your ```.htaccess``` with the following lines: 
+
+```
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-l
+RewriteRule ^(.*)$ index.php
+```
+
+For ***Nginx*** server, add the following to your server declaration
+
+```
+server {
+    location / {
+        try_files $uri $uri/ /index.php;
+    }
+}
+```
+
+## Documentation
+After installation open your browser and go to ```http://localhost/tinymvc/docs```
 
 ## License
 [MIT](https://opensource.org/licenses/MIT)

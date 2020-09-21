@@ -177,7 +177,7 @@ class Request
     public static function getFullURI(): string
     {
         $uri = self::getHeader('REQUEST_URI');
-        $uri = str_replace(APP_FOLDER, '', $uri); //remove app folder if exists 
+        $uri = str_replace(config('app.folder'), '', $uri); //remove app folder if exists 
         return $uri;
     }
 

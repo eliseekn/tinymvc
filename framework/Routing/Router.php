@@ -34,11 +34,11 @@ class Router
     {
         $this->addBrowsingHistory();
         
-        try {
+        //try {
             $this->dispatch(Route::$routes);
-        } catch (Exception $e) {
-            exit($e->getMessage());
-        }
+        //} catch (Exception $e) {
+          //  exit($e->getMessage());
+        //}
     }
     
     /**
@@ -106,10 +106,10 @@ class Router
             }
 
             //send 404 response
-            if (isset(ERRORS_PAGE['404']) && !empty(ERRORS_PAGE['404'])) {
-                View::render(ERRORS_PAGE['404'], [], 404);
+            if (!empty(config('errors.views.404'))) {
+                View::render(config('errors.views.404'), [], 404);
             } else {
-                Response::send([], 'The page you have requested does not exists on this server', 404);
+                Response::send([], 'The page you have requested does not exists', 404);
             }
         } else {
             throw new Exception('No route defines in configuration');

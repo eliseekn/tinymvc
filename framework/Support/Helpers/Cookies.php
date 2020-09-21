@@ -80,7 +80,7 @@ if (!function_exists('create_user_cookie')) {
 	 */
 	function create_user_cookie(string $value): bool 
 	{
-		return create_cookie(APP_NAME . '_user', $value, 3600 * 24 * 365);
+		return create_cookie(config('app.name') . '_user', $value, 3600 * 24 * 365);
 	}
 }
 
@@ -93,7 +93,7 @@ if (!function_exists('get_user_cookie')) {
 	 */
 	function get_user_cookie(): string
 	{
-		return get_cookie(APP_NAME . '_user');
+		return get_cookie(config('app.name') . '_user');
 	}
 }
 
@@ -105,7 +105,7 @@ if (!function_exists('cookie_has_user')) {
 	 */
 	function cookie_has_user(): bool
 	{
-		return cookie_has(APP_NAME . '_user');
+		return cookie_has(config('app.name') . '_user');
 	}
 }
 
@@ -117,6 +117,6 @@ if (!function_exists('delete_user_cookie')) {
 	 */
 	function delete_user_cookie(): bool
 	{
-		delete_cookie(APP_NAME . '_user');
+		delete_cookie(config('app.name') . '_user');
 	}
 }

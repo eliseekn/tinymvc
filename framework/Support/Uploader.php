@@ -152,6 +152,6 @@ class Uploader
     {
         $filename = is_null($filename) ? $this->getOriginalFilename() : $filename;
         $this->filepath = $destination . DIRECTORY_SEPARATOR . $filename;
-        return move_uploaded_file($this->getTempFilename(), STORAGE['public'] . $this->filepath);
+        return move_uploaded_file($this->getTempFilename(), config('storage.public') . $this->filepath);
     }
 }

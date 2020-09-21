@@ -15,8 +15,8 @@ class EmailHelper
     public static function sendWelcome(string $address): bool
     {
         return Email::to($address)
-            ->from(EMAIL['from'], EMAIL['name'])
-            ->replyTo(EMAIL['from'], EMAIL['name'])
+            ->from(config('mailer.from'), config('mailer.name'))
+            ->replyTo(config('mailer.from'), config('mailer.name'))
 			->subject('Welcome')
             ->message('
                 <p>Hello,</p>
@@ -36,8 +36,8 @@ class EmailHelper
     public static function sendToken(string $address, string $token): bool
     {
         return Email::to($address)
-            ->from(EMAIL['from'], EMAIL['name'])
-            ->replyTo(EMAIL['from'], EMAIL['name'])
+            ->from(config('mailer.from'), config('mailer.name'))
+            ->replyTo(config('mailer.from'), config('mailer.name'))
             ->subject('Password reset notification')
             ->message('
                 <p>You are receiving this email because we received a password reset request for your account. Click the button below to reset your password:</p>

@@ -13,12 +13,7 @@
  */
 
 require __DIR__ . DIRECTORY_SEPARATOR . '../vendor/autoload.php';
-
-require_once __DIR__ . DIRECTORY_SEPARATOR . '../config/app.php';
-require_once __DIR__ . DIRECTORY_SEPARATOR . '../config/errors.php';
 require_once __DIR__ . DIRECTORY_SEPARATOR . '../config/env.php';
-require_once __DIR__ . DIRECTORY_SEPARATOR . '../config/database.php';
-require_once __DIR__ . DIRECTORY_SEPARATOR . '../config/storage.php';
 
 //get command line arguments
 $options = getopt('', [

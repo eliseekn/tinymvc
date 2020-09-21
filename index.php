@@ -7,22 +7,14 @@
  */
 
 /**
- * Main application file
+ * Main pplication entry
  */
 
-//import composer autoloader
+//load packages and configurations
 require 'vendor/autoload.php';
-
-//load configurations files
-require_once 'config/app.php';
-require_once 'config/errors.php';
 require_once 'config/env.php';
-require_once 'config/database.php';
 require_once 'config/routes.php';
 require_once 'config/middlewares.php';
-require_once 'config/email.php';
-require_once 'config/security.php';
-require_once 'config/storage.php';
 
 //start routing
 new \Framework\Routing\Router();
