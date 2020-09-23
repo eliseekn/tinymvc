@@ -13,22 +13,6 @@ use Framework\Routing\Route;
  * Set routes paths
  */
 
-//docs route
-Route::get('/docs', [
-    'handler' => function() {
-        View::render('docs/index');
-    }
-]);
-
-//home route
-Route::get('/', [
-    'handler' => function() {
-        View::render('index');
-    }
-]);
-
-Route::get('/home', ['handler' => 'HomeController@index']);
-
 //auth routes
 Route::group([
     '/login' => [
@@ -45,8 +29,8 @@ Route::group([
 ])->by([
     'method' => 'GET',
     'middlewares' => [
-        'remember',
-        'auth'
+        'RememberUser',
+        'AuthPolicy'
     ]
 ]);
 
@@ -65,8 +49,8 @@ Route::group([
 ])->by([
     'method' => 'GET',
     'middlewares' => [
-        'remember',
-        'admin'
+        'RememberUser',
+        'AdminPolicy'
     ]
 ]);
 
@@ -78,8 +62,8 @@ Route::group([
 ])->by([
     'method' => 'POST',
     'middlewares' => [
-        'remember',
-        'admin'
+        'RememberUser',
+        'AdminPolicy'
     ]
 ]);
 
@@ -89,9 +73,9 @@ Route::group([
 ])->by([
     'method' => 'POST',
     'middlewares' => [
-        'csrf',
-        'sanitize',
-        'admin'
+        'CsrfProtection',
+        'SanitizeFields',
+        'AdminPolicy'
     ]
 ]);
 
@@ -105,3 +89,20 @@ Route::get('/password/forgot', [
 Route::get('/password/reset', ['handler' => 'Auth\PasswordResetController@reset']);
 Route::post('/password/notify', ['handler' => 'Auth\PasswordResetController@notify']);
 Route::post('/password/new', ['handler' => 'Auth\PasswordResetController@new']);
+
+//docs routes
+Route::group([
+    '/docs' => ['handler' => function() {
+        View::render('docs/index');
+    }],
+
+    '/docs/getting-started' => ['handler' => function() {
+        View::render('docs/getting-started');
+    }],
+
+    '/docs/routing' => ['handler' => function() {
+        View::render('docs/routing');
+    }],
+])->by([
+    'method' => 'GET'
+]);

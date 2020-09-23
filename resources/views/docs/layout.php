@@ -6,9 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="robots" content="noindex, nofollow">
-    <meta name="description" content="<?= $page_description ?>">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <link rel="stylesheet" href="<?= absolute_url('/public/css/admin.css') ?>">
+    <link rel="stylesheet" href="<?= absolute_url('/public/css/docs.css') ?>">
     <title><?= $page_title ?></title>
 </head>
 
@@ -17,16 +16,38 @@
     <div class="d-flex" id="wrapper">
         <div class="bg-light border-light border-right min-vh-100" id="sidebar-wrapper">
             <div class="sidebar-title bg-dark text-light">
-                <i class="fa fa-cog"></i> Administration
+                <i class="fa fa-book"></i> Documentation
             </div>
 
             <div class="list-group list-group-flush">
-                <a href="<?= absolute_url('/admin') ?>" class="list-group-item list-group-item-action bg-light">
-                    <i class="fa fa-home"></i> Dashboard
+                <a href="<?= absolute_url('/docs/getting-started') ?>" class="list-group-item list-group-item-action bg-light">
+                    <i class="fa fa-home"></i> Getting started
                 </a>
-                <a href="<?= absolute_url('/admin/users') ?>" class="list-group-item list-group-item-action bg-light">
-                    <i class="fa fa-dot-circle <?php if (is_current_page('users')) : echo 'text-primary'; endif ?>"></i> Users
+
+                <a href="#" class="list-group-item list-group-item-action bg-light">
+                    <i class="fa fa-layer-group"></i> Guides
                 </a>
+
+                <div class="list-group list-group-flush">
+                    <a href="<?= absolute_url('/docs/routing') ?>" class="list-group-item list-group-item-action bg-light" style="padding-left: 2.5em">
+                        <i class="fa fa-dot-circle <?php if (is_current_page('routing')) : echo 'text-primary'; endif ?>"></i> Routing
+                    </a>
+                    <a href="<?= absolute_url('/docs/middlewares') ?>" class="list-group-item list-group-item-action bg-light" style="padding-left: 2.5em">
+                        <i class="fa fa-dot-circle <?php if (is_current_page('middlewares')) : echo 'text-primary'; endif ?>"></i> Middlewares
+                    </a>
+                    <a href="<?= absolute_url('/docs/controllers') ?>" class="list-group-item list-group-item-action bg-light" style="padding-left: 2.5em">
+                        <i class="fa fa-dot-circle <?php if (is_current_page('controllers')) : echo 'text-primary'; endif ?>"></i> Controllers
+                    </a>
+                    <a href="<?= absolute_url('/docs/requests') ?>" class="list-group-item list-group-item-action bg-light" style="padding-left: 2.5em">
+                        <i class="fa fa-dot-circle <?php if (is_current_page('requests')) : echo 'text-primary'; endif ?>"></i> Requests
+                    </a>
+                    <a href="<?= absolute_url('/docs/responses') ?>" class="list-group-item list-group-item-action bg-light" style="padding-left: 2.5em">
+                        <i class="fa fa-dot-circle <?php if (is_current_page('responses')) : echo 'text-primary'; endif ?>"></i> Responses
+                    </a>
+                    <a href="<?= absolute_url('/docs/views') ?>" class="list-group-item list-group-item-action bg-light" style="padding-left: 2.5em">
+                        <i class="fa fa-dot-circle <?php if (is_current_page('views')) : echo 'text-primary'; endif ?>"></i> Views
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -37,14 +58,8 @@
                 </button>
 
                 <div class="ml-auto">
-                    <span class="text-white">Welcome, <em><?= explode(' ', get_user_session()->name)[0] ?></em>!</span>
+                    <span class="text-white">v2</span>
                 </div>
-
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="btn btn-danger" href="<?= absolute_url('/logout') ?>">Log out</a>
-                    </li>
-                </ul>
             </nav>
 
             <div class="container-fluid p-4">

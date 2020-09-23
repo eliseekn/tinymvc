@@ -23,13 +23,6 @@ class Middleware
     public static $middlewares = [];
 
     /**
-     * middlewares names
-     * 
-     * @var array
-     */
-    public static $names = [];
-
-    /**
      * execute middleware
      *
      * @param  string $middleware name of middleware
@@ -37,11 +30,6 @@ class Middleware
      */
     private static function execute(string $middleware): void
     {
-        if (!isset(self::$names[$middleware])) {
-            throw new Exception('Invalid middleware name "' . $middleware . '".');
-        }
-
-        $middleware = self::$names[$middleware]; 
         $middleware = 'App\Middlewares\\' . $middleware;
 
         //check if middleware class exists
@@ -65,18 +53,6 @@ class Middleware
                 self::execute($middleware);
             }
         }
-    }
-
-    /**
-     * set middleware name
-     *
-     * @param  string $middleware
-     * @param  string $name given name to middleware
-     * @return void
-     */
-    public static function setName(string $middleware, string $name): void
-    {
-        self::$names[$name] = $middleware; 
     }
     
     /**

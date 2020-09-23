@@ -34,11 +34,11 @@ class Router
     {
         $this->addBrowsingHistory();
         
-        //try {
+        try {
             $this->dispatch(Route::$routes);
-        //} catch (Exception $e) {
-          //  exit($e->getMessage());
-        //}
+        } catch (Exception $e) {
+            exit($e->getMessage());
+        }
     }
     
     /**

@@ -1,0 +1,49 @@
+//https://startbootstrap.com/templates/simple-sidebar
+//-----
+#wrapper {
+    overflow-x: hidden;
+
+    &.toggled {
+        #sidebar-wrapper {
+            margin-left: 0;
+
+            @media (min-width: 768px) {
+                margin-left: -20em;
+            }
+        }
+    }
+}
+
+#sidebar-wrapper {
+    margin-left: -15em;
+    -webkit-transition: margin .25s ease-out;
+    -moz-transition: margin .25s ease-out;
+    -o-transition: margin .25s ease-out;
+    transition: margin .25s ease-out;
+
+    .sidebar-title {
+        padding: .95em 1.25em;
+    }
+
+    .list-group {
+        width: 20em;
+
+        @media (max-width: 768px) {
+            width: 15em;
+        }
+    }
+
+    @media (min-width: 768px) {
+        margin-left: 0;
+    }
+}
+
+#page-content-wrapper {
+    min-width: 100vw;
+
+    @media (min-width: 768px) {
+        min-width: 0;
+        width: 100%;
+    }
+}
+//-----

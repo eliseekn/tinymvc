@@ -13,8 +13,8 @@
 //load packages and configurations
 require 'vendor/autoload.php';
 require_once 'config/env.php';
-require_once 'config/routes.php';
-require_once 'config/middlewares.php';
+require_once 'routes/app.php';
+require_once 'routes/web.php';
 
 //start routing
 new \Framework\Routing\Router();

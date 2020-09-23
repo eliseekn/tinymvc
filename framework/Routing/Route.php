@@ -57,19 +57,6 @@ class Route
         $options = array_merge(['method' => 'GET'], $options);
         self::add($route, $options);
     }
-        
-    /**
-     * add route with HEAD method
-     *
-     * @param  string $route
-     * @param  array $options
-     * @return void
-     */
-    public static function head(string $route, array $options): void
-    {
-        $options = array_merge(['method' => 'HEAD'], $options);
-        self::add($route, $options);
-    }
 
     /**
      * add route with POST method
@@ -117,9 +104,9 @@ class Route
      * @param  array $options
      * @return void
      */
-    public static function option(string $route, array $options): void
+    public static function options(string $route, array $options): void
     {
-        $options = array_merge(['method' => 'OPTION'], $options);
+        $options = array_merge(['method' => 'OPTIONS'], $options);
         self::add($route, $options);
     }
     
