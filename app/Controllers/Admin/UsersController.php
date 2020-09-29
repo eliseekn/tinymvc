@@ -124,7 +124,7 @@ class UsersController
 	public function delete(?int $id = null): void
 	{
 		if (!is_null($id)) {
-			if (!UsersModel::exists('id', $id)) {
+			if (!UsersModel::exists('id', "$id")) {
 				Redirect::back()->withError('This user does not exists');
 			}
 	
@@ -188,6 +188,8 @@ class UsersController
 	 */
 	public function export(): void
 	{
+		$data = [];
+
 		foreach (UsersModel::findAll(['name', 'ASC']) as $users) {
 			$data[] = [
 				$users->name, 

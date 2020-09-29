@@ -48,7 +48,7 @@ class Response
      * send HTTP response with json body
      *
      * @param  array $headers
-     * @param  mixed $body
+     * @param  array $body
      * @param  int $status_code
      * @return void
      */
@@ -57,6 +57,9 @@ class Response
         if (empty($body)) {
             return;
         }
+
+        //send response status code
+        http_response_code($status_code);
 
         //send response headers
         if (!empty($headers)) {
@@ -79,8 +82,8 @@ class Response
     /**
      * send HTTP headers only
      *
-     * @param  mixed $headers
-     * @param  mixed $status_code
+     * @param  array $headers
+     * @param  int $status_code
      * @return void
      */
     public static function sendHeaders(array $headers, int $status_code = 200): void

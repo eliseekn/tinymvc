@@ -88,7 +88,7 @@ class Uploader
         }
 
         $file = explode('.', $this->getOriginalFilename());
-        return $file === false ? '' : end($file);
+        return $file == false ? '' : end($file);
     }
         
     /**
@@ -124,7 +124,7 @@ class Uploader
     /**
      * convert file size from byte to KB or MB
      *
-     * @return int
+     * @return string
      */
     public function getFileSizeToString(): string
     {

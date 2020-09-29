@@ -72,7 +72,6 @@ class Request
     /**
      * retrieves post fields
      *
-     * @param  string $field
      * @return array returns post fields
      */
     public static function getFields(): array
@@ -86,7 +85,7 @@ class Request
      * @param  string $field
      * @return mixed returns field value
      */
-    public static function getField(string $field): string
+    public static function getField(string $field) 
     {
         return self::getFields()[$field] ?? '';
     }
@@ -118,7 +117,7 @@ class Request
      *
      * @param  string $field
      * @param  array $allowed_extensions
-     * @return mixed returns uploader instance
+     * @return \Framework\Support\Uploader returns uploader instance
      */
     public static function getFile(string $field, array $allowed_extensions = []): Uploader
     {

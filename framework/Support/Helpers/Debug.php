@@ -17,7 +17,7 @@ if (!function_exists('write_log')) {
 	 * save log message to file
 	 *
 	 * @param  string $folder
-	 * @param  int $type (INFOS, ERROR, DEBUG...)
+	 * @param  string $type (INFOS, ERROR, DEBUG...)
 	 * @param  string $message 
 	 * @return void
 	 */

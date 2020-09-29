@@ -190,10 +190,10 @@ if (!function_exists('close_user_session')) {
 	/**
 	 * check if user session exists
 	 *
-	 * @return mixed
+	 * @return void
 	 */
-	function close_user_session()
+	function close_user_session(): void
 	{
-		return close_session(config('app.name') . '_user');
+		close_session(config('app.name') . '_user');
 	}
 }

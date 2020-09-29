@@ -18,7 +18,7 @@ class Client
     /**
      * response request
      *
-     * @var string
+     * @var array
      */
     protected static $response = [];
 
@@ -27,7 +27,7 @@ class Client
      *
      * @param  string $method
      * @param  array $urls
-     * @param  array $hedears
+     * @param  array $headers
      * @param  array|null $data data to send
      * @param  bool $json_data send data in json format
      * @return mixed
@@ -51,7 +51,7 @@ class Client
      * send GET request
      *
      * @param  array $urls
-     * @param  array $hedears
+     * @param  array $headers
      * @param  array|null $data data to send
      * @param  bool $json_data send data in json
      * @return mixed
@@ -69,7 +69,7 @@ class Client
      * send POST request
      *
      * @param  array $urls
-     * @param  array $hedears
+     * @param  array $headers
      * @param  array|null $data data to send
      * @param  bool $json_data send data in json format
      * @return mixed
@@ -87,7 +87,7 @@ class Client
      * send PUT request
      *
      * @param  array $urls
-     * @param  array $hedears
+     * @param  array $headers
      * @param  array|null $data data to send
      * @param  bool $json_data send data in json format
      * @return mixed
@@ -105,7 +105,7 @@ class Client
      * send DELETE request
      *
      * @param  array $urls
-     * @param  array $hedears
+     * @param  array $headers
      * @param  array|null $data data to send
      * @param  bool $json_data send data in json
      * @return mixed
@@ -123,7 +123,7 @@ class Client
      * send OPTIONS request
      *
      * @param  array $urls
-     * @param  array $hedears
+     * @param  array $headers
      * @param  array|null $data data to send
      * @param  bool $json_data send data in json format
      * @return mixed
@@ -141,7 +141,7 @@ class Client
      * send PATCH request
      *
      * @param  array $urls
-     * @param  array $hedears
+     * @param  array $headers
      * @param  array|null $data data to send
      * @param  bool $json_data send data in json format
      * @return mixed
@@ -171,7 +171,7 @@ class Client
      * @param  string $field
      * @return mixed returns field value or empty string
      */
-    public function getHeader(string $field): string
+    public function getHeader(string $field)
     {
         return $this->getHeaders()[$field];
     }

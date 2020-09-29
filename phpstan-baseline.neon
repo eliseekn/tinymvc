@@ -1,0 +1,17 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Constant APP_ROOT not found\\.$#"
+			count: 1
+			path: framework/Support/Helpers/Debug.php
+
+		-
+			message: "#^Function krumo invoked with 1 parameter, 0 required\\.$#"
+			count: 1
+			path: framework/Support/Helpers/Debug.php
+
+		-
+			message: "#^Constant APP_ROOT not found\\.$#"
+			count: 1
+			path: framework/Support/Helpers/Utils.php
+

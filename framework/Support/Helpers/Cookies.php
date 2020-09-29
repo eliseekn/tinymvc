@@ -63,7 +63,7 @@ if (!function_exists('delete_cookie')) {
 	 * delete cookie by name
 	 *
 	 * @param  string $name
-	 * @return void
+	 * @return bool
 	 */
 	function delete_cookie(string $name): bool
 	{
@@ -88,7 +88,6 @@ if (!function_exists('get_user_cookie')) {
 	/**
 	 * return user cookie
 	 *
-	 * @param  string $name
 	 * @return string
 	 */
 	function get_user_cookie(): string
@@ -115,7 +114,7 @@ if (!function_exists('delete_user_cookie')) {
 	 *
 	 * @return void
 	 */
-	function delete_user_cookie(): bool
+	function delete_user_cookie(): void
 	{
 		delete_cookie(config('app.name') . '_user');
 	}

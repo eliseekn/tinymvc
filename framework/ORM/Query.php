@@ -53,10 +53,12 @@ class Query
 	/**
 	 * execute sql query
 	 *
-	 * @return mixed returns query result
+	 * @return mixed|null returns query result
 	 */
 	public function executeQuery()
 	{
+		$stmt= null;
+
 		try {
 			$stmt = self::$db->prepare(trim(self::$query));
 			$stmt->execute(self::$args);

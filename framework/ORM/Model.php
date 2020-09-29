@@ -258,9 +258,9 @@ class Model
     /**
      * generate pagination
      *
-     * @param  mixed $items_per_pages
+     * @param  int $items_per_pages
      * @param  array $order_by (ASC or DESC)
-     * @return mixed returns new pager class instance
+     * @return \Framework\Support\Pager returns new pager class instance
      */
     public static function paginate(int $items_per_pages, array $order_by = ['id', 'DESC']): Pager
     {
@@ -287,7 +287,7 @@ class Model
      * @param  string $column
      * @param  string $value
      * @param  array $order_by (ASC or DESC)
-     * @return mixed returns new pager class instance
+     * @return \Framework\Support\Pager returns new pager class instance
      */
     public static function paginateWhere(
         int $items_per_pages,

@@ -24,7 +24,7 @@ class Encryption
      * encrypt
      *
      * @param  string $str
-     * @return mixed false or encrypted string
+     * @return mixed returns false or encrypted string
      */
     public static function encrypt(string $str)
     {
@@ -36,8 +36,8 @@ class Encryption
     /**
      * decrypt
      *
-     * @param  string $str
-     * @return mixed false or decrypted string
+     * @param  string $enc_str
+     * @return mixed returns false or decrypted string
      */
     public static function decrypt(string $enc_str)
     {
