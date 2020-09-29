@@ -64,25 +64,7 @@ class Client
     ) {
         return self::send('GET', $urls, $headers, $data, $json_data);
     }
-
-    /**
-     * send HEAD request
-     *
-     * @param  array $urls
-     * @param  array $hedears
-     * @param  array|null $data data to send
-     * @param  bool $json_data send data in json
-     * @return mixed
-     */
-    public static function head(
-        array $urls,
-        array $headers = [],
-        ?array $data = null,
-        bool $json_data = false
-    ) {
-        return self::send('HEAD', $urls, $headers, $data, $json_data);
-    }
-
+    
     /**
      * send POST request
      *
@@ -138,7 +120,7 @@ class Client
     }
 
     /**
-     * send OPTION request
+     * send OPTIONS request
      *
      * @param  array $urls
      * @param  array $hedears
@@ -152,7 +134,7 @@ class Client
         ?array $data = null,
         bool $json_data = false
     ) {
-        return self::send('OPTION', $urls, $headers, $data, $json_data);
+        return self::send('OPTIONS', $urls, $headers, $data, $json_data);
     }
 
     /**

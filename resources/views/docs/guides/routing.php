@@ -22,7 +22,7 @@ $this->insert('partials/breadcrumb-docs', [
     <div class="card-body">
         <p class="font-weight-bold">Configuration</p>
         <p>
-            You can define your application routes in file <span class="bg-light text-danger">routes/web.php</span>. TinyMVC provides
+            You can define your application routes in <span class="bg-light text-danger">routes/web.php</span> file. TinyMVC provides
             a very expressive method of defining route :
         </p>
 
@@ -38,7 +38,7 @@ $this->insert('partials/breadcrumb-docs', [
         </div>
 
         <p class="font-weight-bold">Routes methods</p>
-        <p>Here are defined all routes methods shortcuts you can use to handle HTTP request :</p>
+        <p>Here are defined all routes methods shortcuts you can use to handle HTTP requests :</p>
 
         <div class="card mb-4">
             <div class="card-body bg-light">
@@ -72,6 +72,7 @@ Route::options(string $uri, array $parameters)</code></pre>
 
     <div class="card-footer d-flex justify-content-between">
         <span>Next: <a href="#route-parameters">Route parameters</a></span>
+        <span>Previous: <a href="<?= absolute_url('/docs/getting-started') ?>">Getting started</a></span>
     </div>
 </div>
 
@@ -110,6 +111,13 @@ Route::options(string $uri, array $parameters)</code></pre>
                     <td>string</td>
                     <td>Defines route unique name</td>
                 </tr>
+                    <th scope="row">prefix</th>
+                    <td>string</td>
+                    <td>
+                        Defines route prefix name. This parameter is only available when using 
+                        <a href="#routes-grouping" class="bg-light text-danger">Route::group()</a> method
+                    </td>
+                </tr>
                 <tr>
                     <th scope="row">middlewares</th>
                     <td>array</td>
@@ -132,7 +140,7 @@ Route::options(string $uri, array $parameters)</code></pre>
             </div>
         </div>
 
-        <p class="font-weight-bold">Routes grouping</p>
+        <p class="font-weight-bold" id="routes-grouping">Routes grouping</p>
         <p>TinyMVC provides a method for grouping routes with same parameters :</p>
 
         <div class="card mb-4">
@@ -145,7 +153,7 @@ Route::options(string $uri, array $parameters)</code></pre>
 
         <div class="card">
             <div class="card-body bg-light">
-            <pre class="m-0 text-danger"><code>Route::group([
+                <pre class="m-0 text-danger"><code>Route::group([
     '/' => [],
     '/home' => []
 ])->by([
@@ -237,7 +245,7 @@ Route::options(string $uri, array $parameters)</code></pre>
     </div>
 
     <div class="card-footer d-flex justify-content-between">
-        <span>Next: <a href="<?= absolute_url('/docs/middlewares') ?>">Middlewares</a></span>
+        <span>Next: <a href="<?= absolute_url('/docs/guides/middlewares') ?>">Middlewares</a></span>
         <span>Previous: <a href="#route-parameters">Route parameters</a></span>
     </div>
 </div>

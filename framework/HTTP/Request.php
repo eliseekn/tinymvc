@@ -60,13 +60,13 @@ class Request
     /**
      * set query value
      *
-     * @param  string $field
+     * @param  string $query
      * @param  mixed $value
      * @return void
      */
-    public static function setQuery(string $field, $value): void
+    public static function setQuery(string $query, $value): void
     {
-        $_GET[$field] = $value;
+        $_GET[$query] = $value;
     }
 
     /**

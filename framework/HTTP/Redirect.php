@@ -44,25 +44,7 @@ class Redirect
      */
     public static function toRoute(string $name, array $params = [])
     {
-        $params = empty($params) ? '' : implode('/', $params);
-
-        //search key from value in a multidimensional array
-        //https://www.php.net/manual/en/function.array-search.php
-        $url = array_search(
-            $name,
-            array_map(
-                function ($val) {
-                    return $val['name'];
-                },
-                Route::$routes
-            )
-        );
-
-        if (empty($url)) {
-            throw new Exception('Route "' . $name . '" not found.');
-        }
-
-        self::$redirect_url = empty($params) ? $url : $url . '/' . $params;
+        self::$redirect_url = route_url($name, $params);
         return new self();
     }
 
@@ -109,22 +91,6 @@ class Redirect
         if (!empty($browsing_history)) {
             end($browsing_history);
             self::$redirect_url = prev($browsing_history);
-        }
-
-        return new self();
-    }
-
-    /**
-     * refresh page
-     *
-     * @return mixed
-     */
-    public static function refresh()
-    {
-        $browsing_history = get_browsing_history();
-
-        if (!empty($browsing_history)) {
-            self::$redirect_url = end($browsing_history);
         }
 
         return new self();

@@ -19,7 +19,7 @@ use Framework\Support\Storage;
 class View
 {    
     /**
-     * display view page
+     * display view template
      *
      * @param  string $view
      * @param  array $data

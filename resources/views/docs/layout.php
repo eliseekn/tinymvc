@@ -27,7 +27,7 @@
                 <a href="#" class="list-group-item list-group-item-action bg-light">
                     <i class="fa fa-layer-group"></i> Guides
                 </a>
-
+                
                 <div class="list-group list-group-flush">
                     <a href="<?= absolute_url('/docs/routing') ?>" class="list-group-item list-group-item-action bg-light" style="padding-left: 2.5em">
                         <i class="fa fa-dot-circle <?php if (is_current_page('routing')) : echo 'text-primary'; endif ?>"></i> Routing
@@ -38,14 +38,24 @@
                     <a href="<?= absolute_url('/docs/controllers') ?>" class="list-group-item list-group-item-action bg-light" style="padding-left: 2.5em">
                         <i class="fa fa-dot-circle <?php if (is_current_page('controllers')) : echo 'text-primary'; endif ?>"></i> Controllers
                     </a>
-                    <a href="<?= absolute_url('/docs/requests') ?>" class="list-group-item list-group-item-action bg-light" style="padding-left: 2.5em">
-                        <i class="fa fa-dot-circle <?php if (is_current_page('requests')) : echo 'text-primary'; endif ?>"></i> Requests
-                    </a>
-                    <a href="<?= absolute_url('/docs/responses') ?>" class="list-group-item list-group-item-action bg-light" style="padding-left: 2.5em">
-                        <i class="fa fa-dot-circle <?php if (is_current_page('responses')) : echo 'text-primary'; endif ?>"></i> Responses
-                    </a>
                     <a href="<?= absolute_url('/docs/views') ?>" class="list-group-item list-group-item-action bg-light" style="padding-left: 2.5em">
                         <i class="fa fa-dot-circle <?php if (is_current_page('views')) : echo 'text-primary'; endif ?>"></i> Views
+                    </a>
+                    <a href="<?= absolute_url('/docs/requests') ?>" class="list-group-item list-group-item-action bg-light" style="padding-left: 2.5em">
+                        <i class="fa fa-dot-circle <?php if (is_current_page('requests')) : echo 'text-primary'; endif ?>"></i> HTTP Requests
+                    </a>
+                    <a href="<?= absolute_url('/docs/responses') ?>" class="list-group-item list-group-item-action bg-light" style="padding-left: 2.5em">
+                        <i class="fa fa-dot-circle <?php if (is_current_page('responses')) : echo 'text-primary'; endif ?>"></i> HTTP Responses
+                    </a>
+                    <a href="<?= absolute_url('/docs/client') ?>" class="list-group-item list-group-item-action bg-light" style="padding-left: 2.5em">
+                        <i class="fa fa-dot-circle <?php if (is_current_page('client')) : echo 'text-primary'; endif ?>"></i> HTTP Client
+                    </a>
+                    <a href="<?= absolute_url('/docs/redirection') ?>" class="list-group-item list-group-item-action bg-light" style="padding-left: 2.5em">
+                        <i class="fa fa-dot-circle <?php if (is_current_page('redirection')) : echo 'text-primary'; endif ?>"></i> URL Redirection
+                    </a>
+
+                    <a href="#" class="list-group-item list-group-item-action bg-light">
+                        <i class="fa fa-database"></i> ORM
                     </a>
                 </div>
             </div>

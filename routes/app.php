@@ -39,28 +39,18 @@ Route::post('/authenticate', ['handler' => 'Auth\AuthController@authenticate']);
 Route::post('/register', ['handler' => 'Auth\AuthController@register']);
 
 //admin routes
-Route::group([
-    '/admin' => ['handler' => 'Admin\AdminController@index'],
-    '/admin/users' => ['handler' => 'Admin\AdminController@users'],
-    '/admin/users/new' => ['handler' => 'Admin\UsersController@new'],
-    '/admin/users/edit/{id:num}' => ['handler' => 'Admin\UsersController@edit'],
-    '/admin/users/view/{id:num}' => ['handler' => 'Admin\UsersController@view'],
-    '/admin/users/export' => ['handler' => 'Admin\UsersController@export']
-])->by([
-    'method' => 'GET',
-    'middlewares' => [
-        'RememberUser',
-        'AdminPolicy'
-    ]
-]);
-
+Route::get('/admin', ['handler' => 'Admin\AdminController@index']);
 Route::delete('/admin/users/delete/{id:num}', ['handler' => 'Admin\UsersController@delete']);
 
 Route::group([
-    '/admin/users/delete' => ['handler' => 'Admin\UsersController@delete'],
-    '/admin/users/import' => ['handler' => 'Admin\UsersController@import']
+    '/users' => ['handler' => 'Admin\AdminController@users'],
+    '/users/new' => ['handler' => 'Admin\UsersController@new'],
+    '/users/edit/{id:num}' => ['handler' => 'Admin\UsersController@edit'],
+    '/users/view/{id:num}' => ['handler' => 'Admin\UsersController@view'],
+    '/users/export' => ['handler' => 'Admin\UsersController@export']
 ])->by([
-    'method' => 'POST',
+    'method' => 'GET',
+    'prefix' => '/admin',
     'middlewares' => [
         'RememberUser',
         'AdminPolicy'
@@ -68,11 +58,25 @@ Route::group([
 ]);
 
 Route::group([
-    '/admin/users/create' => ['handler' => 'Admin\UsersController@create'],
-    '/admin/users/update/{id:num}' => ['handler' => 'Admin\UsersController@update']
+    '/users/delete' => ['handler' => 'Admin\UsersController@delete'],
+    '/users/import' => ['handler' => 'Admin\UsersController@import']
 ])->by([
     'method' => 'POST',
+    'prefix' => '/admin',
     'middlewares' => [
+        'RememberUser',
+        'AdminPolicy'
+    ]
+]);
+
+Route::group([
+    '/users/create' => ['handler' => 'Admin\UsersController@create'],
+    '/users/update/{id:num}' => ['handler' => 'Admin\UsersController@update']
+])->by([
+    'method' => 'POST',
+    'prefix' => '/admin',
+    'middlewares' => [
+        'RememberUser',
         'CsrfProtection',
         'SanitizeFields',
         'AdminPolicy'
@@ -91,18 +95,49 @@ Route::post('/password/notify', ['handler' => 'Auth\PasswordResetController@noti
 Route::post('/password/new', ['handler' => 'Auth\PasswordResetController@new']);
 
 //docs routes
-Route::group([
-    '/docs' => ['handler' => function() {
+Route::get('/docs', [
+    'handler' => function() {
         View::render('docs/index');
-    }],
+    }]
+);
 
-    '/docs/getting-started' => ['handler' => function() {
+Route::group([
+    '/getting-started' => ['handler' => function() {
         View::render('docs/getting-started');
     }],
 
-    '/docs/routing' => ['handler' => function() {
-        View::render('docs/routing');
+    '/routing' => ['handler' => function() {
+        View::render('docs/guides/routing');
     }],
+
+    '/middlewares' => ['handler' => function() {
+        View::render('docs/guides/middlewares');
+    }],
+
+    '/controllers' => ['handler' => function() {
+        View::render('docs/guides/controllers');
+    }],
+
+    '/views' => ['handler' => function() {
+        View::render('docs/guides/views');
+    }],
+
+    '/requests' => ['handler' => function() {
+        View::render('docs/guides/requests');
+    }],
+
+    '/responses' => ['handler' => function() {
+        View::render('docs/guides/responses');
+    }],
+
+    '/client' => ['handler' => function() {
+        View::render('docs/guides/client');
+    }],
+
+    '/redirections' => ['handler' => function() {
+        View::render('docs/guides/redirections');
+    }]
 ])->by([
-    'method' => 'GET'
+    'method' => 'GET',
+    'prefix' => '/docs'
 ]);

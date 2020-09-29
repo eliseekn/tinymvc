@@ -18,17 +18,17 @@ class Response
      *
      * @param  array $headers
      * @param  mixed $body
-     * @param  int $code response status code
+     * @param  int $status_code
      * @return void
      */
-    public static function send(array $headers, $body, int $code = 200): void
+    public static function send(array $headers, $body, int $status_code = 200): void
     {
         if (!isset($body)) {
             return;
         }
         
         //send response status code
-        http_response_code($code);
+        http_response_code($status_code);
 
         //send response headers
         if (!empty($headers)) {
@@ -49,10 +49,10 @@ class Response
      *
      * @param  array $headers
      * @param  mixed $body
-     * @param  int $code response status code
+     * @param  int $status_code
      * @return void
      */
-    public static function sendJson(array $headers, array $body, int $code = 200): void
+    public static function sendJson(array $headers, array $body, int $status_code = 200): void
     {
         if (empty($body)) {
             return;
@@ -75,11 +75,18 @@ class Response
         //send response body and exit
         exit($body);
     }
-
-    public static function sendHeaders(array $headers, int $code = 200): void
+    
+    /**
+     * send HTTP headers only
+     *
+     * @param  mixed $headers
+     * @param  mixed $status_code
+     * @return void
+     */
+    public static function sendHeaders(array $headers, int $status_code = 200): void
     {
         //send response status code
-        http_response_code($code);
+        http_response_code($status_code);
 
         //send response headers
         foreach ($headers as $name => $value) {

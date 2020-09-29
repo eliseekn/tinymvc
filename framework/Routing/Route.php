@@ -157,6 +157,10 @@ class Route
     public function by(array $options): void
     {
         foreach (self::$tmp_routes as $route => $tmp_options) {
+            if (isset($options['prefix']) && !empty($options['prefix'])) {
+                $route = $options['prefix'] . $route;
+            }
+
             self::add($route, array_merge($tmp_options, $options));
         }
     }

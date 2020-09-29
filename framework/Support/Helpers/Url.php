@@ -6,9 +6,12 @@
  * @link https://github.com/eliseekn/TinyMVC
  */
 
+use Framework\Routing\Route;
+
 /**
  * Miscellaneous URL utils functions
  */
+
 
 if (!function_exists('absolute_url')) {
 	/**
@@ -20,6 +23,37 @@ if (!function_exists('absolute_url')) {
 	function absolute_url(string $url): string
 	{
 		return config('app.url') . $url;
+	}
+}
+
+if (!function_exists('route_url')) {	
+	/**
+	 * generate absolute url from route name
+	 *
+	 * @param  string $name
+	 * @return string
+	 */
+	function route_url(string $name, array $params = []): string
+	{
+		$params = empty($params) ? '' : implode('/', $params);
+
+        //search key from value in a multidimensional array
+        //https://www.php.net/manual/en/function.array-search.php
+        $url = array_search(
+            $name,
+            array_map(
+                function ($val) {
+                    return $val['name'];
+                },
+                Route::$routes
+            )
+        );
+
+        if (empty($url)) {
+            throw new Exception('Route "' . $name . '" not found.');
+        }
+
+        return empty($params) ? absolute_url($url) : absolute_url($url . '/' . $params);
 	}
 }
 
