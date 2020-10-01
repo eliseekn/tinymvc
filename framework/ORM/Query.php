@@ -137,10 +137,10 @@ class Query
 	 *
 	 * @param  string $column
 	 * @param  string $operator (<, =, >, IN or NOT IN)
-	 * @param  string $value
+	 * @param  mixed $value
 	 * @return mixed
 	 */
-	public function where(string $column, string $operator, string $value)
+	public function where(string $column, string $operator, $value)
 	{
 		self::$query .= " WHERE $column $operator ? ";
 		self::$args[] = $value;
@@ -151,10 +151,10 @@ class Query
 	 * generate WHERE = query
 	 *
 	 * @param  string $column
-	 * @param  string $value
+	 * @param  mixed $value
 	 * @return mixed
 	 */
-	public function whereEquals(string $column, string $value)
+	public function whereEquals(string $column, $value)
 	{
 		return $this->where($column, '=', $value);
 	}
@@ -163,10 +163,10 @@ class Query
 	 * generate WHERE > query
 	 *
 	 * @param  string $column
-	 * @param  string $value
+	 * @param  mixed $value
 	 * @return mixed
 	 */
-	public function whereGreater(string $column, string $value)
+	public function whereGreater(string $column, $value)
 	{
 		return $this->where($column, '>', $value);
 	}
@@ -175,10 +175,10 @@ class Query
 	 * generate WHERE < query
 	 *
 	 * @param  string $column
-	 * @param  string $value
+	 * @param  mixed $value
 	 * @return mixed
 	 */
-	public function whereLower(string $column, string $value)
+	public function whereLower(string $column, $value)
 	{
 		return $this->where($column, '<', $value);
 	}
@@ -187,10 +187,10 @@ class Query
 	 * generate WHERE NOT IN query
 	 *
 	 * @param  string $column
-	 * @param  string $value
+	 * @param  mixed $value
 	 * @return mixed
 	 */
-	public function whereNotIn(string $column, string $value)
+	public function whereNotIn(string $column, $value)
 	{
 		return $this->where($column, 'NOT IN', $value);
 	}
@@ -199,10 +199,10 @@ class Query
 	 * generate WHERE IN query
 	 *
 	 * @param  string $column
-	 * @param  string $value
+	 * @param  mixed $value
 	 * @return mixed
 	 */
-	public function whereIn(string $column, string $value)
+	public function whereIn(string $column, $value)
 	{
 		return $this->where($column, 'IN', $value);
 	}
@@ -212,10 +212,10 @@ class Query
 	 *
 	 * @param  string $column
 	 * @param  string $operator (<, =, >, IN or NOT IN)
-	 * @param  string $value
+	 * @param  mixed $value
 	 * @return mixed
 	 */
-	public function having(string $column, string $operator, string $value)
+	public function having(string $column, string $operator, $value)
 	{
 		self::$query .= " HAVING $column $operator ? ";
 		self::$args[] = $value;
@@ -227,10 +227,10 @@ class Query
 	 *
 	 * @param  string $column
 	 * @param  string $operator (<, =, >, IN or NOT IN)
-	 * @param  string $value
+	 * @param  mixed $value
 	 * @return mixed
 	 */
-	public function and(string $column, string $operator, string $value)
+	public function and(string $column, string $operator, $value)
 	{
 		self::$query .= " AND $column $operator ? ";
 		self::$args[] = $value;
@@ -242,10 +242,10 @@ class Query
 	 *
 	 * @param  string $column
 	 * @param  string $operator (<, =, >, IN or NOT IN)
-	 * @param  string $value
+	 * @param  mixed $value
 	 * @return mixed
 	 */
-	public function or(string $column, string $operator, string $value)
+	public function or(string $column, string $operator, $value)
 	{
 		self::$query .= " OR $column $operator ? ";
 		self::$args[] = $value;
@@ -281,10 +281,10 @@ class Query
 	 * generate LIKE query
 	 *
 	 * @param  string $column
-	 * @param  string $value
+	 * @param  mixed $value
 	 * @return mixed
 	 */
-	public function like(string $column, string $value)
+	public function like(string $column, $value)
 	{
 		self::$query .= " WHERE $column LIKE '%?%' ";
 		self::$args[] = $value;
@@ -295,10 +295,10 @@ class Query
 	 * generate OR LIKE query
 	 *
 	 * @param  string $column
-	 * @param  string $value
+	 * @param  mixed $value
 	 * @return mixed
 	 */
-	public function orLike(string $column, string $value)
+	public function orLike(string $column, $value)
 	{
 		self::$query .= " OR $column LIKE '%?%' ";
 		self::$args[] = $value;

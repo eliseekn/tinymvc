@@ -77,54 +77,6 @@ if (!function_exists('random_string')) {
 	}
 }
 
-if (!function_exists('generate_csv')) {	
-	/**
-	 * generate csv file from data
-	 *
-	 * @param  string $filename
-	 * @param  array $data
-	 * @param  array|null $headers
-	 * @param  string|null $output
-	 * @return void
-	 */
-	function generate_csv(string $filename, array $data, ?array $headers = null, ?string $output = null): void
-	{
-		if (is_null($output)) {
-    		/* header("Content-Description: File Transfer");
-			header('Content-Type: text/csv');
-			header('Content-Disposition: attachment; filename="' . $filename . '"');
-			header("Cache-Control: no-cache");
-			header("Pragma: no-cache");
-			header("Expires: 0"); */
-			Response::sendHeaders([
-				'Content-Description' => 'File Transfer',
-				'Content-Type' => 'text/csv',
-				'Content-Disposition' => 'attachment; filename="' . $filename . '"',
-				'Cache-Control' => 'no-cache',
-				'Pragma' => 'no-cache',
-				'Expires' => '0'
-			]);
-
-			$handle = fopen('php://output', 'w');
-		} else {
-			$handle = fopen($output, 'w');
-		}
-
-		//insert headers
-		if (!is_null($headers)) {
-			fputcsv($handle, $headers);
-		}
-
-		foreach ($data as $row) {
-			fputcsv($handle, $row);
-		}
-
-		fclose($handle);
-
-		exit();
-	}
-}
-
 if (!function_exists('config')) {	
 	/**
 	 * read configuration

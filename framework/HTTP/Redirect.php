@@ -27,11 +27,13 @@ class Redirect
      * redirect to url 
      *
      * @param  string $url
+     * @param  array $params
      * @return mixed
      */
-    public static function toUrl(string $url)
+    public static function toUrl(string $url, array $params = [])
     {
-        self::$redirect_url = $url;
+        $params = empty($params) ? '' : implode('/', $params);
+        self::$redirect_url = empty($params) ? $url : $url . '/' . $params;
         return new self();
     }
 

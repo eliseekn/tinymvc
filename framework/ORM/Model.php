@@ -27,10 +27,10 @@ class Model
      * check if row exists
      *
      * @param  string $column
-     * @param  string $value
+     * @param  mixed $value
      * @return bool
      */
-    public static function exists(string $column, string $value): bool
+    public static function exists(string $column, $value): bool
     {
         return isset(self::findWhere($column, $value)->$column);
     }
@@ -66,10 +66,10 @@ class Model
      * fetch single row
      *
      * @param  string $column
-     * @param  string $value
+     * @param  mixed $value
      * @return mixed
      */
-    public static function findWhere(string $column, string $value)
+    public static function findWhere(string $column, $value)
     {
         return Query::DB()
             ->select('*')
@@ -97,11 +97,11 @@ class Model
      * find rows with where clause
      *
      * @param  string $column
-     * @param  string $value
+     * @param  mixed $value
      * @param  array $order_by (ASC or DESC)
      * @return mixed
      */
-    public static function findAllWhere(string $column, string $value, array $order_by = ['id', 'DESC'])
+    public static function findAllWhere(string $column, $value, array $order_by = ['id', 'DESC'])
     {
         return Query::DB()
             ->select('*')
@@ -147,7 +147,7 @@ class Model
      * @param  int $limit
      * @param  int $offset
      * @param  string $column
-     * @param  string $value
+     * @param  mixed $value
      * @param  array $order_by (ASC or DESC)
      * @return mixed
      */
@@ -155,7 +155,7 @@ class Model
         int $limit,
         int $offset,
         string $column,
-        string $value,
+        $value,
         array $order_by = ['id', 'DESC']
     ) {
         return Query::DB()
@@ -172,14 +172,14 @@ class Model
      *
      * @param  int $limit
      * @param  string $column
-     * @param  string $value
+     * @param  mixed $value
      * @param  array $order_by (ASC or DESC)
      * @return mixed
      */
     public static function findFirstOfWhere(
         int $limit,
         string $column,
-        string $value,
+        $value,
         array $order_by = ['id', 'DESC']
     ) {
         return self::findRangeWhere(0, $limit, $column, $value, $order_by);
@@ -189,10 +189,10 @@ class Model
      * delete row with WHERE clause
      *
      * @param  string $column
-     * @param  string $value
+     * @param  mixed $value
      * @return void
      */
-    public static function deleteWhere(string $column, string $value): void
+    public static function deleteWhere(string $column, $value): void
     {
         Query::DB()
             ->deleteFrom(static::$table)
@@ -215,11 +215,11 @@ class Model
      * update data with where clause
      *
      * @param  string $column
-     * @param  string $value
+     * @param  mixed $value
      * @param  array $data
      * @return void
      */
-    public static function updateWhere(string $column, string $value, array $data): void
+    public static function updateWhere(string $column, $value, array $data): void
     {
         Query::DB()
             ->update(static::$table)
@@ -285,14 +285,14 @@ class Model
      *
      * @param  int $items_per_pages
      * @param  string $column
-     * @param  string $value
+     * @param  mixed $value
      * @param  array $order_by (ASC or DESC)
      * @return \Framework\Support\Pager returns new pager class instance
      */
     public static function paginateWhere(
         int $items_per_pages,
         string $column,
-        string $value,
+        $value,
         array $order_by = ['id', 'DESC']
     ): Pager {
         $page = empty(Request::getQuery('page')) ? 1 : Request::getQuery('page');

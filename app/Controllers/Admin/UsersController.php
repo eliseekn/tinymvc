@@ -8,6 +8,7 @@ use Framework\HTTP\Redirect;
 use App\Requests\CreateUserRequest;
 use App\Requests\UpdateUserRequest;
 use App\Database\Models\UsersModel;
+use App\Helpers\ReportHelper;
 
 class UsersController
 {
@@ -72,14 +73,14 @@ class UsersController
 			Redirect::back()->withError('This email address already exists');
 		}
 
-	    UsersModel::create([
+	   $id = UsersModel::create([
             'name' => Request::getField('name'),
             'email' => Request::getField('email'),
             'password' => hash_string(Request::getField('password')),
 			'role' => Request::getField('role')
 		]);
 
-        Redirect::back()->withSuccess('The user has been created successfully');
+		Redirect::toUrl('/admin/users/view/' . $id)->withSuccess('The user has been created successfully');
     }
     
 	/**
@@ -146,11 +147,10 @@ class UsersController
 	 * import users data
 	 *
 	 * @return void
-	 * @link https://www.php.net/manual/en/function.str-getcsv.php
 	 */
 	public function import(): void
 	{
-		$file = Request::getFile('file', ['csv']);
+        $file = Request::getFile('file', ['csv']);
 
 		if (!$file->isAllowed()) {
 			Redirect::back()->withError('Only file of type extension ".csv" are allowed');
@@ -160,22 +160,11 @@ class UsersController
 			Redirect::back()->withError('Failed to import users data');
 		}
 
-		$csv = array_map('str_getcsv', file($file->getTempFilename()));
-
-		array_walk($csv, function(&$a) use ($csv) {
-			$a = array_combine($csv[0], $a);
-		});
-
-		//remove header
-		array_shift($csv);
-
-		foreach ($csv as $row) {
-			UsersModel::create([
-				'name' => $row['Name'],
-				'email' => $row['Email'],
-				'password' => hash_string($row['Password'])
-			]);
-		}
+		ReportHelper::import($file->getTempFilename(), ['App\Database\Models\UsersModel', 'create'], [
+			'name' => 'Name', 
+			'email' => 'Email', 
+			'password' => 'Password'
+		]);
 
 		Redirect::back()->withSuccess('The users have been imported successfully');
 	}
@@ -184,23 +173,22 @@ class UsersController
 	 * export users data
 	 *
 	 * @return void
-	 * @link https://www.php.net/manual/en/function.fputcsv.php
 	 */
 	public function export(): void
 	{
-		$data = [];
+		dump_vars(UsersModel::findDateRange(Request::getField('date_start'), Request::getField('date_end')));
 
-		foreach (UsersModel::findAll(['name', 'ASC']) as $users) {
-			$data[] = [
-				$users->name, 
-				$users->email, 
-				$users->role, 
-				$users->created_at
-			];
+		if (!empty(Request::getField('date_start')) && !empty(Request::getField('date_end'))) {
+			$users = UsersModel::findDateRange(Request::getField('date_start'), Request::getField('date_end'));
+		} else {
+			$users = UsersModel::findAll(['name', 'ASC']);
 		}
 
-		generate_csv('users.csv', $data, [
-			'Name', 'Email', 'Role', 'Created at'
+		ReportHelper::export('users.' . Request::getField('file_type'), $users, [
+			'name' => 'Name', 
+			'email' => 'Email', 
+			'role' => 'Role', 
+			'created_at' => 'Created at'
 		]);
 	}
 }

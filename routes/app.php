@@ -46,8 +46,7 @@ Route::group([
     '/users' => ['handler' => 'Admin\AdminController@users'],
     '/users/new' => ['handler' => 'Admin\UsersController@new'],
     '/users/edit/{id:num}' => ['handler' => 'Admin\UsersController@edit'],
-    '/users/view/{id:num}' => ['handler' => 'Admin\UsersController@view'],
-    '/users/export' => ['handler' => 'Admin\UsersController@export']
+    '/users/view/{id:num}' => ['handler' => 'Admin\UsersController@view']
 ])->by([
     'method' => 'GET',
     'prefix' => '/admin',
@@ -59,7 +58,8 @@ Route::group([
 
 Route::group([
     '/users/delete' => ['handler' => 'Admin\UsersController@delete'],
-    '/users/import' => ['handler' => 'Admin\UsersController@import']
+    '/users/import' => ['handler' => 'Admin\UsersController@import'],
+    '/users/export' => ['handler' => 'Admin\UsersController@export']
 ])->by([
     'method' => 'POST',
     'prefix' => '/admin',

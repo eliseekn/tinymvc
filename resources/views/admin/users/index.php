@@ -30,8 +30,9 @@ endif
 
             <span>
                 <a href="<?= absolute_url('/admin/users/new') ?>" class="btn btn-primary">New</a>
+                
                 <upload-modal action="<?= absolute_url('/admin/users/import') ?>"></upload-modal>
-                <a href="<?= absolute_url('/admin/users/export') ?>" class="btn btn-primary mx-2">Export</a>
+                <export-modal action="<?= absolute_url('/admin/users/export') ?>"></export-modal>
 
                 <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('/admin/users/delete') ?>">
                     Bulk delete
@@ -44,7 +45,7 @@ endif
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <div class="input-group-text bg-white">
-                    <li class="fa fa-search"></li>
+                    <i class="fa fa-search"></i>
                 </div>
             </div>
 
