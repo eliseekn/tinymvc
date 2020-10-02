@@ -61,6 +61,6 @@ $config = [
     ],
 
     'session' => [
-        'lifetime' => 3600
+        'lifetime' => 3600 //in seconds
     ]
 ];

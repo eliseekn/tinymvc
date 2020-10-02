@@ -9,24 +9,26 @@ use Framework\HTTP\Response;
 class DownloadHelper
 {   
     /**
-     * @var $mimes_types known mimes types
-     * @link https://stackoverflow.com/a/32885706
+     * known mimes types
+     * 
+     * @var arrray
+     * @link application/x-rar-compressed
      */
-    protected static $mimes_types = [
-        "htm" => "text/html",
-        "html" => "text/html",
-        "exe" => "application/octet-stream",
-        "zip" => "application/zip",
-        "doc" => "application/msword",
-        "jpg" => "image/jpg",
-        "php" => "text/plain",
-        "xls" => "application/vnd.ms-excel",
-        "ppt" => "application/vnd.ms-powerpoint",
-        "gif" => "image/gif",
-        "pdf" => "application/pdf",
-        "txt" => "text/plain",
-        "png" => "image/png",
-        "jpeg"=> "image/jpg"
+    protected static array $mimes_types = [
+        'htm' => 'text/html',
+        'html' => 'text/html',
+        'exe' => 'application/octet-stream',
+        'zip' => 'application/zip',
+        'doc' => 'application/msword',
+        'jpg' => 'image/jpg',
+        'xls' => 'application/vnd.ms-excel',
+        'ppt' => 'application/vnd.ms-powerpoint',
+        'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        'gif' => 'image/gif',
+        'pdf' => 'application/pdf',
+        'png' => 'image/png',
+        'jpeg' => 'image/jpg',
+        'csv' => 'text/csv'
     ];
 
     /**
@@ -43,11 +45,18 @@ class DownloadHelper
     public static function init(string $filename, bool $real_file = false)
     {
         static::$filename = $filename;
+        $filename = $real_file ? basename(static::$filename) : static::$filename;
+        
+        if (array_key_exists(get_file_extension($filename), self::$mimes_types)) {
+            $content_type = self::$mimes_types[get_file_extension($filename)];
+        } else {
+            $content_type = 'text/plain';
+        }
 
 		Response::sendHeaders([
 			'Content-Description' => 'File Transfer',
-            'Content-Type' => end(explode('.', static::$filename)),
-			'Content-Disposition' => 'attachment; filename="' . $real_file ? print(basename(static::$filename)) : print(static::$filename) . '"',
+            'Content-Type' => $content_type,
+			'Content-Disposition' => 'attachment; filename="' . $filename . '"',
 			'Cache-Control' => 'no-cache',
 			'Pragma' => 'no-cache',
             'Expires' => '0'
@@ -64,6 +73,7 @@ class DownloadHelper
         ob_clean();
         flush();
         readfile(static::$filename);
+
         exit();
     }
     
@@ -71,15 +81,17 @@ class DownloadHelper
      * send CSV file
      *
      * @param  array $data
-     * @param  array $headers
+     * @param  array|null $headers
      * @return void
      */
-    public function sendCSV(array $data, array $headers): void
+    public function sendCSV(array $data, ?array $headers = null): void
     {
         $handle = fopen('php://output', 'w');
 
 		//insert headers
-		fputcsv($handle, $headers);
+		if (!is_null($headers)) {
+            fputcsv($handle, $headers);
+        }
 
 		//insert rows
 		foreach ($data as $row) {
@@ -95,15 +107,17 @@ class DownloadHelper
      * send PDF file
      *
      * @param  string $html
+     * @param  array|null $headers
      * @return void
      */
     public function sendPDF(string $html): void
     {
         $options = new Options();
         $options->setIsHtml5ParserEnabled(true);
+        $options->setIsPhpEnabled(true);
 
         $dompdf = new Dompdf($options);
-        $dompdf->loadHtml($html);
+        $dompdf->loadHtml($html, 'UTF-8');
         $dompdf->setPaper('A4', 'landscape');
         $dompdf->render();
 

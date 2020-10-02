@@ -2,8 +2,7 @@
 
 namespace App\Helpers;
 
-use Framework\HTTP\Response;
-use Framework\Support\Storage;
+use Framework\Routing\View;
 
 class ReportHelper
 {    
@@ -45,7 +44,6 @@ class ReportHelper
      * @param  array $data data to export
 	 * @param  array $vars headers and colunms names
      * @return void
-	 * @link   https://www.php.net/manual/en/function.fputcsv.php
      */
     public static function export(string $filename, array $data, array $vars): void
     {
@@ -61,35 +59,13 @@ class ReportHelper
 			$to_export[] = $tmp_data;
 		}
 
-		if (end(explode('.', $$filename)) === 'csv') {
+		if (get_file_extension($filename) === 'csv') {
 			DownloadHelper::init($filename)->sendCSV($to_export, array_values($vars));
 		} else {
-			DownloadHelper::init($filename)->sendPDF(Storage::path('views')->readFile('pdf/report.php'));
+			DownloadHelper::init($filename)->sendPDF(View::renderContent('pdf/report', [
+				'data' => $to_export,
+				'headers' => array_values($vars)
+			]));
 		}
-
-		/* Response::sendHeaders([
-			'Content-Description' => 'File Transfer',
-			'Content-Type' => 'text/csv',
-			'Content-Disposition' => 'attachment; filename="' . $filename . '"',
-			'Cache-Control' => 'no-cache',
-			'Pragma' => 'no-cache',
-			'Expires' => '0'
-		]);
-
-		$handle = fopen('php://output', 'w');
-
-		//insert headers
-		fputcsv($handle, array_values($vars));
-
-		//insert rows
-		foreach ($to_export as $row) {
-			fputcsv($handle, $row);
-		}
-
-		fclose($handle);
-
-		exit(); */
-
-		//generate_csv($filename, $to_export, array_values($vars));
     }
 }

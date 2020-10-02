@@ -90,3 +90,21 @@ if (!function_exists('config')) {
 		return $config($path, '');
 	}
 }
+
+if (!function_exists('get_file_extension')) {	
+	/**
+	 * get file extension
+	 *
+	 * @param  string $filename
+	 * @return string
+	 */
+	function get_file_extension(string $filename): string
+	{
+		if (empty($filename) || strpos($filename, '.') === false) {
+            return '';
+		}
+		
+		$file_ext = explode('.', $filename);
+		return $file_ext == false ? '' : end($file_ext);
+	}
+}

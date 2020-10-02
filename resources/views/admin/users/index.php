@@ -63,7 +63,7 @@ endif
                             </div>
                         </th>
 
-                        <th scope="col"><i class="fa fa-sort"></i> ID</th>
+                        <th scope="col"><i class="fa fa-sort"></i> #</th>
                         <th scope="col"><i class="fa fa-sort"></i> Name</th>
                         <th scope="col"><i class="fa fa-sort"></i> Email</th>
                         <th scope="col"><i class="fa fa-sort"></i> Role</th>
@@ -74,7 +74,7 @@ endif
                 </thead>
 
                 <tbody>
-                    <?php foreach ($users as $user) : ?>
+                    <?php foreach ($users as $key => $user) : ?>
 
                         <tr>
                             <td>
@@ -88,7 +88,7 @@ endif
                                 <?php endif ?>
                             </td>
 
-                            <td><?= $user->id ?></td>
+                            <td><?= $key + 1 ?></td>
                             <td><?= $user->name ?></td>
                             <td><?= $user->email ?></td>
                             <td><?= $user->role ?></td>

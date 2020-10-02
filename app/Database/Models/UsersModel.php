@@ -15,7 +15,7 @@ class UsersModel extends Model
     protected static $table = 'users';
     
     /**
-     * get data from date range
+     * get users from date range
      *
      * @param  string $start
      * @param  string $end

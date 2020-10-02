@@ -4,14 +4,12 @@ namespace App\Controllers\Auth;
 
 use Framework\HTTP\Request;
 use Framework\Routing\View;
+use App\Helpers\EmailHelper;
 use Framework\HTTP\Redirect;
 use Framework\HTTP\Response;
-use Framework\Support\Email;
-use App\Requests\LoginRequest;
+use App\Requests\AuthRequest;
 use App\Database\Models\UsersModel;
 use App\Database\Models\PasswordResetModel;
-use App\Helpers\EmailHelper;
-use App\Requests\AuthRequest;
 
 class PasswordResetController
 {

@@ -160,7 +160,9 @@ class UsersController
 			Redirect::back()->withError('Failed to import users data');
 		}
 
-		ReportHelper::import($file->getTempFilename(), ['App\Database\Models\UsersModel', 'create'], [
+		$function = ['App\Database\Models\UsersModel', 'create'];
+
+		ReportHelper::import($file->getTempFilename(), $function, [
 			'name' => 'Name', 
 			'email' => 'Email', 
 			'password' => 'Password'
@@ -168,7 +170,7 @@ class UsersController
 
 		Redirect::back()->withSuccess('The users have been imported successfully');
 	}
-		
+	
 	/**
 	 * export users data
 	 *
@@ -176,15 +178,15 @@ class UsersController
 	 */
 	public function export(): void
 	{
-		dump_vars(UsersModel::findDateRange(Request::getField('date_start'), Request::getField('date_end')));
-
 		if (!empty(Request::getField('date_start')) && !empty(Request::getField('date_end'))) {
 			$users = UsersModel::findDateRange(Request::getField('date_start'), Request::getField('date_end'));
+			$filename = 'users_' . str_replace('-', '_', Request::getField('date_start')) . '-' . str_replace('-', '_', Request::getField('date_end')) . '.' . Request::getField('file_type');
 		} else {
 			$users = UsersModel::findAll(['name', 'ASC']);
+			$filename = 'users_' . date('Y_m_d') . '.' . Request::getField('file_type');
 		}
 
-		ReportHelper::export('users.' . Request::getField('file_type'), $users, [
+		ReportHelper::export($filename, $users, [
 			'name' => 'Name', 
 			'email' => 'Email', 
 			'role' => 'Role', 

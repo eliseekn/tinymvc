@@ -83,12 +83,7 @@ class Uploader
      */
     public function getFileExtension(): string
     {
-        if (empty($this->getOriginalFilename()) || strpos($this->getOriginalFilename(), '.') === false) {
-            return '';
-        }
-
-        $file = explode('.', $this->getOriginalFilename());
-        return $file == false ? '' : end($file);
+        return get_file_extension($this->getOriginalFilename());
     }
         
     /**
