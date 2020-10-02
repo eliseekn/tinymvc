@@ -49,7 +49,8 @@ $config = [
 
         'auth' => [
             'max_attempts' => 5,
-            'unlock_timeout' => 1
+            'unlock_timeout' => 1,
+            'email_confirmation' => false
         ]
     ],
 

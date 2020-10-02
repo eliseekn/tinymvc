@@ -72,6 +72,22 @@ endif
                     </div>
                 </div>
             </fieldset>
+
+            <fieldset class="form-group">
+                <div class="row">
+                    <legend class="col-form-label col-sm-2 pt-0">Account state</legend>
+                    <div class="col-sm-10">
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input class="custom-control-input" type="radio" name="account_state" id="account_active" value="1" <?php if ($user->active) : echo 'checked'; endif ?>>
+                            <label class="custom-control-label" for="account_active">Active</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input class="custom-control-input" type="radio" name="account_state" id="account_incative" value="0" <?php if (!$user->active) : echo 'checked'; endif ?>>
+                            <label class="custom-control-label" for="account_incative">Inactive</label>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
         </div>
 
         <div class="card-footer">

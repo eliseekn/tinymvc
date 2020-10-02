@@ -25,4 +25,4 @@ $options = getopt('', [
 ]);
 
 //handle command line arguments
-\Framework\Console\CLI::parseCommands($options);
+\Framework\Console\Database::parseCommands($options);

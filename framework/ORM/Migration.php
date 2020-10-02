@@ -35,9 +35,9 @@ class Migration
      * generate CREATE TABLE query 
      *
      * @param  string $name name of table
-     * @return mixed
+     * @return \Framework\ORM\Migration
      */
-    public static function table(string $name)
+    public static function table(string $name): self
     {
         self::$query = "CREATE TABLE " . config('database.table_prefix') . "$name (";
         return new self();
@@ -47,9 +47,10 @@ class Migration
      * generate primary key and autoincrement column query
      *
      * @param  string $name
-     * @return mixed
+     * @return \Framework\ORM\Migration
      */
-    public function addPrimaryKey(string $name = 'id') {
+    public function addPrimaryKey(string $name = 'id'): self
+    {
         self::$query .= "$name INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
         return $this;
     }
@@ -62,7 +63,7 @@ class Migration
      * @param  bool $null
      * @param  bool $unique
      * @param  int|null $default
-     * @return mixed
+     * @return \Framework\ORM\Migration
      */
     public function addInt(
         string $name, 
@@ -70,7 +71,7 @@ class Migration
         bool $null = false, 
         bool $unique = false, 
         ?int $default = null
-    ) {
+    ): self {
         self::$query .= "$name INT($length)";
         self::$query .= $null ? ' NULL' : ' NOT NULL';
         self::$query .= $unique ? ' UNIQUE' : '';
@@ -88,7 +89,7 @@ class Migration
      * @param  bool $null
      * @param  bool $unique
      * @param  int|null $default
-     * @return mixed
+     * @return \Framework\ORM\Migration
      */
     public function addSmallInt(
         string $name, 
@@ -96,7 +97,7 @@ class Migration
         bool $null = false, 
         bool $unique = false, 
         ?int $default = null
-    ) {
+    ): self {
         self::$query .= "$name SMALLINT($length)";
         self::$query .= $null ? ' NULL' : ' NOT NULL';
         self::$query .= $unique ? ' UNIQUE' : '';
@@ -114,7 +115,7 @@ class Migration
      * @param  bool $null
      * @param  bool $unique
      * @param  int|null $default
-     * @return mixed
+     * @return \Framework\ORM\Migration
      */
     public function addBigInt(
         string $name, 
@@ -122,7 +123,7 @@ class Migration
         bool $null = false, 
         bool $unique = false, 
         ?int $default = null
-    ) {
+    ): self {
         self::$query .= "$name BIGINT($length)";
         self::$query .= $null ? ' NULL' : ' NOT NULL';
         self::$query .= $unique ? ' UNIQUE' : '';
@@ -139,14 +140,14 @@ class Migration
      * @param  bool $null
      * @param  bool $unique
      * @param  string|null $default
-     * @return mixed
+     * @return \Framework\ORM\Migration
      */
     public function addChar(
         string $name, 
         bool $null = false, 
         bool $unique = false, 
         ?string $default = null
-    ) {
+    ): self {
         self::$query .= "$name CHAR(1)";
         self::$query .= $null ? ' NULL' : ' NOT NULL';
         self::$query .= $unique ? ' UNIQUE' : '';
@@ -164,7 +165,7 @@ class Migration
      * @param  bool $null
      * @param  bool $unique
      * @param  string|null $default
-     * @return mixed
+     * @return \Framework\ORM\Migration
      */
     public function addString(
         string $name, 
@@ -172,7 +173,7 @@ class Migration
         bool $null = false, 
         bool $unique = false, 
         ?string $default = null
-    ) {
+    ): self {
         self::$query .= "$name VARCHAR($length)";
         self::$query .= $null ? ' NULL' : ' NOT NULL';
         self::$query .= $unique ? ' UNIQUE' : '';
@@ -187,9 +188,10 @@ class Migration
      *
      * @param  string $name
      * @param  bool $null
-     * @return mixed
+     * @return \Framework\ORM\Migration
      */
-    public function addText(string $name, bool $null = false) {
+    public function addText(string $name, bool $null = false): self 
+    {
         self::$query .= "$name TEXT";
         self::$query .= $null ? ' NULL' : ' NOT NULL';
         self::$query .= ', ';
@@ -202,9 +204,10 @@ class Migration
      *
      * @param  string $name
      * @param  bool $null
-     * @return mixed
+     * @return \Framework\ORM\Migration
      */
-    public function addLongText(string $name, bool $null = false) {
+    public function addLongText(string $name, bool $null = false): self 
+    {
         self::$query .= "$name LONGTEXT";
         self::$query .= $null ? ' NULL' : ' NOT NULL';
         self::$query .= ', ';
@@ -218,13 +221,13 @@ class Migration
      * @param  string $name
      * @param  bool $null
      * @param  string $default
-     * @return mixed
+     * @return \Framework\ORM\Migration
      */
     public function addTimestamp(
         string $name, 
         bool $null = false, 
         string $default = 'CURRENT_TIMESTAMP'
-    ) {
+    ): self {
         self::$query .= "$name TIMESTAMP";
         self::$query .= $null ? ' NULL' : ' NOT NULL';
         self::$query .= empty($default) ? '' : " DEFAULT $default";
@@ -239,9 +242,10 @@ class Migration
      * @param  string $name
      * @param  bool $null
      * @param  int|null $default
-     * @return mixed
+     * @return \Framework\ORM\Migration
      */
-    public function addBoolean(string $name, bool $null = false, ?int $default = null) {
+    public function addBoolean(string $name, bool $null = false, ?int $default = null): self 
+    {
         self::$query .= "$name TINYINT(1)";
         self::$query .= $null ? ' NULL' : ' NOT NULL';
         self::$query .= is_null($default) ? '' : " DEFAULT '$default'";

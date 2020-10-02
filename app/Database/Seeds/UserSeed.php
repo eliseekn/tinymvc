@@ -24,7 +24,8 @@ class UserSeed
             'name' => 'Admin',
             'email' => 'admin@mail.com',
             'password' => hash_string('admin'),
-            'role' => 'admin'
+            'role' => 'admin',
+            'active' => 1
         ]);
     }
 }

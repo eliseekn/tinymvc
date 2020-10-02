@@ -140,9 +140,9 @@ class Route
      * group routes
      *
      * @param  array $routes
-     * @return mixed
+     * @return \Framework\Routing\Route
      */
-    public static function group(array $routes)
+    public static function group(array $routes): self
     {
         self::$tmp_routes = $routes;
         return new self();

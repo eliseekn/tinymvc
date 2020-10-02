@@ -13,7 +13,7 @@ use Framework\Support\Storage;
 /**
  * Manage migrations and seeds from command line interface
  */
-class CLI
+class Database
 {
     /**
      * check migration class

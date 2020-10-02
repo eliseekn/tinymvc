@@ -28,9 +28,9 @@ class Email
      *
      * @param  string $address
      * @param  string $name
-     * @return mixed
+     * @return \Framework\Support\Email
      */
-    public static function to(string $address, string $name = '')
+    public static function to(string $address, string $name = ''): self
     {
         self::$mail = new PHPMailer(true);
         self::$mail->Debugoutput = 'error_log';
@@ -52,9 +52,9 @@ class Email
      *
      * @param  string $address
      * @param  string $name
-     * @return mixed
+     * @return \Framework\Support\Email
      */
-    public function from(string $address, string $name = '')
+    public function from(string $address, string $name = ''): self
     {
         self::$mail->setFrom($address, $name);
         return $this;
@@ -65,9 +65,9 @@ class Email
      *
      * @param  string $address
      * @param  string $name
-     * @return mixed
+     * @return \Framework\Support\Email
      */
-    public function replyTo(string $address, string $name = '')
+    public function replyTo(string $address, string $name = ''): self
     {
         self::$mail->addReplyTo($address, $name);
         return $this;
@@ -77,9 +77,9 @@ class Email
      * subject
      *
      * @param  string $subject
-     * @return mixed
+     * @return \Framework\Support\Email
      */
-    public function subject(string $subject)
+    public function subject(string $subject): self
     {
         self::$mail->Subject = $subject;
         return $this;
@@ -89,9 +89,9 @@ class Email
      * message
      *
      * @param  string $message
-     * @return mixed
+     * @return \Framework\Support\Email
      */
-    public function message(string $message)
+    public function message(string $message): self
     {
         self::$mail->Body = $message;
         return $this;
@@ -100,9 +100,9 @@ class Email
     /**
      * set email format to HTML
      *
-     * @return mixed
+     * @return \Framework\Support\Email
      */
-    public function asHTML()
+    public function asHTML(): self
     {
         self::$mail->IsHTML(true);
         return $this;
@@ -113,9 +113,9 @@ class Email
      *
      * @param  string $attachment
      * @param  string $filename
-     * @return mixed
+     * @return \Framework\Support\Email
      */
-    public function addAttachment(string $attachment, string $filename = '')
+    public function addAttachment(string $attachment, string $filename = ''): self
     {
         self::$mail->addAttachment($attachment, $filename);
         return $this;

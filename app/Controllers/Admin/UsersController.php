@@ -105,6 +105,7 @@ class UsersController
             'name' => Request::getField('name'),
             'email' => Request::getField('email'),
             'role' => Request::getField('role'),
+            'active' => Request::getField('account_state'),
             'updated_at' => date("Y-m-d H:i:s")
 		];
 		

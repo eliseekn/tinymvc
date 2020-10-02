@@ -94,6 +94,15 @@ Route::get('/password/reset', ['handler' => 'Auth\PasswordResetController@reset'
 Route::post('/password/notify', ['handler' => 'Auth\PasswordResetController@notify']);
 Route::post('/password/new', ['handler' => 'Auth\PasswordResetController@new']);
 
+//email confirmation routes
+Route::group([
+    '/confirmation' => ['handler' => 'EmailConfirmationController@verify'],
+    '/confirmation/send' => ['handler' => 'EmailConfirmationController@send']
+])->by([
+    'method' => 'GET',
+    'prefix' => '/email'
+]);
+
 //docs routes
 Route::get('/docs', [
     'handler' => function() {

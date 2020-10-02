@@ -49,6 +49,17 @@ endif
         </div>
 
         <div class="form-group row">
+            <legend class="col-form-label col-sm-2">Account</legend>
+            <div class="col-form-label col-sm-10 font-weight-bold">
+                <?php if ($user->active) : ?>
+                <span class="badge badge-pill badge-success">Active</span>
+                <?php else : ?>
+                <span class="badge badge-pill badge-danger">Inactive</span>
+                <?php endif ?>
+            </div>
+        </div>
+
+        <div class="form-group row">
             <legend class="col-form-label col-sm-2">Status</legend>
             <div class="col-form-label col-sm-10 font-weight-bold">
                 <?php if ($user->online) : ?>

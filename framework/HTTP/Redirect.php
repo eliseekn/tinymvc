@@ -28,9 +28,9 @@ class Redirect
      *
      * @param  string $url
      * @param  array $params
-     * @return mixed
+     * @return \Framework\HTTP\Redirect
      */
-    public static function toUrl(string $url, array $params = [])
+    public static function toUrl(string $url, array $params = []): self
     {
         $params = empty($params) ? '' : implode('/', $params);
         self::$redirect_url = empty($params) ? $url : $url . '/' . $params;
@@ -42,9 +42,9 @@ class Redirect
      *
      * @param  string $name
      * @param  array $params
-     * @return mixed
+     * @return \Framework\HTTP\Redirect
      */
-    public static function toRoute(string $name, array $params = [])
+    public static function toRoute(string $name, array $params = []): self
     {
         self::$redirect_url = route_url($name, $params);
         return new self();
@@ -55,9 +55,9 @@ class Redirect
      *
      * @param  string $handler
      * @param  array $params
-     * @return mixed
+     * @return \Framework\HTTP\Redirect
      */
-    public static function toHandler(string $handler, array $params = [])
+    public static function toHandler(string $handler, array $params = []): self
     {
         $params = empty($params) ? '' : implode('/', $params);
 
@@ -84,9 +84,9 @@ class Redirect
     /**
      * go to previous page
      *
-     * @return mixed
+     * @return \Framework\HTTP\Redirect
      */
-    public static function back()
+    public static function back(): self
     {
         $browsing_history = get_browsing_history();
 

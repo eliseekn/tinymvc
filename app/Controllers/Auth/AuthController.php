@@ -53,8 +53,13 @@ class AuthController
             Redirect::back()->withError('The email address is already used by another user');
         }
 
-        EmailHelper::sendWelcome(Request::getField('email'));
-        Redirect::toUrl('/login')->withSuccess('You have been registered successfully. <br> You can log in with your credentials');
+        if (config('security.auth.email_confirmation') === true) {
+            EmailHelper::sendWelcome(Request::getField('email'));
+            Redirect::toUrl('/login')->withSuccess('You have been registered successfully. <br> You can log in with your credentials');
+        } else {
+            EmailHelper::sendConfirmation(Request::getField('email'), 'TinyMVC');
+            Redirect::back()->withInfo('Please check your email account to confirm your email address.');
+        }
     }
 	
 	/**

@@ -39,9 +39,9 @@ class Query
 	/**
 	 * get database connection instance
 	 *
-	 * @return mixed
+	 * @return \Framework\ORM\Query
 	 */
-	public static function DB()
+	public static function DB(): self
 	{
 		//database connection instance
 		$db = Database::getInstance();
@@ -93,9 +93,9 @@ class Query
 	 *
 	 * @param  string $query query string
 	 * @param  array $args query arguments
-	 * @return mixed
+	 * @return \Framework\ORM\Query
 	 */
-	public function setQuery(string $query, array $args = [])
+	public function setQuery(string $query, array $args = []): self
 	{
 		self::$query = $query;
 		self::$args = $args;
@@ -106,9 +106,9 @@ class Query
 	 * generate SELECT query
 	 *
 	 * @param  string $columns name of columns as enumerated string
-	 * @return mixed
+	 * @return \Framework\ORM\Query
 	 */
-	public function select(string ...$columns)
+	public function select(string ...$columns): self
 	{
 		self::$query = 'SELECT ';
 
@@ -124,9 +124,9 @@ class Query
 	 * generate FROM query
 	 *
 	 * @param  string $table
-	 * @return mixed
+	 * @return \Framework\ORM\Query
 	 */
-	public function from(string $table)
+	public function from(string $table): self
 	{
 		self::$query .= " FROM " . config('database.table_prefix') . "$table ";
 		return $this;
@@ -138,9 +138,9 @@ class Query
 	 * @param  string $column
 	 * @param  string $operator (<, =, >, IN or NOT IN)
 	 * @param  mixed $value
-	 * @return mixed
+	 * @return \Framework\ORM\Query
 	 */
-	public function where(string $column, string $operator, $value)
+	public function where(string $column, string $operator, $value): self
 	{
 		self::$query .= " WHERE $column $operator ? ";
 		self::$args[] = $value;
@@ -213,9 +213,9 @@ class Query
 	 * @param  string $column
 	 * @param  string $operator (<, =, >, IN or NOT IN)
 	 * @param  mixed $value
-	 * @return mixed
+	 * @return \Framework\ORM\Query
 	 */
-	public function having(string $column, string $operator, $value)
+	public function having(string $column, string $operator, $value): self
 	{
 		self::$query .= " HAVING $column $operator ? ";
 		self::$args[] = $value;
@@ -228,9 +228,9 @@ class Query
 	 * @param  string $column
 	 * @param  string $operator (<, =, >, IN or NOT IN)
 	 * @param  mixed $value
-	 * @return mixed
+	 * @return \Framework\ORM\Query
 	 */
-	public function and(string $column, string $operator, $value)
+	public function and(string $column, string $operator, $value): self
 	{
 		self::$query .= " AND $column $operator ? ";
 		self::$args[] = $value;
@@ -243,9 +243,9 @@ class Query
 	 * @param  string $column
 	 * @param  string $operator (<, =, >, IN or NOT IN)
 	 * @param  mixed $value
-	 * @return mixed
+	 * @return \Framework\ORM\Query
 	 */
-	public function or(string $column, string $operator, $value)
+	public function or(string $column, string $operator, $value): self
 	{
 		self::$query .= " OR $column $operator ? ";
 		self::$args[] = $value;
@@ -257,9 +257,9 @@ class Query
 	 *
 	 * @param  string $column
 	 * @param  string $direction (ASC or DESC)
-	 * @return mixed
+	 * @return \Framework\ORM\Query
 	 */
-	public function orderBy(string $column, string $direction)
+	public function orderBy(string $column, string $direction): self
 	{
 		self::$query .= " ORDER BY $column " . strtoupper($direction);
 		return $this;
@@ -269,9 +269,9 @@ class Query
 	 * generate GROUP BY query
 	 *
 	 * @param  string $column
-	 * @return mixed
+	 * @return \Framework\ORM\Query
 	 */
-	public function groupBy(string $column)
+	public function groupBy(string $column): self
 	{
 		self::$query .= " GROUP BY $column ";
 		return $this;
@@ -282,9 +282,9 @@ class Query
 	 *
 	 * @param  string $column
 	 * @param  mixed $value
-	 * @return mixed
+	 * @return \Framework\ORM\Query
 	 */
-	public function like(string $column, $value)
+	public function like(string $column, $value): self
 	{
 		self::$query .= " WHERE $column LIKE '%?%' ";
 		self::$args[] = $value;
@@ -296,9 +296,9 @@ class Query
 	 *
 	 * @param  string $column
 	 * @param  mixed $value
-	 * @return mixed
+	 * @return \Framework\ORM\Query
 	 */
-	public function orLike(string $column, $value)
+	public function orLike(string $column, $value): self
 	{
 		self::$query .= " OR $column LIKE '%?%' ";
 		self::$args[] = $value;
@@ -310,9 +310,9 @@ class Query
 	 *
 	 * @param  int $limit
 	 * @param  int $offset
-	 * @return mixed
+	 * @return \Framework\ORM\Query
 	 */
-	public function limit(int $limit, ?int $offset = null)
+	public function limit(int $limit, ?int $offset = null): self
 	{
 		self::$query .= " LIMIT $limit";
 
@@ -329,9 +329,9 @@ class Query
 	 * @param  string $table
 	 * @param  string $second_column
 	 * @param  string $first_column
-	 * @return mixed
+	 * @return \Framework\ORM\Query
 	 */
-	public function innerJoin(string $table, string $second_column, string $first_column)
+	public function innerJoin(string $table, string $second_column, string $first_column): self
 	{
 		self::$query .= " INNER JOIN " . config('database.table_prefix') . "$table ON $first_column = $second_column";
 		return $this;
@@ -343,9 +343,9 @@ class Query
 	 * @param  string $table
 	 * @param  string $second_column
 	 * @param  string $first_column
-	 * @return mixed
+	 * @return \Framework\ORM\Query
 	 */
-	public function leftJoin(string $table, string $second_column, string $first_column)
+	public function leftJoin(string $table, string $second_column, string $first_column): self
 	{
 		self::$query .= " LEFT JOIN " . config('database.table_prefix') . "$table ON $first_column = $second_column";
 		return $this;
@@ -357,9 +357,9 @@ class Query
 	 * @param  string $table
 	 * @param  string $second_column
 	 * @param  string $first_column
-	 * @return mixed
+	 * @return \Framework\ORM\Query
 	 */
-	public function rightJoin(string $table, string $second_column, string $first_column)
+	public function rightJoin(string $table, string $second_column, string $first_column): self
 	{
 		self::$query .= " RIGHT JOIN " . config('database.table_prefix') . "$table ON $first_column = $second_column";
 		return $this;
@@ -371,9 +371,9 @@ class Query
 	 * @param  string $table
 	 * @param  string $second_column
 	 * @param  string $first_column
-	 * @return mixed
+	 * @return \Framework\ORM\Query
 	 */
-	public function fullJoin(string $table, string $second_column, string $first_column)
+	public function fullJoin(string $table, string $second_column, string $first_column): self
 	{
 		self::$query .= " FULL JOIN " . config('database.table_prefix') . "$table ON $first_column = $second_column";
 		return $this;
@@ -383,9 +383,9 @@ class Query
 	 * generate SET query
 	 *
 	 * @param  array $items
-	 * @return mixed
+	 * @return \Framework\ORM\Query
 	 */
-	public function set(array $items)
+	public function set(array $items): self
 	{
 		self::$query .= " SET ";
 
@@ -403,9 +403,9 @@ class Query
 	 *
 	 * @param  string $table
 	 * @param  array $items
-	 * @return mixed
+	 * @return \Framework\ORM\Query
 	 */
-	public function insert(string $table, array $items)
+	public function insert(string $table, array $items): self
 	{
 		self::$query = "INSERT INTO " . config('database.table_prefix') . "$table (";
 
@@ -431,9 +431,9 @@ class Query
 	 * generate UPDATE query
 	 *
 	 * @param  string $table
-	 * @return mixed
+	 * @return \Framework\ORM\Query
 	 */
-	public function update(string $table)
+	public function update(string $table): self
 	{
 		self::$query = "UPDATE " . config('database.table_prefix') . "$table";
 		return $this;
@@ -443,9 +443,9 @@ class Query
 	 * generate DELETE FROM query
 	 * 
 	 * @param  string $table
-	 * @return mixed
+	 * @return \Framework\ORM\Query
 	 */
-	public function deleteFrom(string $table)
+	public function deleteFrom(string $table): self
 	{
 		self::$query = "DELETE FROM " . config('database.table_prefix') . "$table";
 		return $this;

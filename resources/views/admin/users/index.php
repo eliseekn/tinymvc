@@ -67,6 +67,7 @@ endif
                         <th scope="col"><i class="fa fa-sort"></i> Name</th>
                         <th scope="col"><i class="fa fa-sort"></i> Email</th>
                         <th scope="col"><i class="fa fa-sort"></i> Role</th>
+                        <th scope="col"><i class="fa fa-sort"></i> Account</th>
                         <th scope="col"><i class="fa fa-sort"></i> Status</th>
                         <th scope="col"><i class="fa fa-sort"></i> Created at</th>
                         <th scope="col"></th>
@@ -92,6 +93,14 @@ endif
                             <td><?= $user->name ?></td>
                             <td><?= $user->email ?></td>
                             <td><?= $user->role ?></td>
+
+                            <td>
+                                <?php if ($user->active) : ?>
+                                    <span class="badge badge-pill badge-success">Active</span>
+                                <?php else : ?>
+                                    <span class="badge badge-pill badge-danger">Inactive</span>
+                                <?php endif ?>
+                            </td>
 
                             <td>
                                 <?php if ($user->online) : ?>

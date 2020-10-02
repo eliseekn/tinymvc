@@ -30,7 +30,7 @@ class Client
      * @param  array $headers
      * @param  array|null $data data to send
      * @param  bool $json_data send data in json format
-     * @return mixed
+     * @return \Framework\HTTP\Client
      */
     public static function send(
         string $method,
@@ -38,7 +38,7 @@ class Client
         array $headers = [],
         ?array $data = null,
         bool $json_data = false
-    ) {
+    ): self {
         if (empty($urls)) {
             throw new Exception('Cannot send HTTP request to empty url');
         }

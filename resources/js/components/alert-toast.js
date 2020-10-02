@@ -24,7 +24,7 @@ class AlertToast extends HTMLElement {
         element.classList.add('fade')
         element.innerHTML = `
             <div class="modal-dialog position-absolute shadow-sm rounded" style="top: -1em; right: .8em">
-                <div class="modal-content">
+                <div class="modal-content border-${this.getAttribute('type')}">
                     <div class="modal-body d-flex justify-content-around align-items-center">
                         ${this.toastIcon()}
 

@@ -24,9 +24,9 @@ class Storage
      * set storage path
      *
      * @param  string $path
-     * @return mixed
+     * @return \Framework\Support\Storage
      */
-    public static function path(string $path)
+    public static function path(string $path): self
     {
         self::$path = config('storage.' . $path);
         return new self();
