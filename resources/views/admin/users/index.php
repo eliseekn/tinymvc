@@ -63,7 +63,7 @@ endif
                             </div>
                         </th>
 
-                        <th scope="col"><i class="fa fa-sort"></i> #</th>
+                        <th scope="col"><i class="fa fa-sort"></i> ID</th>
                         <th scope="col"><i class="fa fa-sort"></i> Name</th>
                         <th scope="col"><i class="fa fa-sort"></i> Email</th>
                         <th scope="col"><i class="fa fa-sort"></i> Role</th>

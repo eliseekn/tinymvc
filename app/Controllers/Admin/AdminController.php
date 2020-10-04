@@ -3,6 +3,7 @@
 namespace App\Controllers\Admin;
 
 use Framework\Routing\View;
+use App\Helpers\MetricsHelper;
 use App\Database\Models\UsersModel;
 
 class AdminController
@@ -16,7 +17,9 @@ class AdminController
 	{
 		View::render('admin/index', [
 			'users' => UsersModel::findAll(),
-			'online_users' => UsersModel::findAllWhere('online', 1)
+			'online_users' => UsersModel::findAllWhere('online', 1),
+			'active_users' => UsersModel::findAllWhere('active', 1),
+			'users_metrics' => MetricsHelper::getCount('users', 'id', 'months')
 		]);
 	}
 

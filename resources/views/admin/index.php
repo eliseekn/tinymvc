@@ -1,5 +1,6 @@
 <?php
 
+use App\Database\Models\UsersModel;
 use App\Helpers\MetricsHelper;
 
 $this->layout('admin/layout', [
@@ -15,31 +16,35 @@ $this->layout('admin/layout', [
 
 <?php $this->start('page_content') ?>
 
-<div class="card-columns">
-    <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center bg-dark lead">
-            <span class="text-white">Users</span>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center bg-dark lead">
+                <span class="text-white">Total users</span>
 
-            <a href="<?= absolute_url('/admin/users') ?>">
-                <i class="fa fa-dot-circle text-white"></i>
-            </a>
+                <a href="<?= absolute_url('/admin/users') ?>" title="Users">
+                    <i class="fa fa-dot-circle text-white"></i>
+                </a>
+            </div>
+
+            <div class="card-body">
+                <div id="total-users-donut" style="height: 200px"></div>
+            </div>
         </div>
+    </div>
 
-        <div class="card-body">
-            <!-- <div class="mb-3">
-                <p class="card-text">Total: <span class="font-weight-bold"><?= count($users) ?></span></p>
-                <p class="card-text">Online: <span class="font-weight-bold"><?= count($online_users) ?></span></p>
-                <p class="card-text">Latest registered: <span class="font-weight-bold font-italic"><?= $users[0]->name ?></span> - <span class="font-italic"><?= get_time_elapsed($users[0]->created_at, 1) ?></span></p>
-            </div> -->
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center bg-dark lead">
+                <span class="text-white">Users count</span>
 
-            <div class="row">
-                <div class="col">
-                    <div id="donut-chart" style="height: 200px"></div>
-                </div>
+                <a href="<?= absolute_url('/admin/users/new') ?>" title="New user">
+                    <i class="fa fa-dot-circle text-white"></i>
+                </a>
+            </div>
 
-                <div class="col">
-                    <div id="bars-chart" style="height: 200px; width: 700px"></div>
-                </div>
+            <div class="card-body">
+                <div id="users-count-bars" style="height: 200px"></div>
             </div>
         </div>
     </div>
@@ -54,23 +59,25 @@ $this->layout('admin/layout', [
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        new Morris.Bar({
-            element: 'bars-chart',
-            resize: true,
-            data: <?= json_encode(MetricsHelper::getCount('users', 'id', 'months')) ?>,
-            xkey: 'month',
-            ykeys: ['value'],
-            labels: ['Value']
-        })
-
         new Morris.Donut({
-            element: 'donut-chart',
+            element: 'total-users-donut',
             resize: true,
             data: [
-                {label: "Total", value: <?= count($users) ?>},
-                {label: "Online", value: <?= count($online_users) ?>},
-                {label: "Offline", value: <?= count($users) - count($online_users) ?>}
+                {label: 'Total', value: <?= count($users) ?>},
+                {label: 'Online', value: <?= count($online_users) ?>},
+                {label: 'Offline', value: <?= count($users) - count($online_users) ?>},
+                {label: 'Active', value: <?= count($active_users) ?>},
+                {label: 'Inactive', value: <?= count($users) - count($active_users) ?>}
             ]
+        })
+
+        new Morris.Bar({
+            element: 'users-count-bars',
+            resize: true,
+            data: <?= json_encode($users_metrics) ?>,
+            xkey: 'month',
+            ykeys: ['value'],
+            labels: ['Count']
         })
     })
 </script>
