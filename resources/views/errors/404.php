@@ -11,7 +11,6 @@
 </head>
 
 <body>
-
     <div class="container mt-5 p-5 text-center">
         <h1 class="font-weight-bold display-4">Error 404: <em>Page not found</em></h1>
         
@@ -20,7 +19,6 @@
             <a href="<?= absolute_url('/') ?>">Go back home</a>
         </p>
     </div>
-
 </body>
 
 </html>

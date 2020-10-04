@@ -12,7 +12,6 @@
 </head>
 
 <body>
-
     <div class="d-flex" id="wrapper">
         <div class="bg-light border-light border-right min-vh-100" id="sidebar-wrapper">
             <div class="sidebar-title bg-dark text-light">
@@ -30,28 +29,28 @@
                 
                 <div class="list-group list-group-flush">
                     <a href="<?= absolute_url('/docs/routing') ?>" class="list-group-item list-group-item-action bg-light" style="padding-left: 2.5em">
-                        <i class="fa fa-dot-circle <?php if (is_current_page('routing')) : echo 'text-primary'; endif ?>"></i> Routing
+                        <i class="fa fa-dot-circle <?php if (exists_uri('routing')) : echo 'text-primary'; endif ?>"></i> Routing
                     </a>
                     <a href="<?= absolute_url('/docs/middlewares') ?>" class="list-group-item list-group-item-action bg-light" style="padding-left: 2.5em">
-                        <i class="fa fa-dot-circle <?php if (is_current_page('middlewares')) : echo 'text-primary'; endif ?>"></i> Middlewares
+                        <i class="fa fa-dot-circle <?php if (exists_uri('middlewares')) : echo 'text-primary'; endif ?>"></i> Middlewares
                     </a>
                     <a href="<?= absolute_url('/docs/controllers') ?>" class="list-group-item list-group-item-action bg-light" style="padding-left: 2.5em">
-                        <i class="fa fa-dot-circle <?php if (is_current_page('controllers')) : echo 'text-primary'; endif ?>"></i> Controllers
+                        <i class="fa fa-dot-circle <?php if (exists_uri('controllers')) : echo 'text-primary'; endif ?>"></i> Controllers
                     </a>
                     <a href="<?= absolute_url('/docs/views') ?>" class="list-group-item list-group-item-action bg-light" style="padding-left: 2.5em">
-                        <i class="fa fa-dot-circle <?php if (is_current_page('views')) : echo 'text-primary'; endif ?>"></i> Views
+                        <i class="fa fa-dot-circle <?php if (exists_uri('views')) : echo 'text-primary'; endif ?>"></i> Views
                     </a>
                     <a href="<?= absolute_url('/docs/requests') ?>" class="list-group-item list-group-item-action bg-light" style="padding-left: 2.5em">
-                        <i class="fa fa-dot-circle <?php if (is_current_page('requests')) : echo 'text-primary'; endif ?>"></i> HTTP Requests
+                        <i class="fa fa-dot-circle <?php if (exists_uri('requests')) : echo 'text-primary'; endif ?>"></i> HTTP Requests
                     </a>
                     <a href="<?= absolute_url('/docs/responses') ?>" class="list-group-item list-group-item-action bg-light" style="padding-left: 2.5em">
-                        <i class="fa fa-dot-circle <?php if (is_current_page('responses')) : echo 'text-primary'; endif ?>"></i> HTTP Responses
+                        <i class="fa fa-dot-circle <?php if (exists_uri('responses')) : echo 'text-primary'; endif ?>"></i> HTTP Responses
                     </a>
                     <a href="<?= absolute_url('/docs/client') ?>" class="list-group-item list-group-item-action bg-light" style="padding-left: 2.5em">
-                        <i class="fa fa-dot-circle <?php if (is_current_page('client')) : echo 'text-primary'; endif ?>"></i> HTTP Client
+                        <i class="fa fa-dot-circle <?php if (exists_uri('client')) : echo 'text-primary'; endif ?>"></i> HTTP Client
                     </a>
                     <a href="<?= absolute_url('/docs/redirection') ?>" class="list-group-item list-group-item-action bg-light" style="padding-left: 2.5em">
-                        <i class="fa fa-dot-circle <?php if (is_current_page('redirection')) : echo 'text-primary'; endif ?>"></i> URL Redirection
+                        <i class="fa fa-dot-circle <?php if (exists_uri('redirection')) : echo 'text-primary'; endif ?>"></i> URL Redirection
                     </a>
 
                     <a href="#" class="list-group-item list-group-item-action bg-light">
@@ -83,7 +82,6 @@
     <script defer src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script defer src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     <script defer src="<?= absolute_url('/public/js/index.js') ?>"></script>
-    
 </body>
 
 </html>

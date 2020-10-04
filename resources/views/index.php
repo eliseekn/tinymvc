@@ -11,7 +11,6 @@
 </head>
 
 <body>
-
     <div class="container mt-5 p-5 text-center">
         <h1 class="font-weight-bold display-4">TinyMVC</h1>
 
@@ -33,7 +32,6 @@
     </div>
 
     <script defer src="https://use.fontawesome.com/releases/v5.13.0/js/all.js"></script>
-
 </body>
 
 </html>

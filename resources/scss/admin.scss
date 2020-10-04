@@ -1,13 +1,5 @@
-@import 'animations';
-@import 'sidebar';
-
-a {
-    text-decoration: none;
-
-    &:hover {
-        text-decoration: none;
-    }
-}
+@import 'components/main';
+@import 'components/sidebar';
 
 .table {
     thead th {

@@ -110,7 +110,7 @@ endif
                                 <?php endif ?>
                             </td>
 
-                            <td><?= $user->created_at ?></td>
+                            <td><?= date('Y-m-d', strtotime($user->created_at)) ?></td>
 
                             <td>
                                 <a class="btn text-primary" href="<?= absolute_url('/admin/users/view/' . $user->id) ?>" title="View item">

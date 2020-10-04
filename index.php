@@ -6,6 +6,8 @@
  * @link https://github.com/eliseekn/TinyMVC
  */
 
+use App\Helpers\MetricsHelper;
+
 /**
  * Main pplication entry
  */
@@ -15,6 +17,8 @@ require 'vendor/autoload.php';
 require_once 'config/env.php';
 require_once 'routes/app.php';
 require_once 'routes/web.php';
+
+//dump_vars(MetricsHelper::getCount('users', 'id', 'months'));
 
 //start routing
 new \Framework\Routing\Router();

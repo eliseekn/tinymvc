@@ -73,6 +73,8 @@ endif
                 </div>
             </fieldset>
 
+            <?php if ($user->role !== 'admin') : ?>
+            
             <fieldset class="form-group">
                 <div class="row">
                     <legend class="col-form-label col-sm-2 pt-0">Account state</legend>
@@ -88,6 +90,8 @@ endif
                     </div>
                 </div>
             </fieldset>
+
+            <?php endif ?>
         </div>
 
         <div class="card-footer">

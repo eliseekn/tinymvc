@@ -12,7 +12,6 @@ use Framework\Routing\Route;
  * Miscellaneous URL utils functions
  */
 
-
 if (!function_exists('absolute_url')) {
 	/**
 	 * generate abosulte url
@@ -84,15 +83,15 @@ if (!function_exists('current_url')) {
 	}
 }
 
-if (!function_exists('is_current_page')) {	
+if (!function_exists('exists_uri')) {	
 	/**
-	 * check if current url contains string
+	 * check if current url contains specific string
 	 *
-	 * @param  string $page
+	 * @param  string $str
 	 * @return bool
 	 */
-	function is_current_page(string $page): bool
+	function exists_uri(string $str): bool
 	{
-		return preg_match('/' . $page . '/', current_url());
+		return preg_match('/' . $str . '/', current_url());
 	}
 }

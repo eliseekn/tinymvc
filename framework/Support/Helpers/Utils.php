@@ -108,3 +108,44 @@ if (!function_exists('get_file_extension')) {
 		return $file_ext == false ? '' : end($file_ext);
 	}
 }
+
+if (!function_exists('get_time_elapsed')) {	
+	/**
+	 * get time elapsed
+	 *
+	 * @param  mixed $datetime
+	 * @param  int $level
+	 * @return void
+	 * @link   https://stackoverflow.com/a/18602474
+	 */
+	function get_time_elapsed($datetime, $level = 7) 
+	{
+		$now = new DateTime;
+		$ago = new DateTime($datetime);
+		$diff = $now->diff($ago);
+	
+		$diff->w = floor($diff->d / 7);
+		$diff->d -= $diff->w * 7;
+	
+		$string = array(
+			'y' => 'year',
+			'm' => 'month',
+			'w' => 'week',
+			'd' => 'day',
+			'h' => 'hr',
+			'i' => 'min',
+			's' => 'sec',
+		);
+
+		foreach ($string as $k => &$v) {
+			if ($diff->$k) {
+				$v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
+			} else {
+				unset($string[$k]);
+			}
+		}
+	
+		$string = array_slice($string, 0, $level);
+		return $string ? implode(', ', $string) . ' ago' : 'just now';
+	}
+}

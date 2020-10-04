@@ -152,9 +152,9 @@ class Query
 	 *
 	 * @param  string $column
 	 * @param  mixed $value
-	 * @return mixed
+	 * @return \Framework\ORM\Query
 	 */
-	public function whereEquals(string $column, $value)
+	public function whereEquals(string $column, $value): self
 	{
 		return $this->where($column, '=', $value);
 	}
@@ -164,9 +164,9 @@ class Query
 	 *
 	 * @param  string $column
 	 * @param  mixed $value
-	 * @return mixed
+	 * @return \Framework\ORM\Query
 	 */
-	public function whereGreater(string $column, $value)
+	public function whereGreater(string $column, $value): self
 	{
 		return $this->where($column, '>', $value);
 	}
@@ -176,9 +176,9 @@ class Query
 	 *
 	 * @param  string $column
 	 * @param  mixed $value
-	 * @return mixed
+	 * @return \Framework\ORM\Query
 	 */
-	public function whereLower(string $column, $value)
+	public function whereLower(string $column, $value): self
 	{
 		return $this->where($column, '<', $value);
 	}
@@ -188,9 +188,9 @@ class Query
 	 *
 	 * @param  string $column
 	 * @param  mixed $value
-	 * @return mixed
+	 * @return \Framework\ORM\Query
 	 */
-	public function whereNotIn(string $column, $value)
+	public function whereNotIn(string $column, $value): self
 	{
 		return $this->where($column, 'NOT IN', $value);
 	}
@@ -200,9 +200,9 @@ class Query
 	 *
 	 * @param  string $column
 	 * @param  mixed $value
-	 * @return mixed
+	 * @return \Framework\ORM\Query
 	 */
-	public function whereIn(string $column, $value)
+	public function whereIn(string $column, $value): self
 	{
 		return $this->where($column, 'IN', $value);
 	}

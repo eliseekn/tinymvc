@@ -7,12 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="robots" content="noindex, nofollow">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <?= $this->section('styles') ?>
     <link rel="stylesheet" href="<?= absolute_url('/public/css/admin.css') ?>">
     <title><?= $page_title ?></title>
 </head>
 
 <body>
-
     <div class="d-flex" id="wrapper">
         <div class="bg-light border-light border-right min-vh-100" id="sidebar-wrapper">
             <div class="sidebar-title bg-dark text-light">
@@ -24,7 +24,7 @@
                     <i class="fa fa-home"></i> Dashboard
                 </a>
                 <a href="<?= absolute_url('/admin/users') ?>" class="list-group-item list-group-item-action bg-light">
-                    <i class="fa fa-dot-circle <?php if (is_current_page('users')) : echo 'text-primary'; endif ?>"></i> Users
+                    <i class="fa fa-dot-circle <?php if (exists_uri('users')) : echo 'text-primary'; endif ?>"></i> Users
                 </a>
             </div>
         </div>
@@ -56,8 +56,8 @@
     <script defer src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script defer src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <?= $this->section('scripts') ?>
     <script defer src="<?= absolute_url('/public/js/index.js') ?>"></script>
-    
 </body>
 
 </html>

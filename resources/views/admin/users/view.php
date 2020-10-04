@@ -44,8 +44,13 @@ endif
         </div>
 
         <div class="form-group row">
+            <label for="username" class="col-sm-2 col-form-label">Created at</label>
+            <div class="col-form-label col-sm-10 font-weight-bold"><?= date('Y-m-d', strtotime($user->created_at)) ?></div>
+        </div>
+
+        <div class="form-group row">
             <legend class="col-form-label col-sm-2">Role</legend>
-            <div class="col-form-label col-sm-10 font-weight-bold"><?php $user->role === 'admin' ? print('Admin') : print('User') ?></div>
+            <div class="col-form-label col-sm-10 font-weight-bold"><?= $user->role ?></div>
         </div>
 
         <div class="form-group row">

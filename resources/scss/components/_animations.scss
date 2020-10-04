@@ -1,7 +1,3 @@
-html {
-    scroll-behavior: smooth;
-}
-
 @mixin transition($attr, $time, $type) {
     transition: $attr $time $type;
     -webkit-transition: $attr $time $type;

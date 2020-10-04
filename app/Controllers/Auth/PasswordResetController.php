@@ -71,7 +71,7 @@ class PasswordResetController
             Redirect::back()->withError($validate);
         }
 
-		UsersModel::update(UsersModel::findWhere('email', Request::getField('email'))->id, [
+		UsersModel::updateWhere('email', Request::getField('email'), [
 			'password' => hash_string(Request::getField('password'))
 		]);
 		
