@@ -42,6 +42,130 @@ class Migration
         self::$query = "CREATE TABLE " . config('database.table_prefix') . "$name (";
         return new self();
     }
+
+    /**
+     * add column of type integer
+     *
+     * @param  string $name
+     * @param  int $length
+     * @return \Framework\ORM\Migration
+     */
+    public function addInt(string $name, int $length = 11): self 
+    {
+        self::$query .= "$name INT($length) NOT NULL, ";
+        return $this;
+    }
+
+    /**
+     * add column of type small integer
+     *
+     * @param  string $name
+     * @param  int $length
+     * @return \Framework\ORM\Migration
+     */
+    public function addSmallInt(string $name, int $length = 6): self 
+    {
+        self::$query .= "$name SMALLINT($length) NOT NULL, ";
+        return $this;
+    }
+
+    /**
+     * add column of type big integer
+     *
+     * @param  string $name
+     * @param  int $length
+     * @return \Framework\ORM\Migration
+     */
+    public function addBigInt(string $name, int $length = 20): self 
+    {
+        self::$query .= "$name BIGINT($length) NOT NULL, ";
+        return $this;
+    }
+
+    /**
+     * add column of type char
+     *
+     * @param  string $name
+     * @return \Framework\ORM\Migration
+     */
+    public function addChar(string $name): self 
+    {
+        self::$query .= "$name CHAR(1) NOT NULL, ";
+        return $this;
+    }
+
+    /**
+     * add column of type string
+     *
+     * @param  string $name
+     * @param  int $length
+     * @return \Framework\ORM\Migration
+     */
+    public function addString(string $name, int $length = 255): self 
+    {
+        self::$query .= "$name VARCHAR($length) NOT NULL, ";
+        return $this;
+    }
+
+    /**
+     * add column of type text
+     *
+     * @param  string $name
+     * @return \Framework\ORM\Migration
+     */
+    public function addText(string $name): self 
+    {
+        self::$query .= "$name TEXT NOT NULL, ";
+        return $this;
+    }
+
+    /**
+     * add column of type longtext
+     *
+     * @param  string $name
+     * @return \Framework\ORM\Migration
+     */
+    public function addLongText(string $name): self 
+    {
+        self::$query .= "$name LONGTEXT NOT NULL, ";
+        return $this;
+    }
+
+    /**
+     * add column of type timestamp
+     *
+     * @param  string $name
+     * @return \Framework\ORM\Migration
+     */
+    public function addDate(string $name): self 
+    {
+        self::$query .= "$name TIMESTAMP NOT NULL, ";
+        return $this;
+    }
+
+    /**
+     * add column of type timestamp with default current timestamp sql value
+     *
+     * @param  string $name
+     * @return \Framework\ORM\Migration
+     */
+    public function addTimestamp(string $name): self 
+    {
+        self::$query .= "$name TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, ";
+        return $this;
+    }
+
+    /**
+     * add column of type boolean
+     *
+     * @param  string $name
+     * @return \Framework\ORM\Migration
+     */
+    public function addBoolean(string $name): self 
+    {
+        self::$query .= "$name TINYINT(1) NOT NULL, ";
+        return $this;
+    }
     
     /**
      * add primary key and auto increment attributes
@@ -51,206 +175,43 @@ class Migration
     public function primaryKey(): self
     {
         self::$query = rtrim(self::$query, ', ');
-        self::$query .= " AUTO_INCREMENT PRIMARY KEY, ";
+        self::$query .= ' AUTO_INCREMENT PRIMARY KEY, ';
         return $this;
     }
-
+    
     /**
-     * add column of type integer
-     *
-     * @param  string $name
-     * @param  int $length
-     * @param  bool $null
-     * @param  bool $unique
-     * @param  int|null $default
-     * @return \Framework\ORM\Migration
+     * add null attribute
+     * 
+     * @return mixed
      */
-    public function addInt(
-        string $name, 
-        int $length = 11, 
-        bool $null = false, 
-        bool $unique = false, 
-        ?int $default = null
-    ): self {
-        self::$query .= "$name INT($length)";
-        self::$query .= $null ? ' NULL' : ' NOT NULL';
-        self::$query .= $unique ? ' UNIQUE' : '';
-        self::$query .= is_null($default) ? '' : " DEFAULT $default";
-        self::$query .= ', ';
-
-        return $this;
-    }
-
-    /**
-     * add column of type small integer
-     *
-     * @param  string $name
-     * @param  int $length
-     * @param  bool $null
-     * @param  bool $unique
-     * @param  int|null $default
-     * @return \Framework\ORM\Migration
-     */
-    public function addSmallInt(
-        string $name, 
-        int $length = 6, 
-        bool $null = false, 
-        bool $unique = false, 
-        ?int $default = null
-    ): self {
-        self::$query .= "$name SMALLINT($length)";
-        self::$query .= $null ? ' NULL' : ' NOT NULL';
-        self::$query .= $unique ? ' UNIQUE' : '';
-        self::$query .= is_null($default) ? '' : " DEFAULT $default";
-        self::$query .= ', ';
-
-        return $this;
-    }
-
-    /**
-     * add column of type big integer
-     *
-     * @param  string $name
-     * @param  int $length
-     * @param  bool $null
-     * @param  bool $unique
-     * @param  int|null $default
-     * @return \Framework\ORM\Migration
-     */
-    public function addBigInt(
-        string $name, 
-        int $length = 20, 
-        bool $null = false, 
-        bool $unique = false, 
-        ?int $default = null
-    ): self {
-        self::$query .= "$name BIGINT($length)";
-        self::$query .= $null ? ' NULL' : ' NOT NULL';
-        self::$query .= $unique ? ' UNIQUE' : '';
-        self::$query .= is_null($default) ? '' : " DEFAULT $default";
-        self::$query .= ', ';
-
-        return $this;
-    }
-
-    /**
-     * add column of type char
-     *
-     * @param  string $name
-     * @param  bool $null
-     * @param  bool $unique
-     * @param  string|null $default
-     * @return \Framework\ORM\Migration
-     */
-    public function addChar(
-        string $name, 
-        bool $null = false, 
-        bool $unique = false, 
-        ?string $default = null
-    ): self {
-        self::$query .= "$name CHAR(1)";
-        self::$query .= $null ? ' NULL' : ' NOT NULL';
-        self::$query .= $unique ? ' UNIQUE' : '';
-        self::$query .= is_null($default) ? '' : " DEFAULT '$default'";
-        self::$query .= ', ';
-
-        return $this;
-    }
-
-    /**
-     * add column of type string
-     *
-     * @param  string $name
-     * @param  int $length
-     * @param  bool $null
-     * @param  bool $unique
-     * @param  string|null $default
-     * @return \Framework\ORM\Migration
-     */
-    public function addString(
-        string $name, 
-        int $length = 255, 
-        bool $null = false, 
-        bool $unique = false, 
-        ?string $default = null
-    ): self {
-        self::$query .= "$name VARCHAR($length)";
-        self::$query .= $null ? ' NULL' : ' NOT NULL';
-        self::$query .= $unique ? ' UNIQUE' : '';
-        self::$query .= is_null($default) ? '' : " DEFAULT '$default'";
-        self::$query .= ', ';
-
-        return $this;
-    }
-
-    /**
-     * add column of type text
-     *
-     * @param  string $name
-     * @param  bool $null
-     * @return \Framework\ORM\Migration
-     */
-    public function addText(string $name, bool $null = false): self 
+    public function null(): self
     {
-        self::$query .= "$name TEXT";
-        self::$query .= $null ? ' NULL' : ' NOT NULL';
-        self::$query .= ', ';
-
+        self::$query = str_replace('NOT NULL, ', 'NULL, ', self::$query);
         return $this;
     }
 
     /**
-     * add column of type longtext
+     * add unique attribute
      *
-     * @param  string $name
-     * @param  bool $null
-     * @return \Framework\ORM\Migration
+     * @return mixed
      */
-    public function addLongText(string $name, bool $null = false): self 
+    public function unique(): self
     {
-        self::$query .= "$name LONGTEXT";
-        self::$query .= $null ? ' NULL' : ' NOT NULL';
-        self::$query .= ', ';
-
+        self::$query = rtrim(self::$query, ', ');
+        self::$query .= ' UNIQUE, ';
         return $this;
     }
 
     /**
-     * add column of type timestamp
+     * add default attribute
      *
-     * @param  string $name
-     * @param  bool $null
-     * @param  string $default
-     * @return \Framework\ORM\Migration
+     * @param  mixed $default
+     * @return mixed
      */
-    public function addTimestamp(
-        string $name, 
-        bool $null = false, 
-        string $default = 'CURRENT_TIMESTAMP'
-    ): self {
-        self::$query .= "$name TIMESTAMP";
-        self::$query .= $null ? ' NULL' : ' NOT NULL';
-        self::$query .= empty($default) ? '' : " DEFAULT $default";
-        self::$query .= ', ';
-
-        return $this;
-    }
-
-    /**
-     * add column of type boolean
-     *
-     * @param  string $name
-     * @param  bool $null
-     * @param  int|null $default
-     * @return \Framework\ORM\Migration
-     */
-    public function addBoolean(string $name, bool $null = false, ?int $default = null): self 
+    public function default($default) : self
     {
-        self::$query .= "$name TINYINT(1)";
-        self::$query .= $null ? ' NULL' : ' NOT NULL';
-        self::$query .= is_null($default) ? '' : " DEFAULT '$default'";
-        self::$query .= ', ';
-
+        self::$query = rtrim(self::$query, ', ');
+        self::$query .= " DEFAULT '$default', ";
         return $this;
     }
     

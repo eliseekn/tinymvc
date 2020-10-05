@@ -5,11 +5,12 @@ namespace App\Controllers\Admin;
 use Framework\HTTP\Request;
 use Framework\Routing\View;
 use Framework\HTTP\Redirect;
+use Framework\HTTP\Response;
+use App\Helpers\ReportHelper;
+use Framework\Support\Session;
+use App\Database\Models\RolesModel;
 use App\Requests\CreateRoleRequest;
 use App\Requests\UpdateRoleRequest;
-use App\Database\Models\RolesModel;
-use App\Helpers\ReportHelper;
-use Framework\HTTP\Response;
 
 class RolesController
 {
@@ -31,7 +32,7 @@ class RolesController
 	 */
 	public function edit(int $id): void
 	{
-		if (!RolesModel::exists('id', $id)) {
+		if (!RolesModel::has('id', $id)) {
 			Redirect::back()->withError('This role does not exists');
 		}
 
@@ -50,13 +51,13 @@ class RolesController
 		$validate = CreateRoleRequest::validate(Request::getFields());
         
         if (is_array($validate)) {
-            create_flash_messages('danger', $validate);
+            Session::flash('danger', $validate);
         }
 
 		$slug = slugify(Request::getField('title'));
 
-		if (RolesModel::exists('slug', $slug)) {
-			create_flash_messages('danger', 'This role does not exists');
+		if (RolesModel::has('slug', $slug)) {
+			Session::flash('danger', 'This role does not exists');
 		}
 
 	   $id = RolesModel::create([
@@ -65,7 +66,7 @@ class RolesController
             'description' => Request::getField('editor')
 		]);
 
-		create_flash_messages('success', 'The role has been created successfully');
+		Session::flash('success', 'The role has been created successfully');
 		Response::sendJson([], ['redirect' => absolute_url('/admin/roles/view/' . $id)]);
     }
 	
@@ -77,7 +78,7 @@ class RolesController
 	 */
 	public function view(int $id): void
 	{
-		if (!RolesModel::exists('id', $id)) {
+		if (!RolesModel::has('id', $id)) {
 			Redirect::back()->withError('This role does not exists');
 		}
 
@@ -97,11 +98,11 @@ class RolesController
 		$validate = UpdateRoleRequest::validate(Request::getFields());
         
         if (is_array($validate)) {
-			create_flash_messages('danger', $validate);
+			Session::flash('danger', $validate);
         }
 
-		if (!RolesModel::exists('id', $id)) {
-			create_flash_messages('danger', 'This role does not exists');
+		if (!RolesModel::has('id', $id)) {
+			Session::flash('danger', 'This role does not exists');
 		}
 
 		RolesModel::update($id, [
@@ -111,7 +112,7 @@ class RolesController
             'updated_at' => date("Y-m-d H:i:s")
 		]);
 
-		create_flash_messages('success', 'The role has been updated successfully');
+		Session::flash('success', 'The role has been updated successfully');
 		Response::sendJson([], ['redirect' => absolute_url('/admin/roles/view/' . $id)]);
     }
 
@@ -124,12 +125,12 @@ class RolesController
 	public function delete(?int $id = null): void
 	{
 		if (!is_null($id)) {
-			if (!RolesModel::exists('id', "$id")) {
-				create_flash_messages('danger', 'This role does not exists');
+			if (!RolesModel::has('id', "$id")) {
+				Session::flash('danger', 'This role does not exists');
 			}
 	
 			RolesModel::delete($id);
-			create_flash_messages('success', 'The role has been deleted successfully');
+			Session::flash('success', 'The role has been deleted successfully');
 		} else {
 			$roles_id = json_decode(Request::getRawData(), true);
 			$roles_id = $roles_id['items'];
@@ -138,7 +139,7 @@ class RolesController
 				RolesModel::delete($id);
 			}
 			
-			create_flash_messages('success', 'The selected roles have been deleted successfully');
+			Session::flash('success', 'The selected roles have been deleted successfully');
 		}
 	}
 

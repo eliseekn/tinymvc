@@ -12,6 +12,7 @@ use Exception;
 use Framework\Routing\View;
 use Framework\HTTP\Request;
 use Framework\HTTP\Response;
+use Framework\Support\Session;
 
 /**
  * Routing system
@@ -48,7 +49,7 @@ class Router
      */
     private function addBrowsingHistory(): void
     {
-        $browsing_history = get_browsing_history();
+        $browsing_history = Session::getHistory();
 
         if (empty($browsing_history)) {
             $browsing_history = [Request::getFullUri()];
@@ -56,7 +57,7 @@ class Router
             $browsing_history[] = Request::getFullUri();
         }
 
-        create_browsing_history($browsing_history);
+        Session::addHistory($browsing_history);
     }
     
     /**

@@ -3,6 +3,7 @@
 namespace App\Database\Seeds;
 
 use Framework\ORM\Seeder;
+use Framework\Support\Encryption;
 
 class UserSeed
 {     
@@ -23,7 +24,7 @@ class UserSeed
         Seeder::insert(self::$table, [
             'name' => 'Admin',
             'email' => 'admin@mail.com',
-            'password' => hash_string('admin'),
+            'password' => Encryption::hash('admin'),
             'role' => 'administrator',
             'active' => 1
         ]);

@@ -22,7 +22,7 @@ $this->insert('partials/breadcrumb', [
 ?>
 
 <?php 
-if (session_has_flash_messages()) : 
+if (flash_messages()) : 
     $this->insert('partials/notifications', [
         'messages' => get_flash_messages(),
         'display' => 'toast'

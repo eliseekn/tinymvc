@@ -45,4 +45,27 @@ class Encryption
         $enc_key = openssl_digest(config('security.enc_key'), 'SHA256', TRUE);
         return openssl_decrypt($str, self::$cipher_method, $enc_key, 0, hex2bin($enc_iv));
     }
+    
+    /**
+     * hash string
+     *
+     * @param  string $str
+     * @return string
+     */
+    public static function hash(string $str): string
+    {
+        return hash_string($str);
+    }
+
+    /**
+     * compare hashed string
+     *
+     * @param  string $str
+     * @param  string $hash
+     * @return bool
+     */
+    public static function verify(string $str, string $hash): bool
+    {
+        return compare_hash($str, $hash);
+    }
 }

@@ -30,7 +30,7 @@ class Model
      * @param  mixed $value
      * @return bool
      */
-    public static function exists(string $column, $value): bool
+    public static function has(string $column, $value): bool
     {
         return isset(self::findWhere($column, $value)->$column);
     }
@@ -55,7 +55,7 @@ class Model
      */
     public static function findOrCreate(int $id, array $data)
     {
-        if (self::exists('id', $id)) {
+        if (self::has('id', $id)) {
             return self::find($id);
         } else {
             self::create($data);

@@ -2,10 +2,12 @@
 
 namespace App\Helpers;
 
-use App\Database\Models\RolesModel;
 use Framework\HTTP\Request;
 use Framework\HTTP\Redirect;
+use Framework\Support\Cookies;
+use Framework\Support\Session;
 use Framework\Support\Encryption;
+use App\Database\Models\RolesModel;
 use App\Database\Models\UsersModel;
 
 class AuthHelper
@@ -17,7 +19,7 @@ class AuthHelper
      */
     public static function getAttempts(): int
     {
-        return session_has('auth_attempts') ? get_session('auth_attempts') : 0;
+        return Session::has('auth_attempts') ? Session::get('auth_attempts') : 0;
     }
     
     /**
@@ -28,7 +30,7 @@ class AuthHelper
     private static function setAttempts(): void
     {
         $auth_attempts = self::getAttempts() + 1;
-        create_session('auth_attempts', $auth_attempts);
+        Session::create('auth_attempts', $auth_attempts);
     }
     
     /**
@@ -40,11 +42,11 @@ class AuthHelper
     {
         $user = UsersModel::findWhere('email', Request::getField('email'));
 
-        if (!($user !== false && compare_hash(Request::getField('password'), $user->password))) {
+        if (!($user !== false && Encryption::verify(Request::getField('password'), $user->password))) {
             self::setAttempts();
 
             if (config('security.auth.max_attempts') !== 0 && self::getAttempts() > config('security.auth.max_attempts')) {
-                create_session('auth_attempts_timeout', strtotime('+' . config('security.auth.unlock_timeout') . ' minute', strtotime(date('Y-m-d H:i:s'))));
+                Session::create('auth_attempts_timeout', strtotime('+' . config('security.auth.unlock_timeout') . ' minute', strtotime(date('Y-m-d H:i:s'))));
                 Redirect::back()->only();
             } else {
                 Redirect::back()->withError('Invalid email address and/or password');
@@ -55,15 +57,15 @@ class AuthHelper
             'online' => 1
         ]);
         
-        create_user_session($user);
+        Session::setUser($user);
             
         if (!empty(Request::getField('remember'))) {
-            create_user_cookie(Encryption::encrypt(Request::getField('email')));
+            Cookies::setUser(Encryption::encrypt(Request::getField('email')));
         }
 
         //reset authentication attempts and disable lock
-        close_session('auth_attempts');
-        close_session('auth_attempts_timeout');
+        Session::close('auth_attempts');
+        Session::close('auth_attempts_timeout');
     }
 
     /**
@@ -73,14 +75,14 @@ class AuthHelper
      */
     public static function store(): bool
     {
-        if (UsersModel::exists('email', Request::getField('email'))) {
+        if (UsersModel::has('email', Request::getField('email'))) {
             return false;
         }
 
         UsersModel::create([
             'name' => Request::getField('name'),
             'email' => Request::getField('email'),
-            'password' => hash_string(Request::getField('password'))
+            'password' => Encryption::hash(Request::getField('password'))
         ]);
 
         return true;
@@ -93,7 +95,7 @@ class AuthHelper
      */
     public static function checkSession(): bool
     {
-        return session_has_user();
+        return Session::hasUser();
     }
 
     /**
@@ -103,7 +105,7 @@ class AuthHelper
      */
     public static function checkCookie(): bool
     {
-        return cookie_has_user();
+        return Cookies::hasUser();
     }
     
     /**
@@ -113,7 +115,7 @@ class AuthHelper
      */
     public static function getSession()
     {
-        return get_user_session();
+        return Session::getUser();
     }
     
     /**
@@ -123,17 +125,19 @@ class AuthHelper
      */
     public static function forget(): void
     {
-        if (session_has_user()) {
-            UsersModel::update(get_user_session()->id, [
+        if (self::checkSession()) {
+            UsersModel::update(self::getSession()->id, [
                 'online' => 0
             ]);
         
-            close_user_session();
+            Session::deleteUser();
         }
 
-        if (cookie_has_user()) {
-            delete_user_cookie();
+        if (self::checkCookie()) {
+            Cookies::deleteUser();
         }
+
+        Session::clearHistory();
     }
     
     /**
@@ -144,6 +148,6 @@ class AuthHelper
      */
     public static function hasRole(string $role): bool
     {
-        return RolesModel::exists('slug', $role) && get_user_session()->role === $role;
+        return RolesModel::has('slug', $role) && self::getSession()->role === $role;
     }
 }

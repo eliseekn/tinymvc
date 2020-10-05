@@ -107,29 +107,13 @@ if (!function_exists('get_browsing_history')) {
 	}
 }
 
-if (!function_exists('create_flash_messages')) {
-	/**
-	 * create flash messages session
-	 *
-	 * @param  string $title
-	 * @param  mixed $content
-	 * @return void
-	 */
-	function create_flash_messages(string $title, $content): void
-	{
-		create_session('flash_messages', [
-			$title => $content
-		]);
-	}
-}
-
-if (!function_exists('session_has_flash_messages')) {
+if (!function_exists('flash_messages')) {
 	/**
 	 * check if flash messages exists
 	 *
 	 * @return bool
 	 */
-	function session_has_flash_messages(): bool
+	function flash_messages(): bool
 	{
 		return session_has('flash_messages');
 	}
@@ -149,19 +133,6 @@ if (!function_exists('get_flash_messages')) {
 	}
 }
 
-if (!function_exists('create_user_session')) {
-	/**
-	 * create user session data
-	 *
-	 * @param  mixed $data
-	 * @return void
-	 */
-	function create_user_session($data): void
-	{
-		create_session(config('app.name') . '_user', $data);
-	}
-}
-
 if (!function_exists('get_user_session')) {
 	/**
 	 * get user session data
@@ -171,29 +142,5 @@ if (!function_exists('get_user_session')) {
 	function get_user_session()
 	{
 		return get_session(config('app.name') . '_user');
-	}
-}
-
-if (!function_exists('session_has_user')) {
-	/**
-	 * check if user session exists
-	 *
-	 * @return mixed
-	 */
-	function session_has_user()
-	{
-		return session_has(config('app.name') . '_user');
-	}
-}
-
-if (!function_exists('close_user_session')) {
-	/**
-	 * check if user session exists
-	 *
-	 * @return void
-	 */
-	function close_user_session(): void
-	{
-		close_session(config('app.name') . '_user');
 	}
 }

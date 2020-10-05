@@ -16,7 +16,7 @@
             <h1 class="py-3 text-center">Sign up</h1>
 
             <?php 
-            if (session_has_flash_messages()) : 
+            if (flash_messages()) : 
                 $this->insert('partials/notifications', [
                     'messages' => get_flash_messages(),
                     'dismiss' => true,

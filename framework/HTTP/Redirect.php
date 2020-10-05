@@ -10,6 +10,7 @@ namespace Framework\HTTP;
 
 use Exception;
 use Framework\Routing\Route;
+use Framework\Support\Session;
 
 /**
  * Handle HTTP redirection
@@ -88,7 +89,7 @@ class Redirect
      */
     public static function back(): self
     {
-        $browsing_history = get_browsing_history();
+        $browsing_history = Session::getHistory();
 
         if (!empty($browsing_history)) {
             end($browsing_history);
@@ -107,7 +108,7 @@ class Redirect
      */
     public function withMessage(string $title, $content): void
     {
-        create_flash_messages($title, $content);
+        Session::flash($title, $content);
         redirect_to(self::$redirect_url);
     }
 

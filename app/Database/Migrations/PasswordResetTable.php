@@ -22,9 +22,9 @@ class PasswordResetTable
     {
         Migration::table(self::$table)
             ->addBigInt('id')->primaryKey()
-            ->addString('email', 255, false, true)
+            ->addString('email', 255)->unique()
             ->addString('token')
-            ->addTimestamp('expires', false, '')
+            ->addDate('expires')->null()
             ->addTimestamp('created_at')
             ->addTimestamp('updated_at')
             ->create();

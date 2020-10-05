@@ -23,7 +23,7 @@ class RolesTable
         Migration::table(self::$table)
             ->addInt('id')->primaryKey()
             ->addString('title')
-            ->addString('slug', 255, false, true)
+            ->addString('slug', 255)->unique()
             ->addText('description')
             ->addTimestamp('created_at')
             ->addTimestamp('updated_at')

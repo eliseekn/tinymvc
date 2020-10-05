@@ -26,7 +26,7 @@ class EmailConfirmationController
 	 */
 	public function verify(): void
 	{
-		if (UsersModel::exists('email', Request::getQuery('email'))) {
+		if (UsersModel::has('email', Request::getQuery('email'))) {
             UsersModel::updateWhere('email', Request::getQuery('email'), [
                 'active' => 1
             ]);
