@@ -21,7 +21,7 @@ class UsersTable
     public static function migrate(): void
     {
         Migration::table(self::$table)
-            ->addPrimaryKey()
+            ->addBigInt('id')->primaryKey()
             ->addString('name')
             ->addString('email', 255, false, true)
             ->addString('password')

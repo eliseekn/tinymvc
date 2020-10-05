@@ -18,7 +18,7 @@ class AuthPolicy
     public static function handle(): void
     {
         if (AuthHelper::checkSession()) {
-            if (AuthHelper::getSession()->role === 'admin') {
+            if (AuthHelper::hasRole('administrator')) {
                 Redirect::toUrl('/admin')->only();
             } else {
                 Redirect::toUrl('/')->only();

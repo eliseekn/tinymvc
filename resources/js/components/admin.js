@@ -1,8 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     //toggle sidebar
-    document.querySelector('#sidebar-toggler').addEventListener('click', event => {
-        document.querySelector('#wrapper').classList.toggle('toggled')
-    })
+    if (document.querySelector('#sidebar-toggler')) {
+        document.querySelector('#sidebar-toggler').addEventListener('click', event => {
+            document.querySelector('#wrapper').classList.toggle('toggled')
+        })
+    }
 
     //select all table items
     if (document.querySelector('#select-all')) {

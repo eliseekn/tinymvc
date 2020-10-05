@@ -48,6 +48,11 @@ Route::group([
     '/users/delete/{id:num}' => [
         'method' => 'DELETE',
         'handler' => 'Admin\UsersController@delete'
+    ],
+
+    '/roles/delete/{id:num}' => [
+        'method' => 'DELETE',
+        'handler' => 'Admin\RolesController@delete'
     ]
 ])->by([
     'prefix' => '/admin',
@@ -61,7 +66,12 @@ Route::group([
     '/users' => ['handler' => 'Admin\AdminController@users'],
     '/users/new' => ['handler' => 'Admin\UsersController@new'],
     '/users/edit/{id:num}' => ['handler' => 'Admin\UsersController@edit'],
-    '/users/view/{id:num}' => ['handler' => 'Admin\UsersController@view']
+    '/users/view/{id:num}' => ['handler' => 'Admin\UsersController@view'],
+
+    '/roles' => ['handler' => 'Admin\AdminController@roles'],
+    '/roles/new' => ['handler' => 'Admin\RolesController@new'],
+    '/roles/edit/{id:num}' => ['handler' => 'Admin\RolesController@edit'],
+    '/roles/view/{id:num}' => ['handler' => 'Admin\RolesController@view']
 ])->by([
     'method' => 'GET',
     'prefix' => '/admin',
@@ -74,7 +84,11 @@ Route::group([
 Route::group([
     '/users/delete' => ['handler' => 'Admin\UsersController@delete'],
     '/users/import' => ['handler' => 'Admin\UsersController@import'],
-    '/users/export' => ['handler' => 'Admin\UsersController@export']
+    '/users/export' => ['handler' => 'Admin\UsersController@export'],
+
+    '/roles/delete' => ['handler' => 'Admin\RolesController@delete'],
+    '/roles/import' => ['handler' => 'Admin\RolesController@import'],
+    '/roles/export' => ['handler' => 'Admin\RolesController@export']
 ])->by([
     'method' => 'POST',
     'prefix' => '/admin',
@@ -86,7 +100,10 @@ Route::group([
 
 Route::group([
     '/users/create' => ['handler' => 'Admin\UsersController@create'],
-    '/users/update/{id:num}' => ['handler' => 'Admin\UsersController@update']
+    '/users/update/{id:num}' => ['handler' => 'Admin\UsersController@update'],
+
+    '/roles/create' => ['handler' => 'Admin\RolesController@create'],
+    '/roles/update/{id:num}' => ['handler' => 'Admin\RolesController@update']
 ])->by([
     'method' => 'POST',
     'prefix' => '/admin',

@@ -4,14 +4,14 @@ namespace App\Database\Migrations;
 
 use Framework\ORM\Migration;
 
-class PasswordResetTable
+class RolesTable
 {         
     /**
      * name of table
      *
      * @var string
      */
-    protected static $table = 'password_reset';
+    protected static $table = 'roles';
 
     /**
      * create table
@@ -21,10 +21,10 @@ class PasswordResetTable
     public static function migrate(): void
     {
         Migration::table(self::$table)
-            ->addBigInt('id')->primaryKey()
-            ->addString('email', 255, false, true)
-            ->addString('token')
-            ->addTimestamp('expires', false, '')
+            ->addInt('id')->primaryKey()
+            ->addString('title')
+            ->addString('slug', 255, false, true)
+            ->addText('description')
             ->addTimestamp('created_at')
             ->addTimestamp('updated_at')
             ->create();

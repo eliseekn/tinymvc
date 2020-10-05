@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Database\Models\RolesModel;
 use Framework\HTTP\Request;
 use Framework\HTTP\Redirect;
 use Framework\Support\Encryption;
@@ -29,16 +30,6 @@ class AuthHelper
         $auth_attempts = self::getAttempts() + 1;
         create_session('auth_attempts', $auth_attempts);
     }
-
-    /**
-     * check user credentials
-     *
-     * @return bool
-     */
-    private static function checkCredentials($user): bool
-    {
-        return $user !== false && compare_hash(Request::getField('password'), $user->password);
-    }
     
     /**
      * make authentication attempt
@@ -49,7 +40,7 @@ class AuthHelper
     {
         $user = UsersModel::findWhere('email', Request::getField('email'));
 
-        if (!self::checkCredentials($user)) {
+        if (!($user !== false && compare_hash(Request::getField('password'), $user->password))) {
             self::setAttempts();
 
             if (config('security.auth.max_attempts') !== 0 && self::getAttempts() > config('security.auth.max_attempts')) {
@@ -73,8 +64,6 @@ class AuthHelper
         //reset authentication attempts and disable lock
         close_session('auth_attempts');
         close_session('auth_attempts_timeout');
-
-        return self::getSession();
     }
 
     /**
@@ -145,5 +134,16 @@ class AuthHelper
         if (cookie_has_user()) {
             delete_user_cookie();
         }
+    }
+    
+    /**
+     * check user role
+     *
+     * @param  string $role
+     * @return bool
+     */
+    public static function hasRole(string $role): bool
+    {
+        return RolesModel::exists('slug', $role) && get_user_session()->role === $role;
     }
 }

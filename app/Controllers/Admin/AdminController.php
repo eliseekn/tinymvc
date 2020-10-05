@@ -4,6 +4,7 @@ namespace App\Controllers\Admin;
 
 use Framework\Routing\View;
 use App\Helpers\MetricsHelper;
+use App\Database\Models\RolesModel;
 use App\Database\Models\UsersModel;
 
 class AdminController
@@ -32,6 +33,18 @@ class AdminController
 	{
 		View::render('admin/users/index', [
 			'users' => UsersModel::paginate(50, ['name', 'ASC'])
+		]);
+	}
+
+	/**
+	 * display roles page
+	 *
+	 * @return void
+	 */
+	public function roles(): void
+	{
+		View::render('admin/roles/index', [
+			'roles' => RolesModel::paginate(50, ['title', 'ASC'])
 		]);
 	}
 }

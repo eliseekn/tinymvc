@@ -29,32 +29,32 @@ endif
 
     <div class="card-body">
         <div class="form-group row">
-            <label for="name" class="col-sm-2 col-form-label">ID</label>
+            <p class="col-sm-2 col-form-label">ID</p>
             <div class="col-form-label col-sm-10 font-weight-bold"><?= $user->id ?></div>
         </div>
 
         <div class="form-group row">
-            <label for="name" class="col-sm-2 col-form-label">Name</label>
+            <p class="col-sm-2 col-form-label">Name</p>
             <div class="col-form-label col-sm-10 font-weight-bold"><?= $user->name ?></div>
         </div>
 
         <div class="form-group row">
-            <label for="username" class="col-sm-2 col-form-label">Email address</label>
+            <p class="col-sm-2 col-form-label">Email address</p>
             <div class="col-form-label col-sm-10 font-weight-bold"><?= $user->email ?></div>
         </div>
 
         <div class="form-group row">
-            <label for="username" class="col-sm-2 col-form-label">Created at</label>
+            <p class="col-sm-2 col-form-label">Created at</p>
             <div class="col-form-label col-sm-10 font-weight-bold"><?= date('Y-m-d', strtotime($user->created_at)) ?></div>
         </div>
 
         <div class="form-group row">
-            <legend class="col-form-label col-sm-2">Role</legend>
+            <p class="col-form-label col-sm-2">Role</p>
             <div class="col-form-label col-sm-10 font-weight-bold"><?= $user->role ?></div>
         </div>
 
         <div class="form-group row">
-            <legend class="col-form-label col-sm-2">Account</legend>
+            <p class="col-form-label col-sm-2">Account</p>
             <div class="col-form-label col-sm-10 font-weight-bold">
                 <?php if ($user->active) : ?>
                 <span class="badge badge-pill badge-success">Active</span>
@@ -65,7 +65,7 @@ endif
         </div>
 
         <div class="form-group row">
-            <legend class="col-form-label col-sm-2">Status</legend>
+            <p class="col-form-label col-sm-2">Status</p>
             <div class="col-form-label col-sm-10 font-weight-bold">
                 <?php if ($user->online) : ?>
                 <span class="badge badge-pill badge-success">Online</span>

@@ -20,8 +20,8 @@ if (!function_exists('escape')) {
     function escape(string $str): string
     {
         $str = stripslashes($str);
-        $str = strip_tags($str);
         $str = htmlspecialchars($str);
+        $str = strip_tags($str);
         return $str;
     }
 }

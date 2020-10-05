@@ -13,7 +13,7 @@ use App\Helpers\ReportHelper;
 class UsersController
 {
 	/**
-	 * display new user page
+	 * display new page
 	 * 
 	 * @return void
 	 */
@@ -23,24 +23,7 @@ class UsersController
 	}
 	
 	/**
-	 * display view user page
-	 * 
-	 * @param  int $id
-	 * @return void
-	 */
-	public function view(int $id): void
-	{
-		if (!UsersModel::exists('id', $id)) {
-			Redirect::back()->withError('This user does not exists');
-		}
-
-		View::render('admin/users/view', [
-			'user' => UsersModel::find($id)
-		]);
-	}
-	
-	/**
-	 * display edit user page
+	 * display edit page
 	 * 
 	 * @param  int $id
 	 * @return void
@@ -57,7 +40,7 @@ class UsersController
 	}
 
 	/**
-	 * create new user
+	 * create
 	 *
 	 * @return void
 	 */
@@ -82,9 +65,26 @@ class UsersController
 
 		Redirect::toUrl('/admin/users/view/' . $id)->withSuccess('The user has been created successfully');
     }
+	
+	/**
+	 * read
+	 * 
+	 * @param  int $id
+	 * @return void
+	 */
+	public function view(int $id): void
+	{
+		if (!UsersModel::exists('id', $id)) {
+			Redirect::back()->withError('This user does not exists');
+		}
+
+		View::render('admin/users/view', [
+			'user' => UsersModel::find($id)
+		]);
+	}
     
 	/**
-	 * update user
+	 * update
 	 *
      * @param  int $id
 	 * @return void
@@ -114,11 +114,11 @@ class UsersController
 		}
 
 		UsersModel::update($id, $data);
-        Redirect::back()->withSuccess('The user has been updated successfully');
+        Redirect::toUrl('/admin/users/view/' . $id)->withSuccess('The user has been updated successfully');
     }
 
 	/**
-	 * delete user
+	 * delete
 	 *
      * @param  int|null $id
 	 * @return void
@@ -127,7 +127,7 @@ class UsersController
 	{
 		if (!is_null($id)) {
 			if (!UsersModel::exists('id', "$id")) {
-				Redirect::back()->withError('This user does not exists');
+				create_flash_messages('danger', 'This user does not exists');
 			}
 	
 			UsersModel::delete($id);
@@ -145,7 +145,7 @@ class UsersController
 	}
 
 	/**
-	 * import users data
+	 * import data
 	 *
 	 * @return void
 	 */
@@ -173,7 +173,7 @@ class UsersController
 	}
 	
 	/**
-	 * export users data
+	 * export data
 	 *
 	 * @return void
 	 */

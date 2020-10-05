@@ -554,6 +554,106 @@ var ExportModal = /*#__PURE__*/function (_HTMLElement) {
 
 var _default = ExportModal;
 exports.default = _default;
+},{}],"components/text-editor.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _wrapNativeSuper(Class) { var _cache = typeof Map === "function" ? new Map() : undefined; _wrapNativeSuper = function _wrapNativeSuper(Class) { if (Class === null || !_isNativeFunction(Class)) return Class; if (typeof Class !== "function") { throw new TypeError("Super expression must either be null or a function"); } if (typeof _cache !== "undefined") { if (_cache.has(Class)) return _cache.get(Class); _cache.set(Class, Wrapper); } function Wrapper() { return _construct(Class, arguments, _getPrototypeOf(this).constructor); } Wrapper.prototype = Object.create(Class.prototype, { constructor: { value: Wrapper, enumerable: false, writable: true, configurable: true } }); return _setPrototypeOf(Wrapper, Class); }; return _wrapNativeSuper(Class); }
+
+function _construct(Parent, args, Class) { if (_isNativeReflectConstruct()) { _construct = Reflect.construct; } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _isNativeFunction(fn) { return Function.toString.call(fn).indexOf("[native code]") !== -1; }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var TextEditor = /*#__PURE__*/function (_HTMLElement) {
+  _inherits(TextEditor, _HTMLElement);
+
+  var _super = _createSuper(TextEditor);
+
+  function TextEditor() {
+    var _this;
+
+    _classCallCheck(this, TextEditor);
+
+    _this = _super.call(this);
+    document.querySelector(_this.getAttribute('form')).addEventListener('submit', function (e) {
+      e.preventDefault();
+      var formData = new FormData(document.querySelector(_this.getAttribute('form')));
+      formData.append('editor', _this.editor.root.innerHTML);
+      fetch(document.querySelector(_this.getAttribute('form')).dataset.url, {
+        method: 'post',
+        body: formData
+      }).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        return window.location.href = data.redirect;
+      });
+    });
+    return _this;
+  }
+
+  _createClass(TextEditor, [{
+    key: "connectedCallback",
+    value: function connectedCallback() {
+      this.innerHTML = "<div id=\"editor\">".concat(this.getAttribute('content'), "</div>"); //initialize editor
+
+      this.editor = new Quill('#editor', {
+        modules: {
+          toolbar: [['bold', 'italic', 'underline'], [{
+            'align': []
+          }], [{
+            'list': 'ordered'
+          }, {
+            'list': 'bullet'
+          }], [{
+            'script': 'sub'
+          }, {
+            'script': 'super'
+          }], [{
+            'color': []
+          }, {
+            'background': []
+          }], ['clean']]
+        },
+        theme: 'snow'
+      }); //customize editor
+
+      document.querySelector('.ql-editor').setAttribute('style', 'font-size: 1rem');
+      document.querySelector('.ql-toolbar').classList.add('rounded-top');
+      document.querySelector('#editor').classList.add('rounded-bottom');
+    }
+  }]);
+
+  return TextEditor;
+}( /*#__PURE__*/_wrapNativeSuper(HTMLElement));
+
+var _default = TextEditor;
+exports.default = _default;
 },{}],"components/loading-button.js":[function(require,module,exports) {
 document.addEventListener('DOMContentLoaded', function () {
   if (document.querySelectorAll('.loading')) {
@@ -596,9 +696,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 document.addEventListener('DOMContentLoaded', function () {
   //toggle sidebar
-  document.querySelector('#sidebar-toggler').addEventListener('click', function (event) {
-    document.querySelector('#wrapper').classList.toggle('toggled');
-  }); //select all table items
+  if (document.querySelector('#sidebar-toggler')) {
+    document.querySelector('#sidebar-toggler').addEventListener('click', function (event) {
+      document.querySelector('#wrapper').classList.toggle('toggled');
+    });
+  } //select all table items
+
 
   if (document.querySelector('#select-all')) {
     document.querySelector('#select-all').addEventListener('change', function (event) {
@@ -701,6 +804,8 @@ var _confirmDelete = _interopRequireDefault(require("./components/confirm-delete
 
 var _exportModal = _interopRequireDefault(require("./components/export-modal"));
 
+var _textEditor = _interopRequireDefault(require("./components/text-editor"));
+
 require("./components/loading-button");
 
 require("./components/password-toggler");
@@ -714,7 +819,8 @@ window.customElements.define('alert-modal', _alertModal.default);
 window.customElements.define('alert-toast', _alertToast.default);
 window.customElements.define('confirm-delete', _confirmDelete.default);
 window.customElements.define('export-modal', _exportModal.default);
-},{"./components/upload-modal":"components/upload-modal.js","./components/alert-modal":"components/alert-modal.js","./components/alert-toast":"components/alert-toast.js","./components/confirm-delete":"components/confirm-delete.js","./components/export-modal":"components/export-modal.js","./components/loading-button":"components/loading-button.js","./components/password-toggler":"components/password-toggler.js","./components/admin":"components/admin.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+window.customElements.define('text-editor', _textEditor.default);
+},{"./components/upload-modal":"components/upload-modal.js","./components/alert-modal":"components/alert-modal.js","./components/alert-toast":"components/alert-toast.js","./components/confirm-delete":"components/confirm-delete.js","./components/export-modal":"components/export-modal.js","./components/text-editor":"components/text-editor.js","./components/loading-button":"components/loading-button.js","./components/password-toggler":"components/password-toggler.js","./components/admin":"components/admin.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -742,7 +848,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "32927" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "46025" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -8,7 +8,7 @@ use Framework\HTTP\Redirect;
 use Framework\HTTP\Response;
 
 /**
- * Check if user has admin role
+ * Check user permissions and role
  */
 class AdminPolicy
 {    
@@ -23,7 +23,7 @@ class AdminPolicy
             Redirect::toUrl('/login')->withError('You must be logged first to access this page');
         }
         
-        if (AuthHelper::getSession()->role !== 'admin') {
+        if (!AuthHelper::hasRole('administrator')) {
             if (!empty(config('errors.views.403'))) {
                 View::render(config('errors.views.403'), [], 403);
             } else {

@@ -81,10 +81,10 @@ endif
                             <td>
                                 <?php if ($user->role !== 'admin') : ?>
 
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="<?= $user->id ?>" data-id="<?= $user->id ?>">
-                                        <label class="custom-control-label" for="<?= $user->id ?>"></label>
-                                    </div>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="<?= $user->id ?>" data-id="<?= $user->id ?>">
+                                    <label class="custom-control-label" for="<?= $user->id ?>"></label>
+                                </div>
 
                                 <?php endif ?>
                             </td>
@@ -96,17 +96,17 @@ endif
 
                             <td>
                                 <?php if ($user->active) : ?>
-                                    <span class="badge badge-pill badge-success">Active</span>
+                                <span class="badge badge-pill badge-success">Active</span>
                                 <?php else : ?>
-                                    <span class="badge badge-pill badge-danger">Inactive</span>
+                                <span class="badge badge-pill badge-danger">Inactive</span>
                                 <?php endif ?>
                             </td>
 
                             <td>
                                 <?php if ($user->online) : ?>
-                                    <span class="badge badge-pill badge-success">Online</span>
+                                <span class="badge badge-pill badge-success">Online</span>
                                 <?php else : ?>
-                                    <span class="badge badge-pill badge-danger">Offline</span>
+                                <span class="badge badge-pill badge-danger">Offline</span>
                                 <?php endif ?>
                             </td>
 

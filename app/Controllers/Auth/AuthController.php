@@ -3,13 +3,12 @@
 namespace App\Controllers\Auth;
 
 use App\Helpers\AuthHelper;
-use App\Helpers\EmailHelper;
 use Framework\HTTP\Request;
+use App\Helpers\EmailHelper;
 use Framework\HTTP\Redirect;
-use Framework\Support\Email;
 use App\Requests\AuthRequest;
+use App\Middlewares\AuthPolicy;
 use App\Requests\RegisterRequest;
-use Framework\Support\Validator;
 
 /**
  * Manage user authentication
@@ -29,11 +28,8 @@ class AuthController
             Redirect::back()->withError($validate);
         }
 
-        if (AuthHelper::authenticate()->role === 'admin') {
-            Redirect::toUrl('/admin')->only();
-        } else {
-            Redirect::toUrl('/')->only();
-        }
+        AuthHelper::authenticate();
+        AuthPolicy::handle();
     }
         
     /**
@@ -58,7 +54,7 @@ class AuthController
             Redirect::toUrl('/login')->withSuccess('You have been registered successfully. <br> You can log in with your credentials');
         } else {
             EmailHelper::sendConfirmation(Request::getField('email'), 'TinyMVC');
-            Redirect::back()->withInfo('Please check your email account to confirm your email address.');
+            Redirect::back()->withWarning('Please check your email account to confirm your email address.');
         }
     }
 	

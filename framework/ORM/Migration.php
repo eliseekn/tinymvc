@@ -44,14 +44,14 @@ class Migration
     }
     
     /**
-     * generate primary key and autoincrement column query
+     * add primary key and auto increment attributes
      *
-     * @param  string $name
      * @return \Framework\ORM\Migration
      */
-    public function addPrimaryKey(string $name = 'id'): self
+    public function primaryKey(): self
     {
-        self::$query .= "$name INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
+        self::$query = rtrim(self::$query, ', ');
+        self::$query .= " AUTO_INCREMENT PRIMARY KEY, ";
         return $this;
     }
 

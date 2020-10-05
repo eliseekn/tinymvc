@@ -21,7 +21,10 @@
 
             <div class="list-group list-group-flush">
                 <a href="<?= absolute_url('/admin') ?>" class="list-group-item list-group-item-action bg-light">
-                    <i class="fa fa-home"></i> Dashboard
+                    <i class="fa fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a href="<?= absolute_url('/admin/roles') ?>" class="list-group-item list-group-item-action bg-light">
+                    <i class="fa fa-dot-circle <?php if (exists_uri('roles')) : echo 'text-primary'; endif ?>"></i> Roles
                 </a>
                 <a href="<?= absolute_url('/admin/users') ?>" class="list-group-item list-group-item-action bg-light">
                     <i class="fa fa-dot-circle <?php if (exists_uri('users')) : echo 'text-primary'; endif ?>"></i> Users
