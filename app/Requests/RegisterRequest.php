@@ -14,6 +14,7 @@ class RegisterRequest extends Validator
     protected static $rules = [
         'name' => 'required',
         'email' => 'required|valid_email',
+        'role' => 'required',
         'password' => 'required'
     ];
 

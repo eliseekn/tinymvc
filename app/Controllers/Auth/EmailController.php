@@ -7,14 +7,17 @@ use App\Helpers\EmailHelper;
 use Framework\HTTP\Redirect;
 use App\Database\Models\UsersModel;
 
-class EmailConfirmationController
+/**
+ * Manage email confirmation
+ */
+class EmailController
 {
 	/**
 	 * send email confirmation
 	 *
 	 * @return void
 	 */
-	public function send(): void
+	public function notify(): void
 	{
 		EmailHelper::sendConfirmation(Request::getField('email'), 'TinyMVC');
 	}

@@ -4,7 +4,7 @@ namespace App\Requests;
 
 use Framework\Support\Validator;
 
-class CreateRoleRequest extends Validator
+class RoleRequest extends Validator
 {
     /**
      * rules

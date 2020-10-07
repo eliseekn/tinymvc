@@ -199,7 +199,7 @@ var UploadModal = /*#__PURE__*/function (_HTMLElement) {
 
 var _default = UploadModal;
 exports.default = _default;
-},{}],"components/alert-modal.js":[function(require,module,exports) {
+},{}],"components/alert-popup.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -235,22 +235,22 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
-var AlertModal = /*#__PURE__*/function (_HTMLElement) {
-  _inherits(AlertModal, _HTMLElement);
+var AlertPopup = /*#__PURE__*/function (_HTMLElement) {
+  _inherits(AlertPopup, _HTMLElement);
 
-  var _super = _createSuper(AlertModal);
+  var _super = _createSuper(AlertPopup);
 
-  function AlertModal() {
+  function AlertPopup() {
     var _this;
 
-    _classCallCheck(this, AlertModal);
+    _classCallCheck(this, AlertPopup);
 
     _this = _super.call(this);
     _this.modalIcon = _this.modalIcon.bind(_assertThisInitialized(_this));
     return _this;
   }
 
-  _createClass(AlertModal, [{
+  _createClass(AlertPopup, [{
     key: "modalIcon",
     value: function modalIcon() {
       switch (this.getAttribute('type')) {
@@ -271,13 +271,13 @@ var AlertModal = /*#__PURE__*/function (_HTMLElement) {
     key: "connectedCallback",
     value: function connectedCallback() {
       var element = document.createElement('div');
-      element.id = 'alert-modal';
+      element.id = 'alert-popup';
       element.setAttribute('tabindex', '-1');
       element.setAttribute('role', 'dialog');
       element.classList.add('modal', 'fade');
       element.innerHTML = "\n            <div class=\"modal-dialog modal-dialog-centered\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-body text-center\">\n                        ".concat(this.modalIcon(), "\n                        <p class=\"modal-title my-3\">").concat(this.getAttribute('message'), "</p>\n                        <button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\">OK</button>\n                    </div>\n                </div>\n            </div>\n        ");
       document.body.appendChild(element);
-      $('#alert-modal').modal({
+      $('#alert-popup').modal({
         backdrop: 'static',
         keyboard: false,
         show: true
@@ -285,10 +285,10 @@ var AlertModal = /*#__PURE__*/function (_HTMLElement) {
     }
   }]);
 
-  return AlertModal;
+  return AlertPopup;
 }( /*#__PURE__*/_wrapNativeSuper(HTMLElement));
 
-var _default = AlertModal;
+var _default = AlertPopup;
 exports.default = _default;
 },{}],"components/alert-toast.js":[function(require,module,exports) {
 "use strict";
@@ -796,7 +796,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 var _uploadModal = _interopRequireDefault(require("./components/upload-modal"));
 
-var _alertModal = _interopRequireDefault(require("./components/alert-modal"));
+var _alertPopup = _interopRequireDefault(require("./components/alert-popup"));
 
 var _alertToast = _interopRequireDefault(require("./components/alert-toast"));
 
@@ -815,12 +815,12 @@ require("./components/admin");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 window.customElements.define('upload-modal', _uploadModal.default);
-window.customElements.define('alert-modal', _alertModal.default);
+window.customElements.define('alert-popup', _alertPopup.default);
 window.customElements.define('alert-toast', _alertToast.default);
 window.customElements.define('confirm-delete', _confirmDelete.default);
 window.customElements.define('export-modal', _exportModal.default);
 window.customElements.define('text-editor', _textEditor.default);
-},{"./components/upload-modal":"components/upload-modal.js","./components/alert-modal":"components/alert-modal.js","./components/alert-toast":"components/alert-toast.js","./components/confirm-delete":"components/confirm-delete.js","./components/export-modal":"components/export-modal.js","./components/text-editor":"components/text-editor.js","./components/loading-button":"components/loading-button.js","./components/password-toggler":"components/password-toggler.js","./components/admin":"components/admin.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./components/upload-modal":"components/upload-modal.js","./components/alert-popup":"components/alert-popup.js","./components/alert-toast":"components/alert-toast.js","./components/confirm-delete":"components/confirm-delete.js","./components/export-modal":"components/export-modal.js","./components/text-editor":"components/text-editor.js","./components/loading-button":"components/loading-button.js","./components/password-toggler":"components/password-toggler.js","./components/admin":"components/admin.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -848,7 +848,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "46025" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "45641" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

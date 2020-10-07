@@ -19,7 +19,7 @@ class AuthPolicy
     {
         if (AuthHelper::checkSession()) {
             if (AuthHelper::hasRole('administrator')) {
-                Redirect::toUrl('/admin')->only();
+                Redirect::toUrl('/admin/dashboard')->only();
             } else {
                 Redirect::toUrl('/')->only();
             }

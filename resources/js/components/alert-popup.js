@@ -1,4 +1,4 @@
-class AlertModal extends HTMLElement {
+class AlertPopup extends HTMLElement {
     constructor() {
         super()
 
@@ -20,7 +20,7 @@ class AlertModal extends HTMLElement {
 
     connectedCallback() {
         let element = document.createElement('div')
-        element.id = 'alert-modal'
+        element.id = 'alert-popup'
         element.setAttribute('tabindex', '-1')
         element.setAttribute('role', 'dialog')
         element.classList.add('modal', 'fade')
@@ -38,7 +38,7 @@ class AlertModal extends HTMLElement {
 
         document.body.appendChild(element)
 
-        $('#alert-modal').modal({
+        $('#alert-popup').modal({
             backdrop: 'static',
             keyboard: false, 
             show: true
@@ -46,4 +46,4 @@ class AlertModal extends HTMLElement {
     }
 }
 
-export default AlertModal
+export default AlertPopup

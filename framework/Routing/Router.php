@@ -9,10 +9,11 @@
 namespace Framework\Routing;
 
 use Exception;
-use Framework\Routing\View;
 use Framework\HTTP\Request;
+use Framework\Routing\View;
 use Framework\HTTP\Response;
 use Framework\Support\Session;
+use Framework\Support\Browsing;
 
 /**
  * Routing system
@@ -43,13 +44,34 @@ class Router
     }
     
     /**
+     * format uri to add '/' before or remove '/' at the end
+     *
+     * @param  string $uri
+     * @return string
+     */
+    private function formatURI(string $uri): string
+    {
+        if (strlen($uri) > 1) {/* 
+            if ($uri[0] !== '/') {
+                $uri = '/' . $uri;
+            }
+ */
+            if ($uri[strlen($uri) - 1] === '/') {
+                $uri = rtrim($uri, '/');
+            }
+        }
+
+        return $uri;
+    }
+    
+    /**
      * add uri to browsing history session
      *
      * @return void
      */
     private function addBrowsingHistory(): void
     {
-        $browsing_history = Session::getHistory();
+        $browsing_history = Browsing::getHistory();
 
         if (empty($browsing_history)) {
             $browsing_history = [Request::getFullUri()];
@@ -57,7 +79,7 @@ class Router
             $browsing_history[] = Request::getFullUri();
         }
 
-        Session::addHistory($browsing_history);
+        Browsing::addHistory($browsing_history);
     }
     
     /**
@@ -78,7 +100,7 @@ class Router
                     $pattern = preg_replace('/\bany\b/', '([^/]+)', $pattern);
                     $pattern = '#^' . $pattern . '$#';
 
-                    if (preg_match($pattern, Request::getURI(), $params)) {
+                    if (preg_match($pattern, $this->formatURI(Request::getURI()), $params)) {
                         array_shift($params);
 
                         if (is_callable($options['handler'])) {

@@ -61,14 +61,14 @@ endif
                 <div class="row">
                     <legend class="col-form-label col-sm-2 pt-0">Role</legend>
                     <div class="col-sm-10">
+                        <?php foreach ($roles as $role) : ?>
+
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input class="custom-control-input" type="radio" name="role" id="admin" value="admin" <?php if ($user->role === 'admin') : echo 'checked'; endif ?>>
-                            <label class="custom-control-label" for="admin">Admin</label>
+                            <input class="custom-control-input" type="radio" name="role" id="<?= $role->slug ?>" value="<?= $role->slug ?>" <?php if ($user->role === $role->slug) : echo 'checked'; endif ?>>
+                            <label class="custom-control-label" for="<?= $role->slug ?>"><?= $role->title ?></label>
                         </div>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input class="custom-control-input" type="radio" name="role" id="user" value="user" <?php if ($user->role === 'user') : echo 'checked'; endif ?>>
-                            <label class="custom-control-label" for="user">User</label>
-                        </div>
+
+                        <?php endforeach ?>
                     </div>
                 </div>
             </fieldset>

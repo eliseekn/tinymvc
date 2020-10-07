@@ -49,7 +49,7 @@ class AuthHelper
                 Session::create('auth_attempts_timeout', strtotime('+' . config('security.auth.unlock_timeout') . ' minute', strtotime(date('Y-m-d H:i:s'))));
                 Redirect::back()->only();
             } else {
-                Redirect::back()->withError('Invalid email address and/or password');
+                Redirect::back()->withError('Invalid email address or password');
             }
         }
 
@@ -136,8 +136,6 @@ class AuthHelper
         if (self::checkCookie()) {
             Cookies::deleteUser();
         }
-
-        Session::clearHistory();
     }
     
     /**

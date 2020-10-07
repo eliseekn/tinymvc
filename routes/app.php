@@ -15,13 +15,13 @@ use Framework\Routing\Route;
 
 //auth routes
 Route::group([
-    '/login' => [
+    'login' => [
         'handler' => function() {
             View::render('auth/login');
         }
     ],
 
-    '/signup' => [
+    'signup' => [
         'handler' => function() {
             View::render('auth/signup');
         }
@@ -34,28 +34,28 @@ Route::group([
     ]
 ]);
 
-Route::get('/logout', ['handler' => 'Auth\AuthController@logout']);
-Route::post('/authenticate', ['handler' => 'Auth\AuthController@authenticate']);
-Route::post('/register', ['handler' => 'Auth\AuthController@register']);
+Route::get('logout', ['handler' => 'Auth\AuthController@logout']);
+Route::post('authenticate', ['handler' => 'Auth\AuthController@authenticate']);
+Route::post('register', ['handler' => 'Auth\AuthController@register']);
 
 //admin routes
 Route::group([
-    '' => [
+    'dashboard' => [
         'method' => 'GET',
         'handler' => 'Admin\AdminController@index'
     ],
 
-    '/users/delete/{id:num}' => [
+    'users/delete/{id:num}' => [
         'method' => 'DELETE',
         'handler' => 'Admin\UsersController@delete'
     ],
 
-    '/roles/delete/{id:num}' => [
+    'roles/delete/{id:num}' => [
         'method' => 'DELETE',
         'handler' => 'Admin\RolesController@delete'
     ]
 ])->by([
-    'prefix' => '/admin',
+    'prefix' => 'admin',
     'middlewares' => [
         'RememberUser',
         'AdminPolicy'
@@ -63,18 +63,18 @@ Route::group([
 ]);
 
 Route::group([
-    '/users' => ['handler' => 'Admin\AdminController@users'],
-    '/users/new' => ['handler' => 'Admin\UsersController@new'],
-    '/users/edit/{id:num}' => ['handler' => 'Admin\UsersController@edit'],
-    '/users/view/{id:num}' => ['handler' => 'Admin\UsersController@view'],
+    'users' => ['handler' => 'Admin\AdminController@users'],
+    'users/new' => ['handler' => 'Admin\UsersController@new'],
+    'users/edit/{id:num}' => ['handler' => 'Admin\UsersController@edit'],
+    'users/view/{id:num}' => ['handler' => 'Admin\UsersController@view'],
 
-    '/roles' => ['handler' => 'Admin\AdminController@roles'],
-    '/roles/new' => ['handler' => 'Admin\RolesController@new'],
-    '/roles/edit/{id:num}' => ['handler' => 'Admin\RolesController@edit'],
-    '/roles/view/{id:num}' => ['handler' => 'Admin\RolesController@view']
+    'roles' => ['handler' => 'Admin\AdminController@roles'],
+    'roles/new' => ['handler' => 'Admin\RolesController@new'],
+    'roles/edit/{id:num}' => ['handler' => 'Admin\RolesController@edit'],
+    'roles/view/{id:num}' => ['handler' => 'Admin\RolesController@view']
 ])->by([
     'method' => 'GET',
-    'prefix' => '/admin',
+    'prefix' => 'admin',
     'middlewares' => [
         'RememberUser',
         'AdminPolicy'
@@ -82,16 +82,16 @@ Route::group([
 ]);
 
 Route::group([
-    '/users/delete' => ['handler' => 'Admin\UsersController@delete'],
-    '/users/import' => ['handler' => 'Admin\UsersController@import'],
-    '/users/export' => ['handler' => 'Admin\UsersController@export'],
+    'users/delete' => ['handler' => 'Admin\UsersController@delete'],
+    'users/import' => ['handler' => 'Admin\UsersController@import'],
+    'users/export' => ['handler' => 'Admin\UsersController@export'],
 
-    '/roles/delete' => ['handler' => 'Admin\RolesController@delete'],
-    '/roles/import' => ['handler' => 'Admin\RolesController@import'],
-    '/roles/export' => ['handler' => 'Admin\RolesController@export']
+    'roles/delete' => ['handler' => 'Admin\RolesController@delete'],
+    'roles/import' => ['handler' => 'Admin\RolesController@import'],
+    'roles/export' => ['handler' => 'Admin\RolesController@export']
 ])->by([
     'method' => 'POST',
-    'prefix' => '/admin',
+    'prefix' => 'admin',
     'middlewares' => [
         'RememberUser',
         'AdminPolicy'
@@ -99,14 +99,14 @@ Route::group([
 ]);
 
 Route::group([
-    '/users/create' => ['handler' => 'Admin\UsersController@create'],
-    '/users/update/{id:num}' => ['handler' => 'Admin\UsersController@update'],
+    'users/create' => ['handler' => 'Admin\UsersController@create'],
+    'users/update/{id:num}' => ['handler' => 'Admin\UsersController@update'],
 
-    '/roles/create' => ['handler' => 'Admin\RolesController@create'],
-    '/roles/update/{id:num}' => ['handler' => 'Admin\RolesController@update']
+    'roles/create' => ['handler' => 'Admin\RolesController@create'],
+    'roles/update/{id:num}' => ['handler' => 'Admin\RolesController@update']
 ])->by([
     'method' => 'POST',
-    'prefix' => '/admin',
+    'prefix' => 'admin',
     'middlewares' => [
         'RememberUser',
         'CsrfProtection',
@@ -116,69 +116,85 @@ Route::group([
 ]);
 
 //password forgot routes
-Route::get('/password/forgot', [
-    'handler' => function() {
-        View::render('password/reset');
-    }
-]);
+Route::group([
+    'forgot' => [
+        'method' => 'GET',
+        'handler' => function() {
+            View::render('password/reset');
+        }
+    ],
 
-Route::get('/password/reset', ['handler' => 'Auth\PasswordResetController@reset']);
-Route::post('/password/notify', ['handler' => 'Auth\PasswordResetController@notify']);
-Route::post('/password/new', ['handler' => 'Auth\PasswordResetController@new']);
+    'reset' => [
+        'method' => 'GET',
+        'handler' => 'Auth\PasswordController@reset'
+    ],
+
+    'notify' => [
+        'method' => 'POST',
+        'handler' => 'Auth\PasswordController@notify'
+    ],
+
+    'new' => [
+        'method' => 'POST',
+        'handler' => 'Auth\PasswordController@new'
+    ]
+])->by([
+    'prefix' => 'password'
+]);
 
 //email confirmation routes
 Route::group([
-    '/confirmation' => ['handler' => 'EmailConfirmationController@verify'],
-    '/confirmation/send' => ['handler' => 'EmailConfirmationController@send']
+    'confirmation' => ['handler' => 'EmailController@verify'],
+    'confirmation/notify' => ['handler' => 'EmailController@notify']
 ])->by([
     'method' => 'GET',
-    'prefix' => '/email'
+    'prefix' => 'email'
 ]);
 
 //docs routes
-Route::get('/docs', [
+Route::get('docs', [
     'handler' => function() {
         View::render('docs/index');
     }]
 );
 
 Route::group([
-    '/getting-started' => ['handler' => function() {
+    'getting-started' => ['handler' => function() {
         View::render('docs/getting-started');
     }],
 
-    '/routing' => ['handler' => function() {
+    'routing' => ['handler' => function() {
         View::render('docs/guides/routing');
     }],
 
-    '/middlewares' => ['handler' => function() {
+    'middlewares' => ['handler' => function() {
         View::render('docs/guides/middlewares');
     }],
 
-    '/controllers' => ['handler' => function() {
+    'controllers' => ['handler' => function() {
         View::render('docs/guides/controllers');
     }],
 
-    '/views' => ['handler' => function() {
+    'views' => ['handler' => function() {
         View::render('docs/guides/views');
     }],
 
-    '/requests' => ['handler' => function() {
+    'requests' => ['handler' => function() {
         View::render('docs/guides/requests');
     }],
 
-    '/responses' => ['handler' => function() {
+    'responses' => ['handler' => function() {
         View::render('docs/guides/responses');
     }],
 
-    '/client' => ['handler' => function() {
+    'client' => ['handler' => function() {
         View::render('docs/guides/client');
     }],
 
-    '/redirections' => ['handler' => function() {
+    'redirections' => ['handler' => function() {
         View::render('docs/guides/redirections');
     }]
 ])->by([
     'method' => 'GET',
-    'prefix' => '/docs'
+    'prefix' => 'docs'
 ]);

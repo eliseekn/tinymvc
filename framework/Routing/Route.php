@@ -36,7 +36,17 @@ class Route
      */
     public static function add(string $route, array $options): void
     {
-        if (!empty($route) && !empty($options)) {
+        if (!empty($options)) {
+            if (empty($route)) {
+                $route = '/';
+            }
+
+            if (strlen($route) > 1) {
+                if ($route[0] !== '/') {
+                    $route = '/' . $route;
+                }
+            }
+
             self::$routes[$route] = $options;
 
             if (isset($options['middlewares'])) {
@@ -158,7 +168,19 @@ class Route
     {
         foreach (self::$tmp_routes as $route => $tmp_options) {
             if (isset($options['prefix']) && !empty($options['prefix'])) {
-                $route = $options['prefix'] . $route;
+                $prefix = $options['prefix'];
+
+                if ($prefix[strlen($prefix) - 1] !== '/') {
+                    $prefix = $prefix . '/';
+                }
+
+                if (!empty($route)) {
+                    if ($route[0] === '/') {
+                        $route = ltrim($route, '/');
+                    }
+                }
+
+                $route = $prefix . $route;
             }
 
             self::add($route, array_merge($tmp_options, $options));

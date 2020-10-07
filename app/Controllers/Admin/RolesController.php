@@ -9,8 +9,7 @@ use Framework\HTTP\Response;
 use App\Helpers\ReportHelper;
 use Framework\Support\Session;
 use App\Database\Models\RolesModel;
-use App\Requests\CreateRoleRequest;
-use App\Requests\UpdateRoleRequest;
+use App\Requests\RoleRequest;
 
 class RolesController
 {
@@ -33,7 +32,8 @@ class RolesController
 	public function edit(int $id): void
 	{
 		if (!RolesModel::has('id', $id)) {
-			Redirect::back()->withError('This role does not exists');
+			Session::flash('This role does not exists')->error()->toast();
+			Redirect::back()->only();
 		}
 
 		View::render('admin/roles/edit', [
@@ -48,16 +48,17 @@ class RolesController
 	 */
 	public function create(): void
 	{
-		$validate = CreateRoleRequest::validate(Request::getFields());
+		$validate = RoleRequest::validate(Request::getFields());
         
         if (is_array($validate)) {
-            Session::flash('danger', $validate);
+            Redirect::back()->withError($validate);
         }
 
 		$slug = slugify(Request::getField('title'));
 
 		if (RolesModel::has('slug', $slug)) {
-			Session::flash('danger', 'This role does not exists');
+			Session::flash('This role does not exists')->error()->toast();
+			Redirect::back()->only();
 		}
 
 	   $id = RolesModel::create([
@@ -67,7 +68,7 @@ class RolesController
 		]);
 
 		Session::flash('success', 'The role has been created successfully');
-		Response::sendJson([], ['redirect' => absolute_url('/admin/roles/view/' . $id)]);
+		Response::sendJson([], ['redirect' => absolute_url('admin/roles/view/' . $id)]);
     }
 	
 	/**
@@ -79,7 +80,8 @@ class RolesController
 	public function view(int $id): void
 	{
 		if (!RolesModel::has('id', $id)) {
-			Redirect::back()->withError('This role does not exists');
+			Session::flash('This role does not exists')->error()->toast();
+			Redirect::back()->only();
 		}
 
 		View::render('admin/roles/view', [
@@ -95,14 +97,15 @@ class RolesController
 	 */
 	public function update(int $id): void
 	{
-		$validate = UpdateRoleRequest::validate(Request::getFields());
+		$validate = RoleRequest::validate(Request::getFields());
         
         if (is_array($validate)) {
-			Session::flash('danger', $validate);
+            Redirect::back()->withError($validate);
         }
 
 		if (!RolesModel::has('id', $id)) {
-			Session::flash('danger', 'This role does not exists');
+			Session::flash('This role does not exists')->error()->toast();
+			Redirect::back()->only();
 		}
 
 		RolesModel::update($id, [
@@ -112,8 +115,8 @@ class RolesController
             'updated_at' => date("Y-m-d H:i:s")
 		]);
 
-		Session::flash('success', 'The role has been updated successfully');
-		Response::sendJson([], ['redirect' => absolute_url('/admin/roles/view/' . $id)]);
+		Session::flash('The role has been updated successfully')->success()->toast();
+		Response::sendJson([], ['redirect' => absolute_url('admin/roles/view/' . $id)]);
     }
 
 	/**
@@ -126,11 +129,12 @@ class RolesController
 	{
 		if (!is_null($id)) {
 			if (!RolesModel::has('id', "$id")) {
-				Session::flash('danger', 'This role does not exists');
+				Session::flash('This role does not exists')->error()->toast();
+				Redirect::back()->only();
 			}
 	
 			RolesModel::delete($id);
-			Session::flash('success', 'The role has been deleted successfully');
+			Session::flash('The role has been deleted successfully')->success()->toast();
 		} else {
 			$roles_id = json_decode(Request::getRawData(), true);
 			$roles_id = $roles_id['items'];
@@ -139,7 +143,7 @@ class RolesController
 				RolesModel::delete($id);
 			}
 			
-			Session::flash('success', 'The selected roles have been deleted successfully');
+			Session::flash('The selected roles have been deleted successfully')->success()->toast();
 		}
 	}
 
@@ -153,11 +157,13 @@ class RolesController
         $file = Request::getFile('file', ['csv']);
 
 		if (!$file->isAllowed()) {
-			Redirect::back()->withError('Only file of type extension ".csv" are allowed');
+			Session::flash('Only file of type extension ".csv" are allowed')->error()->toast();
+            Redirect::back()->only();
 		}
 
 		if (!$file->isUploaded()) {
-			Redirect::back()->withError('Failed to import users data');
+			Session::flash('Failed to import roles data')->error()->toast();
+			Redirect::back()->only();
 		}
 
 		$function = ['App\Database\Models\RolesModel', 'create'];
@@ -168,7 +174,8 @@ class RolesController
 			'description' => 'Description'
 		]);
 
-		Redirect::back()->withSuccess('The users have been imported successfully');
+		Session::flash('The role has been imported successfully')->success()->toast();
+		Redirect::back()->only();
 	}
 	
 	/**

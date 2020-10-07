@@ -21,6 +21,16 @@ if (!function_exists('absolute_url')) {
 	 */
 	function absolute_url(string $url): string
 	{
+		if (empty($url)) {
+			$url = '/';
+		}
+
+		if (strlen($url) > 1) {
+			if ($url[0] !== '/') {
+				$url = '/' . $url;
+			}
+		}
+
 		return config('app.url') . $url;
 	}
 }

@@ -8,10 +8,14 @@ use App\Helpers\EmailHelper;
 use Framework\HTTP\Redirect;
 use Framework\HTTP\Response;
 use App\Requests\AuthRequest;
+use Framework\Support\Encryption;
 use App\Database\Models\UsersModel;
 use App\Database\Models\PasswordResetModel;
 
-class PasswordResetController
+/**
+ * Manage password reset
+ */
+class PasswordController
 {
 	/**
 	 * send reset password email notification
@@ -72,7 +76,7 @@ class PasswordResetController
         }
 
 		UsersModel::updateWhere('email', Request::getField('email'), [
-			'password' => hash_string(Request::getField('password'))
+			'password' => Encryption::hash(Request::getField('password'))
 		]);
 		
 		Redirect::toUrl('/login')->withSuccess('Your password has been resetted successfully');

@@ -14,6 +14,11 @@ namespace Framework\Support;
 class Session
 {    
     /**
+     * @var array
+     */
+    protected static $flash = [];
+
+    /**
      * create
      *
      * @param  mixed $name
@@ -100,47 +105,96 @@ class Session
     }
     
     /**
-     * addBrowsingHistory
+     * init flash
      *
-     * @param  mixed $content
-     * @return void
+     * @param  array|string $messages
+     * @return \Framework\Support\Session
      */
-    public static function addHistory($content): void
+    public static function flash($messages): self
     {
-        self::create('browsing_history', $content);
+        self::$flash = ['messages' => $messages];
+        return new self();
     }
     
     /**
-     * getHistory
+     * success
      *
-     * @return void
+     * @return self
      */
-    public static function getHistory()
+    public function success(): self
     {
-        return self::get('browsing_history');
+        self::$flash = array_merge(self::$flash, ['type' => 'success']);
+        return new self();
     }
     
     /**
-     * clearHistory
+     * error
      *
-     * @return void
+     * @return self
      */
-    public static function clearHistory(): void
+    public function error(): self
     {
-        self::close('browsing_history');
+        self::$flash = array_merge(self::$flash, ['type' => 'danger']);
+        return new self();
     }
     
     /**
-     * flash
+     * info
      *
-     * @param  mixed $title
-     * @param  mixed $content
+     * @return self
+     */
+    public function info(): self 
+    {
+        self::$flash = array_merge(self::$flash, ['type' => 'primary']);
+        return new self();
+    }
+    
+    /**
+     * warning
+     *
+     * @return self
+     */
+    public function warning(): self 
+    {
+        self::$flash = array_merge(self::$flash, ['type' => 'warning']);
+        return new self();
+    }
+    
+    /**
+     * default
+     *
+     * @param  mixed $dissmiss
      * @return void
      */
-    public static function flash(string $title, $content): void
+    public function default(bool $dissmiss = true): void
     {
-        self::create('flash_messages', [
-			$title => $content
-		]);
+        self::$flash = array_merge(self::$flash, [
+            'display' => 'default',
+            'dismiss' => $dissmiss
+        ]);
+
+        self::create('flash_messages', self::$flash);
+    }
+    
+    /**
+     * popup
+     *
+     * @return void
+     */
+    public function popup(): void
+    {
+        self::$flash = array_merge(self::$flash, ['display' => 'popup']);
+        self::create('flash_messages', self::$flash);
+    }
+    
+    /**
+     * toast
+     *
+     * @return void
+     */
+    public function toast(): void
+    {
+        self::$flash = array_merge(self::$flash, ['display' => 'toast']);
+        self::create('flash_messages', self::$flash);
     }
 }

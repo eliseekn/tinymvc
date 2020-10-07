@@ -7,7 +7,9 @@ use Framework\HTTP\Request;
 use App\Helpers\EmailHelper;
 use Framework\HTTP\Redirect;
 use App\Requests\AuthRequest;
+use Framework\Support\Session;
 use App\Middlewares\AuthPolicy;
+use Framework\Support\Browsing;
 use App\Requests\RegisterRequest;
 
 /**
@@ -66,6 +68,8 @@ class AuthController
 	public function logout(): void
 	{
 		AuthHelper::forget();
+        Browsing::clearHistory();
+        Session::close('csrf_token');
 		Redirect::toUrl('/')->only();
 	}
 }

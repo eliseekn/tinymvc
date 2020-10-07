@@ -11,6 +11,7 @@ namespace Framework\HTTP;
 use Exception;
 use Framework\Routing\Route;
 use Framework\Support\Session;
+use Framework\Support\Browsing;
 
 /**
  * Handle HTTP redirection
@@ -89,7 +90,7 @@ class Redirect
      */
     public static function back(): self
     {
-        $browsing_history = Session::getHistory();
+        $browsing_history = Browsing::getHistory();
 
         if (!empty($browsing_history)) {
             end($browsing_history);
@@ -100,60 +101,51 @@ class Redirect
     }
 
     /**
-     * redirects with session flash message
+     * redirects with success flash messages
      *
-     * @param  string $title title of message
-     * @param  mixed $content content of message
+     * @param  mixed $messages
      * @return void
      */
-    public function withMessage(string $title, $content): void
+    public function withSuccess($messages): void
     {
-        Session::flash($title, $content);
+        Session::flash($messages)->success()->default();
         redirect_to(self::$redirect_url);
     }
 
     /**
-     * redirects with success flash message
+     * redirects with error flash messages
      *
-     * @param  mixed $message
+     * @param  mixed $messages
      * @return void
      */
-    public function withSuccess($message): void
+    public function withError($messages): void
     {
-        $this->withMessage('success', $message);
+        Session::flash($messages)->error()->default();
+        redirect_to(self::$redirect_url);
     }
 
     /**
-     * redirects with error flash message
+     * redirects with success flash messages
      *
-     * @param  mixed $message
+     * @param  mixed $messages
      * @return void
      */
-    public function withError($message): void
+    public function withWarning($messages): void
     {
-        $this->withMessage('danger', $message);
+        Session::flash($messages)->warning()->default();
+        redirect_to(self::$redirect_url);
     }
 
     /**
-     * redirects with success flash message
+     * redirects with success flash messages
      *
-     * @param  mixed $message
+     * @param  mixed $messages
      * @return void
      */
-    public function withWarning($message): void
+    public function withInfo($messages): void
     {
-        $this->withMessage('warning', $message);
-    }
-
-    /**
-     * redirects with success flash message
-     *
-     * @param  mixed $message
-     * @return void
-     */
-    public function withInfo($message): void
-    {
-        $this->withMessage('primary', $message);
+        Session::flash($messages)->info()->default();
+        redirect_to(self::$redirect_url);
     }
 
     /**

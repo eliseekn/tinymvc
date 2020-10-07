@@ -1,16 +1,14 @@
-<?php if ($display === 'alert') : ?>
+<?php if ($display === 'default') : ?>
 
-    <div class="alert alert-<?= key($messages) ?> alert-dismissible show" role="alert">
+    <div class="alert alert-<?= $type ?> alert-dismissible show" role="alert">
         <?php
-        foreach ($messages as $message) :
-            if (is_array($message)) :
-                foreach ($message as $m) :
-                    echo $m . '<br>';
-                endforeach;
-            else :
+        if (is_array($messages)) :
+            foreach ($messages as $message) :
                 echo $message . '<br>';
-            endif;
-        endforeach
+            endforeach;
+        else :
+            echo $messages . '<br>';
+        endif;
         ?>
 
         <?php if ($dismiss === true) : ?>
@@ -20,12 +18,12 @@
         <?php endif ?>
     </div>
 
-<?php elseif ($display === 'modal') : ?>
+<?php elseif ($display === 'popup') : ?>
 
-    <alert-modal type="<?= key($messages) ?>" message="<?= $messages[key($messages)] ?>"></alert-modal>
+    <alert-popup type="<?= $type ?>" message="<?= $messages ?>"></alert-popup>
 
 <?php elseif ($display === 'toast') : ?>
 
-    <alert-toast type="<?= key($messages) ?>" message="<?= $messages[key($messages)] ?>"></alert-toast>
+    <alert-toast type="<?= $type ?>" message="<?= $messages ?>"></alert-toast>
 
 <?php endif ?>
