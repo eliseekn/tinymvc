@@ -70,7 +70,7 @@ endif
                 </thead>
 
                 <tbody>
-                    <?php foreach ($users as $key => $user) : ?>
+                    <?php foreach ($users as $user) : ?>
 
                         <tr>
                             <td>
@@ -84,7 +84,7 @@ endif
                                 <?php endif ?>
                             </td>
 
-                            <td><?= $key + 1 ?></td>
+                            <td><?= $user->id ?></td>
                             <td><?= $user->name ?></td>
                             <td><?= $user->email ?></td>
                             <td><?= $user->role ?></td>

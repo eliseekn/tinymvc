@@ -23,10 +23,7 @@ $this->insert('partials/breadcrumb', [
 
 <?php 
 if (flash_messages()) : 
-    $this->insert('partials/notifications', [
-        'messages' => get_flash_messages(),
-        'display' => 'toast'
-    ]);
+    $this->insert('partials/notifications', get_flash_messages());
 endif 
 ?>
 

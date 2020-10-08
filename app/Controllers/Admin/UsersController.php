@@ -138,7 +138,7 @@ class UsersController
 	public function delete(?int $id = null): void
 	{
 		if (!is_null($id)) {
-			if (!UsersModel::has('id', "$id")) {
+			if (!UsersModel::has('id', $id)) {
 				Session::flash('This user does not exists')->error()->toast();
 			}
 	

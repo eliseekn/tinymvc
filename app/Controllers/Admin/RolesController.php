@@ -67,7 +67,7 @@ class RolesController
             'description' => Request::getField('editor')
 		]);
 
-		Session::flash('success', 'The role has been created successfully');
+		Session::flash('The role has been created successfully')->success()->toast();
 		Response::sendJson([], ['redirect' => absolute_url('admin/roles/view/' . $id)]);
     }
 	
@@ -128,9 +128,8 @@ class RolesController
 	public function delete(?int $id = null): void
 	{
 		if (!is_null($id)) {
-			if (!RolesModel::has('id', "$id")) {
+			if (!RolesModel::has('id', $id)) {
 				Session::flash('This role does not exists')->error()->toast();
-				Redirect::back()->only();
 			}
 	
 			RolesModel::delete($id);

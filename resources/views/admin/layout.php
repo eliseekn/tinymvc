@@ -20,7 +20,7 @@
             </div>
 
             <div class="list-group list-group-flush">
-                <a href="<?= absolute_url('/admin') ?>" class="list-group-item list-group-item-action bg-light">
+                <a href="<?= absolute_url('/admin/dashboard') ?>" class="list-group-item list-group-item-action bg-light">
                     <i class="fa fa-tachometer-alt"></i> Dashboard
                 </a>
                 <a href="<?= absolute_url('/admin/roles') ?>" class="list-group-item list-group-item-action bg-light">

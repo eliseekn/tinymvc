@@ -39,22 +39,32 @@ Route::post('authenticate', ['handler' => 'Auth\AuthController@authenticate']);
 Route::post('register', ['handler' => 'Auth\AuthController@register']);
 
 //admin routes
-Route::group([
-    'dashboard' => [
-        'method' => 'GET',
-        'handler' => 'Admin\AdminController@index'
-    ],
-
-    'users/delete/{id:num}' => [
-        'method' => 'DELETE',
-        'handler' => 'Admin\UsersController@delete'
-    ],
-
-    'roles/delete/{id:num}' => [
-        'method' => 'DELETE',
-        'handler' => 'Admin\RolesController@delete'
+Route::get('admin', [
+    'handler' => 'Admin\AdminController@index',
+    'middlewares' => [
+        'RememberUser',
+        'AdminPolicy'
     ]
+]);
+
+Route::group([
+    '/' => ['handler' => 'Admin\AdminController@index'],
+    'dashboard' => ['handler' => 'Admin\AdminController@index']
 ])->by([
+    'method' => 'GET',
+    'prefix' => 'admin',
+    'middlewares' => [
+        'RememberUser',
+        'AdminPolicy'
+    ]
+]);
+
+Route::group([
+    'users/delete/{id:num}' => ['handler' => 'Admin\UsersController@delete'],
+    
+    'roles/delete/{id:num}' => ['handler' => 'Admin\RolesController@delete']
+])->by([
+    'method' => 'DELETE',
     'prefix' => 'admin',
     'middlewares' => [
         'RememberUser',

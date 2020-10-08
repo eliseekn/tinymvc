@@ -8,19 +8,14 @@ $this->layout('admin/layout', [
 
 <?php
 $this->insert('partials/breadcrumb', [
-    'items' => [
-        'Roles' => ''
-    ]
+    'items' => ['Roles' => '']
 ]);
 ?>
 
-<?php
-if (flash_messages()) :
-    $this->insert('partials/notifications', [
-        'messages' => get_flash_messages(),
-        'display' => 'toast'
-    ]);
-endif
+<?php 
+if (flash_messages()) : 
+    $this->insert('partials/notifications', get_flash_messages());
+endif 
 ?>
 
 <div class="card">
@@ -73,7 +68,7 @@ endif
                 </thead>
 
                 <tbody>
-                    <?php foreach ($roles as $key => $role) : ?>
+                    <?php foreach ($roles as $role) : ?>
 
                         <tr>
                             <td>
@@ -83,7 +78,7 @@ endif
                                 </div>
                             </td>
 
-                            <td><?= $key + 1 ?></td>
+                            <td><?= $role->id ?></td>
                             <td><?= $role->title ?></td>
                             <td><?= $role->slug ?></td>
                             <td><?= html_entity_decode($role->description) ?></td>
