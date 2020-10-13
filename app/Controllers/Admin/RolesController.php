@@ -31,14 +31,14 @@ class RolesController
 	 */
 	public function edit(int $id): void
 	{
-		if (!RolesModel::has('id', $id)) {
+		$role = RolesModel::find('id', $id)->single();
+
+		if ($role === false) {
 			Session::flash('This role does not exists')->error()->toast();
 			Redirect::back()->only();
 		}
 
-		View::render('admin/roles/edit', [
-			'role' => RolesModel::find($id)
-		]);
+		View::render('admin/roles/edit', compact('role'));
 	}
 
 	/**
@@ -56,12 +56,12 @@ class RolesController
 
 		$slug = slugify(Request::getField('title'));
 
-		if (RolesModel::has('slug', $slug)) {
-			Session::flash('This role does not exists')->error()->toast();
+		if (RolesModel::find('slug', $slug)->exists()) {
+			Session::flash('This role already exists')->error()->toast();
 			Redirect::back()->only();
 		}
 
-	   $id = RolesModel::create([
+	   $id = RolesModel::insert([
             'title' => Request::getField('title'),
             'slug' => $slug,
             'description' => Request::getField('editor')
@@ -79,14 +79,14 @@ class RolesController
 	 */
 	public function view(int $id): void
 	{
-		if (!RolesModel::has('id', $id)) {
+		$role = RolesModel::find('id', $id)->single();
+
+		if ($role === false) {
 			Session::flash('This role does not exists')->error()->toast();
 			Redirect::back()->only();
 		}
 
-		View::render('admin/roles/view', [
-			'role' => RolesModel::find($id)
-		]);
+		View::render('admin/roles/view', compact('role'));
 	}
     
 	/**
@@ -103,17 +103,17 @@ class RolesController
             Redirect::back()->withError($validate);
         }
 
-		if (!RolesModel::has('id', $id)) {
+		if (!RolesModel::find('id', $id)->exists()) {
 			Session::flash('This role does not exists')->error()->toast();
 			Redirect::back()->only();
 		}
 
-		RolesModel::update($id, [
+		RolesModel::update([
             'title' => Request::getField('title'),
             'slug' => slugify(Request::getField('title')),
             'description' => Request::getField('editor'),
             'updated_at' => date("Y-m-d H:i:s")
-		]);
+		])->where('id', '=', $id)->persist();
 
 		Session::flash('The role has been updated successfully')->success()->toast();
 		Response::sendJson([], ['redirect' => absolute_url('admin/roles/view/' . $id)]);
@@ -128,7 +128,7 @@ class RolesController
 	public function delete(?int $id = null): void
 	{
 		if (!is_null($id)) {
-			if (!RolesModel::has('id', $id)) {
+			if (!RolesModel::find('id', $id)->exists()) {
 				Session::flash('This role does not exists')->error()->toast();
 			}
 	
@@ -188,7 +188,7 @@ class RolesController
 			$roles = RolesModel::findDateRange(Request::getField('date_start'), Request::getField('date_end'));
 			$filename = 'roles_' . str_replace('-', '_', Request::getField('date_start')) . '-' . str_replace('-', '_', Request::getField('date_end')) . '.' . Request::getField('file_type');
 		} else {
-			$roles = RolesModel::findAll(['name', 'ASC']);
+			$roles = RolesModel::select()->orderBy('name', 'ASC')->all();
 			$filename = 'roles_' . date('Y_m_d') . '.' . Request::getField('file_type');
 		}
 

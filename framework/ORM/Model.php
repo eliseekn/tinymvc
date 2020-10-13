@@ -12,309 +12,358 @@ use Framework\HTTP\Request;
 use Framework\Support\Pager;
 
 /**
- * Simplify use of query builder
+ * Simplify use of builder
  */
 class Model
 {
     /**
-     * name of table
-     *
      * @var string
      */
     protected static $table = '';
 
     /**
-     * check if row exists
-     *
-     * @param  string $column
-     * @param  mixed $value
-     * @return bool
+     * @var \Framework\ORM\Builder
      */
-    public static function has(string $column, $value): bool
-    {
-        return isset(self::findWhere($column, $value)->$column);
-    }
+    protected static $query;
 
     /**
-     * find row by column id
+     * select rows
      *
-     * @param  int $id
-     * @return mixed
+     * @param  array $columns
+     * @return \Framework\ORM\Model
      */
-    public static function find(int $id)
+    public static function select(array $columns = ['*']): self
     {
-        return self::findWhere('id', $id);
+        self::$query = Builder::select(implode(',', $columns))
+            ->from(static::$table);
+
+        return new self();
     }
     
     /**
-     * find row or create if not exists
+     * generate select where = query
      *
-     * @param  int $id
-     * @param  array $data
-     * @return mixed
+	 * @param  string $column
+	 * @param  mixed $value
+     * @return \Framework\ORM\Model
      */
-    public static function findOrCreate(int $id, array $data)
-    {
-        if (self::has('id', $id)) {
-            return self::find($id);
-        } else {
-            self::create($data);
+    public static function find(string $column, $value): self
+	{
+        return self::select()->where($column, '=', $value);
+	}
+    
+    /**
+     * generate select where and query
+     *
+	 * @param  string $column
+	 * @param  mixed $value
+     * @return \Framework\ORM\Model
+     */
+    public static function findMany(array $first, array $and): self
+	{
+        $model = self::select()->where($first[0], '=', $first[1]);
+
+        foreach ($and as $column => $value) {
+            $model->and($column, '=', $value);
         }
+
+        return $model;
+	}
+    
+    /**
+     * generate search query
+     *
+     * @param  string $column
+	 * @param  mixed $value
+     * @return \Framework\ORM\Model
+     */
+    public static function search(string $column, $value): self
+    {
+        return self::select()->like($column, $value);
+    }
+    
+    /**
+     * insert new row
+     *
+     * @param  array $items
+     * @return int
+     */
+    public static function insert(array $items): int
+    {
+        Builder::insert(static::$table, $items)->execute();
+        return Database::getInstance()->lastInsertedId();
+    }
+    
+    /**
+     * update row
+     *
+     * @param  array $items
+     * @return \Framework\ORM\Model
+     */
+    public static function update(array $items): self
+    {
+        self::$query = Builder::update(static::$table)->set($items);
+        return new self();
+    }
+    
+    /**
+     * add DELETE clause
+     *
+     * @return \Framework\ORM\Model
+     */
+    public static function delete(): self
+    {
+        self::$query = Builder::delete(static::$table);
+        return new self();
+    }
+
+	/**
+	 * add WHERE clause
+	 *
+	 * @param  string $column
+	 * @param  string $operator
+	 * @param  mixed $value
+	 * @return \Framework\ORM\Model
+	 */
+    public function where(string $column, string $operator, $value): self
+	{
+        self::$query->where($column, $operator, $value);
+		return $this;
+	}
+
+	/**
+	 * add AND WHERE clause
+	 *
+	 * @param  string $column
+	 * @param  string $operator
+	 * @param  mixed $value
+	 * @return \Framework\ORM\Model
+	 */
+    public function and(string $column, string $operator, $value): self
+    {
+        self::$query->and($column, $operator, $value);
+		return $this;
+    }
+
+	/**
+	 * add OR WHERE clause
+	 *
+	 * @param  string $column
+	 * @param  string $operator
+	 * @param  mixed $value
+	 * @return \Framework\ORM\Model
+	 */
+    public function or(string $column, string $operator, $value): self
+    {
+        self::$query->or($column, $operator, $value);
+		return $this;
+    }
+
+    /**
+	 * add HAVING clause
+	 *
+	 * @param  string $column
+	 * @param  string $operator
+	 * @param  mixed $value
+	 * @return \Framework\ORM\Model
+	 */
+    public function having(string $column, string $operator, $value): self
+	{
+        self::$query->having($column, $operator, $value);
+		return $this;
+	}
+
+    /**
+	 * add LIKE clause
+	 *
+	 * @param  string $column
+	 * @param  mixed $value
+	 * @return \Framework\ORM\Model
+	 */
+    public function like(string $column, $value): self
+	{
+        self::$query->like($column, $value);
+		return $this;
+	}
+
+    /**
+	 * add NOT LIKE clause
+	 *
+	 * @param  string $column
+	 * @param  mixed $value
+	 * @return \Framework\ORM\Model
+	 */
+    public function notLike(string $column, $value): self
+	{
+        self::$query->notLike($column, $value);
+		return $this;
+	}
+
+    /**
+	 * add LIKE clause
+	 *
+	 * @param  string $column
+	 * @param  mixed $value
+	 * @return \Framework\ORM\Model
+	 */
+    public function orLike(string $column, $value): self
+	{
+        self::$query->orLike($column, $value);
+		return $this;
+	}
+
+    /**
+	 * add NOT LIKE clause
+	 *
+	 * @param  string $column
+	 * @param  mixed $value
+	 * @return \Framework\ORM\Model
+	 */
+    public function orNotLike(string $column, $value): self
+	{
+        self::$query->orNotLike($column, $value);
+		return $this;
+	}
+    
+    /**
+     * add ORDER BY clause
+     *
+     * @param  string $column
+     * @param  string $direction
+     * @return \Framework\ORM\Model
+     */
+    public function orderBy(string $column, string $direction = 'DESC'): self
+    {
+        self::$query->orderBy($column, $direction);
+        return $this;
+    }
+    
+    /**
+     * add ORDER BY clause
+     *
+     * @param  string $direction
+     * @return \Framework\ORM\Model
+     */
+    public function order(string $direction = 'DESC'): self
+    {
+        return $this->orderBy('id', $direction);
+    }
+    
+    /**
+     * add GROUP clause
+     *
+     * @param  string $column
+     * @return \Framework\ORM\Model
+     */
+    public function group(string $column): self
+    {
+        self::$query->groupBy($column);
+        return $this;
+    }
+
+    /**
+     * check if row exists
+     *
+     * @return bool
+     */
+    public function exists(): bool
+    {
+        return !$this->single() === false;
     }
     
     /**
      * fetch single row
      *
-     * @param  string $column
-     * @param  mixed $value
      * @return mixed
      */
-    public static function findWhere(string $column, $value)
+    public function single()
     {
-        return Query::DB()
-            ->select('*')
-            ->from(static::$table)
-            ->whereEquals($column, $value)
-            ->fetchSingle();
+        return self::$query->execute()->fetch();
     }
-
+    
     /**
      * fetch all rows
      *
-     * @param  array $order (ASC or DESC)
-     * @return mixed
+     * @return array
      */
-    public static function findAll(array $order = ['id', 'DESC'])
+    public function all(): array
     {
-        return Query::DB()
-            ->select('*')
-            ->from(static::$table)
-            ->orderBy($order[0], $order[1])
-            ->fetchAll();
-    }
-
-    /**
-     * find rows with where clause
-     *
-     * @param  string $column
-     * @param  mixed $value
-     * @param  array $order_by (ASC or DESC)
-     * @return mixed
-     */
-    public static function findAllWhere(string $column, $value, array $order_by = ['id', 'DESC'])
-    {
-        return Query::DB()
-            ->select('*')
-            ->from(static::$table)
-            ->whereEquals($column, $value)
-            ->orderBy($order_by[0], $order_by[1])
-            ->fetchAll();
-    }
-
-    /**
-     * find rows with limit clause
-     *
-     * @param  int $limit
-     * @param  int $offset
-     * @param  array $order_by (ASC or DESC)
-     * @return mixed
-     */
-    public static function findRange(int $limit, int $offset, array $order_by = ['id', 'DESC'])
-    {
-        return Query::DB()
-            ->select('*')
-            ->from(static::$table)
-            ->orderBy($order_by[0], $order_by[1])
-            ->limit($limit, $offset)
-            ->fetchAll();
-    }
-
-    /**
-     * find range rows
-     *
-     * @param  int $limit
-     * @param  array $order_by (ASC or DESC)
-     * @return mixed
-     */
-    public static function findFirstOf(int $limit, array $order_by = ['id', 'DESC'])
-    {
-        return self::findRange(0, $limit, $order_by);
-    }
-
-    /**
-     * find rows with limit and where clauses
-     *
-     * @param  int $limit
-     * @param  int $offset
-     * @param  string $column
-     * @param  mixed $value
-     * @param  array $order_by (ASC or DESC)
-     * @return mixed
-     */
-    public static function findRangeWhere(
-        int $limit,
-        int $offset,
-        string $column,
-        $value,
-        array $order_by = ['id', 'DESC']
-    ) {
-        return Query::DB()
-            ->select('*')
-            ->from(static::$table)
-            ->whereEquals($column, $value)
-            ->orderBy($order_by[0], $order_by[1])
-            ->limit($limit, $offset)
-            ->fetchAll();
-    }
-
-    /**
-     * find range rows with where clause
-     *
-     * @param  int $limit
-     * @param  string $column
-     * @param  mixed $value
-     * @param  array $order_by (ASC or DESC)
-     * @return mixed
-     */
-    public static function findFirstOfWhere(
-        int $limit,
-        string $column,
-        $value,
-        array $order_by = ['id', 'DESC']
-    ) {
-        return self::findRangeWhere(0, $limit, $column, $value, $order_by);
+        return self::$query->execute()->fetchAll();
     }
     
     /**
-     * delete row with WHERE clause
+     * fetch first row
      *
-     * @param  string $column
-     * @param  mixed $value
-     * @return void
+     * @return mixed
      */
-    public static function deleteWhere(string $column, $value): void
+    public function first()
     {
-        Query::DB()
-            ->deleteFrom(static::$table)
-            ->whereEquals($column, $value)
-            ->executeQuery();
+        return $this->all()[0];
     }
     
     /**
-     * delete row
+     * fetch last row
      *
-     * @param  int $id row id
-     * @return void
+     * @return mixed
      */
-    public static function delete(int $id): void
+    public function last()
     {
-        self::deleteWhere('id', $id);
+        $items = $this->all();
+        return $items[count($items) - 1];
     }
-    
-    /**
-     * update data with where clause
-     *
-     * @param  string $column
-     * @param  mixed $value
-     * @param  array $data
-     * @return void
-     */
-    public static function updateWhere(string $column, $value, array $data): void
-    {
-        Query::DB()
-            ->update(static::$table)
-            ->set($data)
-            ->whereEquals($column, $value)
-            ->executeQuery();
-    }
-    
-    /**
-     * update data
-     *
-     * @param  int $id
-     * @param  array $data
-     * @return void
-     */
-    public static function update(int $id, array $data): void
-    {
-        self::updateWhere('id', $id, $data);
-    }
-    
-    /**
-     * insert new data
-     *
-     * @param  array $data
-     * @return int returns inserted element id
-     */
-    public static function create(array $data): int
-    {
-        Query::DB()
-            ->insert(static::$table, $data)
-            ->executeQuery();
 
-        return Query::DB()->lastInsertedId();
+    /**
+     * fetch range of rows
+     *
+     * @param  int $start
+     * @param  int $end
+     * @return array
+     */
+    public function range(int $start, int $end): array
+    {
+        self::$query->limit($start, $end);
+        return $this->all();
     }
     
+    /**
+     * fetch first items of range
+     *
+     * @param  int $value
+     * @return array
+     */
+    public function firstOf(int $value): array
+    {
+        return $this->range(0, $value);
+    }
+
     /**
      * generate pagination
      *
      * @param  int $items_per_pages
-     * @param  array $order_by (ASC or DESC)
-     * @return \Framework\Support\Pager returns new pager class instance
+     * @return \Framework\Support\Pager
      */
-    public static function paginate(int $items_per_pages, array $order_by = ['id', 'DESC']): Pager
+    public function paginate(int $items_per_pages): Pager
     {
+        list($query, $args) = self::$query->get();
+
         $page = empty(Request::getQuery('page')) ? 1 : Request::getQuery('page');
-
-        $total_items = Query::DB()
-            ->select('*')
-            ->from(static::$table)
-            ->count();
-
+        $total_items = count(Builder::query($query, $args)->execute()->fetchAll());
         $pagination = generate_pagination($page, $total_items, $items_per_pages);
-
+        
         $items = $items_per_pages > 0 ? 
-            self::findRange($pagination['first_item'], $items_per_pages, $order_by) :
-            self::findAll($order_by);
-
+            Builder::query($query, $args)->limit($pagination['first_item'], $items_per_pages)->execute()->fetchAll() : 
+            Builder::query($query, $args)->execute()->fetchAll();
+        
         return new Pager($items, $pagination);
     }
-
+    
     /**
-     * generate pagination with where clause
+     * execute query
      *
-     * @param  int $items_per_pages
-     * @param  string $column
-     * @param  mixed $value
-     * @param  array $order_by (ASC or DESC)
-     * @return \Framework\Support\Pager returns new pager class instance
+     * @return void
      */
-    public static function paginateWhere(
-        int $items_per_pages,
-        string $column,
-        $value,
-        array $order_by = ['id', 'DESC']
-    ): Pager {
-        $page = empty(Request::getQuery('page')) ? 1 : Request::getQuery('page');
-
-        $total_items = Query::DB()
-            ->select('*')
-            ->from(static::$table)
-            ->whereEquals($column, $value)
-            ->count();
-
-        $pagination = generate_pagination($page, $total_items, $items_per_pages);
-
-        $items = $items_per_pages > 0 ? 
-            self::findRangeWhere(
-                $pagination['first_item'],
-                $items_per_pages,
-                $column,
-                $value,
-                $order_by
-            ) : 
-            self::findAllWhere($column, $value, $order_by);
-
-        return new Pager($items, $pagination);
+    public function persist(): void
+    {
+        self::$query->execute();
     }
 }

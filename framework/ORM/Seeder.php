@@ -14,16 +14,15 @@ namespace Framework\ORM;
 class Seeder
 {
     /**
-     * insert data in table
+     * insert items in table
      *
      * @param  string $table
-     * @param  array $data
+     * @param  array $items
      * @return void
      */
-    public static function insert(string $table, array $data): void
+    public static function add(string $table, array $items): void
     {
-        Query::DB()
-            ->insert($table, $data)
-            ->executeQuery();
+        list($query, $args) = Builder::insert($table, $items)->get();
+        Database::getInstance()->executeQuery($query, $args);
     }
 }

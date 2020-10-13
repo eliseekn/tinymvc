@@ -14,32 +14,19 @@ namespace Framework\ORM;
 class Migration
 {
     /**
-	 * sql query string
-	 *
-	 * @var string
+	 * @var \Framework\ORM\Builder
 	 */
-    protected static $query = '';
+    protected static $query;
     
-    /**
-     * execute sql query
-     *
-     * @return void
-     */
-    private static function executeQuery(): void
-    {
-        Query::DB()->setQuery(self::$query);
-        Query::DB()->executeQuery();
-    }
-
     /**
      * generate CREATE TABLE query 
      *
-     * @param  string $name name of table
+     * @param  string $name
      * @return \Framework\ORM\Migration
      */
     public static function table(string $name): self
     {
-        self::$query = "CREATE TABLE " . config('database.table_prefix') . "$name (";
+        self::$query = Builder::table($name);
         return new self();
     }
 
@@ -52,7 +39,7 @@ class Migration
      */
     public function addInt(string $name, int $length = 11): self 
     {
-        self::$query .= "$name INT($length) NOT NULL, ";
+        self::$query->column($name, "INT($length)");
         return $this;
     }
 
@@ -65,7 +52,7 @@ class Migration
      */
     public function addSmallInt(string $name, int $length = 6): self 
     {
-        self::$query .= "$name SMALLINT($length) NOT NULL, ";
+        self::$query->column($name, "MALLINT($length)");
         return $this;
     }
 
@@ -78,7 +65,7 @@ class Migration
      */
     public function addBigInt(string $name, int $length = 20): self 
     {
-        self::$query .= "$name BIGINT($length) NOT NULL, ";
+        self::$query->column($name, "BIGINT($length)");
         return $this;
     }
 
@@ -90,7 +77,7 @@ class Migration
      */
     public function addChar(string $name): self 
     {
-        self::$query .= "$name CHAR(1) NOT NULL, ";
+        self::$query->column($name, "CHAR(1)");
         return $this;
     }
 
@@ -103,7 +90,7 @@ class Migration
      */
     public function addString(string $name, int $length = 255): self 
     {
-        self::$query .= "$name VARCHAR($length) NOT NULL, ";
+        self::$query->column($name, "VARCHAR($length)");
         return $this;
     }
 
@@ -115,7 +102,7 @@ class Migration
      */
     public function addText(string $name): self 
     {
-        self::$query .= "$name TEXT NOT NULL, ";
+        self::$query->column($name, "TEXT");
         return $this;
     }
 
@@ -127,7 +114,7 @@ class Migration
      */
     public function addLongText(string $name): self 
     {
-        self::$query .= "$name LONGTEXT NOT NULL, ";
+        self::$query->column($name, "LONGTEXT");
         return $this;
     }
 
@@ -137,21 +124,9 @@ class Migration
      * @param  string $name
      * @return \Framework\ORM\Migration
      */
-    public function addDate(string $name): self 
-    {
-        self::$query .= "$name TIMESTAMP NOT NULL, ";
-        return $this;
-    }
-
-    /**
-     * add column of type timestamp with default current timestamp sql value
-     *
-     * @param  string $name
-     * @return \Framework\ORM\Migration
-     */
     public function addTimestamp(string $name): self 
     {
-        self::$query .= "$name TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, ";
+        self::$query->column($name, "TIMESTAMP");
         return $this;
     }
 
@@ -163,7 +138,7 @@ class Migration
      */
     public function addBoolean(string $name): self 
     {
-        self::$query .= "$name TINYINT(1) NOT NULL, ";
+        self::$query->column($name, "TINYINT(1)");
         return $this;
     }
     
@@ -174,31 +149,29 @@ class Migration
      */
     public function primaryKey(): self
     {
-        self::$query = rtrim(self::$query, ', ');
-        self::$query .= ' AUTO_INCREMENT PRIMARY KEY, ';
+        self::$query->primaryKey();
         return $this;
     }
     
     /**
      * add null attribute
      * 
-     * @return mixed
+     * @return \Framework\ORM\Migration
      */
     public function null(): self
     {
-        self::$query = str_replace('NOT NULL, ', 'NULL, ', self::$query);
+        self::$query->null();
         return $this;
     }
 
     /**
      * add unique attribute
      *
-     * @return mixed
+     * @return \Framework\ORM\Migration
      */
     public function unique(): self
     {
-        self::$query = rtrim(self::$query, ', ');
-        self::$query .= ' UNIQUE, ';
+        self::$query->unique();
         return $this;
     }
 
@@ -206,13 +179,23 @@ class Migration
      * add default attribute
      *
      * @param  mixed $default
-     * @return mixed
+     * @return \Framework\ORM\Migration
      */
     public function default($default) : self
     {
-        self::$query = rtrim(self::$query, ', ');
-        self::$query .= " DEFAULT '$default', ";
+        self::$query->default($default);
         return $this;
+    }
+    
+    /**
+     * execute
+     *
+     * @return void
+     */
+    public static function execute(): void
+    {
+        list($query, $args) = self::$query->get();
+        Database::getInstance()->executeQuery($query, $args);
     }
     
     /**
@@ -222,20 +205,19 @@ class Migration
      */
     public function create(): void
     {
-        self::$query = rtrim(self::$query, ', ');
-        self::$query .= ')';
-        self::executeQuery();
+        self::$query->create();
+        self::execute();
     }
 
     /**
      * drop table if exists
      *
-     * @param  string $name name of table
+     * @param  string $table
      * @return void
      */
-    public static function dropTable(string $name): void
+    public static function drop(string $table): void
     {
-        self::$query = "DROP TABLE IF EXISTS " . config('database.table_prefix') . "$name";
-        self::executeQuery();
+        self::$query->drop($table);
+        self::execute();
     }
 }

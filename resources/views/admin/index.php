@@ -1,8 +1,4 @@
 <?php
-
-use App\Database\Models\UsersModel;
-use App\Helpers\MetricsHelper;
-
 $this->layout('admin/layout', [
     'page_title' => 'TinyMVC | Administration dashboard'
 ])

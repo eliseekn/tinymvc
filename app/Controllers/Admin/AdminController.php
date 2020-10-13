@@ -17,9 +17,9 @@ class AdminController
 	public function index(): void
 	{
 		View::render('admin/index', [
-			'users' => UsersModel::findAll(),
-			'online_users' => UsersModel::findAllWhere('online', 1),
-			'active_users' => UsersModel::findAllWhere('active', 1),
+			'users' => UsersModel::select()->all(),
+			'online_users' => UsersModel::find('online', 1)->all(),
+			'active_users' => UsersModel::find('active', 1)->all(),
 			'users_metrics' => MetricsHelper::getCount('users', 'id', 'months')
 		]);
 	}
@@ -32,7 +32,7 @@ class AdminController
 	public function users(): void
 	{
 		View::render('admin/users/index', [
-			'users' => UsersModel::paginate(50, ['name', 'ASC'])
+			'users' => UsersModel::select()->orderBy('name', 'ASC')->paginate(50)
 		]);
 	}
 
@@ -44,7 +44,7 @@ class AdminController
 	public function roles(): void
 	{
 		View::render('admin/roles/index', [
-			'roles' => RolesModel::paginate(50, ['title', 'ASC'])
+			'roles' => RolesModel::select()->orderBy('title', 'ASC')->paginate(50)
 		]);
 	}
 }

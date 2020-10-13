@@ -19,7 +19,7 @@ class Database
 	/**
 	 * database class instance
 	 * 
-	 * @var mixed
+	 * @var Database\null
 	 */
 	protected static $instance = null;
 
@@ -55,9 +55,9 @@ class Database
 	/**
 	 * create single instance of database class
 	 *
-	 * @return mixed
+	 * @return \Framework\ORM\Database
 	 */
-	public static function getInstance()
+	public static function getInstance(): self
 	{
 		if (is_null(self::$instance)) {
 			self::$instance = new self();
@@ -74,5 +74,36 @@ class Database
 	public function getConnection()
 	{
 		return $this->connection;
+	}
+
+	/**
+	 * execute sql query
+	 *
+	 * @return \PDOStatement
+	 */
+	public function executeQuery(string $query, array $args): \PDOStatement
+	{
+		$stmt = null;
+
+		try {
+			$stmt = $this->connection->prepare(trim($query));
+			$stmt->execute($args);
+		} catch (PDOException $e) {
+			if (config('errors.display') == true) {
+				die($e->getMessage());
+			}
+		}
+
+		return $stmt;
+	}
+
+	/**
+	 * retrieves last inserted id
+	 *
+	 * @return int
+	 */
+	public function lastInsertedId(): int
+	{
+		return $this->connection->lastInsertId();
 	}
 }

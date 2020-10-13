@@ -3,7 +3,6 @@
 namespace App\Database\Models;
 
 use Framework\ORM\Model;
-use Framework\ORM\Query;
 
 class RolesModel extends Model
 {    
@@ -23,12 +22,10 @@ class RolesModel extends Model
      */
     public static function findDateRange(string $start, string $end)
     {
-        return Query::DB()
-            ->select('*')
-            ->from(static::$table)
+        return self::select()
             ->where('created_at', '>=', date('Y-m-d H:i:s', strtotime($start)))
             ->and('created_at', '<=', date('Y-m-d H:i:s', strtotime($end)))
             ->orderBy('name', 'ASC')
-            ->fetchAll();
+            ->all();
     }
 }

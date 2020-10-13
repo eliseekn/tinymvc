@@ -40,7 +40,7 @@ class AuthHelper
      */
     public static function authenticate()
     {
-        $user = UsersModel::findWhere('email', Request::getField('email'));
+        $user = UsersModel::find('email', Request::getField('email'))->single();
 
         if (!($user !== false && Encryption::verify(Request::getField('password'), $user->password))) {
             self::setAttempts();
@@ -53,10 +53,7 @@ class AuthHelper
             }
         }
 
-        UsersModel::update($user->id, [
-            'online' => 1
-        ]);
-        
+        UsersModel::update(['online' => 1])->where('id', '=', $user->id)->persist();
         Session::setUser($user);
             
         if (!empty(Request::getField('remember'))) {
@@ -75,17 +72,15 @@ class AuthHelper
      */
     public static function store(): bool
     {
-        if (UsersModel::has('email', Request::getField('email'))) {
+        if (UsersModel::find('email', Request::getField('email'))->exists()) {
             return false;
         }
-
-        UsersModel::create([
+        
+        UsersModel::insert([
             'name' => Request::getField('name'),
             'email' => Request::getField('email'),
             'password' => Encryption::hash(Request::getField('password'))
         ]);
-
-        return true;
     }
 
     /**
@@ -126,10 +121,7 @@ class AuthHelper
     public static function forget(): void
     {
         if (self::checkSession()) {
-            UsersModel::update(self::getSession()->id, [
-                'online' => 0
-            ]);
-        
+            UsersModel::update(['online' => 0])->where('id', '=', self::getSession()->id)->persist();        
             Session::deleteUser();
         }
 
@@ -146,6 +138,6 @@ class AuthHelper
      */
     public static function hasRole(string $role): bool
     {
-        return RolesModel::has('slug', $role) && self::getSession()->role === $role;
+        return RolesModel::find('slug', $role)->exists() && self::getSession()->role === $role;
     }
 }

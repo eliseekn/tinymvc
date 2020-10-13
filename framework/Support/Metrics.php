@@ -8,7 +8,7 @@
 
 namespace Framework\Support;
 
-use Framework\ORM\Query;
+use Framework\ORM\Builder;
 
 /**
  * Metrics generator
@@ -44,47 +44,48 @@ class Metrics
     {
         switch ($trends) {
             case 'days':
-                return Query::DB()
-                    ->select($value . '(' . $column . ') AS value')
-                    ->from($this->table)
-                    ->whereEquals('DATE(created_at)', date('Y-m-d'))
-                    ->fetchAll();
+                return Builder::select($value . '(' . $column . ') AS value')
+                        ->from($this->table)
+                        ->where('DATE(created_at)', '=', date('Y-m-d'))
+                        ->execute()
+                        ->fetchAll();
+
 
             case 'weeks':
-                return Query::DB()
-                        ->select(
-                            $value . '(' . $column . ') AS value',
-                            'DAYNAME(created_at) AS day'
-                        )
-                        ->from($this->table)
-                        ->whereGreater('DATE(created_at)', date('Y-m-d', strtotime('-7 days')))
-                        ->and('MONTH(created_at)', '=', date('m'))
-                        ->and('YEAR(created_at)', '=', date('Y'))
-                        ->groupBy('DAYNAME(created_at)')
-                        ->orderBy('DAYNAME(created_at)', 'ASC')
-                        ->fetchAll();
+                return Builder::select(
+                        $value . '(' . $column . ') AS value',
+                        'DAYNAME(created_at) AS day'
+                    )
+                    ->from($this->table)
+                    ->where('DATE(created_at)', '>', date('Y-m-d', strtotime('-7 days')))
+                    ->and('MONTH(created_at)', '=', date('m'))
+                    ->and('YEAR(created_at)', '=', date('Y'))
+                    ->groupBy('DAYNAME(created_at)')
+                    ->orderBy('DAYNAME(created_at)', 'ASC')
+                    ->execute()
+                    ->fetchAll();
 
             case 'months':
-                return Query::DB()
-                        ->select(
-                            $value . '(' . $column . ') AS value',
-                            'MONTHNAME(created_at) AS month'
-                        )
-                        ->from($this->table)
-                        ->whereEquals('YEAR(created_at)', date('Y'))
-                        ->groupBy('MONTHNAME(created_at)')
-                        ->orderBy('MONTHNAME(created_at)', 'ASC')
-                        ->fetchAll();
+                return Builder::select(
+                        $value . '(' . $column . ') AS value',
+                        'MONTHNAME(created_at) AS month'
+                    )
+                    ->from($this->table)
+                    ->where('YEAR(created_at)', '=', date('Y'))
+                    ->groupBy('MONTHNAME(created_at)')
+                    ->orderBy('MONTHNAME(created_at)', 'ASC')
+                    ->execute()
+                    ->fetchAll();
             
             case 'years':
-                return Query::DB()
-                        ->select(
+                return Builder::select(
                             $value . '(' . $column . ') AS value',
                             'YEAR(created_at) AS year'
                         )
                         ->from($this->table)
                         ->groupBy('YEAR(created_at)')
                         ->orderBy('YEAR(created_at)', 'ASC')
+                        ->execute()
                         ->fetchAll();
         }
     }
@@ -99,9 +100,9 @@ class Metrics
     public function getCount(string $column, ?string $trends = null)
     {
         if (is_null($trends)) {
-            return Query::DB()
-                ->select('COUNT(' . $column . ')')
+            return Builder::select('COUNT(' . $column . ')')
                 ->from($this->table)
+                ->execute()
                 ->fetchAll();
         } else {
             return $this->getTrends('COUNT' , $column, $trends);
@@ -118,9 +119,9 @@ class Metrics
     public function getSum(string $column, ?string $trends = null)
     {
         if (is_null($trends)) {
-            return Query::DB()
-                ->select('SUM(' . $column . ')')
+            return Builder::select('SUM(' . $column . ')')
                 ->from($this->table)
+                ->execute()
                 ->fetchAll();
         } else {
             return $this->getTrends('SUM' , $column, $trends);
@@ -137,9 +138,9 @@ class Metrics
     public function getAverage(string $column, ?string $trends = null)
     {
         if (is_null($trends)) {
-            return Query::DB()
-                ->select('AVG(' . $column . ')')
+            return Builder::select('AVG(' . $column . ')')
                 ->from($this->table)
+                ->execute()
                 ->fetchAll();
         } else {
             return $this->getTrends('AVG' , $column, $trends);
@@ -156,9 +157,9 @@ class Metrics
     public function getMin(string $column, ?string $trends = null)
     {
         if (is_null($trends)) {
-            return Query::DB()
-                ->select('MIN(' . $column . ')')
+            return Builder::select('MIN(' . $column . ')')
                 ->from($this->table)
+                ->execute()
                 ->fetchAll();
         } else {
             return $this->getTrends('MIN' , $column, $trends);
@@ -175,9 +176,9 @@ class Metrics
     public function getMax(string $column, ?string $trends = null)
     {
         if (is_null($trends)) {
-            return Query::DB()
-                ->select('MAX(' . $column . ')')
+            return Builder::select('MAX(' . $column . ')')
                 ->from($this->table)
+                ->execute()
                 ->fetchAll();
         } else {
             return $this->getTrends('MAX' , $column, $trends);

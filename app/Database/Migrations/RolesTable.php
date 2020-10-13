@@ -23,10 +23,10 @@ class RolesTable
         Migration::table(self::$table)
             ->addInt('id')->primaryKey()
             ->addString('title')
-            ->addString('slug', 255)->unique()
+            ->addString('slug')->unique()
             ->addText('description')
-            ->addTimestamp('created_at')
-            ->addTimestamp('updated_at')
+            ->addTimestamp('created_at')->default(date('Y-m-d H:i:s'))
+            ->addTimestamp('updated_at')->default(date('Y-m-d H:i:s'))
             ->create();
     }
     
@@ -37,7 +37,7 @@ class RolesTable
      */
     public static function delete(): void
     {
-        Migration::dropTable(self::$table);
+        Migration::drop(self::$table);
     }
     
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Database\Migrations;
 
+use Framework\ORM\Builder;
 use Framework\ORM\Migration;
 
 class UsersTable
@@ -23,14 +24,15 @@ class UsersTable
         Migration::table(self::$table)
             ->addBigInt('id')->primaryKey()
             ->addString('name')
-            ->addString('email', 255)->unique()
+            ->addString('email')->unique()
             ->addString('password')
-            ->addString('role', 255)->default('user')
+            ->addString('role')->default('user')
             ->addBoolean('online')->default(0)
             ->addBoolean('active')->default(0)
-            ->addTimestamp('created_at')
-            ->addTimestamp('updated_at')
+            ->addTimestamp('created_at')->default(date('Y-m-d H:i:s'))
+            ->addTimestamp('updated_at')->default(date('Y-m-d H:i:s'))
             ->create();
+
     }
     
     /**
@@ -40,7 +42,7 @@ class UsersTable
      */
     public static function delete(): void
     {
-        Migration::dropTable(self::$table);
+        Migration::drop(self::$table);
     }
     
     /**

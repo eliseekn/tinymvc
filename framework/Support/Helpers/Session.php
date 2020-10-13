@@ -82,31 +82,6 @@ if (!function_exists('close_session')) {
 	}
 }
 
-if (!function_exists('create_browsing_history')) {
-	/**
-	 * create browsing history session
-	 *
-	 * @param  mixed $content
-	 * @return void
-	 */
-	function create_browsing_history($content): void
-	{
-		create_session('browsing_history', $content);
-	}
-}
-
-if (!function_exists('get_browsing_history')) {
-	/**
-	 * get browsing history content
-	 *
-	 * @return mixed
-	 */
-	function get_browsing_history()
-	{
-		return get_session('browsing_history');
-	}
-}
-
 if (!function_exists('flash_messages')) {
 	/**
 	 * check if flash messages exists

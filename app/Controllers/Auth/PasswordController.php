@@ -47,11 +47,14 @@ class PasswordController
 	 */
 	public function reset(): void
 	{
-		if (PasswordResetModel::valid(Request::getQuery('email'), Request::getQuery('token')) === false) {
+		if (PasswordResetModel::findWhere([
+			'email' => Request::getQuery('email'), 
+			'token' => Request::getQuery('token')
+		]) === false) {
 			Response::send([], 'This password reset link is invalid');
 		}
 
-		if (PasswordResetModel::findWhere('email', Request::getQuery('email'))->expires < date('Y-m-d H:i:s')) {
+		if (PasswordResetModel::findWhere(['email', Request::getQuery('email')])->expires < date('Y-m-d H:i:s')) {
 			Response::send([], 'This password reset link expired. Please retrieves a new one');
 		}
 

@@ -23,7 +23,7 @@ class UsersController
 	public function new(): void
 	{
 		View::render('admin/users/new', [
-			'roles' => RolesModel::findAll()
+			'roles' => RolesModel::select()->all()
 		]);
 	}
 	
@@ -35,15 +35,15 @@ class UsersController
 	 */
 	public function edit(int $id): void
 	{
-		if (!UsersModel::has('id', $id)) {
+		$user = UsersModel::find('id', $id)->single();
+		$roles = RolesModel::select()->all();
+
+		if ($user === false) {
 			Session::flash('This user does not exists')->error()->toast();
 			Redirect::back()->only();
 		}
 
-		View::render('admin/users/edit', [
-			'user' => UsersModel::find($id),
-			'roles' => RolesModel::findAll()
-		]);
+		View::render('admin/users/edit', compact('user', 'roles'));
 	}
 
 	/**
@@ -59,12 +59,12 @@ class UsersController
             Redirect::back()->withError($validate);
         }
 
-		if (UsersModel::has('email', Request::getField('email'))) {
+		if (UsersModel::find('email', Request::getField('email'))->exists()) {
 			Session::flash('This email address already exists')->error()->toast();
             Redirect::back()->only();
 		}
 
-	   $id = UsersModel::create([
+	   $id = UsersModel::insert([
             'name' => Request::getField('name'),
             'email' => Request::getField('email'),
             'password' => hash_string(Request::getField('password')),
@@ -83,14 +83,14 @@ class UsersController
 	 */
 	public function view(int $id): void
 	{
-		if (!UsersModel::has('id', $id)) {
+		$user = UsersModel::find('id', $id)->single();
+		
+		if ($user === false) {
 			Session::flash('This user does not exists')->error()->toast();
 			Redirect::back()->only();
 		}
 
-		View::render('admin/users/view', [
-			'user' => UsersModel::find($id)
-		]);
+		View::render('admin/users/view', compact('user'));
 	}
     
 	/**
@@ -107,10 +107,11 @@ class UsersController
             Redirect::back()->withError($validate);
         }
 
-		if (!UsersModel::has('id', $id)) {
+		if (!UsersModel::find('id', $id)->exists()) {
 			Session::flash('This user does not exists')->error()->toast();
 			Redirect::back()->only();
 		}
+
 		$data = [
             'name' => Request::getField('name'),
             'email' => Request::getField('email'),
@@ -123,7 +124,7 @@ class UsersController
 			$data['password'] = Encryption::hash(Request::getField('password'));
 		}
 
-		UsersModel::update($id, $data);
+		UsersModel::update($data)->where('id', '=', $id)->persist();
 
 		Session::flash('The user has been updated successfully')->success()->toast();
         Redirect::toUrl('admin/users/view/' . $id)->only();
@@ -138,7 +139,7 @@ class UsersController
 	public function delete(?int $id = null): void
 	{
 		if (!is_null($id)) {
-			if (!UsersModel::has('id', $id)) {
+			if (!UsersModel::find('id', $id)->exists()) {
 				Session::flash('This user does not exists')->error()->toast();
 			}
 	
@@ -198,7 +199,7 @@ class UsersController
 			$users = UsersModel::findDateRange(Request::getField('date_start'), Request::getField('date_end'));
 			$filename = 'users_' . str_replace('-', '_', Request::getField('date_start')) . '-' . str_replace('-', '_', Request::getField('date_end')) . '.' . Request::getField('file_type');
 		} else {
-			$users = UsersModel::findAll(['name', 'ASC']);
+			$users = UsersModel::select()->orderBy('name', 'ASC')->all();
 			$filename = 'users_' . date('Y_m_d') . '.' . Request::getField('file_type');
 		}
 

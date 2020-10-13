@@ -20,13 +20,13 @@ class RoleSeed
      */
     public static function insert(): void
     {
-        Seeder::insert(self::$table, [
+        Seeder::add(self::$table, [
             'title' => 'Administrator',
             'slug' => 'administrator',
             'description' => 'Can access administration dashboard and has all permissions'
         ]);
 
-        Seeder::insert(self::$table, [
+        Seeder::add(self::$table, [
             'title' => 'Visitor',
             'slug' => 'visitor',
             'description' => 'Can only view website pages'

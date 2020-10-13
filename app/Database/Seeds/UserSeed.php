@@ -21,7 +21,7 @@ class UserSeed
      */
     public static function insert(): void
     {
-        Seeder::insert(self::$table, [
+        Seeder::add(self::$table, [
             'name' => 'Admin',
             'email' => 'admin@mail.com',
             'password' => Encryption::hash('admin'),

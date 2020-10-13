@@ -22,11 +22,11 @@ class PasswordResetTable
     {
         Migration::table(self::$table)
             ->addBigInt('id')->primaryKey()
-            ->addString('email', 255)->unique()
+            ->addString('email')->unique()
             ->addString('token')
-            ->addDate('expires')->null()
-            ->addTimestamp('created_at')
-            ->addTimestamp('updated_at')
+            ->addTimestamp('expires')->null()
+            ->addTimestamp('created_at')->default(date('Y-m-d H:i:s'))
+            ->addTimestamp('updated_at')->default(date('Y-m-d H:i:s'))
             ->create();
     }
     
@@ -37,7 +37,7 @@ class PasswordResetTable
      */
     public static function delete(): void
     {
-        Migration::dropTable(self::$table);
+        Migration::drop(self::$table);
     }
     
     /**
