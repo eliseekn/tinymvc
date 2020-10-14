@@ -1,0 +1,27 @@
+<?php
+
+namespace NAMESPACE;
+
+use Framework\ORM\Seeder;
+
+class CLASSNAME
+{     
+    /**
+     * name of table
+     *
+     * @var string
+     */
+    protected static $table = 'TABLENAME';
+
+    /**
+     * insert row
+     *
+     * @return void
+     */
+    public static function insert(): void
+    {
+        Seeder::add(self::$table, [
+            //
+        ]);
+    }
+}

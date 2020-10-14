@@ -1,0 +1,16 @@
+<?php
+
+namespace NAMESPACE;
+
+class CLASSNAME
+{    
+    /**
+     * handle function
+     *
+     * @return void
+     */
+    public static function handle(): void
+    {
+       //
+    }
+}

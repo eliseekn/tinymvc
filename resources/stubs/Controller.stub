@@ -1,0 +1,11 @@
+<?php
+
+namespace NAMESPACE;
+
+class CLASSNAME
+{
+    public function index(): void
+	{
+		
+	}
+}

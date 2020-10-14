@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Database\Migrations;
+namespace NAMESPACE;
 
 use Framework\ORM\Migration;
 
-class UsersTable
+class CLASSNAME
 {         
     /**
      * name of table
      *
      * @var string
      */
-    protected static $table = 'users';
+    protected static $table = 'TABLENAME';
 
     /**
      * create table
@@ -22,15 +22,10 @@ class UsersTable
     {
         Migration::table(self::$table)
             ->addBigInt('id')->primaryKey()
-            ->addString('name')
-            ->addString('email')->unique()
-            ->addString('password')
-            ->addString('role')->default('visitor')
-            ->addBoolean('online')->default(0)
-            ->addBoolean('active')->default(0)
             ->addTimestamp('created_at')->default(date('Y-m-d H:i:s'))
             ->addTimestamp('updated_at')->default(date('Y-m-d H:i:s'))
             ->create();
+
     }
     
     /**

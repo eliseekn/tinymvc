@@ -55,7 +55,7 @@ class Database
      * @param  array $options
      * @return void
      */
-    public static function parseCommands(array $options)
+    public static function parseCommands(array $options): void
     {
         if (
             array_key_exists('migration', $options) &&
@@ -78,7 +78,7 @@ class Database
                     }
                 }
             } else {
-                foreach (Storage::path('migrations')->getFiles() as $file) {
+                foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
                     $table = explode('.', $file)[0];
                     $table = self::checkMigration($table);
                     $table::migrate();
@@ -107,7 +107,7 @@ class Database
                     }
                 }
             } else {
-                foreach (Storage::path('migrations')->getFiles() as $file) {
+                foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
                     $table = explode('.', $file)[0];
                     $table = self::checkMigration($table);
                     $table::migrate();
@@ -129,7 +129,7 @@ class Database
                     }
                 }
             } else {
-                foreach (Storage::path('seeds')->getFiles() as $file) {
+                foreach (Storage::path(config('storage.seeds'))->getFiles() as $file) {
                     $seed = explode('.', $file)[0];
                     $seed = self::checkSeed($seed);
                     $seed::insert();
@@ -158,7 +158,7 @@ class Database
                     }
                 }
             } else {
-                foreach (Storage::path('migrations')->getFiles() as $file) {
+                foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
                     $table = explode('.', $file)[0];
                     $table = self::checkMigration($table);
                     $table::reset();
@@ -180,7 +180,7 @@ class Database
                     }
                 }
             } else {
-                foreach (Storage::path('seeds')->getFiles() as $file) {
+                foreach (Storage::path(config('storage.seeds'))->getFiles() as $file) {
                     $seed = explode('.', $file)[0];
                     $seed = self::checkSeed($seed);
                     $seed::insert();
@@ -209,7 +209,7 @@ class Database
                     }
                 }
             } else {
-                foreach (Storage::path('migrations')->getFiles() as $file) {
+                foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
                     $table = explode('.', $file)[0];
                     $table = self::checkMigration($table);
                     $table::reset();
@@ -238,7 +238,7 @@ class Database
                     }
                 }
             } else {
-                foreach (Storage::path('migrations')->getFiles() as $file) {
+                foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
                     $table = explode('.', $file)[0];
                     $table = self::checkMigration($table);
                     $table::delete();
@@ -267,7 +267,7 @@ class Database
                     }
                 }
             } else {
-                foreach (Storage::path('seeds')->getFiles() as $file) {
+                foreach (Storage::path(config('storage.seeds'))->getFiles() as $file) {
                     $seed = explode('.', $file)[0];
                     $seed = self::checkSeed($seed);
                     $seed::insert();

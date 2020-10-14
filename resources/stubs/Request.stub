@@ -1,0 +1,26 @@
+<?php
+
+namespace NAMESPACE;
+
+use Framework\Support\Validator;
+
+class CLASSNAME extends Validator
+{
+    /**
+     * rules
+     * 
+     * @var array
+     */
+    protected static $rules = [
+        //
+    ];
+
+    /**
+     * custom errors messages
+     * 
+     * @var array
+     */
+    protected static $error_messages = [
+        //
+    ];
+}

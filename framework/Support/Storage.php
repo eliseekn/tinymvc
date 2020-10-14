@@ -28,7 +28,7 @@ class Storage
      */
     public static function path(string $path): self
     {
-        self::$path = config('storage.' . $path);
+        self::$path = $path;
         return new self();
     }
     

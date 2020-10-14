@@ -1,0 +1,15 @@
+<?php
+
+namespace NAMESPACE;
+
+use Framework\ORM\Model;
+
+class CLASSNAME extends Model
+{
+    /**
+     * name of table
+     *
+     * @var string
+     */
+    protected static $table = 'TABLENAME';
+}

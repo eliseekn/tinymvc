@@ -27,11 +27,11 @@ class View
      */
     public static function renderContent(string $view, array $data = [], int $status_code = 200): string
     {
-        if (!Storage::path('views')->isFile($view . '.php')) {
-            throw new Exception('File "' . Storage::path('views')->get() . $view . '.php" not found.');
+        if (!Storage::path(config('storage.views'))->isFile($view . '.php')) {
+            throw new Exception('File "' . Storage::path(config('storage.views'))->get() . $view . '.php" not found.');
         }
 
-        $engine = new Engine(Storage::path('views')->get());
+        $engine = new Engine(Storage::path(config('storage.views'))->get());
         return $engine->render($view, $data);
     }
 
