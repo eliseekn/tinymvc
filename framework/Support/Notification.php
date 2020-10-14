@@ -22,12 +22,14 @@ class Notification
      * alert
      *
      * @param  array|string $messages
+     * @param  string $title
      * @param  mixed $dissmiss
      * @return \Framework\Support\Notification
      */
-    public static function alert($messages, bool $dissmiss = true): self
+    public static function alert($messages, string $title = '', bool $dissmiss = true): self
     {
         self::$flash = [
+            'title' => $title,
             'messages' => $messages,
             'display' => 'default',
             'dismiss' => $dissmiss
@@ -40,11 +42,13 @@ class Notification
      * popup
      *
      * @param  array|string $messages
+     * @param  string $title
      * @return \Framework\Support\Notification
      */
-    public function popup($messages): self
+    public static function popup($messages, string $title = ''): self
     {
         self::$flash = [
+            'title' => $title,
             'messages' => $messages,
             'display' => 'popup'
         ];
@@ -56,11 +60,13 @@ class Notification
      * toast
      *
      * @param  array|string $messages
+     * @param  string $title
      * @return \Framework\Support\Notification
      */
-    public static function toast($messages) : self
+    public static function toast($messages, string $title = '') : self
     {
         self::$flash = [
+            'title' => $title,
             'messages' => $messages,
             'display' => 'toast'
         ];

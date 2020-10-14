@@ -21,7 +21,7 @@ $options = getopt('', [
     'migration::', 
     'seed::', 
     'delete', 
-    'reset'
+    'refresh'
 ]);
 
 //handle command line arguments

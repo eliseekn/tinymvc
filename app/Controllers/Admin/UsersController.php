@@ -39,7 +39,7 @@ class UsersController
 		$roles = RolesModel::select()->all();
 
 		if ($user === false) {
-			Notification::toast('This user does not exists')->error();
+			Notification::toast('This user does not exists', 'User not exists')->error();
 			Redirect::back()->only();
 		}
 
@@ -60,7 +60,7 @@ class UsersController
         }
 
 		if (UsersModel::find('email', Request::getField('email'))->exists()) {
-			Notification::toast('This email address already exists')->error();
+			Notification::toast('This email address already exists', 'User not created')->error();
             Redirect::back()->only();
 		}
 
@@ -71,7 +71,7 @@ class UsersController
 			'role' => Request::getField('role')
 		]);
 
-		Notification::toast('The user has been created successfully')->success();
+		Notification::toast('The user has been created successfully', 'User created')->success();
 		Redirect::toUrl('admin/users/view/' . $id)->only();
     }
 	
@@ -86,7 +86,7 @@ class UsersController
 		$user = UsersModel::find('id', $id)->single();
 		
 		if ($user === false) {
-			Notification::toast('This user does not exists')->error();
+			Notification::toast('This user does not exists', 'User not exists')->error();
 			Redirect::back()->only();
 		}
 
@@ -108,7 +108,7 @@ class UsersController
         }
 
 		if (!UsersModel::find('id', $id)->exists()) {
-			Notification::toast('This user does not exists')->error();
+			Notification::toast('This user does not exists', 'User not exists')->error();
 			Redirect::back()->only();
 		}
 
@@ -126,7 +126,7 @@ class UsersController
 
 		UsersModel::update($data)->where('id', '=', $id)->persist();
 
-		Notification::toast('The user has been updated successfully')->success();
+		Notification::toast('The user has been updated successfully', 'User updated')->success();
         Redirect::toUrl('admin/users/view/' . $id)->only();
     }
 
@@ -140,11 +140,11 @@ class UsersController
 	{
 		if (!is_null($id)) {
 			if (!UsersModel::find('id', $id)->exists()) {
-				Notification::toast('This user does not exists')->error();
+				Notification::toast('This user does not exists', 'User not exists')->error();
 			}
 	
 			UsersModel::delete()->where('id', '=', $id)->persist();
-			Notification::toast('The user has been deleted successfully')->success();
+			Notification::toast('The user has been deleted successfully', 'User deleted')->success();
 		} else {
 			$users_id = json_decode(Request::getRawData(), true);
 			$users_id = $users_id['items'];
@@ -153,7 +153,7 @@ class UsersController
 				UsersModel::delete()->where('id', '=', $id)->persist();
 			}
 			
-			Notification::toast('The selected users have been deleted successfully')->success();
+			Notification::toast('The selected users have been deleted successfully', 'Users deleted')->success();
 		}
 	}
 
@@ -167,12 +167,12 @@ class UsersController
         $file = Request::getFile('file', ['csv']);
 
 		if (!$file->isAllowed()) {
-			Notification::toast('Only file of type extension ".csv" are allowed')->error();
+			Notification::toast('Only file of type extension .csv are allowed', 'File type error')->error();
             Redirect::back()->only();
 		}
 
 		if (!$file->isUploaded()) {
-			Notification::toast('Failed to import users data')->error();
+			Notification::toast('Failed to import users data', 'Users not imported')->error();
 			Redirect::back()->only();
 		}
 
@@ -184,7 +184,7 @@ class UsersController
 			'password' => 'Password'
 		]);
 
-		Notification::toast('The users have been imported successfully')->success();
+		Notification::toast('The users have been imported successfully', 'Users imported')->success();
 		Redirect::back()->only();
 	}
 	

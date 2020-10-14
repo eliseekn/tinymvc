@@ -357,7 +357,7 @@ var AlertPopup = /*#__PURE__*/function (_HTMLElement) {
       element.setAttribute('tabindex', '-1');
       element.setAttribute('role', 'dialog');
       element.classList.add('modal', 'fade');
-      element.innerHTML = "\n            <div class=\"modal-dialog modal-dialog-centered\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-body text-center\">\n                        ".concat(this.modalIcon(), "\n                        <p class=\"modal-title my-3\">").concat(this.getAttribute('message'), "</p>\n                        <button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\">OK</button>\n                    </div>\n                </div>\n            </div>\n        ");
+      element.innerHTML = "\n            <div class=\"modal-dialog modal-dialog-centered\">\n                <div class=\"modal-content\">\n                    <div class=\"position-relative bg-".concat(this.getAttribute('type'), " rounded-top\" style=\"padding: .13em 0\"></div>\n\n                    <div class=\"modal-body text-center\">\n                        ").concat(this.modalIcon(), "\n                        <h5 class=\"modal-title mt-2 text-").concat(this.getAttribute('type'), "\">").concat(this.getAttribute('title'), "</h5>\n                        <p class=\"modal-title my-2\">").concat(this.getAttribute('message'), "</p>\n                        <button type=\"button\" class=\"btn btn-").concat(this.getAttribute('type'), "\" data-dismiss=\"modal\">OK</button>\n                    </div>\n                </div>\n            </div>\n        ");
       document.body.appendChild(element);
       $('#alert-popup').modal({
         backdrop: 'static',
@@ -446,7 +446,7 @@ var AlertToast = /*#__PURE__*/function (_HTMLElement) {
       var element = document.createElement('div');
       element.id = 'alert-toast';
       element.classList.add('fade');
-      element.innerHTML = "\n            <div class=\"modal-dialog position-absolute shadow-sm rounded\" style=\"top: -1em; right: .8em\">\n                <div class=\"modal-content border-".concat(this.getAttribute('type'), "\">\n                    <div class=\"modal-body d-flex justify-content-around align-items-center\">\n                        ").concat(this.toastIcon(), "\n\n                        <p class=\"modal-title mx-3 mb-0\">").concat(this.getAttribute('message'), "</p>\n\n                        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                            <span aria-hidden=\"true\">&times;</span>\n                        </button>\n                    </div>\n                </div>\n            </div>\n        ");
+      element.innerHTML = "\n            <div class=\"modal-dialog position-absolute shadow-sm rounded\" style=\"top: -1em; right: .8em\">\n                <div class=\"modal-content\">\n                    <div class=\"position-relative bg-".concat(this.getAttribute('type'), " rounded-top\" style=\"padding: .13em 0\"></div>\n\n                    <div class=\"modal-body d-flex justify-content-around align-items-start\">\n                        <div style=\"font-size: 1.5rem\">").concat(this.toastIcon(), "</div>\n\n                        <div class=\"d-flex flex-column px-3\">\n                            <div class=\"toast-header border-0 pl-0 text-").concat(this.getAttribute('type'), "\">").concat(this.getAttribute('title'), "</div>\n                            <p class=\"modal-title mb-0\">").concat(this.getAttribute('message'), "</p>\n                        </div>\n\n                        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                            <span aria-hidden=\"true\">&times;</span>\n                        </button>\n                    </div>\n                </div>\n            </div>\n        ");
       document.body.appendChild(element);
       $('#alert-toast').modal({
         backdrop: false,
@@ -848,7 +848,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "39517" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "41917" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

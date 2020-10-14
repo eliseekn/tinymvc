@@ -27,10 +27,13 @@ class AlertPopup extends HTMLElement {
         element.innerHTML = `
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
+                    <div class="position-relative bg-${this.getAttribute('type')} rounded-top" style="padding: .13em 0"></div>
+
                     <div class="modal-body text-center">
                         ${this.modalIcon()}
-                        <p class="modal-title my-3">${this.getAttribute('message')}</p>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+                        <h5 class="modal-title mt-2 text-${this.getAttribute('type')}">${this.getAttribute('title')}</h5>
+                        <p class="modal-title my-2">${this.getAttribute('message')}</p>
+                        <button type="button" class="btn btn-${this.getAttribute('type')}" data-dismiss="modal">OK</button>
                     </div>
                 </div>
             </div>

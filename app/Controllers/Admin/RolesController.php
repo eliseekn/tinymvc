@@ -34,7 +34,7 @@ class RolesController
 		$role = RolesModel::find('id', $id)->single();
 
 		if ($role === false) {
-			Notification::toast('This role does not exists')->error();
+			Notification::toast('This role does not exists', 'Role not exists')->error();
 			Redirect::back()->only();
 		}
 
@@ -57,7 +57,7 @@ class RolesController
 		$slug = slugify(Request::getField('title'));
 
 		if (RolesModel::find('slug', $slug)->exists()) {
-			Notification::toast('This role already exists')->error();
+			Notification::toast('This role already exists', 'Role not created')->error();
 			Redirect::back()->only();
 		}
 
@@ -67,7 +67,7 @@ class RolesController
             'description' => Request::getField('editor')
 		]);
 
-		Notification::toast('The role has been created successfully')->success();
+		Notification::toast('The role has been created successfully', 'Role created')->success();
 		Response::sendJson([], ['redirect' => absolute_url('admin/roles/view/' . $id)]);
     }
 	
@@ -82,7 +82,7 @@ class RolesController
 		$role = RolesModel::find('id', $id)->single();
 
 		if ($role === false) {
-			Notification::toast('This role does not exists')->error();
+			Notification::toast('This role does not exists', 'Role not exists')->error();
 			Redirect::back()->only();
 		}
 
@@ -104,7 +104,7 @@ class RolesController
         }
 
 		if (!RolesModel::find('id', $id)->exists()) {
-			Notification::toast('This role does not exists')->error();
+			Notification::toast('This role does not exists', 'Role not exists')->error();
 			Redirect::back()->only();
 		}
 
@@ -117,7 +117,7 @@ class RolesController
 		->where('id', '=', $id)
 		->persist();
 
-		Notification::toast('The role has been updated successfully')->success();
+		Notification::toast('The role has been updated successfully', 'Role updated')->success();
 		Response::sendJson([], ['redirect' => absolute_url('admin/roles/view/' . $id)]);
     }
 
@@ -131,11 +131,11 @@ class RolesController
 	{
 		if (!is_null($id)) {
 			if (!RolesModel::find('id', $id)->exists()) {
-				Notification::toast('This role does not exists')->error();
+				Notification::toast('This role does not exists', 'Role not exists')->error();
 			}
 	
 			RolesModel::delete()->where('id', '=', $id)->persist();
-			Notification::toast('The role has been deleted successfully')->success();
+			Notification::toast('The role has been deleted successfully', 'Role deleted')->success();
 		} else {
 			$roles_id = json_decode(Request::getRawData(), true);
 			$roles_id = $roles_id['items'];
@@ -144,7 +144,7 @@ class RolesController
 				RolesModel::delete()->where('id', '=', $id)->persist();
 			}
 			
-			Notification::toast('The selected roles have been deleted successfully')->success();
+			Notification::toast('The selected roles have been deleted successfully', 'Roles deleted')->success();
 		}
 	}
 
@@ -158,12 +158,12 @@ class RolesController
         $file = Request::getFile('file', ['csv']);
 
 		if (!$file->isAllowed()) {
-			Notification::toast('Only file of type extension ".csv" are allowed')->error();
+			Notification::toast('Only file of type extension .csv are allowed', 'File type error')->error();
             Redirect::back()->only();
 		}
 
 		if (!$file->isUploaded()) {
-			Notification::toast('Failed to import roles data')->error();
+			Notification::toast('Failed to import roles data', 'Roles not imported')->error();
 			Redirect::back()->only();
 		}
 
@@ -175,7 +175,7 @@ class RolesController
 			'description' => 'Description'
 		]);
 
-		Notification::toast('The roles have been imported successfully')->success();
+		Notification::toast('The roles have been imported successfully', 'Roles imported')->success();
 		Redirect::back()->only();
 	}
 	
