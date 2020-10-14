@@ -6,12 +6,12 @@ use Framework\HTTP\Request;
 use Framework\Routing\View;
 use Framework\HTTP\Redirect;
 use App\Helpers\ReportHelper;
-use Framework\Support\Session;
 use App\Requests\RegisterRequest;
 use Framework\Support\Encryption;
 use App\Database\Models\RolesModel;
 use App\Database\Models\UsersModel;
 use App\Requests\UpdateUserRequest;
+use Framework\Support\Notification;
 
 class UsersController
 {
@@ -39,7 +39,7 @@ class UsersController
 		$roles = RolesModel::select()->all();
 
 		if ($user === false) {
-			Session::flash('This user does not exists')->error()->toast();
+			Notification::toast('This user does not exists')->error();
 			Redirect::back()->only();
 		}
 
@@ -60,7 +60,7 @@ class UsersController
         }
 
 		if (UsersModel::find('email', Request::getField('email'))->exists()) {
-			Session::flash('This email address already exists')->error()->toast();
+			Notification::toast('This email address already exists')->error();
             Redirect::back()->only();
 		}
 
@@ -71,7 +71,7 @@ class UsersController
 			'role' => Request::getField('role')
 		]);
 
-		Session::flash('The user has been created successfully')->success()->toast();
+		Notification::toast('The user has been created successfully')->success();
 		Redirect::toUrl('admin/users/view/' . $id)->only();
     }
 	
@@ -86,7 +86,7 @@ class UsersController
 		$user = UsersModel::find('id', $id)->single();
 		
 		if ($user === false) {
-			Session::flash('This user does not exists')->error()->toast();
+			Notification::toast('This user does not exists')->error();
 			Redirect::back()->only();
 		}
 
@@ -108,7 +108,7 @@ class UsersController
         }
 
 		if (!UsersModel::find('id', $id)->exists()) {
-			Session::flash('This user does not exists')->error()->toast();
+			Notification::toast('This user does not exists')->error();
 			Redirect::back()->only();
 		}
 
@@ -126,7 +126,7 @@ class UsersController
 
 		UsersModel::update($data)->where('id', '=', $id)->persist();
 
-		Session::flash('The user has been updated successfully')->success()->toast();
+		Notification::toast('The user has been updated successfully')->success();
         Redirect::toUrl('admin/users/view/' . $id)->only();
     }
 
@@ -140,20 +140,20 @@ class UsersController
 	{
 		if (!is_null($id)) {
 			if (!UsersModel::find('id', $id)->exists()) {
-				Session::flash('This user does not exists')->error()->toast();
+				Notification::toast('This user does not exists')->error();
 			}
 	
-			UsersModel::delete($id);
-			Session::flash('The user has been deleted successfully')->success()->toast();
+			UsersModel::delete()->where('id', '=', $id)->persist();
+			Notification::toast('The user has been deleted successfully')->success();
 		} else {
 			$users_id = json_decode(Request::getRawData(), true);
 			$users_id = $users_id['items'];
 
 			foreach ($users_id as $id) {
-				UsersModel::delete($id);
+				UsersModel::delete()->where('id', '=', $id)->persist();
 			}
 			
-			Session::flash('The selected users have been deleted successfully')->success()->toast();
+			Notification::toast('The selected users have been deleted successfully')->success();
 		}
 	}
 
@@ -167,12 +167,12 @@ class UsersController
         $file = Request::getFile('file', ['csv']);
 
 		if (!$file->isAllowed()) {
-			Session::flash('Only file of type extension ".csv" are allowed')->error()->toast();
+			Notification::toast('Only file of type extension ".csv" are allowed')->error();
             Redirect::back()->only();
 		}
 
 		if (!$file->isUploaded()) {
-			Session::flash('Failed to import users data')->error()->toast();
+			Notification::toast('Failed to import users data')->error();
 			Redirect::back()->only();
 		}
 
@@ -184,7 +184,7 @@ class UsersController
 			'password' => 'Password'
 		]);
 
-		Session::flash('The user has been imported successfully')->success()->toast();
+		Notification::toast('The users have been imported successfully')->success();
 		Redirect::back()->only();
 	}
 	

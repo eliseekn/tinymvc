@@ -4,14 +4,14 @@ namespace App\Database\Migrations;
 
 use Framework\ORM\Migration;
 
-class UsersTable
+class SubUsersTable
 {         
     /**
      * name of table
      *
      * @var string
      */
-    protected static $table = 'users';
+    protected static $table = 'sub_users';
 
     /**
      * create table
@@ -22,16 +22,9 @@ class UsersTable
     {
         Migration::table(self::$table)
             ->addBigInt('id')->primaryKey()
-            ->addString('name')
-            ->addString('email')->unique()
-            ->addString('password')
-            ->addString('role')->default('user')
-            ->addBoolean('online')->default(0)
-            ->addBoolean('active')->default(0)
-            ->addTimestamp('created_at')->default(date('Y-m-d H:i:s'))
-            ->addTimestamp('updated_at')->default(date('Y-m-d H:i:s'))
+            ->addBigInt('parent_id')
+            ->addForeignKey('fk_user', 'parent_id')->references('users', 'id')->onDelete()->cascade()->onUpdate()->cascade()
             ->create();
-
     }
     
     /**

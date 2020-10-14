@@ -22,7 +22,6 @@ class Seeder
      */
     public static function add(string $table, array $items): void
     {
-        list($query, $args) = Builder::insert($table, $items)->get();
-        Database::getInstance()->executeQuery($query, $args);
+        Builder::insert($table, $items)->execute();
     }
 }

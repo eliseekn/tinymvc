@@ -10,8 +10,8 @@ namespace Framework\HTTP;
 
 use Exception;
 use Framework\Routing\Route;
-use Framework\Support\Session;
 use Framework\Support\Browsing;
+use Framework\Support\Notification;
 
 /**
  * Handle HTTP redirection
@@ -108,7 +108,7 @@ class Redirect
      */
     public function withSuccess($messages): void
     {
-        Session::flash($messages)->success()->default();
+        Notification::alert($messages)->success();
         redirect_to(self::$redirect_url);
     }
 
@@ -120,31 +120,31 @@ class Redirect
      */
     public function withError($messages): void
     {
-        Session::flash($messages)->error()->default();
+        Notification::alert($messages)->error();
         redirect_to(self::$redirect_url);
     }
 
     /**
-     * redirects with success flash messages
+     * redirects with warning flash messages
      *
      * @param  mixed $messages
      * @return void
      */
     public function withWarning($messages): void
     {
-        Session::flash($messages)->warning()->default();
+        Notification::alert($messages)->warning();
         redirect_to(self::$redirect_url);
     }
 
     /**
-     * redirects with success flash messages
+     * redirects with info flash messages
      *
      * @param  mixed $messages
      * @return void
      */
     public function withInfo($messages): void
     {
-        Session::flash($messages)->info()->default();
+        Notification::alert($messages)->info();
         redirect_to(self::$redirect_url);
     }
 

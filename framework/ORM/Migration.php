@@ -143,6 +143,76 @@ class Migration
     }
     
     /**
+     * add foreign key constraints
+     *
+	 * @param  string $name
+	 * @param  string $column
+     * @return \Framework\ORM\Migration
+     */
+	public function addForeignKey(string $name, string $column): self
+	{
+		self::$query->foreign($name, $column);
+        return $this;
+	}
+	
+	/**
+	 * add references
+	 *
+	 * @param  string $table
+	 * @param  string $column
+	 * @return \Framework\ORM\Migration
+	 */
+	public function references(string $table, string $column): self
+	{
+		self::$query->references($table, $column);
+        return $this;
+	}
+	
+	/**
+	 * add on update attribute
+	 *
+	 * @return \Framework\ORM\Migration
+	 */
+	public function onUpdate(): self
+	{
+		self::$query->onUpdate();
+        return $this;
+	}
+	
+	/**
+	 * add on delete attribute
+	 *
+	 * @return \Framework\ORM\Migration
+	 */
+	public function onDelete(): self
+	{
+		self::$query->onDelete();
+        return $this;
+	}
+	
+	/**
+	 * add cascade attribute
+	 *
+	 * @return \Framework\ORM\Migration
+	 */
+	public function cascade(): self
+	{
+		self::$query->cascade();
+        return $this;
+	}
+	
+	/**
+	 * add set null attribute
+	 *
+	 * @return \Framework\ORM\Migration
+	 */
+	public function setNull(): self
+	{
+		self::$query->setNull();
+        return $this;
+	}
+    
+    /**
      * add primary key and auto increment attributes
      *
      * @return \Framework\ORM\Migration
@@ -188,25 +258,13 @@ class Migration
     }
     
     /**
-     * execute
-     *
-     * @return void
-     */
-    public static function execute(): void
-    {
-        list($query, $args) = self::$query->get();
-        Database::getInstance()->executeQuery($query, $args);
-    }
-    
-    /**
      * create new table
      *
      * @return void
      */
     public function create(): void
     {
-        self::$query->create();
-        self::execute();
+        self::$query->create()->execute();
     }
 
     /**
@@ -217,7 +275,6 @@ class Migration
      */
     public static function drop(string $table): void
     {
-        self::$query->drop($table);
-        self::execute();
+        Builder::drop($table)->execute();
     }
 }

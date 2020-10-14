@@ -14,11 +14,6 @@ namespace Framework\Support;
 class Session
 {    
     /**
-     * @var array
-     */
-    protected static $flash = [];
-
-    /**
      * create
      *
      * @param  mixed $name
@@ -102,99 +97,5 @@ class Session
     public static function deleteUser(): void
     {
         self::close(config('app.name') . '_user');
-    }
-    
-    /**
-     * init flash
-     *
-     * @param  array|string $messages
-     * @return \Framework\Support\Session
-     */
-    public static function flash($messages): self
-    {
-        self::$flash = ['messages' => $messages];
-        return new self();
-    }
-    
-    /**
-     * success
-     *
-     * @return self
-     */
-    public function success(): self
-    {
-        self::$flash = array_merge(self::$flash, ['type' => 'success']);
-        return new self();
-    }
-    
-    /**
-     * error
-     *
-     * @return self
-     */
-    public function error(): self
-    {
-        self::$flash = array_merge(self::$flash, ['type' => 'danger']);
-        return new self();
-    }
-    
-    /**
-     * info
-     *
-     * @return self
-     */
-    public function info(): self 
-    {
-        self::$flash = array_merge(self::$flash, ['type' => 'primary']);
-        return new self();
-    }
-    
-    /**
-     * warning
-     *
-     * @return self
-     */
-    public function warning(): self 
-    {
-        self::$flash = array_merge(self::$flash, ['type' => 'warning']);
-        return new self();
-    }
-    
-    /**
-     * default
-     *
-     * @param  mixed $dissmiss
-     * @return void
-     */
-    public function default(bool $dissmiss = true): void
-    {
-        self::$flash = array_merge(self::$flash, [
-            'display' => 'default',
-            'dismiss' => $dissmiss
-        ]);
-
-        self::create('flash_messages', self::$flash);
-    }
-    
-    /**
-     * popup
-     *
-     * @return void
-     */
-    public function popup(): void
-    {
-        self::$flash = array_merge(self::$flash, ['display' => 'popup']);
-        self::create('flash_messages', self::$flash);
-    }
-    
-    /**
-     * toast
-     *
-     * @return void
-     */
-    public function toast(): void
-    {
-        self::$flash = array_merge(self::$flash, ['display' => 'toast']);
-        self::create('flash_messages', self::$flash);
     }
 }

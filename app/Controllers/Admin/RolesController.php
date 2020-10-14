@@ -7,9 +7,9 @@ use Framework\Routing\View;
 use Framework\HTTP\Redirect;
 use Framework\HTTP\Response;
 use App\Helpers\ReportHelper;
-use Framework\Support\Session;
-use App\Database\Models\RolesModel;
 use App\Requests\RoleRequest;
+use App\Database\Models\RolesModel;
+use Framework\Support\Notification;
 
 class RolesController
 {
@@ -34,7 +34,7 @@ class RolesController
 		$role = RolesModel::find('id', $id)->single();
 
 		if ($role === false) {
-			Session::flash('This role does not exists')->error()->toast();
+			Notification::toast('This role does not exists')->error();
 			Redirect::back()->only();
 		}
 
@@ -57,7 +57,7 @@ class RolesController
 		$slug = slugify(Request::getField('title'));
 
 		if (RolesModel::find('slug', $slug)->exists()) {
-			Session::flash('This role already exists')->error()->toast();
+			Notification::toast('This role already exists')->error();
 			Redirect::back()->only();
 		}
 
@@ -67,7 +67,7 @@ class RolesController
             'description' => Request::getField('editor')
 		]);
 
-		Session::flash('The role has been created successfully')->success()->toast();
+		Notification::toast('The role has been created successfully')->success();
 		Response::sendJson([], ['redirect' => absolute_url('admin/roles/view/' . $id)]);
     }
 	
@@ -82,7 +82,7 @@ class RolesController
 		$role = RolesModel::find('id', $id)->single();
 
 		if ($role === false) {
-			Session::flash('This role does not exists')->error()->toast();
+			Notification::toast('This role does not exists')->error();
 			Redirect::back()->only();
 		}
 
@@ -104,7 +104,7 @@ class RolesController
         }
 
 		if (!RolesModel::find('id', $id)->exists()) {
-			Session::flash('This role does not exists')->error()->toast();
+			Notification::toast('This role does not exists')->error();
 			Redirect::back()->only();
 		}
 
@@ -113,9 +113,11 @@ class RolesController
             'slug' => slugify(Request::getField('title')),
             'description' => Request::getField('editor'),
             'updated_at' => date("Y-m-d H:i:s")
-		])->where('id', '=', $id)->persist();
+		])
+		->where('id', '=', $id)
+		->persist();
 
-		Session::flash('The role has been updated successfully')->success()->toast();
+		Notification::toast('The role has been updated successfully')->success();
 		Response::sendJson([], ['redirect' => absolute_url('admin/roles/view/' . $id)]);
     }
 
@@ -129,20 +131,20 @@ class RolesController
 	{
 		if (!is_null($id)) {
 			if (!RolesModel::find('id', $id)->exists()) {
-				Session::flash('This role does not exists')->error()->toast();
+				Notification::toast('This role does not exists')->error();
 			}
 	
-			RolesModel::delete($id);
-			Session::flash('The role has been deleted successfully')->success()->toast();
+			RolesModel::delete()->where('id', '=', $id)->persist();
+			Notification::toast('The role has been deleted successfully')->success();
 		} else {
 			$roles_id = json_decode(Request::getRawData(), true);
 			$roles_id = $roles_id['items'];
 
 			foreach ($roles_id as $id) {
-				RolesModel::delete($id);
+				RolesModel::delete()->where('id', '=', $id)->persist();
 			}
 			
-			Session::flash('The selected roles have been deleted successfully')->success()->toast();
+			Notification::toast('The selected roles have been deleted successfully')->success();
 		}
 	}
 
@@ -156,12 +158,12 @@ class RolesController
         $file = Request::getFile('file', ['csv']);
 
 		if (!$file->isAllowed()) {
-			Session::flash('Only file of type extension ".csv" are allowed')->error()->toast();
+			Notification::toast('Only file of type extension ".csv" are allowed')->error();
             Redirect::back()->only();
 		}
 
 		if (!$file->isUploaded()) {
-			Session::flash('Failed to import roles data')->error()->toast();
+			Notification::toast('Failed to import roles data')->error();
 			Redirect::back()->only();
 		}
 
@@ -173,7 +175,7 @@ class RolesController
 			'description' => 'Description'
 		]);
 
-		Session::flash('The role has been imported successfully')->success()->toast();
+		Notification::toast('The roles have been imported successfully')->success();
 		Redirect::back()->only();
 	}
 	

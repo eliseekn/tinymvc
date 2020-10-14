@@ -100,7 +100,7 @@ class Metrics
     public function getCount(string $column, ?string $trends = null)
     {
         if (is_null($trends)) {
-            return Builder::select('COUNT(' . $column . ')')
+            return Builder::select('COUNT(' . $column . ') AS value')
                 ->from($this->table)
                 ->execute()
                 ->fetchAll();
@@ -119,7 +119,7 @@ class Metrics
     public function getSum(string $column, ?string $trends = null)
     {
         if (is_null($trends)) {
-            return Builder::select('SUM(' . $column . ')')
+            return Builder::select('SUM(' . $column . ') AS value')
                 ->from($this->table)
                 ->execute()
                 ->fetchAll();
@@ -138,7 +138,7 @@ class Metrics
     public function getAverage(string $column, ?string $trends = null)
     {
         if (is_null($trends)) {
-            return Builder::select('AVG(' . $column . ')')
+            return Builder::select('AVG(' . $column . ') AS value')
                 ->from($this->table)
                 ->execute()
                 ->fetchAll();
@@ -157,7 +157,7 @@ class Metrics
     public function getMin(string $column, ?string $trends = null)
     {
         if (is_null($trends)) {
-            return Builder::select('MIN(' . $column . ')')
+            return Builder::select('MIN(' . $column . ') AS value')
                 ->from($this->table)
                 ->execute()
                 ->fetchAll();
@@ -176,7 +176,7 @@ class Metrics
     public function getMax(string $column, ?string $trends = null)
     {
         if (is_null($trends)) {
-            return Builder::select('MAX(' . $column . ')')
+            return Builder::select('MAX(' . $column . ') AS value')
                 ->from($this->table)
                 ->execute()
                 ->fetchAll();

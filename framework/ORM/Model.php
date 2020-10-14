@@ -53,24 +53,6 @@ class Model
 	}
     
     /**
-     * generate select where and query
-     *
-	 * @param  string $column
-	 * @param  mixed $value
-     * @return \Framework\ORM\Model
-     */
-    public static function findMany(array $first, array $and): self
-	{
-        $model = self::select()->where($first[0], '=', $first[1]);
-
-        foreach ($and as $column => $value) {
-            $model->and($column, '=', $value);
-        }
-
-        return $model;
-	}
-    
-    /**
      * generate search query
      *
      * @param  string $column
@@ -115,6 +97,50 @@ class Model
     {
         self::$query = Builder::delete(static::$table);
         return new self();
+    }
+    
+    /**
+     * get column count value
+     *
+     * @param  string $column
+     * @return mixed
+     */
+    public static function count(string $column = 'id')
+    {
+        return self::select(['COUNT(' . $column . ') AS value'])->single();
+    }
+    
+    /**
+     * get column sum value
+     *
+     * @param  string $column
+     * @return mixed
+     */
+    public static function sum(string $column)
+    {
+        return self::select(['SUM(' . $column . ') AS value'])->single();
+    }
+    
+    /**
+     * get column max value
+     *
+     * @param  string $column
+     * @return mixed
+     */
+    public static function max(string $column)
+    {
+        return self::select(['MAX(' . $column . ') AS value'])->single();
+    }
+    
+    /**
+     * get column min value
+     *
+     * @param  string $column
+     * @return mixed
+     */
+    public static function min(string $column)
+    {
+        return self::select(['MIN(' . $column . ') AS value'])->single();
     }
 
 	/**
@@ -278,7 +304,7 @@ class Model
      */
     public function single()
     {
-        return self::$query->execute()->fetch();
+        return $this->persist()->fetch();
     }
     
     /**
@@ -288,7 +314,7 @@ class Model
      */
     public function all(): array
     {
-        return self::$query->execute()->fetchAll();
+        return $this->persist()->fetchAll();
     }
     
     /**
@@ -360,10 +386,10 @@ class Model
     /**
      * execute query
      *
-     * @return void
+     * @return \PDOStatement
      */
-    public function persist(): void
+    public function persist(): \PDOStatement
     {
-        self::$query->execute();
+        return self::$query->execute();
     }
 }

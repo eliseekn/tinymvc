@@ -121,6 +121,19 @@ class Builder
 		self::$query = "DROP TABLE IF EXISTS " . config('database.table_prefix') . "$table";
 		return new self();
 	}
+	
+	/**
+	 * generate DROP FOREIGN KEY query
+	 *
+	 * @param  string $table
+	 * @param  string $key foreign key name
+	 * @return \Framework\ORM\Builder
+	 */
+	public static function dropForeign(string $table, string $key): self
+	{
+		self::$query = "ALTER TABLE " . config('database.table_prefix') . "$table DROP FOREIGN KEY $key";
+		return new self();
+	}
 		
 	/**
 	 * column
@@ -181,7 +194,77 @@ class Builder
         self::$query = rtrim(self::$query, ', ');
         self::$query .= " DEFAULT '$default', ";
         return $this;
-    }
+	}
+		
+	/**
+	 * add foreign key
+	 *
+	 * @param  string $name
+	 * @param  string $column
+	 * @return \Framework\ORM\Builder
+	 */
+	public function foreign(string $name, string $column): self
+	{
+		self::$query .= " CONSTRAINT $name FOREIGN KEY ($column)";
+        return $this;
+	}
+	
+	/**
+	 * add references
+	 *
+	 * @param  string $table
+	 * @param  string $column
+	 * @return \Framework\ORM\Builder
+	 */
+	public function references(string $table, string $column): self
+	{
+		self::$query .= " REFERENCES $table($column)";
+        return $this;
+	}
+	
+	/**
+	 * onUpdate
+	 *
+	 * @return \Framework\ORM\Builder
+	 */
+	public function onUpdate(): self
+	{
+		self::$query .= " ON UPDATE";
+        return $this;
+	}
+	
+	/**
+	 * onDelete
+	 *
+	 * @return \Framework\ORM\Builder
+	 */
+	public function onDelete(): self
+	{
+		self::$query .= " ON DELETE";
+        return $this;
+	}
+	
+	/**
+	 * cascade
+	 *
+	 * @return \Framework\ORM\Builder
+	 */
+	public function cascade(): self
+	{
+		self::$query .= " CASCADE";
+        return $this;
+	}
+	
+	/**
+	 * setNull
+	 *
+	 * @return \Framework\ORM\Builder
+	 */
+	public function setNull(): self
+	{
+		self::$query .= " SET NULL";
+        return $this;
+	}
     
     /**
      * create new table
@@ -370,7 +453,7 @@ class Builder
 	 * @param  string $first_column
 	 * @return \Framework\ORM\Builder
 	 */
-	public function innerJoin(string $table, string $second_column, string $first_column): self
+	public function join(string $table, string $second_column, string $first_column): self
 	{
 		self::$query .= " INNER JOIN " . config('database.table_prefix') . "$table ON $first_column = $second_column";
 		return $this;
