@@ -17,6 +17,7 @@ $config = [
         'url' => 'http://localhost/tinymvc'
     ],
 
+    //mysql
     'database' => [
         'charset' => 'utf8',
         'host' => 'localhost',
@@ -26,6 +27,7 @@ $config = [
         'table_prefix' => ''
     ],
 
+    //smtp
     'mailer' => [
         'host' => 'localhost',
         'port' => 25,

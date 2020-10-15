@@ -10,6 +10,7 @@ namespace Framework\ORM;
 
 use Framework\HTTP\Request;
 use Framework\Support\Pager;
+use Framework\Support\Metrics;
 
 /**
  * Simplify use of builder
@@ -44,12 +45,13 @@ class Model
      * generate select where = query
      *
 	 * @param  string $column
+	 * @param  mixed $operator
 	 * @param  mixed $value
      * @return \Framework\ORM\Model
      */
-    public static function find(string $column, $value): self
+    public static function find(string $column, $operator = null, $value = null): self
 	{
-        return self::select()->where($column, '=', $value);
+        return self::select()->where($column, $operator, $value);
 	}
     
     /**
@@ -142,60 +144,102 @@ class Model
     {
         return self::select(['MIN(' . $column . ') AS value'])->single();
     }
+    
+    /**
+     * retrieves metrics
+     *
+     * @param  string $column
+     * @param  string $type
+     * @param  string $trends
+     * @return mixed
+     */
+    public static function metrics(string $column, string $type, string $trends)
+    {
+        return (new Metrics(static::$table))->getTrends($type, $column, $trends);
+    }
 
 	/**
 	 * add WHERE clause
 	 *
 	 * @param  string $column
-	 * @param  string $operator
+	 * @param  mixed $operator
 	 * @param  mixed $value
 	 * @return \Framework\ORM\Model
 	 */
-    public function where(string $column, string $operator, $value): self
+    public function where(string $column, $operator = null, $value = null): self
 	{
-        self::$query->where($column, $operator, $value);
+        if (!is_null($operator) && is_null($value)) {
+            self::$query->where($column, '=', $operator);
+        }
+
+        else if (!is_null($operator) && !is_null($value)) {
+            self::$query->where($column, $operator, $value);
+        }
+        
 		return $this;
 	}
 
 	/**
 	 * add AND WHERE clause
 	 *
-	 * @param  string $column
-	 * @param  string $operator
+	 * @param  mixed $column
+	 * @param  mixed $operator
 	 * @param  mixed $value
 	 * @return \Framework\ORM\Model
 	 */
-    public function and(string $column, string $operator, $value): self
+    public function and(string $column, $operator = null, $value = null): self
     {
-        self::$query->and($column, $operator, $value);
+        if (!is_null($operator) && is_null($value)) {
+            self::$query->and($column, '=', $operator);
+        }
+
+        else if (!is_null($operator) && !is_null($value)) {
+            self::$query->and($column, $operator, $value);
+        }
+
 		return $this;
     }
 
 	/**
 	 * add OR WHERE clause
 	 *
-	 * @param  string $column
-	 * @param  string $operator
+	 * @param  mixed $column
+	 * @param  mixed $operator
 	 * @param  mixed $value
 	 * @return \Framework\ORM\Model
 	 */
-    public function or(string $column, string $operator, $value): self
+    public function or(string $column, $operator = null, $value = null): self
     {
-        self::$query->or($column, $operator, $value);
+        if (!is_null($operator) && is_null($value)) {
+            self::$query->or($column, '=', $operator);
+        }
+
+        else if (!is_null($operator) && !is_null($value)) {
+            self::$query->or($column, $operator, $value);
+        }
+
 		return $this;
     }
 
     /**
 	 * add HAVING clause
 	 *
-	 * @param  string $column
-	 * @param  string $operator
+	 * @param  mixed $column
+	 * @param  mixed $operator
 	 * @param  mixed $value
 	 * @return \Framework\ORM\Model
 	 */
-    public function having(string $column, string $operator, $value): self
+    public function having(string $column, $operator = null, $value = null): self
 	{
-        self::$query->having($column, $operator, $value);
+        
+        if (!is_null($operator) && is_null($value)) {
+            self::$query->having($column, '=', $operator);
+        }
+
+        else if (!is_null($operator) && !is_null($value)) {
+            self::$query->having($column, $operator, $value);
+        }
+
 		return $this;
 	}
 
@@ -278,12 +322,12 @@ class Model
     /**
      * add GROUP clause
      *
-     * @param  string $column
+     * @param  array $columns
      * @return \Framework\ORM\Model
      */
-    public function group(string $column): self
+    public function group(array $columns): self
     {
-        self::$query->groupBy($column);
+        self::$query->groupBy(implode(',', $columns));
         return $this;
     }
 

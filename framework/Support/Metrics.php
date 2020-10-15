@@ -19,6 +19,19 @@ class Metrics
      * @var string
      */
     private $table;
+
+    /**
+     * metrics constants
+     */
+    public const COUNT = 'COUNT';
+    public const AVERAGE = 'AVG';
+    public const SUM = 'SUM';
+    public const MAX = 'MAX';
+    public const MIN = 'MIN';
+    public const DAYS = 'days';
+    public const WEEKS = 'weeks';
+    public const MONTHS = 'months';
+    public const YEARS = 'years';
     
     /**
      * __construct
@@ -34,26 +47,25 @@ class Metrics
     /**
      * get items value according to trends
      *
-     * @param  string $value
+     * @param  string $type
      * @param  string $column
      * @param  string $trends
      * @return mixed
      * @link   https://www.tutsmake.com/mysql-get-data-of-current-date-week-month-year/
      */
-    private function getTrends(string $value, string $column, string $trends)
+    public function getTrends(string $type, string $column, string $trends)
     {
         switch ($trends) {
             case 'days':
-                return Builder::select($value . '(' . $column . ') AS value')
-                        ->from($this->table)
-                        ->where('DATE(created_at)', '=', date('Y-m-d'))
-                        ->execute()
-                        ->fetchAll();
-
+                return Builder::select($type . '(' . $column . ') AS value')
+                    ->from($this->table)
+                    ->where('DATE(created_at)', '=', date('Y-m-d'))
+                    ->execute()
+                    ->fetchAll();
 
             case 'weeks':
                 return Builder::select(
-                        $value . '(' . $column . ') AS value',
+                        $type . '(' . $column . ') AS value',
                         'DAYNAME(created_at) AS day'
                     )
                     ->from($this->table)
@@ -67,7 +79,7 @@ class Metrics
 
             case 'months':
                 return Builder::select(
-                        $value . '(' . $column . ') AS value',
+                        $type . '(' . $column . ') AS value',
                         'MONTHNAME(created_at) AS month'
                     )
                     ->from($this->table)
@@ -79,110 +91,14 @@ class Metrics
             
             case 'years':
                 return Builder::select(
-                            $value . '(' . $column . ') AS value',
-                            'YEAR(created_at) AS year'
-                        )
-                        ->from($this->table)
-                        ->groupBy('YEAR(created_at)')
-                        ->orderBy('YEAR(created_at)', 'ASC')
-                        ->execute()
-                        ->fetchAll();
+                        $type . '(' . $column . ') AS value',
+                        'YEAR(created_at) AS year'
+                    )
+                    ->from($this->table)
+                    ->groupBy('YEAR(created_at)')
+                    ->orderBy('YEAR(created_at)', 'ASC')
+                    ->execute()
+                    ->fetchAll();
         }
-    }
-    
-    /**
-     * get items count
-     *
-     * @param  string $column
-     * @param  string|null $trends
-     * @return mixed
-     */
-    public function getCount(string $column, ?string $trends = null)
-    {
-        if (is_null($trends)) {
-            return Builder::select('COUNT(' . $column . ') AS value')
-                ->from($this->table)
-                ->execute()
-                ->fetchAll();
-        } else {
-            return $this->getTrends('COUNT' , $column, $trends);
-        }
-    }
-    
-    /**
-     * get items sum
-     *
-     * @param  string $column
-     * @param  string|null $trends
-     * @return mixed
-     */
-    public function getSum(string $column, ?string $trends = null)
-    {
-        if (is_null($trends)) {
-            return Builder::select('SUM(' . $column . ') AS value')
-                ->from($this->table)
-                ->execute()
-                ->fetchAll();
-        } else {
-            return $this->getTrends('SUM' , $column, $trends);
-        }
-    }
-    
-    /**
-     * get items average
-     *
-     * @param  string $column
-     * @param  string|null $trends
-     * @return mixed
-     */
-    public function getAverage(string $column, ?string $trends = null)
-    {
-        if (is_null($trends)) {
-            return Builder::select('AVG(' . $column . ') AS value')
-                ->from($this->table)
-                ->execute()
-                ->fetchAll();
-        } else {
-            return $this->getTrends('AVG' , $column, $trends);
-        }
-    }
-    
-    /**
-     * get minimum item
-     *
-     * @param  string $column
-     * @param  string|null $trends
-     * @return mixed
-     */
-    public function getMin(string $column, ?string $trends = null)
-    {
-        if (is_null($trends)) {
-            return Builder::select('MIN(' . $column . ') AS value')
-                ->from($this->table)
-                ->execute()
-                ->fetchAll();
-        } else {
-            return $this->getTrends('MIN' , $column, $trends);
-        }
-    }
-    
-    /**
-     * get miaxmum item
-     *
-     * @param  string $column
-     * @param  string|null $trends
-     * @return mixed
-     */
-    public function getMax(string $column, ?string $trends = null)
-    {
-        if (is_null($trends)) {
-            return Builder::select('MAX(' . $column . ') AS value')
-                ->from($this->table)
-                ->execute()
-                ->fetchAll();
-        } else {
-            return $this->getTrends('MAX' , $column, $trends);
-        }
-    
     }
 }

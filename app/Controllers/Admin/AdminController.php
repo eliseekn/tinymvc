@@ -3,7 +3,7 @@
 namespace App\Controllers\Admin;
 
 use Framework\Routing\View;
-use App\Helpers\MetricsHelper;
+use Framework\Support\Metrics;
 use App\Database\Models\RolesModel;
 use App\Database\Models\UsersModel;
 
@@ -20,7 +20,7 @@ class AdminController
 			'users' => UsersModel::select()->all(),
 			'online_users' => UsersModel::find('online', 1)->all(),
 			'active_users' => UsersModel::find('active', 1)->all(),
-			'users_metrics' => MetricsHelper::getCount('users', 'id', 'months')
+			'users_metrics' => UsersModel::metrics('id', Metrics::COUNT, Metrics::MONTHS)
 		]);
 	}
 

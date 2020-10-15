@@ -366,12 +366,18 @@ class Builder
 	/**
 	 * generate GROUP BY query
 	 *
-	 * @param  string $column
+	 * @param  string of string $columns
 	 * @return \Framework\ORM\Builder
 	 */
-	public function groupBy(string $column): self
+	public function groupBy(string ...$columns): self
 	{
-		self::$query .= " GROUP BY $column ";
+		self::$query .= ' GROUP BY ';
+
+		foreach ($columns as $column) {
+			self::$query .= "$column, ";
+		}
+
+		self::$query = rtrim(self::$query, ', ');
 		return $this;
 	}
 

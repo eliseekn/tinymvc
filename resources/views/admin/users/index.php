@@ -1,8 +1,4 @@
-<?php
-$this->layout('admin/layout', [
-    'page_title' => 'Users | Administration'
-])
-?>
+<?php $this->layout('admin/layout', ['page_title' => 'Users | Administration']) ?>
 
 <?php $this->start('page_content') ?>
 
@@ -138,11 +134,7 @@ endif
     <div class="card-footer d-flex align-items-center justify-content-between">
         <span>Total result(s): <span class="font-weight-bold"><?= $users->getTotalItems() ?></span></span>
 
-        <?php
-        $this->insert('partials/pagination', [
-            'pagination' => $users
-        ])
-        ?>
+        <?php $this->insert('partials/pagination', ['pagination' => $users]) ?>
     </div>
 </div>
 
