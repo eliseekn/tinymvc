@@ -12,6 +12,7 @@ use App\Database\Models\RolesModel;
 use App\Database\Models\UsersModel;
 use App\Requests\UpdateUserRequest;
 use Framework\Support\Notification;
+use Framework\Support\Session;
 
 class UsersController
 {
@@ -56,6 +57,7 @@ class UsersController
 		$validate = RegisterRequest::validate(Request::getFields());
         
         if (is_array($validate)) {
+			Session::setErrors(Request::getFields());
             Redirect::back()->withError($validate);
         }
 

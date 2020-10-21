@@ -6,8 +6,6 @@
  * @link https://github.com/eliseekn/TinyMVC
  */
 
-use App\Database\Models\UsersModel;
-
 /**
  * Main pplication entry
  */
@@ -17,10 +15,6 @@ require 'vendor/autoload.php';
 require_once 'config/env.php';
 require_once 'routes/app.php';
 require_once 'routes/web.php';
-
-dump_vars(
-    UsersModel::select()->all()
-);
 
 //start routing
 new \Framework\Routing\Router();

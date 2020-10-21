@@ -25,8 +25,6 @@ class PasswordResetTable
             ->addString('email')->unique()
             ->addString('token')
             ->addTimestamp('expires')->null()
-            ->addTimestamp('created_at')->default(date('Y-m-d H:i:s'))
-            ->addTimestamp('updated_at')->default(date('Y-m-d H:i:s'))
             ->create();
     }
     
@@ -41,11 +39,11 @@ class PasswordResetTable
     }
     
     /**
-     * reset table
+     * refresh table
      *
      * @return void
      */
-    public static function reset(): void
+    public static function refresh(): void
     {
         self::delete();
         self::migrate();

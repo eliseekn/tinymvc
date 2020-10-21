@@ -52,7 +52,7 @@ class Migration
      */
     public function addSmallInt(string $name, int $length = 6): self 
     {
-        self::$query->column($name, "MALLINT($length)");
+        self::$query->column($name, "SMALLINT($length)");
         return $this;
     }
 
@@ -77,7 +77,7 @@ class Migration
      */
     public function addChar(string $name): self 
     {
-        self::$query->column($name, "CHAR(1)");
+        self::$query->column($name, 'CHAR(1)');
         return $this;
     }
 
@@ -102,7 +102,7 @@ class Migration
      */
     public function addText(string $name): self 
     {
-        self::$query->column($name, "TEXT");
+        self::$query->column($name, 'TEXT');
         return $this;
     }
 
@@ -114,7 +114,31 @@ class Migration
      */
     public function addLongText(string $name): self 
     {
-        self::$query->column($name, "LONGTEXT");
+        self::$query->column($name, 'LONGTEXT');
+        return $this;
+    }
+
+    /**
+     * add column of type date
+     *
+     * @param  string $name
+     * @return \Framework\ORM\Migration
+     */
+    public function addDate(string $name): self 
+    {
+        self::$query->column($name, 'DATE');
+        return $this;
+    }
+
+    /**
+     * add column of type datetime
+     *
+     * @param  string $name
+     * @return \Framework\ORM\Migration
+     */
+    public function addDateTime(string $name): self 
+    {
+        self::$query->column($name, 'DATETIME');
         return $this;
     }
 
@@ -126,7 +150,7 @@ class Migration
      */
     public function addTimestamp(string $name): self 
     {
-        self::$query->column($name, "TIMESTAMP");
+        self::$query->column($name, 'TIMESTAMP');
         return $this;
     }
 
@@ -138,7 +162,7 @@ class Migration
      */
     public function addBoolean(string $name): self 
     {
-        self::$query->column($name, "TINYINT(1)");
+        self::$query->column($name, 'TINYINT(1)');
         return $this;
     }
     

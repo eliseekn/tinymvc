@@ -2,7 +2,7 @@
 
     <div class="alert alert-<?= $type ?> alert-dismissible show" role="alert">
         <?php if (!empty($title)) : ?>
-        <h4 class="alert-heading"><?= $title ?></h4>
+        <h5 class="alert-heading"><?= $title ?></h5>
         <?php endif ?>
 
         <?php

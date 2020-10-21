@@ -51,14 +51,15 @@ class RolesController
 		$validate = RoleRequest::validate(Request::getFields());
         
         if (is_array($validate)) {
-            Redirect::back()->withError($validate);
+			Notification::alert($validate)->error();
+            Response::sendJson([], ['redirect' => absolute_url('admin/roles/new')]);
         }
 
 		$slug = slugify(Request::getField('title'));
 
 		if (RolesModel::find('slug', $slug)->exists()) {
 			Notification::toast('This role already exists', 'Role not created')->error();
-			Redirect::back()->only();
+			Response::sendJson([], ['redirect' => absolute_url('admin/roles/new')]);
 		}
 
 	   $id = RolesModel::insert([
@@ -100,12 +101,13 @@ class RolesController
 		$validate = RoleRequest::validate(Request::getFields());
         
         if (is_array($validate)) {
-            Redirect::back()->withError($validate);
+			Notification::alert($validate)->error();
+            Response::sendJson([], ['redirect' => absolute_url('admin/roles/edit')]);
         }
 
 		if (!RolesModel::find('id', $id)->exists()) {
 			Notification::toast('This role does not exists', 'Role not exists')->error();
-			Redirect::back()->only();
+			Response::sendJson([], ['redirect' => absolute_url('admin/roles/edit')]);
 		}
 
 		RolesModel::update([

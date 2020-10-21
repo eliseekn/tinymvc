@@ -273,8 +273,8 @@ class Builder
      */
     public function create(): self
     {
-        self::$query = rtrim(self::$query, ', ');
-		self::$query .= ')';
+		self::$query .= "created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+			updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)";
 		return $this;
     }
 
@@ -516,6 +516,11 @@ class Builder
 	public function set(array $items): self
 	{
 		self::$query .= " SET ";
+
+		//update last modifed timestamp
+		$items = array_merge($items, [
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
 
 		foreach ($items as $key => $value) {
 			self::$query .= "$key = ?, ";

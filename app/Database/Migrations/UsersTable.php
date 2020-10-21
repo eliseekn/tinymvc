@@ -28,8 +28,6 @@ class UsersTable
             ->addString('role')->default('visitor')
             ->addBoolean('online')->default(0)
             ->addBoolean('active')->default(0)
-            ->addTimestamp('created_at')->default(date('Y-m-d H:i:s'))
-            ->addTimestamp('updated_at')->default(date('Y-m-d H:i:s'))
             ->create();
     }
     

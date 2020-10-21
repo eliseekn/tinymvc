@@ -104,11 +104,12 @@ class Redirect
      * redirects with success flash messages
      *
      * @param  mixed $messages
+     * @param  string $title
      * @return void
      */
-    public function withSuccess($messages): void
+    public function withSuccess($messages, string $title = ''): void
     {
-        Notification::alert($messages)->success();
+        Notification::alert($messages, $title)->success();
         redirect_to(self::$redirect_url);
     }
 
@@ -116,11 +117,12 @@ class Redirect
      * redirects with error flash messages
      *
      * @param  mixed $messages
+     * @param  string $title
      * @return void
      */
-    public function withError($messages): void
+    public function withError($messages, string $title = ''): void
     {
-        Notification::alert($messages)->error();
+        Notification::alert($messages, $title)->error();
         redirect_to(self::$redirect_url);
     }
 
@@ -128,11 +130,12 @@ class Redirect
      * redirects with warning flash messages
      *
      * @param  mixed $messages
+     * @param  string $title
      * @return void
      */
-    public function withWarning($messages): void
+    public function withWarning($messages, string $title = ''): void
     {
-        Notification::alert($messages)->warning();
+        Notification::alert($messages, $title)->warning();
         redirect_to(self::$redirect_url);
     }
 
@@ -140,11 +143,12 @@ class Redirect
      * redirects with info flash messages
      *
      * @param  mixed $messages
+     * @param  string $title
      * @return void
      */
-    public function withInfo($messages): void
+    public function withInfo($messages, string $title = ''): void
     {
-        Notification::alert($messages)->info();
+        Notification::alert($messages, $title)->info();
         redirect_to(self::$redirect_url);
     }
 

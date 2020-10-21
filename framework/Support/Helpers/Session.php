@@ -119,3 +119,17 @@ if (!function_exists('get_user_session')) {
 		return get_session(config('app.name') . '_user');
 	}
 }
+
+if (!function_exists('get_errors')) {
+	/**
+	 * get errors fields content
+	 *
+	 * @return mixed returns errors fields content
+	 */
+	function get_errors()
+	{
+		$errors = get_session('errors');
+		close_session('errors');
+		return $errors;
+	}
+}

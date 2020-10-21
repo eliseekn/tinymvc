@@ -1,4 +1,6 @@
 <?php 
+//dump_vars(get_errors());
+
 $this->layout('admin/layout', [
     'page_title' => 'New user | Administration'
 ]) 
