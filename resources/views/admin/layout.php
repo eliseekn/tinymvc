@@ -16,7 +16,7 @@
     <div class="d-flex" id="wrapper">
         <div class="bg-light border-light border-right min-vh-100" id="sidebar-wrapper">
             <div class="sidebar-title bg-dark text-light">
-                <i class="fa fa-cog"></i> Administration
+                Administration
             </div>
 
             <div class="list-group list-group-flush">

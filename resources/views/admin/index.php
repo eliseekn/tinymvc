@@ -20,7 +20,17 @@
             </div>
 
             <div class="card-body">
-                <div id="total-users-donut" style="height: 200px"></div>
+                <donut-chart el="total-users-donut" 
+                    data=<?= json_encode([
+                        ['label' => 'Total', 'value' => count($users)],
+                        ['label' => 'Online', 'value' => count($online_users)],
+                        ['label' => 'Offline', 'value' => count($users) - count($online_users)],
+                        ['label' => 'Active', 'value' => count($active_users)],
+                        ['label' => 'Inactive', 'value' => count($users) - count($active_users)]
+                    ]) ?>
+                >
+                    <div id="total-users-donut" style="height: 200px"></div>
+                </donut-chart>
             </div>
         </div>
     </div>
@@ -36,7 +46,9 @@
             </div>
 
             <div class="card-body">
-                <div id="users-count-bars" style="height: 200px"></div>
+                <bars-chart el="users-count-bars" data=<?= json_encode($users_metrics) ?> xkey="month" ykeys=<?= json_encode(['value']) ?> labels=<?= json_encode(['Count']) ?>>
+                    <div id="users-count-bars" style="height: 200px"></div>
+                </bars-chart>
             </div>
         </div>
     </div>
@@ -48,30 +60,5 @@
 
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        new Morris.Donut({
-            element: 'total-users-donut',
-            resize: true,
-            data: [
-                {label: 'Total', value: <?= count($users) ?>},
-                {label: 'Online', value: <?= count($online_users) ?>},
-                {label: 'Offline', value: <?= count($users) - count($online_users) ?>},
-                {label: 'Active', value: <?= count($active_users) ?>},
-                {label: 'Inactive', value: <?= count($users) - count($active_users) ?>}
-            ]
-        })
-
-        new Morris.Bar({
-            element: 'users-count-bars',
-            resize: true,
-            data: <?= json_encode($users_metrics) ?>,
-            xkey: 'month',
-            ykeys: ['value'],
-            labels: ['Count']
-        })
-    })
-</script>
 
 <?php $this->stop() ?>

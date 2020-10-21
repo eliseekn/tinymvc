@@ -28,7 +28,5 @@ class UserSeed
             'role' => 'administrator',
             'active' => 1
         ]);
-
-        Seeder::add('sub_users', ['parent_id' => 1]);
     }
 }

@@ -31,12 +31,6 @@ class UsersTable
             ->addTimestamp('created_at')->default(date('Y-m-d H:i:s'))
             ->addTimestamp('updated_at')->default(date('Y-m-d H:i:s'))
             ->create();
-
-        Migration::table('sub_users')
-            ->addBigInt('id')->primaryKey()
-            ->addBigInt('parent_id')
-            ->addForeignKey('fk_users', 'parent_id')->references('users', 'id')->onDelete()->cascade()->onUpdate()->cascade()
-            ->create();
     }
     
     /**
@@ -46,7 +40,6 @@ class UsersTable
      */
     public static function delete(): void
     {
-        Migration::drop('sub_users');
         Migration::drop(self::$table);
     }
     
