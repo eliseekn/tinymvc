@@ -39,20 +39,12 @@ Route::post('authenticate', ['handler' => 'Auth\AuthController@authenticate']);
 Route::post('register', ['handler' => 'Auth\AuthController@register']);
 
 //admin routes
-Route::get('admin', [
-    'handler' => 'Admin\AdminController@index',
-    'middlewares' => [
-        'RememberUser',
-        'AdminPolicy'
-    ]
-]);
-
 Route::group([
-    '/' => ['handler' => 'Admin\AdminController@index'],
-    'dashboard' => ['handler' => 'Admin\AdminController@index']
+    'admin' => [],
+    'admin/dashboard' => []
 ])->by([
     'method' => 'GET',
-    'prefix' => 'admin',
+    'handler' => 'Admin\DashboardController@index',
     'middlewares' => [
         'RememberUser',
         'AdminPolicy'
@@ -61,7 +53,6 @@ Route::group([
 
 Route::group([
     'users/delete/{id:num}' => ['handler' => 'Admin\UsersController@delete'],
-    
     'roles/delete/{id:num}' => ['handler' => 'Admin\RolesController@delete']
 ])->by([
     'method' => 'DELETE',
@@ -73,12 +64,12 @@ Route::group([
 ]);
 
 Route::group([
-    'users' => ['handler' => 'Admin\AdminController@users'],
+    'users' => ['handler' => 'Admin\UsersController@index'],
     'users/new' => ['handler' => 'Admin\UsersController@new'],
     'users/edit/{id:num}' => ['handler' => 'Admin\UsersController@edit'],
     'users/view/{id:num}' => ['handler' => 'Admin\UsersController@view'],
 
-    'roles' => ['handler' => 'Admin\AdminController@roles'],
+    'roles' => ['handler' => 'Admin\RolesController@index'],
     'roles/new' => ['handler' => 'Admin\RolesController@new'],
     'roles/edit/{id:num}' => ['handler' => 'Admin\RolesController@edit'],
     'roles/view/{id:num}' => ['handler' => 'Admin\RolesController@view']

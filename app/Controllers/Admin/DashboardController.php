@@ -7,7 +7,7 @@ use Framework\Support\Metrics;
 use App\Database\Models\RolesModel;
 use App\Database\Models\UsersModel;
 
-class AdminController
+class DashboardController
 {
 	/**
 	 * display dashboard page
@@ -21,30 +21,6 @@ class AdminController
 			'online_users' => UsersModel::find('online', 1)->all(),
 			'active_users' => UsersModel::find('active', 1)->all(),
 			'users_metrics' => UsersModel::metrics('id', Metrics::COUNT, Metrics::MONTHS)
-		]);
-	}
-
-	/**
-	 * display users page
-	 *
-	 * @return void
-	 */
-	public function users(): void
-	{
-		View::render('admin/users/index', [
-			'users' => UsersModel::select()->orderBy('name', 'ASC')->paginate(50)
-		]);
-	}
-
-	/**
-	 * display roles page
-	 *
-	 * @return void
-	 */
-	public function roles(): void
-	{
-		View::render('admin/roles/index', [
-			'roles' => RolesModel::select()->orderBy('title', 'ASC')->paginate(50)
 		]);
 	}
 }

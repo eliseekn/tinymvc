@@ -13,6 +13,18 @@ use Framework\Support\Notification;
 
 class RolesController
 {
+    /**
+     * display list
+     *
+     * @return void
+     */
+    public function index(): void
+    {
+        View::render('admin/roles/index', [
+            'roles' => RolesModel::select()->orderBy('title', 'ASC')->paginate(50)
+        ]);
+    }
+
 	/**
 	 * display new page
 	 * 

@@ -16,6 +16,18 @@ use Framework\Support\Session;
 
 class UsersController
 {
+    /**
+     * display list
+     *
+     * @return void
+     */
+    public function index(): void
+    {
+        View::render('admin/users/index', [
+            'users' => UsersModel::select()->orderBy('name', 'ASC')->paginate(50)
+        ]);
+    }
+
 	/**
 	 * display new page
 	 * 
@@ -57,7 +69,6 @@ class UsersController
 		$validate = RegisterRequest::validate(Request::getFields());
         
         if (is_array($validate)) {
-			Session::setErrors(Request::getFields());
             Redirect::back()->withError($validate);
         }
 

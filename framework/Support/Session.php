@@ -98,15 +98,4 @@ class Session
     {
         self::close(config('app.name') . '_user');
     }
-    
-    /**
-     * setErrors
-     *
-     * @param  mixed $errors
-     * @return void
-     */
-    public static function setErrors($errors): void
-    {
-        self::create('errors', $errors);
-    }
 }
