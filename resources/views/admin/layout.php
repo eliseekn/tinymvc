@@ -38,15 +38,17 @@
                     <i class="fa fa-bars"></i>
                 </button>
 
-                <div class="ml-auto">
-                    <span class="text-white">Welcome, <em><?= explode(' ', get_user_session()->name)[0] ?></em>!</span>
-                </div>
+                <div class="dropdown ml-auto">
+                    <button class="btn btn-danger dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <?= get_user_session()->name ?>
+                    </button>
 
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="btn btn-danger" href="<?= absolute_url('/logout') ?>">Log out</a>
-                    </li>
-                </ul>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="<?= absolute_url('/logout') ?>">
+                            <i class="fa fa-power-off text-danger"></i> Log out
+                        </a>
+                    </div>
+                </div>
             </nav>
 
             <div class="container-fluid p-4">

@@ -137,7 +137,13 @@ class UsersController
 			$data['password'] = Encryption::hash(Request::getField('password'));
 		}
 
-		UsersModel::update($data)->where('id', '=', $id)->persist();
+        UsersModel::update($data)->where('id', $id)->persist();
+
+        $user = UsersModel::find('id', $id)->single();
+        
+        if (Session::getUser()->id === $id) {
+            Session::setUser($user);
+        }
 
 		Notification::toast('The user has been updated successfully', 'User updated')->success();
         Redirect::toUrl('admin/users/view/' . $id)->only();

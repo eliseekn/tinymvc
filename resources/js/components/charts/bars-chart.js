@@ -1,8 +1,6 @@
 class BarsChart extends HTMLElement {
     constructor() {
         super()
-
-        console.log(JSON.parse(this.getAttribute('data')))
     }
 
     connectedCallback() {

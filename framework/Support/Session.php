@@ -16,7 +16,7 @@ class Session
     /**
      * create
      *
-     * @param  mixed $name
+     * @param  string $name
      * @param  mixed $data
      * @return void
      */
@@ -28,8 +28,8 @@ class Session
     /**
      * get
      *
-     * @param  mixed $name
-     * @return void
+     * @param  string $name
+     * @return mixed
      */
     public static function get(string $name)
     {
@@ -39,7 +39,7 @@ class Session
     /**
      * has
      *
-     * @param  mixed $name
+     * @param  string $name
      * @return bool
      */
     public static function has(string $name): bool
@@ -50,7 +50,7 @@ class Session
     /**
      * close
      *
-     * @param  mixed $name
+     * @param  string $name
      * @return void
      */
     public static function close(string $name): void
@@ -72,7 +72,7 @@ class Session
     /**
      * getUser
      *
-     * @return void
+     * @return mixed
      */
     public static function getUser()
     {

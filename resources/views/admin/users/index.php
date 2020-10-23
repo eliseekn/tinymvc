@@ -66,64 +66,64 @@ endif
                 </thead>
 
                 <tbody>
-                    <?php foreach ($users as $user) : ?>
+                    <?php foreach ($users as $key => $user) : ?>
 
-                        <tr>
-                            <td>
-                                <?php if ($user->role !== 'admin') : ?>
+                    <tr>
+                        <td>
+                            <?php if ($user->role !== 'admin') : ?>
 
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="<?= $user->id ?>" data-id="<?= $user->id ?>">
-                                    <label class="custom-control-label" for="<?= $user->id ?>"></label>
-                                </div>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="<?= $user->id ?>" data-id="<?= $user->id ?>">
+                                <label class="custom-control-label" for="<?= $user->id ?>"></label>
+                            </div>
 
-                                <?php endif ?>
-                            </td>
+                            <?php endif ?>
+                        </td>
 
-                            <td><?= $user->id ?></td>
-                            <td><?= $user->name ?></td>
-                            <td><?= $user->email ?></td>
-                            <td><?= $user->role ?></td>
+                        <td><?= $key + 1 ?></td>
+                        <td><?= $user->name ?></td>
+                        <td><?= $user->email ?></td>
+                        <td><?= $user->role ?></td>
 
-                            <td>
-                                <?php if ($user->active) : ?>
-                                <span class="badge badge-pill badge-success">Active</span>
-                                <?php else : ?>
-                                <span class="badge badge-pill badge-danger">Inactive</span>
-                                <?php endif ?>
-                            </td>
+                        <td>
+                            <?php if ($user->active) : ?>
+                            <span class="badge badge-pill badge-success">Active</span>
+                            <?php else : ?>
+                            <span class="badge badge-pill badge-danger">Inactive</span>
+                            <?php endif ?>
+                        </td>
 
-                            <td>
-                                <?php if ($user->online) : ?>
-                                <span class="badge badge-pill badge-success">Online</span>
-                                <?php else : ?>
-                                <span class="badge badge-pill badge-danger">Offline</span>
-                                <?php endif ?>
-                            </td>
+                        <td>
+                            <?php if ($user->online) : ?>
+                            <span class="badge badge-pill badge-success">Online</span>
+                            <?php else : ?>
+                            <span class="badge badge-pill badge-danger">Offline</span>
+                            <?php endif ?>
+                        </td>
 
-                            <td><?= date('Y-m-d', strtotime($user->created_at)) ?></td>
+                        <td><?= date('Y-m-d', strtotime($user->created_at)) ?></td>
 
-                            <td>
-                                <a class="btn text-primary" href="<?= absolute_url('/admin/users/view/' . $user->id) ?>" title="View item">
-                                    <i class="fa fa-eye"></i>
-                                </a>
+                        <td>
+                            <a class="btn text-primary" href="<?= absolute_url('/admin/users/view/' . $user->id) ?>" title="View item">
+                                <i class="fa fa-eye"></i>
+                            </a>
 
-                                <?php if ($user->role !== 'admin' || $user->id === get_user_session()->id) : ?>
+                            <?php if ($user->role !== 'admin' || $user->id === get_user_session()->id) : ?>
 
-                                <a class="btn text-primary" href="<?= absolute_url('/admin/users/edit/' . $user->id) ?>" title="Edit item">
-                                    <i class="fa fa-edit"></i>
-                                </a>
+                            <a class="btn text-primary" href="<?= absolute_url('/admin/users/edit/' . $user->id) ?>" title="Edit item">
+                                <i class="fa fa-edit"></i>
+                            </a>
 
-                                <?php if ($user->id !== get_user_session()->id) : ?>
+                            <?php if ($user->id !== get_user_session()->id) : ?>
 
-                                <confirm-delete type="icon" content='<i class="fa fa-trash-alt"></i>' action="<?= absolute_url('/admin/users/delete/' . $user->id) ?>" redirect="<?= current_url()?>"></confirm-delete>
+                            <confirm-delete type="icon" content='<i class="fa fa-trash-alt"></i>' action="<?= absolute_url('/admin/users/delete/' . $user->id) ?>" redirect="<?= current_url()?>"></confirm-delete>
 
-                                <?php
-                                    endif;
-                                endif
-                                ?>
-                            </td>
-                        </tr>
+                            <?php
+                                endif;
+                            endif
+                            ?>
+                        </td>
+                    </tr>
 
                     <?php endforeach ?>
                 </tbody>

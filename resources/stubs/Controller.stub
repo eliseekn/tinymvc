@@ -4,8 +4,97 @@ namespace NAMESPACE;
 
 class CLASSNAME
 {
+    /**
+     * display list
+     *
+     * @return void
+     */
     public function index(): void
 	{
-		
+		//
+	}
+
+    /**
+	 * display new page
+	 * 
+	 * @return void
+	 */
+    public function new(): void
+	{
+		//
+	}
+	
+	/**
+	 * display edit page
+	 * 
+	 * @param  int $id
+	 * @return void
+	 */
+    public function edit(int $id): void
+	{
+		//
+	}
+
+	/**
+	 * create
+	 *
+	 * @return void
+	 */
+    public function create(): void
+	{
+		//
+	}
+	
+	/**
+	 * read
+	 * 
+	 * @param  int $id
+	 * @return void
+	 */
+	public function view(int $id): void
+	{
+		//
+	}
+    
+	/**
+	 * update
+	 *
+     * @param  int $id
+	 * @return void
+	 */
+	public function update(int $id): void
+	{
+		//
+	}
+
+	/**
+	 * delete
+	 *
+     * @param  int|null $id
+	 * @return void
+	 */
+	public function delete(?int $id = null): void
+	{
+        //
+	}
+
+	/**
+	 * import data
+	 *
+	 * @return void
+	 */
+    public function import(): void
+	{
+		//
+	}
+	
+	/**
+	 * export data
+	 *
+	 * @return void
+	 */
+    public function export(): void
+	{
+		//
 	}
 }

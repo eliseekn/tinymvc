@@ -68,34 +68,34 @@ endif
                 </thead>
 
                 <tbody>
-                    <?php foreach ($roles as $role) : ?>
+                    <?php foreach ($roles as $key => $role) : ?>
 
-                        <tr>
-                            <td>
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="<?= $role->id ?>" data-id="<?= $role->id ?>">
-                                    <label class="custom-control-label" for="<?= $role->id ?>"></label>
-                                </div>
-                            </td>
+                    <tr>
+                        <td>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="<?= $role->id ?>" data-id="<?= $role->id ?>">
+                                <label class="custom-control-label" for="<?= $role->id ?>"></label>
+                            </div>
+                        </td>
 
-                            <td><?= $role->id ?></td>
-                            <td><?= $role->title ?></td>
-                            <td><?= $role->slug ?></td>
-                            <td><?= html_entity_decode($role->description) ?></td>
-                            <td><?= date('Y-m-d', strtotime($role->created_at)) ?></td>
+                        <td><?= $key + 1 ?></td>
+                        <td><?= $role->title ?></td>
+                        <td><?= $role->slug ?></td>
+                        <td><?= html_entity_decode($role->description) ?></td>
+                        <td><?= date('Y-m-d', strtotime($role->created_at)) ?></td>
 
-                            <td>
-                                <a class="btn text-primary" href="<?= absolute_url('/admin/roles/view/' . $role->id) ?>" title="View item">
-                                    <i class="fa fa-eye"></i>
-                                </a>
+                        <td>
+                            <a class="btn text-primary" href="<?= absolute_url('/admin/roles/view/' . $role->id) ?>" title="View item">
+                                <i class="fa fa-eye"></i>
+                            </a>
 
-                                <a class="btn text-primary" href="<?= absolute_url('/admin/roles/edit/' . $role->id) ?>" title="Edit item">
-                                    <i class="fa fa-edit"></i>
-                                </a>
+                            <a class="btn text-primary" href="<?= absolute_url('/admin/roles/edit/' . $role->id) ?>" title="Edit item">
+                                <i class="fa fa-edit"></i>
+                            </a>
 
-                                <confirm-delete type="icon" content='<i class="fa fa-trash-alt"></i>' action="<?= absolute_url('/admin/roles/delete/' . $role->id) ?>" redirect="<?= current_url()?>"></confirm-delete>
-                            </td>
-                        </tr>
+                            <confirm-delete type="icon" content='<i class="fa fa-trash-alt"></i>' action="<?= absolute_url('/admin/roles/delete/' . $role->id) ?>" redirect="<?= current_url()?>"></confirm-delete>
+                        </td>
+                    </tr>
 
                     <?php endforeach ?>
                 </tbody>

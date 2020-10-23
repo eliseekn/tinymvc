@@ -61,7 +61,7 @@ class Client
         array $headers = [],
         ?array $data = null,
         bool $json_data = false
-    ) {
+    ): self {
         return self::send('GET', $urls, $headers, $data, $json_data);
     }
     
@@ -79,7 +79,7 @@ class Client
         array $headers = [],
         ?array $data = null,
         bool $json_data = false
-    ) {
+    ): self {
         return self::send('POST', $urls, $headers, $data, $json_data);
     }
 
@@ -97,7 +97,7 @@ class Client
         array $headers = [],
         ?array $data = null,
         bool $json_data = false
-    ) {
+    ): self {
         return self::send('PUT', $urls, $headers, $data, $json_data);
     }
 
@@ -115,7 +115,7 @@ class Client
         array $headers = [],
         ?array $data = null,
         bool $json_data = false
-    ) {
+    ): self {
         return self::send('DELETE', $urls, $headers, $data, $json_data);
     }
 
@@ -133,7 +133,7 @@ class Client
         array $headers = [],
         ?array $data = null,
         bool $json_data = false
-    ) {
+    ): self {
         return self::send('OPTIONS', $urls, $headers, $data, $json_data);
     }
 
@@ -151,7 +151,7 @@ class Client
         array $headers = [],
         ?array $data = null,
         bool $json_data = false
-    ) {
+    ): self {
         return self::send('PATCH', $urls, $headers, $data, $json_data);
     }
 
