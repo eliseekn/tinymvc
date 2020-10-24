@@ -8,6 +8,7 @@
 
 namespace Framework\Console;
 
+use Framework\ORM\Builder;
 use Framework\Support\Storage;
 
 /**
@@ -61,7 +62,8 @@ class Database
             array_key_exists('migration', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('delete', $options) &&
-            !array_key_exists('refresh', $options)
+            !array_key_exists('refresh', $options) &&
+            !array_key_exists('db', $options)
         ) {
             if ($options['migration'] !== 'all') {
                 $table = $options['migration'];
@@ -90,7 +92,8 @@ class Database
             array_key_exists('migration', $options) &&
             array_key_exists('seed', $options) &&
             !array_key_exists('delete', $options) &&
-            !array_key_exists('refresh', $options)
+            !array_key_exists('refresh', $options) &&
+            !array_key_exists('db', $options)
         ) {
             if ($options['migration'] !== 'all') {
                 $table = $options['migration'];
@@ -141,7 +144,8 @@ class Database
             array_key_exists('migration', $options) &&
             array_key_exists('seed', $options) &&
             array_key_exists('refresh', $options) &&
-            !array_key_exists('delete', $options)
+            !array_key_exists('delete', $options) &&
+            !array_key_exists('db', $options)
         ) {
             if ($options['migration'] !== 'all') {
                 $table = $options['migration'];
@@ -192,7 +196,8 @@ class Database
             array_key_exists('migration', $options) &&
             array_key_exists('refresh', $options) &&
             !array_key_exists('seed', $options) &&
-            !array_key_exists('delete', $options)
+            !array_key_exists('delete', $options) &&
+            !array_key_exists('db', $options)
         ) {
             if ($options['migration'] !== 'all') {
                 $table = $options['migration'];
@@ -221,7 +226,8 @@ class Database
             array_key_exists('migration', $options) &&
             array_key_exists('delete', $options) &&
             !array_key_exists('refresh', $options) &&
-            !array_key_exists('seed', $options)
+            !array_key_exists('seed', $options) &&
+            !array_key_exists('db', $options)
         ) {
             if ($options['migration'] !== 'all') {
                 $table = $options['migration'];
@@ -250,7 +256,8 @@ class Database
             array_key_exists('seed', $options) &&
             !array_key_exists('migration', $options) &&
             !array_key_exists('delete', $options) &&
-            !array_key_exists('refresh', $options)
+            !array_key_exists('refresh', $options) &&
+            !array_key_exists('db', $options)
         ) {
             if ($options['seed'] !== 'all') {
                 $seed = $options['seed'];
@@ -275,8 +282,51 @@ class Database
             }
         }
         
+        else if (
+            array_key_exists('db', $options) &&
+            !array_key_exists('seed', $options) &&
+            !array_key_exists('migration', $options) &&
+            !array_key_exists('delete', $options) &&
+            !array_key_exists('refresh', $options)
+        ) {
+            if (strpos($options['db'], ',') === false) {
+                $database = $options['db'];
+                Builder::query("CREATE DATABASE $database CHARACTER SET utf8 COLLATE utf8_unicode_ci")->execute();
+            } else {
+                $db = explode(',', $options['db']);
+
+                foreach ($db as $database) {
+                    Builder::query("CREATE DATABASE $database CHARACTER SET utf8 COLLATE utf8_unicode_ci")->execute();
+                }
+            }
+        }
+
+        else if (
+            array_key_exists('db', $options) &&
+            !array_key_exists('seed', $options) &&
+            !array_key_exists('migration', $options) &&
+            array_key_exists('delete', $options) &&
+            !array_key_exists('refresh', $options)
+        ) {
+            if (strpos($options['db'], ',') === false) {
+                $database = $options['db'];
+                Builder::query("DROP DATABASE IF EXISTS $database")->execute();
+            } else {
+                $db = explode(',', $options['db']);
+
+                foreach ($db as $database) {
+                    Builder::query("DROP DATABASE IF EXISTS $database")->execute();
+                }
+            }
+        }
+        
         else if (array_key_exists('help', $options)) {
             $help_message = '[+] Commands list:' . PHP_EOL;
+            $help_message .= PHP_EOL;
+            $help_message .= '      --db=users                                  Create new database with utf8 encoding character' . PHP_EOL;
+            $help_message .= '      --db=users,comments                         Create users and comments database' . PHP_EOL;
+            $help_message .= '      --db=users --delete                         Delete users database' . PHP_EOL;
+            $help_message .= '      --db=users,comments --delete                Delete users and comments database' . PHP_EOL;
             $help_message .= PHP_EOL;
             $help_message .= '      --migration=all                             Migrate all tables' . PHP_EOL;
             $help_message .= '      --migration=UsersTable                      Migrate UsersTable only' . PHP_EOL;
@@ -288,9 +338,9 @@ class Database
             $help_message .= '      --seed=UserSeed                             Insert UserSeed only' . PHP_EOL;
             $help_message .= '      --seed=UserSeed,CommentSeed                 Insert UserSeed and CommentSeed only' . PHP_EOL;
             $help_message .= PHP_EOL;
-            $help_message .= '      --migration=all --seed=all                  Migrate all tables and insert all seeds' . PHP_EOL;
-            $help_message .= '      --migration=all --refresh                   Revert all tables migration' . PHP_EOL;
-            $help_message .= '      --migration=all --refresh --seed=all        Revert all tables migration and insert all seeds' . PHP_EOL;
+            $help_message .= '      --migration=all --seed=all                  Migrate all tables and insert seeds' . PHP_EOL;
+            $help_message .= '      --migration=all --refresh                   Refresh all tables migration' . PHP_EOL;
+            $help_message .= '      --migration=all --refresh --seed=all        Refresh all tables migration and insert seeds' . PHP_EOL;
             
             exit($help_message);
         } 

@@ -28,7 +28,7 @@ class PasswordController
 		$expires = strtotime('+1 hour', strtotime(date('Y-m-d H:i:s')));
 
 		if (EmailHelper::sendToken(Request::getField('email'), $token)) {
-			PasswordResetModel::create([
+			PasswordResetModel::insert([
 				'email' => Request::getField('email'),
 				'token' => $token,
 				'expires' => date('Y-m-d H:i:s', $expires)
@@ -47,18 +47,20 @@ class PasswordController
 	 */
 	public function reset(): void
 	{
-		if (PasswordResetModel::findWhere([
-			'email' => Request::getQuery('email'), 
-			'token' => Request::getQuery('token')
-		]) === false) {
+        $password_reset = PasswordResetModel::select()
+            ->where('email', Request::getQuery('email'))
+            ->andWhere('token', Request::getQuery('token'))
+            ->single();
+
+		if ($password_reset === false) {
 			Response::send([], 'This password reset link is invalid');
 		}
 
-		if (PasswordResetModel::findWhere(['email', Request::getQuery('email')])->expires < date('Y-m-d H:i:s')) {
+		if (PasswordResetModel::find('email', Request::getQuery('email'))->single()->expires < date('Y-m-d H:i:s')) {
 			Response::send([], 'This password reset link expired. Please retrieves a new one');
 		}
 
-		PasswordResetModel::deleteWhere('email', Request::getQuery('email'));
+		PasswordResetModel::delete()->where('email', Request::getQuery('email'))->persist();
 		
 		View::render('password/new', [
 			'email' => Request::getQuery('email')
@@ -78,9 +80,9 @@ class PasswordController
             Redirect::back()->withError($validate);
         }
 
-		UsersModel::updateWhere('email', Request::getField('email'), [
-			'password' => Encryption::hash(Request::getField('password'))
-		]);
+        UsersModel::update(['password' => Encryption::hash(Request::getField('password'))])
+            ->where('email', Request::getField('email'))
+            ->persist();
 		
 		Redirect::toUrl('/login')->withSuccess('Your password has been resetted successfully');
 	}

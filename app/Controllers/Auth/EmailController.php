@@ -29,8 +29,8 @@ class EmailController
 	 */
 	public function verify(): void
 	{
-		if (UsersModel::has(['email' => Request::getQuery('email')])) {
-            UsersModel::update(['active' => 1])->where('email', '=', Request::getQuery('email'));
+		if (UsersModel::find('email', Request::getQuery('email'))->exists()) {
+            UsersModel::update(['active' => 1])->where('email', Request::getQuery('email'))->persist();
 
             Redirect::toUrl('/')->withError('Your account has been successfully activated.');
         } else {

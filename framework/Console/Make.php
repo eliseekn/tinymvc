@@ -16,6 +16,16 @@ use Framework\Support\Storage;
 class Make
 {
     /**
+     * get stubs path
+     *
+     * @return Framework\Support\Storage
+     */
+    private static function stubsPath(): Storage
+    {
+        return Storage::path(config('storage.stubs'));
+    }
+
+    /**
      * parseCommands
      *
      * @param  array $options
@@ -33,7 +43,7 @@ class Make
             !array_key_exists('middleware', $options) &&
             !array_key_exists('table', $options)
         ) {
-            $data = Storage::path(config('storage.stubs'))->readFile('Controller.stub');
+            $data = self::stubsPath()->readFile('Controller.stub');
             $data = str_replace('NAMESPACE', 'App\Controllers', $data);
             $data = str_replace('CLASSNAME', $options['controller'], $data);
 
@@ -52,15 +62,17 @@ class Make
             !array_key_exists('middleware', $options) &&
             !array_key_exists('table', $options)
         ) {
-            $data = Storage::path(config('storage.stubs'))->readFile('Controller.stub');
+            $data = self::stubsPath()->readFile('Controller.stub');
             $data = str_replace('NAMESPACE', 'App\Controllers\\' . $options['namespace'], $data);
             $data = str_replace('CLASSNAME', $options['controller'], $data);
 
-            if (!Storage::path(config('storage.controllers'))->isDir($options['namespace'])) {
-                Storage::path(config('storage.controllers'))->createDir($options['namespace']);
+            $path = Storage::path(config('storage.controllers'));
+
+            if (!$path->isDir($options['namespace'])) {
+                $path->createDir($options['namespace']);
             }
 
-            if (!Storage::path(config('storage.controllers') . $options['namespace'] . DIRECTORY_SEPARATOR)->writeFile($options['controller'] . '.php', $data)) {
+            if (!$path->add($options['namespace'] . DIRECTORY_SEPARATOR)->writeFile($options['controller'] . '.php', $data)) {
                 exit('[-] Failed to create controller file ' . $options['controller'] . '.php' . PHP_EOL);
             }
         }
@@ -75,7 +87,7 @@ class Make
             !array_key_exists('middleware', $options) &&
             array_key_exists('table', $options)
         ) {
-            $data = Storage::path(config('storage.stubs'))->readFile('Model.stub');
+            $data = self::stubsPath()->readFile('Model.stub');
             $data = str_replace('NAMESPACE', 'App\Database\Models', $data);
             $data = str_replace('CLASSNAME', $options['model'], $data);
             $data = str_replace('TABLENAME', $options['table'], $data);
@@ -95,16 +107,18 @@ class Make
             !array_key_exists('middleware', $options) &&
             array_key_exists('table', $options)
         ) {
-            $data = Storage::path(config('storage.stubs'))->readFile('Model.stub');
+            $data = self::stubsPath()->readFile('Model.stub');
             $data = str_replace('NAMESPACE', 'App\Database\Models\\' . $options['namespace'], $data);
             $data = str_replace('CLASSNAME', $options['model'], $data);
             $data = str_replace('TABLENAME', $options['table'], $data);
 
-            if (!Storage::path(config('storage.models'))->isDir($options['namespace'])) {
-                Storage::path(config('storage.models'))->createDir($options['namespace']);
+            $path = Storage::path(config('storage.models'));
+
+            if (!$path->isDir($options['namespace'])) {
+                $path->createDir($options['namespace']);
             }
 
-            if (!Storage::path(config('storage.models') . $options['namespace'] . DIRECTORY_SEPARATOR)->writeFile($options['model'] . '.php', $data)) {
+            if (!$path->add($options['namespace'] . DIRECTORY_SEPARATOR)->writeFile($options['model'] . '.php', $data)) {
                 exit('[-] Failed to create model file ' . $options['model'] . '.php' . PHP_EOL);
             }
         }
@@ -119,7 +133,7 @@ class Make
             !array_key_exists('middleware', $options) &&
             array_key_exists('table', $options)
         ) {
-            $data = Storage::path(config('storage.stubs'))->readFile('Migration.stub');
+            $data = self::stubsPath()->readFile('Migration.stub');
             $data = str_replace('NAMESPACE', 'App\Database\Migrations', $data);
             $data = str_replace('CLASSNAME', $options['migration'], $data);
             $data = str_replace('TABLENAME', $options['table'], $data);
@@ -139,7 +153,7 @@ class Make
             !array_key_exists('middleware', $options) &&
             array_key_exists('table', $options)
         ) {
-            $data = Storage::path(config('storage.stubs'))->readFile('Migration.stub');
+            $data = self::stubsPath()->readFile('Migration.stub');
             $data = str_replace('NAMESPACE', 'App\Database\Migrations', $data);
             $data = str_replace('CLASSNAME', $options['migration'], $data);
             $data = str_replace('TABLENAME', $options['table'], $data);
@@ -149,7 +163,7 @@ class Make
             }
 
             //
-            $data = Storage::path(config('storage.stubs'))->readFile('Model.stub');
+            $data = self::stubsPath()->readFile('Model.stub');
             $data = str_replace('NAMESPACE', 'App\Database\Models', $data);
             $data = str_replace('CLASSNAME', $options['model'], $data);
             $data = str_replace('TABLENAME', $options['table'], $data);
@@ -169,16 +183,18 @@ class Make
             !array_key_exists('middleware', $options) &&
             array_key_exists('table', $options)
         ) {
-            $data = Storage::path(config('storage.stubs'))->readFile('Migration.stub');
+            $data = self::stubsPath()->readFile('Migration.stub');
             $data = str_replace('NAMESPACE', 'App\Database\Migration\\' . $options['namespace'], $data);
             $data = str_replace('CLASSNAME', $options['migration'], $data);
             $data = str_replace('TABLENAME', $options['table'], $data);
 
-            if (!Storage::path(config('storage.migrations'))->isDir($options['namespace'])) {
-                Storage::path(config('storage.migrations'))->createDir($options['namespace']);
+            $path = Storage::path(config('storage.migrations'));
+
+            if (!$path->isDir($options['namespace'])) {
+                $path->createDir($options['namespace']);
             }
 
-            if (!Storage::path(config('storage.migrations') . $options['namespace'] . DIRECTORY_SEPARATOR)->writeFile($options['migration'] . '.php', $data)) {
+            if (!$path->add($options['namespace'] . DIRECTORY_SEPARATOR)->writeFile($options['migration'] . '.php', $data)) {
                 exit('[-] Failed to create migration file ' . $options['migration'] . '.php' . PHP_EOL);
             }
         }
@@ -193,30 +209,34 @@ class Make
             !array_key_exists('middleware', $options) &&
             array_key_exists('table', $options)
         ) {
-            $data = Storage::path(config('storage.stubs'))->readFile('Migration.stub');
+            $data = self::stubsPath()->readFile('Migration.stub');
             $data = str_replace('NAMESPACE', 'App\Database\Migration\\' . $options['namespace'], $data);
             $data = str_replace('CLASSNAME', $options['migration'], $data);
             $data = str_replace('TABLENAME', $options['table'], $data);
 
-            if (!Storage::path(config('storage.migrations'))->isDir($options['namespace'])) {
-                Storage::path(config('storage.migrations'))->createDir($options['namespace']);
+            $path = Storage::path(config('storage.migrations'));
+
+            if (!$path->isDir($options['namespace'])) {
+                $path->createDir($options['namespace']);
             }
 
-            if (!Storage::path(config('storage.migrations') . $options['namespace'] . DIRECTORY_SEPARATOR)->writeFile($options['migration'] . '.php', $data)) {
+            if (!$path->add($options['namespace'] . DIRECTORY_SEPARATOR)->writeFile($options['migration'] . '.php', $data)) {
                 exit('[-] Failed to create migration file ' . $options['migration'] . '.php' . PHP_EOL);
             }
 
             //
-            $data = Storage::path(config('storage.stubs'))->readFile('Model.stub');
+            $data = self::stubsPath()->readFile('Model.stub');
             $data = str_replace('NAMESPACE', 'App\Database\Models\\' . $options['namespace'], $data);
             $data = str_replace('CLASSNAME', $options['model'], $data);
             $data = str_replace('TABLENAME', $options['table'], $data);
 
-            if (!Storage::path(config('storage.models'))->isDir($options['namespace'])) {
-                Storage::path(config('storage.models'))->createDir($options['namespace']);
+            $path = Storage::path(config('storage.models'));
+
+            if (!$path->isDir($options['namespace'])) {
+                $path->createDir($options['namespace']);
             }
 
-            if (!Storage::path(config('storage.models') . $options['namespace'] . DIRECTORY_SEPARATOR)->writeFile($options['model'] . '.php', $data)) {
+            if (!$path->add($options['namespace'] . DIRECTORY_SEPARATOR)->writeFile($options['model'] . '.php', $data)) {
                 exit('[-] Failed to create model file ' . $options['model'] . '.php' . PHP_EOL);
             }
         }
@@ -231,7 +251,7 @@ class Make
             !array_key_exists('middleware', $options) &&
             array_key_exists('table', $options)
         ) {
-            $data = Storage::path(config('storage.stubs'))->readFile('Seed.stub');
+            $data = self::stubsPath()->readFile('Seed.stub');
             $data = str_replace('NAMESPACE', 'App\Database\Seeds', $data);
             $data = str_replace('CLASSNAME', $options['seed'], $data);
             $data = str_replace('TABLENAME', $options['table'], $data);
@@ -251,16 +271,18 @@ class Make
             !array_key_exists('middleware', $options) &&
             array_key_exists('table', $options)
         ) {
-            $data = Storage::path(config('storage.stubs'))->readFile('Seed.stub');
+            $data = self::stubsPath()->readFile('Seed.stub');
             $data = str_replace('NAMESPACE', 'App\Database\Seeds\\' . $options['namespace'], $data);
             $data = str_replace('CLASSNAME', $options['seed'], $data);
             $data = str_replace('TABLENAME', $options['table'], $data);
 
-            if (!Storage::path(config('storage.seeds'))->isDir($options['namespace'])) {
-                Storage::path(config('storage.seeds'))->createDir($options['namespace']);
+            $path = Storage::path(config('storage.seeds'));
+
+            if (!$path->isDir($options['namespace'])) {
+                $path->createDir($options['namespace']);
             }
 
-            if (!Storage::path(config('storage.seeds') . $options['namespace'] . DIRECTORY_SEPARATOR)->writeFile($options['seed'] . '.php', $data)) {
+            if (!$path->add($options['namespace'] . DIRECTORY_SEPARATOR)->writeFile($options['seed'] . '.php', $data)) {
                 exit('[-] Failed to create seed file ' . $options['seed'] . '.php' . PHP_EOL);
             }
         }
@@ -275,7 +297,7 @@ class Make
             !array_key_exists('middleware', $options) &&
             !array_key_exists('table', $options)
         ) {
-            $data = Storage::path(config('storage.stubs'))->readFile('Request.stub');
+            $data = self::stubsPath()->readFile('Request.stub');
             $data = str_replace('NAMESPACE', 'App\Requests', $data);
             $data = str_replace('CLASSNAME', $options['request'], $data);
 
@@ -294,7 +316,7 @@ class Make
             !array_key_exists('request', $options) &&
             !array_key_exists('table', $options)
         ) {
-            $data = Storage::path(config('storage.stubs'))->readFile('Middleware.stub');
+            $data = self::stubsPath()->readFile('Middleware.stub');
             $data = str_replace('NAMESPACE', 'App\Middlewares', $data);
             $data = str_replace('CLASSNAME', $options['middleware'], $data);
 

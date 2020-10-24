@@ -43,6 +43,17 @@ class Storage
     }
 
     /**
+     * add path to current path
+     *
+     * @return \Framework\Support\Storage
+     */
+    public function add(string $path): self
+    {
+        self::$path .= $path;
+        return new self();
+    }
+
+    /**
      * create new directory
      *
      * @param  string $pathname

@@ -25,7 +25,19 @@ class Builder
 	 *
 	 * @var array
 	 */
-	protected static $args = [];
+    protected static $args = [];
+        
+    /**
+     * generate CREATE DATABASE query
+     *
+     * @param  string $name
+     * @return self
+     */
+    public static function database(string $name): self
+    {
+        self::$query = "CREATE DATABASE $name";
+        return new self();
+    }
 
     /**
      * generate CREATE TABLE query 
@@ -459,7 +471,7 @@ class Builder
 	 * @param  string $first_column
 	 * @return \Framework\ORM\Builder
 	 */
-	public function join(string $table, string $second_column, string $first_column): self
+	public function innerJoin(string $table, string $second_column, string $first_column): self
 	{
 		self::$query .= " INNER JOIN " . config('database.table_prefix') . "$table ON $first_column = $second_column";
 		return $this;

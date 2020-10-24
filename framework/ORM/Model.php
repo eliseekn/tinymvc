@@ -187,7 +187,7 @@ class Model
 	 * @param  mixed $value
 	 * @return \Framework\ORM\Model
 	 */
-    public function and(string $column, $operator = null, $value = null): self
+    public function andWhere(string $column, $operator = null, $value = null): self
     {
         if (!is_null($operator) && is_null($value)) {
             self::$query->and($column, '=', $operator);
@@ -208,7 +208,7 @@ class Model
 	 * @param  mixed $value
 	 * @return \Framework\ORM\Model
 	 */
-    public function or(string $column, $operator = null, $value = null): self
+    public function orWhere(string $column, $operator = null, $value = null): self
     {
         if (!is_null($operator) && is_null($value)) {
             self::$query->or($column, '=', $operator);
@@ -231,7 +231,6 @@ class Model
 	 */
     public function having(string $column, $operator = null, $value = null): self
 	{
-        
         if (!is_null($operator) && is_null($value)) {
             self::$query->having($column, '=', $operator);
         }
@@ -293,7 +292,21 @@ class Model
 	{
         self::$query->orNotLike($column, $value);
 		return $this;
-	}
+    }
+
+    /**
+     * add INNER JOIN query
+     *
+     * @param  string $table
+     * @param  string $second_column
+     * @param  string $first_column
+     * @return \Framework\ORM\Model
+     */
+    public function join(string $table, string $second_column, string $first_column): self
+    {
+        self::$query->innerJoin($table, $second_column, $first_column);
+        return $this;
+    }
     
     /**
      * add ORDER BY clause
