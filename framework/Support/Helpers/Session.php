@@ -90,7 +90,7 @@ if (!function_exists('flash_messages')) {
 	 */
 	function flash_messages(): bool
 	{
-		return session_has('flash_messages');
+		return session_has(config('app.name') . '_messages');
 	}
 }
 
@@ -102,8 +102,8 @@ if (!function_exists('get_flash_messages')) {
 	 */
 	function get_flash_messages()
 	{
-		$flash_messages = get_session('flash_messages');
-		close_session('flash_messages');
+		$flash_messages = get_session(config('app.name') . '_messages');
+		close_session(config('app.name') . '_messages');
 		return $flash_messages;
 	}
 }

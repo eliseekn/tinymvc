@@ -82,7 +82,7 @@ class Notification
     public function success(): void
     {
         self::$flash = array_merge(self::$flash, ['type' => 'success']);
-        Session::create('flash_messages', self::$flash);
+        Session::create(config('app.name') . '_messages', self::$flash);
     }
     
     /**
@@ -93,7 +93,7 @@ class Notification
     public function error(): void
     {
         self::$flash = array_merge(self::$flash, ['type' => 'danger']);
-        Session::create('flash_messages', self::$flash);
+        Session::create(config('app.name') . '_messages', self::$flash);
     }
     
     /**
@@ -104,7 +104,7 @@ class Notification
     public function info(): void 
     {
         self::$flash = array_merge(self::$flash, ['type' => 'primary']);
-        Session::create('flash_messages', self::$flash);
+        Session::create(config('app.name') . '_messages', self::$flash);
     }
     
     /**
@@ -115,6 +115,6 @@ class Notification
     public function warning(): void 
     {
         self::$flash = array_merge(self::$flash, ['type' => 'warning']);
-        Session::create('flash_messages', self::$flash);
+        Session::create(config('app.name') . '_messages', self::$flash);
     }
 }

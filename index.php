@@ -6,22 +6,16 @@
  * @link https://github.com/eliseekn/TinyMVC
  */
 
-use App\Database\Models\UsersModel;
+use Framework\App;
 
 /**
  * Main application entry
  */
 
-//load packages and configurations
+//load packages and main configuration
 require 'vendor/autoload.php';
 require_once 'config/env.php';
-require_once 'routes/app.php';
-require_once 'routes/api.php';
-require_once 'routes/web.php';
 
-dump_vars(
-    UsersModel::select(['id', 'name'])->single()
-);
-
-//start routing
-new \Framework\Routing\Router();
+//start application
+$app = new App();
+$app->start();

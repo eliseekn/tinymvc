@@ -1,18 +1,57 @@
-<?php $this->layout('admin/layout', ['page_title' => 'Users | Administration']) ?>
+<?php $this->layout('admin/layout', [
+    'page_title' => 'Users | Administration'
+]) ?>
 
 <?php $this->start('page_content') ?>
 
-<?php
-$this->insert('partials/breadcrumb', [
+<?php $this->insert('partials/breadcrumb', [
     'items' => ['Users' => '']
-]);
-?>
+]) ?>
 
-<?php
-if (flash_messages()) :
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="position-relative bg-dark rounded-top py-2"></div>
+            
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <span><i class="fa fa-users fa-lg text-dark"></i> Total</span>
+                    <span class="font-weight-bold"><?= $users->getTotalItems() ?></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="position-relative bg-dark rounded-top py-2"></div>
+            
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <span><i class="fa fa-user-lock fa-lg text-dark"></i> Active</span>
+                    <span class="font-weight-bold"><?= count($active_users) ?></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="position-relative bg-dark rounded-top py-2"></div>
+            
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <span><i class="fa fa-user-clock fa-lg text-dark"></i> Online</span>
+                    <span class="font-weight-bold"><?= count($online_users) ?></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php if (flash_messages()) :
     $this->insert('partials/notifications', get_flash_messages());
-endif
-?>
+endif ?>
 
 <div class="card">
     <div class="card-header bg-dark">
@@ -134,7 +173,9 @@ endif
     <div class="card-footer d-flex align-items-center justify-content-between">
         <span>Total result(s): <span class="font-weight-bold"><?= $users->getTotalItems() ?></span></span>
 
-        <?php $this->insert('partials/pagination', ['pagination' => $users]) ?>
+        <?php $this->insert('partials/pagination', [
+            'pagination' => $users
+        ]) ?>
     </div>
 </div>
 

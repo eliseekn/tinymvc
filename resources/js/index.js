@@ -6,6 +6,7 @@ import ConfirmDelete from './components/mixed/confirm-delete'
 import TextEditor from './components/mixed/text-editor'
 import DonutChart from './components/charts/donut-chart'
 import BarsChart from './components/charts/bars-chart'
+import LinesChart from './components/charts/lines-chart'
 import './components/loading-button'
 import './components/password-toggler'
 import './components/admin'
@@ -18,3 +19,4 @@ window.customElements.define('confirm-delete', ConfirmDelete)
 window.customElements.define('text-editor', TextEditor)
 window.customElements.define('donut-chart', DonutChart)
 window.customElements.define('bars-chart', BarsChart)
+window.customElements.define('lines-chart', LinesChart)

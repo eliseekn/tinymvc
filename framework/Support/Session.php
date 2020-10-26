@@ -14,7 +14,7 @@ namespace Framework\Support;
 class Session
 {    
     /**
-     * create
+     * create new session
      *
      * @param  string $name
      * @param  mixed $data
@@ -26,7 +26,7 @@ class Session
     }
     
     /**
-     * get
+     * get session data
      *
      * @param  string $name
      * @return mixed
@@ -37,7 +37,7 @@ class Session
     }
     
     /**
-     * has
+     * check if session exists
      *
      * @param  string $name
      * @return bool
@@ -48,7 +48,7 @@ class Session
     }
     
     /**
-     * close
+     * close session
      *
      * @param  string $name
      * @return void
@@ -59,7 +59,7 @@ class Session
     }
     
     /**
-     * setUser
+     * set user session
      *
      * @param  mixed $data
      * @return void
@@ -70,7 +70,7 @@ class Session
     }
     
     /**
-     * getUser
+     * get user session data
      *
      * @return mixed
      */
@@ -80,7 +80,7 @@ class Session
     }
     
     /**
-     * hasUser
+     * check user sessions
      *
      * @return bool
      */
@@ -90,7 +90,7 @@ class Session
     }
     
     /**
-     * deleteUser
+     * colse user session
      *
      * @return void
      */

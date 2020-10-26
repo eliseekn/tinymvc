@@ -38,9 +38,8 @@ class Database
 	private function __construct()
 	{
 		try {
-			$dsn = 'mysql:host=' . config('database.host') . ';dbname=' . config('database.name') . ';charset=' . config('database.charset');
-
-			$this->connection = new PDO($dsn, config('database.username'), config('database.password'));
+            $this->connection = new PDO('mysql:host=' . config('database.host'), config('database.username'), config('database.password'));
+            $this->connection->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, "SET NAMES " . config('database.charset') . " COLLATE " . config('database.collation'));
 			$this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 			$this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
@@ -64,7 +63,30 @@ class Database
 		}
 
 		return self::$instance;
-	}
+    }
+    
+    /**
+     * set database name
+     *
+     * @param  string $database
+     * @return \Framework\ORM\Database
+     */
+    public function setDatabase(string $database): self
+    {
+        $this->connection->exec("USE $database");
+        return $this;
+    }
+
+	/**
+	 * execute sql query
+	 *
+	 * @return \PDOStatement
+	 */
+    public function setQuery(string $query): \PDOStatement
+    {
+        $stmt = $this->connection->query($query);
+        return $stmt;
+    }
 
 	/**
 	 * returns database connection instance
@@ -77,7 +99,7 @@ class Database
 	}
 
 	/**
-	 * execute sql query
+	 * execute safe sql query
 	 *
 	 * @return \PDOStatement
 	 */

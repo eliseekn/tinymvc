@@ -38,7 +38,7 @@ class Validator
     public static function validate(array $fields, array $rules = [], array $messages = [])
     {
         $validators = empty($rules) ? static::$rules : $rules;
-        $fields_error_messages = empty($messages) ? static::$messages : $$messages;
+        $fields_error_messages = empty($messages) ? static::$messages : $messages;
         return GUMP::is_valid($fields, $validators, $fields_error_messages);
     }
 }

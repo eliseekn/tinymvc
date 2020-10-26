@@ -1,8 +1,6 @@
-<?php 
-$this->layout('admin/layout', [
+<?php $this->layout('admin/layout', [
     'page_title' => 'New role | Administration'
-]) 
-?>
+]) ?>
 
 <?php $this->start('styles') ?>
 
@@ -12,20 +10,16 @@ $this->layout('admin/layout', [
 
 <?php $this->start('page_content') ?>
 
-<?php
-$this->insert('partials/breadcrumb', [
+<?php $this->insert('partials/breadcrumb', [
     'items' => [
         'Roles' => absolute_url('/admin/roles'),
         'New' => ''
     ]
-]);
-?>
+]) ?>
 
-<?php 
-if (flash_messages()) : 
+<?php if (flash_messages()) : 
     $this->insert('partials/notifications', get_flash_messages());
-endif 
-?>
+endif ?>
 
 <div class="card">
     <div class="card-header bg-dark text-white lead">New role</div>

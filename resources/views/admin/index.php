@@ -1,4 +1,6 @@
-<?php $this->layout('admin/layout', ['page_title' => 'TinyMVC | Administration dashboard']) ?>
+<?php $this->layout('admin/layout', [
+    'page_title' => 'TinyMVC | Administration dashboard'
+]) ?>
 
 <?php $this->start('styles') ?>
 
@@ -8,7 +10,7 @@
 
 <?php $this->start('page_content') ?>
 
-<div class="row">
+<div class="row mb-4">
     <div class="col-md-4">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center bg-dark lead">
@@ -20,15 +22,13 @@
             </div>
 
             <div class="card-body">
-                <donut-chart el="total-users-donut" 
-                    data=<?= json_encode([
-                        ['label' => 'Total', 'value' => count($users)],
-                        ['label' => 'Online', 'value' => count($online_users)],
-                        ['label' => 'Offline', 'value' => count($users) - count($online_users)],
-                        ['label' => 'Active', 'value' => count($active_users)],
-                        ['label' => 'Inactive', 'value' => count($users) - count($active_users)]
-                    ]) ?>
-                >
+                <donut-chart el="total-users-donut" data=<?= json_encode([
+                    ['label' => 'Total', 'value' => count($users)],
+                    ['label' => 'Online', 'value' => count($online_users)],
+                    ['label' => 'Offline', 'value' => count($users) - count($online_users)],
+                    ['label' => 'Active', 'value' => count($active_users)],
+                    ['label' => 'Inactive', 'value' => count($users) - count($active_users)]
+                ]) ?>>
                     <div id="total-users-donut" style="height: 200px"></div>
                 </donut-chart>
             </div>

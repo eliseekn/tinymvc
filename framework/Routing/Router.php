@@ -51,11 +51,7 @@ class Router
      */
     private function formatURI(string $uri): string
     {
-        if (strlen($uri) > 1) {/* 
-            if ($uri[0] !== '/') {
-                $uri = '/' . $uri;
-            }
- */
+        if (strlen($uri) > 1) {
             if ($uri[strlen($uri) - 1] === '/') {
                 $uri = rtrim($uri, '/');
             }

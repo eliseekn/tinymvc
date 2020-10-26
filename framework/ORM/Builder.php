@@ -26,19 +26,7 @@ class Builder
 	 * @var array
 	 */
     protected static $args = [];
-        
-    /**
-     * generate CREATE DATABASE query
-     *
-     * @param  string $name
-     * @return self
-     */
-    public static function database(string $name): self
-    {
-        self::$query = "CREATE DATABASE $name";
-        return new self();
-    }
-
+    
     /**
      * generate CREATE TABLE query 
      *
@@ -573,7 +561,10 @@ class Builder
 	 */
 	public function execute(): \PDOStatement
 	{
-		$stmt = Database::getInstance()->executeQuery(self::$query, self::$args);
+        $stmt = Database::getInstance()
+            ->setDatabase(config('database.name'))
+            ->executeQuery(self::$query, self::$args);
+
 		self::query('');
 		return $stmt;
 	}

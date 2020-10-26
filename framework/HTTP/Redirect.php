@@ -12,6 +12,7 @@ use Exception;
 use Framework\Routing\Route;
 use Framework\Support\Browsing;
 use Framework\Support\Notification;
+use Framework\Support\Session;
 
 /**
  * Handle HTTP redirection

@@ -13,13 +13,14 @@
 $config = [
     'app' => [
         'name' => 'tinymvc',
-        'folder' => '/tinymvc',
-        'url' => 'http://localhost/tinymvc'
+        'folder' => '/tinymvc', //or leave empty if you are using 'www' root
+        'url' => 'http://localhost/tinymvc' //do not forget to remove folder if you are using 'www' root
     ],
 
     //mysql
     'database' => [
         'charset' => 'utf8',
+        'collation' => 'utf8_unicode_ci',
         'host' => 'localhost',
         'name' => 'test',
         'username' => 'root',
@@ -58,6 +59,7 @@ $config = [
 
     'storage' => [
         'public' => APP_ROOT . 'public' . DIRECTORY_SEPARATOR,
+        'routes' => APP_ROOT . 'routes' . DIRECTORY_SEPARATOR,
         'views' => APP_ROOT . 'resources' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR,
         'migrations' => APP_ROOT . 'app' . DIRECTORY_SEPARATOR . 'Database' . DIRECTORY_SEPARATOR . 'Migrations' . DIRECTORY_SEPARATOR,
         'seeds' => APP_ROOT . 'app' . DIRECTORY_SEPARATOR . 'Database' . DIRECTORY_SEPARATOR . 'Seeds' . DIRECTORY_SEPARATOR,

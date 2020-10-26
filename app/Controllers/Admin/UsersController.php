@@ -24,7 +24,9 @@ class UsersController
     public function index(): void
     {
         View::render('admin/users/index', [
-            'users' => UsersModel::select()->orderBy('name', 'ASC')->paginate(50)
+            'users' => UsersModel::select()->orderBy('name', 'ASC')->paginate(50),
+            'online_users' => UsersModel::find('online', 1)->all(),
+			'active_users' => UsersModel::find('active', 1)->all(),
         ]);
     }
 
@@ -66,7 +68,7 @@ class UsersController
 	 */
 	public function create(): void
 	{
-		$validate = RegisterRequest::validate(Request::getFields());
+        $validate = RegisterRequest::validate(Request::getFields());
         
         if (is_array($validate)) {
             Redirect::back()->withError($validate);

@@ -10,6 +10,7 @@ namespace Framework\Console;
 
 use Framework\ORM\Builder;
 use Framework\Support\Storage;
+use Framework\ORM\Database as DB;
 
 /**
  * Manage migrations and seeds from command line interface
@@ -291,21 +292,21 @@ class Database
         ) {
             if (strpos($options['db'], ',') === false) {
                 $database = $options['db'];
-                Builder::query("CREATE DATABASE $database CHARACTER SET utf8 COLLATE utf8_unicode_ci")->execute();
+                DB::getInstance()->setQuery("CREATE DATABASE $database CHARACTER SET " . config('database.charset') . " COLLATE " . config('database.collation'));
             } else {
                 $db = explode(',', $options['db']);
 
                 foreach ($db as $database) {
-                    Builder::query("CREATE DATABASE $database CHARACTER SET utf8 COLLATE utf8_unicode_ci")->execute();
+                    DB::getInstance()->setQuery("CREATE DATABASE $database CHARACTER SET " . config('database.charset') . " COLLATE " . config('database.collation'));
                 }
             }
         }
 
         else if (
             array_key_exists('db', $options) &&
+            array_key_exists('delete', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('migration', $options) &&
-            array_key_exists('delete', $options) &&
             !array_key_exists('refresh', $options)
         ) {
             if (strpos($options['db'], ',') === false) {
@@ -320,13 +321,119 @@ class Database
             }
         }
         
+        else if (
+            array_key_exists('db', $options) &&
+            array_key_exists('migration', $options) &&
+            !array_key_exists('seed', $options) &&
+            !array_key_exists('delete', $options) &&
+            !array_key_exists('refresh', $options)
+        ) {
+            if (strpos($options['db'], ',') === false) {
+                $database = $options['db'];
+                Builder::query("DROP DATABASE IF EXISTS $database")->execute();
+            } else {
+                $db = explode(',', $options['db']);
+
+                foreach ($db as $database) {
+                    Builder::query("DROP DATABASE IF EXISTS $database")->execute();
+                }
+            }
+
+            if ($options['migration'] !== 'all') {
+                $table = $options['migration'];
+
+                if (strpos($table, ',') === false) {
+                    $table = self::checkMigration($table);
+                    $table::migrate();
+                } else {
+                    $tables = explode(',', $table);
+
+                    foreach ($tables as $table) {
+                        $table = self::checkMigration($table);
+                        $table::migrate();
+                    }
+                }
+            } else {
+                foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
+                    $table = explode('.', $file)[0];
+                    $table = self::checkMigration($table);
+                    $table::migrate();
+                }
+            }
+        }
+        
+        else if (
+            array_key_exists('db', $options) &&
+            array_key_exists('migration', $options) &&
+            array_key_exists('seed', $options) &&
+            !array_key_exists('delete', $options) &&
+            !array_key_exists('refresh', $options)
+        ) {
+            if (strpos($options['db'], ',') === false) {
+                $database = $options['db'];
+                DB::getInstance()->setQuery("CREATE DATABASE $database CHARACTER SET " . config('database.charset') . " COLLATE " . config('database.collation'));
+            } else {
+                $db = explode(',', $options['db']);
+
+                foreach ($db as $database) {
+                    DB::getInstance()->setQuery("CREATE DATABASE $database CHARACTER SET " . config('database.charset') . " COLLATE " . config('database.collation'));
+                }
+            }
+
+            if ($options['migration'] !== 'all') {
+                $table = $options['migration'];
+
+                if (strpos($table, ',') === false) {
+                    $table = self::checkMigration($table);
+                    $table::migrate();
+                } else {
+                    $tables = explode(',', $table);
+
+                    foreach ($tables as $table) {
+                        $table = self::checkMigration($table);
+                        $table::migrate();
+                    }
+                }
+            } else {
+                foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
+                    $table = explode('.', $file)[0];
+                    $table = self::checkMigration($table);
+                    $table::migrate();
+                }
+            }
+
+            if ($options['seed'] !== 'all') {
+                $seed = $options['seed'];
+
+                if (strpos($seed, ',') === false) {
+                    $seed = self::checkSeed($seed);
+                    $seed::insert();
+                } else {
+                    $seeds = explode(',', $seed);
+
+                    foreach ($seeds as $seed) {
+                        $seed = self::checkSeed($seed);
+                        $seed::insert();
+                    }
+                }
+            } else {
+                foreach (Storage::path(config('storage.seeds'))->getFiles() as $file) {
+                    $seed = explode('.', $file)[0];
+                    $seed = self::checkSeed($seed);
+                    $seed::insert();
+                }
+            }
+        }
+        
         else if (array_key_exists('help', $options)) {
             $help_message = '[+] Commands list:' . PHP_EOL;
             $help_message .= PHP_EOL;
-            $help_message .= '      --db=users                                  Create new database with utf8 encoding character' . PHP_EOL;
-            $help_message .= '      --db=users,comments                         Create users and comments database' . PHP_EOL;
+            $help_message .= '      --db=users                                  Create users database with utf8 encoding character' . PHP_EOL;
+            $help_message .= '      --db=users,comments                         Create users and comments databases' . PHP_EOL;
             $help_message .= '      --db=users --delete                         Delete users database' . PHP_EOL;
-            $help_message .= '      --db=users,comments --delete                Delete users and comments database' . PHP_EOL;
+            $help_message .= '      --db=users,comments --delete                Delete users and comments databases' . PHP_EOL;
+            $help_message .= '      --db=users --migration=all                  Create users database and migrate all tables (use default database configuration)' . PHP_EOL;
+            $help_message .= '      --db=users --migration=all --seed=all       Create users database, migrate all tables and insert all seeds (use default database configuration)' . PHP_EOL;
             $help_message .= PHP_EOL;
             $help_message .= '      --migration=all                             Migrate all tables' . PHP_EOL;
             $help_message .= '      --migration=UsersTable                      Migrate UsersTable only' . PHP_EOL;

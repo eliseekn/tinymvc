@@ -1,22 +1,31 @@
-<?php
-$this->layout('admin/layout', [
+<?php $this->layout('admin/layout', [
     'page_title' => 'Roles | Administration'
-])
-?>
+]) ?>
 
 <?php $this->start('page_content') ?>
 
-<?php
-$this->insert('partials/breadcrumb', [
+<?php $this->insert('partials/breadcrumb', [
     'items' => ['Roles' => '']
-]);
-?>
+]) ?>
 
-<?php 
-if (flash_messages()) : 
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="position-relative bg-dark rounded-top py-2"></div>
+            
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <span><i class="fa fa-user-shield fa-lg text-dark"></i> Total</span>
+                    <span class="font-weight-bold"><?= $roles->getTotalItems() ?></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php if (flash_messages()) : 
     $this->insert('partials/notifications', get_flash_messages());
-endif 
-?>
+endif ?>
 
 <div class="card">
     <div class="card-header bg-dark">
@@ -106,11 +115,9 @@ endif
     <div class="card-footer d-flex align-items-center justify-content-between">
         <span>Total result(s): <span class="font-weight-bold"><?= $roles->getTotalItems() ?></span></span>
 
-        <?php
-        $this->insert('partials/pagination', [
+        <?php $this->insert('partials/pagination', [
             'pagination' => $roles
-        ])
-        ?>
+        ]) ?>
     </div>
 </div>
 

@@ -21,7 +21,7 @@ class Browsing
      */
     public static function addHistory($content): void
     {
-        Session::create('browsing_history', $content);
+        Session::create(config('app.name') . '_history', $content);
     }
     
     /**
@@ -31,7 +31,7 @@ class Browsing
      */
     public static function getHistory()
     {
-        return Session::get('browsing_history');
+        return Session::get(config('app.name') . '_history');
     }
     
     /**
@@ -41,6 +41,6 @@ class Browsing
      */
     public static function clearHistory(): void
     {
-        Session::close('browsing_history');
+        Session::close(config('app.name') . '_history');
     }
 }
