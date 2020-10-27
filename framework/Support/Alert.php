@@ -9,9 +9,9 @@
 namespace Framework\Support;
 
 /**
- * Manage flash notifications
+ * Manage alerts flash messages
  */
-class Notification
+class Alert
 {
     /**
      * @var array
@@ -19,14 +19,14 @@ class Notification
     protected static $flash = [];
 
     /**
-     * alert
+     * default alert
      *
      * @param  array|string $messages
      * @param  string $title
      * @param  mixed $dissmiss
      * @return \Framework\Support\Notification
      */
-    public static function alert($messages, string $title = '', bool $dissmiss = true): self
+    public static function default($messages, string $title = '', bool $dissmiss = true): self
     {
         self::$flash = [
             'title' => $title,
@@ -39,7 +39,7 @@ class Notification
     }
     
     /**
-     * popup
+     * popup alert
      *
      * @param  array|string $messages
      * @param  string $title
@@ -57,7 +57,7 @@ class Notification
     }
 
     /**
-     * toast
+     * toast alert
      *
      * @param  array|string $messages
      * @param  string $title
@@ -75,7 +75,7 @@ class Notification
     }
     
     /**
-     * success
+     * display success alert
      *
      * @return void
      */
@@ -86,7 +86,7 @@ class Notification
     }
     
     /**
-     * error
+     * display error alert
      *
      * @return void
      */
@@ -97,7 +97,7 @@ class Notification
     }
     
     /**
-     * info
+     * display info alert
      *
      * @return void
      */
@@ -108,7 +108,7 @@ class Notification
     }
     
     /**
-     * warning
+     * display warning alert
      *
      * @return void
      */

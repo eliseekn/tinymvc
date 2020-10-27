@@ -23,8 +23,8 @@ if (!function_exists('write_log')) {
 	 */
 	function write_log(string $folder, string $type, string $message): void
 	{
-		$log = '[' . date('H:i:s', time()) . '] [' . $type . '] ' . $message . PHP_EOL;
-		$log_file = APP_ROOT . $folder . DIRECTORY_SEPARATOR . 'logs_' . date('m_d_y', time()) . '.txt';
+		$log = '[' . date('H:i:s') . '] [' . $type . '] ' . $message . PHP_EOL;
+		$log_file = APP_ROOT . $folder . DIRECTORY_SEPARATOR . 'logs_' . date('m_d_y') . '.txt';
 		file_put_contents($log_file, $log, FILE_APPEND | LOCK_EX);
 	}
 }

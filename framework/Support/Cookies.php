@@ -14,7 +14,7 @@ namespace Framework\Support;
 class Cookies
 {    
     /**
-     * create
+     * create cookie
      *
      * @param  mixed $name
      * @param  mixed $data
@@ -31,7 +31,7 @@ class Cookies
     }
     
     /**
-     * get
+     * get cookie data
      *
      * @param  mixed $name
      * @return void
@@ -42,7 +42,7 @@ class Cookies
     }
     
     /**
-     * has
+     * check if cookie exists
      *
      * @param  mixed $name
      * @return bool
@@ -53,7 +53,7 @@ class Cookies
     }
     
     /**
-     * close
+     * delete cookie
      *
      * @param  mixed $name
      * @return bool
@@ -64,7 +64,7 @@ class Cookies
     }
     
     /**
-     * setUser
+     * set user cookie data
      *
      * @param  mixed $data
      * @return bool
@@ -75,7 +75,7 @@ class Cookies
     }
     
     /**
-     * getUser
+     * get user cookie data
      *
      * @return mixed
      */
@@ -85,7 +85,7 @@ class Cookies
     }
     
     /**
-     * hasUser
+     * check user cookie data
      *
      * @return bool
      */
@@ -95,7 +95,7 @@ class Cookies
     }
     
     /**
-     * deleteUser
+     * delete user cookie data
      *
      * @return bool
      */

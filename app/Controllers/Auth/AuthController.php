@@ -68,7 +68,7 @@ class AuthController
 	public function logout(): void
 	{
 		AuthHelper::forget();
-        Browsing::clearHistory();
+        Browsing::clear();
         Session::close('csrf_token');
 		Redirect::toUrl('/')->only();
 	}

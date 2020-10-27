@@ -10,7 +10,7 @@ use Framework\HTTP\Response;
 use Framework\Routing\Route;
 
 /**
- * Set routes paths
+ * Set api routes
  */
 
 Route::get('/api', [

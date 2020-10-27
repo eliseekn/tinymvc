@@ -12,13 +12,14 @@
 
 <?php $this->insert('partials/breadcrumb', [
     'items' => [
+        'Dashboard' => absolute_url('/admin/dashboard'),
         'Roles' => absolute_url('/admin/roles'),
         'Edit' => ''
     ]
 ]) ?>
 
 <?php if (flash_messages()) : 
-    $this->insert('partials/notifications', get_flash_messages());
+    $this->insert('partials/alert', get_flash_messages());
 endif ?>
 
 <div class="card">

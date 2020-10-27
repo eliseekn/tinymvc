@@ -22,7 +22,7 @@ class UserSeed
     public static function insert(): void
     {
         Seeder::add(self::$table, [
-            'name' => 'Admin',
+            'name' => 'admin',
             'email' => 'admin@mail.com',
             'password' => Encryption::hash('admin'),
             'role' => 'administrator',

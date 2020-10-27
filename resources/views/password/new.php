@@ -15,15 +15,13 @@
         <div class="container" style="width: 400px">
             <h1 class="py-3 text-center">Reset password</h1>
 
-            <?php 
-            if (flash_messages()) : 
-                $this->insert('partials/notifications', [
+            <?php if (flash_messages()) : 
+                $this->insert('partials/alert', [
                     'messages' => get_flash_messages(),
                     'display' => 'alert',
                     'dismiss' => true
                 ]);
-            endif 
-            ?>
+            endif ?>
 
             <div class="card shadow p-4">
                 <form method="post" action="<?= absolute_url('/password/new') ?>">

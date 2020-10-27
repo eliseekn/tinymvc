@@ -6,39 +6,12 @@
  * @link https://github.com/eliseekn/TinyMVC
  */
 
-use Framework\Routing\View;
 use Framework\Routing\Route;
 
 /**
- * Set routes paths
+ * Set admin panel routes
  */
 
-//auth routes
-Route::group([
-    'login' => [
-        'handler' => function() {
-            View::render('auth/login');
-        }
-    ],
-
-    'signup' => [
-        'handler' => function() {
-            View::render('auth/signup');
-        }
-    ]
-])->by([
-    'method' => 'GET',
-    'middlewares' => [
-        'RememberUser',
-        'AuthPolicy'
-    ]
-]);
-
-Route::get('logout', ['handler' => 'Auth\AuthController@logout']);
-Route::post('authenticate', ['handler' => 'Auth\AuthController@authenticate']);
-Route::post('register', ['handler' => 'Auth\AuthController@register']);
-
-//admin routes
 Route::group([
     'admin' => [],
     'admin/dashboard' => []
@@ -114,88 +87,4 @@ Route::group([
         'SanitizeFields',
         'AdminPolicy'
     ]
-]);
-
-//password forgot routes
-Route::group([
-    'forgot' => [
-        'method' => 'GET',
-        'handler' => function() {
-            View::render('password/reset');
-        }
-    ],
-
-    'reset' => [
-        'method' => 'GET',
-        'handler' => 'Auth\PasswordController@reset'
-    ],
-
-    'notify' => [
-        'method' => 'POST',
-        'handler' => 'Auth\PasswordController@notify'
-    ],
-
-    'new' => [
-        'method' => 'POST',
-        'handler' => 'Auth\PasswordController@new'
-    ]
-])->by([
-    'prefix' => 'password'
-]);
-
-//email confirmation routes
-Route::group([
-    'confirmation' => ['handler' => 'EmailController@verify'],
-    'confirmation/notify' => ['handler' => 'EmailController@notify']
-])->by([
-    'method' => 'GET',
-    'prefix' => 'email'
-]);
-
-//docs routes
-Route::get('docs', [
-    'handler' => function() {
-        View::render('docs/index');
-    }]
-);
-
-Route::group([
-    'getting-started' => ['handler' => function() {
-        View::render('docs/getting-started');
-    }],
-
-    'routing' => ['handler' => function() {
-        View::render('docs/guides/routing');
-    }],
-
-    'middlewares' => ['handler' => function() {
-        View::render('docs/guides/middlewares');
-    }],
-
-    'controllers' => ['handler' => function() {
-        View::render('docs/guides/controllers');
-    }],
-
-    'views' => ['handler' => function() {
-        View::render('docs/guides/views');
-    }],
-
-    'requests' => ['handler' => function() {
-        View::render('docs/guides/requests');
-    }],
-
-    'responses' => ['handler' => function() {
-        View::render('docs/guides/responses');
-    }],
-
-    'client' => ['handler' => function() {
-        View::render('docs/guides/client');
-    }],
-
-    'redirections' => ['handler' => function() {
-        View::render('docs/guides/redirections');
-    }]
-])->by([
-    'method' => 'GET',
-    'prefix' => 'docs'
 ]);

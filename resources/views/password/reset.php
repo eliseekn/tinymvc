@@ -24,15 +24,13 @@
 				</div>
 			</div>
 
-            <?php 
-            if (flash_messages()) : 
-                $this->insert('partials/notifications', [
+            <?php if (flash_messages()) : 
+                $this->insert('partials/alert', [
                     'messages' => get_flash_messages(),
                     'display' => 'alert',
                     'dismiss' => true
                 ]);
-            endif 
-            ?>
+            endif ?>
 
             <div class="card shadow p-4">
                 <form method="post" action="<?= absolute_url('/password/notify') ?>">

@@ -142,7 +142,7 @@ class Route
      */
     public static function any(string $route, array $options): void
     {
-        $options = array_merge(['method' => 'GET|HEAD|POST|PUT|DELETE|OPTION|PATCH'], $options);
+        $options = array_merge(['method' => 'GET|HEAD|POST|PUT|DELETE|OPTIONS|PATCH'], $options);
         self::add($route, $options);
     }
 

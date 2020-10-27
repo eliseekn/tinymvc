@@ -1,8 +1,6 @@
-<?php 
-$this->layout('docs/layout', [
+<?php $this->layout('docs/layout', [
     'page_title' => 'TinyMVC | Documentation'
-]) 
-?>
+]) ?>
 
 <?php $this->start('page_content') ?>
 

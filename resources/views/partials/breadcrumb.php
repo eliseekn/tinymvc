@@ -1,23 +1,17 @@
 <nav class="d-flex justify-content-end">
-    <ol class="breadcrumb bg-white">
-        <li class="breadcrumb-item">
-            <a href="<?= absolute_url('/admin') ?>">
-                <i class="fa fa-home"></i> Dashboard
-            </a>
-        </li>
-
+    <ol class="breadcrumb bg-dark">
         <?php
         foreach ($items as $key => $value) :
             if (!empty($value)) :
         ?>
 
         <li class="breadcrumb-item">
-            <a href="<?= $value ?>"><?= $key ?></a>
+            <a href="<?= $value ?>" class="text-white"><?= $key ?></a>
         </li>
 
         <?php else : ?>
 
-        <li class="breadcrumb-item active" aria-current="page"><?= $key ?></li>
+        <li class="breadcrumb-item active text-muted" aria-current="page"><?= $key ?></li>
 
         <?php
             endif;

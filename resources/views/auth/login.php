@@ -17,13 +17,13 @@
 
             <?php 
             if (flash_messages()) :
-                $this->insert('partials/notifications', get_flash_messages());
+                $this->insert('partials/alert', get_flash_messages());
             endif 
             ?>
 
             <?php 
             if(session_has('auth_attempts') && get_session('auth_attempts') > config('security.auth.max_attempts') && strtotime('+' . config('security.auth.unlock_timeout') . ' minute', get_session('auth_attempts_timeout')) > strtotime(date('Y-m-d H:i:s'))) : 
-                $this->insert('partials/notifications', [
+                $this->insert('partials/alert', [
                     'type' => 'danger',
                     'messages' => 'Authentication attempts exceeded. <br> Wait ' . config('security.auth.unlock_timeout') . ' minute(s) before try again',
                     'display' => 'alert',

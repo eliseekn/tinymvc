@@ -220,6 +220,19 @@ class Model
 
 		return $this;
     }
+    
+    /**
+     * add custom WHERE clause for range
+     *
+     * @param  string $column
+     * @param  mixed $start
+     * @param  mixed $end
+     * @return \Framework\ORM\Model
+     */
+    public function between(string $column, $start, $end): self
+    {
+        return $this->where($column, '>=', $start)->andWhere($column, '<=', $end);
+    }
 
     /**
 	 * add HAVING clause

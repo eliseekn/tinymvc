@@ -1,18 +1,15 @@
-<?php
-$this->layout('docs/layout', [
+<?php $this->layout('docs/layout', [
     'page_title' => 'HTTP Client | Documentation'
-])
-?>
+]) ?>
 
 <?php $this->start('page_content') ?>
 
-<?php
-$this->insert('partials/breadcrumb-docs', [
+<?php $this->insert('partials/breadcrumb', [
     'items' => [
+        'Documentation' => absolute_url('/docs'),
         'HTTP Client' => ''
     ]
-]);
-?>
+]) ?>
 
 <div class="card mb-5" id="basic-routing">
     <div class="card-header bg-dark">

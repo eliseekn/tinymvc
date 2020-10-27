@@ -114,11 +114,10 @@ class DownloadHelper
     {
         $options = new Options();
         $options->setIsHtml5ParserEnabled(true);
-        $options->setIsPhpEnabled(true);
 
         $dompdf = new Dompdf($options);
         $dompdf->loadHtml($html, 'UTF-8');
-        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->setPaper('A4');
         $dompdf->render();
 
         $handle = fopen('php://output', 'w');

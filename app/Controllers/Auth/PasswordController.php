@@ -2,6 +2,7 @@
 
 namespace App\Controllers\Auth;
 
+use Carbon\Carbon;
 use Framework\HTTP\Request;
 use Framework\Routing\View;
 use App\Helpers\EmailHelper;
@@ -25,13 +26,13 @@ class PasswordController
 	public function notify(): void
 	{
 		$token = random_string(50, true);
-		$expires = strtotime('+1 hour', strtotime(date('Y-m-d H:i:s')));
+		//$expires = strtotime('+1 hour', strtotime(date('Y-m-d H:i:s')));
 
 		if (EmailHelper::sendToken(Request::getField('email'), $token)) {
 			PasswordResetModel::insert([
 				'email' => Request::getField('email'),
 				'token' => $token,
-				'expires' => date('Y-m-d H:i:s', $expires)
+				'expires' => Carbon::now()->addHour()->format('Y-m-d H:i:s')
 			]);
 
 			Redirect::back()->withSuccess('Your password reset link has been sumbitted successfuly. <br> You can check your email box now');
@@ -47,23 +48,20 @@ class PasswordController
 	 */
 	public function reset(): void
 	{
-        $password_reset = PasswordResetModel::select()
-            ->where('email', Request::getQuery('email'))
-            ->andWhere('token', Request::getQuery('token'))
-            ->single();
+        $pasword_reset = PasswordResetModel::find('email', Request::getQuery('email'))->single();
 
-		if ($password_reset === false) {
+        if ($pasword_reset === false || $pasword_reset->token !== Request::getQuery('token')) {
 			Response::send([], 'This password reset link is invalid');
 		}
 
-		if (PasswordResetModel::find('email', Request::getQuery('email'))->single()->expires < date('Y-m-d H:i:s')) {
+		if ($pasword_reset->expires < date('Y-m-d H:i:s')) {
 			Response::send([], 'This password reset link expired. Please retrieves a new one');
 		}
 
-		PasswordResetModel::delete()->where('email', Request::getQuery('email'))->persist();
+		PasswordResetModel::delete()->where('email', $pasword_reset->email)->persist();
 		
 		View::render('password/new', [
-			'email' => Request::getQuery('email')
+			'email' => $pasword_reset->email
 		]);
 	}
 	

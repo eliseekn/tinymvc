@@ -6,13 +6,14 @@
 
 <?php $this->insert('partials/breadcrumb', [
     'items' => [
+        'Dashboard' => absolute_url('/admin/dashboard'),
         'Users' => absolute_url('/admin/users'),
         'View' => ''
     ]
 ]) ?>
 
 <?php if (flash_messages()) : 
-    $this->insert('partials/notifications', get_flash_messages());
+    $this->insert('partials/alert', get_flash_messages());
 endif ?>
 
 <div class="card">
@@ -36,7 +37,7 @@ endif ?>
 
         <div class="form-group row">
             <p class="col-sm-2 col-form-label">Created at</p>
-            <div class="col-form-label col-sm-10 font-weight-bold"><?= date('Y-m-d', strtotime($user->created_at)) ?></div>
+            <div class="col-form-label col-sm-10 font-weight-bold"><?= \Carbon\Carbon::parse($user->created_at)->format('Y-m-d') ?></div>
         </div>
 
         <div class="form-group row">

@@ -20,7 +20,6 @@ if (!function_exists('start_session')) {
 	{
 		if (session_status() === PHP_SESSION_NONE) {
 			session_start();
-			setcookie(session_name(), session_id(), time() + config('session.lifetime'));
 		}
 	}
 }

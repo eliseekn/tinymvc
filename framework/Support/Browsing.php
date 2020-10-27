@@ -8,38 +8,47 @@
 
 namespace Framework\Support;
 
+use Framework\HTTP\Request;
+
 /**
  * Manage browsing history
  */
 class Browsing
 {
     /**
-     * addBrowsingHistory
+     * add url to browsing history
      *
-     * @param  mixed $content
      * @return void
      */
-    public static function addHistory($content): void
+    public static function set(): void
     {
-        Session::create(config('app.name') . '_history', $content);
+        $url = self::get();
+
+        if (empty($url)) {
+            $url = [Request::getFullUri()];
+        } else {
+            $url[] = Request::getFullUri();
+        }
+
+        Session::create(config('app.name') . '_history', $url);
     }
     
     /**
-     * getHistory
+     * get browsing history
      *
-     * @return void
+     * @return mixed
      */
-    public static function getHistory()
+    public static function get()
     {
         return Session::get(config('app.name') . '_history');
     }
     
     /**
-     * clearHistory
+     * clear browsing history
      *
      * @return void
      */
-    public static function clearHistory(): void
+    public static function clear(): void
     {
         Session::close(config('app.name') . '_history');
     }

@@ -6,9 +6,9 @@
             <a class="page-link" href="<?= $pagination->previousPageUrl() ?>">Previous</a>
         </li>
 
-        <?php endif ?>
-
-        <?php
+        <?php 
+        endif;
+        
         if ($pagination->totalPages() > 1) :
             for ($i = 1; $i <= $pagination->totalPages(); $i++) :
         ?>
@@ -20,9 +20,9 @@
         <?php
             endfor;
         endif;
-        ?>
         
-        <?php if ($pagination->hasMore()) : ?>
+        if ($pagination->hasMore()) : 
+        ?>
 
         <li class="page-item">
             <a class="page-link" href="<?= $pagination->nextPageUrl() ?>">Next</a>

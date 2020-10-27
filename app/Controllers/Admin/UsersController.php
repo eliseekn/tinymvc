@@ -2,17 +2,18 @@
 
 namespace App\Controllers\Admin;
 
+use Carbon\Carbon;
 use Framework\HTTP\Request;
 use Framework\Routing\View;
 use Framework\HTTP\Redirect;
+use Framework\Support\Alert;
 use App\Helpers\ReportHelper;
+use Framework\Support\Session;
 use App\Requests\RegisterRequest;
 use Framework\Support\Encryption;
 use App\Database\Models\RolesModel;
 use App\Database\Models\UsersModel;
 use App\Requests\UpdateUserRequest;
-use Framework\Support\Notification;
-use Framework\Support\Session;
 
 class UsersController
 {
@@ -54,7 +55,7 @@ class UsersController
 		$roles = RolesModel::select()->all();
 
 		if ($user === false) {
-			Notification::toast('This user does not exists', 'User not exists')->error();
+			Alert::toast('This user does not exists', 'User not exists')->error();
 			Redirect::back()->only();
 		}
 
@@ -75,7 +76,7 @@ class UsersController
         }
 
 		if (UsersModel::find('email', Request::getField('email'))->exists()) {
-			Notification::toast('This email address already exists', 'User not created')->error();
+			Alert::toast('This email address already exists', 'User not created')->error();
             Redirect::back()->only();
 		}
 
@@ -86,7 +87,7 @@ class UsersController
 			'role' => Request::getField('role')
 		]);
 
-		Notification::toast('The user has been created successfully', 'User created')->success();
+		Alert::toast('The user has been created successfully', 'User created')->success();
 		Redirect::toUrl('admin/users/view/' . $id)->only();
     }
 	
@@ -101,7 +102,7 @@ class UsersController
 		$user = UsersModel::find('id', $id)->single();
 		
 		if ($user === false) {
-			Notification::toast('This user does not exists', 'User not exists')->error();
+			Alert::toast('This user does not exists', 'User not exists')->error();
 			Redirect::back()->only();
 		}
 
@@ -123,7 +124,7 @@ class UsersController
         }
 
 		if (!UsersModel::find('id', $id)->exists()) {
-			Notification::toast('This user does not exists', 'User not exists')->error();
+			Alert::toast('This user does not exists', 'User not exists')->error();
 			Redirect::back()->only();
 		}
 
@@ -147,7 +148,7 @@ class UsersController
             Session::setUser($user);
         }
 
-		Notification::toast('The user has been updated successfully', 'User updated')->success();
+		Alert::toast('The user has been updated successfully', 'User updated')->success();
         Redirect::toUrl('admin/users/view/' . $id)->only();
     }
 
@@ -161,11 +162,11 @@ class UsersController
 	{
 		if (!is_null($id)) {
 			if (!UsersModel::find('id', $id)->exists()) {
-				Notification::toast('This user does not exists', 'User not exists')->error();
+				Alert::toast('This user does not exists', 'User not exists')->error();
 			}
 	
 			UsersModel::delete()->where('id', $id)->persist();
-			Notification::toast('The user has been deleted successfully', 'User deleted')->success();
+			Alert::toast('The user has been deleted successfully', 'User deleted')->success();
 		} else {
 			$users_id = json_decode(Request::getRawData(), true);
 			$users_id = $users_id['items'];
@@ -174,7 +175,7 @@ class UsersController
 				UsersModel::delete()->where('id', $id)->persist();
 			}
 			
-			Notification::toast('The selected users have been deleted successfully', 'Users deleted')->success();
+			Alert::toast('The selected users have been deleted successfully', 'Users deleted')->success();
 		}
 	}
 
@@ -188,12 +189,12 @@ class UsersController
         $file = Request::getFile('file', ['csv']);
 
 		if (!$file->isAllowed()) {
-			Notification::toast('Only file of type extension .csv are allowed', 'File type error')->error();
+			Alert::toast('Only file of type extension .csv are allowed', 'File type error')->error();
             Redirect::back()->only();
 		}
 
 		if (!$file->isUploaded()) {
-			Notification::toast('Failed to import users data', 'Users not imported')->error();
+			Alert::toast('Failed to import users data', 'Users not imported')->error();
 			Redirect::back()->only();
 		}
 
@@ -203,7 +204,7 @@ class UsersController
 			'password' => 'Password'
 		]);
 
-		Notification::toast('The users have been imported successfully', 'Users imported')->success();
+		Alert::toast('The users have been imported successfully', 'Users imported')->success();
 		Redirect::back()->only();
 	}
 	
@@ -214,13 +215,19 @@ class UsersController
 	 */
 	public function export(): void
 	{
-		if (!empty(Request::getField('date_start')) && !empty(Request::getField('date_end'))) {
-			$users = UsersModel::findDateRange(Request::getField('date_start'), Request::getField('date_end'));
-			$filename = 'users_' . str_replace('-', '_', Request::getField('date_start')) . '-' . str_replace('-', '_', Request::getField('date_end')) . '.' . Request::getField('file_type');
+		$date_start = Request::getField('date_start');
+        $date_end = Request::getField('date_end');
+
+		if (!empty($date_start) && !empty($date_end)) {
+			$users = UsersModel::select()
+                ->between('created_at', Carbon::parse($date_start)->format('Y-m-d H:i:s'), Carbon::parse($date_end)->format('Y-m-d H:i:s'))
+                ->orderBy('name', 'ASC')
+                ->all();
 		} else {
 			$users = UsersModel::select()->orderBy('name', 'ASC')->all();
-			$filename = 'users_' . date('Y_m_d') . '.' . Request::getField('file_type');
-		}
+        }
+        
+        $filename = 'roles_' . date('Y_m_d') . '.' . Request::getField('file_type');
 
 		ReportHelper::export($filename, $users, [
 			'name' => 'Name', 

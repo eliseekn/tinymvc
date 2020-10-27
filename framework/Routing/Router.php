@@ -12,7 +12,6 @@ use Exception;
 use Framework\HTTP\Request;
 use Framework\Routing\View;
 use Framework\HTTP\Response;
-use Framework\Support\Session;
 use Framework\Support\Browsing;
 
 /**
@@ -34,8 +33,10 @@ class Router
      */
     public function __construct()
     {
-        $this->addBrowsingHistory();
+        //set browsing history
+        Browsing::set();
         
+        //dispatch routes
         try {
             $this->dispatch(Route::$routes);
         } catch (Exception $e) {
@@ -58,24 +59,6 @@ class Router
         }
 
         return $uri;
-    }
-    
-    /**
-     * add uri to browsing history session
-     *
-     * @return void
-     */
-    private function addBrowsingHistory(): void
-    {
-        $browsing_history = Browsing::getHistory();
-
-        if (empty($browsing_history)) {
-            $browsing_history = [Request::getFullUri()];
-        } else {
-            $browsing_history[] = Request::getFullUri();
-        }
-
-        Browsing::addHistory($browsing_history);
     }
     
     /**

@@ -5,7 +5,10 @@
 <?php $this->start('page_content') ?>
 
 <?php $this->insert('partials/breadcrumb', [
-    'items' => ['Users' => '']
+    'items' => [
+        'Dashboard' => absolute_url('/admin/dashboard'),
+        'Users' => ''
+    ]
 ]) ?>
 
 <div class="row mb-4">
@@ -50,7 +53,7 @@
 </div>
 
 <?php if (flash_messages()) :
-    $this->insert('partials/notifications', get_flash_messages());
+    $this->insert('partials/alert', get_flash_messages());
 endif ?>
 
 <div class="card">
@@ -140,7 +143,7 @@ endif ?>
                             <?php endif ?>
                         </td>
 
-                        <td><?= date('Y-m-d', strtotime($user->created_at)) ?></td>
+                        <td><?= \Carbon\Carbon::parse($user->created_at)->format('Y-m-d') ?></td>
 
                         <td>
                             <a class="btn text-primary" href="<?= absolute_url('/admin/users/view/' . $user->id) ?>" title="View item">

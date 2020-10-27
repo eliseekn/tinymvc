@@ -10,9 +10,8 @@ namespace Framework\HTTP;
 
 use Exception;
 use Framework\Routing\Route;
+use Framework\Support\Alert;
 use Framework\Support\Browsing;
-use Framework\Support\Notification;
-use Framework\Support\Session;
 
 /**
  * Handle HTTP redirection
@@ -91,7 +90,7 @@ class Redirect
      */
     public static function back(): self
     {
-        $browsing_history = Browsing::getHistory();
+        $browsing_history = Browsing::get();
 
         if (!empty($browsing_history)) {
             end($browsing_history);
@@ -110,7 +109,7 @@ class Redirect
      */
     public function withSuccess($messages, string $title = ''): void
     {
-        Notification::alert($messages, $title)->success();
+        Alert::default($messages, $title)->success();
         redirect_to(self::$redirect_url);
     }
 
@@ -123,7 +122,7 @@ class Redirect
      */
     public function withError($messages, string $title = ''): void
     {
-        Notification::alert($messages, $title)->error();
+        Alert::default($messages, $title)->error();
         redirect_to(self::$redirect_url);
     }
 
@@ -136,7 +135,7 @@ class Redirect
      */
     public function withWarning($messages, string $title = ''): void
     {
-        Notification::alert($messages, $title)->warning();
+        Alert::default($messages, $title)->warning();
         redirect_to(self::$redirect_url);
     }
 
@@ -149,7 +148,7 @@ class Redirect
      */
     public function withInfo($messages, string $title = ''): void
     {
-        Notification::alert($messages, $title)->info();
+        Alert::default($messages, $title)->info();
         redirect_to(self::$redirect_url);
     }
 

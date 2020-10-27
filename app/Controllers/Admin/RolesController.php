@@ -2,14 +2,15 @@
 
 namespace App\Controllers\Admin;
 
+use Carbon\Carbon;
 use Framework\HTTP\Request;
 use Framework\Routing\View;
 use Framework\HTTP\Redirect;
 use Framework\HTTP\Response;
+use Framework\Support\Alert;
 use App\Helpers\ReportHelper;
 use App\Requests\RoleRequest;
 use App\Database\Models\RolesModel;
-use Framework\Support\Notification;
 
 class RolesController
 {
@@ -46,7 +47,7 @@ class RolesController
 		$role = RolesModel::find('id', $id)->single();
 
 		if ($role === false) {
-			Notification::toast('This role does not exists', 'Role not exists')->error();
+			Alert::toast('This role does not exists', 'Role not exists')->error();
 			Redirect::back()->only();
 		}
 
@@ -63,14 +64,14 @@ class RolesController
 		$validate = RoleRequest::validate(Request::getFields());
         
         if (is_array($validate)) {
-			Notification::alert($validate)->error();
+			Alert::default($validate)->error();
             Response::sendJson([], ['redirect' => absolute_url('admin/roles/new')]);
         }
 
 		$slug = slugify(Request::getField('title'));
 
 		if (RolesModel::find('slug', $slug)->exists()) {
-			Notification::toast('This role already exists', 'Role not created')->error();
+			Alert::toast('This role already exists', 'Role not created')->error();
 			Response::sendJson([], ['redirect' => absolute_url('admin/roles/new')]);
 		}
 
@@ -80,7 +81,7 @@ class RolesController
             'description' => Request::getField('editor')
 		]);
 
-		Notification::toast('The role has been created successfully', 'Role created')->success();
+		Alert::toast('The role has been created successfully', 'Role created')->success();
 		Response::sendJson([], ['redirect' => absolute_url('admin/roles/view/' . $id)]);
     }
 	
@@ -95,7 +96,7 @@ class RolesController
 		$role = RolesModel::find('id', $id)->single();
 
 		if ($role === false) {
-			Notification::toast('This role does not exists', 'Role not exists')->error();
+			Alert::toast('This role does not exists', 'Role not exists')->error();
 			Redirect::back()->only();
 		}
 
@@ -113,12 +114,12 @@ class RolesController
 		$validate = RoleRequest::validate(Request::getFields());
         
         if (is_array($validate)) {
-			Notification::alert($validate)->error();
+			Alert::default($validate)->error();
             Response::sendJson([], ['redirect' => absolute_url('admin/roles/edit')]);
         }
 
 		if (!RolesModel::find('id', $id)->exists()) {
-			Notification::toast('This role does not exists', 'Role not exists')->error();
+			Alert::toast('This role does not exists', 'Role not exists')->error();
 			Response::sendJson([], ['redirect' => absolute_url('admin/roles/edit')]);
 		}
 
@@ -131,7 +132,7 @@ class RolesController
 		->where('id', $id)
 		->persist();
 
-		Notification::toast('The role has been updated successfully', 'Role updated')->success();
+		Alert::toast('The role has been updated successfully', 'Role updated')->success();
 		Response::sendJson([], ['redirect' => absolute_url('admin/roles/view/' . $id)]);
     }
 
@@ -145,11 +146,11 @@ class RolesController
 	{
 		if (!is_null($id)) {
 			if (!RolesModel::find('id', $id)->exists()) {
-				Notification::toast('This role does not exists', 'Role not exists')->error();
+				Alert::toast('This role does not exists', 'Role not exists')->error();
 			}
 	
 			RolesModel::delete()->where('id', $id)->persist();
-			Notification::toast('The role has been deleted successfully', 'Role deleted')->success();
+			Alert::toast('The role has been deleted successfully', 'Role deleted')->success();
 		} else {
 			$roles_id = json_decode(Request::getRawData(), true);
 			$roles_id = $roles_id['items'];
@@ -158,7 +159,7 @@ class RolesController
 				RolesModel::delete()->where('id', $id)->persist();
 			}
 			
-			Notification::toast('The selected roles have been deleted successfully', 'Roles deleted')->success();
+			Alert::toast('The selected roles have been deleted successfully', 'Roles deleted')->success();
 		}
 	}
 
@@ -172,12 +173,12 @@ class RolesController
         $file = Request::getFile('file', ['csv']);
 
 		if (!$file->isAllowed()) {
-			Notification::toast('Only file of type extension .csv are allowed', 'File type error')->error();
+			Alert::toast('Only file of type extension .csv are allowed', 'File type error')->error();
             Redirect::back()->only();
 		}
 
 		if (!$file->isUploaded()) {
-			Notification::toast('Failed to import roles data', 'Roles not imported')->error();
+			Alert::toast('Failed to import roles data', 'Roles not imported')->error();
 			Redirect::back()->only();
 		}
 
@@ -187,7 +188,7 @@ class RolesController
 			'description' => 'Description'
 		]);
 
-		Notification::toast('The roles have been imported successfully', 'Roles imported')->success();
+		Alert::toast('The roles have been imported successfully', 'Roles imported')->success();
 		Redirect::back()->only();
 	}
 	
@@ -198,13 +199,19 @@ class RolesController
 	 */
 	public function export(): void
 	{
-		if (!empty(Request::getField('date_start')) && !empty(Request::getField('date_end'))) {
-			$roles = RolesModel::findDateRange(Request::getField('date_start'), Request::getField('date_end'));
-			$filename = 'roles_' . str_replace('-', '_', Request::getField('date_start')) . '-' . str_replace('-', '_', Request::getField('date_end')) . '.' . Request::getField('file_type');
+        $date_start = Request::getField('date_start');
+        $date_end = Request::getField('date_end');
+
+		if (!empty($date_start) && !empty($date_end)) {
+			$roles = RolesModel::select()
+                ->between('created_at', Carbon::parse($date_start)->format('Y-m-d H:i:s'), Carbon::parse($date_end)->format('Y-m-d H:i:s'))
+                ->orderBy('name', 'ASC')
+                ->all();
 		} else {
 			$roles = RolesModel::select()->orderBy('name', 'ASC')->all();
-			$filename = 'roles_' . date('Y_m_d') . '.' . Request::getField('file_type');
-		}
+        }
+        
+        $filename = 'roles_' . date('Y_m_d') . '.' . Request::getField('file_type');
 
 		ReportHelper::export($filename, $roles, [
 			'title' => 'Title', 

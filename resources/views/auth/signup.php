@@ -17,7 +17,7 @@
 
             <?php 
             if (flash_messages()) : 
-                $this->insert('partials/notifications', [
+                $this->insert('partials/alert', [
                     'messages' => get_flash_messages(),
                     'dismiss' => true,
                     'display' => 'alert'
