@@ -38,8 +38,8 @@ class Database
 	private function __construct()
 	{
 		try {
-            $this->connection = new PDO('mysql:host=' . config('database.host'), config('database.username'), config('database.password'));
-            $this->connection->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, "SET NAMES " . config('database.charset') . " COLLATE " . config('database.collation'));
+            $this->connection = new PDO('mysql:host=' . config('db.host'), config('db.username'), config('db.password'));
+            $this->connection->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, 'SET NAMES ' . config('db.charset') . ' COLLATE ' . config('db.collation'));
 			$this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 			$this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
@@ -64,29 +64,6 @@ class Database
 
 		return self::$instance;
     }
-    
-    /**
-     * set database name
-     *
-     * @param  string $database
-     * @return \Framework\ORM\Database
-     */
-    public function setDatabase(string $database): self
-    {
-        $this->connection->exec("USE $database");
-        return $this;
-    }
-
-	/**
-	 * execute sql query
-	 *
-	 * @return \PDOStatement
-	 */
-    public function setQuery(string $query): \PDOStatement
-    {
-        $stmt = $this->connection->query($query);
-        return $stmt;
-    }
 
 	/**
 	 * returns database connection instance
@@ -99,15 +76,27 @@ class Database
 	}
 
 	/**
+	 * execute sql query
+	 *
+	 * @return \PDOStatement
+	 */
+    public function executeQuery(string $query): \PDOStatement
+    {
+        $stmt = $this->connection->query($query);
+        return $stmt;
+    }
+
+	/**
 	 * execute safe sql query
 	 *
 	 * @return \PDOStatement
 	 */
-	public function executeQuery(string $query, array $args): \PDOStatement
+	public function executeStatement(string $query, array $args): \PDOStatement
 	{
 		$stmt = null;
 
 		try {
+            $this->connection->exec('USE ' . config('db.name'));
 			$stmt = $this->connection->prepare(trim($query));
 			$stmt->execute($args);
 		} catch (PDOException $e) {

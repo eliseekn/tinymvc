@@ -164,14 +164,14 @@ class UsersController
 				Notification::toast('This user does not exists', 'User not exists')->error();
 			}
 	
-			UsersModel::delete()->where('id', '=', $id)->persist();
+			UsersModel::delete()->where('id', $id)->persist();
 			Notification::toast('The user has been deleted successfully', 'User deleted')->success();
 		} else {
 			$users_id = json_decode(Request::getRawData(), true);
 			$users_id = $users_id['items'];
 
 			foreach ($users_id as $id) {
-				UsersModel::delete()->where('id', '=', $id)->persist();
+				UsersModel::delete()->where('id', $id)->persist();
 			}
 			
 			Notification::toast('The selected users have been deleted successfully', 'Users deleted')->success();
@@ -197,9 +197,7 @@ class UsersController
 			Redirect::back()->only();
 		}
 
-		$function = ['App\Database\Models\UsersModel', 'create'];
-
-		ReportHelper::import($file->getTempFilename(), $function, [
+		ReportHelper::import($file->getTempFilename(), UsersModel::class, [
 			'name' => 'Name', 
 			'email' => 'Email', 
 			'password' => 'Password'

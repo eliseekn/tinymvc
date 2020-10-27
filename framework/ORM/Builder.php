@@ -35,7 +35,7 @@ class Builder
      */
     public static function table(string $name): self
     {
-        self::$query = "CREATE TABLE " . config('database.table_prefix') . "$name (";
+        self::$query = "CREATE TABLE " . config('db.table_prefix') . "$name (";
         return new self();
 	}
 
@@ -66,7 +66,7 @@ class Builder
 	 */
 	public static function insert(string $table, array $items): self
 	{
-		self::$query = "INSERT INTO " . config('database.table_prefix') . "$table (";
+		self::$query = "INSERT INTO " . config('db.table_prefix') . "$table (";
 
 		foreach ($items as $key => $value) {
 			self::$query .= "$key, ";
@@ -94,7 +94,7 @@ class Builder
 	 */
 	public static function update(string $table): self
 	{
-		self::$query = "UPDATE " . config('database.table_prefix') . "$table";
+		self::$query = "UPDATE " . config('db.table_prefix') . "$table";
 		return new self();
 	}
 
@@ -106,7 +106,7 @@ class Builder
 	 */
 	public static function delete(string $table): self
 	{
-		self::$query = "DELETE FROM " . config('database.table_prefix') . "$table";
+		self::$query = "DELETE FROM " . config('db.table_prefix') . "$table";
 		return new self();
 	}
 	
@@ -118,7 +118,7 @@ class Builder
 	 */
 	public static function drop(string $table): self
 	{
-		self::$query = "DROP TABLE IF EXISTS " . config('database.table_prefix') . "$table";
+		self::$query = "DROP TABLE IF EXISTS " . config('db.table_prefix') . "$table";
 		return new self();
 	}
 	
@@ -131,7 +131,7 @@ class Builder
 	 */
 	public static function dropForeign(string $table, string $key): self
 	{
-		self::$query = "ALTER TABLE " . config('database.table_prefix') . "$table DROP FOREIGN KEY $key";
+		self::$query = "ALTER TABLE " . config('db.table_prefix') . "$table DROP FOREIGN KEY $key";
 		return new self();
 	}
 		
@@ -286,7 +286,7 @@ class Builder
 	 */
 	public function from(string $table): self
 	{
-		self::$query .= " FROM " . config('database.table_prefix') . "$table ";
+		self::$query .= " FROM " . config('db.table_prefix') . "$table ";
 		return $this;
 	}
 
@@ -461,7 +461,7 @@ class Builder
 	 */
 	public function innerJoin(string $table, string $second_column, string $first_column): self
 	{
-		self::$query .= " INNER JOIN " . config('database.table_prefix') . "$table ON $first_column = $second_column";
+		self::$query .= " INNER JOIN " . config('db.table_prefix') . "$table ON $first_column = $second_column";
 		return $this;
 	}
 
@@ -475,7 +475,7 @@ class Builder
 	 */
 	public function leftJoin(string $table, string $second_column, string $first_column): self
 	{
-		self::$query .= " LEFT JOIN " . config('database.table_prefix') . "$table ON $first_column = $second_column";
+		self::$query .= " LEFT JOIN " . config('db.table_prefix') . "$table ON $first_column = $second_column";
 		return $this;
 	}
 
@@ -489,7 +489,7 @@ class Builder
 	 */
 	public function rightJoin(string $table, string $second_column, string $first_column): self
 	{
-		self::$query .= " RIGHT JOIN " . config('database.table_prefix') . "$table ON $first_column = $second_column";
+		self::$query .= " RIGHT JOIN " . config('db.table_prefix') . "$table ON $first_column = $second_column";
 		return $this;
 	}
 
@@ -503,7 +503,7 @@ class Builder
 	 */
 	public function fullJoin(string $table, string $second_column, string $first_column): self
 	{
-		self::$query .= " FULL JOIN " . config('database.table_prefix') . "$table ON $first_column = $second_column";
+		self::$query .= " FULL JOIN " . config('db.table_prefix') . "$table ON $first_column = $second_column";
 		return $this;
 	}
 
@@ -561,10 +561,7 @@ class Builder
 	 */
 	public function execute(): \PDOStatement
 	{
-        $stmt = Database::getInstance()
-            ->setDatabase(config('database.name'))
-            ->executeQuery(self::$query, self::$args);
-
+        $stmt = Database::getInstance()->executeStatement(self::$query, self::$args);
 		self::query('');
 		return $stmt;
 	}

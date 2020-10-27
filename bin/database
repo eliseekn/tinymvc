@@ -21,6 +21,9 @@ $options = getopt('', [
     'migration::', 
     'seed::',
     'db::',
+    'query::',
+    'fetch::',
+    'execute',
     'delete', 
     'refresh'
 ]);

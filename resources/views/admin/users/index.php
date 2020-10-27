@@ -11,39 +11,39 @@
 <div class="row mb-4">
     <div class="col-md-4">
         <div class="card">
-            <div class="position-relative bg-dark rounded-top py-2"></div>
-            
-            <div class="card-body">
-                <div class="d-flex align-items-center justify-content-between">
-                    <span><i class="fa fa-users fa-lg text-dark"></i> Total</span>
-                    <span class="font-weight-bold"><?= $users->getTotalItems() ?></span>
-                </div>
+            <div class="card-header bg-dark">
+                <i class="fa fa-users fa-lg text-white"></i>
+            </div>
+
+            <div class="card-body d-flex align-items-center justify-content-between">
+                <p class="mb-0">Total</p>
+                <p class="font-weight-bold mb-0 lead"><?= $users->getTotalItems() ?></p>
             </div>
         </div>
     </div>
 
     <div class="col-md-4">
         <div class="card">
-            <div class="position-relative bg-dark rounded-top py-2"></div>
-            
-            <div class="card-body">
-                <div class="d-flex align-items-center justify-content-between">
-                    <span><i class="fa fa-user-lock fa-lg text-dark"></i> Active</span>
-                    <span class="font-weight-bold"><?= count($active_users) ?></span>
-                </div>
+            <div class="card-header bg-dark">
+                <i class="fa fa-user-check fa-lg text-white"></i>
+            </div>
+
+            <div class="card-body d-flex align-items-center justify-content-between">
+                <p class="mb-0">Active</p>
+                <p class="font-weight-bold mb-0 lead"><?= count($active_users) ?></p>
             </div>
         </div>
     </div>
 
     <div class="col-md-4">
         <div class="card">
-            <div class="position-relative bg-dark rounded-top py-2"></div>
-            
-            <div class="card-body">
-                <div class="d-flex align-items-center justify-content-between">
-                    <span><i class="fa fa-user-clock fa-lg text-dark"></i> Online</span>
-                    <span class="font-weight-bold"><?= count($online_users) ?></span>
-                </div>
+            <div class="card-header bg-dark">
+                <i class="fa fa-user-clock fa-lg text-white"></i>
+            </div>
+
+            <div class="card-body d-flex align-items-center justify-content-between">
+                <p class="mb-0">Online</p>
+                <p class="font-weight-bold mb-0 lead"><?= count($online_users) ?></p>
             </div>
         </div>
     </div>

@@ -16,7 +16,7 @@
     <div class="d-flex" id="wrapper">
         <div class="bg-light border-light border-right min-vh-100" id="sidebar-wrapper">
             <div class="sidebar-title bg-dark text-light">
-                Administration
+                <i class="fa fa-cog"></i> Administration
             </div>
 
             <div class="list-group list-group-flush">
@@ -43,7 +43,7 @@
                         <?= get_user_session()->name ?>
                     </button>
 
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                    <div class="dropdown-menu dropdown-menu-right py-1" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item" href="<?= absolute_url('/logout') ?>">
                             <i class="fa fa-power-off text-danger"></i> Log out
                         </a>

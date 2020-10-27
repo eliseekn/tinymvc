@@ -78,14 +78,14 @@ class Make
         }
 
         else if (
+            array_key_exists('model', $options) &&
+            array_key_exists('table', $options) &&
             !array_key_exists('controller', $options) &&
             !array_key_exists('namespace', $options) &&
-            array_key_exists('model', $options) &&
             !array_key_exists('migration', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('request', $options) &&
-            !array_key_exists('middleware', $options) &&
-            array_key_exists('table', $options)
+            !array_key_exists('middleware', $options)
         ) {
             $data = self::stubsPath()->readFile('Model.stub');
             $data = str_replace('NAMESPACE', 'App\Database\Models', $data);
@@ -98,14 +98,14 @@ class Make
         }
 
         else if (
-            !array_key_exists('controller', $options) &&
-            array_key_exists('namespace', $options) &&
             array_key_exists('model', $options) &&
+            array_key_exists('table', $options) &&
+            array_key_exists('namespace', $options) &&
+            !array_key_exists('controller', $options) &&
             !array_key_exists('migration', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('request', $options) &&
-            !array_key_exists('middleware', $options) &&
-            array_key_exists('table', $options)
+            !array_key_exists('middleware', $options)
         ) {
             $data = self::stubsPath()->readFile('Model.stub');
             $data = str_replace('NAMESPACE', 'App\Database\Models\\' . $options['namespace'], $data);
@@ -124,14 +124,14 @@ class Make
         }
 
         else if (
+            array_key_exists('migration', $options) &&
+            array_key_exists('table', $options) &&
             !array_key_exists('controller', $options) &&
             !array_key_exists('namespace', $options) &&
             !array_key_exists('model', $options) &&
-            array_key_exists('migration', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('request', $options) &&
-            !array_key_exists('middleware', $options) &&
-            array_key_exists('table', $options)
+            !array_key_exists('middleware', $options)
         ) {
             $data = self::stubsPath()->readFile('Migration.stub');
             $data = str_replace('NAMESPACE', 'App\Database\Migrations', $data);
@@ -144,14 +144,14 @@ class Make
         }
 
         else if (
+            array_key_exists('migration', $options) &&
+            array_key_exists('model', $options) &&
+            array_key_exists('table', $options) &&
             !array_key_exists('controller', $options) &&
             !array_key_exists('namespace', $options) &&
-            array_key_exists('model', $options) &&
-            array_key_exists('migration', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('request', $options) &&
-            !array_key_exists('middleware', $options) &&
-            array_key_exists('table', $options)
+            !array_key_exists('middleware', $options)
         ) {
             $data = self::stubsPath()->readFile('Migration.stub');
             $data = str_replace('NAMESPACE', 'App\Database\Migrations', $data);
@@ -174,14 +174,14 @@ class Make
         }
 
         else if (
-            !array_key_exists('controller', $options) &&
-            array_key_exists('namespace', $options) &&
-            !array_key_exists('model', $options) &&
             array_key_exists('migration', $options) &&
+            array_key_exists('table', $options) &&
+            array_key_exists('namespace', $options) &&
+            !array_key_exists('controller', $options) &&
+            !array_key_exists('model', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('request', $options) &&
-            !array_key_exists('middleware', $options) &&
-            array_key_exists('table', $options)
+            !array_key_exists('middleware', $options)
         ) {
             $data = self::stubsPath()->readFile('Migration.stub');
             $data = str_replace('NAMESPACE', 'App\Database\Migration\\' . $options['namespace'], $data);
@@ -200,14 +200,14 @@ class Make
         }
 
         else if (
-            !array_key_exists('controller', $options) &&
-            array_key_exists('namespace', $options) &&
-            array_key_exists('model', $options) &&
             array_key_exists('migration', $options) &&
+            array_key_exists('model', $options) &&
+            array_key_exists('namespace', $options) &&
+            array_key_exists('table', $options) &&
+            !array_key_exists('controller', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('request', $options) &&
-            !array_key_exists('middleware', $options) &&
-            array_key_exists('table', $options)
+            !array_key_exists('middleware', $options)
         ) {
             $data = self::stubsPath()->readFile('Migration.stub');
             $data = str_replace('NAMESPACE', 'App\Database\Migration\\' . $options['namespace'], $data);
@@ -242,14 +242,14 @@ class Make
         }
 
         else if (
-            !array_key_exists('controller', $options) &&
-            !array_key_exists('namespace', $options) &&
-            !array_key_exists('model', $options) &&
-            !array_key_exists('migration', $options) &&
             array_key_exists('seed', $options) &&
+            array_key_exists('table', $options) &&
+            !array_key_exists('controller', $options) &&
+            !array_key_exists('namespace', $options) &&
+            !array_key_exists('model', $options) &&
+            !array_key_exists('migration', $options) &&
             !array_key_exists('request', $options) &&
-            !array_key_exists('middleware', $options) &&
-            array_key_exists('table', $options)
+            !array_key_exists('middleware', $options)
         ) {
             $data = self::stubsPath()->readFile('Seed.stub');
             $data = str_replace('NAMESPACE', 'App\Database\Seeds', $data);
@@ -262,14 +262,14 @@ class Make
         }
 
         else if (
-            !array_key_exists('controller', $options) &&
+            array_key_exists('seed', $options) &&
+            array_key_exists('table', $options) &&
             array_key_exists('namespace', $options) &&
+            !array_key_exists('controller', $options) &&
             !array_key_exists('model', $options) &&
             !array_key_exists('migration', $options) &&
-            array_key_exists('seed', $options) &&
             !array_key_exists('request', $options) &&
-            !array_key_exists('middleware', $options) &&
-            array_key_exists('table', $options)
+            !array_key_exists('middleware', $options)
         ) {
             $data = self::stubsPath()->readFile('Seed.stub');
             $data = str_replace('NAMESPACE', 'App\Database\Seeds\\' . $options['namespace'], $data);

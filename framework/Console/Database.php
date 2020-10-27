@@ -64,7 +64,10 @@ class Database
             !array_key_exists('seed', $options) &&
             !array_key_exists('delete', $options) &&
             !array_key_exists('refresh', $options) &&
-            !array_key_exists('db', $options)
+            !array_key_exists('db', $options) &&
+            !array_key_exists('query', $options) &&
+            !array_key_exists('fetch', $options) &&
+            !array_key_exists('execute', $options)
         ) {
             if ($options['migration'] !== 'all') {
                 $table = $options['migration'];
@@ -94,7 +97,10 @@ class Database
             array_key_exists('seed', $options) &&
             !array_key_exists('delete', $options) &&
             !array_key_exists('refresh', $options) &&
-            !array_key_exists('db', $options)
+            !array_key_exists('db', $options) &&
+            !array_key_exists('query', $options) &&
+            !array_key_exists('fetch', $options) &&
+            !array_key_exists('execute', $options)
         ) {
             if ($options['migration'] !== 'all') {
                 $table = $options['migration'];
@@ -146,7 +152,10 @@ class Database
             array_key_exists('seed', $options) &&
             array_key_exists('refresh', $options) &&
             !array_key_exists('delete', $options) &&
-            !array_key_exists('db', $options)
+            !array_key_exists('db', $options) &&
+            !array_key_exists('query', $options) &&
+            !array_key_exists('fetch', $options) &&
+            !array_key_exists('execute', $options)
         ) {
             if ($options['migration'] !== 'all') {
                 $table = $options['migration'];
@@ -198,7 +207,10 @@ class Database
             array_key_exists('refresh', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('delete', $options) &&
-            !array_key_exists('db', $options)
+            !array_key_exists('db', $options) &&
+            !array_key_exists('query', $options) &&
+            !array_key_exists('fetch', $options) &&
+            !array_key_exists('execute', $options)
         ) {
             if ($options['migration'] !== 'all') {
                 $table = $options['migration'];
@@ -228,7 +240,10 @@ class Database
             array_key_exists('delete', $options) &&
             !array_key_exists('refresh', $options) &&
             !array_key_exists('seed', $options) &&
-            !array_key_exists('db', $options)
+            !array_key_exists('db', $options) &&
+            !array_key_exists('query', $options) &&
+            !array_key_exists('fetch', $options) &&
+            !array_key_exists('execute', $options)
         ) {
             if ($options['migration'] !== 'all') {
                 $table = $options['migration'];
@@ -258,7 +273,10 @@ class Database
             !array_key_exists('migration', $options) &&
             !array_key_exists('delete', $options) &&
             !array_key_exists('refresh', $options) &&
-            !array_key_exists('db', $options)
+            !array_key_exists('db', $options) &&
+            !array_key_exists('query', $options) &&
+            !array_key_exists('fetch', $options) &&
+            !array_key_exists('execute', $options)
         ) {
             if ($options['seed'] !== 'all') {
                 $seed = $options['seed'];
@@ -288,16 +306,19 @@ class Database
             !array_key_exists('seed', $options) &&
             !array_key_exists('migration', $options) &&
             !array_key_exists('delete', $options) &&
-            !array_key_exists('refresh', $options)
+            !array_key_exists('refresh', $options) &&
+            !array_key_exists('query', $options) &&
+            !array_key_exists('fetch', $options) &&
+            !array_key_exists('execute', $options)
         ) {
             if (strpos($options['db'], ',') === false) {
                 $database = $options['db'];
-                DB::getInstance()->setQuery("CREATE DATABASE $database CHARACTER SET " . config('database.charset') . " COLLATE " . config('database.collation'));
+                DB::getInstance()->executeQuery("CREATE DATABASE $database CHARACTER SET " . config('db.charset') . " COLLATE " . config('db.collation'));
             } else {
                 $db = explode(',', $options['db']);
 
                 foreach ($db as $database) {
-                    DB::getInstance()->setQuery("CREATE DATABASE $database CHARACTER SET " . config('database.charset') . " COLLATE " . config('database.collation'));
+                    DB::getInstance()->executeQuery("CREATE DATABASE $database CHARACTER SET " . config('db.charset') . " COLLATE " . config('db.collation'));
                 }
             }
         }
@@ -311,12 +332,12 @@ class Database
         ) {
             if (strpos($options['db'], ',') === false) {
                 $database = $options['db'];
-                Builder::query("DROP DATABASE IF EXISTS $database")->execute();
+                DB::getInstance()->executeQuery("DROP DATABASE IF EXISTS $database");
             } else {
                 $db = explode(',', $options['db']);
 
                 foreach ($db as $database) {
-                    Builder::query("DROP DATABASE IF EXISTS $database")->execute();
+                    DB::getInstance()->executeQuery("DROP DATABASE IF EXISTS $database");
                 }
             }
         }
@@ -326,16 +347,19 @@ class Database
             array_key_exists('migration', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('delete', $options) &&
-            !array_key_exists('refresh', $options)
+            !array_key_exists('refresh', $options) &&
+            !array_key_exists('query', $options) &&
+            !array_key_exists('fetch', $options) &&
+            !array_key_exists('execute', $options)
         ) {
             if (strpos($options['db'], ',') === false) {
                 $database = $options['db'];
-                Builder::query("DROP DATABASE IF EXISTS $database")->execute();
+                DB::getInstance()->executeQuery("DROP DATABASE IF EXISTS $database");
             } else {
                 $db = explode(',', $options['db']);
 
                 foreach ($db as $database) {
-                    Builder::query("DROP DATABASE IF EXISTS $database")->execute();
+                    DB::getInstance()->executeQuery("DROP DATABASE IF EXISTS $database");
                 }
             }
 
@@ -367,16 +391,19 @@ class Database
             array_key_exists('migration', $options) &&
             array_key_exists('seed', $options) &&
             !array_key_exists('delete', $options) &&
-            !array_key_exists('refresh', $options)
+            !array_key_exists('refresh', $options) &&
+            !array_key_exists('query', $options) &&
+            !array_key_exists('fetch', $options) &&
+            !array_key_exists('execute', $options)
         ) {
             if (strpos($options['db'], ',') === false) {
                 $database = $options['db'];
-                DB::getInstance()->setQuery("CREATE DATABASE $database CHARACTER SET " . config('database.charset') . " COLLATE " . config('database.collation'));
+                DB::getInstance()->executeQuery("CREATE DATABASE $database CHARACTER SET " . config('db.charset') . " COLLATE " . config('db.collation'));
             } else {
                 $db = explode(',', $options['db']);
 
                 foreach ($db as $database) {
-                    DB::getInstance()->setQuery("CREATE DATABASE $database CHARACTER SET " . config('database.charset') . " COLLATE " . config('database.collation'));
+                    DB::getInstance()->executeQuery("CREATE DATABASE $database CHARACTER SET " . config('db.charset') . " COLLATE " . config('db.collation'));
                 }
             }
 
@@ -424,6 +451,40 @@ class Database
                 }
             }
         }
+
+        else if (
+            array_key_exists('query', $options) &&
+            array_key_exists('fetch', $options) &&
+            !array_key_exists('execute', $options) &&
+            !array_key_exists('db', $options) &&
+            !array_key_exists('migration', $options) &&
+            !array_key_exists('seed', $options) &&
+            !array_key_exists('delete', $options) &&
+            !array_key_exists('refresh', $options)
+        ) {
+            $stmt = DB::getInstance()->executeQuery($options['query']);
+
+            if ($options['fetch'] === 'single') {
+                print_r($stmt->fetch());
+            } else if ($options['fetch'] === 'all') {
+                print_r($stmt->fetchAll());
+            } else {
+                exit('[-] Invalid fetch option');
+            }
+        }
+
+        else if (
+            array_key_exists('query', $options) &&
+            array_key_exists('execute', $options) &&
+            !array_key_exists('fetch', $options) &&
+            !array_key_exists('db', $options) &&
+            !array_key_exists('migration', $options) &&
+            !array_key_exists('seed', $options) &&
+            !array_key_exists('delete', $options) &&
+            !array_key_exists('refresh', $options)
+        ) {
+            DB::getInstance()->executeQuery($options['query']);
+        }
         
         else if (array_key_exists('help', $options)) {
             $help_message = '[+] Commands list:' . PHP_EOL;
@@ -448,6 +509,9 @@ class Database
             $help_message .= '      --migration=all --seed=all                  Migrate all tables and insert seeds' . PHP_EOL;
             $help_message .= '      --migration=all --refresh                   Refresh all tables migration' . PHP_EOL;
             $help_message .= '      --migration=all --refresh --seed=all        Refresh all tables migration and insert seeds' . PHP_EOL;
+            $help_message .= PHP_EOL;
+            $help_message .= "      --query='sql query' --fetch=single|all      Execute SQL query and fetch results (single or all)" . PHP_EOL;
+            $help_message .= "      --query='sql query' --execute               Execute SQL query only" . PHP_EOL;
             
             exit($help_message);
         } 

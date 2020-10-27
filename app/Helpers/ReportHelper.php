@@ -10,12 +10,12 @@ class ReportHelper
      * import data from csv
      *
      * @param  string $filename
-	 * @param  array $function method to execute
+	 * @param  string $model
 	 * @param  array $vars headers and colunms names
      * @return void
 	 * @link   https://www.php.net/manual/en/function.str-getcsv.php
      */
-    public static function import(string $filename, array $function, array $vars): void
+    public static function import(string $filename, string $model, array $vars): void
     {
 		$csv = array_map('str_getcsv', file($filename));
 
@@ -33,6 +33,7 @@ class ReportHelper
 				$to_import[$key] = $row[$value];
 			}
 
+            $function = ['App\Database\Models\\' . $model, 'insert'];
 			call_user_func_array($function, [$to_import]);
 		}
     }

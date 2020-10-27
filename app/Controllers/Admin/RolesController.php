@@ -128,7 +128,7 @@ class RolesController
             'description' => Request::getField('editor'),
             'updated_at' => date("Y-m-d H:i:s")
 		])
-		->where('id', '=', $id)
+		->where('id', $id)
 		->persist();
 
 		Notification::toast('The role has been updated successfully', 'Role updated')->success();
@@ -148,14 +148,14 @@ class RolesController
 				Notification::toast('This role does not exists', 'Role not exists')->error();
 			}
 	
-			RolesModel::delete()->where('id', '=', $id)->persist();
+			RolesModel::delete()->where('id', $id)->persist();
 			Notification::toast('The role has been deleted successfully', 'Role deleted')->success();
 		} else {
 			$roles_id = json_decode(Request::getRawData(), true);
 			$roles_id = $roles_id['items'];
 
 			foreach ($roles_id as $id) {
-				RolesModel::delete()->where('id', '=', $id)->persist();
+				RolesModel::delete()->where('id', $id)->persist();
 			}
 			
 			Notification::toast('The selected roles have been deleted successfully', 'Roles deleted')->success();
@@ -181,9 +181,7 @@ class RolesController
 			Redirect::back()->only();
 		}
 
-		$function = ['App\Database\Models\RolesModel', 'create'];
-
-		ReportHelper::import($file->getTempFilename(), $function, [
+		ReportHelper::import($file->getTempFilename(), RolesModel::class, [
 			'title' => 'Title', 
 			'slug' => 'Slug', 
 			'description' => 'Description'

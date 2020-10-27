@@ -24,7 +24,7 @@ class UsersModel extends Model
     {
         return self::select()
             ->where('created_at', '>=', date('Y-m-d H:i:s', strtotime($start)))
-            ->and('created_at', '<=', date('Y-m-d H:i:s', strtotime($end)))
+            ->andWhere('created_at', '<=', date('Y-m-d H:i:s', strtotime($end)))
             ->orderBy('name', 'ASC')
             ->all();
     }

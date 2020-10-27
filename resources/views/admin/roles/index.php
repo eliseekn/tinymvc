@@ -11,13 +11,13 @@
 <div class="row mb-4">
     <div class="col-md-4">
         <div class="card">
-            <div class="position-relative bg-dark rounded-top py-2"></div>
-            
-            <div class="card-body">
-                <div class="d-flex align-items-center justify-content-between">
-                    <span><i class="fa fa-user-shield fa-lg text-dark"></i> Total</span>
-                    <span class="font-weight-bold"><?= $roles->getTotalItems() ?></span>
-                </div>
+            <div class="card-header bg-dark">
+                <i class="fa fa-user-shield fa-lg text-white"></i>
+            </div>
+
+            <div class="card-body d-flex align-items-center justify-content-between">
+                <p class="mb-0">Total</p>
+                <p class="font-weight-bold mb-0 lead"><?= $roles->getTotalItems() ?></p>
             </div>
         </div>
     </div>

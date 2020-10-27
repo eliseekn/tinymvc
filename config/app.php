@@ -18,7 +18,7 @@ $config = [
     ],
 
     //mysql
-    'database' => [
+    'db' => [
         'charset' => 'utf8',
         'collation' => 'utf8_unicode_ci',
         'host' => 'localhost',
