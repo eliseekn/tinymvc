@@ -143,7 +143,7 @@ endif ?>
                             <?php endif ?>
                         </td>
 
-                        <td><?= \Carbon\Carbon::parse($user->created_at)->format('Y-m-d') ?></td>
+                        <td><?= \Carbon\Carbon::parse($user->created_at)->locale('en')->isoFormat('MMM. Do, YYYY') ?></td>
 
                         <td>
                             <a class="btn text-primary" href="<?= absolute_url('/admin/users/view/' . $user->id) ?>" title="View item">

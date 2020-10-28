@@ -42,12 +42,12 @@ endif ?>
 
         <div class="form-group row">
             <p class="col-sm-2 col-form-label">Created at</p>
-            <div class="col-form-label col-sm-10 font-weight-bold"><?= \Carbon\Carbon::parse($role->created_at)->format('Y-m-d') ?></div>
+            <div class="col-form-label col-sm-10 font-weight-bold"><?= \Carbon\Carbon::parse($role->created_at)->locale('en')->isoFormat('MMM. Do, YYYY') ?></div>
         </div>
     </div>
 
     <div class="card-footer">
-        <a href="<?= absolute_url('/admin/roles/edit/' . $role->id) ?>" class="btn btn-primary mr-2">Edit</a>
+        <a href="<?= absolute_url('/admin/roles/edit/' . $role->id) ?>" class="btn btn-primary">Edit</a>
         <confirm-delete type="text" content="Delete" action="<?= absolute_url('/admin/roles/delete/' . $role->id) ?>" redirect="<?= current_url() ?>"></confirm-delete>
         <a href="<?= absolute_url('/admin/roles') ?>" class="btn btn-secondary ml-2">Cancel</a>
     </div>

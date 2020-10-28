@@ -524,9 +524,9 @@ var ConfirmDelete = /*#__PURE__*/function (_HTMLElement) {
     key: "connectedCallback",
     value: function connectedCallback() {
       if (this.getAttribute('type') === 'icon') {
-        this.innerHTML = "<a class=\"btn text-danger\" title=\"Delete item\">".concat(this.getAttribute('content'), "</a>");
+        this.innerHTML = "<a class=\"btn text-danger ml-2\" title=\"Delete item\">".concat(this.getAttribute('content'), "</a>");
       } else {
-        this.innerHTML = "<a class=\"btn btn-danger\" href=\"#\">".concat(this.getAttribute('content'), "</a>");
+        this.innerHTML = "<a class=\"btn btn-danger ml-2\" href=\"#\">".concat(this.getAttribute('content'), "</a>");
       }
     }
   }, {
@@ -1052,7 +1052,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "33665" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "42089" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

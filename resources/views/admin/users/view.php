@@ -37,7 +37,7 @@ endif ?>
 
         <div class="form-group row">
             <p class="col-sm-2 col-form-label">Created at</p>
-            <div class="col-form-label col-sm-10 font-weight-bold"><?= \Carbon\Carbon::parse($user->created_at)->format('Y-m-d') ?></div>
+            <div class="col-form-label col-sm-10 font-weight-bold"><?= \Carbon\Carbon::parse($user->created_at)->locale('en')->isoFormat('MMM. Do, YYYY') ?></div>
         </div>
 
         <div class="form-group row">
@@ -69,8 +69,12 @@ endif ?>
     </div>
 
     <div class="card-footer">
-        <a href="<?= absolute_url('/admin/users/edit/' . $user->id) ?>" class="btn btn-primary mr-2">Edit</a>
+        <a href="<?= absolute_url('/admin/users/edit/' . $user->id) ?>" class="btn btn-primary">Edit</a>
+
+        <?php if (!\App\Helpers\AuthHelper::hasRole('administrator')) : ?>
         <confirm-delete type="text" content="Delete" action="<?= absolute_url('/admin/users/delete/' . $user->id) ?>" redirect="<?= current_url() ?>"></confirm-delete>
+        <?php endif ?>
+        
         <a href="<?= absolute_url('/admin/users') ?>" class="btn btn-secondary ml-2">Cancel</a>
     </div>
 </div>
