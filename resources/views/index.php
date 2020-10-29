@@ -28,6 +28,10 @@
             <a href="<?= absolute_url('/docs') ?>" class="ml-3 btn btn-success">
                 <i class="fa fa-book"></i> Documentation
             </a>
+            
+            <a href="<?= absolute_url('/login') ?>" class="ml-3 btn btn-danger">
+                <i class="fa fa-cog"></i> Administration
+            </a>
         </span>
     </div>
 
