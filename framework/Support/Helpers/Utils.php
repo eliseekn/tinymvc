@@ -7,7 +7,6 @@
  */
 
 use Configula\ConfigFactory;
-use Framework\HTTP\Response;
 
 /**
  * Miscellaneous utils functions
@@ -109,16 +108,16 @@ if (!function_exists('get_file_extension')) {
 	}
 }
 
-if (!function_exists('get_time_elapsed')) {	
+if (!function_exists('time_elapsed')) {	
 	/**
 	 * get time elapsed
 	 *
 	 * @param  mixed $datetime
 	 * @param  int $level
-	 * @return void
+	 * @return string
 	 * @link   https://stackoverflow.com/a/18602474
 	 */
-	function get_time_elapsed($datetime, $level = 7) 
+	function time_elapsed($datetime, int $level = 7): string
 	{
 		$now = new DateTime;
 		$ago = new DateTime($datetime);
@@ -148,4 +147,21 @@ if (!function_exists('get_time_elapsed')) {
 		$string = array_slice($string, 0, $level);
 		return $string ? implode(', ', $string) . ' ago' : 'just now';
 	}
+}
+
+if (!function_exists('__')) {    
+    /**
+     * return expression translation
+     *
+     * @param  string $expr
+     * @param  bool $app_config use application language configuration
+     * @return string
+     */
+    function __(string $expr, bool $app_config = false): string
+    {
+        $lang = $app_config ? config('app.lang') : get_user_session()->lang;
+
+        require 'resources/lang/' . $lang . '.php';
+        return $$expr;
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controllers\Auth;
 
+use Carbon\Carbon;
 use App\Helpers\AuthHelper;
 use Framework\HTTP\Request;
 use App\Helpers\EmailHelper;
@@ -11,6 +12,7 @@ use Framework\Support\Session;
 use App\Middlewares\AuthPolicy;
 use Framework\Support\Browsing;
 use App\Requests\RegisterRequest;
+use App\Database\Models\TokensModel;
 
 /**
  * Manage user authentication
@@ -55,8 +57,17 @@ class AuthController
             EmailHelper::sendWelcome(Request::getField('email'));
             Redirect::toUrl('/login')->withSuccess('You have been registered successfully. <br> You can log in with your credentials');
         } else {
-            EmailHelper::sendConfirmation(Request::getField('email'), 'TinyMVC');
-            Redirect::back()->withWarning('Please check your email account to confirm your email address.');
+            $token = random_string(50, true);
+
+            if (EmailHelper::sendConfirmation(Request::getField('email'), $token)) {
+                TokensModel::insert([
+                    'email' => Request::getField('email'),
+                    'token' => $token,
+                    'expires' => Carbon::now()->addHour()->format('Y-m-d H:i:s')
+                ]);
+            }
+
+            Redirect::back()->withWarning('Please heck your email account to confirm your email address.');
         }
     }
 	

@@ -21,5 +21,5 @@ class DashboardController
 			'active_users' => UsersModel::find('active', 1)->all(),
             'users_metrics' => UsersModel::metrics('id', Metrics::COUNT, Metrics::MONTHS)
 		]);
-	}
+    }
 }

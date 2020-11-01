@@ -343,116 +343,6 @@ class Database
         }
         
         else if (
-            array_key_exists('db', $options) &&
-            array_key_exists('migration', $options) &&
-            !array_key_exists('seed', $options) &&
-            !array_key_exists('delete', $options) &&
-            !array_key_exists('refresh', $options) &&
-            !array_key_exists('query', $options) &&
-            !array_key_exists('fetch', $options) &&
-            !array_key_exists('execute', $options)
-        ) {
-            if (strpos($options['db'], ',') === false) {
-                $database = $options['db'];
-                DB::getInstance()->executeQuery("DROP DATABASE IF EXISTS $database");
-            } else {
-                $db = explode(',', $options['db']);
-
-                foreach ($db as $database) {
-                    DB::getInstance()->executeQuery("DROP DATABASE IF EXISTS $database");
-                }
-            }
-
-            if ($options['migration'] !== 'all') {
-                $table = $options['migration'];
-
-                if (strpos($table, ',') === false) {
-                    $table = self::checkMigration($table);
-                    $table::migrate();
-                } else {
-                    $tables = explode(',', $table);
-
-                    foreach ($tables as $table) {
-                        $table = self::checkMigration($table);
-                        $table::migrate();
-                    }
-                }
-            } else {
-                foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
-                    $table = explode('.', $file)[0];
-                    $table = self::checkMigration($table);
-                    $table::migrate();
-                }
-            }
-        }
-        
-        else if (
-            array_key_exists('db', $options) &&
-            array_key_exists('migration', $options) &&
-            array_key_exists('seed', $options) &&
-            !array_key_exists('delete', $options) &&
-            !array_key_exists('refresh', $options) &&
-            !array_key_exists('query', $options) &&
-            !array_key_exists('fetch', $options) &&
-            !array_key_exists('execute', $options)
-        ) {
-            if (strpos($options['db'], ',') === false) {
-                $database = $options['db'];
-                DB::getInstance()->executeQuery("CREATE DATABASE $database CHARACTER SET " . config('db.charset') . " COLLATE " . config('db.collation'));
-            } else {
-                $db = explode(',', $options['db']);
-
-                foreach ($db as $database) {
-                    DB::getInstance()->executeQuery("CREATE DATABASE $database CHARACTER SET " . config('db.charset') . " COLLATE " . config('db.collation'));
-                }
-            }
-
-            if ($options['migration'] !== 'all') {
-                $table = $options['migration'];
-
-                if (strpos($table, ',') === false) {
-                    $table = self::checkMigration($table);
-                    $table::migrate();
-                } else {
-                    $tables = explode(',', $table);
-
-                    foreach ($tables as $table) {
-                        $table = self::checkMigration($table);
-                        $table::migrate();
-                    }
-                }
-            } else {
-                foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
-                    $table = explode('.', $file)[0];
-                    $table = self::checkMigration($table);
-                    $table::migrate();
-                }
-            }
-
-            if ($options['seed'] !== 'all') {
-                $seed = $options['seed'];
-
-                if (strpos($seed, ',') === false) {
-                    $seed = self::checkSeed($seed);
-                    $seed::insert();
-                } else {
-                    $seeds = explode(',', $seed);
-
-                    foreach ($seeds as $seed) {
-                        $seed = self::checkSeed($seed);
-                        $seed::insert();
-                    }
-                }
-            } else {
-                foreach (Storage::path(config('storage.seeds'))->getFiles() as $file) {
-                    $seed = explode('.', $file)[0];
-                    $seed = self::checkSeed($seed);
-                    $seed::insert();
-                }
-            }
-        }
-
-        else if (
             array_key_exists('query', $options) &&
             array_key_exists('fetch', $options) &&
             !array_key_exists('execute', $options) &&
@@ -493,8 +383,6 @@ class Database
             $help_message .= '      --db=users,comments                         Create users and comments databases' . PHP_EOL;
             $help_message .= '      --db=users --delete                         Delete users database' . PHP_EOL;
             $help_message .= '      --db=users,comments --delete                Delete users and comments databases' . PHP_EOL;
-            $help_message .= '      --db=users --migration=all                  Create users database and migrate all tables (use default database configuration)' . PHP_EOL;
-            $help_message .= '      --db=users --migration=all --seed=all       Create users database, migrate all tables and insert all seeds (use default database configuration)' . PHP_EOL;
             $help_message .= PHP_EOL;
             $help_message .= '      --migration=all                             Migrate all tables' . PHP_EOL;
             $help_message .= '      --migration=UsersTable                      Migrate UsersTable only' . PHP_EOL;

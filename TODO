@@ -1,0 +1,1 @@
+- add translated alerts message to AuthController, EmailController, PasswordController, EmailHelper, AuthHelper

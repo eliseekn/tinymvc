@@ -117,7 +117,177 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"components/modal/upload-modal.js":[function(require,module,exports) {
+})({"components/admin.js":[function(require,module,exports) {
+var _this = this;
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+document.addEventListener('DOMContentLoaded', function () {
+  //toggle sidebar
+  if (document.querySelector('#sidebar-toggler')) {
+    document.querySelector('#sidebar-toggler').addEventListener('click', function (event) {
+      document.querySelector('#wrapper').classList.toggle('toggled');
+    });
+  } //select all table items
+
+
+  if (document.querySelector('#select-all')) {
+    document.querySelector('#select-all').addEventListener('change', function (event) {
+      if (event.target.checked) {
+        document.querySelectorAll('.table input[type=checkbox]').forEach(function (element) {
+          element.checked = true;
+        });
+      } else {
+        document.querySelectorAll('.table input[type=checkbox]').forEach(function (element) {
+          element.checked = false;
+        });
+      }
+    });
+  } //delete selected table items
+
+
+  if (document.querySelector('#bulk-delete')) {
+    document.querySelector('#bulk-delete').addEventListener('click', function (event) {
+      var innerHTML = event.target.innerHTML;
+      event.target.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>';
+
+      if (window.confirm('Are you sure want to delete all selected items?')) {
+        items = [];
+        document.querySelectorAll('.table input[type=checkbox]').forEach(function (element) {
+          if (element.id !== 'select-all' && element.checked) {
+            items.push(element.dataset.id);
+          }
+        });
+
+        if (items.length > 0) {
+          fetch(event.target.dataset.url, {
+            method: 'post',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              items: items
+            })
+          }).then(function () {
+            return window.location.reload();
+          });
+        }
+      }
+
+      event.target.innerHTML = innerHTML;
+    });
+  } //mark notifications as read
+
+
+  if (document.querySelector('#bulk-read')) {
+    document.querySelector('#bulk-read').addEventListener('click', function (event) {
+      var innerHTML = event.target.innerHTML;
+      event.target.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>';
+
+      if (window.confirm('Are you sure want to mark all selected notifications as read?')) {
+        items = [];
+        document.querySelectorAll('.table input[type=checkbox]').forEach(function (element) {
+          if (element.id !== 'select-all' && element.checked) {
+            items.push(element.dataset.id);
+          }
+        });
+
+        if (items.length > 0) {
+          fetch(event.target.dataset.url, {
+            method: 'post',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              items: items
+            })
+          }).then(function () {
+            return window.location.reload();
+          });
+        }
+      }
+
+      event.target.innerHTML = innerHTML;
+    });
+  } //filter tables
+  //https://stackoverflow.com/questions/51187477/how-to-filter-a-html-table-using-simple-javascript
+
+
+  if (document.querySelector('#filter')) {
+    document.querySelector('#filter').addEventListener('keyup', function (event) {
+      var filterText = event.target.value.toUpperCase();
+      document.querySelectorAll('.table tbody tr:not(.header)').forEach(function (tr) {
+        var match = _toConsumableArray(tr.children).some(function (td) {
+          return td.textContent.toUpperCase().includes(filterText);
+        });
+
+        tr.style.display = match ? '' : 'none';
+      });
+    });
+  } //sort tables
+  //https://stackoverflow.com/questions/14267781/sorting-html-table-with-javascript
+
+
+  if (document.querySelector('.table')) {
+    var getCellValue = function getCellValue(tr, idx) {
+      return tr.children[idx].innerText || tr.children[idx].textContent;
+    };
+
+    var comparer = function comparer(idx, asc) {
+      return function (a, b) {
+        return function (v1, v2) {
+          return v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2);
+        }(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
+      };
+    };
+
+    document.querySelectorAll('th').forEach(function (th) {
+      return th.addEventListener('click', function () {
+        var table = th.closest('table');
+        var tbody = table.querySelector('tbody');
+        Array.from(tbody.querySelectorAll('tr')).sort(comparer(Array.from(th.parentNode.children).indexOf(th), _this.asc = !_this.asc)).forEach(function (tr) {
+          return tbody.appendChild(tr);
+        });
+      });
+    });
+  }
+});
+},{}],"components/loading-button.js":[function(require,module,exports) {
+document.addEventListener('DOMContentLoaded', function () {
+  if (document.querySelectorAll('.loading')) {
+    document.querySelectorAll('.loading').forEach(function (element) {
+      element.addEventListener('click', function (event) {
+        event.target.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>';
+        event.target.setAttribute('disabled', 'disabled');
+      });
+    });
+  }
+});
+},{}],"components/password-toggler.js":[function(require,module,exports) {
+document.addEventListener('DOMContentLoaded', function () {
+  if (document.querySelector('#password-toggler')) {
+    document.querySelector('#password-toggler').addEventListener('click', function (event) {
+      if (document.querySelector('#password').type === 'password') {
+        document.querySelector('#password').type = 'text';
+        event.target.innerHTML = '<i class="fa fa-eye"></i>';
+      } else {
+        document.querySelector('#password').type = 'password';
+        event.target.innerHTML = '<i class="fa fa-eye-slash"></i>';
+      }
+    });
+  }
+});
+},{}],"components/modal/upload-modal.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -174,7 +344,7 @@ var UploadModal = /*#__PURE__*/function (_HTMLElement) {
   _createClass(UploadModal, [{
     key: "connectedCallback",
     value: function connectedCallback() {
-      this.innerHTML = '<button class="btn btn-primary ml-2">Import</button>';
+      this.innerHTML = "<button class=\"btn btn-primary ml-2\">".concat(this.getAttribute('title'), "</button>");
     }
   }, {
     key: "showDialog",
@@ -256,7 +426,7 @@ var ExportModal = /*#__PURE__*/function (_HTMLElement) {
   _createClass(ExportModal, [{
     key: "connectedCallback",
     value: function connectedCallback() {
-      this.innerHTML = '<button class="btn btn-primary mx-2">Export</button>';
+      this.innerHTML = "<button class=\"btn btn-primary mx-2\">".concat(this.getAttribute('title'), "</button>");
     }
   }, {
     key: "showDialog",
@@ -446,7 +616,7 @@ var AlertToast = /*#__PURE__*/function (_HTMLElement) {
       var element = document.createElement('div');
       element.id = 'alert-toast';
       element.classList.add('fade');
-      element.innerHTML = "\n            <div class=\"modal-dialog position-absolute shadow-sm rounded\" style=\"top: -1em; right: .8em\">\n                <div class=\"modal-content\">\n                    <div class=\"position-relative bg-".concat(this.getAttribute('type'), " rounded-top\" style=\"padding: .13em 0\"></div>\n\n                    <div class=\"modal-body d-flex justify-content-around align-items-start\">\n                        <div style=\"font-size: 1.5rem\">").concat(this.toastIcon(), "</div>\n\n                        <div class=\"d-flex flex-column px-3\">\n                            <div class=\"toast-header border-0 pl-0 text-").concat(this.getAttribute('type'), "\">").concat(this.getAttribute('title'), "</div>\n                            <p class=\"modal-title mb-0\">").concat(this.getAttribute('message'), "</p>\n                        </div>\n\n                        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                            <span aria-hidden=\"true\">&times;</span>\n                        </button>\n                    </div>\n                </div>\n            </div>\n        ");
+      element.innerHTML = "\n            <div class=\"modal-dialog position-absolute shadow-sm rounded\" style=\"top: -0.3em; right: .8em\">\n                <div class=\"modal-content\">\n                    <div class=\"position-relative bg-".concat(this.getAttribute('type'), " rounded-top\" style=\"padding: .13em 0\"></div>\n\n                    <div class=\"modal-body d-flex justify-content-around align-items-start\">\n                        <div style=\"font-size: 1.5rem\">").concat(this.toastIcon(), "</div>\n\n                        <div class=\"d-flex flex-column px-3\">\n                            <div class=\"toast-header border-0 pl-0 text-").concat(this.getAttribute('type'), "\">").concat(this.getAttribute('title'), "</div>\n                            <p class=\"modal-title mb-0\">").concat(this.getAttribute('message'), "</p>\n                        </div>\n\n                        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                            <span aria-hidden=\"true\">&times;</span>\n                        </button>\n                    </div>\n                </div>\n            </div>\n        ");
       document.body.appendChild(element);
       $('#alert-toast').modal({
         backdrop: false,
@@ -524,7 +694,7 @@ var ConfirmDelete = /*#__PURE__*/function (_HTMLElement) {
     key: "connectedCallback",
     value: function connectedCallback() {
       if (this.getAttribute('type') === 'icon') {
-        this.innerHTML = "<a class=\"btn text-danger ml-2\" title=\"Delete item\">".concat(this.getAttribute('content'), "</a>");
+        this.innerHTML = "<a class=\"btn text-danger\" title=\"Delete item\">".concat(this.getAttribute('content'), "</a>");
       } else {
         this.innerHTML = "<a class=\"btn btn-danger ml-2\" href=\"#\">".concat(this.getAttribute('content'), "</a>");
       }
@@ -653,6 +823,144 @@ var TextEditor = /*#__PURE__*/function (_HTMLElement) {
 }( /*#__PURE__*/_wrapNativeSuper(HTMLElement));
 
 var _default = TextEditor;
+exports.default = _default;
+},{}],"components/mixed/timezone-picker.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _wrapNativeSuper(Class) { var _cache = typeof Map === "function" ? new Map() : undefined; _wrapNativeSuper = function _wrapNativeSuper(Class) { if (Class === null || !_isNativeFunction(Class)) return Class; if (typeof Class !== "function") { throw new TypeError("Super expression must either be null or a function"); } if (typeof _cache !== "undefined") { if (_cache.has(Class)) return _cache.get(Class); _cache.set(Class, Wrapper); } function Wrapper() { return _construct(Class, arguments, _getPrototypeOf(this).constructor); } Wrapper.prototype = Object.create(Class.prototype, { constructor: { value: Wrapper, enumerable: false, writable: true, configurable: true } }); return _setPrototypeOf(Wrapper, Class); }; return _wrapNativeSuper(Class); }
+
+function _construct(Parent, args, Class) { if (_isNativeReflectConstruct()) { _construct = Reflect.construct; } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _isNativeFunction(fn) { return Function.toString.call(fn).indexOf("[native code]") !== -1; }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var TimezonePicker = /*#__PURE__*/function (_HTMLElement) {
+  _inherits(TimezonePicker, _HTMLElement);
+
+  var _super = _createSuper(TimezonePicker);
+
+  function TimezonePicker() {
+    var _this;
+
+    _classCallCheck(this, TimezonePicker);
+
+    _this = _super.call(this);
+    _this.timeZone = ["(GMT-11:00) Pacific/Pago_Pago", "(GMT-10:00) Pacific/Honolulu", "(GMT-08:00) America/Los_Angeles", "(GMT-08:00) America/Tijuana", "(GMT-07:00) America/Denver", "(GMT-07:00) America/Phoenix", "(GMT-07:00) America/Mazatlan", "(GMT-06:00) America/Chicago", "(GMT-06:00) America/Mexico_City", "(GMT-06:00) America/Regina", "(GMT-06:00) America/Guatemala", "(GMT-05:00) America/Bogota", "(GMT-05:00) America/New_York", "(GMT-05:00) America/Lima", "(GMT-04:30) America/Caracas", "(GMT-04:00) America/Halifax", "(GMT-04:00) America/Guyana", "(GMT-04:00) America/La_Paz", "(GMT-03:00) America/Argentina/Buenos_Aires", "(GMT-03:00) America/Godthab", "(GMT-03:00) America/Montevideo", "(GMT-03:30) America/St_Johns", "(GMT-03:00) America/Santiago", "(GMT-02:00) America/Sao_Paulo", "(GMT-02:00) Atlantic/South_Georgia", "(GMT-01:00) Atlantic/Azores", "(GMT-01:00) Atlantic/Cape_Verde", "(GMT+00:00) Africa/Abidjan", "(GMT+00:00) Africa/Casablanca", "(GMT+00:00) Europe/Dublin", "(GMT+00:00) Europe/Lisbon", "(GMT+00:00) Europe/London", "(GMT+00:00) UTC", "(GMT+00:00) GMT", "(GMT+00:00) Africa/Monrovia", "(GMT+01:00) Africa/Algiers", "(GMT+01:00) Europe/Amsterdam", "(GMT+01:00) Europe/Berlin", "(GMT+01:00) Europe/Brussels", "(GMT+01:00) Europe/Budapest", "(GMT+01:00) Europe/Belgrade", "(GMT+01:00) Europe/Prague", "(GMT+01:00) Europe/Copenhagen", "(GMT+01:00) Europe/Madrid", "(GMT+01:00) Europe/Paris", "(GMT+01:00) Europe/Rome", "(GMT+01:00) Europe/Stockholm", "(GMT+01:00) Europe/Vienna", "(GMT+01:00) Europe/Warsaw", "(GMT+02:00) Europe/Athens", "(GMT+02:00) Europe/Bucharest", "(GMT+02:00) Africa/Cairo", "(GMT+02:00) Asia/Jerusalem", "(GMT+02:00) Africa/Johannesburg", "(GMT+02:00) Europe/Helsinki", "(GMT+02:00) Europe/Kiev", "(GMT+02:00) Europe/Kaliningrad", "(GMT+02:00) Europe/Riga", "(GMT+02:00) Europe/Sofia", "(GMT+02:00) Europe/Tallinn", "(GMT+02:00) Europe/Vilnius", "(GMT+03:00) Europe/Istanbul", "(GMT+03:00) Asia/Baghdad", "(GMT+03:00) Africa/Nairobi", "(GMT+03:00) Europe/Minsk", "(GMT+03:00) Asia/Riyadh", "(GMT+03:00) Europe/Moscow", "(GMT+03:30) Asia/Tehran", "(GMT+04:00) Asia/Baku", "(GMT+04:00) Europe/Samara", "(GMT+04:00) Asia/Tbilisi", "(GMT+04:00) Asia/Yerevan", "(GMT+04:30) Asia/Kabul", "(GMT+05:00) Asia/Karachi", "(GMT+05:00) Asia/Yekaterinburg", "(GMT+05:00) Asia/Tashkent", "(GMT+05:30) Asia/Colombo", "(GMT+06:00) Asia/Almaty", "(GMT+06:00) Asia/Dhaka", "(GMT+06:30) Asia/Rangoon", "(GMT+07:00) Asia/Bangkok", "(GMT+07:00) Asia/Jakarta", "(GMT+07:00) Asia/Krasnoyarsk", "(GMT+08:00) Asia/Shanghai", "(GMT+08:00) Asia/Hong_Kong", "(GMT+08:00) Asia/Kuala_Lumpur", "(GMT+08:00) Asia/Irkutsk", "(GMT+08:00) Asia/Singapore", "(GMT+08:00) Asia/Taipei", "(GMT+08:00) Asia/Ulaanbaatar", "(GMT+08:00) Australia/Perth", "(GMT+09:00) Asia/Yakutsk", "(GMT+09:00) Asia/Seoul", "(GMT+09:00) Asia/Tokyo", "(GMT+09:30) Australia/Darwin", "(GMT+10:00) Australia/Brisbane", "(GMT+10:00) Pacific/Guam", "(GMT+10:00) Asia/Magadan", "(GMT+10:00) Yuzhno-Asia/Vladivostok", "(GMT+10:00) Pacific/Port_Moresby", "(GMT+10:30) Australia/Adelaide", "(GMT+11:00) Australia/Hobart", "(GMT+11:00) Australia/Sydney", "(GMT+11:00) Pacific/Guadalcanal", "(GMT+11:00) Pacific/Noumea", "(GMT+12:00) Pacific/Majuro", "(GMT+12:00) Asia/Kamchatka", "(GMT+13:00) Pacific/Auckland", "(GMT+13:00) Pacific/Fakaofo", "(GMT+13:00) Pacific/Fiji", "(GMT+13:00) Pacific/Tongatapu", "(GMT+14:00) Pacific/Apia"];
+    return _this;
+  }
+
+  _createClass(TimezonePicker, [{
+    key: "connectedCallback",
+    value: function connectedCallback() {
+      var _this2 = this;
+
+      this.innerHTML = "\n            <select id=\"timezone\" name=\"timezone\" class=\"custom-select\">\n                ".concat(this.timeZone.map(function (name) {
+        var timezone = name.split(' ')[1];
+        var selected = _this2.getAttribute('selected') === timezone ? 'selected' : '';
+        return '<option value="' + timezone + '" ' + selected + '>' + name + '</option>';
+      }), "\n            </select>\n        ");
+    }
+  }]);
+
+  return TimezonePicker;
+}( /*#__PURE__*/_wrapNativeSuper(HTMLElement));
+
+var _default = TimezonePicker;
+exports.default = _default;
+},{}],"components/mixed/currency-picker.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _wrapNativeSuper(Class) { var _cache = typeof Map === "function" ? new Map() : undefined; _wrapNativeSuper = function _wrapNativeSuper(Class) { if (Class === null || !_isNativeFunction(Class)) return Class; if (typeof Class !== "function") { throw new TypeError("Super expression must either be null or a function"); } if (typeof _cache !== "undefined") { if (_cache.has(Class)) return _cache.get(Class); _cache.set(Class, Wrapper); } function Wrapper() { return _construct(Class, arguments, _getPrototypeOf(this).constructor); } Wrapper.prototype = Object.create(Class.prototype, { constructor: { value: Wrapper, enumerable: false, writable: true, configurable: true } }); return _setPrototypeOf(Wrapper, Class); }; return _wrapNativeSuper(Class); }
+
+function _construct(Parent, args, Class) { if (_isNativeReflectConstruct()) { _construct = Reflect.construct; } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _isNativeFunction(fn) { return Function.toString.call(fn).indexOf("[native code]") !== -1; }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var CurrencyPicker = /*#__PURE__*/function (_HTMLElement) {
+  _inherits(CurrencyPicker, _HTMLElement);
+
+  var _super = _createSuper(CurrencyPicker);
+
+  function CurrencyPicker() {
+    var _this;
+
+    _classCallCheck(this, CurrencyPicker);
+
+    _this = _super.call(this);
+    _this.currency = ["AED (United Arab Emirates Dirham)", "AFN (Afghan Afghani)", "ALL (Albanian Lek)", "AMD (Armenian Dram)", "ANG (Netherlands Antillean Guilder)", "AOA (Angolan Kwanza)", "ARS (Argentine Peso)", "AUD (Australian Dollar)", "AWG (Aruban Florin)", "AZN (Azerbaijani Manat)", "BAM (Bosnia-Herzegovina Convertible Mark)", "BBD (Barbadian Dollar)", "BDT (Bangladeshi Taka)", "BGN (Bulgarian Lev)", "BHD (Bahraini Dinar)", "BIF (Burundian Franc)", "BMD (Bermudan Dollar)", "BND (Brunei Dollar)", "BOB (Bolivian Boliviano)", "BRL (Brazilian Real)", "BSD (Bahamian Dollar)", "BTC (Bitcoin)", "BTN (Bhutanese Ngultrum)", "BWP (Botswanan Pula)", "BYN (Belarusian Ruble)", "BZD (Belize Dollar)", "CAD (Canadian Dollar)", "CDF (Congolese Franc)", "CHF (Swiss Franc)", "CLF (Chilean Unit of Account (UF))", "CLP (Chilean Peso)", "CNH (Chinese Yuan (Offshore))", "CNY (Chinese Yuan)", "COP (Colombian Peso)", "CRC (Costa Rican Colón)", "CUC (Cuban Convertible Peso)", "CUP (Cuban Peso)", "CVE (Cape Verdean Escudo)", "CZK (Czech Republic Koruna)", "DJF (Djiboutian Franc)", "DKK (Danish Krone)", "DOP (Dominican Peso)", "DZD (Algerian Dinar)", "EGP (Egyptian Pound)", "ERN (Eritrean Nakfa)", "ETB (Ethiopian Birr)", "EUR (Euro)", "FJD (Fijian Dollar)", "FKP (Falkland Islands Pound)", "GBP (British Pound Sterling)", "GEL (Georgian Lari)", "GGP (Guernsey Pound)", "GHS (Ghanaian Cedi)", "GIP (Gibraltar Pound)", "GMD (Gambian Dalasi)", "GNF (Guinean Franc)", "GTQ (Guatemalan Quetzal)", "GYD (Guyanaese Dollar)", "HKD (Hong Kong Dollar)", "HNL (Honduran Lempira)", "HRK (Croatian Kuna)", "HTG (Haitian Gourde)", "HUF (Hungarian Forint)", "IDR (Indonesian Rupiah)", "ILS (Israeli New Sheqel)", "IMP (Manx pound)", "INR (Indian Rupee)", "IQD (Iraqi Dinar)", "IRR (Iranian Rial)", "ISK (Icelandic Króna)", "JEP (Jersey Pound)", "JMD (Jamaican Dollar)", "JOD (Jordanian Dinar)", "JPY (Japanese Yen)", "KES (Kenyan Shilling)", "KGS (Kyrgystani Som)", "KHR (Cambodian Riel)", "KMF (Comorian Franc)", "KPW (North Korean Won)", "KRW (South Korean Won)", "KWD (Kuwaiti Dinar)", "KYD (Cayman Islands Dollar)", "KZT (Kazakhstani Tenge)", "LAK (Laotian Kip)", "LBP (Lebanese Pound)", "LKR (Sri Lankan Rupee)", "LRD (Liberian Dollar)", "LSL (Lesotho Loti)", "LYD (Libyan Dinar)", "MAD (Moroccan Dirham)", "MDL (Moldovan Leu)", "MGA (Malagasy Ariary)", "MKD (Macedonian Denar)", "MMK (Myanma Kyat)", "MNT (Mongolian Tugrik)", "MOP (Macanese Pataca)", "MRO (Mauritanian Ouguiya (pre-2018))", "MRU (Mauritanian Ouguiya)", "MUR (Mauritian Rupee)", "MVR (Maldivian Rufiyaa)", "MWK (Malawian Kwacha)", "MXN (Mexican Peso)", "MYR (Malaysian Ringgit)", "MZN (Mozambican Metical)", "NAD (Namibian Dollar)", "NGN (Nigerian Naira)", "NIO (Nicaraguan Córdoba)", "NOK (Norwegian Krone)", "NPR (Nepalese Rupee)", "NZD (New Zealand Dollar)", "OMR (Omani Rial)", "PAB (Panamanian Balboa)", "PEN (Peruvian Nuevo Sol)", "PGK (Papua New Guinean Kina)", "PHP (Philippine Peso)", "PKR (Pakistani Rupee)", "PLN (Polish Zloty)", "PYG (Paraguayan Guarani)", "QAR (Qatari Rial)", "RON (Romanian Leu)", "RSD (Serbian Dinar)", "RUB (Russian Ruble)", "RWF (Rwandan Franc)", "SAR (Saudi Riyal)", "SBD (Solomon Islands Dollar)", "SCR (Seychellois Rupee)", "SDG (Sudanese Pound)", "SEK (Swedish Krona)", "SGD (Singapore Dollar)", "SHP (Saint Helena Pound)", "SLL (Sierra Leonean Leone)", "SOS (Somali Shilling)", "SRD (Surinamese Dollar)", "SSP (South Sudanese Pound)", "STD (São Tomé and Príncipe Dobra (pre-2018))", "STN (São Tomé and Príncipe Dobra)", "SVC (Salvadoran Colón)", "SYP (Syrian Pound)", "SZL (Swazi Lilangeni)", "THB (Thai Baht)", "TJS (Tajikistani Somoni)", "TMT (Turkmenistani Manat)", "TND (Tunisian Dinar)", "TOP (Tongan Pa'anga)", "TRY (Turkish Lira)", "TTD (Trinidad and Tobago Dollar)", "TWD (New Taiwan Dollar)", "TZS (Tanzanian Shilling)", "UAH (Ukrainian Hryvnia)", "UGX (Ugandan Shilling)", "USD (United States Dollar)", "UYU (Uruguayan Peso)", "UZS (Uzbekistan Som)", "VEF (Venezuelan Bolívar Fuerte)", "VND (Vietnamese Dong)", "VUV (Vanuatu Vatu)", "WST (Samoan Tala)", "XAF (CFA Franc BEAC)", "XAG (Silver Ounce)", "XAU (Gold Ounce)", "XCD (East Caribbean Dollar)", "XDR (Special Drawing Rights)", "XOF (CFA Franc BCEAO)", "XPD (Palladium Ounce)", "XPF (CFP Franc)", "XPT (Platinum Ounce)", "YER (Yemeni Rial)", "ZAR (South African Rand)", "ZMW (Zambian Kwacha)", "ZWL (Zimbabwean Dolla)r"];
+    return _this;
+  }
+
+  _createClass(CurrencyPicker, [{
+    key: "connectedCallback",
+    value: function connectedCallback() {
+      var _this2 = this;
+
+      this.innerHTML = "\n            <select id=\"currency\" name=\"currency\" class=\"custom-select\">\n                ".concat(this.currency.map(function (name) {
+        var currency = name.split(' ')[0];
+        var selected = _this2.getAttribute('selected') === currency ? 'selected' : '';
+        return '<option value="' + currency + '" ' + selected + '>' + name + '</option>';
+      }), "\n            </select>\n        ");
+    }
+  }]);
+
+  return CurrencyPicker;
+}( /*#__PURE__*/_wrapNativeSuper(HTMLElement));
+
+var _default = CurrencyPicker;
 exports.default = _default;
 },{}],"components/charts/donut-chart.js":[function(require,module,exports) {
 "use strict";
@@ -849,145 +1157,99 @@ var LinesChart = /*#__PURE__*/function (_HTMLElement) {
 
 var _default = LinesChart;
 exports.default = _default;
-},{}],"components/loading-button.js":[function(require,module,exports) {
-document.addEventListener('DOMContentLoaded', function () {
-  if (document.querySelectorAll('.loading')) {
-    document.querySelectorAll('.loading').forEach(function (element) {
-      element.addEventListener('click', function (event) {
-        event.target.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>';
-        event.target.setAttribute('disabled', 'disabled');
-      });
-    });
-  }
+},{}],"components/mixed/theme-switch.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
 });
-},{}],"components/password-toggler.js":[function(require,module,exports) {
-document.addEventListener('DOMContentLoaded', function () {
-  if (document.querySelector('#password-toggler')) {
-    document.querySelector('#password-toggler').addEventListener('click', function (event) {
-      if (document.querySelector('#password').type === 'password') {
-        document.querySelector('#password').type = 'text';
-        event.target.innerHTML = '<i class="fa fa-eye"></i>';
-      } else {
-        document.querySelector('#password').type = 'password';
-        event.target.innerHTML = '<i class="fa fa-eye-slash"></i>';
-      }
-    });
+exports.default = void 0;
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _wrapNativeSuper(Class) { var _cache = typeof Map === "function" ? new Map() : undefined; _wrapNativeSuper = function _wrapNativeSuper(Class) { if (Class === null || !_isNativeFunction(Class)) return Class; if (typeof Class !== "function") { throw new TypeError("Super expression must either be null or a function"); } if (typeof _cache !== "undefined") { if (_cache.has(Class)) return _cache.get(Class); _cache.set(Class, Wrapper); } function Wrapper() { return _construct(Class, arguments, _getPrototypeOf(this).constructor); } Wrapper.prototype = Object.create(Class.prototype, { constructor: { value: Wrapper, enumerable: false, writable: true, configurable: true } }); return _setPrototypeOf(Wrapper, Class); }; return _wrapNativeSuper(Class); }
+
+function _construct(Parent, args, Class) { if (_isNativeReflectConstruct()) { _construct = Reflect.construct; } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _isNativeFunction(fn) { return Function.toString.call(fn).indexOf("[native code]") !== -1; }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var ThemeSwitch = /*#__PURE__*/function (_HTMLElement) {
+  _inherits(ThemeSwitch, _HTMLElement);
+
+  var _super = _createSuper(ThemeSwitch);
+
+  function ThemeSwitch() {
+    _classCallCheck(this, ThemeSwitch);
+
+    return _super.call(this);
   }
-});
-},{}],"components/admin.js":[function(require,module,exports) {
-var _this = this;
 
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-document.addEventListener('DOMContentLoaded', function () {
-  //toggle sidebar
-  if (document.querySelector('#sidebar-toggler')) {
-    document.querySelector('#sidebar-toggler').addEventListener('click', function (event) {
-      document.querySelector('#wrapper').classList.toggle('toggled');
-    });
-  } //select all table items
-
-
-  if (document.querySelector('#select-all')) {
-    document.querySelector('#select-all').addEventListener('change', function (event) {
-      if (event.target.checked) {
-        document.querySelectorAll('.table input[type=checkbox]').forEach(function (element) {
-          element.checked = true;
+  _createClass(ThemeSwitch, [{
+    key: "connectedCallback",
+    value: function connectedCallback() {
+      this.innerHTML = "\n            <div class=\"custom-control custom-switch\">\n                <input type=\"checkbox\" class=\"custom-control-input\" name=\"theme\" id=\"theme\" ".concat(this.getAttribute('checked'), ">\n                <label class=\"custom-control-label\" for=\"theme\"></label>\n            </div>\n        ");
+      document.querySelector('#theme').addEventListener('change', function () {
+        document.querySelectorAll('.card-header').forEach(function (element) {
+          element.classList.toggle('bg-dark');
+          element.classList.toggle('text-white');
         });
-      } else {
-        document.querySelectorAll('.table input[type=checkbox]').forEach(function (element) {
-          element.checked = false;
+        document.querySelectorAll('.card-metrics').forEach(function (element) {
+          element.classList.toggle('bg-dark');
+          element.classList.toggle('bg-light');
+          element.classList.toggle('text-white');
         });
-      }
-    });
-  } //delete selected table items
-
-
-  if (document.querySelector('#bulk-delete')) {
-    document.querySelector('#bulk-delete').addEventListener('click', function (event) {
-      var innerHTML = event.target.innerHTML;
-      event.target.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>';
-
-      if (window.confirm('Are you sure want to delete all selected items?')) {
-        items = [];
-        document.querySelectorAll('.table input[type=checkbox]').forEach(function (element) {
-          if (element.id !== 'select-all' && element.checked) {
-            items.push(element.dataset.id);
-          }
-        });
-
-        if (items.length > 0) {
-          fetch(event.target.dataset.url, {
-            method: 'post',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              items: items
-            })
-          }).then(function () {
-            return window.location.reload();
-          });
-        }
-      }
-
-      event.target.innerHTML = innerHTML;
-    });
-  } //filter tables
-  //https://stackoverflow.com/questions/51187477/how-to-filter-a-html-table-using-simple-javascript
-
-
-  if (document.querySelector('#filter')) {
-    document.querySelector('#filter').addEventListener('keyup', function (event) {
-      var filterText = event.target.value.toUpperCase();
-      document.querySelectorAll('.table tbody tr:not(.header)').forEach(function (tr) {
-        var match = _toConsumableArray(tr.children).some(function (td) {
-          return td.textContent.toUpperCase().includes(filterText);
-        });
-
-        tr.style.display = match ? '' : 'none';
-      });
-    });
-  } //sort tables
-  //https://stackoverflow.com/questions/14267781/sorting-html-table-with-javascript
-
-
-  if (document.querySelector('.table')) {
-    var getCellValue = function getCellValue(tr, idx) {
-      return tr.children[idx].innerText || tr.children[idx].textContent;
-    };
-
-    var comparer = function comparer(idx, asc) {
-      return function (a, b) {
-        return function (v1, v2) {
-          return v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2);
-        }(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
-      };
-    };
-
-    document.querySelectorAll('th').forEach(function (th) {
-      return th.addEventListener('click', function () {
-        var table = th.closest('table');
-        var tbody = table.querySelector('tbody');
-        Array.from(tbody.querySelectorAll('tr')).sort(comparer(Array.from(th.parentNode.children).indexOf(th), _this.asc = !_this.asc)).forEach(function (tr) {
-          return tbody.appendChild(tr);
+        document.querySelector('.navbar').classList.toggle('navbar-light');
+        document.querySelector('.navbar').classList.toggle('bg-light');
+        document.querySelector('.navbar').classList.toggle('navbar-dark');
+        document.querySelector('.navbar').classList.toggle('bg-dark');
+        document.querySelector('#sidebar-toggler').classList.toggle('border-dark');
+        document.querySelector('#sidebar-toggler').classList.toggle('border-light');
+        document.querySelector('#sidebar-toggler .fa-bars').classList.toggle('text-light');
+        document.querySelector('#dropdown-notifications').classList.toggle('text-light');
+        document.querySelector('#sidebar-wrapper').classList.toggle('bg-light');
+        document.querySelector('#sidebar-wrapper .sidebar-title').classList.toggle('bg-light');
+        document.querySelector('#sidebar-wrapper .sidebar-title').classList.toggle('bg-dark');
+        document.querySelector('#sidebar-wrapper .sidebar-title').classList.toggle('text-light');
+        document.querySelectorAll('#sidebar-wrapper .list-group-item').forEach(function (element) {
+          element.classList.toggle('bg-light');
         });
       });
-    });
-  }
-});
+    }
+  }]);
+
+  return ThemeSwitch;
+}( /*#__PURE__*/_wrapNativeSuper(HTMLElement));
+
+var _default = ThemeSwitch;
+exports.default = _default;
 },{}],"index.js":[function(require,module,exports) {
 "use strict";
+
+require("./components/admin");
+
+require("./components/loading-button");
+
+require("./components/password-toggler");
 
 var _uploadModal = _interopRequireDefault(require("./components/modal/upload-modal"));
 
@@ -1001,17 +1263,17 @@ var _confirmDelete = _interopRequireDefault(require("./components/mixed/confirm-
 
 var _textEditor = _interopRequireDefault(require("./components/mixed/text-editor"));
 
+var _timezonePicker = _interopRequireDefault(require("./components/mixed/timezone-picker"));
+
+var _currencyPicker = _interopRequireDefault(require("./components/mixed/currency-picker"));
+
 var _donutChart = _interopRequireDefault(require("./components/charts/donut-chart"));
 
 var _barsChart = _interopRequireDefault(require("./components/charts/bars-chart"));
 
 var _linesChart = _interopRequireDefault(require("./components/charts/lines-chart"));
 
-require("./components/loading-button");
-
-require("./components/password-toggler");
-
-require("./components/admin");
+var _themeSwitch = _interopRequireDefault(require("./components/mixed/theme-switch"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1024,7 +1286,10 @@ window.customElements.define('text-editor', _textEditor.default);
 window.customElements.define('donut-chart', _donutChart.default);
 window.customElements.define('bars-chart', _barsChart.default);
 window.customElements.define('lines-chart', _linesChart.default);
-},{"./components/modal/upload-modal":"components/modal/upload-modal.js","./components/modal/export-modal":"components/modal/export-modal.js","./components/alert/alert-popup":"components/alert/alert-popup.js","./components/alert/alert-toast":"components/alert/alert-toast.js","./components/mixed/confirm-delete":"components/mixed/confirm-delete.js","./components/mixed/text-editor":"components/mixed/text-editor.js","./components/charts/donut-chart":"components/charts/donut-chart.js","./components/charts/bars-chart":"components/charts/bars-chart.js","./components/charts/lines-chart":"components/charts/lines-chart.js","./components/loading-button":"components/loading-button.js","./components/password-toggler":"components/password-toggler.js","./components/admin":"components/admin.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+window.customElements.define('timezone-picker', _timezonePicker.default);
+window.customElements.define('currency-picker', _currencyPicker.default);
+window.customElements.define('theme-switch', _themeSwitch.default);
+},{"./components/admin":"components/admin.js","./components/loading-button":"components/loading-button.js","./components/password-toggler":"components/password-toggler.js","./components/modal/upload-modal":"components/modal/upload-modal.js","./components/modal/export-modal":"components/modal/export-modal.js","./components/alert/alert-popup":"components/alert/alert-popup.js","./components/alert/alert-toast":"components/alert/alert-toast.js","./components/mixed/confirm-delete":"components/mixed/confirm-delete.js","./components/mixed/text-editor":"components/mixed/text-editor.js","./components/mixed/timezone-picker":"components/mixed/timezone-picker.js","./components/mixed/currency-picker":"components/mixed/currency-picker.js","./components/charts/donut-chart":"components/charts/donut-chart.js","./components/charts/bars-chart":"components/charts/bars-chart.js","./components/charts/lines-chart":"components/charts/lines-chart.js","./components/mixed/theme-switch":"components/mixed/theme-switch.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -1052,7 +1317,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "42089" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "37477" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

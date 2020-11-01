@@ -11,7 +11,7 @@ use Framework\HTTP\Response;
 use App\Requests\AuthRequest;
 use Framework\Support\Encryption;
 use App\Database\Models\UsersModel;
-use App\Database\Models\PasswordResetModel;
+use App\Database\Models\TokensModel;
 
 /**
  * Manage password reset
@@ -26,10 +26,9 @@ class PasswordController
 	public function notify(): void
 	{
 		$token = random_string(50, true);
-		//$expires = strtotime('+1 hour', strtotime(date('Y-m-d H:i:s')));
 
 		if (EmailHelper::sendToken(Request::getField('email'), $token)) {
-			PasswordResetModel::insert([
+			TokensModel::insert([
 				'email' => Request::getField('email'),
 				'token' => $token,
 				'expires' => Carbon::now()->addHour()->format('Y-m-d H:i:s')
@@ -48,20 +47,20 @@ class PasswordController
 	 */
 	public function reset(): void
 	{
-        $pasword_reset = PasswordResetModel::find('email', Request::getQuery('email'))->single();
+        $reset_token = TokensModel::find('email', Request::getQuery('email'))->single();
 
-        if ($pasword_reset === false || $pasword_reset->token !== Request::getQuery('token')) {
+        if ($reset_token === false || $reset_token->token !== Request::getQuery('token')) {
 			Response::send([], 'This password reset link is invalid');
 		}
 
-		if ($pasword_reset->expires < date('Y-m-d H:i:s')) {
+		if ($reset_token->expires < date('Y-m-d H:i:s')) {
 			Response::send([], 'This password reset link expired. Please retrieves a new one');
 		}
 
-		PasswordResetModel::delete()->where('email', $pasword_reset->email)->persist();
+		TokensModel::delete()->where('email', $reset_token->email)->persist();
 		
 		View::render('password/new', [
-			'email' => $pasword_reset->email
+			'email' => $reset_token->email
 		]);
 	}
 	

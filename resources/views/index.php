@@ -30,7 +30,7 @@
             </a>
             
             <a href="<?= absolute_url('/login') ?>" class="ml-3 btn btn-danger">
-                <i class="fa fa-cog"></i> Administration
+                <i class="fa fa-cog"></i> Backoffice
             </a>
         </span>
     </div>

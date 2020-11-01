@@ -10,3 +10,14 @@
         vertical-align: middle;
     }
 }
+
+.notifications-icon {
+    display: inline-block;
+    border-radius: 50%;
+    position: absolute;
+    right: .5em;
+    top: .5em;
+    width: 13px;
+    height: 13px;
+    padding-top: 1px;
+}

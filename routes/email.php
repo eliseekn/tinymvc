@@ -13,8 +13,9 @@ use Framework\Routing\Route;
  */
 
 Route::group([
-    'confirmation' => ['handler' => 'EmailController@verify'],
-    'confirmation/notify' => ['handler' => 'EmailController@notify']
+    'confirm' => ['handler' => 'EmailController@verify'],
+    'confirmation/notify' => ['handler' => 'EmailController@notify'],
+    'auth' => ['handler' => 'EmailController@auth'],
 ])->by([
     'method' => 'GET',
     'prefix' => 'email'

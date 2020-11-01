@@ -26,8 +26,15 @@ class UsersTable
             ->addString('email')->unique()
             ->addString('password')
             ->addString('role')->default('visitor')
+            ->addString('lang')->default('en')
+            ->addString('currency')->default('USD')
+            ->addString('timezone')->default('UTC')
+            ->addString('theme')->default('dark')
             ->addBoolean('online')->default(0)
             ->addBoolean('active')->default(0)
+            ->addBoolean('two_factor')->default(0)
+            ->addBoolean('notifications')->default(1)
+            ->addBoolean('notifications_email')->default(0)
             ->create();
     }
     

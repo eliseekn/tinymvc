@@ -12,8 +12,8 @@
 ]) ?>
 
 <div class="card mb-5" id="installation">
-    <div class="card-header bg-dark">
-        <span class="text-white lead">Installation</span>
+    <div class="card-header ">
+        <span class=" lead">Installation</span>
     </div>
 
     <div class="card-body">
@@ -46,8 +46,8 @@ Yarn</code></pre>
 </div>
 
 <div class="card" id="configuration">
-    <div class="card-header bg-dark">
-        <span class="text-white lead">Configuration</span>
+    <div class="card-header ">
+        <span class=" lead">Configuration</span>
     </div>
 
     <div class="card-body">

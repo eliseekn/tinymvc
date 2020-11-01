@@ -1,26 +1,15 @@
 <?php $this->layout('admin/layout', [
-    'page_title' => 'Roles | Administration'
+    'page_title' => __('roles') . ' | Administration'
 ]) ?>
 
 <?php $this->start('page_content') ?>
 
-<?php $this->insert('partials/breadcrumb', [
-    'items' => [
-        'Dashboard' => absolute_url('/admin/dashboard'),
-        'Roles' => ''
-    ]
-]) ?>
-
 <div class="row mb-4">
     <div class="col-md-4">
-        <div class="card">
-            <div class="card-header bg-dark">
-                <i class="fa fa-user-shield fa-lg text-white"></i>
-            </div>
-
+        <div class="card card-metrics bg-light shadow-sm">
             <div class="card-body d-flex align-items-center justify-content-between">
-                <p class="mb-0">Total</p>
-                <p class="font-weight-bold mb-0 lead"><?= $roles->getTotalItems() ?></p>
+                <p class="mb-0 "><i class="fa fa-user-shield fa-lg"></i> Total</p>
+                <p class="font-weight-bold mb-0 "><?= $roles->getTotalItems() ?></p>
             </div>
         </div>
     </div>
@@ -30,37 +19,33 @@
     $this->insert('partials/alert', get_flash_messages());
 endif ?>
 
-<div class="card">
-    <div class="card-header bg-dark">
-        <div class="d-flex flex-lg-row flex-sm-column align-items-lg-center justify-content-lg-between">
-            <span class="text-white lead">Roles</span>
+<div class="card shadow-sm">
+    <div class="card-header">
+        <div class="d-flex flex-md-row flex-column align-items-lg-center justify-content-lg-between">
+            <span><?= __('roles') ?></span>
 
-            <span>
-                <a href="<?= absolute_url('/admin/roles/new') ?>" class="btn btn-primary">New</a>
-                
-                <upload-modal action="<?= absolute_url('/admin/roles/import') ?>"></upload-modal>
-                <export-modal action="<?= absolute_url('/admin/roles/export') ?>"></export-modal>
+            <div class="d-flex flex-md-row flex-column mt-md-0 mt-2">
+                <span class="mr-md-3">
+                    <input type="search" class="form-control" id="filter" placeholder="<?= __('search') ?>">
+                </span>
 
-                <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('/admin/roles/delete') ?>">
-                    Bulk delete
-                </button>
-            </span>
+                <span class="mt-md-0 mt-2">
+                    <a href="<?= absolute_url('/admin/roles/new') ?>" class="btn btn-primary"><?= __('new') ?></a>
+                    
+                    <upload-modal action="<?= absolute_url('/admin/roles/import') ?>" title="<?= __('import') ?>"></upload-modal>
+                    <export-modal action="<?= absolute_url('/admin/roles/export') ?>" title="<?= __('export') ?>"></export-modal>
+
+                    <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('/admin/roles/delete') ?>">
+                        <?= __('delete') ?>
+                    </button>
+                </span>
+            </div>
         </div>
     </div>
 
     <div class="card-body">
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <div class="input-group-text bg-white">
-                    <i class="fa fa-search"></i>
-                </div>
-            </div>
-
-            <input type="search" class="form-control border-left-0" id="filter" placeholder="Filter results">
-        </div>
-
         <div class="table-responsive">
-            <table class="table table-striped table-hover">
+            <table class="table table-striped table-hover mb-0">
                 <thead>
                     <tr>
                         <th scope="col">
@@ -70,11 +55,11 @@ endif ?>
                             </div>
                         </th>
 
-                        <th scope="col"><i class="fa fa-sort"></i> ID</th>
-                        <th scope="col"><i class="fa fa-sort"></i> Title</th>
-                        <th scope="col"><i class="fa fa-sort"></i> Slug</th>
-                        <th scope="col"><i class="fa fa-sort"></i> Description</th>
-                        <th scope="col"><i class="fa fa-sort"></i> Created at</th>
+                        <th scope="col"><i class="fa fa-sort"></i> #</th>
+                        <th scope="col"><i class="fa fa-sort"></i> <?= __('title') ?></th>
+                        <th scope="col"><i class="fa fa-sort"></i> <?= __('slug') ?></th>
+                        <th scope="col"><i class="fa fa-sort"></i> <?= __('description') ?></th>
+                        <th scope="col"><i class="fa fa-sort"></i> <?= __('created_at') ?></th>
                         <th scope="col"></th>
                     </tr>
                 </thead>
@@ -94,7 +79,7 @@ endif ?>
                         <td><?= $role->title ?></td>
                         <td><?= $role->slug ?></td>
                         <td><?= html_entity_decode($role->description) ?></td>
-                        <td><?= \Carbon\Carbon::parse($role->created_at)->locale('en')->isoFormat('MMM. Do, YYYY') ?></td>
+                        <td><?= \Carbon\Carbon::parse($role->created_at)->locale(get_user_session()->lang)->isoFormat('MMM Do, YYYY') ?></td>
 
                         <td>
                             <a class="btn text-primary" href="<?= absolute_url('/admin/roles/view/' . $role->id) ?>" title="View item">
@@ -116,7 +101,7 @@ endif ?>
     </div>
 
     <div class="card-footer d-flex align-items-center justify-content-between">
-        <span>Total result(s): <span class="font-weight-bold"><?= $roles->getTotalItems() ?></span></span>
+        <span><?= __('total_results') ?> <span class="font-weight-bold"><?= $roles->getTotalItems() ?></span></span>
 
         <?php $this->insert('partials/pagination', [
             'pagination' => $roles

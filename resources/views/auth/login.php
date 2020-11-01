@@ -5,15 +5,15 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Log in page">
+    <meta name="description" content="<?= __('login', true) ?>">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <title>Log in</title>
+    <title><?= __('login', true) ?></title>
 </head>
 
 <body>
     <div class="d-flex align-items-center justify-content-center min-vh-100">
         <div class="container" style="width: 400px">
-            <h1 class="py-3 text-center">Log in</h1>
+            <h1 class="py-3 text-center"><?= __('login', true) ?></h1>
 
             <?php 
             if (flash_messages()) :
@@ -22,11 +22,11 @@
             ?>
 
             <?php 
-            if(session_has('auth_attempts') && get_session('auth_attempts') > config('security.auth.max_attempts') && strtotime('+' . config('security.auth.unlock_timeout') . ' minute', get_session('auth_attempts_timeout')) > strtotime(date('Y-m-d H:i:s'))) : 
+            if(auth_attempts_exceeded()) : 
                 $this->insert('partials/alert', [
                     'type' => 'danger',
-                    'messages' => 'Authentication attempts exceeded. <br> Wait ' . config('security.auth.unlock_timeout') . ' minute(s) before try again',
-                    'display' => 'alert',
+                    'messages' => 'Authentication attempts exceeded. You must wait about ' . config('security.auth.unlock_timeout') . ' minute(s) before try again',
+                    'display' => 'default',
                     'dismiss' => false
                 ]);
             endif
@@ -37,12 +37,12 @@
                     <?= generate_csrf_token() ?>
 
                     <div class="form-group">
-                        <label for="email">Email address</label>
+                        <label for="email"><?= __('email', true) ?></label>
                         <input type="email" id="email" name="email" class="form-control">
                     </div>
 
                     <div class="form-group">
-                        <label for="password">Password</label>
+                        <label for="password"><?= __('password', true) ?></label>
 
                         <div class="d-flex align-items-center">
                             <input type="password" id="password" name="password" class="form-control">
@@ -56,24 +56,20 @@
                     <div class="d-flex flex-column flex-lg-row justify-content-lg-between justify-content-center mb-3 mb-lg-0 mx-auto">
                         <div class="form-group custom-control custom-switch">
                             <input type="checkbox" class="custom-control-input" id="remember" name="remember">
-                            <label class="custom-control-label" for="remember">Remember me</label>
+                            <label class="custom-control-label" for="remember"><?= __('remember', true) ?></label>
                         </div>
 
-                        <a href="<?= absolute_url('/password/forgot') ?>">Forgot password?</a>
+                        <a href="<?= absolute_url('/password/forgot') ?>"><?= __('forgot_password', true) ?></a>
                     </div>
 
-                    <?php if(session_has('auth_attempts') && get_session('auth_attempts') > config('security.auth.max_attempts') && strtotime('+' . config('security.auth.unlock_timeout') . ' minute', get_session('auth_attempts_timeout')) > strtotime(date('Y-m-d H:i:s'))) : ?>
-
-                    <button type="submit" class="btn btn-block btn-primary loading" disabled>Submit</button>
-
+                    <?php if(auth_attempts_exceeded()) : ?>
+                    <button type="submit" class="btn btn-block btn-primary loading" disabled><?= __('submit', true) ?></button>
                     <?php else : ?>
-
-                    <button type="submit" class="btn btn-block btn-primary loading">Submit</button>
-
+                    <button type="submit" class="btn btn-block btn-primary loading"><?= __('submit', true) ?></button>
                     <?php endif ?>
                 </form>
 
-                <p class="mt-4 text-center">Don't have an account? <a href="<?= absolute_url('/signup') ?>">Sign up here</a> </p>
+                <p class="mt-4 text-center"><?= __('no_account', true) ?> <a href="<?= absolute_url('/signup') ?>"><?= __('signup_here', true) ?></a> </p>
             </div>
         </div>
     </div>

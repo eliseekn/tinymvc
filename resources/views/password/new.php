@@ -5,33 +5,29 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Reset password page">
+    <meta name="description" content="<?= __('reset_password', true) ?>">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <title>Reset password</title>
+    <title><?= __('reset_password', true) ?></title>
 </head>
 
 <body>
     <div class="d-flex align-items-center justify-content-center min-vh-100">
         <div class="container" style="width: 400px">
-            <h1 class="py-3 text-center">Reset password</h1>
+            <h1 class="py-3 text-center"><?= __('reset_password', true) ?></h1>
 
             <?php if (flash_messages()) : 
-                $this->insert('partials/alert', [
-                    'messages' => get_flash_messages(),
-                    'display' => 'alert',
-                    'dismiss' => true
-                ]);
+                $this->insert('partials/alert', get_flash_messages());
             endif ?>
 
             <div class="card shadow p-4">
                 <form method="post" action="<?= absolute_url('/password/new') ?>">
                     <div class="form-group">
-                        <label for="email">Email address</label>
+                        <label for="email"><?= __('email', true) ?></label>
                         <input type="email" id="email" name="email" class="form-control" value="<?= $email ?>">
                     </div>
 
                     <div class="form-group">
-                        <label for="password">New password</label>
+                        <label for="password"><?= __('new_password', true) ?></label>
 
                         <div class="d-flex align-items-center">
                             <input type="password" id="password" name="password" class="form-control">
@@ -42,7 +38,7 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-block btn-primary loading">Submit</button>
+                    <button type="submit" class="btn btn-block btn-primary loading"><?= __('submit', true) ?></button>
                 </form>
             </div>
         </div>

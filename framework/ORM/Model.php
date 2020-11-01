@@ -105,44 +105,44 @@ class Model
      * get column count value
      *
      * @param  string $column
-     * @return mixed
+     * @return \Framework\ORM\Model
      */
     public static function count(string $column = 'id')
     {
-        return self::select(['COUNT(' . $column . ') AS value'])->single();
+        return self::select(['COUNT(' . $column . ') AS value']);
     }
     
     /**
      * get column sum value
      *
      * @param  string $column
-     * @return mixed
+     * @return \Framework\ORM\Model
      */
     public static function sum(string $column)
     {
-        return self::select(['SUM(' . $column . ') AS value'])->single();
+        return self::select(['SUM(' . $column . ') AS value']);
     }
     
     /**
      * get column max value
      *
      * @param  string $column
-     * @return mixed
+     * @return \Framework\ORM\Model
      */
     public static function max(string $column)
     {
-        return self::select(['MAX(' . $column . ') AS value'])->single();
+        return self::select(['MAX(' . $column . ') AS value']);
     }
     
     /**
      * get column min value
      *
      * @param  string $column
-     * @return mixed
+     * @return \Framework\ORM\Model
      */
     public static function min(string $column)
     {
-        return self::select(['MIN(' . $column . ') AS value'])->single();
+        return self::select(['MIN(' . $column . ') AS value']);
     }
     
     /**
@@ -335,14 +335,23 @@ class Model
     }
     
     /**
-     * add ORDER BY clause
+     * add custom ORDER BY clause with DESC
      *
-     * @param  string $direction
      * @return \Framework\ORM\Model
      */
-    public function order(string $direction = 'DESC'): self
+    public function orderDesc(string $column = 'id'): self
     {
-        return $this->orderBy('id', $direction);
+        return $this->orderBy($column);
+    }
+    
+    /**
+     * add custom ORDER BY clause with ASC 
+     *
+     * @return \Framework\ORM\Model
+     */
+    public function orderAsc(string $column = 'id'): self
+    {
+        return $this->orderBy($column, 'ASC');
     }
     
     /**

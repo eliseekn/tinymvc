@@ -13,45 +13,105 @@
 </head>
 
 <body>
+
+    <?php if (flash_messages()) :
+        $this->insert('partials/alert', get_flash_messages());
+    endif ?>
+
     <div class="d-flex" id="wrapper">
-        <div class="bg-light border-light border-right min-vh-100" id="sidebar-wrapper">
-            <div class="sidebar-title bg-dark text-light">
-                <i class="fa fa-cog"></i> Administration
+        <div class="border-right shadow-sm min-vh-100" id="sidebar-wrapper">
+            <div class="sidebar-title bg-light">
+                <?= config('app.name') ?>
             </div>
 
             <div class="list-group list-group-flush">
-                <a href="<?= absolute_url('/admin/dashboard') ?>" class="list-group-item list-group-item-action bg-light">
-                    <i class="fa fa-tachometer-alt"></i> Dashboard
+                <a href="<?= absolute_url('/admin/dashboard') ?>" class="list-group-item list-group-item-action">
+                    <i class="fa fa-home <?php if (url_exists('dashboard')) : echo 'text-primary'; endif ?>"></i> <?= __('dashboard') ?>
                 </a>
-                <a href="<?= absolute_url('/admin/roles') ?>" class="list-group-item list-group-item-action bg-light">
-                    <i class="fa fa-dot-circle <?php if (exists_uri('roles')) : echo 'text-primary'; endif ?>"></i> Roles
+                <a href="<?= absolute_url('/admin/roles') ?>" class="list-group-item list-group-item-action">
+                    <i class="fa fa-dot-circle <?php if (url_exists('roles')) : echo 'text-primary'; endif ?>"></i> <?= __('roles') ?>
                 </a>
-                <a href="<?= absolute_url('/admin/users') ?>" class="list-group-item list-group-item-action bg-light">
-                    <i class="fa fa-dot-circle <?php if (exists_uri('users')) : echo 'text-primary'; endif ?>"></i> Users
+                <a href="<?= absolute_url('/admin/users') ?>" class="list-group-item list-group-item-action">
+                    <i class="fa fa-dot-circle <?php if (url_exists('users')) : echo 'text-primary'; endif ?>"></i> <?= __('users') ?>
                 </a>
             </div>
         </div>
 
         <div id="page-content-wrapper">
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
-                <button class="btn border-light text-light" id="sidebar-toggler" title="Toggle sidebar">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm px-4">
+                <button class="btn border-dark" id="sidebar-toggler" title="Toggle sidebar">
                     <i class="fa fa-bars"></i>
                 </button>
 
-                <div class="dropdown ml-auto">
-                    <button class="btn btn-danger dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <?= get_user_session()->name ?>
-                    </button>
+                <div class="ml-auto d-flex">
+                    <?php 
+                    if (get_user_session()->notifications) : 
+                        $notifications = \App\Database\Models\NotificationsModel::select()->where('status', 'unread')->firstOf(4); 
+                    ?>
+                    <div class="dropdown mr-3">
+                        <button class="btn" type="button" id="dropdown-notifications" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-bell fa-lg"></i>
 
-                    <div class="dropdown-menu dropdown-menu-right py-1" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="<?= absolute_url('/logout') ?>">
-                            <i class="fa fa-power-off text-danger"></i> Log out
-                        </a>
+                            <?php if (count($notifications) > 0) : ?>
+                            <span class="bg-danger notifications-icon"></span>
+                            <?php endif ?>
+                        </button>
+
+                        <div class="dropdown-menu dropdown-menu-right py-0" aria-labelledby="dropdown-notifications" style="z-index: 1111">
+                            <p class="font-weight-bold mb-0 px-4 py-2">Notifications (<?= count($notifications) ?>)</p>
+
+                            <div class="dropdown-divider my-0"></div>
+
+                            <?php foreach ($notifications as $notification) : ?>
+                            <div class="dropdown-item py-2" style="width: 400px;">
+                                <p class="mb-0 text-wrap">
+                                    <?= $notification->message ?>
+                                </p>
+                                
+                                <div class="d-flex align-items-center justify-content-between small">
+                                    <span class="text-muted">
+                                        <?= time_elapsed(\Carbon\Carbon::parse($notification->created_at, get_user_session()->timezone)->locale(get_user_session()->lang), 1)?>
+                                    </span>
+
+                                    <a class="text-primary" href="<?= absolute_url('/admin/notifications/update/' . $notification->id) ?>">
+                                        <?= __('mark_as_read') ?>
+                                    </a>
+                                </div>
+                            </div>
+                            <?php endforeach ?>
+
+                            <div class="dropdown-divider my-0"></div>
+
+                            <div class="px-4 py-2">
+                                <a class="text-primary" href="<?= absolute_url('/admin/notifications') ?>">
+                                    <?= __('view_more') ?>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endif ?>
+
+                    <div class="dropdown">
+                        <button class="btn btn-danger dropdown-toggle" type="button" id="dropdown-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <?= get_user_session()->name ?>
+                        </button>
+
+                        <div class="dropdown-menu dropdown-menu-right py-0" aria-labelledby="dropdown-menu">
+                            <a class="dropdown-item py-2" href="<?= absolute_url('/admin/settings/' . get_user_session()->id) ?>">
+                                <i class="fa fa-cog"></i> <?= __('settings') ?>
+                            </a>
+
+                            <div class="dropdown-divider my-0"></div>
+
+                            <a class="dropdown-item py-2" href="<?= absolute_url('/logout') ?>">
+                            <i class="fa fa-power-off text-danger"></i> <?= __('logout') ?>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </nav>
 
-            <div class="container-fluid p-4">
+            <div class="container-fluid">
                 <?= $this->section('page_content') ?>
             </div>
         </div>
@@ -63,6 +123,10 @@
     <script defer src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     <?= $this->section('scripts') ?>
     <script defer src="<?= absolute_url('/public/js/index.js') ?>"></script>
+
+    <?php if (get_user_session()->theme === 'dark') : ?>
+    <script defer src="<?= absolute_url('/public/js/theme.js') ?>"></script>
+    <?php endif ?>
 </body>
 
 </html>

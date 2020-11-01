@@ -56,6 +56,17 @@ class Request
     {
         return self::getQueries()[$field] ?? '';
     }
+
+    /**
+     * check if get query exists
+     *
+     * @param  string $field
+     * @return bool
+     */
+    public static function hasQuery(string $field) : bool
+    {
+        return !empty(self::getQuery($field));
+    }
     
     /**
      * set query value
@@ -88,6 +99,17 @@ class Request
     public static function getField(string $field) 
     {
         return self::getFields()[$field] ?? '';
+    }
+
+    /**
+     * check if post field exists
+     *
+     * @param  string $field
+     * @return bool
+     */
+    public static function hasField(string $field) : bool
+    {
+        return !empty(self::getField($field));
     }
     
     /**

@@ -17,18 +17,18 @@ class DownloadHelper
     protected static array $mimes_types = [
         'htm' => 'text/html',
         'html' => 'text/html',
+        'csv' => 'text/csv',
         'exe' => 'application/octet-stream',
         'zip' => 'application/zip',
         'doc' => 'application/msword',
-        'jpg' => 'image/jpg',
         'xls' => 'application/vnd.ms-excel',
         'ppt' => 'application/vnd.ms-powerpoint',
         'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-        'gif' => 'image/gif',
         'pdf' => 'application/pdf',
-        'png' => 'image/png',
+        'jpg' => 'image/jpg',
         'jpeg' => 'image/jpg',
-        'csv' => 'text/csv'
+        'gif' => 'image/gif',
+        'png' => 'image/png',
     ];
 
     /**

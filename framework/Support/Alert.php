@@ -24,12 +24,11 @@ class Alert
      * @param  array|string $messages
      * @param  string $title
      * @param  mixed $dissmiss
-     * @return \Framework\Support\Notification
+     * @return \Framework\Support\Alert
      */
-    public static function default($messages, string $title = '', bool $dissmiss = true): self
+    public static function default($messages, bool $dissmiss = true): self
     {
         self::$flash = [
-            'title' => $title,
             'messages' => $messages,
             'display' => 'default',
             'dismiss' => $dissmiss
@@ -43,12 +42,11 @@ class Alert
      *
      * @param  array|string $messages
      * @param  string $title
-     * @return \Framework\Support\Notification
+     * @return \Framework\Support\Alert
      */
-    public static function popup($messages, string $title = ''): self
+    public static function popup($messages): self
     {
         self::$flash = [
-            'title' => $title,
             'messages' => $messages,
             'display' => 'popup'
         ];
@@ -61,12 +59,11 @@ class Alert
      *
      * @param  array|string $messages
      * @param  string $title
-     * @return \Framework\Support\Notification
+     * @return \Framework\Support\Alert
      */
-    public static function toast($messages, string $title = '') : self
+    public static function toast($messages) : self
     {
         self::$flash = [
-            'title' => $title,
             'messages' => $messages,
             'display' => 'toast'
         ];
@@ -77,44 +74,64 @@ class Alert
     /**
      * display success alert
      *
+     * @param  string $title
      * @return void
      */
-    public function success(): void
+    public function success(string $title = 'Success'): void
     {
-        self::$flash = array_merge(self::$flash, ['type' => 'success']);
+        self::$flash = array_merge(self::$flash, [
+            'type' => 'success',
+            'title' => $title,
+        ]);
+
         Session::create(config('app.name') . '_messages', self::$flash);
     }
     
     /**
      * display error alert
      *
+     * @param  string $title
      * @return void
      */
-    public function error(): void
+    public function error(string $title = 'Error'): void
     {
-        self::$flash = array_merge(self::$flash, ['type' => 'danger']);
+        self::$flash = array_merge(self::$flash, [
+            'type' => 'danger',
+            'title' => $title,
+        ]);
+        
         Session::create(config('app.name') . '_messages', self::$flash);
     }
     
     /**
      * display info alert
      *
+     * @param  string $title
      * @return void
      */
-    public function info(): void 
+    public function info(string $title = 'Info'): void 
     {
-        self::$flash = array_merge(self::$flash, ['type' => 'primary']);
+        self::$flash = array_merge(self::$flash, [
+            'type' => 'primary',
+            'title' => $title,
+        ]);
+        
         Session::create(config('app.name') . '_messages', self::$flash);
     }
     
     /**
      * display warning alert
      *
+     * @param  string $title
      * @return void
      */
-    public function warning(): void 
+    public function warning(string $title = 'Warning'): void 
     {
-        self::$flash = array_merge(self::$flash, ['type' => 'warning']);
+        self::$flash = array_merge(self::$flash, [
+            'type' => 'warning',
+            'title' => $title,
+        ]);
+        
         Session::create(config('app.name') . '_messages', self::$flash);
     }
 }

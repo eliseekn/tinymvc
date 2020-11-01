@@ -20,14 +20,14 @@ class AdminPolicy
     public static function handle(): void
     {
         if (!AuthHelper::checkSession()) {
-            Redirect::toUrl('/login')->withError('You must be logged first to access this page');
+            Redirect::toUrl('/login')->withError(__('not_logged_error', true));
         }
         
         if (!AuthHelper::hasRole('administrator')) {
             if (!empty(config('errors.views.403'))) {
                 View::render(config('errors.views.403'), [], 403);
             } else {
-                Response::send([], 'You do not have permission to access this page', 403);
+                Response::send([], __('no_access_permission', true), 403);
             }
         }
     }

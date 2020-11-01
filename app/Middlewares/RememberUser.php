@@ -21,7 +21,7 @@ class RememberUser
     public static function handle(): void
     {
         if (AuthHelper::checkCookie()) {
-            $user = UsersModel::select()->where('email', '=', Encryption::decrypt(Cookies::getUser()))->single();
+            $user = UsersModel::find('email', Encryption::decrypt(Cookies::getUser()))->single();
 
             if ($user !== false) {
                 Session::getUser($user);

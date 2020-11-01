@@ -12,8 +12,8 @@
 ]) ?>
 
 <div class="card mb-5" id="basic-routing">
-    <div class="card-header bg-dark">
-        <span class="text-white lead">Basic routing</span>
+    <div class="card-header ">
+        <span class=" lead">Basic routing</span>
     </div>
 
     <div class="card-body">
@@ -74,8 +74,8 @@ Route::options(string $uri, array $parameters)</code></pre>
 </div>
 
 <div class="card mb-5" id="route-parameters">
-    <div class="card-header bg-dark">
-        <span class="text-white lead" id="route-parameters">Route parameters</span>
+    <div class="card-header ">
+        <span class=" lead" id="route-parameters">Route parameters</span>
     </div>
 
     <div class="card-body">
@@ -169,8 +169,8 @@ Route::options(string $uri, array $parameters)</code></pre>
 </div>
 
 <div class="card" id="uri-parameters">
-    <div class="card-header bg-dark">
-        <span class="text-white lead" id="uri-parameters">URI parameters</span>
+    <div class="card-header ">
+        <span class=" lead" id="uri-parameters">URI parameters</span>
     </div>
 
     <div class="card-body">

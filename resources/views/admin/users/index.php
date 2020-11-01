@@ -1,52 +1,33 @@
 <?php $this->layout('admin/layout', [
-    'page_title' => 'Users | Administration'
+    'page_title' => __('users') . ' | Administration'
 ]) ?>
 
 <?php $this->start('page_content') ?>
 
-<?php $this->insert('partials/breadcrumb', [
-    'items' => [
-        'Dashboard' => absolute_url('/admin/dashboard'),
-        'Users' => ''
-    ]
-]) ?>
-
 <div class="row mb-4">
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-header bg-dark">
-                <i class="fa fa-users fa-lg text-white"></i>
-            </div>
-
+    <div class="col-md-4 mb-md-0 mb-4">
+        <div class="card card-metrics bg-light shadow-sm">
             <div class="card-body d-flex align-items-center justify-content-between">
-                <p class="mb-0">Total</p>
-                <p class="font-weight-bold mb-0 lead"><?= $users->getTotalItems() ?></p>
+                <p class="mb-0 "><i class="fa fa-users fa-lg"></i> <?= __('total') ?></p>
+                <p class="font-weight-bold mb-0 "><?= $users->getTotalItems() ?></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-md-0 mb-4">
+        <div class="card card-metrics bg-light shadow-sm">
+            <div class="card-body d-flex align-items-center justify-content-between">
+                <p class="mb-0 "><i class="fa fa-user-check fa-lg"></i> <?= __('active') ?></p>
+                <p class="font-weight-bold mb-0 "><?= count($active_users) ?></p>
             </div>
         </div>
     </div>
 
     <div class="col-md-4">
-        <div class="card">
-            <div class="card-header bg-dark">
-                <i class="fa fa-user-check fa-lg text-white"></i>
-            </div>
-
+        <div class="card card-metrics bg-light shadow-sm">
             <div class="card-body d-flex align-items-center justify-content-between">
-                <p class="mb-0">Active</p>
-                <p class="font-weight-bold mb-0 lead"><?= count($active_users) ?></p>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-header bg-dark">
-                <i class="fa fa-user-clock fa-lg text-white"></i>
-            </div>
-
-            <div class="card-body d-flex align-items-center justify-content-between">
-                <p class="mb-0">Online</p>
-                <p class="font-weight-bold mb-0 lead"><?= count($online_users) ?></p>
+                <p class="mb-0 "><i class="fa fa-user-clock fa-lg"></i> <?= __('online') ?></p>
+                <p class="font-weight-bold mb-0 "><?= count($online_users) ?></p>
             </div>
         </div>
     </div>
@@ -56,37 +37,33 @@
     $this->insert('partials/alert', get_flash_messages());
 endif ?>
 
-<div class="card">
-    <div class="card-header bg-dark">
-        <div class="d-flex flex-lg-row flex-sm-column align-items-lg-center justify-content-lg-between">
-            <span class="text-white lead">Users</span>
+<div class="card shadow-sm">
+    <div class="card-header">
+        <div class="d-flex flex-md-row flex-column align-items-lg-center justify-content-lg-between">
+            <span><?= __('users') ?></span>
 
-            <span>
-                <a href="<?= absolute_url('/admin/users/new') ?>" class="btn btn-primary">New</a>
-                
-                <upload-modal action="<?= absolute_url('/admin/users/import') ?>"></upload-modal>
-                <export-modal action="<?= absolute_url('/admin/users/export') ?>"></export-modal>
+            <div class="d-flex flex-md-row flex-column mt-md-0 mt-2">
+                <span class="mr-md-3">
+                    <input type="search" class="form-control" id="filter" placeholder="<?= __('search') ?>">
+                </span>
 
-                <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('/admin/users/delete') ?>">
-                    Bulk delete
-                </button>
-            </span>
+                <span class="mt-md-0 mt-2">
+                    <a href="<?= absolute_url('/admin/users/new') ?>" class="btn btn-primary"><?= __('new') ?></a>
+                    
+                    <upload-modal action="<?= absolute_url('/admin/users/import') ?>" title="<?= __('import') ?>"></upload-modal>
+                    <export-modal action="<?= absolute_url('/admin/users/export') ?>" title="<?= __('export') ?>"></export-modal>
+
+                    <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('/admin/users/delete') ?>">
+                        <?= __('delete') ?>
+                    </button>
+                </span>
+            </div>
         </div>
     </div>
 
     <div class="card-body">
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <div class="input-group-text bg-white">
-                    <i class="fa fa-search"></i>
-                </div>
-            </div>
-
-            <input type="search" class="form-control border-left-0" id="filter" placeholder="Filter results">
-        </div>
-
         <div class="table-responsive">
-            <table class="table table-striped table-hover">
+            <table class="table table-striped table-hover mb-0">
                 <thead>
                     <tr>
                         <th scope="col">
@@ -96,13 +73,13 @@ endif ?>
                             </div>
                         </th>
 
-                        <th scope="col"><i class="fa fa-sort"></i> ID</th>
-                        <th scope="col"><i class="fa fa-sort"></i> Name</th>
-                        <th scope="col"><i class="fa fa-sort"></i> Email</th>
-                        <th scope="col"><i class="fa fa-sort"></i> Role</th>
-                        <th scope="col"><i class="fa fa-sort"></i> Account</th>
-                        <th scope="col"><i class="fa fa-sort"></i> Status</th>
-                        <th scope="col"><i class="fa fa-sort"></i> Created at</th>
+                        <th scope="col"><i class="fa fa-sort"></i> #</th>
+                        <th scope="col"><i class="fa fa-sort"></i> <?= __('name') ?></th>
+                        <th scope="col"><i class="fa fa-sort"></i> <?= __('email') ?></th>
+                        <th scope="col"><i class="fa fa-sort"></i> <?= __('role') ?></th>
+                        <th scope="col"><i class="fa fa-sort"></i> <?= __('account') ?></th>
+                        <th scope="col"><i class="fa fa-sort"></i> <?= __('status') ?></th>
+                        <th scope="col"><i class="fa fa-sort"></i> <?= __('created_at') ?></th>
                         <th scope="col"></th>
                     </tr>
                 </thead>
@@ -129,21 +106,21 @@ endif ?>
 
                         <td>
                             <?php if ($user->active) : ?>
-                            <span class="badge badge-pill badge-success">Active</span>
+                            <span class="badge badge-pill badge-success"><?= __('active') ?></span>
                             <?php else : ?>
-                            <span class="badge badge-pill badge-danger">Inactive</span>
+                            <span class="badge badge-pill badge-danger"><?= __('inactive') ?></span>
                             <?php endif ?>
                         </td>
 
                         <td>
                             <?php if ($user->online) : ?>
-                            <span class="badge badge-pill badge-success">Online</span>
+                            <span class="badge badge-pill badge-success"><?= __('online') ?></span>
                             <?php else : ?>
-                            <span class="badge badge-pill badge-danger">Offline</span>
+                            <span class="badge badge-pill badge-danger"><?= __('offline') ?></span>
                             <?php endif ?>
                         </td>
 
-                        <td><?= \Carbon\Carbon::parse($user->created_at)->locale('en')->isoFormat('MMM. Do, YYYY') ?></td>
+                        <td><?= \Carbon\Carbon::parse($user->created_at, get_user_session()->timezone)->locale(get_user_session()->lang)->isoFormat('MMM Do, YYYY') ?></td>
 
                         <td>
                             <a class="btn text-primary" href="<?= absolute_url('/admin/users/view/' . $user->id) ?>" title="View item">
@@ -174,7 +151,7 @@ endif ?>
     </div>
 
     <div class="card-footer d-flex align-items-center justify-content-between">
-        <span>Total result(s): <span class="font-weight-bold"><?= $users->getTotalItems() ?></span></span>
+        <span><?= __('total_results') ?> <span class="font-weight-bold"><?= $users->getTotalItems() ?></span></span>
 
         <?php $this->insert('partials/pagination', [
             'pagination' => $users

@@ -12,8 +12,8 @@
 ]) ?>
 
 <div class="card mb-5" id="basic-routing">
-    <div class="card-header bg-dark">
-        <span class="text-white lead">URL Redirection</span>
+    <div class="card-header ">
+        <span class=" lead">URL Redirection</span>
     </div>
 
     <div class="card-body">

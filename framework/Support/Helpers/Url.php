@@ -93,14 +93,14 @@ if (!function_exists('current_url')) {
 	}
 }
 
-if (!function_exists('exists_uri')) {	
+if (!function_exists('url_exists')) {	
 	/**
 	 * check if current url contains specific string
 	 *
 	 * @param  string $str
 	 * @return bool
 	 */
-	function exists_uri(string $str): bool
+	function url_exists(string $str): bool
 	{
 		return preg_match('/' . $str . '/', current_url());
 	}

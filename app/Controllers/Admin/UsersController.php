@@ -25,7 +25,7 @@ class UsersController
     public function index(): void
     {
         View::render('admin/users/index', [
-            'users' => UsersModel::select()->orderBy('name', 'ASC')->paginate(50),
+            'users' => UsersModel::select()->orderAsc('name')->paginate(50),
             'online_users' => UsersModel::find('online', 1)->all(),
 			'active_users' => UsersModel::find('active', 1)->all(),
         ]);
@@ -55,7 +55,7 @@ class UsersController
 		$roles = RolesModel::select()->all();
 
 		if ($user === false) {
-			Alert::toast('This user does not exists', 'User not exists')->error();
+			Alert::toast(__('user_not_found'))->error();
 			Redirect::back()->only();
 		}
 
@@ -76,18 +76,18 @@ class UsersController
         }
 
 		if (UsersModel::find('email', Request::getField('email'))->exists()) {
-			Alert::toast('This email address already exists', 'User not created')->error();
+			Alert::toast(__('user_already_exists'))->error();
             Redirect::back()->only();
 		}
 
-	   $id = UsersModel::insert([
+	    $id = UsersModel::insert([
             'name' => Request::getField('name'),
             'email' => Request::getField('email'),
             'password' => hash_string(Request::getField('password')),
-			'role' => Request::getField('role')
+            'role' => Request::getField('role')
 		]);
 
-		Alert::toast('The user has been created successfully', 'User created')->success();
+		Alert::toast(__('user_created'))->success();
 		Redirect::toUrl('admin/users/view/' . $id)->only();
     }
 	
@@ -102,7 +102,7 @@ class UsersController
 		$user = UsersModel::find('id', $id)->single();
 		
 		if ($user === false) {
-			Alert::toast('This user does not exists', 'User not exists')->error();
+			Alert::toast(__('user_not_found'))->error();
 			Redirect::back()->only();
 		}
 
@@ -124,7 +124,7 @@ class UsersController
         }
 
 		if (!UsersModel::find('id', $id)->exists()) {
-			Alert::toast('This user does not exists', 'User not exists')->error();
+			Alert::toast(__('user_not_found'))->error();
 			Redirect::back()->only();
 		}
 
@@ -132,8 +132,7 @@ class UsersController
             'name' => Request::getField('name'),
             'email' => Request::getField('email'),
             'role' => Request::getField('role'),
-            'active' => Request::getField('account_state'),
-            'updated_at' => date("Y-m-d H:i:s")
+            'active' => Request::getField('account_state')
 		];
 		
 		if (!empty(Request::getField('password'))) {
@@ -148,7 +147,7 @@ class UsersController
             Session::setUser($user);
         }
 
-		Alert::toast('The user has been updated successfully', 'User updated')->success();
+		Alert::toast(__('user_updated'))->success();
         Redirect::toUrl('admin/users/view/' . $id)->only();
     }
 
@@ -162,11 +161,12 @@ class UsersController
 	{
 		if (!is_null($id)) {
 			if (!UsersModel::find('id', $id)->exists()) {
-				Alert::toast('This user does not exists', 'User not exists')->error();
+				Alert::toast(__('user_not_found'))->error();
 			}
 	
 			UsersModel::delete()->where('id', $id)->persist();
-			Alert::toast('The user has been deleted successfully', 'User deleted')->success();
+			Alert::toast(__('user_deleted'))->success();
+            Redirect::back()->only();
 		} else {
 			$users_id = json_decode(Request::getRawData(), true);
 			$users_id = $users_id['items'];
@@ -175,7 +175,7 @@ class UsersController
 				UsersModel::delete()->where('id', $id)->persist();
 			}
 			
-			Alert::toast('The selected users have been deleted successfully', 'Users deleted')->success();
+			Alert::toast(__('users_deleted'))->success();
 		}
 	}
 
@@ -189,12 +189,12 @@ class UsersController
         $file = Request::getFile('file', ['csv']);
 
 		if (!$file->isAllowed()) {
-			Alert::toast('Only file of type extension .csv are allowed', 'File type error')->error();
+			Alert::toast(__('import_file_type_error'))->error();
             Redirect::back()->only();
 		}
 
 		if (!$file->isUploaded()) {
-			Alert::toast('Failed to import users data', 'Users not imported')->error();
+			Alert::toast(__('import_data_error'))->error();
 			Redirect::back()->only();
 		}
 
@@ -204,7 +204,7 @@ class UsersController
 			'password' => 'Password'
 		]);
 
-		Alert::toast('The users have been imported successfully', 'Users imported')->success();
+		Alert::toast(__('data_imported'))->success();
 		Redirect::back()->only();
 	}
 	

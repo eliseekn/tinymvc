@@ -1,23 +1,15 @@
 <?php $this->layout('admin/layout', [
-    'page_title' => 'View role | Administration'
+    'page_title' => __('summary') . ' | Administration'
 ]) ?>
 
 <?php $this->start('page_content') ?>
-
-<?php $this->insert('partials/breadcrumb', [
-    'items' => [
-        'Dashboard' => absolute_url('/admin/dashboard'),
-        'Roles' => absolute_url('/admin/roles'),
-        'View' => ''
-    ]
-]) ?>
 
 <?php if (flash_messages()) :
     $this->insert('partials/alert', get_flash_messages());
 endif ?>
 
-<div class="card">
-    <div class="card-header bg-dark text-white lead">View role</div>
+<div class="card shadow-sm">
+    <div class="card-header"><?= __('summary') ?></div>
 
     <div class="card-body">
         <div class="form-group row">
@@ -26,30 +18,30 @@ endif ?>
         </div>
 
         <div class="form-group row">
-            <p class="col-sm-2 col-form-label">Title</p>
+            <p class="col-sm-2 col-form-label"><?= __('title') ?></p>
             <div class="col-form-label col-sm-10 font-weight-bold"><?= $role->title ?></div>
         </div>
 
         <div class="form-group row">
-            <p class="col-sm-2 col-form-label">Slug</p>
+            <p class="col-sm-2 col-form-label"><?= __('slug') ?></p>
             <div class="col-form-label col-sm-10 font-weight-bold"><?= $role->slug ?></div>
         </div>
 
         <div class="form-group row">
-            <p class="col-sm-2 col-form-label">Description</p>
+            <p class="col-sm-2 col-form-label"><?= __('description') ?></p>
             <div class="col-form-label col-sm-10 font-weight-bold"><?= html_entity_decode($role->description) ?></div>
         </div>
 
         <div class="form-group row">
-            <p class="col-sm-2 col-form-label">Created at</p>
-            <div class="col-form-label col-sm-10 font-weight-bold"><?= \Carbon\Carbon::parse($role->created_at)->locale('en')->isoFormat('MMM. Do, YYYY') ?></div>
+            <p class="col-sm-2 col-form-label"><?= __('created_at') ?></p>
+            <div class="col-form-label col-sm-10 font-weight-bold"><?= \Carbon\Carbon::parse($role->created_at)->locale(get_user_session()->lang)->isoFormat('MMM Do, YYYY') ?></div>
         </div>
     </div>
 
     <div class="card-footer">
-        <a href="<?= absolute_url('/admin/roles/edit/' . $role->id) ?>" class="btn btn-primary">Edit</a>
-        <confirm-delete type="text" content="Delete" action="<?= absolute_url('/admin/roles/delete/' . $role->id) ?>" redirect="<?= current_url() ?>"></confirm-delete>
-        <a href="<?= absolute_url('/admin/roles') ?>" class="btn btn-secondary ml-2">Cancel</a>
+        <a href="<?= absolute_url('/admin/roles/edit/' . $role->id) ?>" class="btn btn-primary"><?= __('edit') ?></a>
+        <confirm-delete type="text" content="<?= __('delete') ?>" action="<?= absolute_url('/admin/roles/delete/' . $role->id) ?>" redirect="<?= current_url() ?>"></confirm-delete>
+        <a href="<?= absolute_url('/admin/roles') ?>" class="btn btn-secondary ml-2"><?= __('cancel') ?></a>
     </div>
 </div>
 

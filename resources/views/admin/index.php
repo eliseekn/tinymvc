@@ -12,12 +12,12 @@
 
 <div class="row mb-4">
     <div class="col-md-4">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center bg-dark lead">
-                <span class="text-white">Total users</span>
+        <div class="card shadow-sm mb-4 mb-md-0">
+            <div class="card-header d-flex justify-content-between align-items-center ">
+                <span class=""><?= __('total_users') ?></span>
 
                 <a href="<?= absolute_url('/admin/users') ?>" title="Users">
-                    <i class="fa fa-dot-circle text-white"></i>
+                    <i class="fa fa-dot-circle text-dark"></i>
                 </a>
             </div>
 
@@ -36,12 +36,12 @@
     </div>
 
     <div class="col-md-8">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center bg-dark lead">
-                <span class="text-white">Users count</span>
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center ">
+                <span class=""><?= __('registered_users') ?></span>
 
                 <a href="<?= absolute_url('/admin/users/new') ?>" title="New user">
-                    <i class="fa fa-dot-circle text-white"></i>
+                    <i class="fa fa-dot-circle text-dark"></i>
                 </a>
             </div>
 

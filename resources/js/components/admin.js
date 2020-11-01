@@ -49,6 +49,34 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     }
 
+    //mark notifications as read
+    if (document.querySelector('#bulk-read')) {
+        document.querySelector('#bulk-read').addEventListener('click', event => {
+            const innerHTML = event.target.innerHTML
+            event.target.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>'
+
+            if (window.confirm('Are you sure want to mark all selected notifications as read?')) {
+                items = []
+
+                document.querySelectorAll('.table input[type=checkbox]').forEach(element => {
+                    if (element.id !== 'select-all' && element.checked) {
+                        items.push(element.dataset.id)
+                    }
+                })
+
+                if (items.length > 0) {
+                    fetch(event.target.dataset.url, {
+                        method: 'post',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({items: items})
+                    }).then(() => window.location.reload())
+                }
+            } 
+            
+            event.target.innerHTML = innerHTML
+        })
+    }
+
     //filter tables
     //https://stackoverflow.com/questions/51187477/how-to-filter-a-html-table-using-simple-javascript
     if (document.querySelector('#filter')) {

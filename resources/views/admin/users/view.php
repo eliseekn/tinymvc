@@ -1,23 +1,15 @@
 <?php $this->layout('admin/layout', [
-    'page_title' => 'View user | Administration'
+    'page_title' => __('summary') . ' | Administration'
 ]) ?>
 
 <?php $this->start('page_content') ?>
-
-<?php $this->insert('partials/breadcrumb', [
-    'items' => [
-        'Dashboard' => absolute_url('/admin/dashboard'),
-        'Users' => absolute_url('/admin/users'),
-        'View' => ''
-    ]
-]) ?>
 
 <?php if (flash_messages()) : 
     $this->insert('partials/alert', get_flash_messages());
 endif ?>
 
-<div class="card">
-    <div class="card-header bg-dark text-white lead">View user</div>
+<div class="card shadow-sm">
+    <div class="card-header"><?= __('summary') ?></div>
 
     <div class="card-body">
         <div class="form-group row">
@@ -26,56 +18,56 @@ endif ?>
         </div>
 
         <div class="form-group row">
-            <p class="col-sm-2 col-form-label">Name</p>
+            <p class="col-sm-2 col-form-label"><?= __('name') ?></p>
             <div class="col-form-label col-sm-10 font-weight-bold"><?= $user->name ?></div>
         </div>
 
         <div class="form-group row">
-            <p class="col-sm-2 col-form-label">Email address</p>
+            <p class="col-sm-2 col-form-label"><?= __('email') ?></p>
             <div class="col-form-label col-sm-10 font-weight-bold"><?= $user->email ?></div>
         </div>
 
         <div class="form-group row">
-            <p class="col-sm-2 col-form-label">Created at</p>
-            <div class="col-form-label col-sm-10 font-weight-bold"><?= \Carbon\Carbon::parse($user->created_at)->locale('en')->isoFormat('MMM. Do, YYYY') ?></div>
+            <p class="col-sm-2 col-form-label"><?= __('created_at') ?></p>
+            <div class="col-form-label col-sm-10 font-weight-bold"><?= \Carbon\Carbon::parse($user->created_at)->locale(get_user_session()->lang)->isoFormat('MMM Do, YYYY') ?></div>
         </div>
 
         <div class="form-group row">
-            <p class="col-form-label col-sm-2">Role</p>
+            <p class="col-form-label col-sm-2"><?= __('role') ?></p>
             <div class="col-form-label col-sm-10 font-weight-bold"><?= $user->role ?></div>
         </div>
 
         <div class="form-group row">
-            <p class="col-form-label col-sm-2">Account</p>
+            <p class="col-form-label col-sm-2"><?= __('account') ?></p>
             <div class="col-form-label col-sm-10 font-weight-bold">
                 <?php if ($user->active) : ?>
-                <span class="badge badge-pill badge-success">Active</span>
+                <span class="badge badge-pill badge-success"><?= __('active') ?></span>
                 <?php else : ?>
-                <span class="badge badge-pill badge-danger">Inactive</span>
+                <span class="badge badge-pill badge-danger"><?= __('inactive') ?></span>
                 <?php endif ?>
             </div>
         </div>
 
         <div class="form-group row">
-            <p class="col-form-label col-sm-2">Status</p>
+            <p class="col-form-label col-sm-2"><?= __('status') ?></p>
             <div class="col-form-label col-sm-10 font-weight-bold">
                 <?php if ($user->online) : ?>
-                <span class="badge badge-pill badge-success">Online</span>
+                <span class="badge badge-pill badge-success"><?= __('online') ?></span>
                 <?php else : ?>
-                <span class="badge badge-pill badge-danger">Offline</span>
+                <span class="badge badge-pill badge-danger"><?= __('offline') ?></span>
                 <?php endif ?>
             </div>
         </div>
     </div>
 
     <div class="card-footer">
-        <a href="<?= absolute_url('/admin/users/edit/' . $user->id) ?>" class="btn btn-primary">Edit</a>
+        <a href="<?= absolute_url('/admin/users/edit/' . $user->id) ?>" class="btn btn-primary"><?= __('edit') ?></a>
 
         <?php if (!\App\Helpers\AuthHelper::hasRole('administrator')) : ?>
-        <confirm-delete type="text" content="Delete" action="<?= absolute_url('/admin/users/delete/' . $user->id) ?>" redirect="<?= current_url() ?>"></confirm-delete>
+        <confirm-delete type="text" content="<?= __('delete') ?>" action="<?= absolute_url('/admin/users/delete/' . $user->id) ?>" redirect="<?= current_url() ?>"></confirm-delete>
         <?php endif ?>
         
-        <a href="<?= absolute_url('/admin/users') ?>" class="btn btn-secondary ml-2">Cancel</a>
+        <a href="<?= absolute_url('/admin/users') ?>" class="btn btn-secondary ml-2"><?= __('cancel') ?></a>
     </div>
 </div>
 

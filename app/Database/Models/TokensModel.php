@@ -4,12 +4,12 @@ namespace App\Database\Models;
 
 use Framework\ORM\Model;
 
-class PasswordResetModel extends Model
+class TokensModel extends Model
 {    
     /**
      * name of table
      *
      * @var string
      */
-    protected static $table = 'password_reset';
+    protected static $table = 'tokens';
 }

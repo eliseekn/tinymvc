@@ -3,7 +3,7 @@
         <?php if ($pagination->hasLess()) : ?>
 
         <li class="page-item">
-            <a class="page-link" href="<?= $pagination->previousPageUrl() ?>">Previous</a>
+            <a class="page-link" href="<?= $pagination->previousPageUrl() ?>"><?= __('previous') ?></a>
         </li>
 
         <?php 
@@ -25,7 +25,7 @@
         ?>
 
         <li class="page-item">
-            <a class="page-link" href="<?= $pagination->nextPageUrl() ?>">Next</a>
+            <a class="page-link" href="<?= $pagination->nextPageUrl() ?>"><?= __('next') ?></a>
         </li>
 
         <?php endif ?>

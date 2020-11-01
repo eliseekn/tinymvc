@@ -7,7 +7,7 @@ class ExportModal extends HTMLElement {
     }
 
     connectedCallback() {
-        this.innerHTML = '<button class="btn btn-primary mx-2">Export</button>'
+        this.innerHTML = `<button class="btn btn-primary mx-2">${this.getAttribute('title')}</button>`
     }
 
     showDialog() {

@@ -14,7 +14,7 @@
 <body>
     <div class="d-flex" id="wrapper">
         <div class="bg-light border-light border-right min-vh-100" id="sidebar-wrapper">
-            <div class="sidebar-title bg-dark text-light">
+            <div class="sidebar-title  text-light">
                 <i class="fa fa-book"></i> Documentation
             </div>
 
@@ -29,28 +29,28 @@
                 
                 <div class="list-group list-group-flush">
                     <a href="<?= absolute_url('/docs/routing') ?>" class="list-group-item list-group-item-action bg-light" style="padding-left: 2.5em">
-                        <i class="fa fa-dot-circle <?php if (exists_uri('routing')) : echo 'text-primary'; endif ?>"></i> Routing
+                        <i class="fa fa-dot-circle <?php if (url_exists('routing')) : echo 'text-primary'; endif ?>"></i> Routing
                     </a>
                     <a href="<?= absolute_url('/docs/middlewares') ?>" class="list-group-item list-group-item-action bg-light" style="padding-left: 2.5em">
-                        <i class="fa fa-dot-circle <?php if (exists_uri('middlewares')) : echo 'text-primary'; endif ?>"></i> Middlewares
+                        <i class="fa fa-dot-circle <?php if (url_exists('middlewares')) : echo 'text-primary'; endif ?>"></i> Middlewares
                     </a>
                     <a href="<?= absolute_url('/docs/controllers') ?>" class="list-group-item list-group-item-action bg-light" style="padding-left: 2.5em">
-                        <i class="fa fa-dot-circle <?php if (exists_uri('controllers')) : echo 'text-primary'; endif ?>"></i> Controllers
+                        <i class="fa fa-dot-circle <?php if (url_exists('controllers')) : echo 'text-primary'; endif ?>"></i> Controllers
                     </a>
                     <a href="<?= absolute_url('/docs/views') ?>" class="list-group-item list-group-item-action bg-light" style="padding-left: 2.5em">
-                        <i class="fa fa-dot-circle <?php if (exists_uri('views')) : echo 'text-primary'; endif ?>"></i> Views
+                        <i class="fa fa-dot-circle <?php if (url_exists('views')) : echo 'text-primary'; endif ?>"></i> Views
                     </a>
                     <a href="<?= absolute_url('/docs/requests') ?>" class="list-group-item list-group-item-action bg-light" style="padding-left: 2.5em">
-                        <i class="fa fa-dot-circle <?php if (exists_uri('requests')) : echo 'text-primary'; endif ?>"></i> HTTP Requests
+                        <i class="fa fa-dot-circle <?php if (url_exists('requests')) : echo 'text-primary'; endif ?>"></i> HTTP Requests
                     </a>
                     <a href="<?= absolute_url('/docs/responses') ?>" class="list-group-item list-group-item-action bg-light" style="padding-left: 2.5em">
-                        <i class="fa fa-dot-circle <?php if (exists_uri('responses')) : echo 'text-primary'; endif ?>"></i> HTTP Responses
+                        <i class="fa fa-dot-circle <?php if (url_exists('responses')) : echo 'text-primary'; endif ?>"></i> HTTP Responses
                     </a>
                     <a href="<?= absolute_url('/docs/client') ?>" class="list-group-item list-group-item-action bg-light" style="padding-left: 2.5em">
-                        <i class="fa fa-dot-circle <?php if (exists_uri('client')) : echo 'text-primary'; endif ?>"></i> HTTP Client
+                        <i class="fa fa-dot-circle <?php if (url_exists('client')) : echo 'text-primary'; endif ?>"></i> HTTP Client
                     </a>
                     <a href="<?= absolute_url('/docs/redirection') ?>" class="list-group-item list-group-item-action bg-light" style="padding-left: 2.5em">
-                        <i class="fa fa-dot-circle <?php if (exists_uri('redirection')) : echo 'text-primary'; endif ?>"></i> URL Redirection
+                        <i class="fa fa-dot-circle <?php if (url_exists('redirection')) : echo 'text-primary'; endif ?>"></i> URL Redirection
                     </a>
 
                     <a href="#" class="list-group-item list-group-item-action bg-light">
@@ -61,13 +61,13 @@
         </div>
 
         <div id="page-content-wrapper">
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+            <nav class="navbar navbar-expand-lg navbar-dark  px-4">
                 <button class="btn border-light text-light" id="sidebar-toggler" title="Toggle sidebar">
                     <i class="fa fa-bars"></i>
                 </button>
 
                 <div class="ml-auto">
-                    <span class="text-white">v2</span>
+                    <span class="">v2</span>
                 </div>
             </nav>
 

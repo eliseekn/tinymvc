@@ -6,9 +6,12 @@
  * @link https://github.com/eliseekn/TinyMVC
  */
 
+use Carbon\Carbon;
+
 /**
  * Sessions management functions
  */
+
 
 if (!function_exists('start_session')) {
 	/**
@@ -18,7 +21,12 @@ if (!function_exists('start_session')) {
 	 */
 	function start_session(): void
 	{
+
 		if (session_status() === PHP_SESSION_NONE) {
+            //https://stackoverflow.com/questions/8311320/how-to-change-the-session-timeout-in-php/8311400
+            ini_set('session.gc_maxlifetime', config('session.lifetime'));
+            session_set_cookie_params(config('session.lifetime'));
+            
 			session_start();
 		}
 	}
@@ -117,4 +125,17 @@ if (!function_exists('get_user_session')) {
 	{
 		return get_session(config('app.name') . '_user');
 	}
+}
+
+if (!function_exists('auth_attempts_exceeded')) {    
+    /**
+     * check auth attempts exceeded
+     *
+     * @return bool
+     */
+    function auth_attempts_exceeded(): bool
+    {
+        $unlock_timeout = Carbon::parse(get_session('auth_attempts_timeout'))->addMinutes(config('security.auth.unlock_timeout')) > Carbon::now();
+        return session_has('auth_attempts') && get_session('auth_attempts') > config('security.auth.max_attempts') && $unlock_timeout;
+    }
 }

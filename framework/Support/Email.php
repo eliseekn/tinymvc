@@ -98,6 +98,17 @@ class Email
     }
 
     /**
+     * set message as html
+     *
+     * @param  string $message
+     * @return \Framework\Support\Email
+     */
+    public function html(string $message): self
+    {
+        return $this->message($message)->asHTML();
+    }
+
+    /**
      * set email format to HTML
      *
      * @return \Framework\Support\Email

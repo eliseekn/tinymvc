@@ -1,7 +1,7 @@
 {
 	"private": true,
 	"scripts": {
-		"parcel-watch": "parcel watch resources/js/index.js -d public/js",
+		"parcel-watch": "parcel watch resources/js/index.js resources/js/theme.js -d public/js",
 		"sass-watch": "sass --watch resources/scss:public/css --style=compressed",
 		"parcel-build": "parcel build resources/js/index.js -d public/js",
 		"build": "yarn parcel-build",

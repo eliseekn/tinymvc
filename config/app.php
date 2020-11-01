@@ -12,9 +12,10 @@
 
 $config = [
     'app' => [
-        'name' => 'tinymvc',
+        'name' => 'TinyMVC',
         'folder' => '/tinymvc', //or leave empty if you are using 'www' root
-        'url' => 'http://localhost/tinymvc' //do not forget to remove folder if you are using 'www' root
+        'url' => 'http://localhost/tinymvc', //do not forget to remove folder if you are using 'www' root
+        'lang' => 'en'
     ],
 
     //mysql
@@ -68,5 +69,9 @@ $config = [
         'models' => APP_ROOT . 'app' . DIRECTORY_SEPARATOR . 'Database' . DIRECTORY_SEPARATOR . 'Models' . DIRECTORY_SEPARATOR,
         'middlewares' => APP_ROOT . 'app' . DIRECTORY_SEPARATOR . 'Middlewares' . DIRECTORY_SEPARATOR,
         'requests' => APP_ROOT . 'app' . DIRECTORY_SEPARATOR . 'Requests' . DIRECTORY_SEPARATOR
+    ],
+
+    'session' => [
+        'lifetime' => 3600 //1 hour in seconds
     ]
 ];

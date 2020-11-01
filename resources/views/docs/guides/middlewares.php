@@ -12,8 +12,8 @@
 ]) ?>
 
 <div class="card mb-5" id="basic-routing">
-    <div class="card-header bg-dark">
-        <span class="text-white lead">Middlewares</span>
+    <div class="card-header ">
+        <span class=" lead">Middlewares</span>
     </div>
 
     <div class="card-body">

@@ -5,41 +5,36 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Forgot password page">
+    <meta name="description" content="<?= __('forgot_password', true) ?>">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <title>Forgot password</title>
+    <title><?= __('forgot_password', true) ?></title>
 </head>
 
 <body>
     <div class="d-flex align-items-center justify-content-center min-vh-100">
         <div class="container" style="width: 400px">
-            <h1 class="text-center">Forgot password</h1>
+            <h1 class="text-center"><?= __('forgot_password', true) ?></h1>
             
             <div class="card my-3 mb-3">
 				<div class="card-body bg-light">
 					<p class="card-text">
-						Enter the email address associated with your account.
-						We will send you a link to this email address to reset your password.
+                        <?= __('reset_password_instructions', true) ?>
 					</p>
 				</div>
 			</div>
 
             <?php if (flash_messages()) : 
-                $this->insert('partials/alert', [
-                    'messages' => get_flash_messages(),
-                    'display' => 'alert',
-                    'dismiss' => true
-                ]);
+                $this->insert('partials/alert', get_flash_messages());
             endif ?>
 
             <div class="card shadow p-4">
                 <form method="post" action="<?= absolute_url('/password/notify') ?>">
                     <div class="form-group">
-                        <label for="email">Email address</label>
+                        <label for="email"><?= __('email', true) ?></label>
                         <input type="email" id="email" name="email" class="form-control">
                     </div>
 
-                    <button type="submit" class="btn btn-block btn-primary loading">Submit</button>
+                    <button type="submit" class="btn btn-block btn-primary loading"><?= __('submit', true) ?></button>
                 </form>
             </div>
 

@@ -7,7 +7,7 @@ class UploadModal extends HTMLElement {
     }
 
     connectedCallback() {
-        this.innerHTML = '<button class="btn btn-primary ml-2">Import</button>'
+        this.innerHTML = `<button class="btn btn-primary ml-2">${this.getAttribute('title')}</button>`
     }
 
     showDialog() {

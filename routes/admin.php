@@ -26,10 +26,20 @@ Route::group([
 
 Route::group([
     'users/delete/{id:num}' => ['handler' => 'Admin\UsersController@delete'],
-    'roles/delete/{id:num}' => ['handler' => 'Admin\RolesController@delete']
+    'roles/delete/{id:num}' => ['handler' => 'Admin\RolesController@delete'],
+
+    'notifications/delete/{id:num}' => ['handler' => 'Admin\NotificationsController@delete'],
 ])->by([
     'method' => 'DELETE',
     'prefix' => 'admin',
+    'middlewares' => [
+        'RememberUser',
+        'AdminPolicy'
+    ]
+]);
+
+Route::get('/admin/notifications/update/{id:num}', [
+    'handler' => 'Admin\NotificationsController@update',
     'middlewares' => [
         'RememberUser',
         'AdminPolicy'
@@ -45,7 +55,10 @@ Route::group([
     'roles' => ['handler' => 'Admin\RolesController@index'],
     'roles/new' => ['handler' => 'Admin\RolesController@new'],
     'roles/edit/{id:num}' => ['handler' => 'Admin\RolesController@edit'],
-    'roles/view/{id:num}' => ['handler' => 'Admin\RolesController@view']
+    'roles/view/{id:num}' => ['handler' => 'Admin\RolesController@view'],
+
+    'settings/{id:num}' => ['handler' => 'Admin\SettingsController@index'],
+    'notifications' => ['handler' => 'Admin\NotificationsController@index']
 ])->by([
     'method' => 'GET',
     'prefix' => 'admin',
@@ -62,7 +75,10 @@ Route::group([
 
     'roles/delete' => ['handler' => 'Admin\RolesController@delete'],
     'roles/import' => ['handler' => 'Admin\RolesController@import'],
-    'roles/export' => ['handler' => 'Admin\RolesController@export']
+    'roles/export' => ['handler' => 'Admin\RolesController@export'],
+
+    'notifications/delete' => ['handler' => 'Admin\NotificationsController@delete'],
+    'notifications/update' => ['handler' => 'Admin\NotificationsController@update']
 ])->by([
     'method' => 'POST',
     'prefix' => 'admin',
@@ -77,7 +93,9 @@ Route::group([
     'users/update/{id:num}' => ['handler' => 'Admin\UsersController@update'],
 
     'roles/create' => ['handler' => 'Admin\RolesController@create'],
-    'roles/update/{id:num}' => ['handler' => 'Admin\RolesController@update']
+    'roles/update/{id:num}' => ['handler' => 'Admin\RolesController@update'],
+
+    'settings/update/{parameter:str}/{id:num}' => ['handler' => 'Admin\SettingsController@update'],
 ])->by([
     'method' => 'POST',
     'prefix' => 'admin',

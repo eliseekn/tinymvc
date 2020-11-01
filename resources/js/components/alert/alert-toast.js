@@ -23,7 +23,7 @@ class AlertToast extends HTMLElement {
         element.id = 'alert-toast'
         element.classList.add('fade')
         element.innerHTML = `
-            <div class="modal-dialog position-absolute shadow-sm rounded" style="top: -1em; right: .8em">
+            <div class="modal-dialog position-absolute shadow-sm rounded" style="top: -0.3em; right: .8em">
                 <div class="modal-content">
                     <div class="position-relative bg-${this.getAttribute('type')} rounded-top" style="padding: .13em 0"></div>
 

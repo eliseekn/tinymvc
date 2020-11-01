@@ -4,14 +4,14 @@ namespace App\Database\Migrations;
 
 use Framework\ORM\Migration;
 
-class PasswordResetTable
+class TokensTable
 {         
     /**
      * name of table
      *
      * @var string
      */
-    protected static $table = 'password_reset';
+    protected static $table = 'tokens';
 
     /**
      * create table
