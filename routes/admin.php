@@ -95,7 +95,7 @@ Route::group([
     'roles/create' => ['handler' => 'Admin\RolesController@create'],
     'roles/update/{id:num}' => ['handler' => 'Admin\RolesController@update'],
 
-    'settings/update/{parameter:str}/{id:num}' => ['handler' => 'Admin\SettingsController@update'],
+    'settings/update/{id:num}' => ['handler' => 'Admin\SettingsController@update'],
 ])->by([
     'method' => 'POST',
     'prefix' => 'admin',

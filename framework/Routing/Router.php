@@ -12,7 +12,7 @@ use Exception;
 use Framework\HTTP\Request;
 use Framework\Routing\View;
 use Framework\HTTP\Response;
-use Framework\Support\Browsing;
+use Framework\Support\Session;
 
 /**
  * Routing system
@@ -33,8 +33,8 @@ class Router
      */
     public function __construct()
     {
-        //set browsing history
-        Browsing::set();
+        //set history
+        Session::setHistory();
         
         //dispatch routes
         try {
@@ -111,7 +111,7 @@ class Router
             if (!empty(config('errors.views.404'))) {
                 View::render(config('errors.views.404'), [], 404);
             } else {
-                Response::send([], 'The page you have requested does not exists', 404);
+                Response::send('The page you have requested does not exists', [], 404);
             }
         } else {
             throw new Exception('No route defines in configuration');

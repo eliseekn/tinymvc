@@ -22,16 +22,15 @@ class Alert
      * default alert
      *
      * @param  array|string $messages
-     * @param  string $title
-     * @param  mixed $dissmiss
+     * @param  mixed $dismiss
      * @return \Framework\Support\Alert
      */
-    public static function default($messages, bool $dissmiss = true): self
+    public static function default($messages, bool $dismiss = true): self
     {
         self::$flash = [
             'messages' => $messages,
             'display' => 'default',
-            'dismiss' => $dissmiss
+            'dismiss' => $dismiss
         ];
 
         return new self();
@@ -41,7 +40,6 @@ class Alert
      * popup alert
      *
      * @param  array|string $messages
-     * @param  string $title
      * @return \Framework\Support\Alert
      */
     public static function popup($messages): self
@@ -58,7 +56,6 @@ class Alert
      * toast alert
      *
      * @param  array|string $messages
-     * @param  string $title
      * @return \Framework\Support\Alert
      */
     public static function toast($messages) : self

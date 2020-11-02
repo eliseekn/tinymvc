@@ -13,6 +13,9 @@ import DonutChart from './components/charts/donut-chart'
 import BarsChart from './components/charts/bars-chart'
 import LinesChart from './components/charts/lines-chart'
 import ThemeSwitch from './components/mixed/theme-switch'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import Notifications from './components/react/notifications'
 
 window.customElements.define('upload-modal', UploadModal)
 window.customElements.define('export-modal', ExportModal)
@@ -26,3 +29,7 @@ window.customElements.define('lines-chart', LinesChart)
 window.customElements.define('timezone-picker', TimezonePicker)
 window.customElements.define('currency-picker', CurrencyPicker)
 window.customElements.define('theme-switch', ThemeSwitch)
+
+if (document.querySelector('#notifications-bell')) {
+    ReactDOM.render(<Notifications />, document.querySelector('#notifications-bell'))
+}

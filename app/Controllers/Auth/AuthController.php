@@ -6,18 +6,17 @@ use Carbon\Carbon;
 use App\Helpers\AuthHelper;
 use Framework\HTTP\Request;
 use App\Helpers\EmailHelper;
-use Framework\HTTP\Redirect;
 use App\Requests\AuthRequest;
 use Framework\Support\Session;
 use App\Middlewares\AuthPolicy;
-use Framework\Support\Browsing;
 use App\Requests\RegisterRequest;
+use Framework\Routing\Controller;
 use App\Database\Models\TokensModel;
 
 /**
  * Manage user authentication
  */
-class AuthController
+class AuthController extends Controller
 {
 	/**
 	 * authenticate user
@@ -29,7 +28,7 @@ class AuthController
         $validate = AuthRequest::validate(Request::getFields());
         
         if (is_array($validate)) {
-            Redirect::back()->withError($validate);
+            $this->redirect()->withError($validate);
         }
 
         AuthHelper::authenticate();
@@ -46,16 +45,16 @@ class AuthController
         $validate = RegisterRequest::validate(Request::getFields());
         
         if (is_array($validate)) {
-            Redirect::back()->withError($validate);
+            $this->redirect()->withError($validate);
         }
 
         if (!AuthHelper::store()) {
-            Redirect::back()->withError('The email address is already used by another user');
+            $this->redirect()->withError(__('user_already_exists'));
         }
 
-        if (config('security.auth.email_confirmation') === true) {
+        if (config('security.auth.email_confirmation') === false) {
             EmailHelper::sendWelcome(Request::getField('email'));
-            Redirect::toUrl('/login')->withSuccess('You have been registered successfully. <br> You can log in with your credentials');
+            $this->redirect('/login')->withSuccess('You have been registered successfully. You can log in with your credentials');
         } else {
             $token = random_string(50, true);
 
@@ -63,11 +62,11 @@ class AuthController
                 TokensModel::insert([
                     'email' => Request::getField('email'),
                     'token' => $token,
-                    'expires' => Carbon::now()->addHour()->format('Y-m-d H:i:s')
+                    'expires' => Carbon::now()->addHour()->toDateTimeString()
                 ]);
             }
 
-            Redirect::back()->withWarning('Please heck your email account to confirm your email address.');
+            $this->redirect()->withWarning('Please heck your email account to confirm your email address.');
         }
     }
 	
@@ -79,8 +78,8 @@ class AuthController
 	public function logout(): void
 	{
 		AuthHelper::forget();
-        Browsing::clear();
+        Session::clearHistory();
         Session::close('csrf_token');
-		Redirect::toUrl('/')->only();
+		$this->redirect('/')->only();
 	}
 }

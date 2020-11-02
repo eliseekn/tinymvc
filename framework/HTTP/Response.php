@@ -16,12 +16,12 @@ class Response
     /**
      * send HTTP response
      *
-     * @param  array $headers
      * @param  mixed $body
+     * @param  array $headers
      * @param  int $status_code
      * @return void
      */
-    public static function send(array $headers, $body, int $status_code = 200): void
+    public static function send($body, array $headers = [],int $status_code = 200): void
     {
         if (!isset($body)) {
             return;
@@ -47,12 +47,12 @@ class Response
     /**
      * send HTTP response with json body
      *
-     * @param  array $headers
      * @param  array $body
+     * @param  array $headers
      * @param  int $status_code
      * @return void
      */
-    public static function sendJson(array $headers, array $body, int $status_code = 200): void
+    public static function sendJson(array $body, array $headers = [], int $status_code = 200): void
     {
         if (empty($body)) {
             return;

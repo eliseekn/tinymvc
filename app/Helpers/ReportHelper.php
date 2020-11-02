@@ -63,7 +63,7 @@ class ReportHelper
 		if (get_file_extension($filename) === 'csv') {
 			DownloadHelper::init($filename)->sendCSV($to_export, array_values($vars));
 		} else {
-			DownloadHelper::init($filename)->sendPDF(View::renderContent('pdf/report', [
+			DownloadHelper::init($filename)->sendPDF(View::getContent('pdf/report', [
 				'data' => $to_export,
 				'headers' => array_values($vars)
 			]));

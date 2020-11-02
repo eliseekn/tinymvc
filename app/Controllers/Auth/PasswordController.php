@@ -4,11 +4,9 @@ namespace App\Controllers\Auth;
 
 use Carbon\Carbon;
 use Framework\HTTP\Request;
-use Framework\Routing\View;
 use App\Helpers\EmailHelper;
-use Framework\HTTP\Redirect;
-use Framework\HTTP\Response;
 use App\Requests\AuthRequest;
+use Framework\Routing\Controller;
 use Framework\Support\Encryption;
 use App\Database\Models\UsersModel;
 use App\Database\Models\TokensModel;
@@ -16,7 +14,7 @@ use App\Database\Models\TokensModel;
 /**
  * Manage password reset
  */
-class PasswordController
+class PasswordController extends Controller
 {
 	/**
 	 * send reset password email notification
@@ -31,12 +29,12 @@ class PasswordController
 			TokensModel::insert([
 				'email' => Request::getField('email'),
 				'token' => $token,
-				'expires' => Carbon::now()->addHour()->format('Y-m-d H:i:s')
+				'expires' => Carbon::now()->addHour()->toDateTimeString()
 			]);
 
-			Redirect::back()->withSuccess('Your password reset link has been sumbitted successfuly. <br> You can check your email box now');
+			$this->redirect()->withSuccess('Your password reset link has been sumbitted successfuly. <br> You can check your email box now');
 		} else {
-			Redirect::back()->withError('Failed to send paswword reset link to your email address');
+			$this->redirect()->withError('Failed to send paswword reset link to your email address');
 		}
 	}
 	
@@ -50,16 +48,16 @@ class PasswordController
         $reset_token = TokensModel::find('email', Request::getQuery('email'))->single();
 
         if ($reset_token === false || $reset_token->token !== Request::getQuery('token')) {
-			Response::send([], 'This password reset link is invalid');
+			$this->response('This password reset link is invalid');
 		}
 
-		if ($reset_token->expires < date('Y-m-d H:i:s')) {
-			Response::send([], 'This password reset link expired. Please retrieves a new one');
+		if ($reset_token->expires < Carbon::now()->toDateTimeString()) {
+			$this->response('This password reset link expired. Please retrieves a new one');
 		}
 
 		TokensModel::delete()->where('email', $reset_token->email)->persist();
 		
-		View::render('password/new', [
+		$this->render('password/new', [
 			'email' => $reset_token->email
 		]);
 	}
@@ -74,13 +72,13 @@ class PasswordController
 		$validate = AuthRequest::validate(Request::getFields());
         
         if (is_array($validate)) {
-            Redirect::back()->withError($validate);
+            $this->redirect()->withError($validate);
         }
 
         UsersModel::update(['password' => Encryption::hash(Request::getField('password'))])
             ->where('email', Request::getField('email'))
             ->persist();
 		
-		Redirect::toUrl('/login')->withSuccess('Your password has been resetted successfully');
+		$this->redirect('/login')->withSuccess('Your password has been resetted successfully');
 	}
 }

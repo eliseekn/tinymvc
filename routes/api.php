@@ -6,15 +6,31 @@
  * @link https://github.com/eliseekn/TinyMVC
  */
 
+use Carbon\Carbon;
 use Framework\HTTP\Response;
 use Framework\Routing\Route;
+use App\Database\Models\NotificationsModel;
 
 /**
  * Set api routes
  */
 
-Route::get('/api', [
+//get notifications list
+Route::get('/api/notifications', [
     'handler' => function() {
-        Response::sendJson([], ['response' => 'TinyMVC, just a PHP framework based on MVC architecture that helps you <br> build easly and quickly powerful web applications and RESTful API.']);
+        $notifications = NotificationsModel::find('status', 'unread')->firstOf(5);
+
+        foreach ($notifications as $notification) {
+            $notification->created_at = time_elapsed(Carbon::parse($notification->created_at, user_session()->timezone)->locale(user_session()->lang), 1);
+        }
+
+        Response::sendJson([
+            'items' => $notifications,
+            'title' => __('notifications'),
+            'view_all' => __('view_all')
+        ], [
+            'Access-Control-Allow-Origin' => '*',
+            'Access-Control-Allow-Headers' => 'X-Requested-With',
+        ]);
     }
 ]);

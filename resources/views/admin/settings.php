@@ -8,13 +8,13 @@
     $this->insert('partials/alert', get_flash_messages());
 endif ?>
 
-<div class="row mb-4 pr-md-0 pr-3">
-    <div class="col-md-6">
-        <div class="card shadow-sm mb-4 mb-md-0">
-            <div class="card-header "><?= __('profile') ?></div>
+<form method="post" action="<?= absolute_url('/admin/settings/update/' . user_session()->id) ?>">
+    <?= generate_csrf_token() ?>
 
-            <form method="post" action="<?= absolute_url('/admin/settings/update/profile/' . get_user_session()->id) ?>">
-                <?= generate_csrf_token() ?>
+    <div class="row mb-4 pr-md-0 pr-3">
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4 mb-md-0">
+                <div class="card-header "><?= __('profile') ?></div>
 
                 <div class="card-body">
                     <div class="form-group row">
@@ -31,20 +31,12 @@ endif ?>
                         </div>
                     </div>
                 </div>
-
-                <div class="card-footer">
-                    <button type="submit" class="btn btn-primary loading"><?= __('save') ?></button>
-                </div>
-            </form>
+            </div>
         </div>
-    </div>
 
-    <div class="col-md-6">
-        <div class="card shadow-sm">
-            <div class="card-header "><?= __('security') ?></div>
-
-            <form method="post" action="<?= absolute_url('/admin/settings/update/security/' . get_user_session()->id) ?>">
-                <?= generate_csrf_token() ?>
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header "><?= __('security') ?></div>
 
                 <div class="card-body">
                     <div class="form-group row">
@@ -69,22 +61,14 @@ endif ?>
                         </div>
                     </div>
                 </div>
-
-                <div class="card-footer">
-                    <button type="submit" class="btn btn-primary loading"><?= __('save') ?></button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
-</div>
 
-<div class="row mb-4 pr-md-0 pr-3">
-    <div class="col-md-6">
-        <div class="card shadow-sm mb-4 mb-md-0">
-            <div class="card-header "><?= __('preferences') ?></div>
-
-            <form method="post" action="<?= absolute_url('/admin/settings/update/preferences/' . get_user_session()->id) ?>">
-                <?= generate_csrf_token() ?>
+    <div class="row mb-4 pr-md-0 pr-3">
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4 mb-md-0">
+                <div class="card-header "><?= __('preferences') ?></div>
 
                 <div class="card-body">
                     <div class="form-group row">
@@ -114,20 +98,12 @@ endif ?>
                         </div>
                     </div>
                 </div>
-
-                <div class="card-footer">
-                    <button type="submit" class="btn btn-primary loading"><?= __('save') ?></button>
-                </div>
-            </form>
+            </div>
         </div>
-    </div>
 
-    <div class="col-md-6">
-        <div class="card shadow-sm">
-            <div class="card-header "><?= __('dashboard') ?></div>
-
-            <form method="post" action="<?= absolute_url('/admin/settings/update/dashboard/' . get_user_session()->id) ?>">
-                <?= generate_csrf_token() ?>
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header "><?= __('dashboard') ?></div>
 
                 <div class="card-body">
                     <div class="form-group row d-flex align-items-center">
@@ -157,13 +133,13 @@ endif ?>
                         </div>
                     </div>
                 </div>
-
-                <div class="card-footer">
-                    <button type="submit" class="btn btn-primary loading"><?= __('save') ?></button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
-</div>
+
+    <div class="">
+        <button type="submit" class="btn btn-primary loading"><?= __('save') ?></button>
+    </div>
+</form>
 
 <?php $this->stop() ?>

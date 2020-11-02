@@ -8,8 +8,8 @@
     <div class="col-md-4">
         <div class="card card-metrics bg-light shadow-sm">
             <div class="card-body d-flex align-items-center justify-content-between">
-                <p class="mb-0 "><i class="fa fa-user-shield fa-lg"></i> Total</p>
-                <p class="font-weight-bold mb-0 "><?= $roles->getTotalItems() ?></p>
+                <p><i class="fa fa-user-shield fa-lg"></i> Total</p>
+                <p class="font-weight-bold"><?= $roles->getTotalItems() ?></p>
             </div>
         </div>
     </div>
@@ -79,7 +79,7 @@ endif ?>
                         <td><?= $role->title ?></td>
                         <td><?= $role->slug ?></td>
                         <td><?= html_entity_decode($role->description) ?></td>
-                        <td><?= \Carbon\Carbon::parse($role->created_at)->locale(get_user_session()->lang)->isoFormat('MMM Do, YYYY') ?></td>
+                        <td><?= \Carbon\Carbon::parse($role->created_at)->locale(user_session()->lang)->isoFormat('MMM Do, YYYY') ?></td>
 
                         <td>
                             <a class="btn text-primary" href="<?= absolute_url('/admin/roles/view/' . $role->id) ?>" title="View item">

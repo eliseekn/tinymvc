@@ -11,7 +11,7 @@ namespace Framework\HTTP;
 use Exception;
 use Framework\Routing\Route;
 use Framework\Support\Alert;
-use Framework\Support\Browsing;
+use Framework\Support\Session;
 
 /**
  * Handle HTTP redirection
@@ -66,10 +66,11 @@ class Redirect
         //search key from value in a multidimensional array
         //https://www.php.net/manual/en/function.array-search.php
         $url = array_search(
-            $handler,
-            array_map(
+            $handler, array_map(
                 function ($val) {
-                    return $val['handler'];
+                    if (isset($val['handler'])) {
+                        return $val['handler'];
+                    }
                 },
                 Route::$routes
             )
@@ -90,11 +91,11 @@ class Redirect
      */
     public static function back(): self
     {
-        $browsing_history = Browsing::get();
+        $history = Session::getHistory();
 
-        if (!empty($browsing_history)) {
-            end($browsing_history);
-            self::$redirect_url = prev($browsing_history);
+        if (!empty($history)) {
+            end($history);
+            self::$redirect_url = prev($history);
         }
 
         return new self();

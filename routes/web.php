@@ -18,3 +18,7 @@ Route::get('/', [
         View::render('index');
     }
 ]);
+
+Route::get('/home', [
+    'handler' => 'HomeController@index'
+]);

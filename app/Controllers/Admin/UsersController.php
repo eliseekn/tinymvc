@@ -4,18 +4,16 @@ namespace App\Controllers\Admin;
 
 use Carbon\Carbon;
 use Framework\HTTP\Request;
-use Framework\Routing\View;
-use Framework\HTTP\Redirect;
-use Framework\Support\Alert;
 use App\Helpers\ReportHelper;
 use Framework\Support\Session;
 use App\Requests\RegisterRequest;
+use Framework\Routing\Controller;
 use Framework\Support\Encryption;
 use App\Database\Models\RolesModel;
 use App\Database\Models\UsersModel;
 use App\Requests\UpdateUserRequest;
 
-class UsersController
+class UsersController extends Controller
 {
     /**
      * display list
@@ -24,7 +22,7 @@ class UsersController
      */
     public function index(): void
     {
-        View::render('admin/users/index', [
+        $this->render('admin/users/index', [
             'users' => UsersModel::select()->orderAsc('name')->paginate(50),
             'online_users' => UsersModel::find('online', 1)->all(),
 			'active_users' => UsersModel::find('active', 1)->all(),
@@ -38,7 +36,7 @@ class UsersController
 	 */
 	public function new(): void
 	{
-		View::render('admin/users/new', [
+		$this->render('admin/users/new', [
 			'roles' => RolesModel::select()->all()
 		]);
 	}
@@ -55,11 +53,11 @@ class UsersController
 		$roles = RolesModel::select()->all();
 
 		if ($user === false) {
-			Alert::toast(__('user_not_found'))->error();
-			Redirect::back()->only();
+			$this->toast(__('user_not_found'))->error();
+			$this->redirect()->only();
 		}
 
-		View::render('admin/users/edit', compact('user', 'roles'));
+		$this->render('admin/users/edit', compact('user', 'roles'));
 	}
 
 	/**
@@ -72,12 +70,12 @@ class UsersController
         $validate = RegisterRequest::validate(Request::getFields());
         
         if (is_array($validate)) {
-            Redirect::back()->withError($validate);
+            $this->redirect()->withError($validate);
         }
 
 		if (UsersModel::find('email', Request::getField('email'))->exists()) {
-			Alert::toast(__('user_already_exists'))->error();
-            Redirect::back()->only();
+			$this->toast(__('user_already_exists'))->error();
+            $this->redirect()->only();
 		}
 
 	    $id = UsersModel::insert([
@@ -87,8 +85,8 @@ class UsersController
             'role' => Request::getField('role')
 		]);
 
-		Alert::toast(__('user_created'))->success();
-		Redirect::toUrl('admin/users/view/' . $id)->only();
+		$this->toast(__('user_created'))->success();
+		$this->redirect('admin/users/view/' . $id)->only();
     }
 	
 	/**
@@ -102,11 +100,11 @@ class UsersController
 		$user = UsersModel::find('id', $id)->single();
 		
 		if ($user === false) {
-			Alert::toast(__('user_not_found'))->error();
-			Redirect::back()->only();
+			$this->toast(__('user_not_found'))->error();
+			$this->redirect()->only();
 		}
 
-		View::render('admin/users/view', compact('user'));
+		$this->render('admin/users/view', compact('user'));
 	}
     
 	/**
@@ -120,12 +118,12 @@ class UsersController
 		$validate = UpdateUserRequest::validate(Request::getFields());
         
         if (is_array($validate)) {
-            Redirect::back()->withError($validate);
+            $this->redirect()->withError($validate);
         }
 
 		if (!UsersModel::find('id', $id)->exists()) {
-			Alert::toast(__('user_not_found'))->error();
-			Redirect::back()->only();
+			$this->toast(__('user_not_found'))->error();
+			$this->redirect()->only();
 		}
 
 		$data = [
@@ -147,8 +145,8 @@ class UsersController
             Session::setUser($user);
         }
 
-		Alert::toast(__('user_updated'))->success();
-        Redirect::toUrl('admin/users/view/' . $id)->only();
+		$this->toast(__('user_updated'))->success();
+        $this->redirect('admin/users/view/' . $id)->only();
     }
 
 	/**
@@ -161,12 +159,12 @@ class UsersController
 	{
 		if (!is_null($id)) {
 			if (!UsersModel::find('id', $id)->exists()) {
-				Alert::toast(__('user_not_found'))->error();
+				$this->toast(__('user_not_found'))->error();
 			}
 	
 			UsersModel::delete()->where('id', $id)->persist();
-			Alert::toast(__('user_deleted'))->success();
-            Redirect::back()->only();
+			$this->toast(__('user_deleted'))->success();
+            $this->redirect()->only();
 		} else {
 			$users_id = json_decode(Request::getRawData(), true);
 			$users_id = $users_id['items'];
@@ -175,7 +173,7 @@ class UsersController
 				UsersModel::delete()->where('id', $id)->persist();
 			}
 			
-			Alert::toast(__('users_deleted'))->success();
+			$this->toast(__('users_deleted'))->success();
 		}
 	}
 
@@ -189,13 +187,13 @@ class UsersController
         $file = Request::getFile('file', ['csv']);
 
 		if (!$file->isAllowed()) {
-			Alert::toast(__('import_file_type_error'))->error();
-            Redirect::back()->only();
+			$this->toast(__('import_file_type_error'))->error();
+            $this->redirect()->only();
 		}
 
 		if (!$file->isUploaded()) {
-			Alert::toast(__('import_data_error'))->error();
-			Redirect::back()->only();
+			$this->toast(__('import_data_error'))->error();
+			$this->redirect()->only();
 		}
 
 		ReportHelper::import($file->getTempFilename(), UsersModel::class, [
@@ -204,8 +202,8 @@ class UsersController
 			'password' => 'Password'
 		]);
 
-		Alert::toast(__('data_imported'))->success();
-		Redirect::back()->only();
+		$this->toast(__('data_imported'))->success();
+		$this->redirect()->only();
 	}
 	
 	/**
@@ -220,11 +218,11 @@ class UsersController
 
 		if (!empty($date_start) && !empty($date_end)) {
 			$users = UsersModel::select()
-                ->between('created_at', Carbon::parse($date_start)->format('Y-m-d H:i:s'), Carbon::parse($date_end)->format('Y-m-d H:i:s'))
-                ->orderBy('name', 'ASC')
+                ->between('created_at', Carbon::parse($date_start)->toDateTimeString(), Carbon::parse($date_end)->toDateTimeString())
+                ->orderAsc('name')
                 ->all();
 		} else {
-			$users = UsersModel::select()->orderBy('name', 'ASC')->all();
+			$users = UsersModel::select()->orderAsc('name')->all();
         }
         
         $filename = 'roles_' . date('Y_m_d') . '.' . Request::getField('file_type');

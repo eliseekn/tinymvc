@@ -46,7 +46,7 @@ class ExportModal extends HTMLElement {
                             </fieldset>
 
                             <div class="form-group row">
-                                <p class="col-sm-4 col-form-label mb-0">Period <small>(optional)</small></p>
+                                <p class="col-sm-4 col-form-label">Period <small>(optional)</small></p>
 
                                 <div class="col-sm-8">
                                     <div class="input-group mb-3">

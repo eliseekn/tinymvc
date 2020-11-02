@@ -26,9 +26,11 @@ $users = 'Utilisateurs';
 
 //navabar
 $mark_as_read = 'Marquer comme lu';
-$view_more = 'Voir plus';
+$mark_all_as_read = 'Mark tout comme lu';
+$view_all = 'Voir toutes les notifications';
 $settings = 'Paramètres';
 $logout = 'Déconnexion';
+$notifications = 'Notifications';
 
 //dashboard
 $total_users = 'Total utilisateurs';
@@ -82,6 +84,7 @@ $next = 'Suivant';
 
 //alerts
 $notification_not_found = 'Notification non trouvée';
+$notifications_created = 'Notification créée avec succès';
 $notification_updated = 'Notification marquée comme lu';
 $notifications_updated = 'Notifications marquées comme lu';
 $notification_deleted = 'Notification supprimée avec succès';
@@ -89,13 +92,13 @@ $notifications_deleted = 'Notifications supprimées avec succès';
 $role_not_found = 'Role non trouvé';
 $role_already_exists = 'Role déjà existant';
 $role_created = 'Role créé avec succès';
-$role_updated = 'Role mis à jour avec successfully';
+$role_updated = 'Role mis à jour avec succès';
 $role_deleted = 'Role supprimé avec succès';
 $roles_deleted = 'Roles supprimés avec succès';
 $user_not_found = 'Utilisateur non trouvé';
 $user_already_exists = 'Adresse email déjà existant';
 $user_created = 'Utilisateur créé avec succès';
-$user_updated = 'Utilisateur mis à jour avec successfully';
+$user_updated = 'Utilisateur mis à jour avec succès';
 $user_deleted = 'Utilisateur supprimé avec succès';
 $users_deleted = 'Utilisateurs supprimés avec succès';
 $import_file_type_error = 'Type de fichier non autorisé';
@@ -104,3 +107,4 @@ $data_imported = 'Données importées avec succès';
 $account_not_activated = "Votre compte n'est pas encore activé.";
 $not_logged_error = 'Vous devez être connecté avant de pouvoir accéder à cette page';
 $no_access_permission = "Vous n'avez pas les droits d'accès à cette page";
+$changes_saved = 'Vos modifications ont été sauvegardées avec succès';

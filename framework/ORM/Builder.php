@@ -8,6 +8,8 @@
 
 namespace Framework\ORM;
 
+use Carbon\Carbon;
+
 /**
  * Database query builder
  */
@@ -519,7 +521,7 @@ class Builder
 
 		//update last modifed timestamp
 		$items = array_merge($items, [
-            'updated_at' => date('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->toDateTimeString()
         ]);
 
 		foreach ($items as $key => $value) {

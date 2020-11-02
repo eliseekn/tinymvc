@@ -28,7 +28,7 @@
                 <pre class="m-0 text-danger"><code>Route::add('/home', [
     'method' => 'GET',
     'handler' => function () {
-        Response::send([], 'Hello world!');
+        Response::send('Hello world!');
     }
 ]);</code></pre>
             </div>
@@ -181,7 +181,7 @@ Route::options(string $uri, array $parameters)</code></pre>
             <div class="card-body bg-light">
                 <pre class="m-0 text-danger"><code>Route::get('/welcome/{name:str}', [
     'handler' => function ($name) {
-        Response::send([], 'Welcome ' . $name . '!');       
+        Response::send('Welcome ' . $name . '!');       
     }
 ]);</code></pre>
             </div>
@@ -234,7 +234,7 @@ Route::options(string $uri, array $parameters)</code></pre>
                 <pre class="m-0 text-danger"><code>Route::get('/welcome/{name:str}?', [
     'handler' => function (?string $name = null) {
         $visitor = is_null($name) ? 'Stranger' : $name;
-        Response::send([], 'Welcome ' . $visitor . '!');       
+        Response::send('Welcome ' . $visitor . '!');       
     }
 ]);</code></pre>
             </div>

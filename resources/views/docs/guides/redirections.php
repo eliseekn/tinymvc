@@ -21,7 +21,7 @@
         
         <div class="card mb-4">
             <div class="card-body bg-light">
-                <code class="text-danger">Response::send(array $headers, $body, int $status_code = 200);</code>
+                <code class="text-danger">Response::send($body, array $headers = [], int $status_code = 200);</code>
             </div>
         </div>
 
@@ -29,7 +29,7 @@
         
         <div class="card mb-4">
             <div class="card-body bg-light">
-                <code class="text-danger">Response::sendJson(array $headers, array $body, int $status_code = 200);</code>
+                <code class="text-danger">Response::sendJson(array $body, array $headers = [], int $status_code = 200);</code>
             </div>
         </div>
 

@@ -26,9 +26,11 @@ $users = 'Users';
 
 //navabar
 $mark_as_read = 'Mark as read';
-$view_more = 'View more';
+$mark_all_as_read = 'Mark all as read';
+$view_all = 'View all';
 $settings = 'Settings';
 $logout = 'Log out';
+$notifications = 'Notifications';
 
 //dashboard
 $total_users = 'Total users';
@@ -82,8 +84,9 @@ $next = 'Next';
 
 //alerts
 $notification_not_found = 'Notification was not found';
-$notification_updated = 'Notification marked as read successfully';
-$notifications_updated = 'Notifications marked as read successfully';
+$notifications_created = 'Notification created successfully';
+$notification_updated = 'Notification marked as read';
+$notifications_updated = 'Notifications marked as read';
 $notification_deleted = 'Notification deleted successfully';
 $notifications_deleted = 'Notifications deleted successfully';
 $role_not_found = 'Role not found';
@@ -104,3 +107,4 @@ $data_imported = 'Data imported successfully';
 $account_not_activated = 'Your account is not yet activated.';
 $not_logged_error = 'You must be logged first to access this page';
 $no_access_permission = 'You do not have permission to access this page';
+$changes_saved = 'Your changes have been saved succesfully';

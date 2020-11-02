@@ -12,7 +12,6 @@ use Carbon\Carbon;
  * Sessions management functions
  */
 
-
 if (!function_exists('start_session')) {
 	/**
 	 * start session
@@ -115,13 +114,13 @@ if (!function_exists('get_flash_messages')) {
 	}
 }
 
-if (!function_exists('get_user_session')) {
+if (!function_exists('user_session')) {
 	/**
 	 * get user session data
 	 *
 	 * @return mixed
 	 */
-	function get_user_session()
+	function user_session()
 	{
 		return get_session(config('app.name') . '_user');
 	}

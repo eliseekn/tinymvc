@@ -19,13 +19,13 @@ use Framework\Support\Storage;
 class View
 {    
     /**
-     * get template content
+     * get view content
      *
      * @param  string $view
      * @param  array $data
      * @return string
      */
-    public static function renderContent(string $view, array $data = [], int $status_code = 200): string
+    public static function getContent(string $view, array $data = []): string
     {
         if (!Storage::path(config('storage.views'))->isFile($view . '.php')) {
             throw new Exception('File "' . Storage::path(config('storage.views'))->get() . $view . '.php" not found.');
@@ -36,7 +36,7 @@ class View
     }
 
     /**
-     * display template
+     * display view
      *
      * @param  string $view
      * @param  array $data
@@ -44,6 +44,6 @@ class View
      */
     public static function render(string $view, array $data = [], int $status_code = 200): void
     {
-        Response::send([], self::renderContent($view, $data, $status_code), $status_code);
+        Response::send(self::getContent($view, $data), [], $status_code);
     }
 }

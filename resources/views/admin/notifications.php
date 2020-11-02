@@ -8,8 +8,8 @@
     <div class="col-md-4 mb-md-0 mb-4">
         <div class="card card-metrics bg-light shadow-sm">
             <div class="card-body d-flex align-items-center justify-content-between">
-                <p class="mb-0 "><i class="fa fa-bell fa-lg"></i> Total</p>
-                <p class="font-weight-bold mb-0 "><?= $notifications->getTotalItems() ?></p>
+                <p><i class="fa fa-bell fa-lg"></i> Total</p>
+                <p class="font-weight-bold"><?= $notifications->getTotalItems() ?></p>
             </div>
         </div>
     </div>
@@ -17,8 +17,8 @@
     <div class="col-md-4">
         <div class="card card-metrics bg-light shadow-sm">
             <div class="card-body d-flex align-items-center justify-content-between">
-                <p class="mb-0 "><i class="fa fa-eye-slash fa-lg"></i> <?= __('unread') ?></p>
-                <p class="font-weight-bold mb-0 "><?= $notifications_unread ?></p>
+                <p><i class="fa fa-eye-slash fa-lg"></i> <?= __('unread') ?></p>
+                <p class="font-weight-bold"><?= $notifications_unread ?></p>
             </div>
         </div>
     </div>
@@ -83,7 +83,7 @@ endif ?>
 
                         <td><?= $key + 1 ?></td>
                         <td><?= $notification->message ?></td>
-                        <td><?= time_elapsed(\Carbon\Carbon::parse($notification->created_at, get_user_session()->timezone)->locale(get_user_session()->lang), 1) ?></td>
+                        <td><?= time_elapsed(\Carbon\Carbon::parse($notification->created_at, user_session()->timezone)->locale(user_session()->lang), 1) ?></td>
 
                         <td>
                             <a class="btn text-primary <?php if ($notification->status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('/admin/notifications/update/' . $notification->id) ?>" <?php if ($notification->status === 'unread') : echo 'title="Mark as read"'; endif ?>>

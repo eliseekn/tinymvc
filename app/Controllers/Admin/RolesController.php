@@ -4,15 +4,12 @@ namespace App\Controllers\Admin;
 
 use Carbon\Carbon;
 use Framework\HTTP\Request;
-use Framework\Routing\View;
-use Framework\HTTP\Redirect;
-use Framework\HTTP\Response;
-use Framework\Support\Alert;
 use App\Helpers\ReportHelper;
 use App\Requests\RoleRequest;
+use Framework\Routing\Controller;
 use App\Database\Models\RolesModel;
 
-class RolesController
+class RolesController extends Controller
 {
     /**
      * display list
@@ -21,7 +18,7 @@ class RolesController
      */
     public function index(): void
     {
-        View::render('admin/roles/index', [
+        $this->render('admin/roles/index', [
             'roles' => RolesModel::select()->orderAsc('title')->paginate(50)
         ]);
     }
@@ -33,7 +30,7 @@ class RolesController
 	 */
 	public function new(): void
 	{
-		View::render('admin/roles/new');
+		$this->render('admin/roles/new');
 	}
 	
 	/**
@@ -47,11 +44,11 @@ class RolesController
 		$role = RolesModel::find('id', $id)->single();
 
 		if ($role === false) {
-			Alert::toast(__('role_not_found'))->error();
-			Redirect::back()->only();
+			$this->toast(__('role_not_found'))->error();
+			$this->redirect()->only();
 		}
 
-		View::render('admin/roles/edit', compact('role'));
+		$this->render('admin/roles/edit', compact('role'));
 	}
 
 	/**
@@ -64,15 +61,15 @@ class RolesController
 		$validate = RoleRequest::validate(Request::getFields());
         
         if (is_array($validate)) {
-			Alert::default($validate)->error();
-            Response::sendJson([], ['redirect' => absolute_url('admin/roles/new')]);
+			$this->alert($validate)->error();
+            $this->json(['redirect' => absolute_url('admin/roles/new')]);
         }
 
 		$slug = slugify(Request::getField('title'));
 
 		if (RolesModel::find('slug', $slug)->exists()) {
-			Alert::toast(__('role_already_exists'))->error();
-			Response::sendJson([], ['redirect' => absolute_url('admin/roles/new')]);
+			$this->toast(__('role_already_exists'))->error();
+			$this->json(['redirect' => absolute_url('admin/roles/new')]);
 		}
 
 	    $id = RolesModel::insert([
@@ -81,8 +78,8 @@ class RolesController
             'description' => Request::getField('editor')
 		]);
 
-		Alert::toast(__('role_created'))->success();
-		Response::sendJson([], ['redirect' => absolute_url('admin/roles/view/' . $id)]);
+		$this->toast(__('role_created'))->success();
+		$this->json(['redirect' => absolute_url('admin/roles/view/' . $id)]);
     }
 	
 	/**
@@ -96,11 +93,11 @@ class RolesController
 		$role = RolesModel::find('id', $id)->single();
 
 		if ($role === false) {
-			Alert::toast(__('role_not_found'))->error();
-			Redirect::back()->only();
+			$this->toast(__('role_not_found'))->error();
+			$this->redirect()->only();
 		}
 
-		View::render('admin/roles/view', compact('role'));
+		$this->render('admin/roles/view', compact('role'));
 	}
     
 	/**
@@ -114,13 +111,13 @@ class RolesController
 		$validate = RoleRequest::validate(Request::getFields());
         
         if (is_array($validate)) {
-			Alert::default($validate)->error();
-            Response::sendJson([], ['redirect' => absolute_url('admin/roles/edit')]);
+			$this->alert($validate)->error();
+            $this->json(['redirect' => absolute_url('admin/roles/edit')]);
         }
 
 		if (!RolesModel::find('id', $id)->exists()) {
-			Alert::toast(__('role_not_found'))->error();
-			Response::sendJson([], ['redirect' => absolute_url('admin/roles/edit')]);
+			$this->toast(__('role_not_found'))->error();
+			$this->json(['redirect' => absolute_url('admin/roles/edit')]);
 		}
 
 		RolesModel::update([
@@ -131,8 +128,8 @@ class RolesController
 		->where('id', $id)
 		->persist();
 
-		Alert::toast(__('role_updated'))->success();
-		Response::sendJson([], ['redirect' => absolute_url('admin/roles/view/' . $id)]);
+		$this->toast(__('role_updated'))->success();
+		$this->json(['redirect' => absolute_url('admin/roles/view/' . $id)]);
     }
 
 	/**
@@ -145,12 +142,12 @@ class RolesController
 	{
 		if (!is_null($id)) {
 			if (!RolesModel::find('id', $id)->exists()) {
-				Alert::toast(__('role_not_found'))->error();
+				$this->toast(__('role_not_found'))->error();
 			}
 	
 			RolesModel::delete()->where('id', $id)->persist();
-			Alert::toast(__('role_deleted'))->success();
-            Redirect::back()->only();
+			$this->toast(__('role_deleted'))->success();
+            $this->redirect()->only();
 		} else {
 			$roles_id = json_decode(Request::getRawData(), true);
 			$roles_id = $roles_id['items'];
@@ -159,7 +156,7 @@ class RolesController
 				RolesModel::delete()->where('id', $id)->persist();
 			}
 			
-			Alert::toast(__('roles_deleted'))->success();
+			$this->toast(__('roles_deleted'))->success();
 		}
 	}
 
@@ -173,13 +170,13 @@ class RolesController
         $file = Request::getFile('file', ['csv']);
 
 		if (!$file->isAllowed()) {
-			Alert::toast(__('import_file_type_error'))->error();
-            Redirect::back()->only();
+			$this->toast(__('import_file_type_error'))->error();
+            $this->redirect()->only();
 		}
 
 		if (!$file->isUploaded()) {
-			Alert::toast(__('import_data_error'))->error();
-			Redirect::back()->only();
+			$this->toast(__('import_data_error'))->error();
+			$this->redirect()->only();
 		}
 
 		ReportHelper::import($file->getTempFilename(), RolesModel::class, [
@@ -188,8 +185,8 @@ class RolesController
 			'description' => 'Description'
 		]);
 
-		Alert::toast(__('data_imported'))->success();
-		Redirect::back()->only();
+		$this->toast(__('data_imported'))->success();
+		$this->redirect()->only();
 	}
 	
 	/**
@@ -204,11 +201,11 @@ class RolesController
 
 		if (!empty($date_start) && !empty($date_end)) {
 			$roles = RolesModel::select()
-                ->between('created_at', Carbon::parse($date_start)->format('Y-m-d H:i:s'), Carbon::parse($date_end)->format('Y-m-d H:i:s'))
-                ->orderBy('name', 'ASC')
+                ->between('created_at', Carbon::parse($date_start)->toDateTimeString(), Carbon::parse($date_end)->toDateTimeString())
+                ->orderAsc('name')
                 ->all();
 		} else {
-			$roles = RolesModel::select()->orderBy('name', 'ASC')->all();
+			$roles = RolesModel::select()->orderAsc('name')->all();
         }
         
         $filename = 'roles_' . date('Y_m_d') . '.' . Request::getField('file_type');

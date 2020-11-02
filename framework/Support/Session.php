@@ -8,6 +8,8 @@
 
 namespace Framework\Support;
 
+use Framework\HTTP\Request;
+
 /**
  * Manage session
  */
@@ -97,5 +99,47 @@ class Session
     public static function deleteUser(): void
     {
         self::close(config('app.name') . '_user');
+    }
+
+    /**
+     * set history sesssion
+     *
+     * @return void
+     */
+    public static function setHistory(): void
+    {
+        $url = self::getHistory();
+
+        foreach (config('session.history.excludes') as $exclude) {
+            if (!url_exists($exclude)) {
+                if (empty($url)) {
+                    $url = [Request::getFullUri()];
+                } else {
+                    $url[] = Request::getFullUri();
+                }
+            }
+        }
+
+        self::create(config('app.name') . '_history', $url);
+    }
+    
+    /**
+     * get history session
+     *
+     * @return mixed
+     */
+    public static function getHistory()
+    {
+        return self::get(config('app.name') . '_history');
+    }
+    
+    /**
+     * close history session
+     *
+     * @return void
+     */
+    public static function clearHistory(): void
+    {
+        self::close(config('app.name') . '_history');
     }
 }

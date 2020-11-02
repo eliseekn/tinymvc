@@ -32,7 +32,7 @@ class AlertToast extends HTMLElement {
 
                         <div class="d-flex flex-column px-3">
                             <div class="toast-header border-0 pl-0 text-${this.getAttribute('type')}">${this.getAttribute('title')}</div>
-                            <p class="modal-title mb-0">${this.getAttribute('message')}</p>
+                            <p class="modal-title">${this.getAttribute('message')}</p>
                         </div>
 
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">

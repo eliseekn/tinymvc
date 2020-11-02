@@ -22,7 +22,7 @@ class NotificationsTable
     {
         Migration::table(self::$table)
             ->addBigInt('id')->primaryKey()
-            ->addText('text')
+            ->addText('message')
             ->addString('status')->default('unread')
             ->create();
     }

@@ -2,7 +2,9 @@
 
 namespace NAMESPACE;
 
-class CLASSNAME
+use Framework\Routing\Controller;
+
+class CLASSNAME extends Controller
 {
     /**
      * display list

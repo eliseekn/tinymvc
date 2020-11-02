@@ -48,7 +48,7 @@ class AuthHelper
             self::setAttempts();
 
             if (config('security.auth.max_attempts') > 0 && self::getAttempts() > config('security.auth.max_attempts')) {
-                Session::create('auth_attempts_timeout', Carbon::now()->addMinutes(config('security.auth.unlock_timeout'))->format('Y-m-d H:i:s'));
+                Session::create('auth_attempts_timeout', Carbon::now()->addMinutes(config('security.auth.unlock_timeout'))->toDateTimeString());
                 Redirect::back()->only();
             } else {
                 Redirect::back()->withError('Invalid email address or password');
@@ -62,7 +62,7 @@ class AuthHelper
                 TokensModel::insert([
                     'email' => Request::getField('email'),
                     'token' => $token,
-                    'expires' => Carbon::now()->addHour()->format('Y-m-d H:i:s')
+                    'expires' => Carbon::now()->addHour()->toDateTimeString()
                 ]);
 
                 Redirect::back()->withInfo('Please check your email account to confirm your email address.');

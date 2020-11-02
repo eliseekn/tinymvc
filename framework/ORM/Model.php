@@ -337,6 +337,7 @@ class Model
     /**
      * add custom ORDER BY clause with DESC
      *
+     * @param  string $column
      * @return \Framework\ORM\Model
      */
     public function orderDesc(string $column = 'id'): self
@@ -347,6 +348,7 @@ class Model
     /**
      * add custom ORDER BY clause with ASC 
      *
+     * @param  string $column
      * @return \Framework\ORM\Model
      */
     public function orderAsc(string $column = 'id'): self

@@ -3,19 +3,18 @@
 namespace App\Controllers\Auth;
 
 use Carbon\Carbon;
+use App\Helpers\AuthHelper;
 use Framework\HTTP\Request;
 use App\Helpers\EmailHelper;
-use Framework\HTTP\Redirect;
-use Framework\HTTP\Response;
 use App\Middlewares\AuthPolicy;
+use Framework\Routing\Controller;
 use App\Database\Models\UsersModel;
 use App\Database\Models\TokensModel;
-use App\Helpers\AuthHelper;
 
 /**
  * Manage email confirmation
  */
-class EmailController
+class EmailController extends Controller
 {
 	/**
 	 * send email confirmation
@@ -30,7 +29,7 @@ class EmailController
             TokensModel::insert([
                 'email' => Request::getField('email'),
                 'token' => $token,
-                'expires' => Carbon::now()->addHour()->format('Y-m-d H:i:s')
+                'expires' => Carbon::now()->addHour()->toDateTimeString()
             ]);
         }
 	}
@@ -45,9 +44,9 @@ class EmailController
 		if (UsersModel::find('email', Request::getQuery('email'))->exists()) {
             UsersModel::update(['active' => 1])->where('email', Request::getQuery('email'))->persist();
             EmailHelper::sendWelcome(Request::getField('email'));
-            Redirect::toUrl('/')->withError('Your account has been successfully activated.');
+            $this->redirect('/')->withError('Your account has been successfully activated.');
         } else {
-            Redirect::toUrl('/signup')->withError('Your account is not registred. Please register here.');
+            $this->redirect('/signup')->withError('Your account is not registred. Please register here.');
         }
     }
         
@@ -61,11 +60,11 @@ class EmailController
         $auth_token = TokensModel::find('email', Request::getQuery('email'))->single();
 
         if ($auth_token === false || $auth_token->token !== Request::getQuery('token')) {
-			Response::send([], 'This Two-Factor authentication link is invalid');
+			$this->response('This Two-Factor authentication link is invalid');
 		}
 
-		if ($auth_token->expires < date('Y-m-d H:i:s')) {
-			Response::send([], 'This Two-Factor authentication link expired. Please retrieves a new one');
+		if ($auth_token->expires < Carbon::now()->toDateTimeString()) {
+			$this->response('This Two-Factor authentication link expired. Please retrieves a new one');
 		}
 
         TokensModel::delete()->where('email', $auth_token->email)->persist();

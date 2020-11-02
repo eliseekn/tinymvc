@@ -159,7 +159,7 @@ if (!function_exists('__')) {
      */
     function __(string $expr, bool $app_config = false): string
     {
-        $lang = $app_config ? config('app.lang') : get_user_session()->lang;
+        $lang = $app_config ? config('app.lang') : user_session()->lang;
 
         require 'resources/lang/' . $lang . '.php';
         return $$expr;

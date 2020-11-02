@@ -8,8 +8,8 @@
     <div class="col-md-4 mb-md-0 mb-4">
         <div class="card card-metrics bg-light shadow-sm">
             <div class="card-body d-flex align-items-center justify-content-between">
-                <p class="mb-0 "><i class="fa fa-users fa-lg"></i> <?= __('total') ?></p>
-                <p class="font-weight-bold mb-0 "><?= $users->getTotalItems() ?></p>
+                <p><i class="fa fa-users fa-lg"></i> <?= __('total') ?></p>
+                <p class="font-weight-bold"><?= $users->getTotalItems() ?></p>
             </div>
         </div>
     </div>
@@ -17,8 +17,8 @@
     <div class="col-md-4 mb-md-0 mb-4">
         <div class="card card-metrics bg-light shadow-sm">
             <div class="card-body d-flex align-items-center justify-content-between">
-                <p class="mb-0 "><i class="fa fa-user-check fa-lg"></i> <?= __('active') ?></p>
-                <p class="font-weight-bold mb-0 "><?= count($active_users) ?></p>
+                <p><i class="fa fa-user-check fa-lg"></i> <?= __('active') ?></p>
+                <p class="font-weight-bold"><?= count($active_users) ?></p>
             </div>
         </div>
     </div>
@@ -26,8 +26,8 @@
     <div class="col-md-4">
         <div class="card card-metrics bg-light shadow-sm">
             <div class="card-body d-flex align-items-center justify-content-between">
-                <p class="mb-0 "><i class="fa fa-user-clock fa-lg"></i> <?= __('online') ?></p>
-                <p class="font-weight-bold mb-0 "><?= count($online_users) ?></p>
+                <p><i class="fa fa-user-clock fa-lg"></i> <?= __('online') ?></p>
+                <p class="font-weight-bold"><?= count($online_users) ?></p>
             </div>
         </div>
     </div>
@@ -120,20 +120,20 @@ endif ?>
                             <?php endif ?>
                         </td>
 
-                        <td><?= \Carbon\Carbon::parse($user->created_at, get_user_session()->timezone)->locale(get_user_session()->lang)->isoFormat('MMM Do, YYYY') ?></td>
+                        <td><?= \Carbon\Carbon::parse($user->created_at, user_session()->timezone)->locale(user_session()->lang)->isoFormat('MMM Do, YYYY') ?></td>
 
                         <td>
                             <a class="btn text-primary" href="<?= absolute_url('/admin/users/view/' . $user->id) ?>" title="View item">
                                 <i class="fa fa-eye"></i>
                             </a>
 
-                            <?php if ($user->role !== 'admin' || $user->id === get_user_session()->id) : ?>
+                            <?php if ($user->role !== 'admin' || $user->id === user_session()->id) : ?>
 
                             <a class="btn text-primary" href="<?= absolute_url('/admin/users/edit/' . $user->id) ?>" title="Edit item">
                                 <i class="fa fa-edit"></i>
                             </a>
 
-                            <?php if ($user->id !== get_user_session()->id) : ?>
+                            <?php if ($user->id !== user_session()->id) : ?>
 
                             <confirm-delete type="icon" content='<i class="fa fa-trash-alt"></i>' action="<?= absolute_url('/admin/users/delete/' . $user->id) ?>" redirect="<?= current_url()?>"></confirm-delete>
 

@@ -3,13 +3,11 @@
 namespace App\Controllers\Admin;
 
 use Framework\HTTP\Request;
-use Framework\Routing\View;
-use Framework\HTTP\Redirect;
-use Framework\Support\Alert;
+use Framework\Routing\Controller;
 use App\Requests\NotificationRequest;
 use App\Database\Models\NotificationsModel;
 
-class NotificationsController
+class NotificationsController extends Controller
 {
     /**
      * display list
@@ -18,7 +16,7 @@ class NotificationsController
      */
     public function index(): void
     {
-        View::render('admin/notifications', [
+        $this->render('admin/notifications', [
             'notifications' => NotificationsModel::select()->orderDesc('created_at')->paginate(50),
             'notifications_unread' => NotificationsModel::count()->where('status', 'unread')->single()->value,
         ]);
@@ -34,10 +32,11 @@ class NotificationsController
         $validate = NotificationRequest::validate(Request::getFields());
         
         if (is_array($validate)) {
-            Redirect::back()->withError($validate);
+            $this->redirect()->withError($validate);
         }
 
-	    NotificationsModel::insert(['text' => Request::getField('text')]);
+        NotificationsModel::insert(['message' => Request::getField('message')]);
+        $this->toast(__('notifications_created'))->success();
     }
     
 	/**
@@ -50,12 +49,12 @@ class NotificationsController
 	{
         if (!is_null($id)) {
 			if (!NotificationsModel::find('id', $id)->exists()) {
-				Alert::toast(__('notification_not_found'))->error();
+				$this->toast(__('notification_not_found'))->error();
 			}
 	
 			NotificationsModel::update(['status' => 'read'])->where('id', $id)->persist();
-            Alert::toast(__('notification_updated'))->success();
-            Redirect::back()->only();
+            $this->toast(__('notification_updated'))->success();
+            $this->redirect()->only();
 		} else {
 			$notifications_id = json_decode(Request::getRawData(), true);
 			$notifications_id = $notifications_id['items'];
@@ -64,7 +63,7 @@ class NotificationsController
 				NotificationsModel::update(['status' => 'read'])->where('id', $id)->persist();
 			}
 			
-			Alert::toast(__('notifications_updated'))->success();
+			$this->toast(__('notifications_updated'))->success();
 		}
     }
 	
@@ -78,12 +77,12 @@ class NotificationsController
 	{
 		if (!is_null($id)) {
 			if (!NotificationsModel::find('id', $id)->exists()) {
-				Alert::toast(__('notification_not_found'))->error();
+				$this->toast(__('notification_not_found'))->error();
 			}
 	
 			NotificationsModel::delete()->where('id', $id)->persist();
-			Alert::toast(__('notification_deleted'))->success();
-            Redirect::back()->only();
+			$this->toast(__('notification_deleted'))->success();
+            $this->redirect()->only();
 		} else {
 			$notifications_id = json_decode(Request::getRawData(), true);
 			$notifications_id = $notifications_id['items'];
@@ -92,7 +91,7 @@ class NotificationsController
 				NotificationsModel::delete()->where('id', $id)->persist();
 			}
 			
-			Alert::toast(__('notification_deleted'))->success();
+			$this->toast(__('notification_deleted'))->success();
 		}
 	}
 }

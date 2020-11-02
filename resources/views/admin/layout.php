@@ -44,60 +44,15 @@
                 </button>
 
                 <div class="ml-auto d-flex">
-                    <?php 
-                    if (get_user_session()->notifications) : 
-                        $notifications = \App\Database\Models\NotificationsModel::select()->where('status', 'unread')->firstOf(4); 
-                    ?>
-                    <div class="dropdown mr-3">
-                        <button class="btn" type="button" id="dropdown-notifications" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fa fa-bell fa-lg"></i>
-
-                            <?php if (count($notifications) > 0) : ?>
-                            <span class="bg-danger notifications-icon"></span>
-                            <?php endif ?>
-                        </button>
-
-                        <div class="dropdown-menu dropdown-menu-right py-0" aria-labelledby="dropdown-notifications" style="z-index: 1111">
-                            <p class="font-weight-bold mb-0 px-4 py-2">Notifications (<?= count($notifications) ?>)</p>
-
-                            <div class="dropdown-divider my-0"></div>
-
-                            <?php foreach ($notifications as $notification) : ?>
-                            <div class="dropdown-item py-2" style="width: 400px;">
-                                <p class="mb-0 text-wrap">
-                                    <?= $notification->message ?>
-                                </p>
-                                
-                                <div class="d-flex align-items-center justify-content-between small">
-                                    <span class="text-muted">
-                                        <?= time_elapsed(\Carbon\Carbon::parse($notification->created_at, get_user_session()->timezone)->locale(get_user_session()->lang), 1)?>
-                                    </span>
-
-                                    <a class="text-primary" href="<?= absolute_url('/admin/notifications/update/' . $notification->id) ?>">
-                                        <?= __('mark_as_read') ?>
-                                    </a>
-                                </div>
-                            </div>
-                            <?php endforeach ?>
-
-                            <div class="dropdown-divider my-0"></div>
-
-                            <div class="px-4 py-2">
-                                <a class="text-primary" href="<?= absolute_url('/admin/notifications') ?>">
-                                    <?= __('view_more') ?>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <?php endif ?>
+                    <div id="notifications-bell"></div>
 
                     <div class="dropdown">
                         <button class="btn btn-danger dropdown-toggle" type="button" id="dropdown-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <?= get_user_session()->name ?>
+                            <?= user_session()->name ?>
                         </button>
 
                         <div class="dropdown-menu dropdown-menu-right py-0" aria-labelledby="dropdown-menu">
-                            <a class="dropdown-item py-2" href="<?= absolute_url('/admin/settings/' . get_user_session()->id) ?>">
+                            <a class="dropdown-item py-2" href="<?= absolute_url('/admin/settings/' . user_session()->id) ?>">
                                 <i class="fa fa-cog"></i> <?= __('settings') ?>
                             </a>
 
@@ -124,7 +79,7 @@
     <?= $this->section('scripts') ?>
     <script defer src="<?= absolute_url('/public/js/index.js') ?>"></script>
 
-    <?php if (get_user_session()->theme === 'dark') : ?>
+    <?php if (user_session()->theme === 'dark') : ?>
     <script defer src="<?= absolute_url('/public/js/theme.js') ?>"></script>
     <?php endif ?>
 </body>

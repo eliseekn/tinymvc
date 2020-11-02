@@ -49,10 +49,11 @@ if (!function_exists('route_url')) {
         //search key from value in a multidimensional array
         //https://www.php.net/manual/en/function.array-search.php
         $url = array_search(
-            $name,
-            array_map(
+            $name, array_map(
                 function ($val) {
-                    return $val['name'];
+                    if (isset($val['name'])) {
+                        return $val['name'];
+                    }
                 },
                 Route::$routes
             )

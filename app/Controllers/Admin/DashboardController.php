@@ -2,11 +2,11 @@
 
 namespace App\Controllers\Admin;
 
-use Framework\Routing\View;
 use Framework\Support\Metrics;
+use Framework\Routing\Controller;
 use App\Database\Models\UsersModel;
 
-class DashboardController
+class DashboardController extends Controller
 {
 	/**
 	 * display dashboard page
@@ -15,7 +15,7 @@ class DashboardController
 	 */
 	public function index(): void
 	{
-		View::render('admin/index', [
+		$this->render('admin/index', [
 			'users' => UsersModel::select()->all(),
 			'online_users' => UsersModel::find('online', 1)->all(),
 			'active_users' => UsersModel::find('active', 1)->all(),

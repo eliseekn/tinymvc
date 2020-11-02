@@ -72,6 +72,12 @@ $config = [
     ],
 
     'session' => [
-        'lifetime' => 3600 //1 hour in seconds
+        'lifetime' => 3600, //1 hour in seconds
+        
+        'history' => [
+            'excludes' => [
+                'api'
+            ]
+        ]
     ]
 ];

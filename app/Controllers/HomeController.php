@@ -2,9 +2,9 @@
 
 namespace App\Controllers;
 
-use Framework\Routing\View;
+use Framework\Routing\Controller;
 
-class HomeController
+class HomeController extends Controller
 {
 	/**
 	 * display home page
@@ -13,8 +13,8 @@ class HomeController
 	 */
 	public function index(): void
 	{
-		View::render('index', [
+        $this->render('index', [
 			//
-		]);
+        ]);
 	}
 }
