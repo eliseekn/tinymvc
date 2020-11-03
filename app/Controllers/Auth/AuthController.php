@@ -49,12 +49,12 @@ class AuthController extends Controller
         }
 
         if (!AuthHelper::store()) {
-            $this->redirect()->withError(__('user_already_exists'));
+            $this->redirect()->withError(__('user_already_exists', true));
         }
 
         if (config('security.auth.email_confirmation') === false) {
             EmailHelper::sendWelcome(Request::getField('email'));
-            $this->redirect('/login')->withSuccess('You have been registered successfully. You can log in with your credentials');
+            $this->redirect('/login')->withSuccess(__('user_registered', true));
         } else {
             $token = random_string(50, true);
 
@@ -64,9 +64,11 @@ class AuthController extends Controller
                     'token' => $token,
                     'expires' => Carbon::now()->addHour()->toDateTimeString()
                 ]);
-            }
 
-            $this->redirect()->withWarning('Please heck your email account to confirm your email address.');
+                $this->redirect()->withInfo(__('confirm_email_link_sent', true));
+            } else {
+                $this->redirect()->withError(__('confirm_email_link_not_sent', true));
+            }
         }
     }
 	

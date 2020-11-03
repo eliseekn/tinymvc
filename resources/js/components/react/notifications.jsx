@@ -51,8 +51,8 @@ class Notifications extends React.Component {
 
     render() {
         return (
-            <div className="dropdown mr-3">
-                <button className="btn" type="button" id="dropdown-notifications" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <div className="dropdown">
+                <button className="btn" type="button" id="dropdown-notifications" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title={this.state.title}>
                     <i className="fa fa-bell fa-lg"></i>
                     
                     <Icon count={this.state.items.length} />

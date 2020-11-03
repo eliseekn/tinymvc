@@ -51,7 +51,7 @@ class AuthHelper
                 Session::create('auth_attempts_timeout', Carbon::now()->addMinutes(config('security.auth.unlock_timeout'))->toDateTimeString());
                 Redirect::back()->only();
             } else {
-                Redirect::back()->withError('Invalid email address or password');
+                Redirect::back()->withError(__('login_failed', true));
             }
         }
 
@@ -65,9 +65,9 @@ class AuthHelper
                     'expires' => Carbon::now()->addHour()->toDateTimeString()
                 ]);
 
-                Redirect::back()->withInfo('Please check your email account to confirm your email address.');
+                Redirect::back()->withInfo(__('confirm_email_link_sent', true));
             } else {
-                Redirect::back()->withInfo('An unexpected error occurs while . Please contact the adminstrator for more infos');
+                Redirect::back()->withError(__('confirm_email_link_not_sent', true));
             }
         }
 

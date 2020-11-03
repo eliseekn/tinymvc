@@ -14,7 +14,7 @@ use Framework\Support\Storage;
 /**
  * Main application
  */
-class App
+class Application
 {
     /**
      * load routes files
@@ -33,7 +33,7 @@ class App
      *
      * @return void
      */
-    public function start(): void
+    public function run(): void
     {
         new Router();
     }

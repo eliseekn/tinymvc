@@ -127,25 +127,25 @@ if (!function_exists('time_elapsed')) {
 		$diff->d -= $diff->w * 7;
 	
 		$string = array(
-			'y' => 'year',
-			'm' => 'month',
-			'w' => 'week',
-			'd' => 'day',
-			'h' => 'hr',
-			'i' => 'min',
-			's' => 'sec',
+			'y' => __('year'),
+			'm' => __('month'),
+			'w' => __('week'),
+			'd' => __('day'),
+			'h' => __('hr'),
+			'i' => __('min'),
+			's' => __('sec'),
 		);
 
 		foreach ($string as $k => &$v) {
 			if ($diff->$k) {
-				$v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
+				$v = $diff->$k . ' ' . $v; // . ($diff->$k > 1 ? 's' : '');
 			} else {
 				unset($string[$k]);
 			}
 		}
 	
 		$string = array_slice($string, 0, $level);
-		return $string ? implode(', ', $string) . ' ago' : 'just now';
+		return $string ? implode(', ', $string) . __('ago') : __('just now');
 	}
 }
 

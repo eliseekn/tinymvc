@@ -21,7 +21,7 @@
     <div class="d-flex" id="wrapper">
         <div class="border-right shadow-sm min-vh-100" id="sidebar-wrapper">
             <div class="sidebar-title bg-light">
-                <?= config('app.name') ?>
+                <?= user_session()->name ?>
             </div>
 
             <div class="list-group list-group-flush">
@@ -46,23 +46,13 @@
                 <div class="ml-auto d-flex">
                     <div id="notifications-bell"></div>
 
-                    <div class="dropdown">
-                        <button class="btn btn-danger dropdown-toggle" type="button" id="dropdown-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <?= user_session()->name ?>
-                        </button>
+                    <a class="btn" href="<?= absolute_url('/admin/settings/' . user_session()->id) ?>" title="<?= __('settings') ?>">
+                        <i class="fa fa-cog fa-lg"></i>
+                    </a>
 
-                        <div class="dropdown-menu dropdown-menu-right py-0" aria-labelledby="dropdown-menu">
-                            <a class="dropdown-item py-2" href="<?= absolute_url('/admin/settings/' . user_session()->id) ?>">
-                                <i class="fa fa-cog"></i> <?= __('settings') ?>
-                            </a>
-
-                            <div class="dropdown-divider my-0"></div>
-
-                            <a class="dropdown-item py-2" href="<?= absolute_url('/logout') ?>">
-                            <i class="fa fa-power-off text-danger"></i> <?= __('logout') ?>
-                            </a>
-                        </div>
-                    </div>
+                    <a class="btn" href="<?= absolute_url('/logout') ?>" title="<?= __('logout') ?>">
+                        <i class="fa fa-power-off fa-lg text-danger"></i>
+                    </a>
                 </div>
             </nav>
 

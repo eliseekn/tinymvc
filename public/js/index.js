@@ -1226,6 +1226,7 @@ var ThemeSwitch = /*#__PURE__*/function (_HTMLElement) {
         document.querySelector('#sidebar-toggler').classList.toggle('border-light');
         document.querySelector('#sidebar-toggler .fa-bars').classList.toggle('text-light');
         document.querySelector('#dropdown-notifications').classList.toggle('text-light');
+        document.querySelector('.fa-cog').classList.toggle('text-light');
         document.querySelector('#sidebar-wrapper').classList.toggle('bg-light');
         document.querySelector('#sidebar-wrapper .sidebar-title').classList.toggle('bg-light');
         document.querySelector('#sidebar-wrapper .sidebar-title').classList.toggle('bg-dark');
@@ -31010,14 +31011,15 @@ var Notifications = /*#__PURE__*/function (_React$Component) {
       var _this4 = this;
 
       return /*#__PURE__*/_react.default.createElement("div", {
-        className: "dropdown mr-3"
+        className: "dropdown"
       }, /*#__PURE__*/_react.default.createElement("button", {
         className: "btn",
         type: "button",
         id: "dropdown-notifications",
         "data-toggle": "dropdown",
         "aria-haspopup": "true",
-        "aria-expanded": "false"
+        "aria-expanded": "false",
+        title: this.state.title
       }, /*#__PURE__*/_react.default.createElement("i", {
         className: "fa fa-bell fa-lg"
       }), /*#__PURE__*/_react.default.createElement(Icon, {
@@ -31142,7 +31144,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44889" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "34045" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

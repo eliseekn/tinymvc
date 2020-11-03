@@ -33,6 +33,7 @@ class ThemeSwitch extends HTMLElement {
             document.querySelector('#sidebar-toggler .fa-bars').classList.toggle('text-light')
         
             document.querySelector('#dropdown-notifications').classList.toggle('text-light')
+            document.querySelector('.fa-cog').classList.toggle('text-light')
         
             document.querySelector('#sidebar-wrapper').classList.toggle('bg-light')  
         

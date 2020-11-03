@@ -6,7 +6,7 @@
  * @link https://github.com/eliseekn/TinyMVC
  */
 
-use Framework\App;
+use Framework\Application;
 
 /**
  * Main application entry
@@ -17,5 +17,5 @@ require 'vendor/autoload.php';
 require_once 'config/env.php';
 
 //start application
-$app = new App();
-$app->start();
+$app = new Application();
+$app->run();

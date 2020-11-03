@@ -44,9 +44,9 @@ class EmailController extends Controller
 		if (UsersModel::find('email', Request::getQuery('email'))->exists()) {
             UsersModel::update(['active' => 1])->where('email', Request::getQuery('email'))->persist();
             EmailHelper::sendWelcome(Request::getField('email'));
-            $this->redirect('/')->withError('Your account has been successfully activated.');
+            $this->redirect('/')->withError(__('user_activated', true));
         } else {
-            $this->redirect('/signup')->withError('Your account is not registred. Please register here.');
+            $this->redirect('/signup')->withError(__('user_not_registered', true));
         }
     }
         
@@ -60,11 +60,11 @@ class EmailController extends Controller
         $auth_token = TokensModel::find('email', Request::getQuery('email'))->single();
 
         if ($auth_token === false || $auth_token->token !== Request::getQuery('token')) {
-			$this->response('This Two-Factor authentication link is invalid');
+			$this->response(__('invalid_two_factor_link', true));
 		}
 
 		if ($auth_token->expires < Carbon::now()->toDateTimeString()) {
-			$this->response('This Two-Factor authentication link expired. Please retrieves a new one');
+			$this->response(__('expired_two_factor_link', true));
 		}
 
         TokensModel::delete()->where('email', $auth_token->email)->persist();

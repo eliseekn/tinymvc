@@ -25,9 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#sidebar-toggler .fa-bars').classList.toggle('text-light')
 
     document.querySelector('#dropdown-notifications').classList.toggle('text-light')
+    document.querySelector('.fa-cog').classList.toggle('text-light')
 
     document.querySelector('#sidebar-wrapper').classList.toggle('bg-light')  
-
     document.querySelector('#sidebar-wrapper .sidebar-title').classList.toggle('bg-light')            
     document.querySelector('#sidebar-wrapper .sidebar-title').classList.toggle('bg-dark')            
     document.querySelector('#sidebar-wrapper .sidebar-title').classList.toggle('text-light')  

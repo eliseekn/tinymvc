@@ -32,9 +32,9 @@ class PasswordController extends Controller
 				'expires' => Carbon::now()->addHour()->toDateTimeString()
 			]);
 
-			$this->redirect()->withSuccess('Your password reset link has been sumbitted successfuly. <br> You can check your email box now');
+			$this->redirect()->withSuccess(__('password_reset_link_sent', true));
 		} else {
-			$this->redirect()->withError('Failed to send paswword reset link to your email address');
+			$this->redirect()->withError(__('password_reset_link_not_sent', true));
 		}
 	}
 	
@@ -48,11 +48,11 @@ class PasswordController extends Controller
         $reset_token = TokensModel::find('email', Request::getQuery('email'))->single();
 
         if ($reset_token === false || $reset_token->token !== Request::getQuery('token')) {
-			$this->response('This password reset link is invalid');
+			$this->response(__('invalid_password_link', true));
 		}
 
 		if ($reset_token->expires < Carbon::now()->toDateTimeString()) {
-			$this->response('This password reset link expired. Please retrieves a new one');
+			$this->response(__('expired_password_link', true));
 		}
 
 		TokensModel::delete()->where('email', $reset_token->email)->persist();
@@ -79,6 +79,6 @@ class PasswordController extends Controller
             ->where('email', Request::getField('email'))
             ->persist();
 		
-		$this->redirect('/login')->withSuccess('Your password has been resetted successfully');
+		$this->redirect('/login')->withSuccess(__('password_resetted', true));
 	}
 }
