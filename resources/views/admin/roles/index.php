@@ -82,11 +82,11 @@ endif ?>
                         <td><?= \Carbon\Carbon::parse($role->created_at)->locale(user_session()->lang)->isoFormat('MMM Do, YYYY') ?></td>
 
                         <td>
-                            <a class="btn text-primary" href="<?= absolute_url('/admin/roles/view/' . $role->id) ?>" title="View item">
+                            <a class="btn text-primary px-1" href="<?= absolute_url('/admin/roles/view/' . $role->id) ?>" title="View item">
                                 <i class="fa fa-eye"></i>
                             </a>
 
-                            <a class="btn text-primary" href="<?= absolute_url('/admin/roles/edit/' . $role->id) ?>" title="Edit item">
+                            <a class="btn text-primary px-1" href="<?= absolute_url('/admin/roles/edit/' . $role->id) ?>" title="Edit item">
                                 <i class="fa fa-edit"></i>
                             </a>
 

@@ -29,7 +29,9 @@ endif ?>
 
         <div class="form-group row">
             <p class="col-sm-2 col-form-label"><?= __('created_at') ?></p>
-            <div class="col-form-label col-sm-10 font-weight-bold"><?= \Carbon\Carbon::parse($user->created_at)->locale(user_session()->lang)->isoFormat('MMM Do, YYYY') ?></div>
+            <div class="col-form-label col-sm-10 font-weight-bold">
+                <?= \Carbon\Carbon::parse($user->created_at)->locale(user_session()->lang)->isoFormat('MMM Do, YYYY') ?>
+            </div>
         </div>
 
         <div class="form-group row">
@@ -39,22 +41,24 @@ endif ?>
 
         <div class="form-group row">
             <p class="col-form-label col-sm-2"><?= __('account') ?></p>
+
             <div class="col-form-label col-sm-10 font-weight-bold">
                 <?php if ($user->active) : ?>
-                <span class="badge badge-pill badge-success"><?= __('active') ?></span>
+                <span class="badge badge-success"><?= __('active') ?></span>
                 <?php else : ?>
-                <span class="badge badge-pill badge-danger"><?= __('inactive') ?></span>
+                <span class="badge badge-danger"><?= __('inactive') ?></span>
                 <?php endif ?>
             </div>
         </div>
 
         <div class="form-group row">
             <p class="col-form-label col-sm-2"><?= __('status') ?></p>
+
             <div class="col-form-label col-sm-10 font-weight-bold">
                 <?php if ($user->online) : ?>
-                <span class="badge badge-pill badge-success"><?= __('online') ?></span>
+                <span class="badge badge-success"><?= __('online') ?></span>
                 <?php else : ?>
-                <span class="badge badge-pill badge-danger"><?= __('offline') ?></span>
+                <span class="badge badge-danger"><?= __('offline') ?></span>
                 <?php endif ?>
             </div>
         </div>

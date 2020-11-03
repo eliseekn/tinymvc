@@ -106,30 +106,30 @@ endif ?>
 
                         <td>
                             <?php if ($user->active) : ?>
-                            <span class="badge badge-pill badge-success"><?= __('active') ?></span>
+                            <span class="badge badge-success"><?= __('active') ?></span>
                             <?php else : ?>
-                            <span class="badge badge-pill badge-danger"><?= __('inactive') ?></span>
+                            <span class="badge badge-danger"><?= __('inactive') ?></span>
                             <?php endif ?>
                         </td>
 
                         <td>
                             <?php if ($user->online) : ?>
-                            <span class="badge badge-pill badge-success"><?= __('online') ?></span>
+                            <span class="badge badge-success"><?= __('online') ?></span>
                             <?php else : ?>
-                            <span class="badge badge-pill badge-danger"><?= __('offline') ?></span>
+                            <span class="badge badge-danger"><?= __('offline') ?></span>
                             <?php endif ?>
                         </td>
 
                         <td><?= \Carbon\Carbon::parse($user->created_at, user_session()->timezone)->locale(user_session()->lang)->isoFormat('MMM Do, YYYY') ?></td>
 
                         <td>
-                            <a class="btn text-primary" href="<?= absolute_url('/admin/users/view/' . $user->id) ?>" title="View item">
+                            <a class="btn text-primary px-1" href="<?= absolute_url('/admin/users/view/' . $user->id) ?>" title="View item">
                                 <i class="fa fa-eye"></i>
                             </a>
 
                             <?php if ($user->role !== 'admin' || $user->id === user_session()->id) : ?>
 
-                            <a class="btn text-primary" href="<?= absolute_url('/admin/users/edit/' . $user->id) ?>" title="Edit item">
+                            <a class="btn text-primary px-1" href="<?= absolute_url('/admin/users/edit/' . $user->id) ?>" title="Edit item">
                                 <i class="fa fa-edit"></i>
                             </a>
 

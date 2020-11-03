@@ -275,8 +275,11 @@ class Builder
      */
     public function create(): self
     {
-		self::$query .= "created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
-			updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)";
+        if (config('db.timestamps') === true) {
+            self::$query .= "created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+			    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)";
+        }
+        
 		return $this;
     }
 
@@ -520,9 +523,11 @@ class Builder
 		self::$query .= " SET ";
 
 		//update last modifed timestamp
-		$items = array_merge($items, [
-            'updated_at' => Carbon::now()->toDateTimeString()
-        ]);
+		if (config('db.timestamps') === true) {
+            $items = array_merge($items, [
+                'updated_at' => Carbon::now()->toDateTimeString()
+            ]);
+        }
 
 		foreach ($items as $key => $value) {
 			self::$query .= "$key = ?, ";

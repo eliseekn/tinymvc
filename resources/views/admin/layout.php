@@ -20,8 +20,9 @@
 
     <div class="d-flex" id="wrapper">
         <div class="border-right shadow-sm min-vh-100" id="sidebar-wrapper">
-            <div class="sidebar-title bg-light">
-                <?= user_session()->name ?>
+            <div class="sidebar-title bg-light d-flex align-items-center">
+                <avatar-icon name="<?= user_session()->name ?>"></avatar-icon>
+                <span class="ml-2"><?= user_session()->name ?></span>
             </div>
 
             <div class="list-group list-group-flush">
@@ -39,18 +40,18 @@
 
         <div id="page-content-wrapper">
             <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm px-4">
-                <button class="btn border-dark" id="sidebar-toggler" title="Toggle sidebar">
+                <button class="btn px-1" id="sidebar-toggler" title="Toggle sidebar">
                     <i class="fa fa-bars"></i>
                 </button>
 
-                <div class="ml-auto d-flex">
+                <div class="ml-auto d-flex align-items-center">
                     <div id="notifications-bell"></div>
 
-                    <a class="btn" href="<?= absolute_url('/admin/settings/' . user_session()->id) ?>" title="<?= __('settings') ?>">
+                    <a class="btn btn-sm" href="<?= absolute_url('/admin/settings/' . user_session()->id) ?>" title="<?= __('settings') ?>">
                         <i class="fa fa-cog fa-lg"></i>
                     </a>
 
-                    <a class="btn" href="<?= absolute_url('/logout') ?>" title="<?= __('logout') ?>">
+                    <a class="btn btn-sm" href="<?= absolute_url('/logout') ?>" title="<?= __('logout') ?>">
                         <i class="fa fa-power-off fa-lg text-danger"></i>
                     </a>
                 </div>

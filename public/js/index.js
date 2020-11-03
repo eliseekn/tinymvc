@@ -694,7 +694,7 @@ var ConfirmDelete = /*#__PURE__*/function (_HTMLElement) {
     key: "connectedCallback",
     value: function connectedCallback() {
       if (this.getAttribute('type') === 'icon') {
-        this.innerHTML = "<a class=\"btn text-danger\" title=\"Delete item\">".concat(this.getAttribute('content'), "</a>");
+        this.innerHTML = "<a class=\"btn text-danger px-1\" title=\"Delete item\">".concat(this.getAttribute('content'), "</a>");
       } else {
         this.innerHTML = "<a class=\"btn btn-danger ml-2\" href=\"#\">".concat(this.getAttribute('content'), "</a>");
       }
@@ -1231,6 +1231,10 @@ var ThemeSwitch = /*#__PURE__*/function (_HTMLElement) {
         document.querySelector('#sidebar-wrapper .sidebar-title').classList.toggle('bg-light');
         document.querySelector('#sidebar-wrapper .sidebar-title').classList.toggle('bg-dark');
         document.querySelector('#sidebar-wrapper .sidebar-title').classList.toggle('text-light');
+        document.querySelector('#avatar-icon').classList.toggle('text-light');
+        document.querySelector('#avatar-icon').classList.toggle('bg-dark');
+        document.querySelector('#avatar-icon').classList.toggle('text-dark');
+        document.querySelector('#avatar-icon').classList.toggle('bg-light');
         document.querySelectorAll('#sidebar-wrapper .list-group-item').forEach(function (element) {
           element.classList.toggle('bg-light');
         });
@@ -1242,6 +1246,81 @@ var ThemeSwitch = /*#__PURE__*/function (_HTMLElement) {
 }( /*#__PURE__*/_wrapNativeSuper(HTMLElement));
 
 var _default = ThemeSwitch;
+exports.default = _default;
+},{}],"components/mixed/avatar-icon.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _wrapNativeSuper(Class) { var _cache = typeof Map === "function" ? new Map() : undefined; _wrapNativeSuper = function _wrapNativeSuper(Class) { if (Class === null || !_isNativeFunction(Class)) return Class; if (typeof Class !== "function") { throw new TypeError("Super expression must either be null or a function"); } if (typeof _cache !== "undefined") { if (_cache.has(Class)) return _cache.get(Class); _cache.set(Class, Wrapper); } function Wrapper() { return _construct(Class, arguments, _getPrototypeOf(this).constructor); } Wrapper.prototype = Object.create(Class.prototype, { constructor: { value: Wrapper, enumerable: false, writable: true, configurable: true } }); return _setPrototypeOf(Wrapper, Class); }; return _wrapNativeSuper(Class); }
+
+function _construct(Parent, args, Class) { if (_isNativeReflectConstruct()) { _construct = Reflect.construct; } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _isNativeFunction(fn) { return Function.toString.call(fn).indexOf("[native code]") !== -1; }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var AvatarIcon = /*#__PURE__*/function (_HTMLElement) {
+  _inherits(AvatarIcon, _HTMLElement);
+
+  var _super = _createSuper(AvatarIcon);
+
+  function AvatarIcon() {
+    var _this;
+
+    _classCallCheck(this, AvatarIcon);
+
+    _this = _super.call(this);
+    _this.getFirstLetter = _this.getFirstLetter.bind(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  _createClass(AvatarIcon, [{
+    key: "connectedCallback",
+    value: function connectedCallback() {
+      this.innerHTML = "\n            <div class=\"d-flex align-items-center justify-content-center rounded-circle bg-dark text-light\" id=\"avatar-icon\" style=\"width: 30px; height: 30px\">\n                <span class=\"small\">".concat(this.getFirstLetter(), "</span>\n            </div>\n        ");
+    }
+  }, {
+    key: "getFirstLetter",
+    value: function getFirstLetter() {
+      var name = this.getAttribute('name');
+      var firstLetter = name.split(' ');
+
+      if (firstLetter.length === 0) {
+        return name[0].toUpperCase();
+      } else {
+        return firstLetter[0][0].toUpperCase();
+      }
+    }
+  }]);
+
+  return AvatarIcon;
+}( /*#__PURE__*/_wrapNativeSuper(HTMLElement));
+
+var _default = AvatarIcon;
 exports.default = _default;
 },{}],"../../node_modules/object-assign/index.js":[function(require,module,exports) {
 /*
@@ -31013,7 +31092,7 @@ var Notifications = /*#__PURE__*/function (_React$Component) {
       return /*#__PURE__*/_react.default.createElement("div", {
         className: "dropdown"
       }, /*#__PURE__*/_react.default.createElement("button", {
-        className: "btn",
+        className: "btn btn-sm",
         type: "button",
         id: "dropdown-notifications",
         "data-toggle": "dropdown",
@@ -31031,7 +31110,7 @@ var Notifications = /*#__PURE__*/function (_React$Component) {
           zIndex: 1111
         }
       }, /*#__PURE__*/_react.default.createElement("p", {
-        className: "font-weight-bold px-4 py-2"
+        className: "font-weight-bold px-4 py-2 text-center"
       }, this.state.title, " (", this.state.items.length, ")"), /*#__PURE__*/_react.default.createElement("div", {
         className: "dropdown-divider my-0"
       }), this.state.items.map(function (item) {
@@ -31046,7 +31125,7 @@ var Notifications = /*#__PURE__*/function (_React$Component) {
       }), /*#__PURE__*/_react.default.createElement("div", {
         className: "dropdown-divider my-0"
       }), /*#__PURE__*/_react.default.createElement("div", {
-        className: "px-4 py-2 bg-light"
+        className: "px-4 py-2 bg-light text-center"
       }, /*#__PURE__*/_react.default.createElement("a", {
         className: "text-primary",
         href: "/tinymvc/admin/notifications"
@@ -31092,6 +31171,8 @@ var _linesChart = _interopRequireDefault(require("./components/charts/lines-char
 
 var _themeSwitch = _interopRequireDefault(require("./components/mixed/theme-switch"));
 
+var _avatarIcon = _interopRequireDefault(require("./components/mixed/avatar-icon"));
+
 var _react = _interopRequireDefault(require("react"));
 
 var _reactDom = _interopRequireDefault(require("react-dom"));
@@ -31112,11 +31193,12 @@ window.customElements.define('lines-chart', _linesChart.default);
 window.customElements.define('timezone-picker', _timezonePicker.default);
 window.customElements.define('currency-picker', _currencyPicker.default);
 window.customElements.define('theme-switch', _themeSwitch.default);
+window.customElements.define('avatar-icon', _avatarIcon.default);
 
 if (document.querySelector('#notifications-bell')) {
   _reactDom.default.render( /*#__PURE__*/_react.default.createElement(_notifications.default, null), document.querySelector('#notifications-bell'));
 }
-},{"./components/admin":"components/admin.js","./components/loading-button":"components/loading-button.js","./components/password-toggler":"components/password-toggler.js","./components/modal/upload-modal":"components/modal/upload-modal.js","./components/modal/export-modal":"components/modal/export-modal.js","./components/alert/alert-popup":"components/alert/alert-popup.js","./components/alert/alert-toast":"components/alert/alert-toast.js","./components/mixed/confirm-delete":"components/mixed/confirm-delete.js","./components/mixed/text-editor":"components/mixed/text-editor.js","./components/mixed/timezone-picker":"components/mixed/timezone-picker.js","./components/mixed/currency-picker":"components/mixed/currency-picker.js","./components/charts/donut-chart":"components/charts/donut-chart.js","./components/charts/bars-chart":"components/charts/bars-chart.js","./components/charts/lines-chart":"components/charts/lines-chart.js","./components/mixed/theme-switch":"components/mixed/theme-switch.js","react":"../../node_modules/react/index.js","react-dom":"../../node_modules/react-dom/index.js","./components/react/notifications":"components/react/notifications.jsx"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./components/admin":"components/admin.js","./components/loading-button":"components/loading-button.js","./components/password-toggler":"components/password-toggler.js","./components/modal/upload-modal":"components/modal/upload-modal.js","./components/modal/export-modal":"components/modal/export-modal.js","./components/alert/alert-popup":"components/alert/alert-popup.js","./components/alert/alert-toast":"components/alert/alert-toast.js","./components/mixed/confirm-delete":"components/mixed/confirm-delete.js","./components/mixed/text-editor":"components/mixed/text-editor.js","./components/mixed/timezone-picker":"components/mixed/timezone-picker.js","./components/mixed/currency-picker":"components/mixed/currency-picker.js","./components/charts/donut-chart":"components/charts/donut-chart.js","./components/charts/bars-chart":"components/charts/bars-chart.js","./components/charts/lines-chart":"components/charts/lines-chart.js","./components/mixed/theme-switch":"components/mixed/theme-switch.js","./components/mixed/avatar-icon":"components/mixed/avatar-icon.js","react":"../../node_modules/react/index.js","react-dom":"../../node_modules/react-dom/index.js","./components/react/notifications":"components/react/notifications.jsx"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -31144,7 +31226,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "34045" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "40415" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

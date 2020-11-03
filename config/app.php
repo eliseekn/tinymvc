@@ -26,7 +26,8 @@ $config = [
         'name' => 'test',
         'username' => 'root',
         'password' => 'root',
-        'table_prefix' => ''
+        'table_prefix' => '',
+        'timestamps' => true
     ],
 
     //smtp

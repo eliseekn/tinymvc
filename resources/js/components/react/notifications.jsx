@@ -52,14 +52,14 @@ class Notifications extends React.Component {
     render() {
         return (
             <div className="dropdown">
-                <button className="btn" type="button" id="dropdown-notifications" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title={this.state.title}>
+                <button className="btn btn-sm" type="button" id="dropdown-notifications" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title={this.state.title}>
                     <i className="fa fa-bell fa-lg"></i>
                     
                     <Icon count={this.state.items.length} />
                 </button>
 
                 <div className="dropdown-menu dropdown-menu-right py-0" aria-labelledby="dropdown-notifications" style={{ zIndex: 1111 }}>
-                    <p className="font-weight-bold px-4 py-2">
+                    <p className="font-weight-bold px-4 py-2 text-center">
                         {this.state.title} ({this.state.items.length})
                     </p>
 
@@ -81,7 +81,7 @@ class Notifications extends React.Component {
 
                     <div className="dropdown-divider my-0"></div>
 
-                    <div className="px-4 py-2 bg-light">
+                    <div className="px-4 py-2 bg-light text-center">
                         <a className="text-primary" href="/tinymvc/admin/notifications">
                             {this.state.viewAll}
                         </a>

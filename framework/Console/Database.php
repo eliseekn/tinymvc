@@ -8,7 +8,7 @@
 
 namespace Framework\Console;
 
-use Framework\ORM\Builder;
+use Exception;
 use Framework\Support\Storage;
 use Framework\ORM\Database as DB;
 
@@ -18,12 +18,12 @@ use Framework\ORM\Database as DB;
 class Database
 {
     /**
-     * check migration class
+     * get migration class
      *
      * @param  string $table
      * @return mixed
      */
-    private static function checkMigration(string $table)
+    private static function getMigration(string $table)
     {
         $migration = 'App\Database\Migrations\\' . $table;
 
@@ -35,12 +35,12 @@ class Database
     }
     
     /**
-     * check seed class
+     * get seed class
      *
      * @param  string $seed
      * @return mixed
      */
-    private static function checkSeed(string $seed)
+    private static function getSeed(string $seed)
     {
         $seeder = 'App\Database\Seeds\\' . $seed;
 
@@ -69,25 +69,45 @@ class Database
             !array_key_exists('fetch', $options) &&
             !array_key_exists('execute', $options)
         ) {
+            echo '[+] Running migrations...' . PHP_EOL;
+
             if ($options['migration'] !== 'all') {
                 $table = $options['migration'];
         
                 if (strpos($table, ',') === false) {
-                    $table = self::checkMigration($table);
-                    $table::migrate();
+                    $table = self::getMigration($table);
+                    
+                    try {
+                        $table::migrate();
+                        echo '[+] Table ' . $table . ' migrated successfully' . PHP_EOL;
+                    } catch(Exception $e) {
+                        exit('[-] ' . $e->getMessage());
+                    }
                 } else {
                     $tables = explode(',', $table);
         
                     foreach ($tables as $table) {
-                        $table = self::checkMigration($table);
-                        $table::migrate();
+                        $table = self::getMigration($table);
+                        
+                        try {
+                            $table::migrate();
+                            echo '[+] Table ' . $table . ' migrated successfully' . PHP_EOL;
+                        } catch(Exception $e) {
+                            exit('[-] ' . $e->getMessage());
+                        }
                     }
                 }
             } else {
                 foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
                     $table = explode('.', $file)[0];
-                    $table = self::checkMigration($table);
-                    $table::migrate();
+                    $table = self::getMigration($table);
+                    
+                    try {
+                        $table::migrate();
+                        echo '[+] Table ' . $table . ' migrated successfully' . PHP_EOL;
+                    } catch(Exception $e) {
+                        exit('[-] ' . $e->getMessage());
+                    }
                 }
             }
         }
@@ -102,47 +122,87 @@ class Database
             !array_key_exists('fetch', $options) &&
             !array_key_exists('execute', $options)
         ) {
+            echo '[+] Running migrations...' . PHP_EOL;
+
             if ($options['migration'] !== 'all') {
                 $table = $options['migration'];
         
                 if (strpos($table, ',') === false) {
-                    $table = self::checkMigration($table);
-                    $table::migrate();
+                    $table = self::getMigration($table);
+                    
+                    try {
+                        $table::migrate();
+                        echo '[+] Table ' . $table . ' migrated successfully' . PHP_EOL;
+                    } catch(Exception $e) {
+                        exit('[-] ' . $e->getMessage());
+                    }
                 } else {
                     $tables = explode(',', $table);
         
                     foreach ($tables as $table) {
-                        $table = self::checkMigration($table);
-                        $table::migrate();
+                        $table = self::getMigration($table);
+                        
+                        try {
+                            $table::migrate();
+                            echo '[+] Table ' . $table . ' migrated successfully' . PHP_EOL;
+                        } catch(Exception $e) {
+                            exit('[-] ' . $e->getMessage());
+                        }
                     }
                 }
             } else {
                 foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
                     $table = explode('.', $file)[0];
-                    $table = self::checkMigration($table);
-                    $table::migrate();
+                    $table = self::getMigration($table);
+                    
+                    try {
+                        $table::migrate();
+                        echo '[+] Table ' . $table . ' migrated successfully' . PHP_EOL;
+                    } catch(Exception $e) {
+                        exit('[-] ' . $e->getMessage());
+                    }
                 }
             }
         
+            echo '[+] Running seeds...' . PHP_EOL;
+
             if ($options['seed'] !== 'all') {
                 $seed = $options['seed'];
         
                 if (strpos($seed, ',') === false) {
-                    $seed = self::checkSeed($seed);
-                    $seed::insert();
+                    $seed = self::getSeed($seed);
+                    
+                    try {
+                        $seed::migrate();
+                        echo '[+] Seed ' . $seed . ' inserted successfully' . PHP_EOL;
+                    } catch(Exception $e) {
+                        exit('[-] ' . $e->getMessage());
+                    }
                 } else {
                     $seeds = explode(',', $seed);
         
                     foreach ($seeds as $seed) {
-                        $seed = self::checkSeed($seed);
-                        $seed::insert();
+                        $seed = self::getSeed($seed);
+                        
+                        try {
+                            $seed::migrate();
+                            echo '[+] Seed ' . $seed . ' inserted successfully' . PHP_EOL;
+                        } catch(Exception $e) {
+                            exit('[-] ' . $e->getMessage());
+                        }
                     }
                 }
             } else {
                 foreach (Storage::path(config('storage.seeds'))->getFiles() as $file) {
                     $seed = explode('.', $file)[0];
-                    $seed = self::checkSeed($seed);
-                    $seed::insert();
+                    $seed = self::getSeed($seed);
+                    
+                    try {
+                        $seed::migrate();
+                        echo '[+] Seed ' . $seed . ' inserted successfully' . PHP_EOL;
+                    } catch(Exception $e) {
+                        exit('[-] ' . $e->getMessage());
+                    }
                 }
             }
         } 
@@ -161,20 +221,20 @@ class Database
                 $table = $options['migration'];
         
                 if (strpos($table, ',') === false) {
-                    $table = self::checkMigration($table);
+                    $table = self::getMigration($table);
                     $table::refresh();
                 } else {
                     $tables = explode(',', $table);
         
                     foreach ($tables as $table) {
-                        $table = self::checkMigration($table);
+                        $table = self::getMigration($table);
                         $table::refresh();
                     }
                 }
             } else {
                 foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
                     $table = explode('.', $file)[0];
-                    $table = self::checkMigration($table);
+                    $table = self::getMigration($table);
                     $table::refresh();
                 }
             }
@@ -183,20 +243,20 @@ class Database
                 $seed = $options['seed'];
         
                 if (strpos($seed, ',') === false) {
-                    $seed = self::checkSeed($seed);
+                    $seed = self::getSeed($seed);
                     $seed::insert();
                 } else {
                     $seeds = explode(',', $seed);
         
                     foreach ($seeds as $seed) {
-                        $seed = self::checkSeed($seed);
+                        $seed = self::getSeed($seed);
                         $seed::insert();
                     }
                 }
             } else {
                 foreach (Storage::path(config('storage.seeds'))->getFiles() as $file) {
                     $seed = explode('.', $file)[0];
-                    $seed = self::checkSeed($seed);
+                    $seed = self::getSeed($seed);
                     $seed::insert();
                 }
             }
@@ -216,20 +276,20 @@ class Database
                 $table = $options['migration'];
         
                 if (strpos($table, ',') === false) {
-                    $table = self::checkMigration($table);
+                    $table = self::getMigration($table);
                     $table::refresh();
                 } else {
                     $tables = explode(',', $table);
         
                     foreach ($tables as $table) {
-                        $table = self::checkMigration($table);
+                        $table = self::getMigration($table);
                         $table::refresh();
                     }
                 }
             } else {
                 foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
                     $table = explode('.', $file)[0];
-                    $table = self::checkMigration($table);
+                    $table = self::getMigration($table);
                     $table::refresh();
                 }
             }
@@ -249,20 +309,20 @@ class Database
                 $table = $options['migration'];
         
                 if (strpos($table, ',') === false) {
-                    $table = self::checkMigration($table);
+                    $table = self::getMigration($table);
                     $table::delete();
                 } else {
                     $tables = explode(',', $table);
         
                     foreach ($tables as $table) {
-                        $table = self::checkMigration($table);
+                        $table = self::getMigration($table);
                         $table::delete();
                     }
                 }
             } else {
                 foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
                     $table = explode('.', $file)[0];
-                    $table = self::checkMigration($table);
+                    $table = self::getMigration($table);
                     $table::delete();
                 }
             }
@@ -282,20 +342,20 @@ class Database
                 $seed = $options['seed'];
         
                 if (strpos($seed, ',') === false) {
-                    $seed = self::checkSeed($seed);
+                    $seed = self::getSeed($seed);
                     $seed::insert();
                 } else {
                     $seeds = explode(',', $seed);
         
                     foreach ($seeds as $seed) {
-                        $seed = self::checkSeed($seed);
+                        $seed = self::getSeed($seed);
                         $seed::insert();
                     }
                 }
             } else {
                 foreach (Storage::path(config('storage.seeds'))->getFiles() as $file) {
                     $seed = explode('.', $file)[0];
-                    $seed = self::checkSeed($seed);
+                    $seed = self::getSeed($seed);
                     $seed::insert();
                 }
             }
@@ -408,6 +468,6 @@ class Database
             exit('[-] Invalid command line arguments, print "--help" for commands list' . PHP_EOL);
         }
         
-        exit('[+] Operations done successfully.' . PHP_EOL);
+        exit('[+] Operations done successfully' . PHP_EOL);
     }
 }

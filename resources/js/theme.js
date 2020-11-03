@@ -32,6 +32,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#sidebar-wrapper .sidebar-title').classList.toggle('bg-dark')            
     document.querySelector('#sidebar-wrapper .sidebar-title').classList.toggle('text-light')  
 
+    document.querySelector('#avatar-icon').classList.toggle('text-light')
+    document.querySelector('#avatar-icon').classList.toggle('bg-dark')
+    document.querySelector('#avatar-icon').classList.toggle('text-dark')
+    document.querySelector('#avatar-icon').classList.toggle('bg-light')
+
     document.querySelectorAll('#sidebar-wrapper .list-group-item').forEach(element => {
         element.classList.toggle('bg-light')
     })
