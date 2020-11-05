@@ -22,15 +22,6 @@
             </div>
         </div>
     </div>
-
-    <div class="col-md-4">
-        <div class="card card-metrics bg-light shadow-sm">
-            <div class="card-body d-flex align-items-center justify-content-between">
-                <p><i class="fa fa-user-clock fa-lg"></i> <?= __('online') ?></p>
-                <p class="font-weight-bold"><?= count($online_users) ?></p>
-            </div>
-        </div>
-    </div>
 </div>
 
 <?php if (flash_messages()) :
@@ -39,15 +30,15 @@ endif ?>
 
 <div class="card shadow-sm">
     <div class="card-header">
-        <div class="d-flex flex-md-row flex-column align-items-lg-center justify-content-lg-between">
+        <div class="d-flex flex-lg-row flex-column align-items-lg-center justify-content-lg-between">
             <span><?= __('users') ?></span>
 
-            <div class="d-flex flex-md-row flex-column mt-md-0 mt-2">
+            <div class="d-flex flex-lg-row flex-column mt-lg-0 mt-2">
                 <span class="mr-md-3">
                     <input type="search" class="form-control" id="filter" placeholder="<?= __('search') ?>">
                 </span>
 
-                <span class="mt-md-0 mt-2">
+                <span class="mt-lg-0 mt-2">
                     <a href="<?= absolute_url('/admin/users/new') ?>" class="btn btn-primary"><?= __('new') ?></a>
                     
                     <upload-modal action="<?= absolute_url('/admin/users/import') ?>" title="<?= __('import') ?>"></upload-modal>
@@ -77,7 +68,6 @@ endif ?>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('name') ?></th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('email') ?></th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('role') ?></th>
-                        <th scope="col"><i class="fa fa-sort"></i> <?= __('account') ?></th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('status') ?></th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('created_at') ?></th>
                         <th scope="col"></th>
@@ -112,24 +102,16 @@ endif ?>
                             <?php endif ?>
                         </td>
 
-                        <td>
-                            <?php if ($user->online) : ?>
-                            <span class="badge badge-success"><?= __('online') ?></span>
-                            <?php else : ?>
-                            <span class="badge badge-danger"><?= __('offline') ?></span>
-                            <?php endif ?>
-                        </td>
-
                         <td><?= \Carbon\Carbon::parse($user->created_at, user_session()->timezone)->locale(user_session()->lang)->isoFormat('MMM Do, YYYY') ?></td>
 
                         <td>
-                            <a class="btn text-primary px-1" href="<?= absolute_url('/admin/users/view/' . $user->id) ?>" title="View item">
+                            <a class="btn text-primary p-1" href="<?= absolute_url('/admin/users/view/' . $user->id) ?>" title="View item">
                                 <i class="fa fa-eye"></i>
                             </a>
 
                             <?php if ($user->role !== 'admin' || $user->id === user_session()->id) : ?>
 
-                            <a class="btn text-primary px-1" href="<?= absolute_url('/admin/users/edit/' . $user->id) ?>" title="Edit item">
+                            <a class="btn text-primary p-1" href="<?= absolute_url('/admin/users/edit/' . $user->id) ?>" title="Edit item">
                                 <i class="fa fa-edit"></i>
                             </a>
 

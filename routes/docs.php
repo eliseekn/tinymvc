@@ -10,7 +10,7 @@ use Framework\Routing\View;
 use Framework\Routing\Route;
 
 /**
- * Set documentation routes
+ * Documentation routes
  */
 
 Route::get('docs', [

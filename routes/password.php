@@ -10,7 +10,7 @@ use Framework\Routing\View;
 use Framework\Routing\Route;
 
 /**
- * Set password forgot routes
+ * Password forgot routes
  */
 
 Route::get('password/forgot', [

@@ -1,11 +1,20 @@
 document.addEventListener('DOMContentLoaded', () => {
     //toggle sidebar
-    if (document.querySelector('#sidebar-toggler')) {
-        document.querySelector('#sidebar-toggler').addEventListener('click', event => {
-            document.querySelector('#wrapper').classList.toggle('toggled')
+    if (document.querySelector('.sidebar-toggler')) {
+        document.querySelector('.sidebar-toggler').addEventListener('click', event => {
+            document.querySelector('.wrapper').classList.toggle('toggled')
+            document.querySelector('.sidebar-close').classList.toggle('d-none')
         })
     }
 
+    //close sidebar
+    if (document.querySelector('.sidebar-close')) {
+        document.querySelector('.sidebar-close').addEventListener('click', event => {
+            document.querySelector('.wrapper').classList.toggle('toggled')
+            document.querySelector('.sidebar-close').classList.toggle('d-none')
+        })
+    }
+    
     //select all table items
     if (document.querySelector('#select-all')) {
         document.querySelector('#select-all').addEventListener('change', event => {

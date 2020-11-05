@@ -55,6 +55,10 @@ class AuthHelper
             }
         }
 
+        //reset authentication attempts and disable lock
+        Session::close('auth_attempts');
+        Session::close('auth_attempts_timeout');
+
         if ($user->two_factor) {
             $token = random_string(50, true);
 
@@ -71,34 +75,21 @@ class AuthHelper
             }
         }
 
-        UsersModel::update(['online' => 1])->where('id', $user->id)->persist();
         Session::setUser($user);
             
         if (!empty(Request::getField('remember'))) {
             Cookies::setUser(Encryption::encrypt(Request::getField('email')));
         }
-
-        //reset authentication attempts and disable lock
-        Session::close('auth_attempts');
-        Session::close('auth_attempts_timeout');
     }
     
     /**
      * email authentication
      *
-     * @param  string $email
      * @return void
      */
-    public static function authEmail(string $email): void
+    public static function authEmail(): void
     {
-        $user = UsersModel::find('email', Request::getField('email'))->single();
-        
-        UsersModel::update(['online' => 1])->where('id', $user->id)->persist();
-        Session::setUser($user);
-            
-        if (!empty(Request::getField('remember'))) {
-            Cookies::setUser(Encryption::encrypt(Request::getField('email')));
-        }
+        Session::setUser(UsersModel::find('email', Request::getField('email'))->single());
     }
 
     /**
@@ -157,7 +148,6 @@ class AuthHelper
     public static function forget(): void
     {
         if (self::checkSession()) {
-            UsersModel::update(['online' => 0])->where('id', self::getSession()->id)->persist();        
             Session::deleteUser();
         }
 

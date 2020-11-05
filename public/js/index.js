@@ -134,9 +134,18 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 document.addEventListener('DOMContentLoaded', function () {
   //toggle sidebar
-  if (document.querySelector('#sidebar-toggler')) {
-    document.querySelector('#sidebar-toggler').addEventListener('click', function (event) {
-      document.querySelector('#wrapper').classList.toggle('toggled');
+  if (document.querySelector('.sidebar-toggler')) {
+    document.querySelector('.sidebar-toggler').addEventListener('click', function (event) {
+      document.querySelector('.wrapper').classList.toggle('toggled');
+      document.querySelector('.sidebar-close').classList.toggle('d-none');
+    });
+  } //close sidebar
+
+
+  if (document.querySelector('.sidebar-close')) {
+    document.querySelector('.sidebar-close').addEventListener('click', function (event) {
+      document.querySelector('.wrapper').classList.toggle('toggled');
+      document.querySelector('.sidebar-close').classList.toggle('d-none');
     });
   } //select all table items
 
@@ -616,7 +625,7 @@ var AlertToast = /*#__PURE__*/function (_HTMLElement) {
       var element = document.createElement('div');
       element.id = 'alert-toast';
       element.classList.add('fade');
-      element.innerHTML = "\n            <div class=\"modal-dialog position-absolute shadow-sm rounded\" style=\"top: -0.3em; right: .8em\">\n                <div class=\"modal-content\">\n                    <div class=\"position-relative bg-".concat(this.getAttribute('type'), " rounded-top\" style=\"padding: .13em 0\"></div>\n\n                    <div class=\"modal-body d-flex justify-content-around align-items-start\">\n                        <div style=\"font-size: 1.5rem\">").concat(this.toastIcon(), "</div>\n\n                        <div class=\"d-flex flex-column px-3\">\n                            <div class=\"toast-header border-0 pl-0 text-").concat(this.getAttribute('type'), "\">").concat(this.getAttribute('title'), "</div>\n                            <p class=\"modal-title\">").concat(this.getAttribute('message'), "</p>\n                        </div>\n\n                        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                            <span aria-hidden=\"true\">&times;</span>\n                        </button>\n                    </div>\n                </div>\n            </div>\n        ");
+      element.innerHTML = "\n            <div class=\"modal-dialog position-absolute shadow-sm rounded\" style=\"top: -0.3em; right: .8em; z-index: 11111\">\n                <div class=\"modal-content\">\n                    <div class=\"position-relative bg-".concat(this.getAttribute('type'), " rounded-top\" style=\"padding: .13em 0\"></div>\n\n                    <div class=\"modal-body d-flex justify-content-around align-items-start\">\n                        <div style=\"font-size: 1.5rem\">").concat(this.toastIcon(), "</div>\n\n                        <div class=\"d-flex flex-column px-3\">\n                            <div class=\"toast-header border-0 pl-0 text-").concat(this.getAttribute('type'), "\">").concat(this.getAttribute('title'), "</div>\n                            <p class=\"modal-title\">").concat(this.getAttribute('message'), "</p>\n                        </div>\n\n                        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                            <span aria-hidden=\"true\">&times;</span>\n                        </button>\n                    </div>\n                </div>\n            </div>\n        ");
       document.body.appendChild(element);
       $('#alert-toast').modal({
         backdrop: false,
@@ -694,7 +703,7 @@ var ConfirmDelete = /*#__PURE__*/function (_HTMLElement) {
     key: "connectedCallback",
     value: function connectedCallback() {
       if (this.getAttribute('type') === 'icon') {
-        this.innerHTML = "<a class=\"btn text-danger px-1\" title=\"Delete item\">".concat(this.getAttribute('content'), "</a>");
+        this.innerHTML = "<a class=\"btn text-danger p-1\" title=\"Delete item\">".concat(this.getAttribute('content'), "</a>");
       } else {
         this.innerHTML = "<a class=\"btn btn-danger ml-2\" href=\"#\">".concat(this.getAttribute('content'), "</a>");
       }
@@ -1213,6 +1222,10 @@ var ThemeSwitch = /*#__PURE__*/function (_HTMLElement) {
           element.classList.toggle('bg-dark');
           element.classList.toggle('text-white');
         });
+        document.querySelectorAll('.card-header .fa-dot-circle').forEach(function (element) {
+          element.classList.toggle('text-white');
+          element.classList.toggle('text-dark');
+        });
         document.querySelectorAll('.card-metrics').forEach(function (element) {
           element.classList.toggle('bg-dark');
           element.classList.toggle('bg-light');
@@ -1222,20 +1235,23 @@ var ThemeSwitch = /*#__PURE__*/function (_HTMLElement) {
         document.querySelector('.navbar').classList.toggle('bg-light');
         document.querySelector('.navbar').classList.toggle('navbar-dark');
         document.querySelector('.navbar').classList.toggle('bg-dark');
-        document.querySelector('#sidebar-toggler').classList.toggle('border-dark');
-        document.querySelector('#sidebar-toggler').classList.toggle('border-light');
-        document.querySelector('#sidebar-toggler .fa-bars').classList.toggle('text-light');
+        document.querySelector('.sidebar-toggler').classList.toggle('border-dark');
+        document.querySelector('.sidebar-toggler').classList.toggle('border-light');
+        document.querySelector('.sidebar-toggler .fa-bars').classList.toggle('text-light');
         document.querySelector('#dropdown-notifications').classList.toggle('text-light');
         document.querySelector('.fa-cog').classList.toggle('text-light');
-        document.querySelector('#sidebar-wrapper').classList.toggle('bg-light');
-        document.querySelector('#sidebar-wrapper .sidebar-title').classList.toggle('bg-light');
-        document.querySelector('#sidebar-wrapper .sidebar-title').classList.toggle('bg-dark');
-        document.querySelector('#sidebar-wrapper .sidebar-title').classList.toggle('text-light');
+        document.querySelector('.wrapper__sidebar').classList.toggle('bg-light');
+        document.querySelector('.wrapper__sidebar').classList.toggle('bg-white');
+        document.querySelector('.wrapper__sidebar .sidebar-title').classList.toggle('bg-light');
+        document.querySelector('.wrapper__sidebar .sidebar-title').classList.toggle('bg-dark');
+        document.querySelector('.wrapper__sidebar .sidebar-title').classList.toggle('text-light');
+        document.querySelector('.wrapper__sidebar .sidebar-title .fa-times').classList.toggle('text-dark');
+        document.querySelector('.wrapper__sidebar .sidebar-title .fa-times').classList.toggle('text-light');
         document.querySelector('#avatar-icon').classList.toggle('text-light');
         document.querySelector('#avatar-icon').classList.toggle('bg-dark');
         document.querySelector('#avatar-icon').classList.toggle('text-dark');
         document.querySelector('#avatar-icon').classList.toggle('bg-light');
-        document.querySelectorAll('#sidebar-wrapper .list-group-item').forEach(function (element) {
+        document.querySelectorAll('.wrapper__sidebar .list-group-item').forEach(function (element) {
           element.classList.toggle('bg-light');
         });
       });
@@ -1295,25 +1311,32 @@ var AvatarIcon = /*#__PURE__*/function (_HTMLElement) {
 
     _this = _super.call(this);
     _this.getFirstLetter = _this.getFirstLetter.bind(_assertThisInitialized(_this));
+    _this.getName = _this.getName.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(AvatarIcon, [{
     key: "connectedCallback",
     value: function connectedCallback() {
-      this.innerHTML = "\n            <div class=\"d-flex align-items-center justify-content-center rounded-circle bg-dark text-light\" id=\"avatar-icon\" style=\"width: 30px; height: 30px\">\n                <span class=\"small\">".concat(this.getFirstLetter(), "</span>\n            </div>\n        ");
+      this.innerHTML = "\n            <div class=\"d-flex align-items-center\">\n                <div class=\"d-flex align-items-center justify-content-center rounded-circle bg-dark text-light\" id=\"avatar-icon\" style=\"width: 30px; height: 30px\">\n                    <span class=\"small font-weight-bold\">".concat(this.getFirstLetter(), "</span>\n                </div>\n\n                <span class=\"ml-2\">").concat(this.getName(), "</span>\n            </div>\n        ");
     }
   }, {
-    key: "getFirstLetter",
-    value: function getFirstLetter() {
+    key: "getName",
+    value: function getName() {
       var name = this.getAttribute('name');
       var firstLetter = name.split(' ');
 
       if (firstLetter.length === 0) {
-        return name[0].toUpperCase();
+        return name;
       } else {
-        return firstLetter[0][0].toUpperCase();
+        return firstLetter[0];
       }
+    }
+  }, {
+    key: "getFirstLetter",
+    value: function getFirstLetter() {
+      console.log(this.getName(), this.getName()[0], this.getName()[0].toUpperCase());
+      return this.getName()[0].toUpperCase();
     }
   }]);
 
@@ -31226,7 +31249,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "40415" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36605" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

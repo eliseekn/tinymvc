@@ -30,15 +30,15 @@ endif ?>
 
 <div class="card shadow-sm">
     <div class="card-header">
-        <div class="d-flex flex-md-row flex-column align-items-lg-center justify-content-lg-between">
+        <div class="d-flex flex-lg-row flex-column align-items-lg-center justify-content-lg-between">
             <span><?= __('notifications') ?></span>
 
-            <div class="d-flex flex-md-row flex-column mt-md-0 mt-2">
+            <div class="d-flex flex-lg-row flex-column mt-lg-0 mt-2">
                 <span class="mr-md-3">
                     <input type="search" class="form-control" id="filter" placeholder="<?= __('search') ?>">
                 </span>
 
-                <span class="mt-md-0 mt-2">
+                <span class="mt-lg-0 mt-2">
                     <button class="btn btn-primary mr-2" id="bulk-read" data-url="<?= absolute_url('/admin/notifications/update') ?>">
                         <?= __('mark_as_read') ?>
                     </button>
@@ -86,7 +86,7 @@ endif ?>
                         <td><?= time_elapsed(\Carbon\Carbon::parse($notification->created_at, user_session()->timezone)->locale(user_session()->lang), 1) ?></td>
 
                         <td>
-                            <a class="btn text-primary -1 <?php if ($notification->status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('/admin/notifications/update/' . $notification->id) ?>" <?php if ($notification->status === 'unread') : echo 'title="Mark as read"'; endif ?>>
+                            <a class="btn text-primary p-1 <?php if ($notification->status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('/admin/notifications/update/' . $notification->id) ?>" <?php if ($notification->status === 'unread') : echo 'title="Mark as read"'; endif ?>>
                                 <?php if ($notification->status === 'unread') : ?>
                                 <i class="fa fa-eye-slash"></i>
                                 <?php else : ?>

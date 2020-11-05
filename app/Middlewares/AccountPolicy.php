@@ -8,7 +8,7 @@ use Framework\HTTP\Redirect;
 /**
  * Check if user has admin role
  */
-class ActiveAccountPolicy
+class AccountPolicy
 {    
     /**
      * handle function

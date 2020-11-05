@@ -18,11 +18,14 @@
         $this->insert('partials/alert', get_flash_messages());
     endif ?>
 
-    <div class="d-flex" id="wrapper">
-        <div class="border-right shadow-sm min-vh-100" id="sidebar-wrapper">
+    <div class="wrapper">
+        <div class="wrapper__sidebar border-right shadow-sm bg-white">
             <div class="sidebar-title bg-light d-flex align-items-center">
                 <avatar-icon name="<?= user_session()->name ?>"></avatar-icon>
-                <span class="ml-2"><?= user_session()->name ?></span>
+
+                <button class="btn ml-auto d-none sidebar-close p-0">
+                    <i class="fa fa-times text-dark"></i>
+                </button>
             </div>
 
             <div class="list-group list-group-flush">
@@ -38,9 +41,9 @@
             </div>
         </div>
 
-        <div id="page-content-wrapper">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm px-4">
-                <button class="btn px-1" id="sidebar-toggler" title="Toggle sidebar">
+        <div class="wrapper__content">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm px-5 sticky-top">
+                <button class="btn px-1 sidebar-toggler" title="Toggle sidebar">
                     <i class="fa fa-bars"></i>
                 </button>
 
@@ -57,7 +60,7 @@
                 </div>
             </nav>
 
-            <div class="container-fluid">
+            <div class="p-5">
                 <?= $this->section('page_content') ?>
             </div>
         </div>

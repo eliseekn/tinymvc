@@ -17,6 +17,11 @@ class ThemeSwitch extends HTMLElement {
                 element.classList.toggle('text-white')
             })
         
+            document.querySelectorAll('.card-header .fa-dot-circle').forEach(element => {
+                element.classList.toggle('text-white')
+                element.classList.toggle('text-dark')
+            })
+        
             document.querySelectorAll('.card-metrics').forEach(element => {
                 element.classList.toggle('bg-dark')
                 element.classList.toggle('bg-light')
@@ -28,25 +33,27 @@ class ThemeSwitch extends HTMLElement {
             document.querySelector('.navbar').classList.toggle('navbar-dark')
             document.querySelector('.navbar').classList.toggle('bg-dark')
         
-            document.querySelector('#sidebar-toggler').classList.toggle('border-dark')
-            document.querySelector('#sidebar-toggler').classList.toggle('border-light')
-            document.querySelector('#sidebar-toggler .fa-bars').classList.toggle('text-light')
+            document.querySelector('.sidebar-toggler').classList.toggle('border-dark')
+            document.querySelector('.sidebar-toggler').classList.toggle('border-light')
+            document.querySelector('.sidebar-toggler .fa-bars').classList.toggle('text-light')
         
             document.querySelector('#dropdown-notifications').classList.toggle('text-light')
             document.querySelector('.fa-cog').classList.toggle('text-light')
         
-            document.querySelector('#sidebar-wrapper').classList.toggle('bg-light')  
+            document.querySelector('.wrapper__sidebar').classList.toggle('bg-light')
+            document.querySelector('.wrapper__sidebar').classList.toggle('bg-white')
+            document.querySelector('.wrapper__sidebar .sidebar-title').classList.toggle('bg-light')            
+            document.querySelector('.wrapper__sidebar .sidebar-title').classList.toggle('bg-dark')            
+            document.querySelector('.wrapper__sidebar .sidebar-title').classList.toggle('text-light')
+            document.querySelector('.wrapper__sidebar .sidebar-title .fa-times').classList.toggle('text-dark')
+            document.querySelector('.wrapper__sidebar .sidebar-title .fa-times').classList.toggle('text-light')
         
-            document.querySelector('#sidebar-wrapper .sidebar-title').classList.toggle('bg-light')            
-            document.querySelector('#sidebar-wrapper .sidebar-title').classList.toggle('bg-dark')            
-            document.querySelector('#sidebar-wrapper .sidebar-title').classList.toggle('text-light')  
-
             document.querySelector('#avatar-icon').classList.toggle('text-light')
             document.querySelector('#avatar-icon').classList.toggle('bg-dark')
             document.querySelector('#avatar-icon').classList.toggle('text-dark')
             document.querySelector('#avatar-icon').classList.toggle('bg-light')
         
-            document.querySelectorAll('#sidebar-wrapper .list-group-item').forEach(element => {
+            document.querySelectorAll('.wrapper__sidebar .list-group-item').forEach(element => {
                 element.classList.toggle('bg-light')
             })
         })

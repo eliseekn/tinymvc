@@ -10,7 +10,7 @@ use Framework\Routing\View;
 use Framework\Routing\Route;
 
 /**
- * Set web routes
+ * Web routes
  */
 
 Route::get('/', [

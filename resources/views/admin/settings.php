@@ -11,9 +11,9 @@ endif ?>
 <form method="post" action="<?= absolute_url('/admin/settings/update/' . user_session()->id) ?>">
     <?= generate_csrf_token() ?>
 
-    <div class="row mb-4 pr-md-0 pr-3">
-        <div class="col-md-6">
-            <div class="card shadow-sm mb-4 mb-md-0">
+    <div class="row mb-4">
+        <div class="col-12 col-lg-6 mb-4 mb-lg-0">
+            <div class="card shadow-sm h-100">
                 <div class="card-header "><?= __('profile') ?></div>
 
                 <div class="card-body">
@@ -34,8 +34,8 @@ endif ?>
             </div>
         </div>
 
-        <div class="col-md-6">
-            <div class="card shadow-sm">
+        <div class="col-12 col-lg-6">
+            <div class="card shadow-sm h-100">
                 <div class="card-header "><?= __('security') ?></div>
 
                 <div class="card-body">
@@ -65,9 +65,9 @@ endif ?>
         </div>
     </div>
 
-    <div class="row mb-4 pr-md-0 pr-3">
-        <div class="col-md-6">
-            <div class="card shadow-sm mb-4 mb-md-0">
+    <div class="row mb-4">
+        <div class="col-12 col-lg-6 mb-4 mb-lg-0">
+            <div class="card shadow-sm h-100">
                 <div class="card-header "><?= __('preferences') ?></div>
 
                 <div class="card-body">
@@ -101,8 +101,8 @@ endif ?>
             </div>
         </div>
 
-        <div class="col-md-6">
-            <div class="card shadow-sm">
+        <div class="col-12 col-lg-6">
+            <div class="card shadow-sm h-100">
                 <div class="card-header "><?= __('dashboard') ?></div>
 
                 <div class="card-body">

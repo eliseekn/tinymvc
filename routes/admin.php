@@ -9,7 +9,7 @@
 use Framework\Routing\Route;
 
 /**
- * Set admin panel routes
+ * Admin panel routes
  */
 
 Route::group([

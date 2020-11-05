@@ -10,7 +10,7 @@ use Framework\Routing\View;
 use Framework\Routing\Route;
 
 /**
- * Set authentication routes
+ * Authentication routes
  */
 
 Route::group([

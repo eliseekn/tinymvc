@@ -24,8 +24,6 @@
             <div class="card-body">
                 <donut-chart el="total-users-donut" data=<?= json_encode([
                     ['label' => 'Total', 'value' => count($users)],
-                    ['label' => 'Online', 'value' => count($online_users)],
-                    ['label' => 'Offline', 'value' => count($users) - count($online_users)],
                     ['label' => 'Active', 'value' => count($active_users)],
                     ['label' => 'Inactive', 'value' => count($users) - count($active_users)]
                 ]) ?>>

@@ -8,7 +8,7 @@ class ConfirmDelete extends HTMLElement {
 
     connectedCallback() {
         if (this.getAttribute('type') === 'icon') {
-            this.innerHTML = `<a class="btn text-danger px-1" title="Delete item">${this.getAttribute('content')}</a>`
+            this.innerHTML = `<a class="btn text-danger p-1" title="Delete item">${this.getAttribute('content')}</a>`
         } else {
             this.innerHTML = `<a class="btn btn-danger ml-2" href="#">${this.getAttribute('content')}</a>`
         }

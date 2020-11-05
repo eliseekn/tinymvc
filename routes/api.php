@@ -12,7 +12,7 @@ use Framework\Routing\Route;
 use App\Database\Models\NotificationsModel;
 
 /**
- * Set api routes
+ * API routes
  */
 
 //get notifications list

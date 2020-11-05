@@ -15,13 +15,3 @@ a {
 p {
     margin-bottom: 0;
 }
-
-.container-fluid {
-    padding: 0 8em; 
-    margin-top: 3em;
-
-    @media only screen and (max-width: 768px) {
-        padding: 0 1em;
-        padding-bottom: 2em;
-	}
-}

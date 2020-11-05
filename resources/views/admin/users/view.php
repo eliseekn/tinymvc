@@ -40,25 +40,13 @@ endif ?>
         </div>
 
         <div class="form-group row">
-            <p class="col-form-label col-sm-2"><?= __('account') ?></p>
+            <p class="col-form-label col-sm-2"><?= __('status') ?></p>
 
             <div class="col-form-label col-sm-10 font-weight-bold">
                 <?php if ($user->active) : ?>
                 <span class="badge badge-success"><?= __('active') ?></span>
                 <?php else : ?>
                 <span class="badge badge-danger"><?= __('inactive') ?></span>
-                <?php endif ?>
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <p class="col-form-label col-sm-2"><?= __('status') ?></p>
-
-            <div class="col-form-label col-sm-10 font-weight-bold">
-                <?php if ($user->online) : ?>
-                <span class="badge badge-success"><?= __('online') ?></span>
-                <?php else : ?>
-                <span class="badge badge-danger"><?= __('offline') ?></span>
                 <?php endif ?>
             </div>
         </div>

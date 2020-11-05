@@ -24,7 +24,6 @@ class UsersController extends Controller
     {
         $this->render('admin/users/index', [
             'users' => UsersModel::select()->orderAsc('name')->paginate(50),
-            'online_users' => UsersModel::find('online', 1)->all(),
 			'active_users' => UsersModel::find('active', 1)->all(),
         ]);
     }

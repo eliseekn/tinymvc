@@ -9,7 +9,7 @@
 use Framework\Routing\Route;
 
 /**
- * Set email confirmation routes
+ * Email confirmation routes
  */
 
 Route::group([
