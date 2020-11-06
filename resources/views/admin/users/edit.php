@@ -41,6 +41,8 @@ endif ?>
                 </div>
             </div>
 
+            <?php if ($user->role !== 'administrator') : ?>
+
             <fieldset class="form-group">
                 <div class="row">
                     <legend class="col-form-label col-sm-2 pt-0"><?= __('role') ?></legend>
@@ -56,12 +58,10 @@ endif ?>
                     </div>
                 </div>
             </fieldset>
-
-            <?php if ($user->role !== 'admin') : ?>
             
             <fieldset class="form-group">
                 <div class="row">
-                    <legend class="col-form-label col-sm-2 pt-0"><?= __('account') ?></legend>
+                    <legend class="col-form-label col-sm-2 pt-0"><?= __('status') ?></legend>
                     <div class="col-sm-10">
                         <div class="custom-control custom-radio custom-control-inline">
                             <input class="custom-control-input" type="radio" name="account_state" id="account_active" value="1" <?php if ($user->active) : echo 'checked'; endif ?>>

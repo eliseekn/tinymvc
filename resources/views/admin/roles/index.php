@@ -32,8 +32,8 @@ endif ?>
                 <span class="mt-lg-0 mt-2">
                     <a href="<?= absolute_url('/admin/roles/new') ?>" class="btn btn-primary"><?= __('new') ?></a>
                     
-                    <upload-modal action="<?= absolute_url('/admin/roles/import') ?>" title="<?= __('import') ?>"></upload-modal>
-                    <export-modal action="<?= absolute_url('/admin/roles/export') ?>" title="<?= __('export') ?>"></export-modal>
+                    <upload-modal action="<?= absolute_url('/admin/roles/import') ?>" title="<?= __('import') ?>" modal_title="<?= __('upload_modal_title') ?>" modal_button_title="<?= __('submit') ?>" modal_button_cancel="<?= __('cancel') ?>"></upload-modal>
+                    <export-modal action="<?= absolute_url('/admin/roles/export') ?>" title="<?= __('export') ?>" modal_title="<?= __('export') ?>" modal_button_title="<?= __('export') ?>" modal_button_cancel="<?= __('cancel') ?>"></export-modal>
 
                     <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('/admin/roles/delete') ?>">
                         <?= __('delete') ?>

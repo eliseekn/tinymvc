@@ -30,7 +30,6 @@ class AvatarIcon extends HTMLElement {
     }
 
     getFirstLetter() {
-        console.log(this.getName(), this.getName()[0], this.getName()[0].toUpperCase())
         return this.getName()[0].toUpperCase()
     }
 }

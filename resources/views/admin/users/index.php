@@ -41,8 +41,8 @@ endif ?>
                 <span class="mt-lg-0 mt-2">
                     <a href="<?= absolute_url('/admin/users/new') ?>" class="btn btn-primary"><?= __('new') ?></a>
                     
-                    <upload-modal action="<?= absolute_url('/admin/users/import') ?>" title="<?= __('import') ?>"></upload-modal>
-                    <export-modal action="<?= absolute_url('/admin/users/export') ?>" title="<?= __('export') ?>"></export-modal>
+                    <upload-modal action="<?= absolute_url('/admin/users/import') ?>" title="<?= __('import') ?>" modal_title="<?= __('upload_modal_title') ?>" modal_button_title="<?= __('submit') ?>" modal_button_cancel="<?= __('cancel') ?>"></upload-modal>
+                    <export-modal action="<?= absolute_url('/admin/users/export') ?>" title="<?= __('export') ?>" modal_title="<?= __('export') ?>" modal_button_title="<?= __('export') ?>" modal_button_cancel="<?= __('cancel') ?>"></export-modal>
 
                     <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('/admin/users/delete') ?>">
                         <?= __('delete') ?>
@@ -105,24 +105,17 @@ endif ?>
                         <td><?= \Carbon\Carbon::parse($user->created_at, user_session()->timezone)->locale(user_session()->lang)->isoFormat('MMM Do, YYYY') ?></td>
 
                         <td>
+                            <?php if ($user->role !== 'administrator') : ?>
                             <a class="btn text-primary p-1" href="<?= absolute_url('/admin/users/view/' . $user->id) ?>" title="View item">
                                 <i class="fa fa-eye"></i>
                             </a>
-
-                            <?php if ($user->role !== 'admin' || $user->id === user_session()->id) : ?>
 
                             <a class="btn text-primary p-1" href="<?= absolute_url('/admin/users/edit/' . $user->id) ?>" title="Edit item">
                                 <i class="fa fa-edit"></i>
                             </a>
 
-                            <?php if ($user->id !== user_session()->id) : ?>
-
                             <confirm-delete type="icon" content='<i class="fa fa-trash-alt"></i>' action="<?= absolute_url('/admin/users/delete/' . $user->id) ?>" redirect="<?= current_url()?>"></confirm-delete>
-
-                            <?php
-                                endif;
-                            endif
-                            ?>
+                            <?php endif ?>
                         </td>
                     </tr>
 

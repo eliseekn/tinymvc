@@ -131,3 +131,6 @@ $day = 'jr(s)';
 $hr = 'hr(s)';
 $min = 'min(s)';
 $sec = 'sec(s)';
+
+//upload & exports
+$upload_modal_title = 'Importer';
