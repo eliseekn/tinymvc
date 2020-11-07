@@ -58,7 +58,8 @@ Route::group([
     'roles/view/{id:num}' => ['handler' => 'Admin\RolesController@view'],
 
     'settings/{id:num}' => ['handler' => 'Admin\SettingsController@index'],
-    'notifications' => ['handler' => 'Admin\NotificationsController@index']
+    'notifications' => ['handler' => 'Admin\NotificationsController@index'],
+    'activities' => ['handler' => 'Admin\ActivitiesController@index'],
 ])->by([
     'method' => 'GET',
     'prefix' => 'admin',
@@ -78,7 +79,10 @@ Route::group([
     'roles/export' => ['handler' => 'Admin\RolesController@export'],
 
     'notifications/delete' => ['handler' => 'Admin\NotificationsController@delete'],
-    'notifications/update' => ['handler' => 'Admin\NotificationsController@update']
+    'notifications/update' => ['handler' => 'Admin\NotificationsController@update'],
+
+    'activities/delete' => ['handler' => 'Admin\ActivitiesController@delete'],
+    'activities/update' => ['handler' => 'Admin\ActivitiesController@update']
 ])->by([
     'method' => 'POST',
     'prefix' => 'admin',

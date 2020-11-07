@@ -20,7 +20,7 @@ class Model
     /**
      * @var string
      */
-    protected static $table = '';
+    public static $table = '';
 
     /**
      * @var \Framework\ORM\Builder

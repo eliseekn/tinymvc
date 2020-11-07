@@ -196,9 +196,9 @@ class UsersController extends Controller
 		}
 
 		ReportHelper::import($file->getTempFilename(), UsersModel::class, [
-			'name' => 'Name', 
-			'email' => 'Email', 
-			'password' => 'Password'
+			'name' => __('name'), 
+			'email' => __('email'), 
+			'password' => __('password')
 		]);
 
 		$this->toast(__('data_imported'))->success();
@@ -227,10 +227,10 @@ class UsersController extends Controller
         $filename = 'roles_' . date('Y_m_d') . '.' . Request::getField('file_type');
 
 		ReportHelper::export($filename, $users, [
-			'name' => 'Name', 
-			'email' => 'Email', 
-			'role' => 'Role', 
-			'created_at' => 'Created at'
+			'name' => __('name'), 
+			'email' => __('email'), 
+			'role' => __('role'), 
+			'created_at' => __('created_at')
 		]);
 	}
 }

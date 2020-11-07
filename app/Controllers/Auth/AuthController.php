@@ -8,6 +8,7 @@ use Framework\HTTP\Request;
 use App\Helpers\EmailHelper;
 use App\Requests\AuthRequest;
 use Framework\Support\Session;
+use App\Helpers\ActivityHelper;
 use App\Middlewares\AuthPolicy;
 use App\Requests\RegisterRequest;
 use Framework\Routing\Controller;
@@ -32,6 +33,7 @@ class AuthController extends Controller
         }
 
         AuthHelper::authenticate();
+        ActivityHelper::log('User logged in');
         AuthPolicy::handle();
     }
         
@@ -79,6 +81,7 @@ class AuthController extends Controller
 	 */
 	public function logout(): void
 	{
+        ActivityHelper::log('User logged out');
 		AuthHelper::forget();
         Session::clearHistory();
         Session::close('csrf_token');

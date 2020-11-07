@@ -11,7 +11,7 @@ class NotificationsTable
      *
      * @var string
      */
-    protected static $table = 'notifications';
+    public static $table = 'notifications';
 
     /**
      * create table

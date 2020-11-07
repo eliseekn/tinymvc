@@ -11,7 +11,7 @@ class CLASSNAME
      *
      * @var string
      */
-    protected static $table = 'TABLENAME';
+    public static $table = 'TABLENAME';
 
     /**
      * create table
@@ -23,7 +23,6 @@ class CLASSNAME
         Migration::table(self::$table)
             ->addBigInt('id')->primaryKey()
             ->create();
-
     }
     
     /**

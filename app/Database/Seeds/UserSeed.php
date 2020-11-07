@@ -12,7 +12,7 @@ class UserSeed
      *
      * @var string
      */
-    protected static $table = 'users';
+    public static $table = 'users';
 
     /**
      * insert row

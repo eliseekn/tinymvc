@@ -29,15 +29,54 @@
             </div>
 
             <div class="list-group list-group-flush">
-                <a href="<?= absolute_url('/admin/dashboard') ?>" class="list-group-item list-group-item-action">
+                <a href="<?= absolute_url('/admin/dashboard') ?>" class="list-group-item list-group-item-action border-bottom">
                     <i class="fa fa-home <?php if (url_exists('dashboard')) : echo 'text-primary'; endif ?>"></i> <?= __('dashboard') ?>
                 </a>
-                <a href="<?= absolute_url('/admin/roles') ?>" class="list-group-item list-group-item-action">
-                    <i class="fa fa-dot-circle <?php if (url_exists('roles')) : echo 'text-primary'; endif ?>"></i> <?= __('roles') ?>
-                </a>
-                <a href="<?= absolute_url('/admin/users') ?>" class="list-group-item list-group-item-action">
-                    <i class="fa fa-dot-circle <?php if (url_exists('users')) : echo 'text-primary'; endif ?>"></i> <?= __('users') ?>
-                </a>
+
+                <button class="list-group-item list-group-item-action" id="dropdown-btn" data-target="resources-dropdown-menu">
+                    <i class="fa fa-layer-group <?php if (url_exists('users|roles')) : echo 'text-primary'; endif ?>"></i> <?= __('resources') ?>
+
+                    <span class="float-right dropdown-caret">
+                        <?php if (url_exists('users|roles')) : ?>
+                        <i class="fa fa-caret-up"></i>
+                        <?php else : ?>
+                        <i class="fa fa-caret-down"></i>
+                        <?php endif ?>
+                    </span>
+                </button>
+
+                <div class="<?php if (!url_exists('users|roles')) : echo 'd-none'; endif ?> border-bottom" id="resources-dropdown-menu">
+                    <a href="<?= absolute_url('/admin/roles') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                        <i class="fa fa-dot-circle <?php if (url_exists('roles')) : echo 'text-primary'; endif ?>"></i> <?= __('roles') ?>
+                    </a>
+                    <a href="<?= absolute_url('/admin/users') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                        <i class="fa fa-dot-circle <?php if (url_exists('users')) : echo 'text-primary'; endif ?>"></i> <?= __('users') ?>
+                    </a>
+                </div>
+
+                <button class="list-group-item list-group-item-action" id="dropdown-btn" data-target="account-dropdown-menu">
+                    <i class="fa fa-cog <?php if (url_exists('settings|notifications|activities')) : echo 'text-primary'; endif ?>"></i> <?= __('account') ?>
+
+                    <span class="float-right dropdown-caret">
+                        <?php if (url_exists('settings|notifications')) : ?>
+                        <i class="fa fa-caret-up"></i>
+                        <?php else : ?>
+                        <i class="fa fa-caret-down"></i>
+                        <?php endif ?>
+                    </span>
+                </button>
+
+                <div class="<?php if (!url_exists('settings|notifications|activities')) : echo 'd-none'; endif ?> border-bottom" id="account-dropdown-menu">
+                    <a href="<?= absolute_url('/admin/notifications') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                        <i class="fa fa-dot-circle <?php if (url_exists('notifications')) : echo 'text-primary'; endif ?>"></i> <?= __('notifications') ?>
+                    </a>
+                    <a href="<?= absolute_url('/admin/activities') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                        <i class="fa fa-dot-circle <?php if (url_exists('activities')) : echo 'text-primary'; endif ?>"></i> <?= __('activities') ?>
+                    </a>
+                    <a href="<?= absolute_url('/admin/settings/' . user_session()->id) ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                        <i class="fa fa-dot-circle <?php if (url_exists('settings')) : echo 'text-primary'; endif ?>"></i> <?= __('settings') ?>
+                    </a>
+                </div>
             </div>
         </div>
 

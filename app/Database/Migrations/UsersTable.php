@@ -11,7 +11,7 @@ class UsersTable
      *
      * @var string
      */
-    protected static $table = 'users';
+    public static $table = 'users';
 
     /**
      * create table

@@ -144,7 +144,7 @@ class Pager
      */
     public function firstPageUrl(): string
     {
-        return absolute_url(Request::getURI() . '?page=1');
+        return absolute_url(Request::getUri() . '?page=1');
     }
 
     /**
@@ -154,7 +154,7 @@ class Pager
      */
     public function previousPageUrl(): string
     {
-        return absolute_url(Request::getURI() . '?page=' . $this->previousPage());
+        return absolute_url(Request::getUri() . '?page=' . $this->previousPage());
     }
     
     /**
@@ -164,7 +164,7 @@ class Pager
      */
     public function nextPageUrl(): string
     {
-        return absolute_url(Request::getURI() . '?page=' . $this->nextPage());
+        return absolute_url(Request::getUri() . '?page=' . $this->nextPage());
     }
 
     /**
@@ -174,7 +174,7 @@ class Pager
      */
     public function lastPageUrl(): string
     {
-        return absolute_url(Request::getURI() . '?page=' . $this->totalPages());
+        return absolute_url(Request::getUri() . '?page=' . $this->totalPages());
     }
     
     /**
@@ -185,6 +185,6 @@ class Pager
      */
     public function pageUrl(int $page): string
     {
-        return absolute_url(Request::getURI() . '?page=' . $page);
+        return absolute_url(Request::getUri() . '?page=' . $page);
     }
 }

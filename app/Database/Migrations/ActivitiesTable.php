@@ -4,14 +4,14 @@ namespace App\Database\Migrations;
 
 use Framework\ORM\Migration;
 
-class TokensTable
+class ActivitiesTable
 {         
     /**
      * name of table
      *
      * @var string
      */
-    public static $table = 'tokens';
+    public static $table = 'activities';
 
     /**
      * create table
@@ -22,9 +22,11 @@ class TokensTable
     {
         Migration::table(self::$table)
             ->addBigInt('id')->primaryKey()
-            ->addString('email')->unique()
-            ->addString('token')->unique()
-            ->addTimestamp('expires')->null()
+            ->addString('user')
+            ->addString('url')
+            ->addString('method')
+            ->addString('ip_address')
+            ->addString('action')
             ->create();
     }
     

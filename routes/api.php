@@ -15,6 +15,12 @@ use App\Database\Models\NotificationsModel;
  * API routes
  */
 
+//send basic headers
+Response::sendHeaders([
+    'Access-Control-Allow-Origin' => '*',
+    'Access-Control-Allow-Headers' => 'X-Requested-With',
+]);
+
 //get notifications list
 Route::get('/api/notifications', [
     'handler' => function() {
@@ -28,9 +34,6 @@ Route::get('/api/notifications', [
             'items' => $notifications,
             'title' => __('notifications'),
             'view_all' => __('view_all')
-        ], [
-            'Access-Control-Allow-Origin' => '*',
-            'Access-Control-Allow-Headers' => 'X-Requested-With',
         ]);
     }
 ]);

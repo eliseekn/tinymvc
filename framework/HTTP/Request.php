@@ -195,7 +195,7 @@ class Request
      *
      * @return string
      */
-    public static function getFullURI(): string
+    public static function getFullUri(): string
     {
         $uri = self::getHeader('REQUEST_URI');
         $uri = str_replace(config('app.folder'), '', $uri); //remove app folder if exists 
@@ -207,9 +207,9 @@ class Request
      *
      * @return string
      */
-    public static function getURI(): string
+    public static function getUri(): string
     {
-        $uri = self::getFullURI();
+        $uri = self::getFullUri();
 
         //looks for "?page=" or something like and remove it from uri
         if (strpos($uri, '?') !== false) {
@@ -222,5 +222,15 @@ class Request
 
         //return sanitized url
         return filter_var($uri, FILTER_SANITIZE_URL) === false ? $uri : filter_var($uri, FILTER_SANITIZE_URL);
+    }
+    
+    /**
+     * retrieves ip address
+     *
+     * @return string
+     */
+    public static function getRemoteIP(): string
+    {
+        return self::getHeader('REMOTE_ADDR');
     }
 }

@@ -11,7 +11,7 @@ class CLASSNAME
      *
      * @var string
      */
-    protected static $table = 'TABLENAME';
+    public static $table = 'TABLENAME';
 
     /**
      * insert row

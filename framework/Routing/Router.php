@@ -50,7 +50,7 @@ class Router
      * @param  string $uri
      * @return string
      */
-    private function formatURI(string $uri): string
+    private function formatUri(string $uri): string
     {
         if (strlen($uri) > 1) {
             if ($uri[strlen($uri) - 1] === '/') {
@@ -79,7 +79,7 @@ class Router
                     $pattern = preg_replace('/\bany\b/', '([^/]+)', $pattern);
                     $pattern = '#^' . $pattern . '$#';
 
-                    if (preg_match($pattern, $this->formatURI(Request::getURI()), $params)) {
+                    if (preg_match($pattern, $this->formatUri(Request::getUri()), $params)) {
                         array_shift($params);
 
                         if (is_callable($options['handler'])) {

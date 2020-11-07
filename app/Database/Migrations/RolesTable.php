@@ -11,7 +11,7 @@ class RolesTable
      *
      * @var string
      */
-    protected static $table = 'roles';
+    public static $table = 'roles';
 
     /**
      * create table

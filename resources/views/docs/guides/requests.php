@@ -54,7 +54,7 @@
 
         <div class="card mb-4">
             <div class="card-body bg-light">
-                <code class="text-danger">$uri = Request::getFullURI();</code>
+                <code class="text-danger">$uri = Request::getFullUri();</code>
             </div>
         </div>
 
@@ -62,7 +62,7 @@
 
         <div class="card mb-4">
             <div class="card-body bg-light">
-                <code class="text-danger">$uri = Request::getURI();</code>
+                <code class="text-danger">$uri = Request::getUri();</code>
             </div>
         </div>
 

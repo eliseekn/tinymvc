@@ -103,6 +103,6 @@ if (!function_exists('url_exists')) {
 	 */
 	function url_exists(string $str): bool
 	{
-		return preg_match('/' . $str . '/', current_url());
+        return preg_match('/' . $str . '/', current_url());
 	}
 }

@@ -11,5 +11,5 @@ class TokensModel extends Model
      *
      * @var string
      */
-    protected static $table = 'tokens';
+    public static $table = 'tokens';
 }

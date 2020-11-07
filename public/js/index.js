@@ -133,23 +133,7 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 document.addEventListener('DOMContentLoaded', function () {
-  //toggle sidebar
-  if (document.querySelector('.sidebar-toggler')) {
-    document.querySelector('.sidebar-toggler').addEventListener('click', function (event) {
-      document.querySelector('.wrapper').classList.toggle('toggled');
-      document.querySelector('.sidebar-close').classList.toggle('d-none');
-    });
-  } //close sidebar
-
-
-  if (document.querySelector('.sidebar-close')) {
-    document.querySelector('.sidebar-close').addEventListener('click', function (event) {
-      document.querySelector('.wrapper').classList.toggle('toggled');
-      document.querySelector('.sidebar-close').classList.toggle('d-none');
-    });
-  } //select all table items
-
-
+  //select all table items
   if (document.querySelector('#select-all')) {
     document.querySelector('#select-all').addEventListener('change', function (event) {
       if (event.target.checked) {
@@ -267,6 +251,39 @@ document.addEventListener('DOMContentLoaded', function () {
         Array.from(tbody.querySelectorAll('tr')).sort(comparer(Array.from(th.parentNode.children).indexOf(th), _this.asc = !_this.asc)).forEach(function (tr) {
           return tbody.appendChild(tr);
         });
+      });
+    });
+  }
+});
+},{}],"components/sidebar.js":[function(require,module,exports) {
+document.addEventListener('DOMContentLoaded', function () {
+  //toggle sidebar
+  if (document.querySelector('.sidebar-toggler')) {
+    document.querySelector('.sidebar-toggler').addEventListener('click', function (event) {
+      document.querySelector('.wrapper').classList.toggle('toggled');
+      document.querySelector('.sidebar-close').classList.toggle('d-none');
+    });
+  } //close sidebar
+
+
+  if (document.querySelector('.sidebar-close')) {
+    document.querySelector('.sidebar-close').addEventListener('click', function (event) {
+      document.querySelector('.wrapper').classList.toggle('toggled');
+      document.querySelector('.sidebar-close').classList.toggle('d-none');
+    });
+  } //dropdown menu
+
+
+  if (document.querySelectorAll('#dropdown-btn')) {
+    document.querySelectorAll('#dropdown-btn').forEach(function (element) {
+      element.addEventListener('click', function (event) {
+        if (document.getElementById(event.target.dataset.target).classList.contains('d-none')) {
+          element.childNodes[4].innerHTML = '<i class="fa fa-caret-up"></i>';
+          document.getElementById(event.target.dataset.target).classList.remove('d-none');
+        } else {
+          element.childNodes[4].innerHTML = '<i class="fa fa-caret-down"></i>';
+          document.getElementById(event.target.dataset.target).classList.add('d-none');
+        }
       });
     });
   }
@@ -1239,7 +1256,7 @@ var ThemeSwitch = /*#__PURE__*/function (_HTMLElement) {
         document.querySelector('.sidebar-toggler').classList.toggle('border-light');
         document.querySelector('.sidebar-toggler .fa-bars').classList.toggle('text-light');
         document.querySelector('#dropdown-notifications').classList.toggle('text-light');
-        document.querySelector('.fa-cog').classList.toggle('text-light');
+        document.querySelector('.btn-sm .fa-cog').classList.toggle('text-light');
         document.querySelector('.wrapper__sidebar').classList.toggle('bg-light');
         document.querySelector('.wrapper__sidebar').classList.toggle('bg-white');
         document.querySelector('.wrapper__sidebar .sidebar-title').classList.toggle('bg-light');
@@ -31165,6 +31182,8 @@ exports.default = _default;
 
 require("./components/admin");
 
+require("./components/sidebar");
+
 require("./components/loading-button");
 
 require("./components/password-toggler");
@@ -31220,7 +31239,7 @@ window.customElements.define('avatar-icon', _avatarIcon.default);
 if (document.querySelector('#notifications-bell')) {
   _reactDom.default.render( /*#__PURE__*/_react.default.createElement(_notifications.default, null), document.querySelector('#notifications-bell'));
 }
-},{"./components/admin":"components/admin.js","./components/loading-button":"components/loading-button.js","./components/password-toggler":"components/password-toggler.js","./components/modal/upload-modal":"components/modal/upload-modal.js","./components/modal/export-modal":"components/modal/export-modal.js","./components/alert/alert-popup":"components/alert/alert-popup.js","./components/alert/alert-toast":"components/alert/alert-toast.js","./components/mixed/confirm-delete":"components/mixed/confirm-delete.js","./components/mixed/text-editor":"components/mixed/text-editor.js","./components/mixed/timezone-picker":"components/mixed/timezone-picker.js","./components/mixed/currency-picker":"components/mixed/currency-picker.js","./components/charts/donut-chart":"components/charts/donut-chart.js","./components/charts/bars-chart":"components/charts/bars-chart.js","./components/charts/lines-chart":"components/charts/lines-chart.js","./components/mixed/theme-switch":"components/mixed/theme-switch.js","./components/mixed/avatar-icon":"components/mixed/avatar-icon.js","react":"../../node_modules/react/index.js","react-dom":"../../node_modules/react-dom/index.js","./components/react/notifications":"components/react/notifications.jsx"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./components/admin":"components/admin.js","./components/sidebar":"components/sidebar.js","./components/loading-button":"components/loading-button.js","./components/password-toggler":"components/password-toggler.js","./components/modal/upload-modal":"components/modal/upload-modal.js","./components/modal/export-modal":"components/modal/export-modal.js","./components/alert/alert-popup":"components/alert/alert-popup.js","./components/alert/alert-toast":"components/alert/alert-toast.js","./components/mixed/confirm-delete":"components/mixed/confirm-delete.js","./components/mixed/text-editor":"components/mixed/text-editor.js","./components/mixed/timezone-picker":"components/mixed/timezone-picker.js","./components/mixed/currency-picker":"components/mixed/currency-picker.js","./components/charts/donut-chart":"components/charts/donut-chart.js","./components/charts/bars-chart":"components/charts/bars-chart.js","./components/charts/lines-chart":"components/charts/lines-chart.js","./components/mixed/theme-switch":"components/mixed/theme-switch.js","./components/mixed/avatar-icon":"components/mixed/avatar-icon.js","react":"../../node_modules/react/index.js","react-dom":"../../node_modules/react-dom/index.js","./components/react/notifications":"components/react/notifications.jsx"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -31248,7 +31267,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "41429" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "45435" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

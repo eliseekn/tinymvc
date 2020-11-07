@@ -23,6 +23,8 @@ $reset_password_instructions = "Veuillez entrer l'adresse email associé à ce c
 $dashboard = 'Tableau de bord';
 $roles = 'Permissions';
 $users = 'Utilisateurs';
+$resources = 'Ressources';
+$activities = 'Activitées';
 
 //navabar
 $mark_as_read = 'Marquer comme lu';
@@ -75,6 +77,12 @@ $status = 'Statut';
 $notifications = 'Notifications';
 $message = 'Message';
 $unread = 'Non lu';
+$user = 'Utilisateur';
+$url = 'Url';
+$method = 'Méthode';
+$ip_address = 'Adresse IP';
+$action = 'Action';
+$target = 'Cible';
 
 //pagination
 $previous = 'Précédent';
@@ -120,6 +128,9 @@ $expired_password_link = 'Lien de réinitialisation de mot de passe expiré';
 $password_resetted = 'Mot de passe réinitialisé avec succès';
 $login_failed = 'Mot de passe ou adresse email invalide';
 $auth_attempts_exceeded = "Nombre de tentatives de connexions dépassé. Réessayez dans " . config('security.auth.unlock_timeout') . " minute(s)";
+$activity_not_found = 'Activité non trouvée';
+$activity_deleted = 'Activité supprimée avec succès';
+$activities_deleted = 'Activitées supprimées avec succès';
 
 //misc
 $ago = ' environ';

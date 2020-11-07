@@ -8,8 +8,6 @@
 
 namespace Framework\HTTP;
 
-use Exception;
-use Framework\Routing\Route;
 use Framework\Support\Alert;
 use Framework\Support\Session;
 
@@ -49,38 +47,6 @@ class Redirect
     public static function toRoute(string $name, array $params = []): self
     {
         self::$redirect_url = route_url($name, $params);
-        return new self();
-    }
-
-    /**
-     * redirect to handler
-     *
-     * @param  string $handler
-     * @param  array $params
-     * @return \Framework\HTTP\Redirect
-     */
-    public static function toHandler(string $handler, array $params = []): self
-    {
-        $params = empty($params) ? '' : implode('/', $params);
-
-        //search key from value in a multidimensional array
-        //https://www.php.net/manual/en/function.array-search.php
-        $url = array_search(
-            $handler, array_map(
-                function ($val) {
-                    if (isset($val['handler'])) {
-                        return $val['handler'];
-                    }
-                },
-                Route::$routes
-            )
-        );
-
-        if (empty($url)) {
-            throw new Exception('Handler "' . $handler . '" not found.');
-        }
-
-        self::$redirect_url = empty($params) ? $url : $url . '/' . $params;
         return new self();
     }
 

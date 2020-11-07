@@ -11,7 +11,7 @@ class RoleSeed
      *
      * @var string
      */
-    protected static $table = 'roles';
+    public static $table = 'roles';
 
     /**
      * insert row

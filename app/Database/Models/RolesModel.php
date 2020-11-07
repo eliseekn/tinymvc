@@ -11,5 +11,5 @@ class RolesModel extends Model
      *
      * @var string
      */
-    protected static $table = 'roles';
+    public static $table = 'roles';
 }

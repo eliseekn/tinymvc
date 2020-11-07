@@ -1,4 +1,5 @@
 import './components/admin'
+import './components/sidebar'
 import './components/loading-button'
 import './components/password-toggler'
 import UploadModal from './components/modal/upload-modal'

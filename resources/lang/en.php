@@ -23,6 +23,8 @@ $reset_password_instructions = 'Enter the email address associated with your acc
 $dashboard = 'Dashboard';
 $roles = 'Roles';
 $users = 'Users';
+$resources = 'Resources';
+$activities = 'Activities';
 
 //navabar
 $mark_as_read = 'Mark as read';
@@ -75,6 +77,12 @@ $status = 'Status';
 $notifications = 'Notifications';
 $message = 'Message';
 $unread = 'Unread';
+$user = 'User';
+$url = 'Url';
+$method = 'Method';
+$ip_address = 'IP Address';
+$action = 'Action';
+$target = 'Target';
 
 //pagination
 $previous = 'Previous';
@@ -120,6 +128,9 @@ $expired_password_link = 'Password reset link expired';
 $password_resetted = 'Password resetted succesfully';
 $login_failed = 'Invalid email address or password';
 $auth_attempts_exceeded = 'Authentication attempts exceeded. Retry in ' . config('security.auth.unlock_timeout') . ' minute(s)';
+$activity_not_found = 'Activity not found';
+$activity_deleted = 'Activity deleted successfully';
+$activities_deleted = 'Activities deleted successfully';
 
 //misc
 $ago = ' ago';

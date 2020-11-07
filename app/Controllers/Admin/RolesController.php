@@ -180,9 +180,9 @@ class RolesController extends Controller
 		}
 
 		ReportHelper::import($file->getTempFilename(), RolesModel::class, [
-			'title' => 'Title', 
-			'slug' => 'Slug', 
-			'description' => 'Description'
+			'title' => __('title'), 
+			'slug' => __('slug'), 
+			'description' => __('description')
 		]);
 
 		$this->toast(__('data_imported'))->success();
@@ -211,10 +211,10 @@ class RolesController extends Controller
         $filename = 'roles_' . date('Y_m_d') . '.' . Request::getField('file_type');
 
 		ReportHelper::export($filename, $roles, [
-			'title' => 'Title', 
-			'slug' => 'Slug', 
-			'description' => 'Description',
-			'created_at' => 'Created at'
+			'title' => __('title'), 
+			'slug' => __('slug'), 
+			'description' => __('description'),
+			'created_at' => __('created_at')
 		]);
 	}
 }
