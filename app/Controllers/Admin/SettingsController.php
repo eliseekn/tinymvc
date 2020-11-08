@@ -7,6 +7,8 @@ use Framework\Support\Session;
 use Framework\Routing\Controller;
 use Framework\Support\Encryption;
 use App\Database\Models\UsersModel;
+use App\Database\Models\CountriesModel;
+use App\Requests\SaveSettings;
 
 class SettingsController extends Controller
 {
@@ -23,9 +25,10 @@ class SettingsController extends Controller
 		if ($user === false) {
 			$this->toast(__('user_not_found'))->error();
 			$this->redirect()->only();
-		}
-
-		$this->render('admin/settings', compact('user'));
+        }
+        
+        $countries = CountriesModel::select()->orderAsc('name')->all();
+		$this->render('admin/settings', compact('user', 'countries'));
     }
     
     /**
@@ -36,16 +39,25 @@ class SettingsController extends Controller
      */
     public function update(int $id): void
     {
+        $validate = SaveSettings::validate(Request::getFields());
+        
+        if ($validate->fails()) {
+            $this->redirect()->withError($validate::$errors);
+        }
+
         $data = [
             'name' => Request::getField('name'),
             'email' => Request::getField('email'),
+            'country' => Request::getField('country'),
+            'company' => Request::getField('company'),
+            'phone' => Request::getField('phone'),
             'two_factor' => Request::hasField('two-factor') ? 1 : 0,
             'lang' => Request::getField('lang'),
             'timezone' => Request::getField('timezone'),
             'currency' => Request::getField('currency'),
-            'theme' => Request::hasField('theme') ? 'dark' : 'light',
-            'notifications' => Request::hasField('notifications') ? 1 : 0,
-            'notifications_email' => Request::hasField('notifications_email') ? 1 : 0
+            'theme' => Request::getField('theme') ? 'dark' : 'light',
+            'alerts' => Request::hasField('alerts') ? 1 : 0,
+            'notifications_email' => Request::hasField('notifications-email') ? 1 : 0
 		];
 		
 		if (!empty(Request::getField('password'))) {

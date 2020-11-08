@@ -7,8 +7,6 @@ use App\Helpers\AuthHelper;
 use Framework\HTTP\Request;
 use App\Helpers\EmailHelper;
 use App\Requests\AuthRequest;
-use Framework\Support\Session;
-use App\Helpers\ActivityHelper;
 use App\Middlewares\AuthPolicy;
 use App\Requests\RegisterRequest;
 use Framework\Routing\Controller;
@@ -28,12 +26,11 @@ class AuthController extends Controller
 	{
         $validate = AuthRequest::validate(Request::getFields());
         
-        if (is_array($validate)) {
-            $this->redirect()->withError($validate);
+        if ($validate->fails()) {
+            $this->redirect()->withError($validate::$errors);
         }
 
         AuthHelper::authenticate();
-        ActivityHelper::log('User logged in');
         AuthPolicy::handle();
     }
         
@@ -46,11 +43,11 @@ class AuthController extends Controller
     {
         $validate = RegisterRequest::validate(Request::getFields());
         
-        if (is_array($validate)) {
-            $this->redirect()->withError($validate);
+        if ($validate->fails()) {
+            $this->redirect()->withError($validate::$errors);
         }
 
-        if (!AuthHelper::store()) {
+        if (!AuthHelper::create()) {
             $this->redirect()->withError(__('user_already_exists', true));
         }
 
@@ -64,7 +61,7 @@ class AuthController extends Controller
                 TokensModel::insert([
                     'email' => Request::getField('email'),
                     'token' => $token,
-                    'expires' => Carbon::now()->addHour()->toDateTimeString()
+                    'expires' => Carbon::now()->addDay()->toDateTimeString()
                 ]);
 
                 $this->redirect()->withInfo(__('confirm_email_link_sent', true));
@@ -81,10 +78,7 @@ class AuthController extends Controller
 	 */
 	public function logout(): void
 	{
-        ActivityHelper::log('User logged out');
 		AuthHelper::forget();
-        Session::clearHistory();
-        Session::close('csrf_token');
 		$this->redirect('/')->only();
 	}
 }

@@ -7,6 +7,7 @@
  */
 
 use Framework\Routing\Route;
+use Framework\Routing\View;
 
 /**
  * Admin panel routes
@@ -25,10 +26,10 @@ Route::group([
 ]);
 
 Route::group([
-    'users/delete/{id:num}' => ['handler' => 'Admin\UsersController@delete'],
-    'roles/delete/{id:num}' => ['handler' => 'Admin\RolesController@delete'],
+    'resources/users/delete/{id:num}' => ['handler' => 'Admin\UsersController@delete'],
+    'resources/roles/delete/{id:num}' => ['handler' => 'Admin\RolesController@delete'],
 
-    'notifications/delete/{id:num}' => ['handler' => 'Admin\NotificationsController@delete'],
+    'account/notifications/delete/{id:num}' => ['handler' => 'Admin\NotificationsController@delete'],
 ])->by([
     'method' => 'DELETE',
     'prefix' => 'admin',
@@ -38,7 +39,7 @@ Route::group([
     ]
 ]);
 
-Route::get('/admin/notifications/update/{id:num}', [
+Route::get('/admin/account/notifications/update/{id:num}', [
     'handler' => 'Admin\NotificationsController@update',
     'middlewares' => [
         'RememberUser',
@@ -47,19 +48,19 @@ Route::get('/admin/notifications/update/{id:num}', [
 ]);
 
 Route::group([
-    'users' => ['handler' => 'Admin\UsersController@index'],
-    'users/new' => ['handler' => 'Admin\UsersController@new'],
-    'users/edit/{id:num}' => ['handler' => 'Admin\UsersController@edit'],
-    'users/view/{id:num}' => ['handler' => 'Admin\UsersController@view'],
+    'resources/users' => ['handler' => 'Admin\UsersController@index'],
+    'resources/users/new' => ['handler' => 'Admin\UsersController@new'],
+    'resources/users/edit/{id:num}' => ['handler' => 'Admin\UsersController@edit'],
+    'resources/users/view/{id:num}' => ['handler' => 'Admin\UsersController@view'],
 
-    'roles' => ['handler' => 'Admin\RolesController@index'],
-    'roles/new' => ['handler' => 'Admin\RolesController@new'],
-    'roles/edit/{id:num}' => ['handler' => 'Admin\RolesController@edit'],
-    'roles/view/{id:num}' => ['handler' => 'Admin\RolesController@view'],
+    'resources/roles' => ['handler' => 'Admin\RolesController@index'],
+    'resources/roles/new' => ['handler' => 'Admin\RolesController@new'],
+    'resources/roles/edit/{id:num}' => ['handler' => 'Admin\RolesController@edit'],
+    'resources/roles/view/{id:num}' => ['handler' => 'Admin\RolesController@view'],
 
-    'settings/{id:num}' => ['handler' => 'Admin\SettingsController@index'],
-    'notifications' => ['handler' => 'Admin\NotificationsController@index'],
-    'activities' => ['handler' => 'Admin\ActivitiesController@index'],
+    'account/settings/{id:num}' => ['handler' => 'Admin\SettingsController@index'],
+    'account/notifications' => ['handler' => 'Admin\NotificationsController@index'],
+    'account/activities' => ['handler' => 'Admin\ActivitiesController@index']
 ])->by([
     'method' => 'GET',
     'prefix' => 'admin',
@@ -70,19 +71,19 @@ Route::group([
 ]);
 
 Route::group([
-    'users/delete' => ['handler' => 'Admin\UsersController@delete'],
-    'users/import' => ['handler' => 'Admin\UsersController@import'],
-    'users/export' => ['handler' => 'Admin\UsersController@export'],
+    'resources/users/delete' => ['handler' => 'Admin\UsersController@delete'],
+    'resources/users/import' => ['handler' => 'Admin\UsersController@import'],
+    'resources/users/export' => ['handler' => 'Admin\UsersController@export'],
 
-    'roles/delete' => ['handler' => 'Admin\RolesController@delete'],
-    'roles/import' => ['handler' => 'Admin\RolesController@import'],
-    'roles/export' => ['handler' => 'Admin\RolesController@export'],
+    'resources/roles/delete' => ['handler' => 'Admin\RolesController@delete'],
+    'resources/roles/import' => ['handler' => 'Admin\RolesController@import'],
+    'resources/roles/export' => ['handler' => 'Admin\RolesController@export'],
 
-    'notifications/delete' => ['handler' => 'Admin\NotificationsController@delete'],
-    'notifications/update' => ['handler' => 'Admin\NotificationsController@update'],
+    'account/notifications/delete' => ['handler' => 'Admin\NotificationsController@delete'],
+    'account/notifications/update' => ['handler' => 'Admin\NotificationsController@update'],
 
-    'activities/delete' => ['handler' => 'Admin\ActivitiesController@delete'],
-    'activities/update' => ['handler' => 'Admin\ActivitiesController@update']
+    'account/activities/delete' => ['handler' => 'Admin\ActivitiesController@delete'],
+    'account/activities/update' => ['handler' => 'Admin\ActivitiesController@update']
 ])->by([
     'method' => 'POST',
     'prefix' => 'admin',
@@ -93,13 +94,13 @@ Route::group([
 ]);
 
 Route::group([
-    'users/create' => ['handler' => 'Admin\UsersController@create'],
-    'users/update/{id:num}' => ['handler' => 'Admin\UsersController@update'],
+    'resources/users/create' => ['handler' => 'Admin\UsersController@create'],
+    'resources/users/update/{id:num}' => ['handler' => 'Admin\UsersController@update'],
 
-    'roles/create' => ['handler' => 'Admin\RolesController@create'],
-    'roles/update/{id:num}' => ['handler' => 'Admin\RolesController@update'],
+    'resources/roles/create' => ['handler' => 'Admin\RolesController@create'],
+    'resources/roles/update/{id:num}' => ['handler' => 'Admin\RolesController@update'],
 
-    'settings/update/{id:num}' => ['handler' => 'Admin\SettingsController@update'],
+    'account/settings/update/{id:num}' => ['handler' => 'Admin\SettingsController@update'],
 ])->by([
     'method' => 'POST',
     'prefix' => 'admin',

@@ -49,7 +49,7 @@ class Storage
      */
     public function add(string $path): self
     {
-        self::$path .= $path;
+        self::$path .= $path . DIRECTORY_SEPARATOR;
         return new self();
     }
 

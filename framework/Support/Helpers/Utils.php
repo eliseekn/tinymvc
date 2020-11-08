@@ -145,7 +145,7 @@ if (!function_exists('time_elapsed')) {
 		}
 	
 		$string = array_slice($string, 0, $level);
-		return $string ? implode(', ', $string) . __('ago') : __('just now');
+		return $string ? implode(', ', $string) . __('ago') : __('now');
 	}
 }
 
@@ -163,5 +163,20 @@ if (!function_exists('__')) {
 
         require 'resources/lang/' . $lang . '.php';
         return $$expr;
+    }
+}
+
+if (!function_exists('array_keys_exists')) {    
+    /**
+     * check if multiple array keys exists
+     *
+     * @param  string $keys
+     * @param  array $arr
+     * @return bool
+     * @link   https://stackoverflow.com/a/13169599
+     */
+    function array_keys_exists(string $keys, array $arr): bool
+    {
+        return !array_diff_key(array_flip(explode(',', $keys)), $arr);
     }
 }

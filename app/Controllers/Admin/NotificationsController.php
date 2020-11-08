@@ -31,8 +31,8 @@ class NotificationsController extends Controller
 	{
         $validate = NotificationRequest::validate(Request::getFields());
         
-        if (is_array($validate)) {
-            $this->redirect()->withError($validate);
+        if ($validate->fails()) {
+            $this->redirect()->withError($validate::$errors);
         }
 
         NotificationsModel::insert(['message' => Request::getField('message')]);

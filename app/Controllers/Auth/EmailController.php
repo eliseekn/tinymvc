@@ -17,34 +17,16 @@ use App\Database\Models\TokensModel;
 class EmailController extends Controller
 {
 	/**
-	 * send email confirmation
+	 * confirm email confirmation link
 	 *
 	 * @return void
 	 */
-	public function notify(): void
-	{
-        $token = random_string(50, true);
-            
-		if (EmailHelper::sendConfirmation(Request::getField('email'), $token)) {
-            TokensModel::insert([
-                'email' => Request::getField('email'),
-                'token' => $token,
-                'expires' => Carbon::now()->addHour()->toDateTimeString()
-            ]);
-        }
-	}
-	
-	/**
-	 * verify email confirmation link
-	 *
-	 * @return void
-	 */
-	public function verify(): void
+	public function confirm(): void
 	{
 		if (UsersModel::find('email', Request::getQuery('email'))->exists()) {
             UsersModel::update(['active' => 1])->where('email', Request::getQuery('email'))->persist();
             EmailHelper::sendWelcome(Request::getField('email'));
-            $this->redirect('/')->withError(__('user_activated', true));
+            $this->redirect('/login')->withSuccess(__('user_activated', true));
         } else {
             $this->redirect('/signup')->withError(__('user_not_registered', true));
         }

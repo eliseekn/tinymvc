@@ -30,15 +30,33 @@ class Validator
     protected static $messages = [];
 
     /**
+     * validation errors messages
+     * 
+     * @var bool|array
+     */
+    public static $errors;
+
+    /**
      * validate fields 
      *
      * @param  array $fields
-     * @return bool|array
+     * @return \Framework\Support\Validator
      */
-    public static function validate(array $fields, array $rules = [], array $messages = [])
+    public static function validate(array $fields, array $rules = [], array $messages = []): self
     {
         $validators = empty($rules) ? static::$rules : $rules;
         $fields_error_messages = empty($messages) ? static::$messages : $messages;
-        return GUMP::is_valid($fields, $validators, $fields_error_messages);
+        static::$errors = GUMP::is_valid($fields, $validators, $fields_error_messages);
+        return new self();
+    }
+    
+    /**
+     * check if validation fails
+     *
+     * @return bool
+     */
+    public function fails(): bool
+    {
+        return is_array(static::$errors);
     }
 }

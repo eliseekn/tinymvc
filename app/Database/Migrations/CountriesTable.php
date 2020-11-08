@@ -4,14 +4,14 @@ namespace App\Database\Migrations;
 
 use Framework\ORM\Migration;
 
-class UsersTable
+class CountriesTable
 {         
     /**
      * name of table
      *
      * @var string
      */
-    public static $table = 'users';
+    public static $table = 'countries';
 
     /**
      * create table
@@ -23,20 +23,6 @@ class UsersTable
         Migration::table(self::$table)
             ->addBigInt('id')->primaryKey()
             ->addString('name')
-            ->addString('email')->unique()
-            ->addString('company')
-            ->addInt('phone')->unique()
-            ->addString('password')
-            ->addString('role')->default('visitor')
-            ->addString('lang')->default('en')
-            ->addSmallInt('country')
-            ->addString('currency')->default('USD')
-            ->addString('timezone')->default('UTC')
-            ->addString('theme')->default('dark')
-            ->addBoolean('active')->default(0)
-            ->addBoolean('two_factor')->default(0)
-            ->addBoolean('alerts')->default(1)
-            ->addBoolean('notifications_email')->default(0)
             ->create();
     }
     

@@ -17,7 +17,7 @@ use App\Database\Models\TokensModel;
 class PasswordController extends Controller
 {
 	/**
-	 * send reset password email notification
+	 * send reset password link notification
 	 *
 	 * @return void
 	 */
@@ -30,8 +30,8 @@ class PasswordController extends Controller
 				'email' => Request::getField('email'),
 				'token' => $token,
 				'expires' => Carbon::now()->addHour()->toDateTimeString()
-			]);
-
+            ]);
+            
 			$this->redirect()->withSuccess(__('password_reset_link_sent', true));
 		} else {
 			$this->redirect()->withError(__('password_reset_link_not_sent', true));
@@ -48,31 +48,31 @@ class PasswordController extends Controller
         $reset_token = TokensModel::find('email', Request::getQuery('email'))->single();
 
         if ($reset_token === false || $reset_token->token !== Request::getQuery('token')) {
-			$this->response(__('invalid_password_link', true));
+			$this->response(__('invalid_password_reset_link', true));
 		}
 
 		if ($reset_token->expires < Carbon::now()->toDateTimeString()) {
-			$this->response(__('expired_password_link', true));
+			$this->response(__('expired_password_reset_link', true));
 		}
 
 		TokensModel::delete()->where('email', $reset_token->email)->persist();
 		
-		$this->render('password/new', [
+		$this->render('auth/password/new', [
 			'email' => $reset_token->email
 		]);
 	}
 	
 	/**
-	 * set new user password
+	 * update user password
 	 *
 	 * @return void
 	 */
-	public function new(): void
+	public function update(): void
 	{
 		$validate = AuthRequest::validate(Request::getFields());
         
-        if (is_array($validate)) {
-            $this->redirect()->withError($validate);
+        if ($validate->fails()) {
+            $this->redirect()->withError($validate::$errors);
         }
 
         UsersModel::update(['password' => Encryption::hash(Request::getField('password'))])

@@ -1,4 +1,4 @@
-<html lang="en">
+<html lang="<?= config('app.lang') ?>">
 
 <head>
     <style>

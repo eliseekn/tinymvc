@@ -24,9 +24,13 @@
     </div>
 </div>
 
-<?php if (flash_messages()) :
-    $this->insert('partials/alert', get_flash_messages());
-endif ?>
+<?php 
+if (user_session()->alerts) :
+    if (flash_messages()) :
+        $this->insert('partials/alert', get_flash_messages());
+    endif;
+endif
+?>
 
 <div class="card shadow-sm">
     <div class="card-header">
@@ -39,11 +43,11 @@ endif ?>
                 </span>
 
                 <span class="mt-lg-0 mt-2">
-                    <button class="btn btn-primary mr-2" id="bulk-read" data-url="<?= absolute_url('/admin/notifications/update') ?>">
+                    <button class="btn btn-primary mr-2" id="bulk-read" data-url="<?= absolute_url('/admin/account/notifications/update') ?>">
                         <?= __('mark_as_read') ?>
                     </button>
 
-                    <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('/admin/notifications/delete') ?>">
+                    <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('/admin/account/notifications/delete') ?>">
                         <?= __('delete') ?>
                     </button>
                 </span>
@@ -86,7 +90,7 @@ endif ?>
                         <td><?= time_elapsed(\Carbon\Carbon::parse($notification->created_at, user_session()->timezone)->locale(user_session()->lang), 1) ?></td>
 
                         <td>
-                            <a class="btn text-primary p-1 <?php if ($notification->status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('/admin/notifications/update/' . $notification->id) ?>" <?php if ($notification->status === 'unread') : echo 'title="Mark as read"'; endif ?>>
+                            <a class="btn text-primary p-1 <?php if ($notification->status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('/admin/account/notifications/update/' . $notification->id) ?>" <?php if ($notification->status === 'unread') : echo 'title="Mark as read"'; endif ?>>
                                 <?php if ($notification->status === 'unread') : ?>
                                 <i class="fa fa-eye-slash"></i>
                                 <?php else : ?>
@@ -94,7 +98,7 @@ endif ?>
                                 <?php endif ?>
                             </a>
 
-                            <confirm-delete type="icon" content='<i class="fa fa-trash-alt"></i>' action="<?= absolute_url('/admin/notifications/delete/' . $notification->id) ?>" redirect="<?= current_url()?>"></confirm-delete>
+                            <confirm-delete type="icon" content='<i class="fa fa-trash-alt"></i>' action="<?= absolute_url('/admin/account/notifications/delete/' . $notification->id) ?>" redirect="<?= current_url()?>"></confirm-delete>
                         </td>
                     </tr>
 

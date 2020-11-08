@@ -19,8 +19,7 @@ class AccountPolicy
     {
         if (config('security.auth.email_confirmation') === true) {
             if (!AuthHelper::getSession()->active) {
-                Redirect::toUrl('/login')->withError(__('account_not_activated', true) . '<br>
-                    <a href="' . absolute_url('/email/confirmation/notify') . '"><u>Resend me confirmation link</u></a>');
+                Redirect::toUrl('/login')->withError(__('account_not_activated', true));
             }
         }
     }

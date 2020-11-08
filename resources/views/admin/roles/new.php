@@ -10,14 +10,18 @@
 
 <?php $this->start('page_content') ?>
 
-<?php if (flash_messages()) : 
-    $this->insert('partials/alert', get_flash_messages());
-endif ?>
+<?php 
+if (user_session()->alerts) :
+    if (flash_messages()) :
+        $this->insert('partials/alert', get_flash_messages());
+    endif;
+endif
+?>
 
 <div class="card shadow-sm">
     <div class="card-header"><?= __('new') ?></div>
 
-    <form id="create-role" data-url="<?= absolute_url('/admin/roles/create') ?>">
+    <form id="create-role" data-url="<?= absolute_url('/admin/resources/roles/create') ?>">
         <?= generate_csrf_token() ?>
 
         <div class="card-body">
@@ -39,7 +43,7 @@ endif ?>
         <div class="card-footer">
             <button type="submit" class="btn btn-primary loading"><?= __('create') ?></button>
             <button type="reset" class="btn btn-secondary mx-2"><?= __('reset') ?></button>
-            <a href="<?= absolute_url('/admin/roles') ?>" class="btn btn-secondary"><?= __('cancel') ?></a>
+            <a href="<?= absolute_url('/admin/resources/roles') ?>" class="btn btn-secondary"><?= __('cancel') ?></a>
         </div>
     </form>
 </div>

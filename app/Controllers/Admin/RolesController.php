@@ -60,8 +60,8 @@ class RolesController extends Controller
 	{
 		$validate = RoleRequest::validate(Request::getFields());
         
-        if (is_array($validate)) {
-			$this->alert($validate)->error();
+        if ($validate->fails()) {
+			$this->alert($validate::$errors)->error();
             $this->json(['redirect' => absolute_url('admin/roles/new')]);
         }
 
@@ -110,8 +110,8 @@ class RolesController extends Controller
 	{
 		$validate = RoleRequest::validate(Request::getFields());
         
-        if (is_array($validate)) {
-			$this->alert($validate)->error();
+        if ($validate->fails()) {
+			$this->alert($validate::$errors)->error();
             $this->json(['redirect' => absolute_url('admin/roles/edit')]);
         }
 

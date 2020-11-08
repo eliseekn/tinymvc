@@ -21,47 +21,35 @@ class Database
      * get migration class
      *
      * @param  string $table
-     * @return mixed
+     * @return string
      */
-    private static function getMigration(string $table)
+    private static function getMigration(string $table): string
     {
-        $migration = 'App\Database\Migrations\\' . $table;
-
-        if (!class_exists($migration) || !method_exists($migration, 'migrate')) {
-            exit('[-] Invalid migration class "' . $migration . '"' . PHP_EOL);
-        }
-
-        return $migration;
+        return 'App\Database\Migrations\\' . $table;
     }
     
     /**
      * get seed class
      *
      * @param  string $seed
-     * @return mixed
+     * @return string
      */
-    private static function getSeed(string $seed)
+    private static function getSeed(string $seed): string
     {
-        $seeder = 'App\Database\Seeds\\' . $seed;
-
-        if (!class_exists($seeder) || !method_exists($seeder, 'insert')) {
-            exit('[-] Invalid seeder class "' . $seeder . '"' . PHP_EOL);
-        }
-
-        return $seeder;
+        return 'App\Database\Seeds\\' . $seed;
     }
     
     /**
-     * parseCommands
+     * parse cli
      *
      * @param  array $options
      * @return void
      */
-    public static function parseCommands(array $options): void
+    public static function parseCLI(array $options): void
     {
         if (
             array_key_exists('migration', $options) &&
-            !array_key_exists('seed', $options) &&
+            !array_keys_exists('seed', $options) &&
             !array_key_exists('delete', $options) &&
             !array_key_exists('refresh', $options) &&
             !array_key_exists('db', $options) &&
@@ -79,7 +67,7 @@ class Database
                     
                     try {
                         $table::migrate();
-                        echo '[+] Table ' . $table . ' migrated successfully' . PHP_EOL;
+                        echo '[+] ' . $table . ' migrated successfully' . PHP_EOL;
                     } catch(Exception $e) {
                         exit('[-] ' . $e->getMessage());
                     }
@@ -91,7 +79,7 @@ class Database
                         
                         try {
                             $table::migrate();
-                            echo '[+] Table ' . $table . ' migrated successfully' . PHP_EOL;
+                            echo '[+] ' . $table . ' migrated successfully' . PHP_EOL;
                         } catch(Exception $e) {
                             exit('[-] ' . $e->getMessage());
                         }
@@ -104,7 +92,7 @@ class Database
                     
                     try {
                         $table::migrate();
-                        echo '[+] Table ' . $table . ' migrated successfully' . PHP_EOL;
+                        echo '[+] ' . $table . ' migrated successfully' . PHP_EOL;
                     } catch(Exception $e) {
                         exit('[-] ' . $e->getMessage());
                     }
@@ -132,7 +120,7 @@ class Database
                     
                     try {
                         $table::migrate();
-                        echo '[+] Table ' . $table . ' migrated successfully' . PHP_EOL;
+                        echo '[+] ' . $table . ' migrated successfully' . PHP_EOL;
                     } catch(Exception $e) {
                         exit('[-] ' . $e->getMessage());
                     }
@@ -144,7 +132,7 @@ class Database
                         
                         try {
                             $table::migrate();
-                            echo '[+] Table ' . $table . ' migrated successfully' . PHP_EOL;
+                            echo '[+] ' . $table . ' migrated successfully' . PHP_EOL;
                         } catch(Exception $e) {
                             exit('[-] ' . $e->getMessage());
                         }
@@ -157,14 +145,14 @@ class Database
                     
                     try {
                         $table::migrate();
-                        echo '[+] Table ' . $table . ' migrated successfully' . PHP_EOL;
+                        echo '[+] ' . $table . ' migrated successfully' . PHP_EOL;
                     } catch(Exception $e) {
                         exit('[-] ' . $e->getMessage());
                     }
                 }
             }
         
-            echo '[+] Running seeds...' . PHP_EOL;
+            echo '[+] Inserting seeds...' . PHP_EOL;
 
             if ($options['seed'] !== 'all') {
                 $seed = $options['seed'];
@@ -174,7 +162,7 @@ class Database
                     
                     try {
                         $seed::migrate();
-                        echo '[+] Seed ' . $seed . ' inserted successfully' . PHP_EOL;
+                        echo '[+] ' . $seed . ' inserted successfully' . PHP_EOL;
                     } catch(Exception $e) {
                         exit('[-] ' . $e->getMessage());
                     }
@@ -186,7 +174,7 @@ class Database
                         
                         try {
                             $seed::migrate();
-                            echo '[+] Seed ' . $seed . ' inserted successfully' . PHP_EOL;
+                            echo '[+] ' . $seed . ' inserted successfully' . PHP_EOL;
                         } catch(Exception $e) {
                             exit('[-] ' . $e->getMessage());
                         }
@@ -199,7 +187,7 @@ class Database
                     
                     try {
                         $seed::migrate();
-                        echo '[+] Seed ' . $seed . ' inserted successfully' . PHP_EOL;
+                        echo '[+] ' . $seed . ' inserted successfully' . PHP_EOL;
                     } catch(Exception $e) {
                         exit('[-] ' . $e->getMessage());
                     }

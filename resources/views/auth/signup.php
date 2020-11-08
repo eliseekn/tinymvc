@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?= config('app.lang') ?>">
 
 <head>
     <meta charset="utf-8">

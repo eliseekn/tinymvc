@@ -4,11 +4,15 @@
 
 <?php $this->start('page_content') ?>
 
-<?php if (flash_messages()) :
-    $this->insert('partials/alert', get_flash_messages());
-endif ?>
+<?php 
+if (user_session()->alerts) :
+    if (flash_messages()) :
+        $this->insert('partials/alert', get_flash_messages());
+    endif;
+endif
+?>
 
-<form method="post" action="<?= absolute_url('/admin/settings/update/' . user_session()->id) ?>">
+<form method="post" action="<?= absolute_url('/admin/account/settings/update/' . user_session()->id) ?>">
     <?= generate_csrf_token() ?>
 
     <div class="row mb-4">
@@ -17,6 +21,13 @@ endif ?>
                 <div class="card-header "><?= __('profile') ?></div>
 
                 <div class="card-body">
+                    <div class="form-group row">
+                        <label for="company" class="col-sm-3 col-form-label"><?= __('company') ?></label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="company" id="company" value="<?= $user->company ?>">
+                        </div>
+                    </div>
+
                     <div class="form-group row">
                         <label for="name" class="col-sm-3 col-form-label"><?= __('name') ?></label>
                         <div class="col-sm-9">
@@ -28,6 +39,26 @@ endif ?>
                         <label for="email" class="col-sm-3 col-form-label"><?= __('email') ?></label>
                         <div class="col-sm-9">
                             <input type="email" class="form-control" name="email" id="email" value="<?= $user->email ?>">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="phone" class="col-sm-3 col-form-label"><?= __('phone') ?></label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="phone" id="phone" value="<?= $user->phone ?>">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="country" class="col-sm-3 col-form-label"><?= __('country') ?></label>
+                        <div class="col-sm-9">
+                            <select id="country" name="country" class="custom-select">
+                                <?php foreach($countries as $country) : ?>
+                                <option value="<?= $country->id ?>" <?php if ($user->country === $country->id) : echo 'selected'; endif ?>>
+                                    <?= $country->name ?> 
+                                </option>
+                                <?php endforeach ?>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -114,11 +145,11 @@ endif ?>
                     </div>
 
                     <div class="form-group row d-flex align-items-center">
-                        <label for="notifications" class="col-sm-5 col-form-label"><?= __('display_notifications') ?></label>
+                        <label for="alerts" class="col-sm-5 col-form-label"><?= __('display_alerts') ?></label>
                         <div class="col-sm-7">
                             <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" name="notifications" id="notifications" <?php if ($user->notifications) : echo 'checked'; endif ?>>
-                                <label class="custom-control-label" for="notifications"></label>
+                                <input type="checkbox" class="custom-control-input" name="alerts" id="alerts" <?php if ($user->alerts) : echo 'checked'; endif ?>>
+                                <label class="custom-control-label" for="alerts"></label>
                             </div>
                         </div>
                     </div>

@@ -26,7 +26,10 @@ class UserSeed
             'email' => 'admin@mail.com',
             'password' => Encryption::hash('admin'),
             'role' => 'administrator',
-            'active' => 1
+            'active' => 1,
+            'country' => 209,
+            'company' => 'TinyMVC',
+            'phone' => 00000000
         ]);
     }
 }

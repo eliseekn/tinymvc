@@ -15,9 +15,13 @@
     </div>
 </div>
 
-<?php if (flash_messages()) :
-    $this->insert('partials/alert', get_flash_messages());
-endif ?>
+<?php 
+if (user_session()->alerts) :
+    if (flash_messages()) :
+        $this->insert('partials/alert', get_flash_messages());
+    endif;
+endif
+?>
 
 <div class="card shadow-sm">
     <div class="card-header">
@@ -30,9 +34,9 @@ endif ?>
                 </span>
 
                 <span class="mt-lg-0 mt-2">
-                    <export-modal action="<?= absolute_url('/admin/activities/export') ?>" title="<?= __('export') ?>" modal_title="<?= __('export') ?>" modal_button_title="<?= __('export') ?>" modal_button_cancel="<?= __('cancel') ?>"></export-modal>
+                    <export-modal action="<?= absolute_url('/admin/account/activities/export') ?>" title="<?= __('export') ?>" modal_title="<?= __('export') ?>" modal_button_title="<?= __('export') ?>" modal_button_cancel="<?= __('cancel') ?>"></export-modal>
 
-                    <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('/admin/activities/delete') ?>">
+                    <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('/admin/account/activities/delete') ?>">
                         <?= __('delete') ?>
                     </button>
                 </span>

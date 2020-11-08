@@ -68,8 +68,8 @@ class UsersController extends Controller
 	{
         $validate = RegisterRequest::validate(Request::getFields());
         
-        if (is_array($validate)) {
-            $this->redirect()->withError($validate);
+        if ($validate->fails()) {
+            $this->redirect()->withError($validate::$errors);
         }
 
 		if (UsersModel::find('email', Request::getField('email'))->exists()) {
@@ -116,8 +116,8 @@ class UsersController extends Controller
 	{
 		$validate = UpdateUserRequest::validate(Request::getFields());
         
-        if (is_array($validate)) {
-            $this->redirect()->withError($validate);
+        if ($validate->fails()) {
+            $this->redirect()->withError($validate::$errors);
         }
 
 		if (!UsersModel::find('id', $id)->exists()) {

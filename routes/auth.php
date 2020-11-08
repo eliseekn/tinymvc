@@ -36,3 +36,23 @@ Route::group([
 Route::get('logout', ['handler' => 'Auth\AuthController@logout']);
 Route::post('authenticate', ['handler' => 'Auth\AuthController@authenticate']);
 Route::post('register', ['handler' => 'Auth\AuthController@register']);
+
+//password reset routes
+Route::get('password/forgot', [
+    'handler' => function() {
+        View::render('auth/password/forgot');
+    }
+]);
+
+Route::get('password/reset', ['handler' => 'Auth\PasswordController@reset']);
+Route::post('password/notify', ['handler' => 'Auth\PasswordController@notify']);
+Route::post('password/update', ['handler' => 'Auth\PasswordController@update']);
+
+//email routes
+Route::group([
+    'confirm' => ['handler' => 'EmailController@confirm'],
+    'auth' => ['handler' => 'EmailController@auth'],
+])->by([
+    'method' => 'GET',
+    'prefix' => 'email'
+]);

@@ -24,7 +24,10 @@ $dashboard = 'Dashboard';
 $roles = 'Roles';
 $users = 'Users';
 $resources = 'Resources';
+$resource = 'Resource';
 $activities = 'Activities';
+$builder = 'Builder';
+$migrations = 'Migrations';
 
 //navabar
 $mark_as_read = 'Mark as read';
@@ -48,8 +51,13 @@ $preferences = 'Preferences';
 $language = 'Language';
 $timezone = 'Time Zone';
 $currency = 'Currency';
-$display_notifications = 'Display notifications';
+$display_alerts = 'Display alerts';
 $receive_email_notifications = 'Receive email notifications';
+$alerts = 'Alerts';
+$country = 'Country';
+$countries = 'Countries';
+$company = 'Company';
+$phone = 'Phone';
 
 //cards data
 $search = 'Search';
@@ -123,8 +131,8 @@ $invalid_two_factor_link = 'Two-Factor authentication link invalid';
 $expired_two_factor_link = 'Two-Factor authentication link expired';
 $password_reset_link_sent = 'Password reset link sent successfully';
 $password_reset_link_not_sent = 'Failed to send paswword reset link';
-$invalid_password_link = 'Password reset link invalid';
-$expired_password_link = 'Password reset link expired';
+$invalid_password_reset_link = 'Password reset link invalid';
+$expired_password_reset_link = 'Password reset link expired';
 $password_resetted = 'Password resetted succesfully';
 $login_failed = 'Invalid email address or password';
 $auth_attempts_exceeded = 'Authentication attempts exceeded. Retry in ' . config('security.auth.unlock_timeout') . ' minute(s)';

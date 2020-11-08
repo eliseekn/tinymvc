@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?= config('app.lang') ?>">
 
 <head>
     <meta charset="utf-8">
@@ -14,9 +14,13 @@
 
 <body>
 
-    <?php if (flash_messages()) :
-        $this->insert('partials/alert', get_flash_messages());
-    endif ?>
+    <?php 
+    if (user_session()->alerts) :
+        if (flash_messages()) :
+            $this->insert('partials/alert', get_flash_messages());
+        endif;
+    endif
+    ?>
 
     <div class="wrapper">
         <div class="wrapper__sidebar border-right shadow-sm bg-white">
@@ -34,10 +38,10 @@
                 </a>
 
                 <button class="list-group-item list-group-item-action" id="dropdown-btn" data-target="resources-dropdown-menu">
-                    <i class="fa fa-layer-group <?php if (url_exists('users|roles')) : echo 'text-primary'; endif ?>"></i> <?= __('resources') ?>
+                    <i class="fa fa-layer-group <?php if (url_exists('resources')) : echo 'text-primary'; endif ?>"></i> <?= __('resources') ?>
 
                     <span class="float-right dropdown-caret">
-                        <?php if (url_exists('users|roles')) : ?>
+                        <?php if (url_exists('resources')) : ?>
                         <i class="fa fa-caret-up"></i>
                         <?php else : ?>
                         <i class="fa fa-caret-down"></i>
@@ -45,20 +49,20 @@
                     </span>
                 </button>
 
-                <div class="<?php if (!url_exists('users|roles')) : echo 'd-none'; endif ?> border-bottom" id="resources-dropdown-menu">
-                    <a href="<?= absolute_url('/admin/roles') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                <div class="<?php if (!url_exists('resources')) : echo 'd-none'; endif ?> border-bottom" id="resources-dropdown-menu">
+                    <a href="<?= absolute_url('/admin/resources/roles') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (url_exists('roles')) : echo 'text-primary'; endif ?>"></i> <?= __('roles') ?>
                     </a>
-                    <a href="<?= absolute_url('/admin/users') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                    <a href="<?= absolute_url('/admin/resources/users') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (url_exists('users')) : echo 'text-primary'; endif ?>"></i> <?= __('users') ?>
                     </a>
                 </div>
 
                 <button class="list-group-item list-group-item-action" id="dropdown-btn" data-target="account-dropdown-menu">
-                    <i class="fa fa-cog <?php if (url_exists('settings|notifications|activities')) : echo 'text-primary'; endif ?>"></i> <?= __('account') ?>
+                    <i class="fa fa-user <?php if (url_exists('account')) : echo 'text-primary'; endif ?>"></i> <?= __('account') ?>
 
                     <span class="float-right dropdown-caret">
-                        <?php if (url_exists('settings|notifications')) : ?>
+                        <?php if (url_exists('account')) : ?>
                         <i class="fa fa-caret-up"></i>
                         <?php else : ?>
                         <i class="fa fa-caret-down"></i>
@@ -66,14 +70,14 @@
                     </span>
                 </button>
 
-                <div class="<?php if (!url_exists('settings|notifications|activities')) : echo 'd-none'; endif ?> border-bottom" id="account-dropdown-menu">
-                    <a href="<?= absolute_url('/admin/notifications') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                <div class="<?php if (!url_exists('account')) : echo 'd-none'; endif ?> border-bottom" id="account-dropdown-menu">
+                    <a href="<?= absolute_url('/admin/account/notifications') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (url_exists('notifications')) : echo 'text-primary'; endif ?>"></i> <?= __('notifications') ?>
                     </a>
-                    <a href="<?= absolute_url('/admin/activities') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                    <a href="<?= absolute_url('/admin/account/activities') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (url_exists('activities')) : echo 'text-primary'; endif ?>"></i> <?= __('activities') ?>
                     </a>
-                    <a href="<?= absolute_url('/admin/settings/' . user_session()->id) ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                    <a href="<?= absolute_url('/admin/account/settings/' . user_session()->id) ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (url_exists('settings')) : echo 'text-primary'; endif ?>"></i> <?= __('settings') ?>
                     </a>
                 </div>
@@ -89,7 +93,7 @@
                 <div class="ml-auto d-flex align-items-center">
                     <div id="notifications-bell"></div>
 
-                    <a class="btn btn-sm" href="<?= absolute_url('/admin/settings/' . user_session()->id) ?>" title="<?= __('settings') ?>">
+                    <a class="btn btn-sm" href="<?= absolute_url('/admin/account/settings/' . user_session()->id) ?>" title="<?= __('settings') ?>">
                         <i class="fa fa-cog fa-lg"></i>
                     </a>
 

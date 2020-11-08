@@ -4,9 +4,13 @@
 
 <?php $this->start('page_content') ?>
 
-<?php if (flash_messages()) :
-    $this->insert('partials/alert', get_flash_messages());
-endif ?>
+<?php 
+if (user_session()->alerts) :
+    if (flash_messages()) :
+        $this->insert('partials/alert', get_flash_messages());
+    endif;
+endif
+?>
 
 <div class="card shadow-sm">
     <div class="card-header"><?= __('summary') ?></div>
@@ -41,9 +45,9 @@ endif ?>
     </div>
 
     <div class="card-footer">
-        <a href="<?= absolute_url('/admin/roles/edit/' . $role->id) ?>" class="btn btn-primary"><?= __('edit') ?></a>
-        <confirm-delete type="text" content="<?= __('delete') ?>" action="<?= absolute_url('/admin/roles/delete/' . $role->id) ?>" redirect="<?= current_url() ?>"></confirm-delete>
-        <a href="<?= absolute_url('/admin/roles') ?>" class="btn btn-secondary ml-2"><?= __('cancel') ?></a>
+        <a href="<?= absolute_url('/admin/resources/roles/edit/' . $role->id) ?>" class="btn btn-primary"><?= __('edit') ?></a>
+        <confirm-delete type="text" content="<?= __('delete') ?>" action="<?= absolute_url('/admin/resources/roles/delete/' . $role->id) ?>" redirect="<?= current_url() ?>"></confirm-delete>
+        <a href="<?= absolute_url('/admin/resources/roles') ?>" class="btn btn-secondary ml-2"><?= __('cancel') ?></a>
     </div>
 </div>
 

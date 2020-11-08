@@ -4,9 +4,13 @@
 
 <?php $this->start('page_content') ?>
 
-<?php if (flash_messages()) : 
-    $this->insert('partials/alert', get_flash_messages());
-endif ?>
+<?php 
+if (user_session()->alerts) :
+    if (flash_messages()) :
+        $this->insert('partials/alert', get_flash_messages());
+    endif;
+endif
+?>
 
 <div class="card shadow-sm">
     <div class="card-header"><?= __('summary') ?></div>
@@ -53,13 +57,13 @@ endif ?>
     </div>
 
     <div class="card-footer">
-        <a href="<?= absolute_url('/admin/users/edit/' . $user->id) ?>" class="btn btn-primary"><?= __('edit') ?></a>
+        <a href="<?= absolute_url('/admin/resources/users/edit/' . $user->id) ?>" class="btn btn-primary"><?= __('edit') ?></a>
 
         <?php if (!\App\Helpers\AuthHelper::hasRole('administrator')) : ?>
-        <confirm-delete type="text" content="<?= __('delete') ?>" action="<?= absolute_url('/admin/users/delete/' . $user->id) ?>" redirect="<?= current_url() ?>"></confirm-delete>
+        <confirm-delete type="text" content="<?= __('delete') ?>" action="<?= absolute_url('/admin/resources/users/delete/' . $user->id) ?>" redirect="<?= current_url() ?>"></confirm-delete>
         <?php endif ?>
         
-        <a href="<?= absolute_url('/admin/users') ?>" class="btn btn-secondary ml-2"><?= __('cancel') ?></a>
+        <a href="<?= absolute_url('/admin/resources/users') ?>" class="btn btn-secondary ml-2"><?= __('cancel') ?></a>
     </div>
 </div>
 

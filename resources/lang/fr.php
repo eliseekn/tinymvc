@@ -24,7 +24,10 @@ $dashboard = 'Tableau de bord';
 $roles = 'Permissions';
 $users = 'Utilisateurs';
 $resources = 'Ressources';
-$activities = 'Activitées';
+$resource = 'Ressource';
+$activities = 'Activités';
+$builder = 'Constructeur';
+$migrations = 'Migrations';
 
 //navabar
 $mark_as_read = 'Marquer comme lu';
@@ -48,8 +51,13 @@ $preferences = 'Préférences';
 $language = 'Langage';
 $timezone = 'Fuseau horaire';
 $currency = 'Devise';
-$display_notifications = 'Afficher les notifications';
+$display_alerts = 'Afficher les alertes';
 $receive_email_notifications = 'Revevoir des notifications par email';
+$alerts = 'Alertes';
+$country = 'Pays';
+$countries = 'Pays';
+$company = 'Entreprise';
+$phone = 'Numéro de téléphone';
 
 //cards data
 $search = 'Rechercher';
@@ -123,8 +131,8 @@ $invalid_two_factor_link = "Lien d'authentication Two-Factor invalide";
 $expired_two_factor_link = "Lien d'authentication Two-Factor expiré";
 $password_reset_link_sent = 'Lien de réinitialisation de mot de passe envoyé avec succès';
 $password_reset_link_not_sent = "Echec de l'envoie du lien de réinitiatlisation de mot de passe";
-$invalid_password_link = 'Lien de réinitialisation de mot de passe invalide';
-$expired_password_link = 'Lien de réinitialisation de mot de passe expiré';
+$invalid_password_reset_link = 'Lien de réinitialisation de mot de passe invalide';
+$expired_password_reset_link = 'Lien de réinitialisation de mot de passe expiré';
 $password_resetted = 'Mot de passe réinitialisé avec succès';
 $login_failed = 'Mot de passe ou adresse email invalide';
 $auth_attempts_exceeded = "Nombre de tentatives de connexions dépassé. Réessayez dans " . config('security.auth.unlock_timeout') . " minute(s)";

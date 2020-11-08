@@ -61,17 +61,17 @@ class ActivitiesController extends Controller
         $date_end = Request::getField('date_end');
 
 		if (!empty($date_start) && !empty($date_end)) {
-			$users = ActivitiesModel::select()
+			$activities = ActivitiesModel::select()
                 ->between('created_at', Carbon::parse($date_start)->toDateTimeString(), Carbon::parse($date_end)->toDateTimeString())
                 ->orderAsc('name')
                 ->all();
 		} else {
-			$users = ActivitiesModel::select()->orderAsc('name')->all();
+			$activities = ActivitiesModel::select()->orderAsc('name')->all();
         }
         
         $filename = 'activities_' . date('Y_m_d') . '.' . Request::getField('file_type');
 
-		ReportHelper::export($filename, $users, [
+		ReportHelper::export($filename, $activities, [
 			'user' => __('user'), 
 			'url' => __('url'), 
 			'method' => __('method'), 

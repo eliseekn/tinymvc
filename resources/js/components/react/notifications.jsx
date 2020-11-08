@@ -82,7 +82,7 @@ class Notifications extends React.Component {
                     <div className="dropdown-divider my-0"></div>
 
                     <div className="px-4 py-2 bg-light text-center">
-                        <a className="text-primary" href="/tinymvc/admin/notifications">
+                        <a className="text-primary" href="/tinymvc/admin/account/notifications">
                             {this.state.viewAll}
                         </a>
                     </div>

@@ -31167,7 +31167,7 @@ var Notifications = /*#__PURE__*/function (_React$Component) {
         className: "px-4 py-2 bg-light text-center"
       }, /*#__PURE__*/_react.default.createElement("a", {
         className: "text-primary",
-        href: "/tinymvc/admin/notifications"
+        href: "/tinymvc/admin/account/notifications"
       }, this.state.viewAll))));
     }
   }]);
@@ -31267,7 +31267,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "45435" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "41013" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

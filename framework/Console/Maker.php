@@ -13,7 +13,7 @@ use Framework\Support\Storage;
 /**
  * Manage application stubs
  */
-class Make
+class Maker
 {
     /**
      * get stubs path
@@ -26,15 +26,36 @@ class Make
     }
 
     /**
-     * parseCommands
+     * parseCLI
      *
      * @param  array $options
      * @return void
      */
-    public static function parseCommands(array $options): void
+    public static function parseCLI(array $options): void
     {
         if (
             array_key_exists('controller', $options) &&
+            !array_key_exists('namespace', $options) &&
+            !array_key_exists('model', $options) &&
+            !array_key_exists('migration', $options) &&
+            !array_key_exists('seed', $options) &&
+            !array_key_exists('request', $options) &&
+            !array_key_exists('middleware', $options) &&
+            !array_key_exists('table', $options) &&
+            !array_key_exists('resource', $options)
+        ) {
+            $data = self::stubsPath()->readFile('Controller.stub');
+            $data = str_replace('NAMESPACE', 'App\Controllers', $data);
+            $data = str_replace('CLASSNAME', $options['controller'], $data);
+
+            if (!Storage::path(config('storage.controllers'))->writeFile($options['controller'] . '.php', $data)) {
+                exit('[-] Failed to create controller file ' . $options['controller'] . '.php' . PHP_EOL);
+            }
+        }
+
+        else if (
+            array_key_exists('controller', $options) &&
+            array_key_exists('resource', $options) &&
             !array_key_exists('namespace', $options) &&
             !array_key_exists('model', $options) &&
             !array_key_exists('migration', $options) &&
@@ -50,11 +71,53 @@ class Make
             if (!Storage::path(config('storage.controllers'))->writeFile($options['controller'] . '.php', $data)) {
                 exit('[-] Failed to create controller file ' . $options['controller'] . '.php' . PHP_EOL);
             }
+
+            //create resources files
+            if (!Storage::path(config('storage.views'))->isDir('admin/' . $options['resource'])) {
+                Storage::path(config('storage.views'))->createDir('admin/' . $options['resource']);
+            }
+
+            foreach(self::stubsPath()->add('Resource')->getFiles() as $file) {
+                $data = self::stubsPath()->add('Resource')->readFile($file);
+                $data = str_replace('RESSOURCENAME', $options['resource'], $data);
+                $file = str_replace('stub', 'php', $file);
+
+                if (!Storage::path(config('storage.views'))->add('admin/' . $options['resource'])->writeFile($file, $data)) {
+                    echo '[-] Failed to create resources file' . PHP_EOL;
+                }
+            }
         }
 
         else if (
             array_key_exists('controller', $options) &&
             array_key_exists('namespace', $options) &&
+            !array_key_exists('model', $options) &&
+            !array_key_exists('migration', $options) &&
+            !array_key_exists('seed', $options) &&
+            !array_key_exists('request', $options) &&
+            !array_key_exists('middleware', $options) &&
+            !array_key_exists('table', $options) &&
+            !array_key_exists('resource', $options)
+        ) {
+            $data = self::stubsPath()->readFile('Controller.stub');
+            $data = str_replace('NAMESPACE', 'App\Controllers\\' . $options['namespace'], $data);
+            $data = str_replace('CLASSNAME', $options['controller'], $data);
+
+            $path = Storage::path(config('storage.controllers'));
+
+            if (!$path->isDir($options['namespace'])) {
+                $path->createDir($options['namespace']);
+            }
+
+            if (!$path->add($options['namespace'])->writeFile($options['controller'] . '.php', $data)) {
+                exit('[-] Failed to create controller file ' . $options['controller'] . '.php' . PHP_EOL);
+            }
+        }
+
+        else if (
+            array_key_exists('controller', $options) &&
+            array_key_exists('namespace', $options) &&
+            array_key_exists('resource', $options) &&
             !array_key_exists('model', $options) &&
             !array_key_exists('migration', $options) &&
             !array_key_exists('seed', $options) &&
@@ -72,9 +135,24 @@ class Make
                 $path->createDir($options['namespace']);
             }
 
-            if (!$path->add($options['namespace'] . DIRECTORY_SEPARATOR)->writeFile($options['controller'] . '.php', $data)) {
+            if (!$path->add($options['namespace'])->writeFile($options['controller'] . '.php', $data)) {
                 exit('[-] Failed to create controller file ' . $options['controller'] . '.php' . PHP_EOL);
             }
+
+            //create resources files
+            if (!Storage::path(config('storage.views'))->isDir('admin/' . $options['resource'])) {
+                Storage::path(config('storage.views'))->createDir('admin/' . $options['resource']);
+            }
+
+            foreach(self::stubsPath()->add('Resource')->getFiles() as $file) {
+                $data = self::stubsPath()->add('Resource')->readFile($file);
+                $data = str_replace('RESSOURCENAME', $options['resource'], $data);
+                $file = str_replace('stub', 'php', $file);
+
+                if (!Storage::path(config('storage.views'))->add('admin/' . $options['resource'])->writeFile($file, $data)) {
+                    echo '[-] Failed to create resources file' . PHP_EOL;
+                }
+            }
         }
 
         else if (
@@ -85,7 +163,8 @@ class Make
             !array_key_exists('migration', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('request', $options) &&
-            !array_key_exists('middleware', $options)
+            !array_key_exists('middleware', $options) &&
+            !array_key_exists('resource', $options)
         ) {
             $data = self::stubsPath()->readFile('Model.stub');
             $data = str_replace('NAMESPACE', 'App\Database\Models', $data);
@@ -105,7 +184,8 @@ class Make
             !array_key_exists('migration', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('request', $options) &&
-            !array_key_exists('middleware', $options)
+            !array_key_exists('middleware', $options) &&
+            !array_key_exists('resource', $options)
         ) {
             $data = self::stubsPath()->readFile('Model.stub');
             $data = str_replace('NAMESPACE', 'App\Database\Models\\' . $options['namespace'], $data);
@@ -118,7 +198,7 @@ class Make
                 $path->createDir($options['namespace']);
             }
 
-            if (!$path->add($options['namespace'] . DIRECTORY_SEPARATOR)->writeFile($options['model'] . '.php', $data)) {
+            if (!$path->add($options['namespace'])->writeFile($options['model'] . '.php', $data)) {
                 exit('[-] Failed to create model file ' . $options['model'] . '.php' . PHP_EOL);
             }
         }
@@ -131,7 +211,8 @@ class Make
             !array_key_exists('model', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('request', $options) &&
-            !array_key_exists('middleware', $options)
+            !array_key_exists('middleware', $options) &&
+            !array_key_exists('resource', $options)
         ) {
             $data = self::stubsPath()->readFile('Migration.stub');
             $data = str_replace('NAMESPACE', 'App\Database\Migrations', $data);
@@ -151,7 +232,8 @@ class Make
             !array_key_exists('namespace', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('request', $options) &&
-            !array_key_exists('middleware', $options)
+            !array_key_exists('middleware', $options) &&
+            !array_key_exists('resource', $options)
         ) {
             $data = self::stubsPath()->readFile('Migration.stub');
             $data = str_replace('NAMESPACE', 'App\Database\Migrations', $data);
@@ -181,7 +263,8 @@ class Make
             !array_key_exists('model', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('request', $options) &&
-            !array_key_exists('middleware', $options)
+            !array_key_exists('middleware', $options) &&
+            !array_key_exists('resource', $options)
         ) {
             $data = self::stubsPath()->readFile('Migration.stub');
             $data = str_replace('NAMESPACE', 'App\Database\Migration\\' . $options['namespace'], $data);
@@ -194,7 +277,7 @@ class Make
                 $path->createDir($options['namespace']);
             }
 
-            if (!$path->add($options['namespace'] . DIRECTORY_SEPARATOR)->writeFile($options['migration'] . '.php', $data)) {
+            if (!$path->add($options['namespace'])->writeFile($options['migration'] . '.php', $data)) {
                 exit('[-] Failed to create migration file ' . $options['migration'] . '.php' . PHP_EOL);
             }
         }
@@ -207,7 +290,8 @@ class Make
             !array_key_exists('controller', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('request', $options) &&
-            !array_key_exists('middleware', $options)
+            !array_key_exists('middleware', $options) &&
+            !array_key_exists('resource', $options)
         ) {
             $data = self::stubsPath()->readFile('Migration.stub');
             $data = str_replace('NAMESPACE', 'App\Database\Migration\\' . $options['namespace'], $data);
@@ -220,7 +304,7 @@ class Make
                 $path->createDir($options['namespace']);
             }
 
-            if (!$path->add($options['namespace'] . DIRECTORY_SEPARATOR)->writeFile($options['migration'] . '.php', $data)) {
+            if (!$path->add($options['namespace'])->writeFile($options['migration'] . '.php', $data)) {
                 exit('[-] Failed to create migration file ' . $options['migration'] . '.php' . PHP_EOL);
             }
 
@@ -236,7 +320,7 @@ class Make
                 $path->createDir($options['namespace']);
             }
 
-            if (!$path->add($options['namespace'] . DIRECTORY_SEPARATOR)->writeFile($options['model'] . '.php', $data)) {
+            if (!$path->add($options['namespace'])->writeFile($options['model'] . '.php', $data)) {
                 exit('[-] Failed to create model file ' . $options['model'] . '.php' . PHP_EOL);
             }
         }
@@ -249,7 +333,8 @@ class Make
             !array_key_exists('model', $options) &&
             !array_key_exists('migration', $options) &&
             !array_key_exists('request', $options) &&
-            !array_key_exists('middleware', $options)
+            !array_key_exists('middleware', $options) &&
+            !array_key_exists('resource', $options)
         ) {
             $data = self::stubsPath()->readFile('Seed.stub');
             $data = str_replace('NAMESPACE', 'App\Database\Seeds', $data);
@@ -269,7 +354,8 @@ class Make
             !array_key_exists('model', $options) &&
             !array_key_exists('migration', $options) &&
             !array_key_exists('request', $options) &&
-            !array_key_exists('middleware', $options)
+            !array_key_exists('middleware', $options) &&
+            !array_key_exists('resource', $options)
         ) {
             $data = self::stubsPath()->readFile('Seed.stub');
             $data = str_replace('NAMESPACE', 'App\Database\Seeds\\' . $options['namespace'], $data);
@@ -282,7 +368,7 @@ class Make
                 $path->createDir($options['namespace']);
             }
 
-            if (!$path->add($options['namespace'] . DIRECTORY_SEPARATOR)->writeFile($options['seed'] . '.php', $data)) {
+            if (!$path->add($options['namespace'])->writeFile($options['seed'] . '.php', $data)) {
                 exit('[-] Failed to create seed file ' . $options['seed'] . '.php' . PHP_EOL);
             }
         }
@@ -295,7 +381,8 @@ class Make
             !array_key_exists('migration', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('middleware', $options) &&
-            !array_key_exists('table', $options)
+            !array_key_exists('table', $options) &&
+            !array_key_exists('resource', $options)
         ) {
             $data = self::stubsPath()->readFile('Request.stub');
             $data = str_replace('NAMESPACE', 'App\Requests', $data);
@@ -314,7 +401,8 @@ class Make
             !array_key_exists('migration', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('request', $options) &&
-            !array_key_exists('table', $options)
+            !array_key_exists('table', $options) &&
+            !array_key_exists('resource', $options)
         ) {
             $data = self::stubsPath()->readFile('Middleware.stub');
             $data = str_replace('NAMESPACE', 'App\Middlewares', $data);
@@ -351,6 +439,6 @@ class Make
             exit('[-] Invalid command line arguments, print "--help" for commands list' . PHP_EOL);
         }
 
-        exit('[+] Operations done successfully.' . PHP_EOL);
+        exit('[+] Operations done successfully' . PHP_EOL);
     }
 }

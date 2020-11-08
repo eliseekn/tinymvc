@@ -25,8 +25,9 @@ $options = getopt('', [
     'seed::', 
     'request::', 
     'middleware::', 
-    'table::'
+    'table::',
+    'resource::'
 ]);
 
 //handle command line arguments
-\Framework\Console\Make::parseCommands($options);
+\Framework\Console\Maker::parseCLI($options);

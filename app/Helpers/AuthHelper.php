@@ -59,10 +59,11 @@ class AuthHelper
         Session::close('auth_attempts');
         Session::close('auth_attempts_timeout');
 
+        //check if two factor authentication is enabled
         if ($user->two_factor) {
             $token = random_string(50, true);
 
-            if (EmailHelper::sendAuthentication($user->email, $token)) {
+            if (EmailHelper::sendAuth($user->email, $token)) {
                 TokensModel::insert([
                     'email' => Request::getField('email'),
                     'token' => $token,
@@ -80,6 +81,8 @@ class AuthHelper
         if (!empty(Request::getField('remember'))) {
             Cookies::setUser(Encryption::encrypt(Request::getField('email')));
         }
+        
+        ActivityHelper::log('Logged in');
     }
     
     /**
@@ -87,17 +90,17 @@ class AuthHelper
      *
      * @return void
      */
-    public static function authEmail(): void
+    public static function authEmail(string $email): void
     {
-        Session::setUser(UsersModel::find('email', Request::getField('email'))->single());
+        Session::setUser(UsersModel::find('email', $email)->single());
     }
 
     /**
-     * store new user
+     * create new user
      *
      * @return bool
      */
-    public static function store(): bool
+    public static function create(): bool
     {
         if (UsersModel::find('email', Request::getField('email'))->exists()) {
             return false;
@@ -147,8 +150,12 @@ class AuthHelper
      */
     public static function forget(): void
     {
+        ActivityHelper::log('Logged out');
+
         if (self::checkSession()) {
             Session::deleteUser();
+            Session::clearHistory();
+            Session::close('csrf_token');
         }
 
         if (self::checkCookie()) {
