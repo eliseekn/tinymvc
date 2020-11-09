@@ -30,9 +30,9 @@ endif
     </div>
 
     <div class="card-footer">
-        <a href="<?= absolute_url('/admin/resources/RESSOURCENAME/edit/' . $RESSOURCENAME->id) ?>" class="btn btn-primary"><?= __('edit') ?></a>
-        <confirm-delete type="text" content="<?= __('delete') ?>" action="<?= absolute_url('/admin/resources/RESSOURCENAME/delete/' . $RESSOURCENAME->id) ?>" redirect="<?= current_url() ?>"></confirm-delete>
-        <a href="<?= absolute_url('/admin/resources/RESSOURCENAME') ?>" class="btn btn-secondary ml-2"><?= __('cancel') ?></a>
+        <a href="<?= absolute_url('/admin/resources/RESSOURCENAMEs/edit/' . $RESSOURCENAME->id) ?>" class="btn btn-primary"><?= __('edit') ?></a>
+        <confirm-delete type="text" content="<?= __('delete') ?>" action="<?= absolute_url('/admin/resources/RESSOURCENAMEs/delete/' . $RESSOURCENAME->id) ?>" redirect="<?= current_url() ?>"></confirm-delete>
+        <a href="<?= absolute_url('/admin/resources/RESSOURCENAMEs') ?>" class="btn btn-secondary ml-2"><?= __('cancel') ?></a>
     </div>
 </div>
 

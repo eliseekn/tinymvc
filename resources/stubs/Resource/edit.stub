@@ -15,7 +15,7 @@ endif
 <div class="card shadow-sm">
     <div class="card-header"><?= __('edit') ?></div>
 
-    <form method="post" action="<?= absolute_url('/admin/resources/RESSOURCENAME/update/' . $RESSOURCENAME->id) ?>">
+    <form method="post" action="<?= absolute_url('/admin/resources/RESSOURCENAMEs/update/' . $RESSOURCENAME->id) ?>">
         <?= generate_csrf_token() ?>
 
         <div class="card-body">
@@ -25,7 +25,7 @@ endif
         <div class="card-footer">
             <button type="submit" class="btn btn-primary loading"><?= __('update') ?></button>
             <button type="reset" class="btn btn-secondary mx-2"><?= __('reset') ?></button>
-            <a href="<?= absolute_url('/admin/resources/RESSOURCENAME') ?>" class="btn btn-secondary"><?= __('cancel') ?></a>
+            <a href="<?= absolute_url('/admin/resources/RESSOURCENAMEs') ?>" class="btn btn-secondary"><?= __('cancel') ?></a>
         </div>
     </form>
 </div>

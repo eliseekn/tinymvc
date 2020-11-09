@@ -1,5 +1,5 @@
 <?php $this->layout('admin/layout', [
-    'page_title' => __('RESSOURCENAME') . ' | Administration'
+    'page_title' => __('RESSOURCENAMEs') . ' | Administration'
 ]) ?>
 
 <?php $this->start('page_content') ?>
@@ -9,7 +9,7 @@
         <div class="card card-metrics bg-light shadow-sm">
             <div class="card-body d-flex align-items-center justify-content-between">
                 <p><i class="fa fa-cog fa-lg"></i> <?= __('total') ?></p>
-                <p class="font-weight-bold"><?= $RESSOURCENAME->getTotalItems() ?></p>
+                <p class="font-weight-bold"><?= $RESSOURCENAMEs->getTotalItems() ?></p>
             </div>
         </div>
     </div>
@@ -26,7 +26,7 @@ endif
 <div class="card shadow-sm">
     <div class="card-header">
         <div class="d-flex flex-lg-row flex-column align-items-lg-center justify-content-lg-between">
-            <span><?= __('RESSOURCENAME') ?></span>
+            <span><?= __('RESSOURCENAMEs') ?></span>
 
             <div class="d-flex flex-lg-row flex-column mt-lg-0 mt-2">
                 <span class="mr-md-3">
@@ -34,12 +34,12 @@ endif
                 </span>
 
                 <span class="mt-lg-0 mt-2">
-                    <a href="<?= absolute_url('/admin/resources/RESSOURCENAME/new') ?>" class="btn btn-primary"><?= __('new') ?></a>
+                    <a href="<?= absolute_url('/admin/resources/RESSOURCENAMEs/new') ?>" class="btn btn-primary"><?= __('new') ?></a>
                     
-                    <upload-modal action="<?= absolute_url('/admin/resources/RESSOURCENAME/import') ?>" title="<?= __('import') ?>" modal_title="<?= __('upload_modal_title') ?>" modal_button_title="<?= __('submit') ?>" modal_button_cancel="<?= __('cancel') ?>"></upload-modal>
-                    <export-modal action="<?= absolute_url('/admin/resources/RESSOURCENAME/export') ?>" title="<?= __('export') ?>" modal_title="<?= __('export') ?>" modal_button_title="<?= __('export') ?>" modal_button_cancel="<?= __('cancel') ?>"></export-modal>
+                    <upload-modal action="<?= absolute_url('/admin/resources/RESSOURCENAMEs/import') ?>" title="<?= __('import') ?>" modal_title="<?= __('upload_modal_title') ?>" modal_button_title="<?= __('submit') ?>" modal_button_cancel="<?= __('cancel') ?>"></upload-modal>
+                    <export-modal action="<?= absolute_url('/admin/resources/RESSOURCENAMEs/export') ?>" title="<?= __('export') ?>" modal_title="<?= __('export') ?>" modal_button_title="<?= __('export') ?>" modal_button_cancel="<?= __('cancel') ?>"></export-modal>
 
-                    <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('/admin/resources/RESSOURCENAME/delete') ?>">
+                    <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('/admin/resources/RESSOURCENAMEs/delete') ?>">
                         <?= __('delete') ?>
                     </button>
                 </span>
@@ -66,7 +66,7 @@ endif
                 </thead>
 
                 <tbody>
-                    <?php foreach ($RESSOURCENAME as $key => $user) : ?>
+                    <?php foreach ($RESSOURCENAMEs as $key => $RESSOURCENAME) : ?>
 
                     <tr>
                         <td>
@@ -81,15 +81,15 @@ endif
 
                         <td>
                             <?php if ($user->role !== 'administrator') : ?>
-                            <a class="btn text-primary p-1" href="<?= absolute_url('/admin/resources/RESSOURCENAME/view/' . $user->id) ?>" title="View item">
+                            <a class="btn text-primary p-1" href="<?= absolute_url('/admin/resources/RESSOURCENAMEs/view/' . $user->id) ?>" title="View item">
                                 <i class="fa fa-eye"></i>
                             </a>
 
-                            <a class="btn text-primary p-1" href="<?= absolute_url('/admin/resources/RESSOURCENAME/edit/' . $user->id) ?>" title="Edit item">
+                            <a class="btn text-primary p-1" href="<?= absolute_url('/admin/resources/RESSOURCENAMEs/edit/' . $user->id) ?>" title="Edit item">
                                 <i class="fa fa-edit"></i>
                             </a>
 
-                            <confirm-delete type="icon" content='<i class="fa fa-trash-alt"></i>' action="<?= absolute_url('/admin/resources/RESSOURCENAME/delete/' . $user->id) ?>" redirect="<?= current_url()?>"></confirm-delete>
+                            <confirm-delete type="icon" content='<i class="fa fa-trash-alt"></i>' action="<?= absolute_url('/admin/resources/RESSOURCENAMEs/delete/' . $user->id) ?>" redirect="<?= current_url()?>"></confirm-delete>
                             <?php endif ?>
                         </td>
                     </tr>
@@ -101,10 +101,10 @@ endif
     </div>
 
     <div class="card-footer d-flex align-items-center justify-content-between">
-        <span><?= __('total_results') ?> <span class="font-weight-bold"><?= $RESSOURCENAME->getTotalItems() ?></span></span>
+        <span><?= __('total_results') ?> <span class="font-weight-bold"><?= $RESSOURCENAMEs->getTotalItems() ?></span></span>
 
         <?php $this->insert('partials/pagination', [
-            'pagination' => $RESSOURCENAME
+            'pagination' => $RESSOURCENAMEs
         ]) ?>
     </div>
 </div>
