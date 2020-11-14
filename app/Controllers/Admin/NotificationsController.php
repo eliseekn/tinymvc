@@ -31,7 +31,7 @@ class NotificationsController extends Controller
         $validate = NotificationRequest::validate($this->request->inputs());
         
         if ($validate->fails()) {
-            $this->redirect()->withError($validate::$errors);
+            $this->redirectBack()->withError($validate::$errors);
         }
 
         NotificationsModel::insert(['message' => $this->request->message]);
@@ -53,7 +53,7 @@ class NotificationsController extends Controller
 	
 			NotificationsModel::update(['status' => 'read'])->where('id', $id)->persist();
             $this->toast(__('notification_updated'))->success();
-            $this->redirect()->only();
+            $this->redirectBack()->only();
 		} else {
 			$notifications_id = json_decode($this->request->raw(), true);
 			$notifications_id = $notifications_id['items'];
@@ -81,7 +81,7 @@ class NotificationsController extends Controller
 	
 			NotificationsModel::delete()->where('id', $id)->persist();
 			$this->toast(__('notification_deleted'))->success();
-            $this->redirect()->only();
+            $this->redirectBack()->only();
 		} else {
 			$notifications_id = json_decode($this->request->raw(), true);
 			$notifications_id = $notifications_id['items'];

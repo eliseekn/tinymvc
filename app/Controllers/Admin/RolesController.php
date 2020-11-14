@@ -44,7 +44,7 @@ class RolesController extends Controller
 
 		if ($role === false) {
 			$this->toast(__('role_not_found'))->error();
-			$this->redirect()->only();
+			$this->redirectBack()->only();
 		}
 
 		$this->render('admin/roles/edit', compact('role'));
@@ -93,7 +93,7 @@ class RolesController extends Controller
 
 		if ($role === false) {
 			$this->toast(__('role_not_found'))->error();
-			$this->redirect()->only();
+			$this->redirectBack()->only();
 		}
 
 		$this->render('admin/roles/view', compact('role'));
@@ -116,6 +116,13 @@ class RolesController extends Controller
 
 		if (!RolesModel::find('id', $id)->exists()) {
 			$this->toast(__('role_not_found'))->error();
+			$this->jsonResponse(['redirect' => absolute_url('admin/resources/roles/edit')]);
+        }
+        
+        $slug = slugify($this->request->title);
+
+		if (RolesModel::find('slug', $slug)->exists()) {
+			$this->toast(__('role_already_exists'))->error();
 			$this->jsonResponse(['redirect' => absolute_url('admin/resources/roles/edit')]);
 		}
 
@@ -146,7 +153,7 @@ class RolesController extends Controller
 	
 			RolesModel::delete()->where('id', $id)->persist();
 			$this->toast(__('role_deleted'))->success();
-            $this->redirect()->only();
+            $this->redirectBack()->only();
 		} else {
 			$roles_id = json_decode($this->request->raw(), true);
 			$roles_id = $roles_id['items'];
@@ -170,12 +177,12 @@ class RolesController extends Controller
 
 		if (!$file->isAllowed()) {
 			$this->toast(__('import_file_type_error'))->error();
-            $this->redirect()->only();
+            $this->redirectBack()->only();
 		}
 
 		if (!$file->isUploaded()) {
 			$this->toast(__('import_data_error'))->error();
-			$this->redirect()->only();
+			$this->redirectBack()->only();
 		}
 
 		ReportHelper::import($file->getTempFilename(), RolesModel::class, [
@@ -185,7 +192,7 @@ class RolesController extends Controller
 		]);
 
 		$this->toast(__('data_imported'))->success();
-		$this->redirect()->only();
+		$this->redirectBack()->only();
 	}
 	
 	/**
@@ -195,12 +202,9 @@ class RolesController extends Controller
 	 */
 	public function export(): void
 	{
-        $date_start = $this->request->date_start;
-        $date_end = $this->request->date_end;
-
-		if (!empty($date_start) && !empty($date_end)) {
+        if ($this->request->has('date_start') && $this->request->has('date_end')) {
 			$roles = RolesModel::select()
-                ->between('created_at', Carbon::parse($date_start)->toDateTimeString(), Carbon::parse($date_end)->toDateTimeString())
+                ->between('created_at', Carbon::parse($this->request->date_start)->toDateTimeString(), Carbon::parse($this->request->date_end)->toDateTimeString())
                 ->orderAsc('name')
                 ->all();
 		} else {

@@ -36,7 +36,7 @@ class ActivitiesController extends Controller
 	
 			ActivitiesModel::delete()->where('id', $id)->persist();
 			$this->toast(__('activity_deleted'))->success();
-            $this->redirect()->only();
+            $this->redirectBack()->only();
 		} else {
 			$activities_id = json_decode($this->request->getRawData(), true);
 			$activities_id = $activities_id['items'];
@@ -56,12 +56,9 @@ class ActivitiesController extends Controller
 	 */
     public function export(): void
 	{
-        $date_start = $this->request->date_start;
-        $date_end = $this->request->date_end;
-
-		if (!empty($date_start) && !empty($date_end)) {
+        if ($this->request->has('date_start') && $this->request->has('date_end')) {
 			$activities = ActivitiesModel::select()
-                ->between('created_at', Carbon::parse($date_start)->toDateTimeString(), Carbon::parse($date_end)->toDateTimeString())
+                ->between('created_at', Carbon::parse($this->request->date_start)->toDateTimeString(), Carbon::parse($this->request->date_end)->toDateTimeString())
                 ->orderAsc('name')
                 ->all();
 		} else {

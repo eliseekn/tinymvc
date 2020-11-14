@@ -48,6 +48,16 @@ class Controller
     }
     
     /**
+     * redirect to previous url
+     *
+     * @return \Framework\HTTP\Redirect
+     */
+    public function redirectBack(): \Framework\HTTP\Redirect
+    {
+        return Redirect::back();
+    }
+    
+    /**
      * redirect
      *
      * @param  string $to
@@ -55,22 +65,18 @@ class Controller
      */
     public function redirect(string $to = ''): \Framework\HTTP\Redirect
     {
-        if (empty($to)) {
-            return Redirect::back();
-        } else {
-            $url = array_search(
-                $to, array_map(
-                    function ($val) {
-                        if (isset($val['name'])) {
-                            return $val['name'];
-                        }
-                    },
-                    Route::$routes
-                )
-            );
+        $url = array_search(
+            $to, array_map(
+                function ($val) {
+                    if (isset($val['name'])) {
+                        return $val['name'];
+                    }
+                },
+                Route::$routes
+            )
+        );
 
-            return !empty($url) ? Redirect::toRoute($to) : Redirect::toUrl($to);
-        }
+        return !empty($url) ? Redirect::toRoute($to) : Redirect::toUrl($to);
     }
         
     /**

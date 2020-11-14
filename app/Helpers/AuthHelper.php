@@ -159,7 +159,9 @@ class AuthHelper
      */
     public static function forget(): void
     {
-        ActivityHelper::log(self::getSession()->email, 'Logged out');
+        if (self::checkSession()) {
+            ActivityHelper::log(self::getSession()->email, 'Logged out');
+        }
 
         if (self::checkSession()) {
             Session::deleteUser();

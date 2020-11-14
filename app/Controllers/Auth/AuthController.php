@@ -26,7 +26,7 @@ class AuthController extends Controller
         $validate = AuthRequest::validate($this->request->inputs());
         
         if ($validate->fails()) {
-            $this->redirect()->withError($validate::$errors);
+            $this->redirectBack()->withError($validate::$errors);
         }
 
         AuthHelper::authenticate($this->request);
@@ -43,11 +43,11 @@ class AuthController extends Controller
         $validate = RegisterUser::validate($this->request->inputs());
         
         if ($validate->fails()) {
-            $this->redirect()->withError($validate::$errors);
+            $this->redirectBack()->withError($validate::$errors);
         }
 
         if (!AuthHelper::create($this->request)) {
-            $this->redirect()->withError(__('user_already_exists', true));
+            $this->redirectBack()->withError(__('user_already_exists', true));
         }
 
         if (config('security.auth.email_confirmation') === false) {
@@ -63,9 +63,9 @@ class AuthController extends Controller
                     'expires' => Carbon::now()->addDay()->toDateTimeString()
                 ]);
 
-                $this->redirect()->withInfo(__('confirm_email_link_sent', true));
+                $this->redirectBack()->withInfo(__('confirm_email_link_sent', true));
             } else {
-                $this->redirect()->withError(__('confirm_email_link_not_sent', true));
+                $this->redirectBack()->withError(__('confirm_email_link_not_sent', true));
             }
         }
     }

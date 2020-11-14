@@ -31,9 +31,9 @@ class PasswordController extends Controller
 				'expires' => Carbon::now()->addHour()->toDateTimeString()
             ]);
             
-			$this->redirect()->withSuccess(__('password_reset_link_sent', true));
+			$this->redirectBack()->withSuccess(__('password_reset_link_sent', true));
 		} else {
-			$this->redirect()->withError(__('password_reset_link_not_sent', true));
+			$this->redirectBack()->withError(__('password_reset_link_not_sent', true));
 		}
 	}
 	
@@ -71,7 +71,7 @@ class PasswordController extends Controller
 		$validate = AuthRequest::validate($this->request->inputs());
         
         if ($validate->fails()) {
-            $this->redirect()->withError($validate::$errors);
+            $this->redirectBack()->withError($validate::$errors);
         }
 
         UsersModel::update(['password' => Encryption::hash($this->request->password)])

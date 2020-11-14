@@ -23,7 +23,7 @@ class SettingsController extends Controller
 		
 		if ($user === false) {
 			$this->toast(__('user_not_found'))->error();
-			$this->redirect()->only();
+			$this->redirectBack()->only();
         }
         
         $countries = CountriesModel::select()->orderAsc('name')->all();
@@ -41,7 +41,7 @@ class SettingsController extends Controller
         $validate = UpdateUser::validate($this->request->inputs());
         
         if ($validate->fails()) {
-            $this->redirect()->withError($validate::$errors);
+            $this->redirectBack()->withError($validate::$errors);
         }
 
         $data = [
@@ -72,6 +72,6 @@ class SettingsController extends Controller
         }
 
         $this->toast(__('changes_saved'))->success();
-        $this->redirect()->only();
+        $this->redirectBack()->only();
     }
 }

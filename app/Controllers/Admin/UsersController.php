@@ -52,7 +52,7 @@ class UsersController extends Controller
 
 		if ($user === false) {
 			$this->toast(__('user_not_found'))->error();
-			$this->redirect()->only();
+			$this->redirectBack()->only();
 		}
 
 		$this->render('admin/users/edit', compact('user', 'roles'));
@@ -68,7 +68,7 @@ class UsersController extends Controller
         $validate = RegisterUser::validate($this->request->inputs());
         
         if ($validate->fails()) {
-            $this->redirect()->withError($validate::$errors);
+            $this->redirectBack()->withError($validate::$errors);
         }
 
 		if (
@@ -78,7 +78,7 @@ class UsersController extends Controller
                 ->exists()
         ) {
 			$this->toast(__('user_already_exists'))->error();
-            $this->redirect()->only();
+            $this->redirectBack()->only();
 		}
 
 	    $id = UsersModel::insert([
@@ -105,7 +105,7 @@ class UsersController extends Controller
 		
 		if ($user === false) {
 			$this->toast(__('user_not_found'))->error();
-			$this->redirect()->only();
+			$this->redirectBack()->only();
 		}
 
 		$this->render('admin/users/view', compact('user'));
@@ -122,18 +122,30 @@ class UsersController extends Controller
 		$validate = UpdateUser::validate($this->request->inputs());
         
         if ($validate->fails()) {
-            $this->redirect()->withError($validate::$errors);
+            $this->redirectBack()->withError($validate::$errors);
         }
 
 		if (!UsersModel::find('id', $id)->exists()) {
 			$this->toast(__('user_not_found'))->error();
-			$this->redirect()->only();
+			$this->redirectBack()->only();
+        }
+        
+        if (
+            UsersModel::select()
+                ->where('email', $this->request->email)
+                ->orWhere('phone', $this->request->phone)
+                ->exists()
+        ) {
+			$this->toast(__('user_already_exists'))->error();
+            $this->redirectBack()->only();
 		}
 
 		$data = [
             'name' => $this->request->name,
             'email' => $this->request->email,
             'role' => $this->request->role,
+            'phone' => $this->request->phone,
+            'company' => $this->request->company,
             'active' => $this->request->account_state
 		];
 		
@@ -168,7 +180,7 @@ class UsersController extends Controller
 	
 			UsersModel::delete()->where('id', $id)->persist();
 			$this->toast(__('user_deleted'))->success();
-            $this->redirect()->only();
+            $this->redirectBack()->only();
 		} else {
 			$users_id = json_decode($this->request->raw(), true);
 			$users_id = $users_id['items'];
@@ -192,22 +204,24 @@ class UsersController extends Controller
 
 		if (!$file->isAllowed()) {
 			$this->toast(__('import_file_type_error'))->error();
-            $this->redirect()->only();
+            $this->redirectBack()->only();
 		}
 
 		if (!$file->isUploaded()) {
 			$this->toast(__('import_data_error'))->error();
-			$this->redirect()->only();
+			$this->redirectBack()->only();
 		}
 
 		ReportHelper::import($file->getTempFilename(), UsersModel::class, [
 			'name' => __('name'), 
-			'email' => __('email'), 
+            'email' => __('email'), 
+            'phone' => __('phone'),
+            'company' => __('company'),
 			'password' => __('password')
 		]);
 
 		$this->toast(__('data_imported'))->success();
-		$this->redirect()->only();
+		$this->redirectBack()->only();
 	}
 	
 	/**
@@ -217,12 +231,9 @@ class UsersController extends Controller
 	 */
 	public function export(): void
 	{
-		$date_start = $this->request->date_start;
-        $date_end = $this->request->date_end;
-
-		if (!empty($date_start) && !empty($date_end)) {
+		if ($this->request->has('date_start') && $this->request->has('date_end')) {
 			$users = UsersModel::select()
-                ->between('created_at', Carbon::parse($date_start)->toDateTimeString(), Carbon::parse($date_end)->toDateTimeString())
+                ->between('created_at', Carbon::parse($this->request->date_start)->toDateTimeString(), Carbon::parse($this->request->date_end)->toDateTimeString())
                 ->orderAsc('name')
                 ->all();
 		} else {
@@ -233,7 +244,9 @@ class UsersController extends Controller
 
 		ReportHelper::export($filename, $users, [
 			'name' => __('name'), 
-			'email' => __('email'), 
+            'email' => __('email'),
+            'phone' => __('phone'),
+            'company' => __('company'),
 			'role' => __('role'), 
 			'created_at' => __('created_at')
 		]);
