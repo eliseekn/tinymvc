@@ -34,6 +34,20 @@ endif
             </div>
 
             <div class="form-group row">
+                <label for="phone" class="col-sm-2 col-form-label"><?= __('phone') ?></label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="phone" id="phone">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="company" class="col-sm-2 col-form-label"><?= __('company') ?></label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="company" id="company">
+                </div>
+            </div>
+
+            <div class="form-group row">
                 <label for="password" class="col-sm-2 col-form-label"><?= __('password') ?></label>
 
                 <div class="d-flex align-items-center col-sm-10">

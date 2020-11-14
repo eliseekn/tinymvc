@@ -3,7 +3,6 @@
 namespace App\Controllers\Admin;
 
 use Carbon\Carbon;
-use Framework\HTTP\Request;
 use App\Helpers\ReportHelper;
 use Framework\Routing\Controller;
 use App\Database\Models\ActivitiesModel;
@@ -39,7 +38,7 @@ class ActivitiesController extends Controller
 			$this->toast(__('activity_deleted'))->success();
             $this->redirect()->only();
 		} else {
-			$activities_id = json_decode(Request::getRawData(), true);
+			$activities_id = json_decode($this->request->getRawData(), true);
 			$activities_id = $activities_id['items'];
 
 			foreach ($activities_id as $id) {
@@ -57,8 +56,8 @@ class ActivitiesController extends Controller
 	 */
     public function export(): void
 	{
-        $date_start = Request::getField('date_start');
-        $date_end = Request::getField('date_end');
+        $date_start = $this->request->date_start;
+        $date_end = $this->request->date_end;
 
 		if (!empty($date_start) && !empty($date_end)) {
 			$activities = ActivitiesModel::select()
@@ -69,7 +68,7 @@ class ActivitiesController extends Controller
 			$activities = ActivitiesModel::select()->orderAsc('name')->all();
         }
         
-        $filename = 'activities_' . date('Y_m_d') . '.' . Request::getField('file_type');
+        $filename = 'activities_' . date('Y_m_d') . '.' . $this->request->file_type;
 
 		ReportHelper::export($filename, $activities, [
 			'user' => __('user'), 

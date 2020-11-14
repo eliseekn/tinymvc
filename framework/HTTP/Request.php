@@ -15,6 +15,24 @@ use Framework\Support\Uploader;
  */
 class Request
 {
+    public function __construct()
+    {
+        //add headers as properties
+        foreach (self::getHeaders() as $key => $value) {
+            $this->{$key} = $value;
+        }
+
+        //add fields as properties
+        foreach (self::getInputs() as $key => $value) {
+            $this->{$key} = $value;
+        }
+
+        //add queries as properties
+        foreach (self::getQueries() as $key => $value) {
+            $this->{$key} = $value;
+        }
+    }
+
     /**
      * retrieves headers
      *
@@ -85,7 +103,7 @@ class Request
      *
      * @return array returns post fields
      */
-    public static function getFields(): array
+    public static function getInputs(): array
     {
         return $_POST;
     }
@@ -96,9 +114,9 @@ class Request
      * @param  string $field
      * @return mixed returns field value
      */
-    public static function getField(string $field) 
+    public static function getInput(string $field) 
     {
-        return self::getFields()[$field] ?? '';
+        return self::getInputs()[$field] ?? '';
     }
 
     /**
@@ -107,9 +125,9 @@ class Request
      * @param  string $field
      * @return bool
      */
-    public static function hasField(string $field) : bool
+    public static function hasInput(string $field) : bool
     {
-        return !empty(self::getField($field));
+        return !empty(self::getInput($field));
     }
     
     /**
@@ -119,7 +137,7 @@ class Request
      * @param  mixed $value
      * @return void
      */
-    public static function setField(string $field, $value): void
+    public static function setInput(string $field, $value): void
     {
         $_POST[$field] = $value;
     }
@@ -232,5 +250,82 @@ class Request
     public static function getRemoteIP(): string
     {
         return self::getHeader('REMOTE_ADDR');
+    }
+    
+    /**
+     * files
+     *
+     * @param  string $field
+     * @param  array $allowed_extensions
+     * @param  bool $mutliple
+     * @return \Framework\Support\Uploader|array
+     */
+    public function files(string $field, array $allowed_extensions = [], bool $mutliple = false)
+    {
+        return $mutliple ? self::getFiles($field, $allowed_extensions) : self::getFile($field, $allowed_extensions);
+    }
+    
+    /**
+     * headers
+     *
+     * @return void
+     */
+    public function headers()
+    {
+        return self::getHeaders();
+    }
+    
+    /**
+     * inputs
+     *
+     * @return void
+     */
+    public function inputs(): array
+    {
+        return self::getInputs();
+    }
+    
+    /**
+     * queries
+     *
+     * @return void
+     */
+    public function queries(): array
+    {
+        return self::getQueries();
+    }
+    
+    /**
+     * raw
+     *
+     * @return void
+     */
+    public function raw(): array
+    {
+        return self::getRawData();
+    }
+    
+    /**
+     * has
+     *
+     * @param  string $item
+     * @return bool
+     */
+    public function has(string $item): bool
+    {
+        return isset($this->{$item});
+    }
+
+    public function only(array $items): array
+    {
+        $result = [];
+
+        foreach ($items as $item) {
+            if ($this->has($item)) {
+                $result[] = $this->{$item};
+            }
+        }
+
+        return $result;
     }
 }

@@ -19,7 +19,7 @@
         </a>
         
         <a href="<?= absolute_url('/docs/getting-started') ?>" class="ml-3 btn btn-success">
-            <i class="fa fa-book"></i> Getting started
+            <i class="fa fa-home"></i> Getting started
         </a>
     </span>
 </div>

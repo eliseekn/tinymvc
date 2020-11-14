@@ -24,35 +24,35 @@ Route::group([
         View::render('docs/getting-started');
     }],
 
-    'routing' => ['handler' => function() {
+    'guides/routing' => ['handler' => function() {
         View::render('docs/guides/routing');
     }],
 
-    'middlewares' => ['handler' => function() {
+    'guides/middlewares' => ['handler' => function() {
         View::render('docs/guides/middlewares');
     }],
 
-    'controllers' => ['handler' => function() {
+    'guides/controllers' => ['handler' => function() {
         View::render('docs/guides/controllers');
     }],
 
-    'views' => ['handler' => function() {
+    'guides/views' => ['handler' => function() {
         View::render('docs/guides/views');
     }],
 
-    'requests' => ['handler' => function() {
+    'guides/requests' => ['handler' => function() {
         View::render('docs/guides/requests');
     }],
 
-    'responses' => ['handler' => function() {
+    'guides/responses' => ['handler' => function() {
         View::render('docs/guides/responses');
     }],
 
-    'client' => ['handler' => function() {
+    'guides/client' => ['handler' => function() {
         View::render('docs/guides/client');
     }],
 
-    'redirections' => ['handler' => function() {
+    'guides/redirections' => ['handler' => function() {
         View::render('docs/guides/redirections');
     }]
 ])->by([

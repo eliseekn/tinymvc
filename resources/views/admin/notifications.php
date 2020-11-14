@@ -43,7 +43,7 @@ endif
                 </span>
 
                 <span class="mt-lg-0 mt-2">
-                    <button class="btn btn-primary mr-2" id="bulk-read" data-url="<?= absolute_url('/admin/account/notifications/update') ?>">
+                    <button class="btn btn-outline-dark mr-2" id="bulk-read" data-url="<?= absolute_url('/admin/account/notifications/update') ?>">
                         <?= __('mark_as_read') ?>
                     </button>
 

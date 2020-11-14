@@ -43,7 +43,7 @@ endif
                 </span>
 
                 <span class="mt-lg-0 mt-2">
-                    <a href="<?= absolute_url('/admin/resources/users/new') ?>" class="btn btn-primary"><?= __('new') ?></a>
+                    <a href="<?= absolute_url('/admin/resources/users/new') ?>" class="btn btn-outline-dark"><?= __('new') ?></a>
                     
                     <upload-modal action="<?= absolute_url('/admin/resources/users/import') ?>" title="<?= __('import') ?>" modal_title="<?= __('upload_modal_title') ?>" modal_button_title="<?= __('submit') ?>" modal_button_cancel="<?= __('cancel') ?>"></upload-modal>
                     <export-modal action="<?= absolute_url('/admin/resources/users/export') ?>" title="<?= __('export') ?>" modal_title="<?= __('export') ?>" modal_button_title="<?= __('export') ?>" modal_button_cancel="<?= __('cancel') ?>"></export-modal>
@@ -71,6 +71,8 @@ endif
                         <th scope="col"><i class="fa fa-sort"></i> #</th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('name') ?></th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('email') ?></th>
+                        <th scope="col"><i class="fa fa-sort"></i> <?= __('phone') ?></th>
+                        <th scope="col"><i class="fa fa-sort"></i> <?= __('company') ?></th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('role') ?></th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('status') ?></th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('created_at') ?></th>
@@ -96,6 +98,8 @@ endif
                         <td><?= $key + 1 ?></td>
                         <td><?= $user->name ?></td>
                         <td><?= $user->email ?></td>
+                        <td><?= $user->phone ?></td>
+                        <td><?= $user->company ?></td>
                         <td><?= $user->role ?></td>
 
                         <td>
@@ -110,11 +114,11 @@ endif
 
                         <td>
                             <?php if ($user->role !== 'administrator') : ?>
-                            <a class="btn text-primary p-1" href="<?= absolute_url('/admin/resources/users/view/' . $user->id) ?>" title="View item">
+                            <a class="btn text-dark p-1" href="<?= absolute_url('/admin/resources/users/view/' . $user->id) ?>" title="View item">
                                 <i class="fa fa-eye"></i>
                             </a>
 
-                            <a class="btn text-primary p-1" href="<?= absolute_url('/admin/resources/users/edit/' . $user->id) ?>" title="Edit item">
+                            <a class="btn text-dark p-1" href="<?= absolute_url('/admin/resources/users/edit/' . $user->id) ?>" title="Edit item">
                                 <i class="fa fa-edit"></i>
                             </a>
 

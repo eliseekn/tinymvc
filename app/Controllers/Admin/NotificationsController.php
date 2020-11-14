@@ -2,7 +2,6 @@
 
 namespace App\Controllers\Admin;
 
-use Framework\HTTP\Request;
 use Framework\Routing\Controller;
 use App\Requests\NotificationRequest;
 use App\Database\Models\NotificationsModel;
@@ -29,13 +28,13 @@ class NotificationsController extends Controller
 	 */
 	public function create(): void
 	{
-        $validate = NotificationRequest::validate(Request::getFields());
+        $validate = NotificationRequest::validate($this->request->inputs());
         
         if ($validate->fails()) {
             $this->redirect()->withError($validate::$errors);
         }
 
-        NotificationsModel::insert(['message' => Request::getField('message')]);
+        NotificationsModel::insert(['message' => $this->request->message]);
         $this->toast(__('notifications_created'))->success();
     }
     
@@ -56,7 +55,7 @@ class NotificationsController extends Controller
             $this->toast(__('notification_updated'))->success();
             $this->redirect()->only();
 		} else {
-			$notifications_id = json_decode(Request::getRawData(), true);
+			$notifications_id = json_decode($this->request->raw(), true);
 			$notifications_id = $notifications_id['items'];
 
 			foreach ($notifications_id as $id) {
@@ -84,7 +83,7 @@ class NotificationsController extends Controller
 			$this->toast(__('notification_deleted'))->success();
             $this->redirect()->only();
 		} else {
-			$notifications_id = json_decode(Request::getRawData(), true);
+			$notifications_id = json_decode($this->request->raw(), true);
 			$notifications_id = $notifications_id['items'];
 
 			foreach ($notifications_id as $id) {

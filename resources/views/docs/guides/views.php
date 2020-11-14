@@ -4,17 +4,8 @@
 
 <?php $this->start('page_content') ?>
 
-<?php $this->insert('partials/breadcrumb', [
-    'items' => [
-        'Documentation' => absolute_url('/docs'),
-        'Views' => ''
-    ]
-]) ?>
-
 <div class="card mb-5" id="basic-routing">
-    <div class="card-header ">
-        <span class=" lead">Views</span>
-    </div>
+    <div class="card-header">Views</div>
 
     <div class="card-body">
         <p class="font-weight-bold">Plates template</p>
@@ -62,6 +53,8 @@
                 <pre class="m-0 text-danger"><code>&lt;?php
 
 namespace App\Controllers;
+
+use Framework\Routing\Controller;
 
 class MyController
 {

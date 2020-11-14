@@ -34,7 +34,7 @@ endif
                 </span>
 
                 <span class="mt-lg-0 mt-2">
-                    <a href="<?= absolute_url('/admin/resources/roles/new') ?>" class="btn btn-primary"><?= __('new') ?></a>
+                    <a href="<?= absolute_url('/admin/resources/roles/new') ?>" class="btn btn-outline-dark"><?= __('new') ?></a>
                     
                     <upload-modal action="<?= absolute_url('/admin/resources/roles/import') ?>" title="<?= __('import') ?>" modal_title="<?= __('upload_modal_title') ?>" modal_button_title="<?= __('submit') ?>" modal_button_cancel="<?= __('cancel') ?>"></upload-modal>
                     <export-modal action="<?= absolute_url('/admin/resources/roles/export') ?>" title="<?= __('export') ?>" modal_title="<?= __('export') ?>" modal_button_title="<?= __('export') ?>" modal_button_cancel="<?= __('cancel') ?>"></export-modal>
@@ -86,11 +86,11 @@ endif
                         <td><?= \Carbon\Carbon::parse($role->created_at)->locale(user_session()->lang)->isoFormat('MMM Do, YYYY') ?></td>
 
                         <td>
-                            <a class="btn text-primary p-1" href="<?= absolute_url('/admin/resources/roles/view/' . $role->id) ?>" title="View item">
+                            <a class="btn text-dark p-1" href="<?= absolute_url('/admin/resources/roles/view/' . $role->id) ?>" title="View item">
                                 <i class="fa fa-eye"></i>
                             </a>
 
-                            <a class="btn text-primary p-1" href="<?= absolute_url('/admin/resources/roles/edit/' . $role->id) ?>" title="Edit item">
+                            <a class="btn text-dark p-1" href="<?= absolute_url('/admin/resources/roles/edit/' . $role->id) ?>" title="Edit item">
                                 <i class="fa fa-edit"></i>
                             </a>
 

@@ -24,7 +24,7 @@ class CountrySeed
         foreach (Countries::all() as $country) {
             $country_name = $country['name_' . config('app.lang')];
 
-            if (!empty($country_name)) {
+            if (!is_null($country_name) && !empty($country_name)) {
                 Seeder::add(static::$table, [
                     'name' => utf8_decode($country_name)
                 ]);

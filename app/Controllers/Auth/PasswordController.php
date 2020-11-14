@@ -3,7 +3,6 @@
 namespace App\Controllers\Auth;
 
 use Carbon\Carbon;
-use Framework\HTTP\Request;
 use App\Helpers\EmailHelper;
 use App\Requests\AuthRequest;
 use Framework\Routing\Controller;
@@ -25,9 +24,9 @@ class PasswordController extends Controller
 	{
 		$token = random_string(50, true);
 
-		if (EmailHelper::sendToken(Request::getField('email'), $token)) {
+		if (EmailHelper::sendToken($this->request->email, $token)) {
 			TokensModel::insert([
-				'email' => Request::getField('email'),
+				'email' => $this->request->email,
 				'token' => $token,
 				'expires' => Carbon::now()->addHour()->toDateTimeString()
             ]);
@@ -45,9 +44,9 @@ class PasswordController extends Controller
 	 */
 	public function reset(): void
 	{
-        $reset_token = TokensModel::find('email', Request::getQuery('email'))->single();
+        $reset_token = TokensModel::find('email', $this->request->email)->single();
 
-        if ($reset_token === false || $reset_token->token !== Request::getQuery('token')) {
+        if ($reset_token === false || $reset_token->token !== $this->request->token) {
 			$this->response(__('invalid_password_reset_link', true));
 		}
 
@@ -69,14 +68,14 @@ class PasswordController extends Controller
 	 */
 	public function update(): void
 	{
-		$validate = AuthRequest::validate(Request::getFields());
+		$validate = AuthRequest::validate($this->request->inputs());
         
         if ($validate->fails()) {
             $this->redirect()->withError($validate::$errors);
         }
 
-        UsersModel::update(['password' => Encryption::hash(Request::getField('password'))])
-            ->where('email', Request::getField('email'))
+        UsersModel::update(['password' => Encryption::hash($this->request->password)])
+            ->where('email', $this->request->email)
             ->persist();
 		
 		$this->redirect('/login')->withSuccess(__('password_resetted', true));

@@ -22,7 +22,7 @@ class Redirect
      * @var string
      */
     protected static $redirect_url = '';
-    
+
     /**
      * redirect to url 
      *

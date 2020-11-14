@@ -139,8 +139,15 @@ document.addEventListener('DOMContentLoaded', function () {
   document.querySelector('.sidebar-toggler').classList.toggle('border-dark');
   document.querySelector('.sidebar-toggler').classList.toggle('border-light');
   document.querySelector('.sidebar-toggler .fa-bars').classList.toggle('text-light');
-  document.querySelector('#dropdown-notifications').classList.toggle('text-light');
-  document.querySelector('.btn-sm .fa-cog').classList.toggle('text-light');
+
+  if (document.querySelector('#dropdown-notifications')) {
+    document.querySelector('#dropdown-notifications').classList.toggle('text-light');
+  }
+
+  if (document.querySelector('.btn-sm .fa-cog')) {
+    document.querySelector('.btn-sm .fa-cog').classList.toggle('text-light');
+  }
+
   document.querySelector('.wrapper__sidebar').classList.toggle('bg-light');
   document.querySelector('.wrapper__sidebar').classList.toggle('bg-white');
   document.querySelector('.wrapper__sidebar .sidebar-title').classList.toggle('bg-light');
@@ -148,10 +155,18 @@ document.addEventListener('DOMContentLoaded', function () {
   document.querySelector('.wrapper__sidebar .sidebar-title').classList.toggle('text-light');
   document.querySelector('.wrapper__sidebar .sidebar-title .fa-times').classList.toggle('text-dark');
   document.querySelector('.wrapper__sidebar .sidebar-title .fa-times').classList.toggle('text-light');
-  document.querySelector('#avatar-icon').classList.toggle('text-light');
-  document.querySelector('#avatar-icon').classList.toggle('bg-dark');
-  document.querySelector('#avatar-icon').classList.toggle('text-dark');
-  document.querySelector('#avatar-icon').classList.toggle('bg-light');
+
+  if (document.querySelector('#avatar-icon')) {
+    document.querySelector('#avatar-icon').classList.toggle('text-light');
+    document.querySelector('#avatar-icon').classList.toggle('bg-dark');
+    document.querySelector('#avatar-icon').classList.toggle('text-dark');
+    document.querySelector('#avatar-icon').classList.toggle('bg-light');
+  }
+
+  document.querySelectorAll('.btn-outline-dark').forEach(function (element) {
+    element.classList.toggle('btn-outline-dark');
+    element.classList.toggle('btn-outline-light');
+  });
   document.querySelectorAll('.wrapper__sidebar .list-group-item').forEach(function (element) {
     element.classList.toggle('bg-light');
   });
@@ -184,7 +199,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "41013" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "37101" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

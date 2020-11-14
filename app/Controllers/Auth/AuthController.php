@@ -4,11 +4,10 @@ namespace App\Controllers\Auth;
 
 use Carbon\Carbon;
 use App\Helpers\AuthHelper;
-use Framework\HTTP\Request;
 use App\Helpers\EmailHelper;
 use App\Requests\AuthRequest;
+use App\Requests\RegisterUser;
 use App\Middlewares\AuthPolicy;
-use App\Requests\RegisterRequest;
 use Framework\Routing\Controller;
 use App\Database\Models\TokensModel;
 
@@ -24,13 +23,13 @@ class AuthController extends Controller
 	 */
 	public function authenticate(): void
 	{
-        $validate = AuthRequest::validate(Request::getFields());
+        $validate = AuthRequest::validate($this->request->inputs());
         
         if ($validate->fails()) {
             $this->redirect()->withError($validate::$errors);
         }
 
-        AuthHelper::authenticate();
+        AuthHelper::authenticate($this->request);
         AuthPolicy::handle();
     }
         
@@ -41,25 +40,25 @@ class AuthController extends Controller
      */
     public function register(): void
     {
-        $validate = RegisterRequest::validate(Request::getFields());
+        $validate = RegisterUser::validate($this->request->inputs());
         
         if ($validate->fails()) {
             $this->redirect()->withError($validate::$errors);
         }
 
-        if (!AuthHelper::create()) {
+        if (!AuthHelper::create($this->request)) {
             $this->redirect()->withError(__('user_already_exists', true));
         }
 
         if (config('security.auth.email_confirmation') === false) {
-            EmailHelper::sendWelcome(Request::getField('email'));
+            EmailHelper::sendWelcome($this->request->email);
             $this->redirect('/login')->withSuccess(__('user_registered', true));
         } else {
             $token = random_string(50, true);
 
-            if (EmailHelper::sendConfirmation(Request::getField('email'), $token)) {
+            if (EmailHelper::sendConfirmation($this->request->email, $token)) {
                 TokensModel::insert([
-                    'email' => Request::getField('email'),
+                    'email' => $this->request->email,
                     'token' => $token,
                     'expires' => Carbon::now()->addDay()->toDateTimeString()
                 ]);

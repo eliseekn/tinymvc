@@ -159,6 +159,28 @@ class Route
     }
     
     /**
+     * add route prefix
+     *
+     * @param  string $prefix
+     * @param  string $route
+     * @return string
+     */
+    private function prefix(string $prefix, string $route): string
+    {
+        if ($prefix[strlen($prefix) - 1] !== '/') {
+            $prefix = $prefix . '/';
+        }
+
+        if (!empty($route)) {
+            if ($route[0] === '/') {
+                $route = ltrim($route, '/');
+            }
+        }
+
+        return $prefix . $route;
+    } 
+    
+    /**
      * parameters to group by
      *
      * @param  array $options
@@ -168,19 +190,7 @@ class Route
     {
         foreach (self::$tmp_routes as $route => $tmp_options) {
             if (isset($options['prefix']) && !empty($options['prefix'])) {
-                $prefix = $options['prefix'];
-
-                if ($prefix[strlen($prefix) - 1] !== '/') {
-                    $prefix = $prefix . '/';
-                }
-
-                if (!empty($route)) {
-                    if ($route[0] === '/') {
-                        $route = ltrim($route, '/');
-                    }
-                }
-
-                $route = $prefix . $route;
+                $route = $this->prefix($options['prefix'], $route);
             }
 
             self::add($route, array_merge($tmp_options, $options));

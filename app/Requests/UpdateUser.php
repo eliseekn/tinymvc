@@ -4,7 +4,7 @@ namespace App\Requests;
 
 use Framework\Support\Validator;
 
-class RegisterRequest extends Validator
+class UpdateUser extends Validator
 {
     /**
      * rules
@@ -14,8 +14,7 @@ class RegisterRequest extends Validator
     protected static $rules = [
         'name' => 'required',
         'email' => 'required|valid_email',
-        'role' => 'required',
-        'password' => 'required'
+        'phone' => 'required|numeric'
     ];
 
     /**

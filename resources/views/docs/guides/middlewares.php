@@ -4,17 +4,8 @@
 
 <?php $this->start('page_content') ?>
 
-<?php $this->insert('partials/breadcrumb', [
-    'items' => [
-        'Documentation' => absolute_url('/docs'),
-        'Middlewares' => ''
-    ]
-]) ?>
-
-<div class="card mb-5" id="basic-routing">
-    <div class="card-header ">
-        <span class=" lead">Middlewares</span>
-    </div>
+<div class="card mb-5">
+    <div class="card-header">Middlewares</div>
 
     <div class="card-body">
         <p>
@@ -28,7 +19,8 @@
 
 namespace App\Middlewares
 
-class MyCustomMiddleware {
+class MyCustomMiddleware 
+{
     /**
      * @return void
      */
@@ -42,8 +34,8 @@ class MyCustomMiddleware {
     </div>
 
     <div class="card-footer d-flex justify-content-between">
-        <span>Next: <a href="<?= absolute_url('/docs/controllers') ?>">Controllers</a></span>
-        <span>Previous: <a href="<?= absolute_url('/docs/routing') ?>">Routing</a></span>
+        <span>Next: <a href="<?= absolute_url('/docs/guides/controllers') ?>">Controllers</a></span>
+        <span>Previous: <a href="<?= absolute_url('/docs/guides/routing') ?>">Routing</a></span>
     </div>
 </div>
 

@@ -29,7 +29,7 @@ class UserSeed
             'active' => 1,
             'country' => 209,
             'company' => 'TinyMVC',
-            'phone' => 00000000
+            'phone' => '00000000'
         ]);
     }
 }

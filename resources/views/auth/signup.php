@@ -31,6 +31,11 @@
                         <input type="email" id="email" name="email" class="form-control">
                     </div>
 
+                    <div class="form-group row">
+                        <label for="phone"><?= __('phone', true) ?></label>
+                        <input type="text" class="form-control" name="phone" id="phone">
+                    </div>
+
                     <div class="form-group">
                         <label for="password"><?= __('password', true) ?></label>
 

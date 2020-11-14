@@ -10,14 +10,14 @@ class ActivityHelper
     /**
      * log user action
      *
+     * @param  string $user
      * @param  string $action
-     * @param  string $target
      * @return void
      */
-    public static function log(string $action): void
+    public static function log(string $user, string $action): void
     {
         ActivitiesModel::insert([
-            'user' => AuthHelper::getSession()->email,
+            'user' => $user,
             'url' => Request::getFullUri(),
             'method' => Request::getMethod(),
             'ip_address' => Request::getRemoteIP(),

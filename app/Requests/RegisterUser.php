@@ -4,7 +4,7 @@ namespace App\Requests;
 
 use Framework\Support\Validator;
 
-class SaveSettings extends Validator
+class RegisterUser extends Validator
 {
     /**
      * rules
@@ -14,8 +14,9 @@ class SaveSettings extends Validator
     protected static $rules = [
         'name' => 'required',
         'email' => 'required|valid_email',
-        'company' => 'required',
-        'phone' => 'required|numeric'
+        'phone' => 'required|numeric',
+        'role' => 'required',
+        'password' => 'required'
     ];
 
     /**
@@ -23,7 +24,5 @@ class SaveSettings extends Validator
      * 
      * @var array
      */
-    protected static $error_messages = [
-        //
-    ];
+    protected static $error_messages = [];
 }

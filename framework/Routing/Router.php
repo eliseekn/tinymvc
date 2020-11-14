@@ -69,9 +69,11 @@ class Router
      */
     private function dispatch(array $routes): void
     {
+        $request = new Request();
+
         if (!empty($routes)) {
             foreach ($routes as $route => $options) {
-                if (preg_match('/' . strtoupper($options['method']) . '/', Request::getMethod())) {
+                if (preg_match('/' . strtoupper($options['method']) . '/', $request->getMethod())) {
                     $pattern = preg_replace('/{([a-zA-Z-_]+):([^\}]+)}/i', '$2', $route);
                     $pattern = preg_replace('/{([a-zA-Z-_]+):([^\}]+)}?/i', '$2', $pattern);
                     $pattern = preg_replace('/\bstr\b/', '([a-zA-Z-_]+)', $pattern);
@@ -79,7 +81,7 @@ class Router
                     $pattern = preg_replace('/\bany\b/', '([^/]+)', $pattern);
                     $pattern = '#^' . $pattern . '$#';
 
-                    if (preg_match($pattern, $this->formatUri(Request::getUri()), $params)) {
+                    if (preg_match($pattern, $this->formatUri($request->getUri()), $params)) {
                         array_shift($params);
 
                         if (is_callable($options['handler'])) {
@@ -98,7 +100,7 @@ class Router
                                 Middleware::check($route);
 
                                 //execute controller with action and parameter
-                                call_user_func_array([new $controller(), $action], array_values($params));
+                                call_user_func_array([new $controller($request), $action], array_values($params));
                             } else {
                                 throw new Exception('Handler "' . $options['handler'] . '" not found.');
                             }

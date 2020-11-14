@@ -4,17 +4,8 @@
 
 <?php $this->start('page_content') ?>
 
-<?php $this->insert('partials/breadcrumb', [
-    'items' => [
-        'Documentation' => absolute_url('/docs'),
-        'Controllers' => ''
-    ]
-]) ?>
-
 <div class="card mb-5" id="basic-routing">
-    <div class="card-header ">
-        <span class=" lead">Controllers</span>
-    </div>
+    <div class="card-header">Controllers</div>
 
     <div class="card-body">
         <p>
@@ -28,14 +19,16 @@
 
 namespace App\Controllers;
 
-class MyController
+use Framework\Routing\Controller;
+
+class MyController extends Controller
 {
     /**
      * @return void
      */
     public function index(): void
     {
-        Response::send([], 'Hello world!');
+        $this->response('Hello world!');
     }
 }</code></pre>
             </div>
@@ -43,8 +36,8 @@ class MyController
     </div>
 
     <div class="card-footer d-flex justify-content-between">
-        <span>Next: <a href="<?= absolute_url('/docs/views') ?>">Views</a></span>
-        <span>Previous: <a href="<?= absolute_url('/docs/middlewares') ?>">Middlewares</a></span>
+        <span>Next: <a href="<?= absolute_url('/docs/guides/views') ?>">Views</a></span>
+        <span>Previous: <a href="<?= absolute_url('/docs/guides/middlewares') ?>">Middlewares</a></span>
     </div>
 </div>
 

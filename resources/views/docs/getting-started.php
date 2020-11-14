@@ -4,21 +4,12 @@
 
 <?php $this->start('page_content') ?>
 
-<?php $this->insert('partials/breadcrumb', [
-    'items' => [
-        'Documentation' => absolute_url('/docs'),
-        'Getting started' => ''
-    ]
-]) ?>
-
 <div class="card mb-5" id="installation">
-    <div class="card-header ">
-        <span class=" lead">Installation</span>
-    </div>
+    <div class="card-header">Installation</div>
 
     <div class="card-body">
         <p class="font-weight-bold">Server requirements</p>
-        <p>To use <strong>TinyMVC</strong> framework, you server need to meets the following requirements :</p>
+        <p>To use TinyMVC framework, you server need to meets the following requirements :</p>
 
         <div class="card mb-4">
             <div class="card-body bg-light">
@@ -46,9 +37,7 @@ Yarn</code></pre>
 </div>
 
 <div class="card" id="configuration">
-    <div class="card-header ">
-        <span class=" lead">Configuration</span>
-    </div>
+    <div class="card-header">Configuration</div>
 
     <div class="card-body">
         <p class="font-weight-bold">Web server configuration</p>
@@ -82,11 +71,11 @@ RewriteRule ^(.*)$ index.php</code></pre>
         </div>
 
         <p class="font-weight-bold">Application configuration</p>
-        <p>After installation, you can setup your main application configuraion by editing file <span class="bg-light text-danger">config/app.php</span> </p>
+        <p>After installation, you can setup your main application configuraion by editing <span class="bg-light text-danger">config/app.php</span> file</p>
     </div>
 
     <div class="card-footer d-flex justify-content-between">
-        <span>Next: <a href="<?= absolute_url('/docs/routing') ?>">Routing</a></span>
+        <span>Next: <a href="<?= absolute_url('/docs/guides/routing') ?>">Routing</a></span>
         <span>Previous: <a href="#installation">Installation</a></span>
     </div>
 </div>

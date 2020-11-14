@@ -3,15 +3,14 @@
 namespace App\Controllers\Admin;
 
 use Carbon\Carbon;
-use Framework\HTTP\Request;
+use App\Requests\UpdateUser;
 use App\Helpers\ReportHelper;
+use App\Requests\RegisterUser;
 use Framework\Support\Session;
-use App\Requests\RegisterRequest;
 use Framework\Routing\Controller;
 use Framework\Support\Encryption;
 use App\Database\Models\RolesModel;
 use App\Database\Models\UsersModel;
-use App\Requests\UpdateUserRequest;
 
 class UsersController extends Controller
 {
@@ -66,26 +65,32 @@ class UsersController extends Controller
 	 */
 	public function create(): void
 	{
-        $validate = RegisterRequest::validate(Request::getFields());
+        $validate = RegisterUser::validate($this->request->inputs());
         
         if ($validate->fails()) {
             $this->redirect()->withError($validate::$errors);
         }
 
-		if (UsersModel::find('email', Request::getField('email'))->exists()) {
+		if (
+            UsersModel::select()
+                ->where('email', $this->request->email)
+                ->orWhere('phone', $this->request->phone)
+                ->exists()
+        ) {
 			$this->toast(__('user_already_exists'))->error();
             $this->redirect()->only();
 		}
 
 	    $id = UsersModel::insert([
-            'name' => Request::getField('name'),
-            'email' => Request::getField('email'),
-            'password' => hash_string(Request::getField('password')),
-            'role' => Request::getField('role')
+            'name' => $this->request->name,
+            'email' => $this->request->email,
+            'phone' => $this->request->phone,
+            'password' => Encryption::encrypt($this->request->password),
+            'role' => $this->request->role
 		]);
 
 		$this->toast(__('user_created'))->success();
-		$this->redirect('admin/users/view/' . $id)->only();
+		$this->redirect('admin/resources/users/view/' . $id)->only();
     }
 	
 	/**
@@ -114,7 +119,7 @@ class UsersController extends Controller
 	 */
 	public function update(int $id): void
 	{
-		$validate = UpdateUserRequest::validate(Request::getFields());
+		$validate = UpdateUser::validate($this->request->inputs());
         
         if ($validate->fails()) {
             $this->redirect()->withError($validate::$errors);
@@ -126,14 +131,14 @@ class UsersController extends Controller
 		}
 
 		$data = [
-            'name' => Request::getField('name'),
-            'email' => Request::getField('email'),
-            'role' => Request::getField('role'),
-            'active' => Request::getField('account_state')
+            'name' => $this->request->name,
+            'email' => $this->request->email,
+            'role' => $this->request->role,
+            'active' => $this->request->account_state
 		];
 		
-		if (!empty(Request::getField('password'))) {
-			$data['password'] = Encryption::hash(Request::getField('password'));
+		if (!empty($this->request->password)) {
+			$data['password'] = Encryption::hash($this->request->password);
 		}
 
         UsersModel::update($data)->where('id', $id)->persist();
@@ -145,7 +150,7 @@ class UsersController extends Controller
         }
 
 		$this->toast(__('user_updated'))->success();
-        $this->redirect('admin/users/view/' . $id)->only();
+        $this->redirect('admin/resources/users/view/' . $id)->only();
     }
 
 	/**
@@ -165,7 +170,7 @@ class UsersController extends Controller
 			$this->toast(__('user_deleted'))->success();
             $this->redirect()->only();
 		} else {
-			$users_id = json_decode(Request::getRawData(), true);
+			$users_id = json_decode($this->request->raw(), true);
 			$users_id = $users_id['items'];
 
 			foreach ($users_id as $id) {
@@ -183,7 +188,7 @@ class UsersController extends Controller
 	 */
 	public function import(): void
 	{
-        $file = Request::getFile('file', ['csv']);
+        $file = $this->request->files('file', ['csv']);
 
 		if (!$file->isAllowed()) {
 			$this->toast(__('import_file_type_error'))->error();
@@ -212,8 +217,8 @@ class UsersController extends Controller
 	 */
 	public function export(): void
 	{
-		$date_start = Request::getField('date_start');
-        $date_end = Request::getField('date_end');
+		$date_start = $this->request->date_start;
+        $date_end = $this->request->date_end;
 
 		if (!empty($date_start) && !empty($date_end)) {
 			$users = UsersModel::select()
@@ -224,7 +229,7 @@ class UsersController extends Controller
 			$users = UsersModel::select()->orderAsc('name')->all();
         }
         
-        $filename = 'roles_' . date('Y_m_d') . '.' . Request::getField('file_type');
+        $filename = 'roles_' . date('Y_m_d') . '.' . $this->request->file_type;
 
 		ReportHelper::export($filename, $users, [
 			'name' => __('name'), 

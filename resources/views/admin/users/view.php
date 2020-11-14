@@ -32,6 +32,16 @@ endif
         </div>
 
         <div class="form-group row">
+            <p class="col-sm-2 col-form-label"><?= __('phone') ?></p>
+            <div class="col-form-label col-sm-10 font-weight-bold"><?= $user->phone ?></div>
+        </div>
+
+        <div class="form-group row">
+            <p class="col-sm-2 col-form-label"><?= __('company') ?></p>
+            <div class="col-form-label col-sm-10 font-weight-bold"><?= $user->company ?></div>
+        </div>
+
+        <div class="form-group row">
             <p class="col-sm-2 col-form-label"><?= __('created_at') ?></p>
             <div class="col-form-label col-sm-10 font-weight-bold">
                 <?= \Carbon\Carbon::parse($user->created_at)->locale(user_session()->lang)->isoFormat('MMM Do, YYYY') ?>

@@ -4,28 +4,19 @@
 
 <?php $this->start('page_content') ?>
 
-<?php $this->insert('partials/breadcrumb', [
-    'items' => [
-        'Documentation' => absolute_url('/docs'),
-        'Routing' => ''
-    ]
-]) ?>
-
 <div class="card mb-5" id="basic-routing">
-    <div class="card-header ">
-        <span class=" lead">Basic routing</span>
-    </div>
+    <div class="card-header">Basic routing</div>
 
     <div class="card-body">
         <p class="font-weight-bold">Configuration</p>
         <p>
-            You can define your application routes in <span class="bg-light text-danger">routes/web.php</span> file. TinyMVC provides
+            You can define your application routes in <span class="bg-light text-danger">routes</span> folder. TinyMVC provides
             a very expressive method of defining route :
         </p>
 
         <div class="card mb-4">
             <div class="card-body bg-light">
-                <pre class="m-0 text-danger"><code>Route::add('/home', [
+                <pre class="m-0 text-danger"><code>Route::add('home', [
     'method' => 'GET',
     'handler' => function () {
         Response::send('Hello world!');
@@ -69,14 +60,12 @@ Route::options(string $uri, array $parameters)</code></pre>
 
     <div class="card-footer d-flex justify-content-between">
         <span>Next: <a href="#route-parameters">Route parameters</a></span>
-        <span>Previous: <a href="<?= absolute_url('/docs/getting-started') ?>">Getting started</a></span>
+        <span>Previous: <a href="<?= absolute_url('/docs/guides/getting-started') ?>">Getting started</a></span>
     </div>
 </div>
 
 <div class="card mb-5" id="route-parameters">
-    <div class="card-header ">
-        <span class=" lead" id="route-parameters">Route parameters</span>
-    </div>
+    <div class="card-header">Route parameters</div>
 
     <div class="card-body">
         <p class="font-weight-bold">List of available route parameters with name and descripton</p>
@@ -127,7 +116,7 @@ Route::options(string $uri, array $parameters)</code></pre>
 
         <div class="card mb-4">
             <div class="card-body bg-light">
-                <pre class="m-0 text-danger"><code>Route::get('/home', [
+                <pre class="m-0 text-danger"><code>Route::get('home', [
     'handler' => 'HomeController::index',
     'name' => 'home',
     'middlewares' => [
@@ -151,8 +140,8 @@ Route::options(string $uri, array $parameters)</code></pre>
         <div class="card">
             <div class="card-body bg-light">
                 <pre class="m-0 text-danger"><code>Route::group([
-    '/' => [],
-    '/home' => []
+    'index' => [],
+    'home' => []
 ])->by([
     'method' => 'GET',
     'handler' => 'HomeController@index',
@@ -169,9 +158,7 @@ Route::options(string $uri, array $parameters)</code></pre>
 </div>
 
 <div class="card" id="uri-parameters">
-    <div class="card-header ">
-        <span class=" lead" id="uri-parameters">URI parameters</span>
-    </div>
+    <div class="card-header ">URI parameters</div>
 
     <div class="card-body">
         <p class="font-weight-bold">Required parameters</p>
@@ -179,7 +166,7 @@ Route::options(string $uri, array $parameters)</code></pre>
 
         <div class="card mb-4">
             <div class="card-body bg-light">
-                <pre class="m-0 text-danger"><code>Route::get('/welcome/{name:str}', [
+                <pre class="m-0 text-danger"><code>Route::get('welcome/{name:str}', [
     'handler' => function ($name) {
         Response::send('Welcome ' . $name . '!');       
     }
@@ -231,9 +218,9 @@ Route::options(string $uri, array $parameters)</code></pre>
 
         <div class="card mb-4">
             <div class="card-body bg-light">
-                <pre class="m-0 text-danger"><code>Route::get('/welcome/{name:str}?', [
+                <pre class="m-0 text-danger"><code>Route::get('welcome/{name:str}?', [
     'handler' => function (?string $name = null) {
-        $visitor = is_null($name) ? 'Stranger' : $name;
+        $visitor = is_null($name) ? 'Visitor' : $name;
         Response::send('Welcome ' . $visitor . '!');       
     }
 ]);</code></pre>

@@ -2,13 +2,12 @@
 
 namespace App\Controllers\Admin;
 
-use Framework\HTTP\Request;
+use App\Requests\UpdateUser;
 use Framework\Support\Session;
 use Framework\Routing\Controller;
 use Framework\Support\Encryption;
 use App\Database\Models\UsersModel;
 use App\Database\Models\CountriesModel;
-use App\Requests\SaveSettings;
 
 class SettingsController extends Controller
 {
@@ -39,29 +38,29 @@ class SettingsController extends Controller
      */
     public function update(int $id): void
     {
-        $validate = SaveSettings::validate(Request::getFields());
+        $validate = UpdateUser::validate($this->request->inputs());
         
         if ($validate->fails()) {
             $this->redirect()->withError($validate::$errors);
         }
 
         $data = [
-            'name' => Request::getField('name'),
-            'email' => Request::getField('email'),
-            'country' => Request::getField('country'),
-            'company' => Request::getField('company'),
-            'phone' => Request::getField('phone'),
-            'two_factor' => Request::hasField('two-factor') ? 1 : 0,
-            'lang' => Request::getField('lang'),
-            'timezone' => Request::getField('timezone'),
-            'currency' => Request::getField('currency'),
-            'theme' => Request::getField('theme') ? 'dark' : 'light',
-            'alerts' => Request::hasField('alerts') ? 1 : 0,
-            'notifications_email' => Request::hasField('notifications-email') ? 1 : 0
+            'name' => $this->request->name,
+            'email' => $this->request->email,
+            'country' => $this->request->country,
+            'company' => $this->request->company ?? '',
+            'phone' => $this->request->phone,
+            'two_factor' => $this->request->has('two-factor') ? 1 : 0,
+            'lang' => $this->request->lang,
+            'timezone' => $this->request->timezone,
+            'currency' => $this->request->currency,
+            'theme' => $this->request->theme ? 'dark' : 'light',
+            'alerts' => $this->request->has('alerts') ? 1 : 0,
+            'notifications_email' => $this->request->has('notifications-email') ? 1 : 0
 		];
 		
-		if (!empty(Request::getField('password'))) {
-			$data['password'] = Encryption::hash(Request::getField('password'));
+		if (!empty($this->request->password)) {
+			$data['password'] = Encryption::hash($this->request->password);
 		}
 
         UsersModel::update($data)->where('id', $id)->persist();

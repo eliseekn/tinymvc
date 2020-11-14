@@ -4,7 +4,6 @@ namespace App\Controllers\Auth;
 
 use Carbon\Carbon;
 use App\Helpers\AuthHelper;
-use Framework\HTTP\Request;
 use App\Helpers\EmailHelper;
 use App\Middlewares\AuthPolicy;
 use Framework\Routing\Controller;
@@ -23,9 +22,9 @@ class EmailController extends Controller
 	 */
 	public function confirm(): void
 	{
-		if (UsersModel::find('email', Request::getQuery('email'))->exists()) {
-            UsersModel::update(['active' => 1])->where('email', Request::getQuery('email'))->persist();
-            EmailHelper::sendWelcome(Request::getField('email'));
+		if (UsersModel::find('email', $this->request->email)->exists()) {
+            UsersModel::update(['active' => 1])->where('email', $this->request->email)->persist();
+            EmailHelper::sendWelcome($this->request->email);
             $this->redirect('/login')->withSuccess(__('user_activated', true));
         } else {
             $this->redirect('/signup')->withError(__('user_not_registered', true));
@@ -39,9 +38,9 @@ class EmailController extends Controller
      */
     public function auth(): void
     {
-        $auth_token = TokensModel::find('email', Request::getQuery('email'))->single();
+        $auth_token = TokensModel::find('email', $this->request->email)->single();
 
-        if ($auth_token === false || $auth_token->token !== Request::getQuery('token')) {
+        if ($auth_token === false || $auth_token->token !== $this->request->token) {
 			$this->response(__('invalid_two_factor_link', true));
 		}
 

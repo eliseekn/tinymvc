@@ -31,8 +31,7 @@ class AuthHelper
      */
     private static function setAttempts(): void
     {
-        $auth_attempts = self::getAttempts() + 1;
-        Session::create('auth_attempts', $auth_attempts);
+        Session::create('auth_attempts', self::getAttempts() + 1);
     }
     
     /**
@@ -40,11 +39,15 @@ class AuthHelper
      *
      * @return mixed
      */
-    public static function authenticate()
+    public static function authenticate(Request $request)
     {
-        $user = UsersModel::find('email', Request::getField('email'))->single();
+        ActivityHelper::log($request->email, 'Log in attempts');
 
-        if (!($user !== false && Encryption::verify(Request::getField('password'), $user->password))) {
+        $user = UsersModel::find('email', $request->email)->single();
+
+        if (!($user !== false && Encryption::verify($request->password, $user->password))) {
+            ActivityHelper::log($request->email, 'Log in attempts failed');
+            
             self::setAttempts();
 
             if (config('security.auth.max_attempts') > 0 && self::getAttempts() > config('security.auth.max_attempts')) {
@@ -65,7 +68,7 @@ class AuthHelper
 
             if (EmailHelper::sendAuth($user->email, $token)) {
                 TokensModel::insert([
-                    'email' => Request::getField('email'),
+                    'email' => $request->email,
                     'token' => $token,
                     'expires' => Carbon::now()->addHour()->toDateTimeString()
                 ]);
@@ -78,11 +81,11 @@ class AuthHelper
 
         Session::setUser($user);
             
-        if (!empty(Request::getField('remember'))) {
-            Cookies::setUser(Encryption::encrypt(Request::getField('email')));
+        if (isset($request->remember) && !empty($request->remember)) {
+            Cookies::setUser(Encryption::encrypt($request->email));
         }
         
-        ActivityHelper::log('Logged in');
+        ActivityHelper::log($request->email, 'Log in attempts succeeded');
     }
     
     /**
@@ -100,16 +103,22 @@ class AuthHelper
      *
      * @return bool
      */
-    public static function create(): bool
+    public static function create(Request $request): bool
     {
-        if (UsersModel::find('email', Request::getField('email'))->exists()) {
+        if (
+            UsersModel::select()
+                ->where('email', $request->email)
+                ->orWhere('phone', $request->phone)
+                ->exists()
+        ) {
             return false;
         }
         
         UsersModel::insert([
-            'name' => Request::getField('name'),
-            'email' => Request::getField('email'),
-            'password' => Encryption::hash(Request::getField('password'))
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'password' => Encryption::hash($request->password)
         ]);
     }
 
@@ -150,7 +159,7 @@ class AuthHelper
      */
     public static function forget(): void
     {
-        ActivityHelper::log('Logged out');
+        ActivityHelper::log(self::getSession()->email, 'Logged out');
 
         if (self::checkSession()) {
             Session::deleteUser();

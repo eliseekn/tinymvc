@@ -3,7 +3,6 @@
 namespace App\Controllers\Admin;
 
 use Carbon\Carbon;
-use Framework\HTTP\Request;
 use App\Helpers\ReportHelper;
 use App\Requests\RoleRequest;
 use Framework\Routing\Controller;
@@ -58,28 +57,28 @@ class RolesController extends Controller
 	 */
 	public function create(): void
 	{
-		$validate = RoleRequest::validate(Request::getFields());
+		$validate = RoleRequest::validate($this->request->inputs());
         
         if ($validate->fails()) {
 			$this->alert($validate::$errors)->error();
-            $this->json(['redirect' => absolute_url('admin/roles/new')]);
+            $this->jsonResponse(['redirect' => absolute_url('admin/resources/roles/new')]);
         }
 
-		$slug = slugify(Request::getField('title'));
+		$slug = slugify($this->request->title);
 
 		if (RolesModel::find('slug', $slug)->exists()) {
 			$this->toast(__('role_already_exists'))->error();
-			$this->json(['redirect' => absolute_url('admin/roles/new')]);
+			$this->jsonResponse(['redirect' => absolute_url('admin/resources/roles/new')]);
 		}
 
 	    $id = RolesModel::insert([
-            'title' => Request::getField('title'),
+            'title' => $this->request->title,
             'slug' => $slug,
-            'description' => Request::getField('editor')
+            'description' => $this->request->editor
 		]);
 
 		$this->toast(__('role_created'))->success();
-		$this->json(['redirect' => absolute_url('admin/roles/view/' . $id)]);
+		$this->jsonResponse(['redirect' => absolute_url('admin/resources/roles/view/' . $id)]);
     }
 	
 	/**
@@ -108,28 +107,28 @@ class RolesController extends Controller
 	 */
 	public function update(int $id): void
 	{
-		$validate = RoleRequest::validate(Request::getFields());
+        $validate = RoleRequest::validate($this->request->inputs());
         
         if ($validate->fails()) {
 			$this->alert($validate::$errors)->error();
-            $this->json(['redirect' => absolute_url('admin/roles/edit')]);
+            $this->jsonResponse(['redirect' => absolute_url('admin/resources/roles/edit')]);
         }
 
 		if (!RolesModel::find('id', $id)->exists()) {
 			$this->toast(__('role_not_found'))->error();
-			$this->json(['redirect' => absolute_url('admin/roles/edit')]);
+			$this->jsonResponse(['redirect' => absolute_url('admin/resources/roles/edit')]);
 		}
 
 		RolesModel::update([
-            'title' => Request::getField('title'),
-            'slug' => slugify(Request::getField('title')),
-            'description' => Request::getField('editor')
+            'title' => $this->request->title,
+            'slug' => slugify($this->request->title),
+            'description' => $this->request->editor
 		])
 		->where('id', $id)
 		->persist();
 
 		$this->toast(__('role_updated'))->success();
-		$this->json(['redirect' => absolute_url('admin/roles/view/' . $id)]);
+		$this->jsonResponse(['redirect' => absolute_url('admin/resources/roles/view/' . $id)]);
     }
 
 	/**
@@ -149,7 +148,7 @@ class RolesController extends Controller
 			$this->toast(__('role_deleted'))->success();
             $this->redirect()->only();
 		} else {
-			$roles_id = json_decode(Request::getRawData(), true);
+			$roles_id = json_decode($this->request->raw(), true);
 			$roles_id = $roles_id['items'];
 
 			foreach ($roles_id as $id) {
@@ -167,7 +166,7 @@ class RolesController extends Controller
 	 */
 	public function import(): void
 	{
-        $file = Request::getFile('file', ['csv']);
+        $file = $this->request->files('file', ['csv']);
 
 		if (!$file->isAllowed()) {
 			$this->toast(__('import_file_type_error'))->error();
@@ -196,8 +195,8 @@ class RolesController extends Controller
 	 */
 	public function export(): void
 	{
-        $date_start = Request::getField('date_start');
-        $date_end = Request::getField('date_end');
+        $date_start = $this->request->date_start;
+        $date_end = $this->request->date_end;
 
 		if (!empty($date_start) && !empty($date_end)) {
 			$roles = RolesModel::select()
@@ -208,7 +207,7 @@ class RolesController extends Controller
 			$roles = RolesModel::select()->orderAsc('name')->all();
         }
         
-        $filename = 'roles_' . date('Y_m_d') . '.' . Request::getField('file_type');
+        $filename = 'roles_' . date('Y_m_d') . '.' . $this->request->file_type;
 
 		ReportHelper::export($filename, $roles, [
 			'title' => __('title'), 
