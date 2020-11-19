@@ -10,19 +10,17 @@
 
 <?php $this->start('page_content') ?>
 
-<?php 
-if (user_session()->alerts) :
-    if (flash_messages()) :
-        $this->insert('partials/alert', get_flash_messages());
+<?php if (user_session()->alerts) :
+    if (session_alerts()) :
+        $this->insert('partials/alert', get_alerts());
     endif;
-endif
-?>
+endif ?>
 
 <div class="card shadow-sm">
     <div class="card-header"><?= __('edit') ?></div>
 
     <form id="update-role" data-url="<?= absolute_url('/admin/resources/roles/update/' . $role->id) ?>">
-        <?= generate_csrf_token() ?>
+        <?= csrf_token_input() ?>
 
         <div class="card-body">
             <div class="form-group row">
@@ -41,9 +39,9 @@ endif
         </div>
 
         <div class="card-footer">
-            <button type="submit" class="btn btn-primary loading"><?= __('update') ?></button>
-            <button type="reset" class="btn btn-secondary mx-2"><?= __('reset') ?></button>
-            <a href="<?= absolute_url('/admin/resources/roles') ?>" class="btn btn-secondary"><?= __('cancel') ?></a>
+            <button type="submit" class="btn btn-outline-dark loading"><?= __('update') ?></button>
+            <button type="reset" class="btn btn-outline-dark mx-2"><?= __('reset') ?></button>
+            <a href="<?= absolute_url('/admin/resources/roles') ?>" class="btn btn-outline-dark"><?= __('cancel') ?></a>
         </div>
     </form>
 </div>

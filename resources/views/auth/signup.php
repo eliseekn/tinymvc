@@ -12,11 +12,11 @@
 
 <body>
     <div class="d-flex align-items-center justify-content-center min-vh-100">
-        <div class="container" style="width: 400px">
+        <div class="container" style="width: 450px">
             <h1 class="py-3 text-center"><?= __('signup', true) ?></h1>
 
-            <?php if (flash_messages()) : 
-                $this->insert('partials/alert', get_flash_messages());
+            <?php if (session_alerts()) : 
+                $this->insert('partials/alert', get_alerts());
             endif ?>
 
             <div class="card shadow p-4">
@@ -31,9 +31,14 @@
                         <input type="email" id="email" name="email" class="form-control">
                     </div>
 
-                    <div class="form-group row">
+                    <div class="form-group">
                         <label for="phone"><?= __('phone', true) ?></label>
                         <input type="text" class="form-control" name="phone" id="phone">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="company"><?= __('company', true) ?></label>
+                        <input type="text" class="form-control" name="company" id="company">
                     </div>
 
                     <div class="form-group">

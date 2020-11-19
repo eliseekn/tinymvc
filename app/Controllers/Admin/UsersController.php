@@ -21,8 +21,8 @@ class UsersController extends Controller
      */
     public function index(): void
     {
-        $this->render('admin/users/index', [
-            'users' => UsersModel::select()->orderAsc('name')->paginate(50),
+        $this->render('admin/resources/users/index', [
+            'users' => UsersModel::select()->orderAsc('name')->paginate(20),
 			'active_users' => UsersModel::find('active', 1)->all(),
         ]);
     }
@@ -34,7 +34,7 @@ class UsersController extends Controller
 	 */
 	public function new(): void
 	{
-		$this->render('admin/users/new', [
+		$this->render('admin/resources/users/new', [
 			'roles' => RolesModel::select()->all()
 		]);
 	}
@@ -55,7 +55,7 @@ class UsersController extends Controller
 			$this->redirectBack()->only();
 		}
 
-		$this->render('admin/users/edit', compact('user', 'roles'));
+		$this->render('admin/resources/users/edit', compact('user', 'roles'));
 	}
 
 	/**
@@ -65,10 +65,10 @@ class UsersController extends Controller
 	 */
 	public function create(): void
 	{
-        $validate = RegisterUser::validate($this->request->inputs());
+        $validator = RegisterUser::validate($this->request->inputs());
         
-        if ($validate->fails()) {
-            $this->redirectBack()->withError($validate::$errors);
+        if ($validator->fails()) {
+            $this->redirectBack()->withError($validator->errors());
         }
 
 		if (
@@ -85,12 +85,13 @@ class UsersController extends Controller
             'name' => $this->request->name,
             'email' => $this->request->email,
             'phone' => $this->request->phone,
+            'company' => $this->request->company,
             'password' => Encryption::encrypt($this->request->password),
             'role' => $this->request->role
 		]);
 
 		$this->toast(__('user_created'))->success();
-		$this->redirect('admin/resources/users/view/' . $id)->only();
+		$this->redirect('admin/resources/users/view', $id)->only();
     }
 	
 	/**
@@ -108,7 +109,7 @@ class UsersController extends Controller
 			$this->redirectBack()->only();
 		}
 
-		$this->render('admin/users/view', compact('user'));
+		$this->render('admin/resources/users/view', compact('user'));
 	}
     
 	/**
@@ -119,26 +120,30 @@ class UsersController extends Controller
 	 */
 	public function update(int $id): void
 	{
-		$validate = UpdateUser::validate($this->request->inputs());
+		$validator = UpdateUser::validate($this->request->inputs());
         
-        if ($validate->fails()) {
-            $this->redirectBack()->withError($validate::$errors);
+        if ($validator->fails()) {
+            $this->redirectBack()->withError($validator->errors());
         }
 
-		if (!UsersModel::find('id', $id)->exists()) {
+        $user = UsersModel::find('id', $id)->single();
+
+		if ($user === false) {
 			$this->toast(__('user_not_found'))->error();
 			$this->redirectBack()->only();
         }
-        
-        if (
-            UsersModel::select()
-                ->where('email', $this->request->email)
-                ->orWhere('phone', $this->request->phone)
-                ->exists()
-        ) {
-			$this->toast(__('user_already_exists'))->error();
-            $this->redirectBack()->only();
-		}
+
+        if ($user->email !== $this->request->email || $user->phone !== $this->request->phone) {
+            if (
+                UsersModel::select()
+                    ->where('email', $this->request->email)
+                    ->orWhere('phone', $this->request->phone)
+                    ->exists()
+            ) {
+                $this->toast(__('user_already_exists'))->error();
+                $this->redirectBack()->only();
+            }
+        }
 
 		$data = [
             'name' => $this->request->name,
@@ -162,7 +167,7 @@ class UsersController extends Controller
         }
 
 		$this->toast(__('user_updated'))->success();
-        $this->redirect('admin/resources/users/view/' . $id)->only();
+        $this->redirect('admin/resources/users/view', $id)->only();
     }
 
 	/**
@@ -180,10 +185,8 @@ class UsersController extends Controller
 	
 			UsersModel::delete()->where('id', $id)->persist();
 			$this->toast(__('user_deleted'))->success();
-            $this->redirectBack()->only();
 		} else {
-			$users_id = json_decode($this->request->raw(), true);
-			$users_id = $users_id['items'];
+            $users_id = explode(',', $this->request->items);
 
 			foreach ($users_id as $id) {
 				UsersModel::delete()->where('id', $id)->persist();

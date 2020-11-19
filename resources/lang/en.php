@@ -28,6 +28,10 @@ $resource = 'Resource';
 $activities = 'Activities';
 $builder = 'Builder';
 $migrations = 'Migrations';
+$messages = 'Messages';
+$sender = 'Sender';
+$recipient = 'Recipient';
+$reply = 'Reply';
 
 //navabar
 $mark_as_read = 'Mark as read';
@@ -40,6 +44,11 @@ $notifications = 'Notifications';
 //dashboard
 $total_users = 'Total users';
 $registered_users = 'Registered users';
+$new_user = 'New user';
+$new_role = 'New role';
+$create_notification = 'Create notification';
+$latest_notifications = 'Latest notifications';
+$all_users= 'All users';
 
 //settings
 $profile = 'Profile';
@@ -139,6 +148,12 @@ $auth_attempts_exceeded = 'Authentication attempts exceeded. Retry in ' . config
 $activity_not_found = 'Activity not found';
 $activity_deleted = 'Activity deleted successfully';
 $activities_deleted = 'Activities deleted successfully';
+$message_sent = 'Message sent successfully';
+$message_not_found = 'Message not found';
+$message_updated = 'Message marked as read';
+$messages_updated = 'Messages marked as read';
+$message_deleted = 'Message deleted successfully';
+$messages_deleted = 'Messages deleted successfully';
 
 //misc
 $ago = ' ago';

@@ -17,13 +17,13 @@
         <p class="font-weight-bold">CSRF field</p>
         <p>
             You can implement a CSRF token in your forms by using the helper function 
-            <span class="bg-light text-danger">generate_csrf_token()</span> :
+            <span class="bg-light text-danger">csrf_token_input()</span> :
         </p>
 
         <div class="card mb-4">
             <div class="card-body bg-light">
                 <pre class="m-0 text-danger"><code>&lt;form method="POST" action="/uri"&gt;
-    &lt;?= generate_csrf_token() ?&gt;
+    &lt;?= csrf_token_input() ?&gt;
                 
 &lt;/form&gt;</code></pre>
             </div>

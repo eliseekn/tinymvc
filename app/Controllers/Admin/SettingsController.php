@@ -38,10 +38,10 @@ class SettingsController extends Controller
      */
     public function update(int $id): void
     {
-        $validate = UpdateUser::validate($this->request->inputs());
+        $validator = UpdateUser::validate($this->request->inputs());
         
-        if ($validate->fails()) {
-            $this->redirectBack()->withError($validate::$errors);
+        if ($validator->fails()) {
+            $this->redirectBack()->withError($validator->errors());
         }
 
         $data = [

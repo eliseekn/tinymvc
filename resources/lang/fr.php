@@ -36,10 +36,19 @@ $view_all = 'Voir toutes les notifications';
 $settings = 'Paramètres';
 $logout = 'Déconnexion';
 $notifications = 'Notifications';
+$messages = 'Messages';
+$sender = 'Expéditeur';
+$recipient = 'Destinataire';
+$reply = 'Répondre';
 
 //dashboard
 $total_users = 'Total utilisateurs';
 $registered_users = 'Utilisateurs inscrits';
+$new_user = 'Nouvel utilisateur';
+$new_role = 'Nouveau role';
+$create_notification = 'Créer une notifications';
+$latest_notifications = 'Dernières notifications';
+$all_users= 'Tous les utilisateurs';
 
 //settings
 $profile = 'Profil';
@@ -139,6 +148,12 @@ $auth_attempts_exceeded = "Nombre de tentatives de connexions dépassé. Réessa
 $activity_not_found = 'Activité non trouvée';
 $activity_deleted = 'Activité supprimée avec succès';
 $activities_deleted = 'Activitées supprimées avec succès';
+$message_sent = 'Message envoyé avec succès';
+$message_not_found = 'Message non trouvée';
+$message_updated = 'Message marqué comme lu';
+$messages_updated = 'Messages marqués comme lus';
+$message_deleted = 'Message supprimé avec succès';
+$messages_deleted = 'Messages supprimés avec succès';
 
 //misc
 $ago = ' environ';

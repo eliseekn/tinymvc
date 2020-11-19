@@ -4,16 +4,14 @@
 
 <?php $this->start('page_content') ?>
 
-<?php 
-if (user_session()->alerts) :
-    if (flash_messages()) :
-        $this->insert('partials/alert', get_flash_messages());
+<?php if (user_session()->alerts) :
+    if (session_alerts()) :
+        $this->insert('partials/alert', get_alerts());
     endif;
-endif
-?>
+endif ?>
 
 <form method="post" action="<?= absolute_url('/admin/account/settings/update/' . user_session()->id) ?>">
-    <?= generate_csrf_token() ?>
+    <?= csrf_token_input() ?>
 
     <div class="row mb-4">
         <div class="col-12 col-lg-6 mb-4 mb-lg-0">
@@ -169,7 +167,7 @@ endif
     </div>
 
     <div class="">
-        <button type="submit" class="btn btn-primary loading"><?= __('save') ?></button>
+        <button type="submit" class="btn btn-dark loading"><?= __('save') ?></button>
     </div>
 </form>
 

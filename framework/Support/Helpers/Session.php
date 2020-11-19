@@ -88,29 +88,29 @@ if (!function_exists('close_session')) {
 	}
 }
 
-if (!function_exists('flash_messages')) {
+if (!function_exists('session_alerts')) {
 	/**
-	 * check if flash messages exists
+	 * check if session alerts exists
 	 *
 	 * @return bool
 	 */
-	function flash_messages(): bool
+	function session_alerts(): bool
 	{
-		return session_has(config('app.name') . '_messages');
+		return session_has(config('app.name') . '_alerts');
 	}
 }
 
-if (!function_exists('get_flash_messages')) {
+if (!function_exists('get_alerts')) {
 	/**
-	 * get flash messages content
+	 * get session alerts content
 	 *
 	 * @return mixed returns message content
 	 */
-	function get_flash_messages()
+	function get_alerts()
 	{
-		$flash_messages = get_session(config('app.name') . '_messages');
-		close_session(config('app.name') . '_messages');
-		return $flash_messages;
+		$alerts = get_session(config('app.name') . '_alerts');
+		close_session(config('app.name') . '_alerts');
+		return $alerts;
 	}
 }
 

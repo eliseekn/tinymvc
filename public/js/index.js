@@ -163,14 +163,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         if (items.length > 0) {
+          var formData = new FormData();
+          formData.append('csrf_token', document.querySelector('#csrf_token').value);
+          formData.append('items', items);
           fetch(event.target.dataset.url, {
             method: 'post',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              items: items
-            })
+            body: formData
           }).then(function () {
             return window.location.reload();
           });
@@ -196,14 +194,13 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         if (items.length > 0) {
+          console.log(items);
+          var formData = new FormData();
+          formData.append('csrf_token', document.querySelector('#csrf_token').value);
+          formData.append('items', items);
           fetch(event.target.dataset.url, {
             method: 'post',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              items: items
-            })
+            body: formData
           }).then(function () {
             return window.location.reload();
           });
@@ -251,6 +248,18 @@ document.addEventListener('DOMContentLoaded', function () {
         Array.from(tbody.querySelectorAll('tr')).sort(comparer(Array.from(th.parentNode.children).indexOf(th), _this.asc = !_this.asc)).forEach(function (tr) {
           return tbody.appendChild(tr);
         });
+      });
+    });
+  } //metrics trends
+
+
+  if (document.querySelector('#users-trends-bars')) {
+    document.querySelector('#users-trends-bars').addEventListener('change', function (event) {
+      fetch(event.target.dataset.url + '/' + event.target.value).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        document.querySelector('bars-chart').setAttribute('data', data.metrics);
+        event.target.value === 'weeks' ? document.querySelector('bars-chart').setAttribute('xkey', 'day') : document.querySelector('bars-chart').setAttribute('xkey', 'month');
       });
     });
   }
@@ -380,12 +389,15 @@ var UploadModal = /*#__PURE__*/function (_HTMLElement) {
       element.setAttribute('tabindex', '-1');
       element.setAttribute('role', 'dialog');
       element.classList.add('modal', 'fade');
-      element.innerHTML = "\n            <div class=\"modal-dialog modal-dialog-centered\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-header\">\n                        <h5 class=\"modal-title\">".concat(this.getAttribute('modal_title'), "</h5>\n                        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                            <span aria-hidden=\"true\">&times;</span>\n                        </button>\n                    </div>\n\n                    <form method=\"post\" action=\"").concat(this.getAttribute('action'), "\" enctype=\"multipart/form-data\">\n                        <div class=\"modal-body\">\n                            <input type=\"file\" name=\"file\" id=\"file\" class=\"form-group-file\" required>\n                        </div>\n\n                        <div class=\"modal-footer\">\n                            <button type=\"submit\" class=\"btn btn-primary\">").concat(this.getAttribute('modal_button_title'), "</button>\n                            <button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">").concat(this.getAttribute('modal_button_cancel'), "</button>\n                        </div>\n                    </form>\n                </div>\n            </div>\n        ");
+      element.innerHTML = "\n            <div class=\"modal-dialog modal-dialog-centered\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-header bg-light text-dark align-items-center py-2\">\n                        <h5 class=\"modal-title\">".concat(this.getAttribute('modal_title'), "</h5>\n                        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                            <span aria-hidden=\"true\">&times;</span>\n                        </button>\n                    </div>\n\n                    <form method=\"post\" action=\"").concat(this.getAttribute('action'), "\" enctype=\"multipart/form-data\">\n                        ").concat(this.getAttribute('csrf_token'), "\n\n                        <div class=\"modal-body\">\n                            <input type=\"file\" name=\"file\" id=\"file\" class=\"form-group-file\" required>\n                        </div>\n\n                        <div class=\"modal-footer\">\n                            <button type=\"submit\" class=\"btn btn-dark\">").concat(this.getAttribute('modal_button_title'), "</button>\n                            <button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">").concat(this.getAttribute('modal_button_cancel'), "</button>\n                        </div>\n                    </form>\n                </div>\n            </div>\n        ");
       document.body.appendChild(element);
       $('#upload-modal').modal({
         backdrop: 'static',
         keyboard: false,
         show: true
+      });
+      $('#upload-modal').on('hidden.bs.modal', function (e) {
+        document.body.removeChild(element);
       });
     }
   }]);
@@ -462,12 +474,15 @@ var ExportModal = /*#__PURE__*/function (_HTMLElement) {
       element.setAttribute('tabindex', '-1');
       element.setAttribute('role', 'dialog');
       element.classList.add('modal', 'fade');
-      element.innerHTML = "\n            <div class=\"modal-dialog modal-dialog-centered\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-header\">\n                        <h5 class=\"modal-title\">".concat(this.getAttribute('modal_title'), "</h5>\n                        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                            <span aria-hidden=\"true\">&times;</span>\n                        </button>\n                    </div>\n\n                    <form method=\"post\" action=\"").concat(this.getAttribute('action'), "\">\n                        <div class=\"modal-body\">\n                            <fieldset class=\"form-group\">\n                                <div class=\"row\">\n                                    <legend class=\"col-form-label col-sm-4 pt-0\">File type</legend>\n\n                                    <div class=\"col-sm-8\">\n                                        <div class=\"custom-control custom-radio custom-control-inline\">\n                                            <input class=\"custom-control-input\" type=\"radio\" name=\"file_type\" id=\"csv\" value=\"csv\" checked>\n                                            <label class=\"custom-control-label\" for=\"csv\">CSV</label>\n                                        </div>\n                                        <div class=\"custom-control custom-radio custom-control-inline\">\n                                            <input class=\"custom-control-input\" type=\"radio\" name=\"file_type\" id=\"pdf\" value=\"pdf\">\n                                            <label class=\"custom-control-label\" for=\"pdf\">PDF</label>\n                                        </div>\n                                    </div>\n                                </div>\n                            </fieldset>\n\n                            <div class=\"form-group row\">\n                                <p class=\"col-sm-4 col-form-label\">Period <small>(optional)</small></p>\n\n                                <div class=\"col-sm-8\">\n                                    <div class=\"input-group mb-3\">\n                                        <div class=\"input-group-prepend\">\n                                            <div class=\"input-group-text\">\n                                                <i class=\"fa fa-calendar-alt\"></i>\n                                            </div>\n                                        </div>\n\n                                        <input type=\"date\" class=\"form-control\" name=\"date_start\" id=\"date_start\">\n                                    </div>\n\n                                    <div class=\"input-group\">\n                                        <div class=\"input-group-prepend\">\n                                            <div class=\"input-group-text\">\n                                                <i class=\"fa fa-calendar-alt\"></i>\n                                            </div>\n                                        </div>\n\n                                        <input type=\"date\" class=\"form-control\" name=\"date_end\" id=\"date_end\">\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n\n                        <div class=\"modal-footer\">\n                            <button type=\"submit\" class=\"btn btn-primary\">").concat(this.getAttribute('modal_button_title'), "</button>\n                            <button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">").concat(this.getAttribute('modal_button_cancel'), "</button>\n                        </div>\n                    </form>\n                </div>\n            </div>\n        ");
+      element.innerHTML = "\n            <div class=\"modal-dialog modal-dialog-centered\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-header bg-light text-dark align-items-center py-2\">\n                        <h5 class=\"modal-title\">".concat(this.getAttribute('modal_title'), "</h5>\n                        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                            <span aria-hidden=\"true\">&times;</span>\n                        </button>\n                    </div>\n\n                    <form method=\"post\" action=\"").concat(this.getAttribute('action'), "\">\n                        ").concat(this.getAttribute('csrf_token'), "\n\n                        <div class=\"modal-body\">\n                            <fieldset class=\"form-group\">\n                                <div class=\"row\">\n                                    <legend class=\"col-form-label col-sm-4 pt-0\">File type</legend>\n\n                                    <div class=\"col-sm-8\">\n                                        <div class=\"custom-control custom-radio custom-control-inline\">\n                                            <input class=\"custom-control-input\" type=\"radio\" name=\"file_type\" id=\"csv\" value=\"csv\" checked>\n                                            <label class=\"custom-control-label\" for=\"csv\">CSV</label>\n                                        </div>\n                                        <div class=\"custom-control custom-radio custom-control-inline\">\n                                            <input class=\"custom-control-input\" type=\"radio\" name=\"file_type\" id=\"pdf\" value=\"pdf\">\n                                            <label class=\"custom-control-label\" for=\"pdf\">PDF</label>\n                                        </div>\n                                    </div>\n                                </div>\n                            </fieldset>\n\n                            <div class=\"form-group row\">\n                                <p class=\"col-sm-4 col-form-label\">Period <small>(optional)</small></p>\n\n                                <div class=\"col-sm-8\">\n                                    <div class=\"input-group mb-3\">\n                                        <div class=\"input-group-prepend\">\n                                            <div class=\"input-group-text\">\n                                                <i class=\"fa fa-calendar-alt\"></i>\n                                            </div>\n                                        </div>\n\n                                        <input type=\"date\" class=\"form-control\" name=\"date_start\" id=\"date_start\">\n                                    </div>\n\n                                    <div class=\"input-group\">\n                                        <div class=\"input-group-prepend\">\n                                            <div class=\"input-group-text\">\n                                                <i class=\"fa fa-calendar-alt\"></i>\n                                            </div>\n                                        </div>\n\n                                        <input type=\"date\" class=\"form-control\" name=\"date_end\" id=\"date_end\">\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n\n                        <div class=\"modal-footer\">\n                            <button type=\"submit\" class=\"btn btn-dark\">").concat(this.getAttribute('modal_button_title'), "</button>\n                            <button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">").concat(this.getAttribute('modal_button_cancel'), "</button>\n                        </div>\n                    </form>\n                </div>\n            </div>\n        ");
       document.body.appendChild(element);
       $('#export-modal').modal({
         backdrop: 'static',
         keyboard: false,
         show: true
+      });
+      $('#export-modal').on('hidden.bs.modal', function (e) {
+        document.body.removeChild(element);
       });
     }
   }]);
@@ -734,9 +749,7 @@ var ConfirmDelete = /*#__PURE__*/function (_HTMLElement) {
       this.childNodes[0].innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>';
 
       if (window.confirm('Are you sure you want to delete this item?')) {
-        fetch(this.getAttribute('action'), {
-          method: 'delete'
-        }).then(function () {
+        fetch(this.getAttribute('action')).then(function () {
           return window.location = _this2.getAttribute('redirect');
         });
       }
@@ -1093,22 +1106,42 @@ var BarsChart = /*#__PURE__*/function (_HTMLElement) {
   var _super = _createSuper(BarsChart);
 
   function BarsChart() {
+    var _this;
+
     _classCallCheck(this, BarsChart);
 
-    return _super.call(this);
+    _this = _super.call(this);
+    _this.displayChart = _this.displayChart.bind(_assertThisInitialized(_this));
+    return _this;
   }
 
   _createClass(BarsChart, [{
-    key: "connectedCallback",
-    value: function connectedCallback() {
+    key: "displayChart",
+    value: function displayChart(data, xkey) {
+      this.innerHTML = '<div id="users-bars" style="height: 200px"></div>';
       new Morris.Bar({
-        element: this.getAttribute('el'),
+        element: 'users-bars',
         resize: true,
-        data: JSON.parse(this.getAttribute('data')),
-        xkey: this.getAttribute('xkey'),
+        data: data,
+        xkey: xkey,
         ykeys: JSON.parse(this.getAttribute('ykeys')),
         labels: JSON.parse(this.getAttribute('labels'))
       });
+    }
+  }, {
+    key: "connectedCallback",
+    value: function connectedCallback() {
+      this.displayChart(JSON.parse(this.getAttribute('data')), this.getAttribute('xkey'));
+    }
+  }, {
+    key: "attributeChangedCallback",
+    value: function attributeChangedCallback(name, oldValue, newValue) {
+      this.displayChart(JSON.parse(this.getAttribute('data')), this.getAttribute('xkey'));
+    }
+  }], [{
+    key: "observedAttributes",
+    get: function get() {
+      return ['data', 'xkey'];
     }
   }]);
 
@@ -1260,6 +1293,10 @@ var ThemeSwitch = /*#__PURE__*/function (_HTMLElement) {
           document.querySelector('#dropdown-notifications').classList.toggle('text-light');
         }
 
+        if (document.querySelector('#dropdown-messages')) {
+          document.querySelector('#dropdown-messages').classList.toggle('text-light');
+        }
+
         if (document.querySelector('.btn-sm .fa-cog')) {
           document.querySelector('.btn-sm .fa-cog').classList.toggle('text-light');
         }
@@ -1279,9 +1316,9 @@ var ThemeSwitch = /*#__PURE__*/function (_HTMLElement) {
           document.querySelector('#avatar-icon').classList.toggle('bg-light');
         }
 
-        document.querySelectorAll('.btn-outline-dark').forEach(function (element) {
+        document.querySelectorAll('.card-header .btn-outline-dark').forEach(function (element) {
           element.classList.toggle('btn-outline-dark');
-          element.classList.toggle('btn-outline-light');
+          element.classList.toggle('btn-light');
         });
         document.querySelectorAll('.wrapper__sidebar .list-group-item').forEach(function (element) {
           element.classList.toggle('bg-light');
@@ -1375,6 +1412,199 @@ var AvatarIcon = /*#__PURE__*/function (_HTMLElement) {
 }( /*#__PURE__*/_wrapNativeSuper(HTMLElement));
 
 var _default = AvatarIcon;
+exports.default = _default;
+},{}],"components/modal/create-notification.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _wrapNativeSuper(Class) { var _cache = typeof Map === "function" ? new Map() : undefined; _wrapNativeSuper = function _wrapNativeSuper(Class) { if (Class === null || !_isNativeFunction(Class)) return Class; if (typeof Class !== "function") { throw new TypeError("Super expression must either be null or a function"); } if (typeof _cache !== "undefined") { if (_cache.has(Class)) return _cache.get(Class); _cache.set(Class, Wrapper); } function Wrapper() { return _construct(Class, arguments, _getPrototypeOf(this).constructor); } Wrapper.prototype = Object.create(Class.prototype, { constructor: { value: Wrapper, enumerable: false, writable: true, configurable: true } }); return _setPrototypeOf(Wrapper, Class); }; return _wrapNativeSuper(Class); }
+
+function _construct(Parent, args, Class) { if (_isNativeReflectConstruct()) { _construct = Reflect.construct; } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _isNativeFunction(fn) { return Function.toString.call(fn).indexOf("[native code]") !== -1; }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var CreateNotification = /*#__PURE__*/function (_HTMLElement) {
+  _inherits(CreateNotification, _HTMLElement);
+
+  var _super = _createSuper(CreateNotification);
+
+  function CreateNotification() {
+    var _this;
+
+    _classCallCheck(this, CreateNotification);
+
+    _this = _super.call(this);
+    _this.showDialog = _this.showDialog.bind(_assertThisInitialized(_this));
+
+    _this.addEventListener('click', _this.showDialog);
+
+    return _this;
+  }
+
+  _createClass(CreateNotification, [{
+    key: "connectedCallback",
+    value: function connectedCallback() {
+      this.innerHTML = "<button class=\"btn btn-outline-dark ml-2\">".concat(this.getAttribute('title'), "</button>");
+    }
+  }, {
+    key: "showDialog",
+    value: function showDialog() {
+      var element = document.createElement('div');
+      element.id = 'create-notification';
+      element.setAttribute('tabindex', '-1');
+      element.setAttribute('role', 'dialog');
+      element.classList.add('modal', 'fade');
+      element.innerHTML = "\n            <div class=\"modal-dialog modal-dialog-centered\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-header bg-light text-dark align-items-center py-2\">\n                        <h5 class=\"modal-title\">".concat(this.getAttribute('modal_title'), "</h5>\n                        <button type=\"button\" class=\"btn\" data-dismiss=\"modal\" aria-label=\"Close\">\n                            <i class=\"fa fa-times\"></i>\n                        </button>\n                    </div>\n\n                    <form method=\"post\" action=\"").concat(this.getAttribute('action'), "\">\n                        ").concat(this.getAttribute('csrf_token'), "\n\n                        <div class=\"modal-body\">\n                            <div class=\"form-group\">\n                                <label for=\"message\">Message</label>\n                                <input type=\"text\" name=\"message\" id=\"message\" class=\"form-control\" required>\n                            </div>\n                        </div>\n\n                        <div class=\"modal-footer\">\n                            <button type=\"submit\" class=\"btn btn-dark loading\">").concat(this.getAttribute('modal_button_title'), "</button>\n                            <button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">").concat(this.getAttribute('modal_button_cancel'), "</button>\n                        </div>\n                    </form>\n                </div>\n            </div>\n        ");
+      document.body.appendChild(element);
+      $('#create-notification').modal({
+        backdrop: 'static',
+        keyboard: false,
+        show: true
+      });
+      $('#create-notification').on('hidden.bs.modal', function (e) {
+        document.body.removeChild(element);
+      });
+    }
+  }]);
+
+  return CreateNotification;
+}( /*#__PURE__*/_wrapNativeSuper(HTMLElement));
+
+var _default = CreateNotification;
+exports.default = _default;
+},{}],"components/modal/send-message.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _wrapNativeSuper(Class) { var _cache = typeof Map === "function" ? new Map() : undefined; _wrapNativeSuper = function _wrapNativeSuper(Class) { if (Class === null || !_isNativeFunction(Class)) return Class; if (typeof Class !== "function") { throw new TypeError("Super expression must either be null or a function"); } if (typeof _cache !== "undefined") { if (_cache.has(Class)) return _cache.get(Class); _cache.set(Class, Wrapper); } function Wrapper() { return _construct(Class, arguments, _getPrototypeOf(this).constructor); } Wrapper.prototype = Object.create(Class.prototype, { constructor: { value: Wrapper, enumerable: false, writable: true, configurable: true } }); return _setPrototypeOf(Wrapper, Class); }; return _wrapNativeSuper(Class); }
+
+function _construct(Parent, args, Class) { if (_isNativeReflectConstruct()) { _construct = Reflect.construct; } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _isNativeFunction(fn) { return Function.toString.call(fn).indexOf("[native code]") !== -1; }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var SendMessage = /*#__PURE__*/function (_HTMLElement) {
+  _inherits(SendMessage, _HTMLElement);
+
+  var _super = _createSuper(SendMessage);
+
+  function SendMessage() {
+    var _this;
+
+    _classCallCheck(this, SendMessage);
+
+    _this = _super.call(this);
+    _this.users = [];
+    _this.getUsers = _this.getUsers.bind(_assertThisInitialized(_this));
+    _this.showDialog = _this.showDialog.bind(_assertThisInitialized(_this));
+
+    _this.addEventListener('click', _this.showDialog);
+
+    return _this;
+  }
+
+  _createClass(SendMessage, [{
+    key: "getUsers",
+    value: function getUsers() {
+      var _this2 = this;
+
+      fetch('/tinymvc/api/users').then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        return _this2.users = data.users;
+      });
+    }
+  }, {
+    key: "connectedCallback",
+    value: function connectedCallback() {
+      if (this.getAttribute('type') === 'icon') {
+        this.innerHTML = "\n                <a class=\"btn text-dark p-1\" href=\"#\" title=\"".concat(this.getAttribute('title'), "\">\n                    ").concat(this.getAttribute('content'), "\n                </a>\n            ");
+      } else {
+        this.innerHTML = "\n                <button class=\"btn btn-outline-dark mr-2\">\n                    ".concat(this.getAttribute('content'), "\n                </button>\n            ");
+      }
+
+      this.getUsers();
+    }
+  }, {
+    key: "showDialog",
+    value: function showDialog() {
+      var _this3 = this;
+
+      var element = document.createElement('div');
+      element.id = 'send-message';
+      element.setAttribute('tabindex', '-1');
+      element.setAttribute('role', 'dialog');
+      element.classList.add('modal', 'fade');
+      element.innerHTML = "\n            <div class=\"modal-dialog modal-dialog-centered\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-header bg-light text-dark align-items-center py-2\">\n                        <h5 class=\"modal-title\">".concat(this.getAttribute('modal_title'), "</h5>\n                        <button type=\"button\" class=\"btn\" data-dismiss=\"modal\" aria-label=\"Close\">\n                            <i class=\"fa fa-times\"></i>\n                        </button>\n                    </div>\n\n                    <form method=\"post\" action=\"").concat(this.getAttribute('action'), "\">\n                        ").concat(this.getAttribute('csrf_token'), "\n                        \n                        <div class=\"modal-body\">\n                            <div class=\"form-group\">\n                                <label for=\"recipient\">User</label>\n                                <select id=\"recipient\" name=\"recipient\" class=\"custom-select\">\n                                    <option selected disabled>Select user</option>\n\n                                    ").concat(this.users.map(function (user) {
+        return "<option value=\"".concat(user.id, "\" ").concat(user.id == _this3.getAttribute('recipient') ? 'selected' : '', ">").concat(user.name, "</option>");
+      }), "\n                                </select>\n                            </div>\n\n                            <div class=\"form-group\">\n                                <label for=\"message\">Message</label>\n                                <input type=\"text\" name=\"message\" id=\"message\" class=\"form-control\" required>\n                            </div>\n                        </div>\n\n                        <div class=\"modal-footer\">\n                            <button type=\"submit\" class=\"btn btn-dark loading\">").concat(this.getAttribute('modal_button_title'), "</button>\n                            <button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">").concat(this.getAttribute('modal_button_cancel'), "</button>\n                        </div>\n                    </form>\n                </div>\n            </div>\n        ");
+      document.body.appendChild(element);
+      $('#send-message').modal({
+        backdrop: 'static',
+        keyboard: false,
+        show: true
+      });
+      $('#send-message').on('hidden.bs.modal', function (e) {
+        document.body.removeChild(element);
+      });
+    }
+  }]);
+
+  return SendMessage;
+}( /*#__PURE__*/_wrapNativeSuper(HTMLElement));
+
+var _default = SendMessage;
 exports.default = _default;
 },{}],"../../node_modules/object-assign/index.js":[function(require,module,exports) {
 /*
@@ -31073,7 +31303,7 @@ var Icon = function Icon(props) {
 }; //single notification item
 
 
-var Item = function Item(props) {
+var Notification = function Notification(props) {
   return /*#__PURE__*/_react.default.createElement("div", {
     className: "dropdown-item py-2",
     style: {
@@ -31099,7 +31329,7 @@ var Notifications = /*#__PURE__*/function (_React$Component) {
 
     _this = _super.call(this);
     _this.state = {
-      items: [],
+      notifications: [],
       title: '',
       markAsRead: '',
       viewAll: ''
@@ -31117,7 +31347,7 @@ var Notifications = /*#__PURE__*/function (_React$Component) {
         return response.json();
       }).then(function (data) {
         return _this2.setState({
-          items: data.items,
+          notifications: data.notifications,
           title: data.title,
           viewAll: data.view_all
         });
@@ -31156,7 +31386,7 @@ var Notifications = /*#__PURE__*/function (_React$Component) {
       }, /*#__PURE__*/_react.default.createElement("i", {
         className: "fa fa-bell fa-lg"
       }), /*#__PURE__*/_react.default.createElement(Icon, {
-        count: this.state.items.length
+        count: this.state.notifications.length
       })), /*#__PURE__*/_react.default.createElement("div", {
         className: "dropdown-menu dropdown-menu-right py-0",
         "aria-labelledby": "dropdown-notifications",
@@ -31165,15 +31395,15 @@ var Notifications = /*#__PURE__*/function (_React$Component) {
         }
       }, /*#__PURE__*/_react.default.createElement("p", {
         className: "font-weight-bold px-4 py-2 text-center"
-      }, this.state.title, " (", this.state.items.length, ")"), /*#__PURE__*/_react.default.createElement("div", {
+      }, this.state.title, " (", this.state.notifications.length, ")"), /*#__PURE__*/_react.default.createElement("div", {
         className: "dropdown-divider my-0"
-      }), this.state.items.map(function (item) {
-        return /*#__PURE__*/_react.default.createElement(Item, {
-          key: item.id,
-          id: item.id,
-          message: item.message,
+      }), this.state.notifications.map(function (notification) {
+        return /*#__PURE__*/_react.default.createElement(Notification, {
+          key: notification.id,
+          id: notification.id,
+          message: notification.message,
           markAsRead: _this4.state.markAsRead,
-          createdAt: item.created_at,
+          createdAt: notification.created_at,
           handleSubmit: _this4.handleSubmit
         });
       }), /*#__PURE__*/_react.default.createElement("div", {
@@ -31192,7 +31422,170 @@ var Notifications = /*#__PURE__*/function (_React$Component) {
 
 var _default = Notifications;
 exports.default = _default;
-},{"react":"../../node_modules/react/index.js"}],"index.js":[function(require,module,exports) {
+},{"react":"../../node_modules/react/index.js"}],"components/react/messages.jsx":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+require("../modal/send-message");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+//new message alert icon
+var Icon = function Icon(props) {
+  return props.count > 0 ? /*#__PURE__*/_react.default.createElement("span", {
+    className: "bg-danger notifications-icon"
+  }) : '';
+}; //single notification item
+
+
+var Message = function Message(props) {
+  return /*#__PURE__*/_react.default.createElement("div", {
+    className: "dropdown-item py-2",
+    style: {
+      width: '350px'
+    }
+  }, /*#__PURE__*/_react.default.createElement("p", {
+    className: "text-wrap"
+  }, props.message), /*#__PURE__*/_react.default.createElement("span", {
+    className: "small text-muted"
+  }, props.createdAt));
+}; //display messages dynamically
+
+
+var Messages = /*#__PURE__*/function (_React$Component) {
+  _inherits(Messages, _React$Component);
+
+  var _super = _createSuper(Messages);
+
+  function Messages() {
+    var _this;
+
+    _classCallCheck(this, Messages);
+
+    _this = _super.call(this);
+    _this.state = {
+      messages: [],
+      title: '',
+      markAsRead: '',
+      viewAll: ''
+    };
+    _this.getMessages = _this.getMessages.bind(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  _createClass(Messages, [{
+    key: "getMessages",
+    value: function getMessages() {
+      var _this2 = this;
+
+      fetch('/tinymvc/api/messages').then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        return _this2.setState({
+          messages: data.messages,
+          title: data.title,
+          viewAll: data.view_all
+        });
+      });
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this3 = this;
+
+      this.getMessages();
+      this.intervalID = window.setInterval(function () {
+        return _this3.getMessages();
+      }, 30 * 1000); //every 30 seconds
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      clearInterval(this.intervalID);
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this4 = this;
+
+      return /*#__PURE__*/_react.default.createElement("div", {
+        className: "dropdown"
+      }, /*#__PURE__*/_react.default.createElement("button", {
+        className: "btn btn-sm",
+        type: "button",
+        id: "dropdown-messages",
+        "data-toggle": "dropdown",
+        "aria-haspopup": "true",
+        "aria-expanded": "false",
+        title: this.state.title
+      }, /*#__PURE__*/_react.default.createElement("i", {
+        className: "fa fa-envelope fa-lg"
+      }), /*#__PURE__*/_react.default.createElement(Icon, {
+        count: this.state.messages.length
+      })), /*#__PURE__*/_react.default.createElement("div", {
+        className: "dropdown-menu dropdown-menu-right py-0",
+        "aria-labelledby": "dropdown-messages",
+        style: {
+          zIndex: 1111
+        }
+      }, /*#__PURE__*/_react.default.createElement("p", {
+        className: "font-weight-bold px-4 py-2 text-center"
+      }, this.state.title, " (", this.state.messages.length, ")"), /*#__PURE__*/_react.default.createElement("div", {
+        className: "dropdown-divider my-0"
+      }), this.state.messages.map(function (message) {
+        return /*#__PURE__*/_react.default.createElement(Message, {
+          key: message.id,
+          id: message.id,
+          message: message.message,
+          markAsRead: _this4.state.markAsRead,
+          createdAt: message.created_at,
+          handleSubmit: _this4.handleSubmit
+        });
+      }), /*#__PURE__*/_react.default.createElement("div", {
+        className: "dropdown-divider my-0"
+      }), /*#__PURE__*/_react.default.createElement("div", {
+        className: "text-center px-4 py-2 bg-light"
+      }, /*#__PURE__*/_react.default.createElement("a", {
+        className: "text-primary",
+        href: "/tinymvc/admin/account/messages"
+      }, this.state.viewAll))));
+    }
+  }]);
+
+  return Messages;
+}(_react.default.Component);
+
+var _default = Messages;
+exports.default = _default;
+},{"react":"../../node_modules/react/index.js","../modal/send-message":"components/modal/send-message.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 require("./components/admin");
@@ -31229,11 +31622,17 @@ var _themeSwitch = _interopRequireDefault(require("./components/mixed/theme-swit
 
 var _avatarIcon = _interopRequireDefault(require("./components/mixed/avatar-icon"));
 
+var _createNotification = _interopRequireDefault(require("./components/modal/create-notification"));
+
+var _sendMessage = _interopRequireDefault(require("./components/modal/send-message"));
+
 var _react = _interopRequireDefault(require("react"));
 
 var _reactDom = _interopRequireDefault(require("react-dom"));
 
 var _notifications = _interopRequireDefault(require("./components/react/notifications"));
+
+var _messages = _interopRequireDefault(require("./components/react/messages"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -31250,11 +31649,17 @@ window.customElements.define('timezone-picker', _timezonePicker.default);
 window.customElements.define('currency-picker', _currencyPicker.default);
 window.customElements.define('theme-switch', _themeSwitch.default);
 window.customElements.define('avatar-icon', _avatarIcon.default);
+window.customElements.define('create-notification', _createNotification.default);
+window.customElements.define('send-message', _sendMessage.default);
 
 if (document.querySelector('#notifications-bell')) {
   _reactDom.default.render( /*#__PURE__*/_react.default.createElement(_notifications.default, null), document.querySelector('#notifications-bell'));
 }
-},{"./components/admin":"components/admin.js","./components/sidebar":"components/sidebar.js","./components/loading-button":"components/loading-button.js","./components/password-toggler":"components/password-toggler.js","./components/modal/upload-modal":"components/modal/upload-modal.js","./components/modal/export-modal":"components/modal/export-modal.js","./components/alert/alert-popup":"components/alert/alert-popup.js","./components/alert/alert-toast":"components/alert/alert-toast.js","./components/mixed/confirm-delete":"components/mixed/confirm-delete.js","./components/mixed/text-editor":"components/mixed/text-editor.js","./components/mixed/timezone-picker":"components/mixed/timezone-picker.js","./components/mixed/currency-picker":"components/mixed/currency-picker.js","./components/charts/donut-chart":"components/charts/donut-chart.js","./components/charts/bars-chart":"components/charts/bars-chart.js","./components/charts/lines-chart":"components/charts/lines-chart.js","./components/mixed/theme-switch":"components/mixed/theme-switch.js","./components/mixed/avatar-icon":"components/mixed/avatar-icon.js","react":"../../node_modules/react/index.js","react-dom":"../../node_modules/react-dom/index.js","./components/react/notifications":"components/react/notifications.jsx"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+
+if (document.querySelector('#messages-icon')) {
+  _reactDom.default.render( /*#__PURE__*/_react.default.createElement(_messages.default, null), document.querySelector('#messages-icon'));
+}
+},{"./components/admin":"components/admin.js","./components/sidebar":"components/sidebar.js","./components/loading-button":"components/loading-button.js","./components/password-toggler":"components/password-toggler.js","./components/modal/upload-modal":"components/modal/upload-modal.js","./components/modal/export-modal":"components/modal/export-modal.js","./components/alert/alert-popup":"components/alert/alert-popup.js","./components/alert/alert-toast":"components/alert/alert-toast.js","./components/mixed/confirm-delete":"components/mixed/confirm-delete.js","./components/mixed/text-editor":"components/mixed/text-editor.js","./components/mixed/timezone-picker":"components/mixed/timezone-picker.js","./components/mixed/currency-picker":"components/mixed/currency-picker.js","./components/charts/donut-chart":"components/charts/donut-chart.js","./components/charts/bars-chart":"components/charts/bars-chart.js","./components/charts/lines-chart":"components/charts/lines-chart.js","./components/mixed/theme-switch":"components/mixed/theme-switch.js","./components/mixed/avatar-icon":"components/mixed/avatar-icon.js","./components/modal/create-notification":"components/modal/create-notification.js","./components/modal/send-message":"components/modal/send-message.js","react":"../../node_modules/react/index.js","react-dom":"../../node_modules/react-dom/index.js","./components/react/notifications":"components/react/notifications.jsx","./components/react/messages":"components/react/messages.jsx"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -31282,7 +31687,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "37101" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44961" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

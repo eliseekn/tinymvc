@@ -25,3 +25,19 @@ p {
     height: 13px;
     padding-top: 1px;
 }
+
+.page-link {
+    color: #343a40;
+
+    &:hover {
+        background-color: #343a40;
+        border-color: #343a40;
+        color: white;
+    }
+}
+
+.page-item.active .page-link {
+    background-color: #343a40;
+    border-color: #343a40;
+    color: white;
+}

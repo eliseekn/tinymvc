@@ -151,9 +151,9 @@ class Model
      * @param  string $column
      * @param  string $type
      * @param  string $trends
-     * @return mixed
+     * @return array
      */
-    public static function metrics(string $column, string $type, string $trends)
+    public static function metrics(string $column, string $type, string $trends): array
     {
         return (new Metrics(static::$table))->getTrends($type, $column, $trends);
     }
@@ -318,6 +318,20 @@ class Model
     public function join(string $table, string $second_column, string $first_column): self
     {
         self::$query->innerJoin($table, $second_column, $first_column);
+        return $this;
+    }
+
+    /**
+     * add LEFT JOIN query
+     *
+     * @param  string $table
+     * @param  string $second_column
+     * @param  string $first_column
+     * @return \Framework\ORM\Model
+     */
+    public function leftJoin(string $table, string $second_column, string $first_column): self
+    {
+        self::$query->leftJoin($table, $second_column, $first_column);
         return $this;
     }
     

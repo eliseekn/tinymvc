@@ -24,13 +24,11 @@
     </div>
 </div>
 
-<?php 
-if (user_session()->alerts) :
-    if (flash_messages()) :
-        $this->insert('partials/alert', get_flash_messages());
+<?php if (user_session()->alerts) :
+    if (session_alerts()) :
+        $this->insert('partials/alert', get_alerts());
     endif;
-endif
-?>
+endif ?>
 
 <div class="card shadow-sm">
     <div class="card-header">
@@ -90,7 +88,7 @@ endif
                         <td><?= time_elapsed(\Carbon\Carbon::parse($notification->created_at, user_session()->timezone)->locale(user_session()->lang), 1) ?></td>
 
                         <td>
-                            <a class="btn text-primary p-1 <?php if ($notification->status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('/admin/account/notifications/update/' . $notification->id) ?>" <?php if ($notification->status === 'unread') : echo 'title="Mark as read"'; endif ?>>
+                            <a class="btn text-dark p-1 <?php if ($notification->status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('/admin/account/notifications/update/' . $notification->id) ?>" <?php if ($notification->status === 'unread') : echo 'title="Mark as read"'; endif ?>>
                                 <?php if ($notification->status === 'unread') : ?>
                                 <i class="fa fa-eye-slash"></i>
                                 <?php else : ?>
@@ -98,7 +96,12 @@ endif
                                 <?php endif ?>
                             </a>
 
-                            <confirm-delete type="icon" content='<i class="fa fa-trash-alt"></i>' action="<?= absolute_url('/admin/account/notifications/delete/' . $notification->id) ?>" redirect="<?= current_url()?>"></confirm-delete>
+                            <confirm-delete 
+                                type="icon" 
+                                content='<i class="fa fa-trash-alt"></i>' 
+                                action="<?= absolute_url('/admin/account/notifications/delete/' . $notification->id) ?>" 
+                                redirect="<?= current_url()?>">
+                            </confirm-delete>
                         </td>
                     </tr>
 

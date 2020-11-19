@@ -12,29 +12,25 @@
 
 <body>
     <div class="d-flex align-items-center justify-content-center min-vh-100">
-        <div class="container" style="width: 400px">
+        <div class="container" style="width: 450px">
             <h1 class="py-3 text-center"><?= __('login', true) ?></h1>
 
-            <?php 
-            if (flash_messages()) :
-                $this->insert('partials/alert', get_flash_messages());
-            endif 
-            ?>
+            <?php if (session_alerts()) :
+                $this->insert('partials/alert', get_alerts());
+            endif ?>
 
-            <?php 
-            if(auth_attempts_exceeded()) : 
+            <?php if(auth_attempts_exceeded()) : 
                 $this->insert('partials/alert', [
                     'type' => 'danger',
                     'messages' => 'Authentication attempts exceeded. You must wait about ' . config('security.auth.unlock_timeout') . ' minute(s) before try again',
                     'display' => 'default',
                     'dismiss' => false
                 ]);
-            endif
-            ?>
+            endif ?>
 
             <div class="card shadow p-4">
                 <form method="post" action="<?= absolute_url('/authenticate') ?>">
-                    <?= generate_csrf_token() ?>
+                    <?= csrf_token_input() ?>
 
                     <div class="form-group">
                         <label for="email"><?= __('email', true) ?></label>

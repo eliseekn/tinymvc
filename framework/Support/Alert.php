@@ -81,7 +81,7 @@ class Alert
             'title' => $title,
         ]);
 
-        Session::create(config('app.name') . '_messages', self::$flash);
+        Session::create(config('app.name') . '_alerts', self::$flash);
     }
     
     /**
@@ -97,7 +97,7 @@ class Alert
             'title' => $title,
         ]);
         
-        Session::create(config('app.name') . '_messages', self::$flash);
+        Session::create(config('app.name') . '_alerts', self::$flash);
     }
     
     /**
@@ -113,7 +113,7 @@ class Alert
             'title' => $title,
         ]);
         
-        Session::create(config('app.name') . '_messages', self::$flash);
+        Session::create(config('app.name') . '_alerts', self::$flash);
     }
     
     /**
@@ -129,6 +129,6 @@ class Alert
             'title' => $title,
         ]);
         
-        Session::create(config('app.name') . '_messages', self::$flash);
+        Session::create(config('app.name') . '_alerts', self::$flash);
     }
 }

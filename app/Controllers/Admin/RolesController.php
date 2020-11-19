@@ -4,9 +4,9 @@ namespace App\Controllers\Admin;
 
 use Carbon\Carbon;
 use App\Helpers\ReportHelper;
-use App\Requests\RoleRequest;
 use Framework\Routing\Controller;
 use App\Database\Models\RolesModel;
+use Framework\Support\Validator;
 
 class RolesController extends Controller
 {
@@ -17,8 +17,8 @@ class RolesController extends Controller
      */
     public function index(): void
     {
-        $this->render('admin/roles/index', [
-            'roles' => RolesModel::select()->orderAsc('title')->paginate(50)
+        $this->render('admin/resources/roles/index', [
+            'roles' => RolesModel::select()->orderAsc('title')->paginate(20)
         ]);
     }
 
@@ -29,7 +29,7 @@ class RolesController extends Controller
 	 */
 	public function new(): void
 	{
-		$this->render('admin/roles/new');
+		$this->render('admin/resources/roles/new');
 	}
 	
 	/**
@@ -47,7 +47,7 @@ class RolesController extends Controller
 			$this->redirectBack()->only();
 		}
 
-		$this->render('admin/roles/edit', compact('role'));
+		$this->render('admin/resources/roles/edit', compact('role'));
 	}
 
 	/**
@@ -57,10 +57,10 @@ class RolesController extends Controller
 	 */
 	public function create(): void
 	{
-		$validate = RoleRequest::validate($this->request->inputs());
+		$validator = Validator::validate($this->request->inputs(), ['title' => 'required']);
         
-        if ($validate->fails()) {
-			$this->alert($validate::$errors)->error();
+        if ($validator->fails()) {
+			$this->alert($validator->errors())->error();
             $this->jsonResponse(['redirect' => absolute_url('admin/resources/roles/new')]);
         }
 
@@ -96,7 +96,7 @@ class RolesController extends Controller
 			$this->redirectBack()->only();
 		}
 
-		$this->render('admin/roles/view', compact('role'));
+		$this->render('admin/resources/roles/view', compact('role'));
 	}
     
 	/**
@@ -107,28 +107,32 @@ class RolesController extends Controller
 	 */
 	public function update(int $id): void
 	{
-        $validate = RoleRequest::validate($this->request->inputs());
+        $validator = Validator::validate($this->request->inputs(), ['title' => 'required']);
         
-        if ($validate->fails()) {
-			$this->alert($validate::$errors)->error();
+        if ($validator->fails()) {
+			$this->alert($validator->errors())->error();
             $this->jsonResponse(['redirect' => absolute_url('admin/resources/roles/edit')]);
         }
 
-		if (!RolesModel::find('id', $id)->exists()) {
+        $role = RolesModel::find('id', $id)->single();
+
+		if ($role === false) {
 			$this->toast(__('role_not_found'))->error();
 			$this->jsonResponse(['redirect' => absolute_url('admin/resources/roles/edit')]);
         }
         
         $slug = slugify($this->request->title);
 
-		if (RolesModel::find('slug', $slug)->exists()) {
-			$this->toast(__('role_already_exists'))->error();
-			$this->jsonResponse(['redirect' => absolute_url('admin/resources/roles/edit')]);
-		}
+		if ($role->slug !== $slug) {
+            if (RolesModel::find('slug', $slug)->exists()) {
+                $this->toast(__('role_already_exists'))->error();
+                $this->jsonResponse(['redirect' => absolute_url('admin/resources/roles/edit')]);
+            }
+        }
 
 		RolesModel::update([
             'title' => $this->request->title,
-            'slug' => slugify($this->request->title),
+            'slug' => $slug,
             'description' => $this->request->editor
 		])
 		->where('id', $id)
@@ -153,7 +157,6 @@ class RolesController extends Controller
 	
 			RolesModel::delete()->where('id', $id)->persist();
 			$this->toast(__('role_deleted'))->success();
-            $this->redirectBack()->only();
 		} else {
 			$roles_id = json_decode($this->request->raw(), true);
 			$roles_id = $roles_id['items'];

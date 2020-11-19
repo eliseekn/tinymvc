@@ -15,13 +15,11 @@
     </div>
 </div>
 
-<?php 
-if (user_session()->alerts) :
-    if (flash_messages()) :
-        $this->insert('partials/alert', get_flash_messages());
+<?php if (user_session()->alerts) :
+    if (session_alerts()) :
+        $this->insert('partials/alert', get_alerts());
     endif;
-endif
-?>
+endif ?>
 
 <div class="card shadow-sm">
     <div class="card-header">
@@ -34,7 +32,14 @@ endif
                 </span>
 
                 <span class="mt-lg-0 mt-2">
-                    <export-modal action="<?= absolute_url('/admin/account/activities/export') ?>" title="<?= __('export') ?>" modal_title="<?= __('export') ?>" modal_button_title="<?= __('export') ?>" modal_button_cancel="<?= __('cancel') ?>"></export-modal>
+                    <export-modal 
+                        action="<?= absolute_url('/admin/account/activities/export') ?>" 
+                        title="<?= __('export') ?>" 
+                        modal_title="<?= __('export') ?>" 
+                        modal_button_title="<?= __('export') ?>" 
+                        modal_button_cancel="<?= __('cancel') ?>"
+                        csrf_token='<?= csrf_token_input() ?>'>
+                    </export-modal>
 
                     <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('/admin/account/activities/delete') ?>">
                         <?= __('delete') ?>
@@ -87,7 +92,12 @@ endif
                         <td><?= time_elapsed(\Carbon\Carbon::parse($activity->created_at, user_session()->timezone)->locale(user_session()->lang), 1) ?></td>
 
                         <td>
-                            <confirm-delete type="icon" content='<i class="fa fa-trash-alt"></i>' action="<?= absolute_url('/admin/activitys/delete/' . $activity->id) ?>" redirect="<?= current_url()?>"></confirm-delete>
+                            <confirm-delete 
+                                type="icon" 
+                                content='<i class="fa fa-trash-alt"></i>' 
+                                action="<?= absolute_url('/admin/activitys/delete/' . $activity->id) ?>" 
+                                redirect="<?= current_url()?>">
+                            </confirm-delete>
                         </td>
                     </tr>
 

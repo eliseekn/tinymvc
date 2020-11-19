@@ -27,13 +27,13 @@ class Redirect
      * redirect to url 
      *
      * @param  string $url
-     * @param  array $params
+     * @param  array|string $params
      * @return \Framework\HTTP\Redirect
      */
-    public static function toUrl(string $url, array $params = []): self
+    public static function toUrl(string $url, $params = null): self
     {
-        $params = empty($params) ? '' : implode('/', $params);
-        self::$redirect_url = empty($params) ? $url : $url . '/' . $params;
+        $params = is_array($params) ? (empty($params) ? '' : implode('/', $params)) : $params;
+        self::$redirect_url = is_null($params) ? $url : $url . '/' . $params;
         return new self();
     }
 
@@ -41,10 +41,10 @@ class Redirect
      * redirect to route
      *
      * @param  string $name
-     * @param  array $params
+     * @param  array|string $params
      * @return \Framework\HTTP\Redirect
      */
-    public static function toRoute(string $name, array $params = []): self
+    public static function toRoute(string $name, $params = null): self
     {
         self::$redirect_url = route_url($name, $params);
         return new self();

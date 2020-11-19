@@ -6,10 +6,14 @@
  * @link https://github.com/eliseekn/TinyMVC
  */
 
+use App\Database\Models\MessagesModel;
 use Carbon\Carbon;
 use Framework\HTTP\Response;
 use Framework\Routing\Route;
+use Framework\Support\Metrics;
+use App\Database\Models\UsersModel;
 use App\Database\Models\NotificationsModel;
+use App\Helpers\AuthHelper;
 
 /**
  * API routes
@@ -22,18 +26,50 @@ Response::sendHeaders([
 ]);
 
 //get notifications list
-Route::get('/api/notifications', [
+Route::get('api/notifications', [
     'handler' => function() {
-        $notifications = NotificationsModel::find('status', 'unread')->firstOf(5);
+        $notifications = NotificationsModel::find('status', 'unread')->orderDesc('created_at')->firstOf(5);
 
         foreach ($notifications as $notification) {
             $notification->created_at = time_elapsed(Carbon::parse($notification->created_at, user_session()->timezone)->locale(user_session()->lang), 1);
         }
 
         Response::sendJson([
-            'items' => $notifications,
+            'notifications' => $notifications,
             'title' => __('notifications'),
             'view_all' => __('view_all')
         ]);
+    }
+]);
+
+//get metrics trends
+Route::get('api/metrics/users/{trends:str}', [
+    'handler' => function (string $trends) {
+        $metrics = UsersModel::metrics('id', Metrics::COUNT, $trends);
+        Response::sendJson(['metrics' => json_encode($metrics)]);
+    }
+]);
+
+//get messages list
+Route::get('api/messages', [
+    'handler' => function () {
+        $messages = MessagesModel::find('status', 'unread')->orderDesc('created_at')->firstOf(5);
+
+        foreach ($messages as $message) {
+            $message->created_at = time_elapsed(Carbon::parse($message->created_at, user_session()->timezone)->locale(user_session()->lang), 1);
+        }
+
+        Response::sendJson([
+            'messages' => $messages,
+            'title' => __('messages'),
+            'view_all' => __('view_all')
+        ]);
+    }
+]);
+
+//get users list
+Route::get('api/users', [
+    'handler' => function () {
+        Response::sendJson(['users' => UsersModel::find('id', '<>', AuthHelper::getSession()->id)->all()]);
     }
 ]);

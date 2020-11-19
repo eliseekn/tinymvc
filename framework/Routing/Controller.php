@@ -61,9 +61,10 @@ class Controller
      * redirect
      *
      * @param  string $to
+     * @param  array|string $params
      * @return \Framework\HTTP\Redirect
      */
-    public function redirect(string $to = ''): \Framework\HTTP\Redirect
+    public function redirect(string $to, $params = null): \Framework\HTTP\Redirect
     {
         $url = array_search(
             $to, array_map(
@@ -76,7 +77,7 @@ class Controller
             )
         );
 
-        return !empty($url) ? Redirect::toRoute($to) : Redirect::toUrl($to);
+        return !empty($url) ? Redirect::toRoute($to, $params) : Redirect::toUrl($to, $params);
     }
         
     /**

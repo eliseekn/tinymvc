@@ -3,7 +3,6 @@
 namespace App\Controllers\Admin;
 
 use Framework\Routing\Controller;
-use App\Requests\NotificationRequest;
 use App\Database\Models\NotificationsModel;
 
 class NotificationsController extends Controller
@@ -16,7 +15,7 @@ class NotificationsController extends Controller
     public function index(): void
     {
         $this->render('admin/notifications', [
-            'notifications' => NotificationsModel::select()->orderDesc('created_at')->paginate(50),
+            'notifications' => NotificationsModel::select()->orderDesc('created_at')->paginate(20),
             'notifications_unread' => NotificationsModel::count()->where('status', 'unread')->single()->value,
         ]);
     }
@@ -28,12 +27,6 @@ class NotificationsController extends Controller
 	 */
 	public function create(): void
 	{
-        $validate = NotificationRequest::validate($this->request->inputs());
-        
-        if ($validate->fails()) {
-            $this->redirectBack()->withError($validate::$errors);
-        }
-
         NotificationsModel::insert(['message' => $this->request->message]);
         $this->toast(__('notifications_created'))->success();
     }
@@ -53,10 +46,8 @@ class NotificationsController extends Controller
 	
 			NotificationsModel::update(['status' => 'read'])->where('id', $id)->persist();
             $this->toast(__('notification_updated'))->success();
-            $this->redirectBack()->only();
 		} else {
-			$notifications_id = json_decode($this->request->raw(), true);
-			$notifications_id = $notifications_id['items'];
+			$notifications_id = explode(',', $this->request->items);
 
 			foreach ($notifications_id as $id) {
 				NotificationsModel::update(['status' => 'read'])->where('id', $id)->persist();
@@ -81,16 +72,14 @@ class NotificationsController extends Controller
 	
 			NotificationsModel::delete()->where('id', $id)->persist();
 			$this->toast(__('notification_deleted'))->success();
-            $this->redirectBack()->only();
 		} else {
-			$notifications_id = json_decode($this->request->raw(), true);
-			$notifications_id = $notifications_id['items'];
+            $notifications_id = explode(',', $this->request->items);
 
 			foreach ($notifications_id as $id) {
 				NotificationsModel::delete()->where('id', $id)->persist();
 			}
 			
-			$this->toast(__('notification_deleted'))->success();
+			$this->toast(__('notifications_deleted'))->success();
 		}
 	}
 }

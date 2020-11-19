@@ -5,6 +5,7 @@ namespace App\Controllers\Admin;
 use Framework\Support\Metrics;
 use Framework\Routing\Controller;
 use App\Database\Models\UsersModel;
+use App\Database\Models\NotificationsModel;
 
 class DashboardController extends Controller
 {
@@ -18,7 +19,8 @@ class DashboardController extends Controller
 		$this->render('admin/index', [
 			'users' => UsersModel::select()->all(),
 			'active_users' => UsersModel::find('active', 1)->all(),
-            'users_metrics' => UsersModel::metrics('id', Metrics::COUNT, Metrics::MONTHS)
+            'users_metrics' => UsersModel::metrics('id', Metrics::COUNT, Metrics::MONTHS),
+            'notifications' => NotificationsModel::find('status', 'unread')->orderDesc('created_at')->firstOf(5)
 		]);
     }
 }

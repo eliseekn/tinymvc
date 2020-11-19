@@ -144,6 +144,10 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelector('#dropdown-notifications').classList.toggle('text-light');
   }
 
+  if (document.querySelector('#dropdown-messages')) {
+    document.querySelector('#dropdown-messages').classList.toggle('text-light');
+  }
+
   if (document.querySelector('.btn-sm .fa-cog')) {
     document.querySelector('.btn-sm .fa-cog').classList.toggle('text-light');
   }
@@ -163,9 +167,9 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelector('#avatar-icon').classList.toggle('bg-light');
   }
 
-  document.querySelectorAll('.btn-outline-dark').forEach(function (element) {
+  document.querySelectorAll('.card-header .btn-outline-dark').forEach(function (element) {
     element.classList.toggle('btn-outline-dark');
-    element.classList.toggle('btn-outline-light');
+    element.classList.toggle('btn-light');
   });
   document.querySelectorAll('.wrapper__sidebar .list-group-item').forEach(function (element) {
     element.classList.toggle('bg-light');
@@ -199,7 +203,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "37101" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44961" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

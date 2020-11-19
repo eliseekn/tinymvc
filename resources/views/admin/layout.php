@@ -14,13 +14,11 @@
 
 <body>
 
-    <?php 
-    if (user_session()->alerts) :
-        if (flash_messages()) :
-            $this->insert('partials/alert', get_flash_messages());
-        endif;
-    endif
-    ?>
+    <?php if (user_session()->alerts) :
+        if (session_alerts()) : $this->insert('partials/alert', get_alerts()); endif;
+    endif ?>
+
+    <?= csrf_token_input() ?>
 
     <div class="wrapper">
         <div class="wrapper__sidebar border-right shadow-sm bg-white">
@@ -74,6 +72,9 @@
                     <a href="<?= absolute_url('/admin/account/notifications') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (url_exists('notifications')) : echo 'text-primary'; endif ?>"></i> <?= __('notifications') ?>
                     </a>
+                    <a href="<?= absolute_url('/admin/account/messages') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                        <i class="fa fa-dot-circle <?php if (url_exists('messages')) : echo 'text-primary'; endif ?>"></i> <?= __('messages') ?>
+                    </a>
                     <a href="<?= absolute_url('/admin/account/activities') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (url_exists('activities')) : echo 'text-primary'; endif ?>"></i> <?= __('activities') ?>
                     </a>
@@ -91,6 +92,8 @@
                 </button>
 
                 <div class="ml-auto d-flex align-items-center">
+                    <div id="messages-icon"></div>
+
                     <div id="notifications-bell"></div>
 
                     <a class="btn btn-sm" href="<?= absolute_url('/admin/account/settings/' . user_session()->id) ?>" title="<?= __('settings') ?>">

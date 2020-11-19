@@ -298,9 +298,9 @@ class Request
     /**
      * raw
      *
-     * @return void
+     * @return mixed
      */
-    public function raw(): array
+    public function raw()
     {
         return self::getRawData();
     }
@@ -315,7 +315,13 @@ class Request
     {
         return isset($this->{$item});
     }
-
+    
+    /**
+     * only
+     *
+     * @param  array $items
+     * @return array
+     */
     public function only(array $items): array
     {
         $result = [];

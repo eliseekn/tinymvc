@@ -26,7 +26,8 @@ $options = getopt('', [
     'request::', 
     'middleware::', 
     'table::',
-    'resource::'
+    'resource::',
+    'api'
 ]);
 
 //handle command line arguments

@@ -28,6 +28,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('#dropdown-notifications').classList.toggle('text-light')
     }
 
+    if (document.querySelector('#dropdown-messages')) {
+        document.querySelector('#dropdown-messages').classList.toggle('text-light')
+    }
+
     if (document.querySelector('.btn-sm .fa-cog')) {
         document.querySelector('.btn-sm .fa-cog').classList.toggle('text-light')
     }
@@ -47,9 +51,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('#avatar-icon').classList.toggle('bg-light')
     }
 
-    document.querySelectorAll('.btn-outline-dark').forEach(element => {
+    document.querySelectorAll('.card-header .btn-outline-dark').forEach(element => {
         element.classList.toggle('btn-outline-dark')
-        element.classList.toggle('btn-outline-light')
+        element.classList.toggle('btn-light')
     })
 
     document.querySelectorAll('.wrapper__sidebar .list-group-item').forEach(element => {

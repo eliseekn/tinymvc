@@ -34,7 +34,7 @@ class Validator
      * 
      * @var bool|array
      */
-    public static $errors;
+    protected static $errors;
 
     /**
      * validate fields 
@@ -58,5 +58,15 @@ class Validator
     public function fails(): bool
     {
         return is_array(static::$errors);
+    }
+    
+    /**
+     * get validation errors
+     *
+     * @return array
+     */
+    public function errors(): array
+    {
+        return static::$errors;
     }
 }

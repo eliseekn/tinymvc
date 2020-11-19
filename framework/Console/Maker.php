@@ -73,7 +73,7 @@ class Maker
             }
 
             //create resources files
-            $folder = 'admin/' . $options['resource'] . 's';
+            $folder = 'admin/resources/' . $options['resource'] . 's';
 
             if (!Storage::path(config('storage.views'))->isDir($folder)) {
                 Storage::path(config('storage.views'))->createDir($folder);
@@ -142,8 +142,10 @@ class Maker
             }
 
             //create resources files
-            if (!Storage::path(config('storage.views'))->isDir('admin/' . $options['resource'])) {
-                Storage::path(config('storage.views'))->createDir('admin/' . $options['resource']);
+            $folder = 'admin/resources/' . $options['resource'] . 's';
+            
+            if (!Storage::path(config('storage.views'))->isDir($folder)) {
+                Storage::path(config('storage.views'))->createDir($folder);
             }
 
             foreach(self::stubsPath()->add('Resource')->getFiles() as $file) {
@@ -151,7 +153,7 @@ class Maker
                 $data = str_replace('RESSOURCENAME', $options['resource'], $data);
                 $file = str_replace('stub', 'php', $file);
 
-                if (!Storage::path(config('storage.views'))->add('admin/' . $options['resource'])->writeFile($file, $data)) {
+                if (!Storage::path(config('storage.views'))->add($folder)->writeFile($file, $data)) {
                     echo '[-] Failed to create resources file' . PHP_EOL;
                 }
             }

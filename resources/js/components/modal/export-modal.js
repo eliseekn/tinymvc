@@ -19,7 +19,7 @@ class ExportModal extends HTMLElement {
         element.innerHTML = `
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header bg-light text-dark align-items-center py-2">
                         <h5 class="modal-title">${this.getAttribute('modal_title')}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -27,6 +27,8 @@ class ExportModal extends HTMLElement {
                     </div>
 
                     <form method="post" action="${this.getAttribute('action')}">
+                        ${this.getAttribute('csrf_token')}
+
                         <div class="modal-body">
                             <fieldset class="form-group">
                                 <div class="row">
@@ -73,7 +75,7 @@ class ExportModal extends HTMLElement {
                         </div>
 
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">${this.getAttribute('modal_button_title')}</button>
+                            <button type="submit" class="btn btn-dark">${this.getAttribute('modal_button_title')}</button>
                             <button type="button" class="btn btn-danger" data-dismiss="modal">${this.getAttribute('modal_button_cancel')}</button>
                         </div>
                     </form>
@@ -87,6 +89,10 @@ class ExportModal extends HTMLElement {
             backdrop: 'static',
             keyboard: false, 
             show: true
+        })
+
+        $('#export-modal').on('hidden.bs.modal', function (e) {
+            document.body.removeChild(element)
         })
     }
 }

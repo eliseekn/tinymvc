@@ -53,13 +53,13 @@ if (!function_exists('compare_hash')) {
     }
 }
 
-if (!function_exists('csrf_token')) {
+if (!function_exists('generate_csrf_token')) {
     /**
      * generate crsf token
      *
      * @return string
      */
-    function csrf_token(): string
+    function generate_csrf_token(): string
     {
         if (session_has('csrf_token')) {
             $csrf_token = get_session('csrf_token');
@@ -72,15 +72,15 @@ if (!function_exists('csrf_token')) {
     }
 }
 
-if (!function_exists('generate_csrf_token')) {
+if (!function_exists('csrf_token_input')) {
     /**
      * generate crsf token html input
      *
      * @return string
      */
-    function generate_csrf_token(): string
+    function csrf_token_input(): string
     {
-        return '<input type="hidden" name="csrf_token" id="csrf_token" value="' . csrf_token() . '">';
+        return '<input type="hidden" name="csrf_token" id="csrf_token" value="' . generate_csrf_token() . '">';
     }
 }
 

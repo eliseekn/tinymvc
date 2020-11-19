@@ -17,7 +17,7 @@ class ActivitiesController extends Controller
     public function index(): void
 	{
 		$this->render('admin/activities', [
-            'activities' => ActivitiesModel::select()->orderDesc('created_at')->paginate(50)
+            'activities' => ActivitiesModel::select()->orderDesc('created_at')->paginate(20)
         ]);
 	}
 

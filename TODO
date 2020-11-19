@@ -1,0 +1,4 @@
+- add api resources stubs and maker
+- fix bulk delete and bulk read bugs
+- improve admin dashboard
+- add avatar image to dashboard

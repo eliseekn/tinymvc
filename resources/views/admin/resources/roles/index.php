@@ -15,13 +15,11 @@
     </div>
 </div>
 
-<?php 
-if (user_session()->alerts) :
-    if (flash_messages()) :
-        $this->insert('partials/alert', get_flash_messages());
+<?php if (user_session()->alerts) :
+    if (session_alerts()) :
+        $this->insert('partials/alert', get_alerts());
     endif;
-endif
-?>
+endif ?>
 
 <div class="card shadow-sm">
     <div class="card-header">
@@ -36,8 +34,23 @@ endif
                 <span class="mt-lg-0 mt-2">
                     <a href="<?= absolute_url('/admin/resources/roles/new') ?>" class="btn btn-outline-dark"><?= __('new') ?></a>
                     
-                    <upload-modal action="<?= absolute_url('/admin/resources/roles/import') ?>" title="<?= __('import') ?>" modal_title="<?= __('upload_modal_title') ?>" modal_button_title="<?= __('submit') ?>" modal_button_cancel="<?= __('cancel') ?>"></upload-modal>
-                    <export-modal action="<?= absolute_url('/admin/resources/roles/export') ?>" title="<?= __('export') ?>" modal_title="<?= __('export') ?>" modal_button_title="<?= __('export') ?>" modal_button_cancel="<?= __('cancel') ?>"></export-modal>
+                    <upload-modal 
+                        action="<?= absolute_url('/admin/resources/roles/import') ?>" 
+                        title="<?= __('import') ?>" 
+                        modal_title="<?= __('upload_modal_title') ?>" 
+                        modal_button_title="<?= __('submit') ?>" 
+                        modal_button_cancel="<?= __('cancel') ?>" 
+                        csrf_token='<?= csrf_token_input() ?>'>
+                    </upload-modal>
+                    
+                    <export-modal 
+                        action="<?= absolute_url('/admin/resources/roles/export') ?>" 
+                        title="<?= __('export') ?>" 
+                        modal_title="<?= __('export') ?>" 
+                        modal_button_title="<?= __('export') ?>" 
+                        modal_button_cancel="<?= __('cancel') ?>" 
+                        csrf_token='<?= csrf_token_input() ?>'>
+                    </export-modal>
 
                     <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('/admin/resources/roles/delete') ?>">
                         <?= __('delete') ?>
@@ -83,7 +96,7 @@ endif
                         <td><?= $role->title ?></td>
                         <td><?= $role->slug ?></td>
                         <td><?= html_entity_decode($role->description) ?></td>
-                        <td><?= \Carbon\Carbon::parse($role->created_at)->locale(user_session()->lang)->isoFormat('MMM Do, YYYY') ?></td>
+                        <td><?= \Carbon\Carbon::parse($role->created_at, user_session()->timezone)->locale(user_session()->lang)->isoFormat('MMM Do, YYYY') ?></td>
 
                         <td>
                             <a class="btn text-dark p-1" href="<?= absolute_url('/admin/resources/roles/view/' . $role->id) ?>" title="View item">
@@ -94,7 +107,12 @@ endif
                                 <i class="fa fa-edit"></i>
                             </a>
 
-                            <confirm-delete type="icon" content='<i class="fa fa-trash-alt"></i>' action="<?= absolute_url('/admin/resources/roles/delete/' . $role->id) ?>" redirect="<?= current_url()?>"></confirm-delete>
+                            <confirm-delete 
+                                type="icon" 
+                                content='<i class="fa fa-trash-alt"></i>' 
+                                action="<?= absolute_url('/admin/resources/roles/delete/' . $role->id) ?>" 
+                                redirect="<?= current_url()?>">
+                            </confirm-delete>
                         </td>
                     </tr>
 

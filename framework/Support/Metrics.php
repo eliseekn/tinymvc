@@ -50,10 +50,10 @@ class Metrics
      * @param  string $type
      * @param  string $column
      * @param  string $trends
-     * @return mixed
+     * @return array
      * @link   https://www.tutsmake.com/mysql-get-data-of-current-date-week-month-year/
      */
-    public function getTrends(string $type, string $column, string $trends)
+    public function getTrends(string $type, string $column, string $trends): array
     {
         switch ($trends) {
             case 'days':
@@ -64,10 +64,7 @@ class Metrics
                     ->fetchAll();
 
             case 'weeks':
-                return Builder::select(
-                        $type . '(' . $column . ') AS value',
-                        'DAYNAME(created_at) AS day'
-                    )
+                return Builder::select($type . '(' . $column . ') AS value', 'DAYNAME(created_at) AS day')
                     ->from($this->table)
                     ->where('DATE(created_at)', '>', date('Y-m-d', strtotime('-7 days')))
                     ->and('MONTH(created_at)', '=', date('m'))
@@ -78,10 +75,7 @@ class Metrics
                     ->fetchAll();
 
             case 'months':
-                return Builder::select(
-                        $type . '(' . $column . ') AS value',
-                        'MONTHNAME(created_at) AS month'
-                    )
+                return Builder::select($type . '(' . $column . ') AS value', 'MONTHNAME(created_at) AS month')
                     ->from($this->table)
                     ->where('YEAR(created_at)', '=', date('Y'))
                     ->groupBy('MONTHNAME(created_at)')
@@ -90,10 +84,7 @@ class Metrics
                     ->fetchAll();
             
             case 'years':
-                return Builder::select(
-                        $type . '(' . $column . ') AS value',
-                        'YEAR(created_at) AS year'
-                    )
+                return Builder::select($type . '(' . $column . ') AS value', 'YEAR(created_at) AS year')
                     ->from($this->table)
                     ->groupBy('YEAR(created_at)')
                     ->orderBy('YEAR(created_at)', 'ASC')

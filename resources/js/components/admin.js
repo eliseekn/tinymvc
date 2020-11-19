@@ -30,11 +30,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
 
                 if (items.length > 0) {
+                    let formData = new FormData()
+                    formData.append('csrf_token', document.querySelector('#csrf_token').value)
+                    formData.append('items', items)
+
                     fetch(event.target.dataset.url, {
                         method: 'post',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({items: items})
-                    }).then(() => window.location.reload())
+                        body: formData
+                    })
+                        .then(() => window.location.reload())
                 }
             } 
             
@@ -58,11 +62,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
 
                 if (items.length > 0) {
+                    console.log(items)
+                    let formData = new FormData()
+                    formData.append('csrf_token', document.querySelector('#csrf_token').value)
+                    formData.append('items', items)
+
                     fetch(event.target.dataset.url, {
                         method: 'post',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({items: items})
-                    }).then(() => window.location.reload())
+                        body: formData
+                    })
+                        .then(() => window.location.reload())
                 }
             } 
             
@@ -102,5 +111,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 .sort(comparer(Array.from(th.parentNode.children).indexOf(th), this.asc = !this.asc))
                 .forEach(tr => tbody.appendChild(tr))
         })))
+    }
+
+    //metrics trends
+    if (document.querySelector('#users-trends-bars')) {
+        document.querySelector('#users-trends-bars').addEventListener('change', event => {
+            fetch(event.target.dataset.url + '/' + event.target.value)
+                .then(response => response.json())
+                .then(data => {
+                    document.querySelector('bars-chart').setAttribute('data', data.metrics)
+                    event.target.value === 'weeks' ? document.querySelector('bars-chart').setAttribute('xkey', 'day') : document.querySelector('bars-chart').setAttribute('xkey', 'month')
+                })
+        })
     }
 })

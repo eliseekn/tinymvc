@@ -15,9 +15,12 @@ import BarsChart from './components/charts/bars-chart'
 import LinesChart from './components/charts/lines-chart'
 import ThemeSwitch from './components/mixed/theme-switch'
 import AvatarIcon from './components/mixed/avatar-icon'
+import CreateNotification from './components/modal/create-notification'
+import SendMessage from './components/modal/send-message'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Notifications from './components/react/notifications'
+import Messages from './components/react/messages'
 
 window.customElements.define('upload-modal', UploadModal)
 window.customElements.define('export-modal', ExportModal)
@@ -32,7 +35,13 @@ window.customElements.define('timezone-picker', TimezonePicker)
 window.customElements.define('currency-picker', CurrencyPicker)
 window.customElements.define('theme-switch', ThemeSwitch)
 window.customElements.define('avatar-icon', AvatarIcon)
+window.customElements.define('create-notification', CreateNotification)
+window.customElements.define('send-message', SendMessage)
 
 if (document.querySelector('#notifications-bell')) {
     ReactDOM.render(<Notifications />, document.querySelector('#notifications-bell'))
+}
+
+if (document.querySelector('#messages-icon')) {
+    ReactDOM.render(<Messages />, document.querySelector('#messages-icon'))
 }

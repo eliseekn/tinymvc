@@ -19,7 +19,7 @@ class ConfirmDelete extends HTMLElement {
         this.childNodes[0].innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>'
 
         if (window.confirm('Are you sure you want to delete this item?')) {
-            fetch(this.getAttribute('action'), { method: 'delete' })
+            fetch(this.getAttribute('action'))
                 .then(() => window.location = this.getAttribute('redirect'))
         }
         
