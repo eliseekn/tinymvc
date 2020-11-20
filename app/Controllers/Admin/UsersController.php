@@ -51,8 +51,7 @@ class UsersController extends Controller
 		$roles = RolesModel::select()->all();
 
 		if ($user === false) {
-			$this->toast(__('user_not_found'))->error();
-			$this->redirectBack()->only();
+			$this->redirectBack()->withError(__('user_not_found'), '', 'toast');
 		}
 
 		$this->render('admin/resources/users/edit', compact('user', 'roles'));
@@ -77,8 +76,7 @@ class UsersController extends Controller
                 ->orWhere('phone', $this->request->phone)
                 ->exists()
         ) {
-			$this->toast(__('user_already_exists'))->error();
-            $this->redirectBack()->only();
+            $this->redirectBack()->withError(__('user_already_exists'), '', 'toast');
 		}
 
 	    $id = UsersModel::insert([
@@ -90,8 +88,7 @@ class UsersController extends Controller
             'role' => $this->request->role
 		]);
 
-		$this->toast(__('user_created'))->success();
-		$this->redirect('admin/resources/users/view', $id)->only();
+		$this->redirect('admin/resources/users/view', $id)->withSuccess(__('user_created'), '', 'toast');
     }
 	
 	/**
@@ -105,8 +102,7 @@ class UsersController extends Controller
 		$user = UsersModel::find('id', $id)->single();
 		
 		if ($user === false) {
-			$this->toast(__('user_not_found'))->error();
-			$this->redirectBack()->only();
+			$this->redirectBack()->withError(__('user_not_found'), '', 'toast');
 		}
 
 		$this->render('admin/resources/users/view', compact('user'));
@@ -129,8 +125,7 @@ class UsersController extends Controller
         $user = UsersModel::find('id', $id)->single();
 
 		if ($user === false) {
-			$this->toast(__('user_not_found'))->error();
-			$this->redirectBack()->only();
+			$this->redirectBack()->withError(__('user_not_found'), '', 'toast');
         }
 
         if ($user->email !== $this->request->email || $user->phone !== $this->request->phone) {
@@ -140,8 +135,7 @@ class UsersController extends Controller
                     ->orWhere('phone', $this->request->phone)
                     ->exists()
             ) {
-                $this->toast(__('user_already_exists'))->error();
-                $this->redirectBack()->only();
+                $this->redirectBack()->withError(__('user_already_exists'), '', 'toast');
             }
         }
 
@@ -166,8 +160,7 @@ class UsersController extends Controller
             Session::setUser($user);
         }
 
-		$this->toast(__('user_updated'))->success();
-        $this->redirect('admin/resources/users/view', $id)->only();
+        $this->redirect('admin/resources/users/view', $id)->withSuccess(__('user_updated'), '', 'toast');
     }
 
 	/**
@@ -180,11 +173,11 @@ class UsersController extends Controller
 	{
 		if (!is_null($id)) {
 			if (!UsersModel::find('id', $id)->exists()) {
-				$this->toast(__('user_not_found'))->error();
+				$this->redirectBack()->withError(__('user_not_found'), '', 'toast');
 			}
 	
 			UsersModel::delete()->where('id', $id)->persist();
-			$this->toast(__('user_deleted'))->success();
+            $this->redirectBack()->withSuccess(__('user_deleted'), '', 'toast');
 		} else {
             $users_id = explode(',', $this->request->items);
 
@@ -206,13 +199,11 @@ class UsersController extends Controller
         $file = $this->request->files('file', ['csv']);
 
 		if (!$file->isAllowed()) {
-			$this->toast(__('import_file_type_error'))->error();
-            $this->redirectBack()->only();
+            $this->redirectBack()->withError(__('import_file_type_error'), '', 'toast');
 		}
 
 		if (!$file->isUploaded()) {
-			$this->toast(__('import_data_error'))->error();
-			$this->redirectBack()->only();
+			$this->redirectBack()->withError(__('import_data_error'), '', 'toast');
 		}
 
 		ReportHelper::import($file->getTempFilename(), UsersModel::class, [
@@ -223,8 +214,7 @@ class UsersController extends Controller
 			'password' => __('password')
 		]);
 
-		$this->toast(__('data_imported'))->success();
-		$this->redirectBack()->only();
+		$this->redirectBack()->withSuccess(__('data_imported'), '', 'toast');
 	}
 	
 	/**
@@ -234,10 +224,13 @@ class UsersController extends Controller
 	 */
 	public function export(): void
 	{
-		if ($this->request->has('date_start') && $this->request->has('date_end')) {
+		$date_start = $this->request->has('date_start') ? $this->request->date_start : null;
+        $date_end = $this->request->has('date_end') ? $this->request->date_end : null;
+
+		if (!is_null($date_start) && !is_null($date_end)) {
 			$users = UsersModel::select()
-                ->between('created_at', Carbon::parse($this->request->date_start)->toDateTimeString(), Carbon::parse($this->request->date_end)->toDateTimeString())
-                ->orderAsc('name')
+                ->between('created_at', Carbon::parse($date_start)->toDateTimeString(), Carbon::parse($date_end)->toDateTimeString())
+                ->orderDesc('created_at')
                 ->all();
 		} else {
 			$users = UsersModel::select()->orderAsc('name')->all();

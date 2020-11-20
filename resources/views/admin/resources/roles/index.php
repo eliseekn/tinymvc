@@ -16,9 +16,7 @@
 </div>
 
 <?php if (user_session()->alerts) :
-    if (session_alerts()) :
-        $this->insert('partials/alert', get_alerts());
-    endif;
+    if (session_alerts()) : $this->insert('partials/alert', get_alerts()); endif;
 endif ?>
 
 <div class="card shadow-sm">
@@ -110,8 +108,7 @@ endif ?>
                             <confirm-delete 
                                 type="icon" 
                                 content='<i class="fa fa-trash-alt"></i>' 
-                                action="<?= absolute_url('/admin/resources/roles/delete/' . $role->id) ?>" 
-                                redirect="<?= current_url()?>">
+                                action="<?= absolute_url('/admin/resources/roles/delete/' . $role->id) ?>">
                             </confirm-delete>
                         </td>
                     </tr>

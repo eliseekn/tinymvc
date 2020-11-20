@@ -66,7 +66,7 @@ class Redirect
 
         return new self();
     }
-
+    
     /**
      * redirects with success flash messages
      *
@@ -74,9 +74,9 @@ class Redirect
      * @param  string $title
      * @return void
      */
-    public function withSuccess($messages, string $title = ''): void
+    public function withSuccess($messages, string $title = '', $display = 'default'): void
     {
-        Alert::default($messages)->success($title);
+        Alert::$display($messages)->success($title);
         redirect_to(self::$redirect_url);
     }
 
@@ -87,9 +87,9 @@ class Redirect
      * @param  string $title
      * @return void
      */
-    public function withError($messages, string $title = ''): void
+    public function withError($messages, string $title = '', $display = 'default'): void
     {
-        Alert::default($messages)->error($title);
+        Alert::$display($messages)->error($title);
         redirect_to(self::$redirect_url);
     }
 
@@ -100,9 +100,9 @@ class Redirect
      * @param  string $title
      * @return void
      */
-    public function withWarning($messages, string $title = ''): void
+    public function withWarning($messages, string $title = '', $display = 'default'): void
     {
-        Alert::default($messages)->warning($title);
+        Alert::$display($messages)->warning($title);
         redirect_to(self::$redirect_url);
     }
 
@@ -113,9 +113,9 @@ class Redirect
      * @param  string $title
      * @return void
      */
-    public function withInfo($messages, string $title = ''): void
+    public function withInfo($messages, string $title = '', $display = 'default'): void
     {
-        Alert::default($messages)->info($title);
+        Alert::$display($messages)->info($title);
         redirect_to(self::$redirect_url);
     }
 

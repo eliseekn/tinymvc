@@ -71,7 +71,7 @@ class PasswordController extends Controller
 		$validate = AuthRequest::validate($this->request->inputs());
         
         if ($validate->fails()) {
-            $this->redirectBack()->withError($validate::$errors);
+            $this->redirectBack()->withError($validate->errors());
         }
 
         UsersModel::update(['password' => Encryption::hash($this->request->password)])

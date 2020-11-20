@@ -6,14 +6,14 @@
  * @link https://github.com/eliseekn/TinyMVC
  */
 
-use App\Database\Models\MessagesModel;
 use Carbon\Carbon;
+use App\Helpers\AuthHelper;
 use Framework\HTTP\Response;
 use Framework\Routing\Route;
 use Framework\Support\Metrics;
 use App\Database\Models\UsersModel;
+use App\Database\Models\MessagesModel;
 use App\Database\Models\NotificationsModel;
-use App\Helpers\AuthHelper;
 
 /**
  * API routes
@@ -53,7 +53,12 @@ Route::get('api/metrics/users/{trends:str}', [
 //get messages list
 Route::get('api/messages', [
     'handler' => function () {
-        $messages = MessagesModel::find('status', 'unread')->orderDesc('created_at')->firstOf(5);
+        $messages = MessagesModel::select(['messages.*', 'users.email AS sender_email', 'users.name AS sender_name'])
+            ->join('users', 'messages.sender', 'users.id')
+            ->where('messages.recipient', AuthHelper::getSession()->id)
+            ->andWhere('messages.status', 'unread')
+            ->orderDesc('messages.created_at')
+            ->firstOf(5);
 
         foreach ($messages as $message) {
             $message->created_at = time_elapsed(Carbon::parse($message->created_at, user_session()->timezone)->locale(user_session()->lang), 1);

@@ -41,11 +41,11 @@ class NotificationsController extends Controller
 	{
         if (!is_null($id)) {
 			if (!NotificationsModel::find('id', $id)->exists()) {
-				$this->toast(__('notification_not_found'))->error();
+				$this->redirectBack()->withError(__('notification_not_found'), '', 'toast');
 			}
 	
 			NotificationsModel::update(['status' => 'read'])->where('id', $id)->persist();
-            $this->toast(__('notification_updated'))->success();
+            $this->redirectBack()->withSuccess(__('notification_updated'), '', 'toast');
 		} else {
 			$notifications_id = explode(',', $this->request->items);
 
@@ -67,11 +67,11 @@ class NotificationsController extends Controller
 	{
 		if (!is_null($id)) {
 			if (!NotificationsModel::find('id', $id)->exists()) {
-				$this->toast(__('notification_not_found'))->error();
+				$this->redirectBack()->withError(__('notification_not_found'), '', 'toast');
 			}
 	
 			NotificationsModel::delete()->where('id', $id)->persist();
-			$this->toast(__('notification_deleted'))->success();
+			$this->redirectBack()->withSuccess(__('notification_deleted'), '', 'toast');
 		} else {
             $notifications_id = explode(',', $this->request->items);
 

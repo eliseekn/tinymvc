@@ -25,9 +25,7 @@
 </div>
 
 <?php if (user_session()->alerts) :
-    if (session_alerts()) :
-        $this->insert('partials/alert', get_alerts());
-    endif;
+    if (session_alerts()) : $this->insert('partials/alert', get_alerts()); endif;
 endif ?>
 
 <div class="card shadow-sm">
@@ -75,7 +73,7 @@ endif ?>
     </div>
 
     <div class="card-body">
-    <div class="table-responsive">
+        <div class="table-responsive">
             <table class="table table-striped table-hover mb-0">
                 <thead>
                     <tr>
@@ -113,7 +111,7 @@ endif ?>
                         <td><?= time_elapsed(\Carbon\Carbon::parse($message->created_at, user_session()->timezone)->locale(user_session()->lang), 1) ?></td>
 
                         <td>
-                            <a class="btn text-dark p-1 <?php if ($message->status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('/admin/account/messages/update/' . $message->id) ?>" <?php if ($message->status === 'unread') : echo 'title="Mark as read"'; endif ?>>
+                            <a class="btn text-dark p-1 <?php if ($message->status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('/admin/account/messages/update/' . $message->id) ?>" <?php if ($message->status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
                                 <?php if ($message->status === 'unread') : ?>
                                 <i class="fa fa-eye-slash"></i>
                                 <?php else : ?>
@@ -136,8 +134,7 @@ endif ?>
                             <confirm-delete 
                                 type="icon" 
                                 content='<i class="fa fa-trash-alt"></i>' 
-                                action="<?= absolute_url('/admin/account/messages/delete/' . $message->id) ?>" 
-                                redirect="<?= current_url()?>">
+                                action="<?= absolute_url('/admin/account/messages/delete/' . $message->id) ?>">
                             </confirm-delete>
                         </td>
                     </tr>

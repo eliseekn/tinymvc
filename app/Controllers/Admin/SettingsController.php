@@ -22,8 +22,7 @@ class SettingsController extends Controller
         $user = UsersModel::find('id', $id)->single();
 		
 		if ($user === false) {
-			$this->toast(__('user_not_found'))->error();
-			$this->redirectBack()->only();
+			$this->redirectBack()->withError(__('user_not_found'), '', 'toast');
         }
         
         $countries = CountriesModel::select()->orderAsc('name')->all();
@@ -71,7 +70,6 @@ class SettingsController extends Controller
             Session::setUser($user);
         }
 
-        $this->toast(__('changes_saved'))->success();
-        $this->redirectBack()->only();
+        $this->redirectBack()->withSuccess(__('changes_saved'), '', 'toast');
     }
 }

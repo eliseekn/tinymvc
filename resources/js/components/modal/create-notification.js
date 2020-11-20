@@ -7,7 +7,7 @@ class CreateNotification extends HTMLElement {
     }
 
     connectedCallback() {
-        this.innerHTML = `<button class="btn btn-outline-dark ml-2">${this.getAttribute('title')}</button>`
+        this.innerHTML = `<button class="btn btn-outline-dark mr-2">${this.getAttribute('title')}</button>`
     }
 
     showDialog() {

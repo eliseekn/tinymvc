@@ -1,5 +1,5 @@
 import React from 'react'
-import '../modal/send-message'
+import '../mixed/avatar-icon'
 
 //new message alert icon
 const Icon = (props) => {
@@ -10,7 +10,10 @@ const Icon = (props) => {
 const Message = (props) => {
     return (
         <div className="dropdown-item py-2" style={{ width: '350px' }}>
-            <p className="text-wrap">{props.message}</p>
+            <p className="text-wrap">
+                <avatar-icon name={props.sender_name + '(' + props.sender_email + ')'}></avatar-icon>
+                <span>{props.message}</span>
+            </p>
             <span className="small text-muted">{props.createdAt}</span>
         </div>
     )
@@ -72,6 +75,8 @@ class Messages extends React.Component {
                                 <Message
                                     key={message.id}
                                     id={message.id}
+                                    sender_email={message.sender_email}
+                                    sender_name={message.sender_name}
                                     message={message.message}
                                     markAsRead={this.state.markAsRead}
                                     createdAt={message.created_at}

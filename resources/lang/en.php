@@ -49,11 +49,12 @@ $new_role = 'New role';
 $create_notification = 'Create notification';
 $latest_notifications = 'Latest notifications';
 $all_users= 'All users';
+$latest_messages = 'Latest messages';
 
 //settings
 $profile = 'Profile';
 $name = 'Name';
-$save = 'Saves changes';
+$save = 'Save changes';
 $security = 'Security';
 $new_password = 'New password';
 $preferences = 'Preferences';

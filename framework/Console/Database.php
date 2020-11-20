@@ -40,19 +40,19 @@ class Database
     }
     
     /**
-     * parse cli
+     * handle cli
      *
      * @param  array $options
      * @return void
      */
-    public static function parseCLI(array $options): void
+    public static function handle(array $options): void
     {
         if (
             array_key_exists('migration', $options) &&
             !array_keys_exists('seed', $options) &&
             !array_key_exists('delete', $options) &&
-            !array_key_exists('refresh', $options) &&
-            !array_key_exists('db', $options) &&
+            !array_key_exists('reset', $options) &&
+            !array_key_exists('schema', $options) &&
             !array_key_exists('query', $options) &&
             !array_key_exists('fetch', $options) &&
             !array_key_exists('execute', $options)
@@ -104,8 +104,8 @@ class Database
             array_key_exists('migration', $options) &&
             array_key_exists('seed', $options) &&
             !array_key_exists('delete', $options) &&
-            !array_key_exists('refresh', $options) &&
-            !array_key_exists('db', $options) &&
+            !array_key_exists('reset', $options) &&
+            !array_key_exists('schema', $options) &&
             !array_key_exists('query', $options) &&
             !array_key_exists('fetch', $options) &&
             !array_key_exists('execute', $options)
@@ -198,32 +198,40 @@ class Database
         else if (
             array_key_exists('migration', $options) &&
             array_key_exists('seed', $options) &&
-            array_key_exists('refresh', $options) &&
+            array_key_exists('reset', $options) &&
             !array_key_exists('delete', $options) &&
-            !array_key_exists('db', $options) &&
+            !array_key_exists('schema', $options) &&
             !array_key_exists('query', $options) &&
             !array_key_exists('fetch', $options) &&
             !array_key_exists('execute', $options)
         ) {
+            echo '[+] Running migrations...' . PHP_EOL;
+
             if ($options['migration'] !== 'all') {
                 $table = $options['migration'];
         
                 if (strpos($table, ',') === false) {
                     $table = self::getMigration($table);
-                    $table::refresh();
+
+                    try {
+                        $table::reset();
+                        echo '[+] ' . $table . ' resetted successfully' . PHP_EOL;
+                    } catch(Exception $e) {
+                        exit('[-] ' . $e->getMessage());
+                    }
                 } else {
                     $tables = explode(',', $table);
         
                     foreach ($tables as $table) {
                         $table = self::getMigration($table);
-                        $table::refresh();
+                        $table::reset();
                     }
                 }
             } else {
                 foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
                     $table = explode('.', $file)[0];
                     $table = self::getMigration($table);
-                    $table::refresh();
+                    $table::reset();
                 }
             }
         
@@ -252,10 +260,10 @@ class Database
         
         else if (
             array_key_exists('migration', $options) &&
-            array_key_exists('refresh', $options) &&
+            array_key_exists('reset', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('delete', $options) &&
-            !array_key_exists('db', $options) &&
+            !array_key_exists('schema', $options) &&
             !array_key_exists('query', $options) &&
             !array_key_exists('fetch', $options) &&
             !array_key_exists('execute', $options)
@@ -265,20 +273,20 @@ class Database
         
                 if (strpos($table, ',') === false) {
                     $table = self::getMigration($table);
-                    $table::refresh();
+                    $table::reset();
                 } else {
                     $tables = explode(',', $table);
         
                     foreach ($tables as $table) {
                         $table = self::getMigration($table);
-                        $table::refresh();
+                        $table::reset();
                     }
                 }
             } else {
                 foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
                     $table = explode('.', $file)[0];
                     $table = self::getMigration($table);
-                    $table::refresh();
+                    $table::reset();
                 }
             }
         } 
@@ -286,9 +294,9 @@ class Database
         else if (
             array_key_exists('migration', $options) &&
             array_key_exists('delete', $options) &&
-            !array_key_exists('refresh', $options) &&
+            !array_key_exists('reset', $options) &&
             !array_key_exists('seed', $options) &&
-            !array_key_exists('db', $options) &&
+            !array_key_exists('schema', $options) &&
             !array_key_exists('query', $options) &&
             !array_key_exists('fetch', $options) &&
             !array_key_exists('execute', $options)
@@ -320,8 +328,8 @@ class Database
             array_key_exists('seed', $options) &&
             !array_key_exists('migration', $options) &&
             !array_key_exists('delete', $options) &&
-            !array_key_exists('refresh', $options) &&
-            !array_key_exists('db', $options) &&
+            !array_key_exists('reset', $options) &&
+            !array_key_exists('schema', $options) &&
             !array_key_exists('query', $options) &&
             !array_key_exists('fetch', $options) &&
             !array_key_exists('execute', $options)
@@ -350,20 +358,20 @@ class Database
         }
         
         else if (
-            array_key_exists('db', $options) &&
+            array_key_exists('schema', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('migration', $options) &&
             !array_key_exists('delete', $options) &&
-            !array_key_exists('refresh', $options) &&
+            !array_key_exists('reset', $options) &&
             !array_key_exists('query', $options) &&
             !array_key_exists('fetch', $options) &&
             !array_key_exists('execute', $options)
         ) {
-            if (strpos($options['db'], ',') === false) {
-                $database = $options['db'];
+            if (strpos($options['schema'], ',') === false) {
+                $database = $options['schema'];
                 DB::getInstance()->executeQuery("CREATE DATABASE $database CHARACTER SET " . config('db.charset') . " COLLATE " . config('db.collation'));
             } else {
-                $db = explode(',', $options['db']);
+                $db = explode(',', $options['schema']);
 
                 foreach ($db as $database) {
                     DB::getInstance()->executeQuery("CREATE DATABASE $database CHARACTER SET " . config('db.charset') . " COLLATE " . config('db.collation'));
@@ -372,17 +380,17 @@ class Database
         }
 
         else if (
-            array_key_exists('db', $options) &&
+            array_key_exists('schema', $options) &&
             array_key_exists('delete', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('migration', $options) &&
-            !array_key_exists('refresh', $options)
+            !array_key_exists('reset', $options)
         ) {
-            if (strpos($options['db'], ',') === false) {
-                $database = $options['db'];
+            if (strpos($options['schema'], ',') === false) {
+                $database = $options['schema'];
                 DB::getInstance()->executeQuery("DROP DATABASE IF EXISTS $database");
             } else {
-                $db = explode(',', $options['db']);
+                $db = explode(',', $options['schema']);
 
                 foreach ($db as $database) {
                     DB::getInstance()->executeQuery("DROP DATABASE IF EXISTS $database");
@@ -394,11 +402,11 @@ class Database
             array_key_exists('query', $options) &&
             array_key_exists('fetch', $options) &&
             !array_key_exists('execute', $options) &&
-            !array_key_exists('db', $options) &&
+            !array_key_exists('schema', $options) &&
             !array_key_exists('migration', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('delete', $options) &&
-            !array_key_exists('refresh', $options)
+            !array_key_exists('reset', $options)
         ) {
             $stmt = DB::getInstance()->executeQuery($options['query']);
 
@@ -415,47 +423,15 @@ class Database
             array_key_exists('query', $options) &&
             array_key_exists('execute', $options) &&
             !array_key_exists('fetch', $options) &&
-            !array_key_exists('db', $options) &&
+            !array_key_exists('schema', $options) &&
             !array_key_exists('migration', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('delete', $options) &&
-            !array_key_exists('refresh', $options)
+            !array_key_exists('reset', $options)
         ) {
             DB::getInstance()->executeQuery($options['query']);
         }
         
-        else if (array_key_exists('help', $options)) {
-            $help_message = '[+] Commands list:' . PHP_EOL;
-            $help_message .= PHP_EOL;
-            $help_message .= '      --db=users                                  Create users database with utf8 encoding character' . PHP_EOL;
-            $help_message .= '      --db=users,comments                         Create users and comments databases' . PHP_EOL;
-            $help_message .= '      --db=users --delete                         Delete users database' . PHP_EOL;
-            $help_message .= '      --db=users,comments --delete                Delete users and comments databases' . PHP_EOL;
-            $help_message .= PHP_EOL;
-            $help_message .= '      --migration=all                             Migrate all tables' . PHP_EOL;
-            $help_message .= '      --migration=UsersTable                      Migrate UsersTable only' . PHP_EOL;
-            $help_message .= '      --migration=UsersTable,CommentsTable        Migrate UsersTable and CommentsTable only' . PHP_EOL;
-            $help_message .= '      --migration=UsersTable,PostsTable --delete  Drop UsersTable and PostsTable only' . PHP_EOL;
-            $help_message .= '      --migration=all --delete                    Drop all tables' . PHP_EOL;
-            $help_message .= PHP_EOL;
-            $help_message .= '      --seed=all                                  Insert all seeds' . PHP_EOL;
-            $help_message .= '      --seed=UserSeed                             Insert UserSeed only' . PHP_EOL;
-            $help_message .= '      --seed=UserSeed,CommentSeed                 Insert UserSeed and CommentSeed only' . PHP_EOL;
-            $help_message .= PHP_EOL;
-            $help_message .= '      --migration=all --seed=all                  Migrate all tables and insert seeds' . PHP_EOL;
-            $help_message .= '      --migration=all --refresh                   Refresh all tables migration' . PHP_EOL;
-            $help_message .= '      --migration=all --refresh --seed=all        Refresh all tables migration and insert seeds' . PHP_EOL;
-            $help_message .= PHP_EOL;
-            $help_message .= "      --query='sql query' --fetch=single|all      Execute SQL query and fetch results (single or all)" . PHP_EOL;
-            $help_message .= "      --query='sql query' --execute               Execute SQL query only" . PHP_EOL;
-            
-            exit($help_message);
-        } 
-        
-        else {
-            exit('[-] Invalid command line arguments, print "--help" for commands list' . PHP_EOL);
-        }
-        
-        exit('[+] Operations done successfully' . PHP_EOL);
+        exit('[+] All operations done' . PHP_EOL);
     }
 }

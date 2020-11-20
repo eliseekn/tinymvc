@@ -35,11 +35,9 @@ class ActivitiesController extends Controller
 			}
 	
 			ActivitiesModel::delete()->where('id', $id)->persist();
-			$this->toast(__('activity_deleted'))->success();
-            $this->redirectBack()->only();
+            $this->redirectBack()->withSuccess(__('activity_deleted'), '', 'toast');
 		} else {
-			$activities_id = json_decode($this->request->getRawData(), true);
-			$activities_id = $activities_id['items'];
+			$activities_id = explode(',', $this->request->items);
 
 			foreach ($activities_id as $id) {
 				ActivitiesModel::delete()->where('id', $id)->persist();
@@ -56,10 +54,13 @@ class ActivitiesController extends Controller
 	 */
     public function export(): void
 	{
-        if ($this->request->has('date_start') && $this->request->has('date_end')) {
+        $date_start = $this->request->has('date_start') ? $this->request->date_start : null;
+        $date_end = $this->request->has('date_end') ? $this->request->date_end : null;
+
+		if (!is_null($date_start) && !is_null($date_end)) {
 			$activities = ActivitiesModel::select()
-                ->between('created_at', Carbon::parse($this->request->date_start)->toDateTimeString(), Carbon::parse($this->request->date_end)->toDateTimeString())
-                ->orderAsc('name')
+                ->between('created_at', Carbon::parse($date_start)->toDateTimeString(), Carbon::parse($date_end)->toDateTimeString())
+                ->orderDesc('created_at')
                 ->all();
 		} else {
 			$activities = ActivitiesModel::select()->orderAsc('name')->all();

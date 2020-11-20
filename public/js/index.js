@@ -743,15 +743,11 @@ var ConfirmDelete = /*#__PURE__*/function (_HTMLElement) {
   }, {
     key: "showDialog",
     value: function showDialog() {
-      var _this2 = this;
-
       var innerHTML = this.childNodes[0].innerHTML;
       this.childNodes[0].innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>';
 
       if (window.confirm('Are you sure you want to delete this item?')) {
-        fetch(this.getAttribute('action')).then(function () {
-          return window.location = _this2.getAttribute('redirect');
-        });
+        window.location.href = this.getAttribute('action');
       }
 
       this.childNodes[0].innerHTML = innerHTML;
@@ -1470,7 +1466,7 @@ var CreateNotification = /*#__PURE__*/function (_HTMLElement) {
   _createClass(CreateNotification, [{
     key: "connectedCallback",
     value: function connectedCallback() {
-      this.innerHTML = "<button class=\"btn btn-outline-dark ml-2\">".concat(this.getAttribute('title'), "</button>");
+      this.innerHTML = "<button class=\"btn btn-outline-dark mr-2\">".concat(this.getAttribute('title'), "</button>");
     }
   }, {
     key: "showDialog",
@@ -1587,8 +1583,8 @@ var SendMessage = /*#__PURE__*/function (_HTMLElement) {
       element.setAttribute('role', 'dialog');
       element.classList.add('modal', 'fade');
       element.innerHTML = "\n            <div class=\"modal-dialog modal-dialog-centered\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-header bg-light text-dark align-items-center py-2\">\n                        <h5 class=\"modal-title\">".concat(this.getAttribute('modal_title'), "</h5>\n                        <button type=\"button\" class=\"btn\" data-dismiss=\"modal\" aria-label=\"Close\">\n                            <i class=\"fa fa-times\"></i>\n                        </button>\n                    </div>\n\n                    <form method=\"post\" action=\"").concat(this.getAttribute('action'), "\">\n                        ").concat(this.getAttribute('csrf_token'), "\n                        \n                        <div class=\"modal-body\">\n                            <div class=\"form-group\">\n                                <label for=\"recipient\">User</label>\n                                <select id=\"recipient\" name=\"recipient\" class=\"custom-select\">\n                                    <option selected disabled>Select user</option>\n\n                                    ").concat(this.users.map(function (user) {
-        return "<option value=\"".concat(user.id, "\" ").concat(user.id == _this3.getAttribute('recipient') ? 'selected' : '', ">").concat(user.name, "</option>");
-      }), "\n                                </select>\n                            </div>\n\n                            <div class=\"form-group\">\n                                <label for=\"message\">Message</label>\n                                <input type=\"text\" name=\"message\" id=\"message\" class=\"form-control\" required>\n                            </div>\n                        </div>\n\n                        <div class=\"modal-footer\">\n                            <button type=\"submit\" class=\"btn btn-dark loading\">").concat(this.getAttribute('modal_button_title'), "</button>\n                            <button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">").concat(this.getAttribute('modal_button_cancel'), "</button>\n                        </div>\n                    </form>\n                </div>\n            </div>\n        ");
+        return "<option value=\"".concat(user.id, "\" ").concat(user.id == _this3.getAttribute('recipient') ? 'selected' : '', ">").concat(user.email, "</option>");
+      }), "\n                                </select>\n                            </div>\n\n                            <div class=\"form-group\">\n                                <label for=\"message\">Message</label>\n                                <textarea id=\"message\" name=\"message\" rows=\"3\"></textarea>\n                            </div>\n                        </div>\n\n                        <div class=\"modal-footer\">\n                            <button type=\"submit\" class=\"btn btn-dark loading\">").concat(this.getAttribute('modal_button_title'), "</button>\n                            <button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">").concat(this.getAttribute('modal_button_cancel'), "</button>\n                        </div>\n                    </form>\n                </div>\n            </div>\n        ");
       document.body.appendChild(element);
       $('#send-message').modal({
         backdrop: 'static',
@@ -31432,7 +31428,7 @@ exports.default = void 0;
 
 var _react = _interopRequireDefault(require("react"));
 
-require("../modal/send-message");
+require("../mixed/avatar-icon");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -31474,7 +31470,9 @@ var Message = function Message(props) {
     }
   }, /*#__PURE__*/_react.default.createElement("p", {
     className: "text-wrap"
-  }, props.message), /*#__PURE__*/_react.default.createElement("span", {
+  }, /*#__PURE__*/_react.default.createElement("avatar-icon", {
+    name: props.sender_name + '(' + props.sender_email + ')'
+  }), /*#__PURE__*/_react.default.createElement("span", null, props.message)), /*#__PURE__*/_react.default.createElement("span", {
     className: "small text-muted"
   }, props.createdAt));
 }; //display messages dynamically
@@ -31564,6 +31562,8 @@ var Messages = /*#__PURE__*/function (_React$Component) {
         return /*#__PURE__*/_react.default.createElement(Message, {
           key: message.id,
           id: message.id,
+          sender_email: message.sender_email,
+          sender_name: message.sender_name,
           message: message.message,
           markAsRead: _this4.state.markAsRead,
           createdAt: message.created_at,
@@ -31585,7 +31585,7 @@ var Messages = /*#__PURE__*/function (_React$Component) {
 
 var _default = Messages;
 exports.default = _default;
-},{"react":"../../node_modules/react/index.js","../modal/send-message":"components/modal/send-message.js"}],"index.js":[function(require,module,exports) {
+},{"react":"../../node_modules/react/index.js","../mixed/avatar-icon":"components/mixed/avatar-icon.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 require("./components/admin");
@@ -31687,7 +31687,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44961" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38487" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

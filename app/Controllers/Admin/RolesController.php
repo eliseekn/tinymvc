@@ -43,8 +43,7 @@ class RolesController extends Controller
 		$role = RolesModel::find('id', $id)->single();
 
 		if ($role === false) {
-			$this->toast(__('role_not_found'))->error();
-			$this->redirectBack()->only();
+			$this->redirectBack()->withError(__('role_not_found'), '', 'toast');
 		}
 
 		$this->render('admin/resources/roles/edit', compact('role'));
@@ -92,8 +91,7 @@ class RolesController extends Controller
 		$role = RolesModel::find('id', $id)->single();
 
 		if ($role === false) {
-			$this->toast(__('role_not_found'))->error();
-			$this->redirectBack()->only();
+			$this->redirectBack()->withError(__('role_not_found'), '', 'toast');
 		}
 
 		$this->render('admin/resources/roles/view', compact('role'));
@@ -156,10 +154,9 @@ class RolesController extends Controller
 			}
 	
 			RolesModel::delete()->where('id', $id)->persist();
-			$this->toast(__('role_deleted'))->success();
+			$this->redirectBack()->withSuccess(__('role_deleted'), '', 'toast');
 		} else {
-			$roles_id = json_decode($this->request->raw(), true);
-			$roles_id = $roles_id['items'];
+			$roles_id = explode(',', $this->request->items);
 
 			foreach ($roles_id as $id) {
 				RolesModel::delete()->where('id', $id)->persist();
@@ -179,13 +176,11 @@ class RolesController extends Controller
         $file = $this->request->files('file', ['csv']);
 
 		if (!$file->isAllowed()) {
-			$this->toast(__('import_file_type_error'))->error();
-            $this->redirectBack()->only();
+            $this->redirectBack()->withError(__('import_file_type_error'), '', 'toast');
 		}
 
 		if (!$file->isUploaded()) {
-			$this->toast(__('import_data_error'))->error();
-			$this->redirectBack()->only();
+			$this->redirectBack()->withError(__('import_data_error'), '', 'toast');
 		}
 
 		ReportHelper::import($file->getTempFilename(), RolesModel::class, [
@@ -194,8 +189,7 @@ class RolesController extends Controller
 			'description' => __('description')
 		]);
 
-		$this->toast(__('data_imported'))->success();
-		$this->redirectBack()->only();
+		$this->redirectBack()->withSuccess(__('data_imported'), '', 'toast');
 	}
 	
 	/**
@@ -205,10 +199,13 @@ class RolesController extends Controller
 	 */
 	public function export(): void
 	{
-        if ($this->request->has('date_start') && $this->request->has('date_end')) {
+        $date_start = $this->request->has('date_start') ? $this->request->date_start : null;
+        $date_end = $this->request->has('date_end') ? $this->request->date_end : null;
+
+		if (!is_null($date_start) && !is_null($date_end)) {
 			$roles = RolesModel::select()
-                ->between('created_at', Carbon::parse($this->request->date_start)->toDateTimeString(), Carbon::parse($this->request->date_end)->toDateTimeString())
-                ->orderAsc('name')
+                ->between('created_at', Carbon::parse($date_start)->toDateTimeString(), Carbon::parse($date_end)->toDateTimeString())
+                ->orderDesc('created_at')
                 ->all();
 		} else {
 			$roles = RolesModel::select()->orderAsc('name')->all();

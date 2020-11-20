@@ -18,7 +18,7 @@ class Maker
     /**
      * get stubs path
      *
-     * @return Framework\Support\Storage
+     * @return \Framework\Support\Storage
      */
     private static function stubsPath(): Storage
     {
@@ -26,12 +26,12 @@ class Maker
     }
 
     /**
-     * parseCLI
+     * handle cli
      *
      * @param  array $options
      * @return void
      */
-    public static function parseCLI(array $options): void
+    public static function handle(array $options): void
     {
         if (
             array_key_exists('controller', $options) &&
@@ -417,32 +417,6 @@ class Maker
             }
         }
         
-        else if (array_key_exists('help', $options)) {
-            $help_message = '[+] Commands list:' . PHP_EOL;
-            $help_message .= PHP_EOL;
-            $help_message .= '      --controller=UsersController                            Create UsersController file' . PHP_EOL;
-            $help_message .= '      --controller=UsersController --namespace=Users          Create UsersController file in app\Controllers\Users folder' . PHP_EOL;
-            $help_message .= PHP_EOL;
-            $help_message .= '      --model=UsersModel --table=users                        Create UsersModel file using table users' . PHP_EOL;
-            $help_message .= '      --model=UsersModel --table=users --namespace=Users      Create UsersModel file in app\Database\Models\Users folder' . PHP_EOL;
-            $help_message .= PHP_EOL;
-            $help_message .= '      --migration=UsersTable --table=users                    Create UsersTable file using table users' . PHP_EOL;
-            $help_message .= '      --migration=UsersTable --table=users --namespace=Users  Create UsersTable file in app\Database\Migrations\Users folder' . PHP_EOL;
-            $help_message .= PHP_EOL;
-            $help_message .= '      --seed=UserSeed --table=users                           Create UserSeed file using table users' . PHP_EOL;
-            $help_message .= '      --seed=UserSeed --table=users --namespace=Users         Create UserSeed file in app\Database\Seeds\Users folder' . PHP_EOL;
-            $help_message .= PHP_EOL;
-            $help_message .= '      --request=AuthRequest                                   Create AuthRequest file' . PHP_EOL;
-            $help_message .= PHP_EOL;
-            $help_message .= '      --middleware=AuthPolicy                                 Create AuthPolicy file' . PHP_EOL;
-            
-            exit($help_message);
-        } 
-        
-        else {
-            exit('[-] Invalid command line arguments, print "--help" for commands list' . PHP_EOL);
-        }
-
-        exit('[+] Operations done successfully' . PHP_EOL);
+        exit('[+] All operations done' . PHP_EOL);
     }
 }

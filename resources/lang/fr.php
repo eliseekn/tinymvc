@@ -32,7 +32,7 @@ $migrations = 'Migrations';
 //navabar
 $mark_as_read = 'Marquer comme lu';
 $mark_all_as_read = 'Mark tout comme lu';
-$view_all = 'Voir toutes les notifications';
+$view_all = 'Voir tout';
 $settings = 'Paramètres';
 $logout = 'Déconnexion';
 $notifications = 'Notifications';
@@ -49,6 +49,7 @@ $new_role = 'Nouveau role';
 $create_notification = 'Créer une notifications';
 $latest_notifications = 'Dernières notifications';
 $all_users= 'Tous les utilisateurs';
+$latest_messages = 'Derniers messages';
 
 //settings
 $profile = 'Profil';

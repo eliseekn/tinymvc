@@ -59,7 +59,7 @@ class SendMessage extends HTMLElement {
 
                                     ${
                                         this.users.map(user => {
-                                            return `<option value="${user.id}" ${user.id == this.getAttribute('recipient') ? 'selected' : ''}>${user.name}</option>`
+                                            return `<option value="${user.id}" ${user.id == this.getAttribute('recipient') ? 'selected' : ''}>${user.email}</option>`
                                         })
                                     }
                                 </select>
@@ -67,7 +67,7 @@ class SendMessage extends HTMLElement {
 
                             <div class="form-group">
                                 <label for="message">Message</label>
-                                <input type="text" name="message" id="message" class="form-control" required>
+                                <textarea id="message" name="message" rows="3"></textarea>
                             </div>
                         </div>
 

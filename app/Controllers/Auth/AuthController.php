@@ -26,7 +26,7 @@ class AuthController extends Controller
         $validate = AuthRequest::validate($this->request->inputs());
         
         if ($validate->fails()) {
-            $this->redirectBack()->withError($validate::$errors);
+            $this->redirectBack()->withError($validate->errors());
         }
 
         AuthHelper::authenticate($this->request);
@@ -43,7 +43,7 @@ class AuthController extends Controller
         $validate = RegisterUser::validate($this->request->inputs());
         
         if ($validate->fails()) {
-            $this->redirectBack()->withError($validate::$errors);
+            $this->redirectBack()->withError($validate->errors());
         }
 
         if (!AuthHelper::create($this->request)) {

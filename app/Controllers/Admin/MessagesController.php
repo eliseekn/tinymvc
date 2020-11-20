@@ -47,8 +47,7 @@ class MessagesController extends Controller
             'message' => $this->request->message
         ]);
 
-        $this->toast(__('message_sent'))->success();
-        $this->redirectBack()->only();
+        $this->redirectBack()->withSuccess(__('message_sent'), '', 'toast');
 	}
 	
 	/**
@@ -65,9 +64,7 @@ class MessagesController extends Controller
         ]);
 
         MessagesModel::update(['status' => 'read'])->where('id', $id)->persist();
-        
-        $this->toast(__('message_sent'))->success();
-        $this->redirectBack()->only();
+        $this->redirectBack()->withSuccess(__('message_sent'), '', 'toast');
 	}
 	
 	/**
@@ -79,11 +76,11 @@ class MessagesController extends Controller
 	public function update(int $id): void
 	{
         if (!MessagesModel::find('id', $id)->exists()) {
-            $this->toast(__('message_not_found'))->error();
+            $this->redirectBack()->withError(__('message_not_found'), '', 'toast');
         }
 
         MessagesModel::update(['status' => 'read'])->where('id', $id)->persist();
-        $this->toast(__('message_updated'))->success();
+        $this->redirectBack()->withSuccess(__('message_updated'), '', 'toast');
 	}
 
 	/**
@@ -96,11 +93,11 @@ class MessagesController extends Controller
 	{
         if (!is_null($id)) {
 			if (!MessagesModel::find('id', $id)->exists()) {
-				$this->toast(__('message_not_found'))->error();
+				$this->redirectBack()->withError(__('message_not_found'), '', 'toast');
 			}
 	
 			MessagesModel::delete()->where('id', $id)->persist();
-			$this->toast(__('message_deleted'))->success();
+            $this->redirectBack()->withSuccess(__('message_deleted'), '', 'toast');
 		} else {
             $messages_id = explode(',', $this->request->items);
 
