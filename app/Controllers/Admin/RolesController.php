@@ -4,9 +4,11 @@ namespace App\Controllers\Admin;
 
 use Carbon\Carbon;
 use App\Helpers\ReportHelper;
+use App\Helpers\ActivityHelper;
+use Framework\Support\Validator;
 use Framework\Routing\Controller;
 use App\Database\Models\RolesModel;
-use Framework\Support\Validator;
+use App\Database\Models\UsersModel;
 
 class RolesController extends Controller
 {
@@ -43,7 +45,7 @@ class RolesController extends Controller
 		$role = RolesModel::find('id', $id)->single();
 
 		if ($role === false) {
-			$this->redirectBack()->withError(__('role_not_found'), '', 'toast');
+			$this->redirectBack()->withToast(__('role_not_found'))->error();
 		}
 
 		$this->render('admin/resources/roles/edit', compact('role'));
@@ -56,10 +58,12 @@ class RolesController extends Controller
 	 */
 	public function create(): void
 	{
-		$validator = Validator::validate($this->request->inputs(), ['title' => 'required']);
+        $validator = Validator::validate((array) $this->request->only('title'), ['title' => 'required|alpha_space']);
         
         if ($validator->fails()) {
-			$this->alert($validator->errors())->error();
+            $this->session('errors', $validator->errors());
+            $this->session('inputs', (array) $this->request->only('title', 'editor'));
+            $this->toast(__('role_not_created'))->error();
             $this->jsonResponse(['redirect' => absolute_url('admin/resources/roles/new')]);
         }
 
@@ -67,7 +71,8 @@ class RolesController extends Controller
 
 		if (RolesModel::find('slug', $slug)->exists()) {
 			$this->toast(__('role_already_exists'))->error();
-			$this->jsonResponse(['redirect' => absolute_url('admin/resources/roles/new')]);
+            $this->session('inputs', (array) $this->request->only('title', 'editor'));
+            $this->jsonResponse(['redirect' => absolute_url('admin/resources/roles/new')]);
 		}
 
 	    $id = RolesModel::insert([
@@ -77,7 +82,8 @@ class RolesController extends Controller
 		]);
 
 		$this->toast(__('role_created'))->success();
-		$this->jsonResponse(['redirect' => absolute_url('admin/resources/roles/view/' . $id)]);
+        ActivityHelper::log('Role created');
+        $this->jsonResponse(['redirect' => absolute_url('admin/resources/roles/view/' . $id)]);
     }
 	
 	/**
@@ -91,7 +97,7 @@ class RolesController extends Controller
 		$role = RolesModel::find('id', $id)->single();
 
 		if ($role === false) {
-			$this->redirectBack()->withError(__('role_not_found'), '', 'toast');
+			$this->redirectBack()->withToast(__('role_not_found'))->error();
 		}
 
 		$this->render('admin/resources/roles/view', compact('role'));
@@ -105,18 +111,21 @@ class RolesController extends Controller
 	 */
 	public function update(int $id): void
 	{
-        $validator = Validator::validate($this->request->inputs(), ['title' => 'required']);
+        $validator = Validator::validate((array) $this->request->only('title'), ['title' => 'required|alpha_space']);
         
         if ($validator->fails()) {
-			$this->alert($validator->errors())->error();
-            $this->jsonResponse(['redirect' => absolute_url('admin/resources/roles/edit')]);
+            $this->toast(__('role_not_updated'))->error();
+            $this->session('errors', $validator->errors());
+            $this->session('inputs', (array) $this->request->only('title', 'editor'));
+            $this->jsonResponse(['redirect' => absolute_url('admin/resources/roles/edit/' . $id)]);
         }
 
         $role = RolesModel::find('id', $id)->single();
 
 		if ($role === false) {
 			$this->toast(__('role_not_found'))->error();
-			$this->jsonResponse(['redirect' => absolute_url('admin/resources/roles/edit')]);
+            $this->session('inputs', (array) $this->request->only('title', 'editor'));
+			$this->jsonResponse(['redirect' => absolute_url('admin/resources/roles/edit/' . $id)]);
         }
         
         $slug = slugify($this->request->title);
@@ -124,7 +133,8 @@ class RolesController extends Controller
 		if ($role->slug !== $slug) {
             if (RolesModel::find('slug', $slug)->exists()) {
                 $this->toast(__('role_already_exists'))->error();
-                $this->jsonResponse(['redirect' => absolute_url('admin/resources/roles/edit')]);
+                $this->session('inputs', (array) $this->request->only('title', 'editor'));
+                $this->jsonResponse(['redirect' => absolute_url('admin/resources/roles/edit/' . $id)]);
             }
         }
 
@@ -134,9 +144,15 @@ class RolesController extends Controller
             'description' => $this->request->editor
 		])
 		->where('id', $id)
-		->persist();
+        ->persist();
+        
+        //also update role slug for users
+        UsersModel::update(['role' => $slug])
+            ->where('role', $role->slug)
+            ->persist();
 
-		$this->toast(__('role_updated'))->success();
+        $this->toast(__('role_updated'))->success();
+        ActivityHelper::log('Role updated');
 		$this->jsonResponse(['redirect' => absolute_url('admin/resources/roles/view/' . $id)]);
     }
 
@@ -150,11 +166,12 @@ class RolesController extends Controller
 	{
 		if (!is_null($id)) {
 			if (!RolesModel::find('id', $id)->exists()) {
-				$this->toast(__('role_not_found'))->error();
+				$this->redirectBack()->withToast(__('role_not_found'))->error();
 			}
 	
 			RolesModel::delete()->where('id', $id)->persist();
-			$this->redirectBack()->withSuccess(__('role_deleted'), '', 'toast');
+            ActivityHelper::log('Role deleted');
+            $this->redirectBack()->withToast(__('role_deleted'))->success();
 		} else {
 			$roles_id = explode(',', $this->request->items);
 
@@ -162,6 +179,7 @@ class RolesController extends Controller
 				RolesModel::delete()->where('id', $id)->persist();
 			}
 			
+            ActivityHelper::log('Roles deleted');
 			$this->toast(__('roles_deleted'))->success();
 		}
 	}
@@ -176,11 +194,11 @@ class RolesController extends Controller
         $file = $this->request->files('file', ['csv']);
 
 		if (!$file->isAllowed()) {
-            $this->redirectBack()->withError(__('import_file_type_error'), '', 'toast');
+            $this->redirectBack()->withToast(__('import_file_type_error'))->success();
 		}
 
 		if (!$file->isUploaded()) {
-			$this->redirectBack()->withError(__('import_data_error'), '', 'toast');
+			$this->redirectBack()->withToast(__('import_data_error'))->error();
 		}
 
 		ReportHelper::import($file->getTempFilename(), RolesModel::class, [
@@ -189,7 +207,8 @@ class RolesController extends Controller
 			'description' => __('description')
 		]);
 
-		$this->redirectBack()->withSuccess(__('data_imported'), '', 'toast');
+        ActivityHelper::log('Roles imported');
+        $this->redirectBack()->withToast(__('data_imported'))->success();
 	}
 	
 	/**
@@ -212,6 +231,8 @@ class RolesController extends Controller
         }
         
         $filename = 'roles_' . date('Y_m_d') . '.' . $this->request->file_type;
+
+        ActivityHelper::log('Roles exported');
 
 		ReportHelper::export($filename, $roles, [
 			'title' => __('title'), 

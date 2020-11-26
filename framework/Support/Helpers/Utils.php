@@ -104,7 +104,7 @@ if (!function_exists('get_file_extension')) {
 		}
 		
 		$file_ext = explode('.', $filename);
-		return $file_ext == false ? '' : end($file_ext);
+		return $file_ext === false ? '' : end($file_ext);
 	}
 }
 
@@ -151,7 +151,7 @@ if (!function_exists('time_elapsed')) {
 
 if (!function_exists('__')) {    
     /**
-     * return expression translation
+     * return translated word or expression
      *
      * @param  string $expr
      * @param  bool $app_config use application language configuration

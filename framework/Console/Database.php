@@ -57,7 +57,7 @@ class Database
             !array_key_exists('fetch', $options) &&
             !array_key_exists('execute', $options)
         ) {
-            echo '[+] Running migrations...' . PHP_EOL;
+            echo '[+] Migrating tables...' . PHP_EOL;
 
             if ($options['migration'] !== 'all') {
                 $table = $options['migration'];
@@ -69,7 +69,7 @@ class Database
                         $table::migrate();
                         echo '[+] ' . $table . ' migrated successfully' . PHP_EOL;
                     } catch(Exception $e) {
-                        exit('[-] ' . $e->getMessage());
+                        echo '[!] ' . $e->getMessage();
                     }
                 } else {
                     $tables = explode(',', $table);
@@ -81,7 +81,7 @@ class Database
                             $table::migrate();
                             echo '[+] ' . $table . ' migrated successfully' . PHP_EOL;
                         } catch(Exception $e) {
-                            exit('[-] ' . $e->getMessage());
+                            echo '[!] ' . $e->getMessage();
                         }
                     }
                 }
@@ -94,7 +94,7 @@ class Database
                         $table::migrate();
                         echo '[+] ' . $table . ' migrated successfully' . PHP_EOL;
                     } catch(Exception $e) {
-                        exit('[-] ' . $e->getMessage());
+                        echo '[!] ' . $e->getMessage();
                     }
                 }
             }
@@ -110,7 +110,7 @@ class Database
             !array_key_exists('fetch', $options) &&
             !array_key_exists('execute', $options)
         ) {
-            echo '[+] Running migrations...' . PHP_EOL;
+            echo '[+] Migrating tables...' . PHP_EOL;
 
             if ($options['migration'] !== 'all') {
                 $table = $options['migration'];
@@ -122,7 +122,7 @@ class Database
                         $table::migrate();
                         echo '[+] ' . $table . ' migrated successfully' . PHP_EOL;
                     } catch(Exception $e) {
-                        exit('[-] ' . $e->getMessage());
+                        echo '[!] ' . $e->getMessage();
                     }
                 } else {
                     $tables = explode(',', $table);
@@ -134,7 +134,7 @@ class Database
                             $table::migrate();
                             echo '[+] ' . $table . ' migrated successfully' . PHP_EOL;
                         } catch(Exception $e) {
-                            exit('[-] ' . $e->getMessage());
+                            echo '[!] ' . $e->getMessage();
                         }
                     }
                 }
@@ -147,7 +147,7 @@ class Database
                         $table::migrate();
                         echo '[+] ' . $table . ' migrated successfully' . PHP_EOL;
                     } catch(Exception $e) {
-                        exit('[-] ' . $e->getMessage());
+                        echo '[!] ' . $e->getMessage();
                     }
                 }
             }
@@ -161,10 +161,10 @@ class Database
                     $seed = self::getSeed($seed);
                     
                     try {
-                        $seed::migrate();
+                        $seed::insert();
                         echo '[+] ' . $seed . ' inserted successfully' . PHP_EOL;
                     } catch(Exception $e) {
-                        exit('[-] ' . $e->getMessage());
+                        echo '[!] ' . $e->getMessage();
                     }
                 } else {
                     $seeds = explode(',', $seed);
@@ -173,10 +173,10 @@ class Database
                         $seed = self::getSeed($seed);
                         
                         try {
-                            $seed::migrate();
+                            $seed::insert();
                             echo '[+] ' . $seed . ' inserted successfully' . PHP_EOL;
                         } catch(Exception $e) {
-                            exit('[-] ' . $e->getMessage());
+                            echo '[!] ' . $e->getMessage();
                         }
                     }
                 }
@@ -186,10 +186,10 @@ class Database
                     $seed = self::getSeed($seed);
                     
                     try {
-                        $seed::migrate();
+                        $seed::insert();
                         echo '[+] ' . $seed . ' inserted successfully' . PHP_EOL;
                     } catch(Exception $e) {
-                        exit('[-] ' . $e->getMessage());
+                        echo '[!] ' . $e->getMessage();
                     }
                 }
             }
@@ -205,7 +205,7 @@ class Database
             !array_key_exists('fetch', $options) &&
             !array_key_exists('execute', $options)
         ) {
-            echo '[+] Running migrations...' . PHP_EOL;
+            echo '[+] Reseting tables...' . PHP_EOL;
 
             if ($options['migration'] !== 'all') {
                 $table = $options['migration'];
@@ -217,43 +217,75 @@ class Database
                         $table::reset();
                         echo '[+] ' . $table . ' resetted successfully' . PHP_EOL;
                     } catch(Exception $e) {
-                        exit('[-] ' . $e->getMessage());
+                        echo '[!] ' . $e->getMessage();
                     }
                 } else {
                     $tables = explode(',', $table);
         
                     foreach ($tables as $table) {
                         $table = self::getMigration($table);
-                        $table::reset();
+                        
+                        try {
+                            $table::reset();
+                            echo '[+] ' . $table . ' resetted successfully' . PHP_EOL;
+                        } catch(Exception $e) {
+                            echo '[!] ' . $e->getMessage();
+                        }
                     }
                 }
             } else {
                 foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
                     $table = explode('.', $file)[0];
                     $table = self::getMigration($table);
-                    $table::reset();
+                    
+                    try {
+                        $table::reset();
+                        echo '[+] ' . $table . ' resetted successfully' . PHP_EOL;
+                    } catch(Exception $e) {
+                        echo '[!] ' . $e->getMessage();
+                    }
                 }
             }
         
+            echo '[+] Inserting seeds...' . PHP_EOL;
+
             if ($options['seed'] !== 'all') {
                 $seed = $options['seed'];
         
                 if (strpos($seed, ',') === false) {
                     $seed = self::getSeed($seed);
-                    $seed::insert();
+
+                    try {
+                        $seed::insert();
+                        echo '[+] ' . $seed . ' inserted successfully' . PHP_EOL;
+                    } catch(Exception $e) {
+                        echo '[!] ' . $e->getMessage();
+                    }
                 } else {
                     $seeds = explode(',', $seed);
         
                     foreach ($seeds as $seed) {
                         $seed = self::getSeed($seed);
-                        $seed::insert();
+                        
+                        try {
+                            $seed::insert();
+                            echo '[+] ' . $seed . ' inserted successfully' . PHP_EOL;
+                        } catch(Exception $e) {
+                            echo '[!] ' . $e->getMessage();
+                        }
                     }
                 }
             } else {
                 foreach (Storage::path(config('storage.seeds'))->getFiles() as $file) {
                     $seed = explode('.', $file)[0];
                     $seed = self::getSeed($seed);
-                    $seed::insert();
+
+                    try {
+                        $seed::insert();
+                        echo '[+] ' . $seed . ' inserted successfully' . PHP_EOL;
+                    } catch(Exception $e) {
+                        echo '[!] ' . $e->getMessage();
+                    }
                 }
             }
         } 
@@ -268,25 +300,45 @@ class Database
             !array_key_exists('fetch', $options) &&
             !array_key_exists('execute', $options)
         ) {
+            echo '[+] Reseting tables...' . PHP_EOL;
+
             if ($options['migration'] !== 'all') {
                 $table = $options['migration'];
         
                 if (strpos($table, ',') === false) {
                     $table = self::getMigration($table);
-                    $table::reset();
+                    
+                    try {
+                        $table::reset();
+                        echo '[+] ' . $table . ' resetted successfully' . PHP_EOL;
+                    } catch(Exception $e) {
+                        echo '[!] ' . $e->getMessage();
+                    }
                 } else {
                     $tables = explode(',', $table);
         
                     foreach ($tables as $table) {
                         $table = self::getMigration($table);
-                        $table::reset();
+                        
+                        try {
+                            $table::reset();
+                            echo '[+] ' . $table . ' resetted successfully' . PHP_EOL;
+                        } catch(Exception $e) {
+                            echo '[!] ' . $e->getMessage();
+                        }
                     }
                 }
             } else {
                 foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
                     $table = explode('.', $file)[0];
                     $table = self::getMigration($table);
-                    $table::reset();
+                    
+                    try {
+                        $table::reset();
+                        echo '[+] ' . $table . ' resetted successfully' . PHP_EOL;
+                    } catch(Exception $e) {
+                        echo '[!] ' . $e->getMessage();
+                    }
                 }
             }
         } 
@@ -301,25 +353,45 @@ class Database
             !array_key_exists('fetch', $options) &&
             !array_key_exists('execute', $options)
         ) {
+            echo '[+] Deleting tables...' . PHP_EOL;
+
             if ($options['migration'] !== 'all') {
                 $table = $options['migration'];
         
                 if (strpos($table, ',') === false) {
                     $table = self::getMigration($table);
-                    $table::delete();
+                    
+                    try {
+                        $table::reset();
+                        echo '[+] ' . $table . ' deleted successfully' . PHP_EOL;
+                    } catch(Exception $e) {
+                        echo '[!] ' . $e->getMessage();
+                    }
                 } else {
                     $tables = explode(',', $table);
         
                     foreach ($tables as $table) {
                         $table = self::getMigration($table);
-                        $table::delete();
+                        
+                        try {
+                            $table::reset();
+                            echo '[+] ' . $table . ' deleted successfully' . PHP_EOL;
+                        } catch(Exception $e) {
+                            echo '[!] ' . $e->getMessage();
+                        }
                     }
                 }
             } else {
                 foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
                     $table = explode('.', $file)[0];
                     $table = self::getMigration($table);
-                    $table::delete();
+                    
+                    try {
+                        $table::reset();
+                        echo '[+] ' . $table . ' deleted successfully' . PHP_EOL;
+                    } catch(Exception $e) {
+                        echo '[!] ' . $e->getMessage();
+                    }
                 }
             }
         } 
@@ -334,25 +406,45 @@ class Database
             !array_key_exists('fetch', $options) &&
             !array_key_exists('execute', $options)
         ) {
+            echo '[+] Inserting seeds...' . PHP_EOL;
+
             if ($options['seed'] !== 'all') {
                 $seed = $options['seed'];
         
                 if (strpos($seed, ',') === false) {
                     $seed = self::getSeed($seed);
-                    $seed::insert();
+                    
+                    try {
+                        $seed::insert();
+                        echo '[+] ' . $seed . ' inserted successfully' . PHP_EOL;
+                    } catch(Exception $e) {
+                        echo '[!] ' . $e->getMessage();
+                    }
                 } else {
                     $seeds = explode(',', $seed);
         
                     foreach ($seeds as $seed) {
                         $seed = self::getSeed($seed);
-                        $seed::insert();
+                        
+                        try {
+                            $seed::insert();
+                            echo '[+] ' . $seed . ' inserted successfully' . PHP_EOL;
+                        } catch(Exception $e) {
+                            echo '[!] ' . $e->getMessage();
+                        }
                     }
                 }
             } else {
                 foreach (Storage::path(config('storage.seeds'))->getFiles() as $file) {
                     $seed = explode('.', $file)[0];
                     $seed = self::getSeed($seed);
-                    $seed::insert();
+                    
+                    try {
+                        $seed::insert();
+                        echo '[+] ' . $seed . ' inserted successfully' . PHP_EOL;
+                    } catch(Exception $e) {
+                        echo '[!] ' . $e->getMessage();
+                    }
                 }
             }
         }
@@ -367,14 +459,27 @@ class Database
             !array_key_exists('fetch', $options) &&
             !array_key_exists('execute', $options)
         ) {
+            echo '[+] Creating databases...' . PHP_EOL;
+
             if (strpos($options['schema'], ',') === false) {
                 $database = $options['schema'];
-                DB::getInstance()->executeQuery("CREATE DATABASE $database CHARACTER SET " . config('db.charset') . " COLLATE " . config('db.collation'));
+                
+                try {
+                    DB::getInstance()->executeQuery("CREATE DATABASE IF NOT EXISTS $database CHARACTER SET " . config('db.charset') . " COLLATE " . config('db.collation'));
+                    echo '[+] ' . $database . ' created successfully' . PHP_EOL;
+                } catch(Exception $e) {
+                    echo '[!] ' . $e->getMessage();
+                }
             } else {
                 $db = explode(',', $options['schema']);
 
                 foreach ($db as $database) {
-                    DB::getInstance()->executeQuery("CREATE DATABASE $database CHARACTER SET " . config('db.charset') . " COLLATE " . config('db.collation'));
+                    try {
+                        DB::getInstance()->executeQuery("CREATE DATABASE IF NOT EXISTS $database CHARACTER SET " . config('db.charset') . " COLLATE " . config('db.collation'));
+                        echo '[+] ' . $database . ' created successfully' . PHP_EOL;
+                    } catch(Exception $e) {
+                        echo '[!] ' . $e->getMessage();
+                    }
                 }
             }
         }
@@ -384,16 +489,32 @@ class Database
             array_key_exists('delete', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('migration', $options) &&
-            !array_key_exists('reset', $options)
+            !array_key_exists('reset', $options) &&
+            !array_key_exists('query', $options) &&
+            !array_key_exists('fetch', $options) &&
+            !array_key_exists('execute', $options)
         ) {
+            echo '[+] Deleting databases...' . PHP_EOL;
+
             if (strpos($options['schema'], ',') === false) {
                 $database = $options['schema'];
-                DB::getInstance()->executeQuery("DROP DATABASE IF EXISTS $database");
+                
+                try {
+                    DB::getInstance()->executeQuery("DROP DATABASE IF EXISTS $database");
+                    echo '[+] ' .$database . ' deleted successfully' . PHP_EOL;
+                } catch(Exception $e) {
+                    echo '[!] ' . $e->getMessage();
+                }
             } else {
                 $db = explode(',', $options['schema']);
 
                 foreach ($db as $database) {
-                    DB::getInstance()->executeQuery("DROP DATABASE IF EXISTS $database");
+                    try {
+                        DB::getInstance()->executeQuery("DROP DATABASE IF EXISTS $database");
+                        echo '[+] ' .$database . ' deleted successfully' . PHP_EOL;
+                    } catch(Exception $e) {
+                        echo '[!] ' . $e->getMessage();
+                    }
                 }
             }
         }
@@ -408,7 +529,13 @@ class Database
             !array_key_exists('delete', $options) &&
             !array_key_exists('reset', $options)
         ) {
-            $stmt = DB::getInstance()->executeQuery($options['query']);
+            echo '[+] Executing MySQL query...' . PHP_EOL;
+
+            try {
+                $stmt = DB::getInstance()->executeQuery($options['query']);
+            } catch(Exception $e) {
+                echo '[!] ' . $e->getMessage();
+            }
 
             if ($options['fetch'] === 'single') {
                 print_r($stmt->fetch());
@@ -429,7 +556,13 @@ class Database
             !array_key_exists('delete', $options) &&
             !array_key_exists('reset', $options)
         ) {
-            DB::getInstance()->executeQuery($options['query']);
+            echo '[+] Executing MySQL query...' . PHP_EOL;
+
+            try {
+                DB::getInstance()->executeQuery($options['query']);
+            } catch(Exception $e) {
+                echo '[!] ' . $e->getMessage();
+            }
         }
         
         exit('[+] All operations done' . PHP_EOL);

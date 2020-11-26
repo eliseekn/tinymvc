@@ -190,11 +190,11 @@ class Model
     public function andWhere(string $column, $operator = null, $value = null): self
     {
         if (!is_null($operator) && is_null($value)) {
-            self::$query->and($column, '=', $operator);
+            self::$query->andWhere($column, '=', $operator);
         }
 
         else if (!is_null($operator) && !is_null($value)) {
-            self::$query->and($column, $operator, $value);
+            self::$query->andWhere($column, $operator, $value);
         }
 
 		return $this;
@@ -211,11 +211,11 @@ class Model
     public function orWhere(string $column, $operator = null, $value = null): self
     {
         if (!is_null($operator) && is_null($value)) {
-            self::$query->or($column, '=', $operator);
+            self::$query->orWhere($column, '=', $operator);
         }
 
         else if (!is_null($operator) && !is_null($value)) {
-            self::$query->or($column, $operator, $value);
+            self::$query->orWhere($column, $operator, $value);
         }
 
 		return $this;

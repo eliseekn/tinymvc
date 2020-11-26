@@ -4,6 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Requests\UpdateUser;
 use Framework\Support\Session;
+use App\Helpers\ActivityHelper;
 use Framework\Routing\Controller;
 use Framework\Support\Encryption;
 use App\Database\Models\UsersModel;
@@ -22,7 +23,7 @@ class SettingsController extends Controller
         $user = UsersModel::find('id', $id)->single();
 		
 		if ($user === false) {
-			$this->redirectBack()->withError(__('user_not_found'), '', 'toast');
+			$this->redirectBack()->withToast(__('user_not_found'))->success();
         }
         
         $countries = CountriesModel::select()->orderAsc('name')->all();
@@ -40,7 +41,8 @@ class SettingsController extends Controller
         $validator = UpdateUser::validate($this->request->inputs());
         
         if ($validator->fails()) {
-            $this->redirectBack()->withError($validator->errors());
+            $this->redirectBack()->withErrors($validator->errors())->withInputs($validator->inputs())
+                ->withToast(__('changes_not_saved'))->error();
         }
 
         $data = [
@@ -49,13 +51,13 @@ class SettingsController extends Controller
             'country' => $this->request->country,
             'company' => $this->request->company ?? '',
             'phone' => $this->request->phone,
-            'two_factor' => $this->request->has('two-factor') ? 1 : 0,
+            'two_steps' => $this->request->has('two-steps') ? 1 : 0,
             'lang' => $this->request->lang,
             'timezone' => $this->request->timezone,
             'currency' => $this->request->currency,
             'theme' => $this->request->theme ? 'dark' : 'light',
             'alerts' => $this->request->has('alerts') ? 1 : 0,
-            'notifications_email' => $this->request->has('notifications-email') ? 1 : 0
+            'email_notifications' => $this->request->has('email-notifications') ? 1 : 0
 		];
 		
 		if (!empty($this->request->password)) {
@@ -66,10 +68,11 @@ class SettingsController extends Controller
 
         $user = UsersModel::find('id', $id)->single();
     
-        if (Session::getUser()->id === $id) {
-            Session::setUser($user);
+        if (Session::get('user')->id === $id) {
+            Session::create('user', $user);
         }
 
-        $this->redirectBack()->withSuccess(__('changes_saved'), '', 'toast');
+        ActivityHelper::log('Settings saved');
+        $this->redirectBack()->withToast(__('changes_saved'))->success();
     }
 }

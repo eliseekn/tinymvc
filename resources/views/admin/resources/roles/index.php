@@ -16,7 +16,7 @@
 </div>
 
 <?php if (user_session()->alerts) :
-    if (session_alerts()) : $this->insert('partials/alert', get_alerts()); endif;
+    if (!empty($alerts)) : $this->insert('partials/alert', $alerts); endif;
 endif ?>
 
 <div class="card shadow-sm">
@@ -75,13 +75,13 @@ endif ?>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('slug') ?></th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('description') ?></th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('created_at') ?></th>
+                        <th scope="col"><i class="fa fa-sort"></i> <?= __('updated_at') ?></th>
                         <th scope="col"></th>
                     </tr>
                 </thead>
 
                 <tbody>
                     <?php foreach ($roles as $key => $role) : ?>
-
                     <tr>
                         <td>
                             <div class="custom-control custom-checkbox">
@@ -95,6 +95,7 @@ endif ?>
                         <td><?= $role->slug ?></td>
                         <td><?= html_entity_decode($role->description) ?></td>
                         <td><?= \Carbon\Carbon::parse($role->created_at, user_session()->timezone)->locale(user_session()->lang)->isoFormat('MMM Do, YYYY') ?></td>
+                        <td><?php $role->updated_at !== $role->created_at ? print(\Carbon\Carbon::parse($role->updated_at, user_session()->timezone)->locale(user_session()->lang)->isoFormat('MMM Do, YYYY')) : print('-') ?></td>
 
                         <td>
                             <a class="btn text-dark p-1" href="<?= absolute_url('/admin/resources/roles/view/' . $role->id) ?>" title="View item">
@@ -112,7 +113,6 @@ endif ?>
                             </confirm-delete>
                         </td>
                     </tr>
-
                     <?php endforeach ?>
                 </tbody>
             </table>

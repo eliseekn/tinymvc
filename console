@@ -34,8 +34,7 @@ $options = getopt('', [
     'request::', 
     'middleware::', 
     'table::',
-    'resource::',
-    'api'
+    'resource::'
 ]);
 
 //handle command line arguments
@@ -87,6 +86,9 @@ else {
     $help_message .= '  --make (Manage resources build operations)' . PHP_EOL;
     $help_message .= '      --controller=UsersController                            Create UsersController file' . PHP_EOL;
     $help_message .= '      --controller=UsersController --namespace=Users          Create UsersController file in app\Controllers\Users folder' . PHP_EOL;
+    $help_message .= '      --controller=UsersController --resource=users           Create UsersController file and generate resources files' . PHP_EOL;
+    $help_message .= PHP_EOL;
+    $help_message .= '      --resource=products                                     Generate products resources files' . PHP_EOL;
     $help_message .= PHP_EOL;
     $help_message .= '      --model=UsersModel --table=users                        Create UsersModel file using table users' . PHP_EOL;
     $help_message .= '      --model=UsersModel --table=users --namespace=Users      Create UsersModel file in app\Database\Models\Users folder' . PHP_EOL;

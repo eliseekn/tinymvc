@@ -31,11 +31,11 @@ class ActivitiesController extends Controller
 	{
         if (!is_null($id)) {
 			if (!ActivitiesModel::find('id', $id)->exists()) {
-				$this->toast(__('activity_not_found'))->error();
+				$this->redirectBack()->withToast(__('activity_not_found'))->error();
 			}
 	
 			ActivitiesModel::delete()->where('id', $id)->persist();
-            $this->redirectBack()->withSuccess(__('activity_deleted'), '', 'toast');
+            $this->redirectBack()->withToast(__('activity_deleted'))->success();
 		} else {
 			$activities_id = explode(',', $this->request->items);
 

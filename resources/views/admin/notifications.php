@@ -25,7 +25,7 @@
 </div>
 
 <?php if (user_session()->alerts) :
-    if (session_alerts()) : $this->insert('partials/alert', get_alerts()); endif;
+    if (!empty($alerts)) : $this->insert('partials/alert', $alerts); endif;
 endif ?>
 
 <div class="card shadow-sm">
@@ -39,6 +39,15 @@ endif ?>
                 </span>
 
                 <span class="mt-lg-0 mt-2">
+                    <create-notification 
+                        title="<?= __('create') ?>"
+                        action="<?= absolute_url('/admin/account/notifications/create') ?>" 
+                        modal_title="<?= __('create_notification') ?>" 
+                        modal_button_title="<?= __('submit') ?>" 
+                        modal_button_cancel="<?= __('cancel') ?>" 
+                        csrf_token='<?= csrf_token_input() ?>'>
+                    </create-notification>
+
                     <button class="btn btn-outline-dark mr-2" id="bulk-read" data-url="<?= absolute_url('/admin/account/notifications/update') ?>">
                         <?= __('mark_as_read') ?>
                     </button>

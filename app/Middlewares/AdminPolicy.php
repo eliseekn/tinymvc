@@ -20,7 +20,7 @@ class AdminPolicy
     public static function handle(): void
     {
         if (!AuthHelper::checkSession()) {
-            Redirect::toUrl('/login')->withError(__('not_logged_error', true));
+            Redirect::toUrl('/login')->withAlert(__('not_logged_error', true))->error('');
         }
         
         if (!AuthHelper::hasRole('administrator')) {

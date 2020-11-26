@@ -14,6 +14,7 @@ use Framework\Support\Metrics;
 use App\Database\Models\UsersModel;
 use App\Database\Models\MessagesModel;
 use App\Database\Models\NotificationsModel;
+use Framework\ORM\Builder;
 
 /**
  * API routes
@@ -53,12 +54,7 @@ Route::get('api/metrics/users/{trends:str}', [
 //get messages list
 Route::get('api/messages', [
     'handler' => function () {
-        $messages = MessagesModel::select(['messages.*', 'users.email AS sender_email', 'users.name AS sender_name'])
-            ->join('users', 'messages.sender', 'users.id')
-            ->where('messages.recipient', AuthHelper::getSession()->id)
-            ->andWhere('messages.status', 'unread')
-            ->orderDesc('messages.created_at')
-            ->firstOf(5);
+        $messages = MessagesModel::recipients()->firstOf(5);
 
         foreach ($messages as $message) {
             $message->created_at = time_elapsed(Carbon::parse($message->created_at, user_session()->timezone)->locale(user_session()->lang), 1);
@@ -75,6 +71,6 @@ Route::get('api/messages', [
 //get users list
 Route::get('api/users', [
     'handler' => function () {
-        Response::sendJson(['users' => UsersModel::find('id', '<>', AuthHelper::getSession()->id)->all()]);
+        Response::sendJson(['users' => UsersModel::find('id', '<>', AuthHelper::user()->id)->all()]);
     }
 ]);

@@ -6,9 +6,7 @@
 
 <?php 
 if (user_session()->alerts) :
-    if (session_alerts()) :
-        $this->insert('partials/alert', get_alerts());
-    endif;
+    if (session_alerts()) : $this->insert('partials/alert', get_alerts()); endif;
 endif
 ?>
 

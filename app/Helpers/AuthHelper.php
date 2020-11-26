@@ -11,6 +11,7 @@ use Framework\Support\Encryption;
 use App\Database\Models\RolesModel;
 use App\Database\Models\UsersModel;
 use App\Database\Models\TokensModel;
+use Framework\Support\Validator;
 
 class AuthHelper
 {
@@ -41,20 +42,18 @@ class AuthHelper
      */
     public static function authenticate(Request $request)
     {
-        ActivityHelper::log($request->email, 'Log in attempts');
-
         $user = UsersModel::find('email', $request->email)->single();
 
         if (!($user !== false && Encryption::verify($request->password, $user->password))) {
-            ActivityHelper::log($request->email, 'Log in attempts failed');
+            ActivityHelper::log('Log in attempts failed', $request->email);
             
             self::setAttempts();
 
             if (config('security.auth.max_attempts') > 0 && self::getAttempts() > config('security.auth.max_attempts')) {
-                Session::create('auth_attempts_timeout', Carbon::now()->addMinutes(config('security.auth.unlock_timeout'))->toDateTimeString());
-                Redirect::back()->only();
+                Redirect::back()->with('auth_attempts_timeout', Carbon::now()->addMinutes(config('security.auth.unlock_timeout'))->toDateTimeString());
             } else {
-                Redirect::back()->withError(__('login_failed', true));
+                Redirect::back()->withInputs((array) $request->only('email', 'password'))
+                    ->withAlert(__('login_failed', true))->error('');
             }
         }
 
@@ -63,7 +62,7 @@ class AuthHelper
         Session::close('auth_attempts_timeout');
 
         //check if two factor authentication is enabled
-        if ($user->two_factor) {
+        if ($user->two_steps) {
             $token = random_string(50, true);
 
             if (EmailHelper::sendAuth($user->email, $token)) {
@@ -73,19 +72,19 @@ class AuthHelper
                     'expires' => Carbon::now()->addHour()->toDateTimeString()
                 ]);
 
-                Redirect::back()->withInfo(__('confirm_email_link_sent', true));
+                Redirect::back()->withAlert(__('confirm_email_link_sent', true))->success('');
             } else {
-                Redirect::back()->withError(__('confirm_email_link_not_sent', true));
+                Redirect::back()->withAlert(__('confirm_email_link_not_sent', true))->error('');
             }
         }
 
-        Session::setUser($user);
+        Session::create('user', $user);
             
         if (isset($request->remember) && !empty($request->remember)) {
-            Cookies::setUser(Encryption::encrypt($request->email));
+            Cookies::create('user', Encryption::encrypt($request->email), 3600 * 24 * 365);
         }
         
-        ActivityHelper::log($request->email, 'Log in attempts succeeded');
+        ActivityHelper::log('Log in attempts succeeded');
     }
     
     /**
@@ -95,7 +94,7 @@ class AuthHelper
      */
     public static function authEmail(string $email): void
     {
-        Session::setUser(UsersModel::find('email', $email)->single());
+        Session::create('user', UsersModel::find('email', $email)->single());
     }
 
     /**
@@ -129,7 +128,7 @@ class AuthHelper
      */
     public static function checkSession(): bool
     {
-        return Session::hasUser();
+        return Session::has('user');
     }
 
     /**
@@ -139,7 +138,7 @@ class AuthHelper
      */
     public static function checkCookie(): bool
     {
-        return Cookies::hasUser();
+        return Cookies::has('user');
     }
     
     /**
@@ -147,9 +146,9 @@ class AuthHelper
      *
      * @return mixed
      */
-    public static function getSession()
+    public static function user()
     {
-        return Session::getUser();
+        return Session::get('user');;
     }
     
     /**
@@ -160,17 +159,15 @@ class AuthHelper
     public static function forget(): void
     {
         if (self::checkSession()) {
-            ActivityHelper::log(self::getSession()->email, 'Logged out');
+            ActivityHelper::log('Logged out');
         }
 
         if (self::checkSession()) {
-            Session::deleteUser();
-            Session::clearHistory();
-            Session::close('csrf_token');
+            Session::close('user', 'history', 'csrf_token');
         }
 
         if (self::checkCookie()) {
-            Cookies::deleteUser();
+            Cookies::delete('user');
         }
     }
     
@@ -182,6 +179,6 @@ class AuthHelper
      */
     public static function hasRole(string $role): bool
     {
-        return RolesModel::find('slug', $role)->exists() && self::getSession()->role === $role;
+        return RolesModel::find('slug', $role)->exists() && self::user()->role === $role;
     }
 }

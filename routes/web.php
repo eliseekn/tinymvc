@@ -6,10 +6,9 @@
  * @link https://github.com/eliseekn/TinyMVC
  */
 
-use Framework\HTTP\Response;
 use Framework\Routing\View;
+use Framework\HTTP\Response;
 use Framework\Routing\Route;
-use PragmaRX\Countries\Package\Countries;
 
 /**
  * Web routes
@@ -23,4 +22,10 @@ Route::get('/', [
 
 Route::get('/home', [
     'handler' => 'HomeController@index'
+]);
+
+Route::get('test', [
+    'handler' => function() {
+        Response::send('Just to test things');
+    }
 ]);

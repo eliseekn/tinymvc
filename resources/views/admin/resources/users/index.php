@@ -25,7 +25,7 @@
 </div>
 
 <?php if (user_session()->alerts) :
-    if (session_alerts()) : $this->insert('partials/alert', get_alerts()); endif;
+    if (!empty($alerts)) : $this->insert('partials/alert', $alerts); endif;
 endif ?>
 
 <div class="card shadow-sm">
@@ -87,22 +87,20 @@ endif ?>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('role') ?></th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('status') ?></th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('created_at') ?></th>
+                        <th scope="col"><i class="fa fa-sort"></i> <?= __('updated_at') ?></th>
                         <th scope="col"></th>
                     </tr>
                 </thead>
 
                 <tbody>
                     <?php foreach ($users as $key => $user) : ?>
-
                     <tr>
                         <td>
                             <?php if ($user->role !== 'admin') : ?>
-
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox" class="custom-control-input" id="<?= $user->id ?>" data-id="<?= $user->id ?>">
                                 <label class="custom-control-label" for="<?= $user->id ?>"></label>
                             </div>
-
                             <?php endif ?>
                         </td>
 
@@ -122,6 +120,7 @@ endif ?>
                         </td>
 
                         <td><?= \Carbon\Carbon::parse($user->created_at, user_session()->timezone)->locale(user_session()->lang)->isoFormat('MMM Do, YYYY') ?></td>
+                        <td><?php $user->updated_at !== $user->created_at ? print(\Carbon\Carbon::parse($user->updated_at, user_session()->timezone)->locale(user_session()->lang)->isoFormat('MMM Do, YYYY')) : print('-') ?></td>
 
                         <td>
                             <?php if ($user->role !== 'administrator') : ?>
@@ -141,7 +140,6 @@ endif ?>
                             <?php endif ?>
                         </td>
                     </tr>
-
                     <?php endforeach ?>
                 </tbody>
             </table>

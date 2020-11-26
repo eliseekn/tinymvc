@@ -15,8 +15,8 @@
         <div class="container" style="width: 450px">
             <h1 class="py-3 text-center"><?= __('login', true) ?></h1>
 
-            <?php if (session_alerts()) :
-                $this->insert('partials/alert', get_alerts());
+            <?php if (!empty($alerts)) :
+                $this->insert('partials/alert', $alerts);
             endif ?>
 
             <?php if(auth_attempts_exceeded()) : 
@@ -34,19 +34,31 @@
 
                     <div class="form-group">
                         <label for="email"><?= __('email', true) ?></label>
-                        <input type="email" id="email" name="email" class="form-control">
+                        <input type="email" id="email" name="email" class="form-control <?php isset($errors->email) ? print('is-invalid') : print('') ?>" value="<?= $inputs->email ?? '' ?>" aria-describedby="email-error">
+
+                        <?php if(isset($errors->email)) : ?>
+                        <div id="email-error" class="invalid-feedback">
+                            <?= $errors->email ?>
+                        </div>
+                        <?php endif ?>
                     </div>
 
                     <div class="form-group">
                         <label for="password"><?= __('password', true) ?></label>
 
                         <div class="d-flex align-items-center">
-                            <input type="password" id="password" name="password" class="form-control">
+                            <input type="password" id="password" name="password" class="form-control <?php isset($errors->password) ? print('is-invalid') : print('') ?>" value="<?= $inputs->password ?? '' ?>" aria-describedby="password-error">
 
                             <span class="btn" id="password-toggler" title="Toggle display">
                                 <i class="fa fa-eye-slash"></i>
                             </span>
                         </div>
+
+                        <?php if(isset($errors->password)) : ?>
+                        <div id="password-error" class="invalid-feedback d-block">
+                            <?= $errors->password ?>
+                        </div>
+                        <?php endif ?>
                     </div>
 
                     <div class="d-flex flex-column flex-lg-row justify-content-lg-between justify-content-center mb-3 mb-lg-0 mx-auto">

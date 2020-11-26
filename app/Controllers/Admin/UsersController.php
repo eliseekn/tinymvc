@@ -7,6 +7,7 @@ use App\Requests\UpdateUser;
 use App\Helpers\ReportHelper;
 use App\Requests\RegisterUser;
 use Framework\Support\Session;
+use App\Helpers\ActivityHelper;
 use Framework\Routing\Controller;
 use Framework\Support\Encryption;
 use App\Database\Models\RolesModel;
@@ -51,7 +52,7 @@ class UsersController extends Controller
 		$roles = RolesModel::select()->all();
 
 		if ($user === false) {
-			$this->redirectBack()->withError(__('user_not_found'), '', 'toast');
+			$this->redirectBack()->withToast(__('user_not_found'))->error();
 		}
 
 		$this->render('admin/resources/users/edit', compact('user', 'roles'));
@@ -67,7 +68,8 @@ class UsersController extends Controller
         $validator = RegisterUser::validate($this->request->inputs());
         
         if ($validator->fails()) {
-            $this->redirectBack()->withError($validator->errors());
+            $this->redirectBack()->withErrors($validator->errors())->withInputs($validator->inputs())
+                ->withToast(__('user_not_created', true))->error();
         }
 
 		if (
@@ -76,7 +78,8 @@ class UsersController extends Controller
                 ->orWhere('phone', $this->request->phone)
                 ->exists()
         ) {
-            $this->redirectBack()->withError(__('user_already_exists'), '', 'toast');
+            $this->redirectBack()->withInputs($validator->inputs())
+                ->withToast(__('user_already_exists'))->error();
 		}
 
 	    $id = UsersModel::insert([
@@ -84,11 +87,11 @@ class UsersController extends Controller
             'email' => $this->request->email,
             'phone' => $this->request->phone,
             'company' => $this->request->company,
-            'password' => Encryption::encrypt($this->request->password),
-            'role' => $this->request->role
+            'password' => Encryption::encrypt($this->request->password)
 		]);
 
-		$this->redirect('admin/resources/users/view', $id)->withSuccess(__('user_created'), '', 'toast');
+        ActivityHelper::log('User created');
+        $this->redirect('admin/resources/users/view', $id)->withToast(__('user_created'))->success();
     }
 	
 	/**
@@ -102,7 +105,7 @@ class UsersController extends Controller
 		$user = UsersModel::find('id', $id)->single();
 		
 		if ($user === false) {
-			$this->redirectBack()->withError(__('user_not_found'), '', 'toast');
+			$this->redirectBack()->withToast(__('user_not_found'))->error();
 		}
 
 		$this->render('admin/resources/users/view', compact('user'));
@@ -119,13 +122,15 @@ class UsersController extends Controller
 		$validator = UpdateUser::validate($this->request->inputs());
         
         if ($validator->fails()) {
-            $this->redirectBack()->withError($validator->errors());
+            $this->redirectBack()->withErrors($validator->errors())->withInputs($validator->inputs())
+                ->withToast(__('user_not_updated', true))->error();
         }
 
         $user = UsersModel::find('id', $id)->single();
 
 		if ($user === false) {
-			$this->redirectBack()->withError(__('user_not_found'), '', 'toast');
+            $this->redirectBack()->withInputs($validator->inputs())
+                ->withToast(__('user_not_found'))->error();
         }
 
         if ($user->email !== $this->request->email || $user->phone !== $this->request->phone) {
@@ -135,7 +140,8 @@ class UsersController extends Controller
                     ->orWhere('phone', $this->request->phone)
                     ->exists()
             ) {
-                $this->redirectBack()->withError(__('user_already_exists'), '', 'toast');
+                $this->redirectBack()->withInputs($validator->inputs())
+                    ->withToast(__('user_already_exists'))->error();
             }
         }
 
@@ -156,11 +162,12 @@ class UsersController extends Controller
 
         $user = UsersModel::find('id', $id)->single();
         
-        if (Session::getUser()->id === $id) {
-            Session::setUser($user);
+        if (Session::get('user')->id === $id) {
+            Session::create('user', $user);
         }
 
-        $this->redirect('admin/resources/users/view', $id)->withSuccess(__('user_updated'), '', 'toast');
+        ActivityHelper::log('User updated');
+        $this->redirect('admin/resources/users/view', $id)->withToast(__('user_updated'))->success();
     }
 
 	/**
@@ -173,11 +180,12 @@ class UsersController extends Controller
 	{
 		if (!is_null($id)) {
 			if (!UsersModel::find('id', $id)->exists()) {
-				$this->redirectBack()->withError(__('user_not_found'), '', 'toast');
+				$this->redirectBack()->withToast(__('user_not_found'))->error();
 			}
 	
 			UsersModel::delete()->where('id', $id)->persist();
-            $this->redirectBack()->withSuccess(__('user_deleted'), '', 'toast');
+            ActivityHelper::log('User deleted');
+            $this->redirectBack()->withToast(__('user_deleted'))->success();
 		} else {
             $users_id = explode(',', $this->request->items);
 
@@ -185,7 +193,8 @@ class UsersController extends Controller
 				UsersModel::delete()->where('id', $id)->persist();
 			}
 			
-			$this->toast(__('users_deleted'))->success();
+            ActivityHelper::log('Users deleted');
+            $this->toast(__('users_deleted'))->success();
 		}
 	}
 
@@ -199,11 +208,11 @@ class UsersController extends Controller
         $file = $this->request->files('file', ['csv']);
 
 		if (!$file->isAllowed()) {
-            $this->redirectBack()->withError(__('import_file_type_error'), '', 'toast');
+            $this->redirectBack()->withToast(__('import_file_type_error'))->success();
 		}
 
 		if (!$file->isUploaded()) {
-			$this->redirectBack()->withError(__('import_data_error'), '', 'toast');
+			$this->redirectBack()->withToast(__('import_data_error'))->error();
 		}
 
 		ReportHelper::import($file->getTempFilename(), UsersModel::class, [
@@ -214,7 +223,8 @@ class UsersController extends Controller
 			'password' => __('password')
 		]);
 
-		$this->redirectBack()->withSuccess(__('data_imported'), '', 'toast');
+        ActivityHelper::log('Users imported');
+		$this->redirectBack()->withToast(__('data_imported'))->success();
 	}
 	
 	/**
@@ -236,8 +246,10 @@ class UsersController extends Controller
 			$users = UsersModel::select()->orderAsc('name')->all();
         }
         
-        $filename = 'roles_' . date('Y_m_d') . '.' . $this->request->file_type;
+        $filename = 'users_' . date('Y_m_d') . '.' . $this->request->file_type;
 
+        ActivityHelper::log('Users exported');
+        
 		ReportHelper::export($filename, $users, [
 			'name' => __('name'), 
             'email' => __('email'),

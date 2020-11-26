@@ -5,9 +5,7 @@
 <?php $this->start('page_content') ?>
 
 <?php if (user_session()->alerts) :
-    if (session_alerts()) :
-        $this->insert('partials/alert', get_alerts());
-    endif;
+    if (!empty($alerts)) : $this->insert('partials/alert', $alerts); endif;
 endif ?>
 
 <div class="card shadow-sm">
@@ -33,8 +31,7 @@ endif ?>
         <confirm-delete 
             type="text" 
             content="<?= __('delete') ?>" 
-            action="<?= absolute_url('/admin/resources/RESSOURCENAMEs/delete/' . $RESSOURCENAME->id) ?>" 
-            redirect="<?= current_url() ?>">
+            action="<?= absolute_url('/admin/resources/RESSOURCENAMEs/delete/' . $RESSOURCENAME->id) ?>">
         </confirm-delete>
         
         <a href="<?= absolute_url('/admin/resources/RESSOURCENAMEs') ?>" class="btn btn-outline-dark ml-2"><?= __('cancel') ?></a>

@@ -20,7 +20,6 @@ if (!function_exists('start_session')) {
 	 */
 	function start_session(): void
 	{
-
 		if (session_status() === PHP_SESSION_NONE) {
             //https://stackoverflow.com/questions/8311320/how-to-change-the-session-timeout-in-php/8311400
             ini_set('session.gc_maxlifetime', config('session.lifetime'));
@@ -42,7 +41,7 @@ if (!function_exists('create_session')) {
 	function create_session(string $name, $data): void
 	{
 		start_session();
-		$_SESSION[$name] = $data;
+		$_SESSION[config('app.name') . '_' . $name] = $data;
 	}
 }
 
@@ -56,7 +55,7 @@ if (!function_exists('get_session')) {
 	function get_session(string $name)
 	{
 		start_session();
-		return $_SESSION[$name] ?? '';
+		return $_SESSION[config('app.name') . '_' . $name] ?? '';
 	}
 }
 
@@ -70,7 +69,7 @@ if (!function_exists('session_has')) {
 	function session_has(string $name): bool
 	{
 		start_session();
-		return isset($_SESSION[$name]);
+		return isset($_SESSION[config('app.name') . '_' . $name]);
 	}
 }
 
@@ -84,33 +83,49 @@ if (!function_exists('close_session')) {
 	function close_session(string $name): void
 	{
 		start_session();
-		unset($_SESSION[$name]);
-	}
-}
-
-if (!function_exists('session_alerts')) {
-	/**
-	 * check if session alerts exists
-	 *
-	 * @return bool
-	 */
-	function session_alerts(): bool
-	{
-		return session_has(config('app.name') . '_alerts');
+		unset($_SESSION[config('app.name') . '_' . $name]);
 	}
 }
 
 if (!function_exists('get_alerts')) {
 	/**
-	 * get session alerts content
+	 * get session alerts data
 	 *
-	 * @return mixed returns message content
+	 * @return mixed
 	 */
 	function get_alerts()
 	{
-		$alerts = get_session(config('app.name') . '_alerts');
-		close_session(config('app.name') . '_alerts');
+		$alerts = get_session('alerts');
+		close_session('alerts');
 		return $alerts;
+	}
+}
+
+if (!function_exists('get_inputs')) {
+	/**
+	 * get session inputs data
+	 *
+	 * @return mixed
+	 */
+	function get_inputs()
+	{
+		$inputs = get_session('inputs');
+		close_session('inputs');
+		return (object) $inputs;
+	}
+}
+
+if (!function_exists('get_errors')) {
+	/**
+	 * get session inputs data
+	 *
+	 * @return mixed
+	 */
+	function get_errors()
+	{
+		$errors = get_session('errors');
+		close_session('errors');
+		return (object) $errors;
 	}
 }
 
@@ -122,7 +137,7 @@ if (!function_exists('user_session')) {
 	 */
 	function user_session()
 	{
-		return get_session(config('app.name') . '_user');
+		return get_session('user');
 	}
 }
 

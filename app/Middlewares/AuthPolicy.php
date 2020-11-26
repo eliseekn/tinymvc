@@ -19,9 +19,9 @@ class AuthPolicy
     {
         if (AuthHelper::checkSession()) {
             if (AuthHelper::hasRole('administrator')) {
-                Redirect::toUrl('/admin/dashboard')->only();
+                Redirect::toUrl('/admin/dashboard')->withToast(__('welcome') . ' ' . AuthHelper::user()->name)->success();
             } else {
-                Redirect::toUrl('/')->only();
+                Redirect::toUrl('/')->withToast(__('welcome') . ' ' . AuthHelper::user()->name)->success();
             }
         }
     }

@@ -38,11 +38,11 @@ class NotificationsTable
     }
     
     /**
-     * refresh table
+     * reset table
      *
      * @return void
      */
-    public static function refresh(): void
+    public static function reset(): void
     {
         self::delete();
         self::migrate();

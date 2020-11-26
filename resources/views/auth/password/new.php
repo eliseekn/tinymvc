@@ -15,8 +15,8 @@
         <div class="container" style="width: 450px">
             <h1 class="py-3 text-center"><?= __('reset_password', true) ?></h1>
 
-            <?php if (session_alerts()) : 
-                $this->insert('partials/alert', get_alerts());
+            <?php if (!empty($alerts)) :
+                $this->insert('partials/alert', $alerts);
             endif ?>
 
             <div class="card shadow p-4">

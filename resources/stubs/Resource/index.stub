@@ -16,9 +16,7 @@
 </div>
 
 <?php if (user_session()->alerts) :
-    if (session_alerts()) :
-        $this->insert('partials/alert', get_alerts());
-    endif;
+    if (!empty($alerts)) : $this->insert('partials/alert', $alerts); endif;
 endif ?>
 
 <div class="card shadow-sm">
@@ -84,31 +82,28 @@ endif ?>
                     <tr>
                         <td>
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="<?= $user->id ?>" data-id="<?= $user->id ?>">
-                                <label class="custom-control-label" for="<?= $user->id ?>"></label>
+                                <input type="checkbox" class="custom-control-input" id="<?= $RESSOURCENAME->id ?>" data-id="<?= $RESSOURCENAME->id ?>">
+                                <label class="custom-control-label" for="<?= $RESSOURCENAME->id ?>"></label>
                             </div>
                         </td>
 
                         <td><?= $key + 1 ?></td>
-                        <td><?= \Carbon\Carbon::parse($user->created_at, user_session()->timezone)->locale(user_session()->lang)->isoFormat('MMM Do, YYYY') ?></td>
+                        <td><?= \Carbon\Carbon::parse($RESSOURCENAME->created_at, user_session()->timezone)->locale(user_session()->lang)->isoFormat('MMM Do, YYYY') ?></td>
 
                         <td>
-                            <?php if ($user->role !== 'administrator') : ?>
-                            <a class="btn text-dark p-1" href="<?= absolute_url('/admin/resources/RESSOURCENAMEs/view/' . $user->id) ?>" title="View item">
+                            <a class="btn text-dark p-1" href="<?= absolute_url('/admin/resources/RESSOURCENAMEs/view/' . $RESSOURCENAME->id) ?>" title="View item">
                                 <i class="fa fa-eye"></i>
                             </a>
 
-                            <a class="btn text-dark p-1" href="<?= absolute_url('/admin/resources/RESSOURCENAMEs/edit/' . $user->id) ?>" title="Edit item">
+                            <a class="btn text-dark p-1" href="<?= absolute_url('/admin/resources/RESSOURCENAMEs/edit/' . $RESSOURCENAME->id) ?>" title="Edit item">
                                 <i class="fa fa-edit"></i>
                             </a>
 
                             <confirm-delete 
                                 type="icon" 
                                 content='<i class="fa fa-trash-alt"></i>' 
-                                action="<?= absolute_url('/admin/resources/RESSOURCENAMEs/delete/' . $user->id) ?>" 
-                                redirect="<?= current_url()?>">
+                                action="<?= absolute_url('/admin/resources/RESSOURCENAMEs/delete/' . $RESSOURCENAME->id) ?>">
                             </confirm-delete>
-                            <?php endif ?>
                         </td>
                     </tr>
 

@@ -5,7 +5,7 @@
 <?php $this->start('page_content') ?>
 
 <?php if (user_session()->alerts) :
-    if (session_alerts()) : $this->insert('partials/alert', get_alerts()); endif;
+    if (!empty($alerts)) : $this->insert('partials/alert', $alerts); endif;
 endif ?>
 
 <div class="card shadow-sm">
@@ -18,21 +18,39 @@ endif ?>
             <div class="form-group row">
                 <label for="name" class="col-sm-2 col-form-label"><?= __('name') ?></label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="name" id="name" value="<?= $user->name ?>">
+                    <input type="text" class="form-control <?php isset($errors->name) ? print('is-invalid') : print('') ?>" name="name" id="name" value="<?= $inputs->name ?? $user->name ?>" aria-describedby="name-error">
+                
+                    <?php if(isset($errors->name)) : ?>
+                    <div id="name-error" class="invalid-feedback">
+                        <?= $errors->name ?>
+                    </div>
+                    <?php endif ?>
                 </div>
             </div>
 
             <div class="form-group row">
                 <label for="email" class="col-sm-2 col-form-label"><?= __('email') ?></label>
                 <div class="col-sm-10">
-                    <input type="email" class="form-control" name="email" id="email" value="<?= $user->email ?>">
+                    <input type="email" class="form-control <?php isset($errors->email) ? print('is-invalid') : print('') ?>" name="email" id="email" value="<?= $inputs->email ?? $user->email ?>" aria-describedby="email-error">
+
+                    <?php if(isset($errors->email)) : ?>
+                    <div id="email-error" class="invalid-feedback">
+                        <?= $errors->email ?>
+                    </div>
+                    <?php endif ?>
                 </div>
             </div>
 
             <div class="form-group row">
                 <label for="phone" class="col-sm-2 col-form-label"><?= __('phone') ?></label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="phone" id="phone" value="<?= $user->phone ?>">
+                    <input type="text" class="form-control <?php isset($errors->phone) ? print('is-invalid') : print('') ?>" name="phone" id="phone" value="<?= $inputs->phone ?? $user->phone ?>" aria-describedby="phone-error">
+
+                    <?php if(isset($errors->phone)) : ?>
+                    <div id="phone-error" class="invalid-feedback">
+                        <?= $errors->phone ?>
+                    </div>
+                    <?php endif ?>
                 </div>
             </div>
 
@@ -91,8 +109,7 @@ endif ?>
         </div>
 
         <div class="card-footer">
-            <button type="submit" class="btn btn-outline-dark loading"><?= __('update') ?></button>
-            <button type="reset" class="btn btn-outline-dark mx-2"><?= __('reset') ?></button>
+            <button type="submit" class="btn btn-outline-dark mr-2 loading"><?= __('update') ?></button>
             <a href="<?= absolute_url('/admin/resources/users') ?>" class="btn btn-outline-dark"><?= __('cancel') ?></a>
         </div>
     </form>

@@ -24,6 +24,21 @@ class Redirect
     protected static $redirect_url = '';
 
     /**
+     * @var \Framework\Support\Alert
+     */
+    protected $alert;
+    
+    /**
+     * process redirection
+     *
+     * @return void
+     */
+    private function redirect(): void
+    {
+        redirect_to(self::$redirect_url);
+    } 
+
+    /**
      * redirect to url 
      *
      * @param  string $url
@@ -57,7 +72,7 @@ class Redirect
      */
     public static function back(): self
     {
-        $history = Session::getHistory();
+        $history = Session::get('history');
 
         if (!empty($history)) {
             end($history);
@@ -65,58 +80,6 @@ class Redirect
         }
 
         return new self();
-    }
-    
-    /**
-     * redirects with success flash messages
-     *
-     * @param  mixed $messages
-     * @param  string $title
-     * @return void
-     */
-    public function withSuccess($messages, string $title = '', $display = 'default'): void
-    {
-        Alert::$display($messages)->success($title);
-        redirect_to(self::$redirect_url);
-    }
-
-    /**
-     * redirects with error flash messages
-     *
-     * @param  mixed $messages
-     * @param  string $title
-     * @return void
-     */
-    public function withError($messages, string $title = '', $display = 'default'): void
-    {
-        Alert::$display($messages)->error($title);
-        redirect_to(self::$redirect_url);
-    }
-
-    /**
-     * redirects with warning flash messages
-     *
-     * @param  mixed $messages
-     * @param  string $title
-     * @return void
-     */
-    public function withWarning($messages, string $title = '', $display = 'default'): void
-    {
-        Alert::$display($messages)->warning($title);
-        redirect_to(self::$redirect_url);
-    }
-
-    /**
-     * redirects with info flash messages
-     *
-     * @param  mixed $messages
-     * @param  string $title
-     * @return void
-     */
-    public function withInfo($messages, string $title = '', $display = 'default'): void
-    {
-        Alert::$display($messages)->info($title);
-        redirect_to(self::$redirect_url);
     }
 
     /**
@@ -126,6 +89,128 @@ class Redirect
      */
     public function only(): void
     {
-        redirect_to(self::$redirect_url);
+        $this->redirect();
+    }
+    
+    /**
+     * redirects with session data
+     *
+     * @param  string $key
+     * @param  mixed $data
+     * @return void
+     */
+    public function with(string $key, $data): void
+    {
+        Session::create($key, $data);
+        $this->redirect();
+    }
+    
+    /**
+     * redirects with errors
+     *
+     * @param  array $errors
+     * @return \Framework\HTTP\Redirect
+     */
+    public function withErrors(array $errors): self
+    {
+        Session::create('errors', $errors);
+        return $this;
+    }
+
+    /**
+     * redirects with inputs
+     *
+     * @param  array $inputs
+     * @return \Framework\HTTP\Redirect
+     */
+    public function withInputs(array $inputs): self
+    {
+        Session::create('inputs', $inputs);
+        return $this;
+    }
+
+    /**
+     * redirects with default alert message
+     *
+     * @param  mixed $messages
+     * @param  bool $dismiss
+     * @return \Framework\HTTP\Redirect
+     */
+    public function withAlert($messages, bool $dismiss = true): self
+    {
+        $this->alert = Alert::default($messages, $dismiss);
+        return $this;
+    }
+
+    /**
+     * redirects with toast message
+     *
+     * @param  mixed $messages
+     * @return \Framework\HTTP\Redirect
+     */
+    public function withToast($messages): self
+    {
+        $this->alert = Alert::toast($messages);
+        return $this;
+    }
+    
+    /**
+     * redirects with popup message
+     *
+     * @param  mixed $messages
+     * @return \Framework\HTTP\Redirect
+     */
+    public function withPopup($messages): self
+    {
+        $this->alert = Alert::popup($messages);
+        return $this;
+    }
+        
+    /**
+     * success
+     *
+     * @param  string $title
+     * @return void
+     */
+    public function success(string $title = 'Success'): void
+    {
+        $this->alert->success($title);
+        $this->redirect();
+    }
+        
+    /**
+     * error
+     *
+     * @param  string $title
+     * @return void
+     */
+    public function error(string $title = 'Error'): void
+    {
+        $this->alert->error($title);
+        $this->redirect();
+    }
+        
+    /**
+     * info
+     *
+     * @param  string $title
+     * @return void
+     */
+    public function info(string $title = 'Info'): void
+    {
+        $this->alert->info($title);
+        $this->redirect();
+    }
+        
+    /**
+     * warning
+     *
+     * @param  string $title
+     * @return void
+     */
+    public function warning(string $title = 'Warning'): void
+    {
+        $this->alert->warning($title);
+        $this->redirect();
     }
 }

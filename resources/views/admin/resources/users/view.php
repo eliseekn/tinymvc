@@ -5,7 +5,7 @@
 <?php $this->start('page_content') ?>
 
 <?php if (user_session()->alerts) :
-    if (session_alerts()) : $this->insert('partials/alert', get_alerts()); endif;
+    if (!empty($alerts)) : $this->insert('partials/alert', $alerts); endif;
 endif ?>
 
 <div class="card shadow-sm">
@@ -45,6 +45,13 @@ endif ?>
         </div>
 
         <div class="form-group row">
+            <p class="col-sm-2 col-form-label"><?= __('updated_at') ?></p>
+            <div class="col-form-label col-sm-10 font-weight-bold">
+                <?php $user->updated_at !== $user->created_at ? print(\Carbon\Carbon::parse($user->updated_at, user_session()->timezone)->locale(user_session()->lang)->isoFormat('MMM Do, YYYY')) : print('-') ?>
+            </div>
+        </div>
+
+        <div class="form-group row">
             <p class="col-form-label col-sm-2"><?= __('role') ?></p>
             <div class="col-form-label col-sm-10 font-weight-bold"><?= $user->role ?></div>
         </div>
@@ -68,8 +75,7 @@ endif ?>
         <confirm-delete 
             type="text" 
             content="<?= __('delete') ?>" 
-            action="<?= absolute_url('/admin/resources/users/delete/' . $user->id) ?>" 
-            redirect="<?= current_url() ?>">
+            action="<?= absolute_url('/admin/resources/users/delete/' . $user->id) ?>">
         </confirm-delete>
     </div>
 </div>

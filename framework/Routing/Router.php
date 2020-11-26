@@ -34,7 +34,7 @@ class Router
     public function __construct()
     {
         //set history
-        Session::setHistory();
+        Session::history();
         
         //dispatch routes
         try {

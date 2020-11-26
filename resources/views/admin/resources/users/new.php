@@ -5,7 +5,7 @@
 <?php $this->start('page_content') ?>
 
 <?php if (user_session()->alerts) :
-    if (session_alerts()) : $this->insert('partials/alert', get_alerts()); endif;
+    if (!empty($alerts)) : $this->insert('partials/alert', $alerts); endif;
 endif ?>
 
 <div class="card shadow-sm">
@@ -18,56 +18,68 @@ endif ?>
             <div class="form-group row">
                 <label for="name" class="col-sm-2 col-form-label"><?= __('name') ?></label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="name" id="name">
+                    <input type="text" class="form-control <?php isset($errors->name) ? print('is-invalid') : print('') ?>" value="<?= $inputs->name ?? '' ?>" aria-describedby="name-error" name="name" id="name">
+                    
+                    <?php if(isset($errors->name)) : ?>
+                    <div id="name-error" class="invalid-feedback">
+                        <?= $errors->name ?>
+                    </div>
+                    <?php endif ?>
                 </div>
             </div>
 
             <div class="form-group row">
                 <label for="email" class="col-sm-2 col-form-label"><?= __('email') ?></label>
                 <div class="col-sm-10">
-                    <input type="email" class="form-control" name="email" id="email">
+                    <input type="email" class="form-control <?php isset($errors->email) ? print('is-invalid') : print('') ?>" value="<?= $inputs->email ?? '' ?>" aria-describedby="email-error" name="email" id="email">
+
+                    <?php if(isset($errors->email)) : ?>
+                    <div id="email-error" class="invalid-feedback">
+                        <?= $errors->email ?>
+                    </div>
+                    <?php endif ?>
                 </div>
             </div>
 
             <div class="form-group row">
                 <label for="phone" class="col-sm-2 col-form-label"><?= __('phone') ?></label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="phone" id="phone">
+                    <input type="text" class="form-control <?php isset($errors->phone) ? print('is-invalid') : print('') ?>" value="<?= $inputs->phone ?? '' ?>" aria-describedby="phone-error" name="phone" id="phone">
+
+                    <?php if(isset($errors->phone)) : ?>
+                    <div id="phone-error" class="invalid-feedback">
+                        <?= $errors->phone ?>
+                    </div>
+                    <?php endif ?>
                 </div>
             </div>
 
             <div class="form-group row">
                 <label for="company" class="col-sm-2 col-form-label"><?= __('company') ?></label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="company" id="company">
+                    <input type="text" class="form-control" name="company" id="company" value="<?= $inputs->company ?? '' ?>">
                 </div>
             </div>
 
             <div class="form-group row">
                 <label for="password" class="col-sm-2 col-form-label"><?= __('password') ?></label>
 
-                <div class="d-flex align-items-center col-sm-10">
-                    <input type="password" id="password" name="password" class="form-control">
+                <div class="col-sm-10">
+                    <div class="d-flex align-items-center">
+                        <input type="password" id="password" name="password" class="form-control <?php isset($errors->password) ? print('is-invalid') : print('') ?>" value="<?= $inputs->password ?? '' ?>" aria-describedby="password-error">
 
-                    <span class="btn" id="password-toggler" title="Toggle display">
-                        <i class="fa fa-eye-slash"></i>
-                    </span>
+                        <span class="btn" id="password-toggler" title="Toggle display">
+                            <i class="fa fa-eye-slash"></i>
+                        </span>
+                    </div>
+                    
+                    <?php if(isset($errors->password)) : ?>
+                    <div id="password-error" class="invalid-feedback d-block">
+                        <?= $errors->password ?>
+                    </div>
+                    <?php endif ?>
                 </div>
             </div>
-
-            <fieldset class="form-group">
-                <div class="row">
-                    <legend class="col-form-label col-sm-2 pt-0"><?= __('role') ?></legend>
-                    <div class="col-sm-10">
-                        <?php foreach ($roles as $role) : ?>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input class="custom-control-input" type="radio" name="role" id="<?= $role->slug ?>" value="<?= $role->slug ?>">
-                            <label class="custom-control-label" for="<?= $role->slug ?>"><?= $role->title ?></label>
-                        </div>
-                        <?php endforeach ?>
-                    </div>
-                </div>
-            </fieldset>
         </div>
 
         <div class="card-footer">

@@ -37,16 +37,24 @@ class Validator
     protected static $errors;
 
     /**
-     * validate fields 
+     * request inputs
+     * 
+     * @var array
+     */
+    protected static $inputs;
+
+    /**
+     * validate inputs 
      *
-     * @param  array $fields
+     * @param  array $inputs
      * @return \Framework\Support\Validator
      */
-    public static function validate(array $fields, array $rules = [], array $messages = []): self
+    public static function validate(array $inputs, array $rules = [], array $messages = []): self
     {
         $validators = empty($rules) ? static::$rules : $rules;
-        $fields_error_messages = empty($messages) ? static::$messages : $messages;
-        static::$errors = GUMP::is_valid($fields, $validators, $fields_error_messages);
+        $inputs_error_messages = empty($messages) ? static::$messages : $messages;
+        static::$inputs = $inputs;
+        static::$errors = GUMP::is_valid(static::$inputs, $validators, $inputs_error_messages);
         return new self();
     }
     
@@ -67,6 +75,28 @@ class Validator
      */
     public function errors(): array
     {
-        return static::$errors;
+        $validation_errors = [];
+
+        foreach (static::$errors as $error) {
+            foreach (static::$inputs as $key => $input) {
+                if (strpos(strtolower($error), $key) !== false) {
+                    $validation_errors = array_merge($validation_errors, [
+                        $key => $error
+                    ]);
+                }
+            }
+        }
+
+        return $validation_errors;
+    }
+    
+    /**
+     * get request inputs
+     *
+     * @return array
+     */
+    public function inputs(): array
+    {
+        return static::$inputs;
     }
 }

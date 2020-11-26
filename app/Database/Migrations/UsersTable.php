@@ -34,9 +34,9 @@ class UsersTable
             ->addString('timezone')->default('UTC')
             ->addString('theme')->default('light')
             ->addBoolean('active')->default(0)
-            ->addBoolean('two_factor')->default(0)
+            ->addBoolean('two_steps')->default(0)
             ->addBoolean('alerts')->default(1)
-            ->addBoolean('notifications_email')->default(0)
+            ->addBoolean('email_notifications')->default(0)
             ->create();
     }
     
@@ -51,11 +51,11 @@ class UsersTable
     }
     
     /**
-     * refresh table
+     * reset table
      *
      * @return void
      */
-    public static function refresh(): void
+    public static function reset(): void
     {
         self::delete();
         self::migrate();

@@ -5,7 +5,7 @@
 <?php $this->start('page_content') ?>
 
 <?php if (user_session()->alerts) :
-    if (session_alerts()) : $this->insert('partials/alert', get_alerts()); endif;
+    if (!empty($alerts)) : $this->insert('partials/alert', $alerts); endif;
 endif ?>
 
 <form method="post" action="<?= absolute_url('/admin/account/settings/update/' . user_session()->id) ?>">
@@ -27,21 +27,39 @@ endif ?>
                     <div class="form-group row">
                         <label for="name" class="col-sm-3 col-form-label"><?= __('name') ?></label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" name="name" id="name" value="<?= $user->name ?>">
+                            <input type="text" class="form-control <?php isset($errors->name) ? print('is-invalid') : print('') ?>" name="name" id="name" value="<?= $inputs->name ?? $user->name ?>" aria-describedby="name-error">
+                            
+                            <?php if(isset($errors->name)) : ?>
+                            <div id="name-error" class="invalid-feedback">
+                                <?= $errors->name ?>
+                            </div>
+                            <?php endif ?>
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <label for="email" class="col-sm-3 col-form-label"><?= __('email') ?></label>
                         <div class="col-sm-9">
-                            <input type="email" class="form-control" name="email" id="email" value="<?= $user->email ?>">
+                            <input type="email" class="form-control <?php isset($errors->email) ? print('is-invalid') : print('') ?>" name="email" id="email" value="<?= $inputs->email ?? $user->email ?>" aria-describedby="email-error">
+
+                            <?php if(isset($errors->email)) : ?>
+                            <div id="email-error" class="invalid-feedback">
+                                <?= $errors->email ?>
+                            </div>
+                            <?php endif ?>
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <label for="phone" class="col-sm-3 col-form-label"><?= __('phone') ?></label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" name="phone" id="phone" value="<?= $user->phone ?>">
+                            <input type="text" class="form-control <?php isset($errors->phone) ? print('is-invalid') : print('') ?>" name="phone" id="phone" value="<?= $inputs->phone ?? $user->phone ?>" aria-describedby="phone-error">
+
+                            <?php if(isset($errors->phone)) : ?>
+                            <div id="phone-error" class="invalid-feedback">
+                                <?= $errors->phone ?>
+                            </div>
+                            <?php endif ?>
                         </div>
                     </div>
 
@@ -79,11 +97,11 @@ endif ?>
                     </div>
 
                     <div class="form-group row d-flex align-items-center">
-                        <label for="two-factor" class="col-sm-3 col-form-label">Two-Factor auth.</label>
+                        <label for="two-steps" class="col-sm-3 col-form-label">Two-Steps auth.</label>
                         <div class="col-sm-9">
                             <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" name="two-factor" id="two-factor" <?php if ($user->two_factor) : echo 'checked'; endif ?>>
-                                <label class="custom-control-label" for="two-factor"></label>
+                                <input type="checkbox" class="custom-control-input" name="two-steps" id="two-steps" <?php if ($user->two_steps) : echo 'checked'; endif ?>>
+                                <label class="custom-control-label" for="two-steps"></label>
                             </div>
                         </div>
                     </div>
@@ -151,11 +169,11 @@ endif ?>
                     </div>
 
                     <div class="form-group row d-flex align-items-center">
-                        <label for="notifications-email" class="col-sm-5 col-form-label"><?= __('receive_email_notifications') ?></label>
+                        <label for="email-notifications" class="col-sm-5 col-form-label"><?= __('receive_email_notifications') ?></label>
                         <div class="col-sm-7">
                             <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" name="notifications-email" id="notifications-email" <?php if ($user->notifications_email) : echo 'checked'; endif ?>>
-                                <label class="custom-control-label" for="notifications-email"></label>
+                                <input type="checkbox" class="custom-control-input" name="email-notifications" id="email-notifications" <?php if ($user->email_notifications) : echo 'checked'; endif ?>>
+                                <label class="custom-control-label" for="email-notifications"></label>
                             </div>
                         </div>
                     </div>

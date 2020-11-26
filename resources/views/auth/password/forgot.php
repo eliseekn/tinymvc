@@ -23,8 +23,8 @@
 				</div>
 			</div>
 
-            <?php if (session_alerts()) : 
-                $this->insert('partials/alert', get_alerts());
+            <?php if (!empty($alerts)) :
+                $this->insert('partials/alert', $alerts);
             endif ?>
 
             <div class="card shadow p-4">

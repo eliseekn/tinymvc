@@ -16,91 +16,53 @@ class Cookies
     /**
      * create cookie
      *
-     * @param  mixed $name
-     * @param  mixed $data
+     * @param  string $key
+     * @param  string $value
+     * @param  int $expires
+     * @param  string $domain
+     * @param  bool $secure
      * @return bool
      */
     public static function create(
-        string $name,
+        string $key,
         string $value,
         int $expires = 3600,
         string $domain = '',
         bool $secure = false
     ): bool {
-        return create_cookie($name, $value, $expires, $domain, $secure);
+        return create_cookie($key, $value, $expires, $domain, $secure);
     }
     
     /**
      * get cookie data
      *
-     * @param  mixed $name
-     * @return void
+     * @param  string $key
+     * @return string
      */
-    public static function get(string $name)
+    public static function get(string $key): string
     {
-        return get_cookie($name);
+        return get_cookie(config('app.name') . '_' . $key);
     }
     
     /**
      * check if cookie exists
      *
-     * @param  mixed $name
+     * @param  string $key
      * @return bool
      */
-    public static function has(string $name): bool
+    public static function has(string $key): bool
     {
-        return cookie_has($name);
+        return cookie_has(config('app.name') . '_' . $key);
     }
     
     /**
      * delete cookie
      *
-     * @param  mixed $name
+     * @param  string $key
      * @return bool
      */
-    public static function delete(string $name): bool
+    public static function delete(string $key): bool
     {
-        return delete_cookie($name);
-    }
-    
-    /**
-     * set user cookie data
-     *
-     * @param  mixed $data
-     * @return bool
-     */
-    public static function setUser($value): bool
-    {
-        return self::create(config('app.name') . '_user', $value, 3600 * 24 * 365);
-    }
-    
-    /**
-     * get user cookie data
-     *
-     * @return mixed
-     */
-    public static function getUser()
-    {
-        return self::get(config('app.name') . '_user');
-    }
-    
-    /**
-     * check user cookie data
-     *
-     * @return bool
-     */
-    public static function hasUser(): bool
-    {
-        return self::has(config('app.name') . '_user');
-    }
-    
-    /**
-     * delete user cookie data
-     *
-     * @return bool
-     */
-    public static function deleteUser(): bool
-    {
-        return self::delete(config('app.name') . '_user');
+        return delete_cookie(config('app.name') . '_' . $key);
     }
 }

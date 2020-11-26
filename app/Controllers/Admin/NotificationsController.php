@@ -2,6 +2,7 @@
 
 namespace App\Controllers\Admin;
 
+use App\Helpers\ActivityHelper;
 use Framework\Routing\Controller;
 use App\Database\Models\NotificationsModel;
 
@@ -41,11 +42,12 @@ class NotificationsController extends Controller
 	{
         if (!is_null($id)) {
 			if (!NotificationsModel::find('id', $id)->exists()) {
-				$this->redirectBack()->withError(__('notification_not_found'), '', 'toast');
+				$this->redirectBack()->withToast(__('notification_not_found'))->error();
 			}
 	
-			NotificationsModel::update(['status' => 'read'])->where('id', $id)->persist();
-            $this->redirectBack()->withSuccess(__('notification_updated'), '', 'toast');
+            NotificationsModel::update(['status' => 'read'])->where('id', $id)->persist();
+            ActivityHelper::log('Notification marked as read');
+            $this->redirectBack()->withToast(__('notification_updated'))->success();
 		} else {
 			$notifications_id = explode(',', $this->request->items);
 
@@ -53,6 +55,7 @@ class NotificationsController extends Controller
 				NotificationsModel::update(['status' => 'read'])->where('id', $id)->persist();
 			}
 			
+            ActivityHelper::log('Notifications marked as read');
 			$this->toast(__('notifications_updated'))->success();
 		}
     }
@@ -67,11 +70,12 @@ class NotificationsController extends Controller
 	{
 		if (!is_null($id)) {
 			if (!NotificationsModel::find('id', $id)->exists()) {
-				$this->redirectBack()->withError(__('notification_not_found'), '', 'toast');
+				$this->redirectBack()->withToast(__('notification_not_found'))->error();
 			}
 	
 			NotificationsModel::delete()->where('id', $id)->persist();
-			$this->redirectBack()->withSuccess(__('notification_deleted'), '', 'toast');
+            ActivityHelper::log('Notification deleted');
+			$this->redirectBack()->withToast(__('notification_deleted'))->success();
 		} else {
             $notifications_id = explode(',', $this->request->items);
 
@@ -79,6 +83,7 @@ class NotificationsController extends Controller
 				NotificationsModel::delete()->where('id', $id)->persist();
 			}
 			
+            ActivityHelper::log('Notifications deleted');
 			$this->toast(__('notifications_deleted'))->success();
 		}
 	}

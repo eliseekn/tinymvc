@@ -14,8 +14,8 @@
 
 <body>
 
-    <?php if (user_session()->alerts) :
-        if (session_alerts()) : $this->insert('partials/alert', get_alerts()); endif;
+    <?php if (!empty($alerts)) :
+        $this->insert('partials/alert', $alerts);
     endif ?>
 
     <?= csrf_token_input() ?>

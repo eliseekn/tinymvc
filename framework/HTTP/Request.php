@@ -268,9 +268,9 @@ class Request
     /**
      * headers
      *
-     * @return void
+     * @return array
      */
-    public function headers()
+    public function headers(): array
     {
         return self::getHeaders();
     }
@@ -278,7 +278,7 @@ class Request
     /**
      * inputs
      *
-     * @return void
+     * @return array
      */
     public function inputs(): array
     {
@@ -288,7 +288,7 @@ class Request
     /**
      * queries
      *
-     * @return void
+     * @return array
      */
     public function queries(): array
     {
@@ -319,19 +319,44 @@ class Request
     /**
      * only
      *
-     * @param  array $items
-     * @return array
+     * @param  string[] $items
+     * @return mixed
      */
-    public function only(array $items): array
+    public function only(string ...$items)
     {
         $result = [];
 
         foreach ($items as $item) {
             if ($this->has($item)) {
-                $result[] = $this->{$item};
+                $result = array_merge($result, [
+                    $item => $this->{$item}
+                ]);
             }
         }
 
-        return $result;
+        return (object) $result;
+    }
+    
+    /**
+     * except
+     *
+     * @param  string[] $items
+     * @return mixed
+     */
+    public function except(string ...$items)
+    {
+        $result = [];
+
+        foreach ($items as $item) {
+            foreach ($this->inputs() as $key => $input) {
+                if ($item !== $key) {
+                    $result = array_merge($result, [
+                        $key => $input
+                    ]);
+                }
+            }
+        }
+
+        return (object) $result;
     }
 }

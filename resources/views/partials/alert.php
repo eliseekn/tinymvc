@@ -5,15 +5,7 @@
         <h5 class="alert-heading"><?= $title ?></h5>
         <?php endif ?>
 
-        <?php
-        if (is_array($messages)) :
-            foreach ($messages as $message) :
-                echo $message . '<br>';
-            endforeach;
-        else :
-            echo $messages . '<br>';
-        endif;
-        ?>
+        <?= $message . '<br>' ?>
 
         <?php if ($dismiss === true) : ?>
         <button class="close" data-dismiss="alert" aria-label="Close">
@@ -24,10 +16,10 @@
 
 <?php elseif ($display === 'popup') : ?>
 
-    <alert-popup type="<?= $type ?>" message="<?= $messages ?>" title="<?= $title ?>"></alert-popup>
+    <alert-popup type="<?= $type ?>" message="<?= $message ?>" title="<?= $title ?>"></alert-popup>
 
 <?php elseif ($display === 'toast') : ?>
 
-    <alert-toast type="<?= $type ?>" message="<?= $messages ?>" title="<?= $title ?>"></alert-toast>
+    <alert-toast type="<?= $type ?>" message="<?= $message ?>" title="<?= $title ?>"></alert-toast>
 
 <?php endif ?>

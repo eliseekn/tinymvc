@@ -333,7 +333,7 @@ class Builder
 	 * @param  mixed $value
 	 * @return \Framework\ORM\Builder
 	 */
-	public function and(string $column, string $operator, $value): self
+	public function andWhere(string $column, string $operator, $value): self
 	{
 		self::$query .= " AND $column $operator ? ";
 		self::$args[] = $value;
@@ -348,7 +348,7 @@ class Builder
 	 * @param  mixed $value
 	 * @return \Framework\ORM\Builder
 	 */
-	public function or(string $column, string $operator, $value): self
+	public function orWhere(string $column, string $operator, $value): self
 	{
 		self::$query .= " OR $column $operator ? ";
 		self::$args[] = $value;

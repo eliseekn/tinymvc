@@ -9,10 +9,11 @@
 namespace Framework\Routing;
 
 use Framework\HTTP\Client;
-use Framework\HTTP\Redirect;
 use Framework\HTTP\Request;
+use Framework\HTTP\Redirect;
 use Framework\HTTP\Response;
 use Framework\Support\Alert;
+use Framework\Support\Session;
 
 /**
  * Main controller class
@@ -129,34 +130,46 @@ class Controller
     /**
      * display alert
      *
-     * @param  mixed $messages
+     * @param  mixed $message
      * @param  bool $dismiss
      * @return \Framework\Support\Alert
      */
-    public function alert($messages, bool $dismiss = true): \Framework\Support\Alert
+    public function alert($message, bool $dismiss = true): \Framework\Support\Alert
     {
-        return Alert::default($messages, $dismiss);
+        return Alert::default($message, $dismiss);
     }
     
     /**
      * display toast
      *
-     * @param  mixed $messages
+     * @param  mixed $message
      * @return \Framework\Support\Alert
      */
-    public function toast($messages): \Framework\Support\Alert
+    public function toast($message): \Framework\Support\Alert
     {
-        return Alert::toast($messages);
+        return Alert::toast($message);
     }
     
     /**
      * dispaly popup
      *
-     * @param  mixed $messages
+     * @param  mixed $message
      * @return \Framework\Support\Alert
      */
-    public function popup($messages): \Framework\Support\Alert
+    public function popup($message): \Framework\Support\Alert
     {
-        return Alert::popup($messages);
+        return Alert::popup($message);
+    }
+    
+    /**
+     * create session data
+     *
+     * @param  string $key
+     * @param  mixed $data
+     * @return void
+     */
+    public function session(string $key, $data): void
+    {
+        Session::create($key, $data);
     }
 }

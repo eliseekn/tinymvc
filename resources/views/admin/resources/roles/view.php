@@ -4,11 +4,9 @@
 
 <?php $this->start('page_content') ?>
 
-<?php 
-if (user_session()->alerts) :
-    if (session_alerts()) : $this->insert('partials/alert', get_alerts()); endif;
-endif
-?>
+<?php if (user_session()->alerts) :
+    if (!empty($alerts)) : $this->insert('partials/alert', $alerts); endif;
+endif ?>
 
 <div class="card shadow-sm">
     <div class="card-header"><?= __('summary') ?></div>
@@ -40,6 +38,13 @@ endif
                 <?= \Carbon\Carbon::parse($role->created_at, user_session()->timezone)->locale(user_session()->lang)->isoFormat('MMM Do, YYYY') ?>
             </div>
         </div>
+
+        <div class="form-group row">
+            <p class="col-sm-2 col-form-label"><?= __('updated_at') ?></p>
+            <div class="col-form-label col-sm-10 font-weight-bold">
+                <?php $role->updated_at !== $role->created_at ? print(\Carbon\Carbon::parse($role->updated_at, user_session()->timezone)->locale(user_session()->lang)->isoFormat('MMM Do, YYYY')) : print('-') ?>
+            </div>
+        </div>
     </div>
 
     <div class="card-footer">
@@ -48,8 +53,7 @@ endif
         <confirm-delete 
             type="text" 
             content="<?= __('delete') ?>" 
-            action="<?= absolute_url('/admin/resources/roles/delete/' . $role->id) ?>" 
-            redirect="<?= current_url() ?>">
+            action="<?= absolute_url('/admin/resources/roles/delete/' . $role->id) ?>">
         </confirm-delete>
     </div>
 </div>

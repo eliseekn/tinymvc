@@ -12,7 +12,7 @@ class UpdateUser extends Validator
      * @var array
      */
     protected static $rules = [
-        'name' => 'required',
+        'name' => 'required|alpha_space',
         'email' => 'required|valid_email',
         'phone' => 'required|numeric'
     ];

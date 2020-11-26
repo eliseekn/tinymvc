@@ -32,6 +32,14 @@ class View
         }
 
         $engine = new Engine(Storage::path(config('storage.views'))->get());
+
+        //session flash data
+        $data = array_merge($data, [
+            'inputs' => get_inputs(), 
+            'errors' => get_errors(), 
+            'alerts' => get_alerts()
+        ]);
+
         return $engine->render($view, $data);
     }
 

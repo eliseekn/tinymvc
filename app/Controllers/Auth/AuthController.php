@@ -10,6 +10,7 @@ use App\Requests\RegisterUser;
 use App\Middlewares\AuthPolicy;
 use Framework\Routing\Controller;
 use App\Database\Models\TokensModel;
+use Framework\Support\Validator;
 
 /**
  * Manage user authentication
@@ -23,10 +24,11 @@ class AuthController extends Controller
 	 */
 	public function authenticate(): void
 	{
-        $validate = AuthRequest::validate($this->request->inputs());
-        
-        if ($validate->fails()) {
-            $this->redirectBack()->withError($validate->errors());
+        $validator = AuthRequest::validate($this->request->inputs());
+
+        if ($validator->fails()) {
+            $this->redirectBack()->withErrors($validator->errors())->withInputs($validator->inputs())
+                ->withAlert(__('login_failed', true))->error('');
         }
 
         AuthHelper::authenticate($this->request);
@@ -40,19 +42,21 @@ class AuthController extends Controller
      */
     public function register(): void
     {
-        $validate = RegisterUser::validate($this->request->inputs());
+        $validator = RegisterUser::validate($this->request->inputs());
         
-        if ($validate->fails()) {
-            $this->redirectBack()->withError($validate->errors());
+        if ($validator->fails()) {
+            $this->redirectBack()->withErrors($validator->errors())->withInputs($validator->inputs())
+                ->withAlert(__('signup_failed', true))->error('');
         }
 
         if (!AuthHelper::create($this->request)) {
-            $this->redirectBack()->withError(__('user_already_exists', true));
+            $this->redirectBack()->withInputs($validator->inputs())
+                ->withAlert(__('user_already_exists', true))->error('');
         }
 
         if (config('security.auth.email_confirmation') === false) {
             EmailHelper::sendWelcome($this->request->email);
-            $this->redirect('/login')->withSuccess(__('user_registered', true));
+            $this->redirect('/login')->withAlert(__('user_registered', true))->success('');
         } else {
             $token = random_string(50, true);
 
@@ -63,9 +67,9 @@ class AuthController extends Controller
                     'expires' => Carbon::now()->addDay()->toDateTimeString()
                 ]);
 
-                $this->redirectBack()->withInfo(__('confirm_email_link_sent', true));
+                $this->redirect('/login')->withAlert(__('confirm_email_link_sent', true))->success('');
             } else {
-                $this->redirectBack()->withError(__('confirm_email_link_not_sent', true));
+                $this->redirect('/login')->withAlert(__('confirm_email_link_not_sent', true))->error('');
             }
         }
     }

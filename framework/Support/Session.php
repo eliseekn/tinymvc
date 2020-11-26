@@ -18,97 +18,58 @@ class Session
     /**
      * create new session
      *
-     * @param  string $name
+     * @param  string $key
      * @param  mixed $data
      * @return void
      */
-    public static function create(string $name, $data): void
+    public static function create(string $key, $data): void
     {
-        create_session($name, $data);
+        create_session($key, $data);
     }
     
     /**
      * get session data
      *
-     * @param  string $name
+     * @param  string $key
      * @return mixed
      */
-    public static function get(string $name)
+    public static function get(string $key)
     {
-        return get_session($name);
+        return get_session($key);
     }
     
     /**
      * check if session exists
      *
-     * @param  string $name
+     * @param  string $key
      * @return bool
      */
-    public static function has(string $name): bool
+    public static function has(string $key): bool
     {
-        return session_has($name);
+        return session_has($key);
     }
     
     /**
      * close session
      *
-     * @param  string $name
+     * @param  string[] $key
      * @return void
      */
-    public static function close(string $name): void
+    public static function close(string ...$keys): void
     {
-        close_session($name);
+        foreach ($keys as $key) {
+            close_session($key);
+        }
     }
     
-    /**
-     * set user session
-     *
-     * @param  mixed $data
-     * @return void
-     */
-    public static function setUser($data): void
-    {
-        self::create(config('app.name') . '_user', $data);
-    }
-    
-    /**
-     * get user session data
-     *
-     * @return mixed
-     */
-    public static function getUser()
-    {
-        return self::get(config('app.name') . '_user');
-    }
-    
-    /**
-     * check user sessions
-     *
-     * @return bool
-     */
-    public static function hasUser(): bool
-    {
-        return self::has(config('app.name') . '_user');
-    }
-    
-    /**
-     * colse user session
-     *
-     * @return void
-     */
-    public static function deleteUser(): void
-    {
-        self::close(config('app.name') . '_user');
-    }
-
     /**
      * set history sesssion
      *
      * @return void
      */
-    public static function setHistory(): void
+    public static function history(): void
     {
-        $url = self::getHistory();
+        $url = self::get('history');
 
         foreach (config('session.history.excludes') as $exclude) {
             if (!url_exists($exclude)) {
@@ -120,26 +81,6 @@ class Session
             }
         }
 
-        self::create(config('app.name') . '_history', $url);
-    }
-    
-    /**
-     * get history session
-     *
-     * @return mixed
-     */
-    public static function getHistory()
-    {
-        return self::get(config('app.name') . '_history');
-    }
-    
-    /**
-     * close history session
-     *
-     * @return void
-     */
-    public static function clearHistory(): void
-    {
-        self::close(config('app.name') . '_history');
+        self::create('history', $url);
     }
 }

@@ -167,7 +167,7 @@ class Route
      */
     private function prefix(string $prefix, string $route): string
     {
-        if ($prefix[strlen($prefix) - 1] !== '/') {
+        if ($prefix[-1] !== '/') {
             $prefix = $prefix . '/';
         }
 

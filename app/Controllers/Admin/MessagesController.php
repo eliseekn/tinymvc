@@ -7,6 +7,8 @@ use App\Helpers\AuthHelper;
 use App\Helpers\ReportHelper;
 use Framework\Routing\Controller;
 use App\Database\Models\MessagesModel;
+use App\Database\Models\UsersModel;
+use App\Helpers\ActivityHelper;
 
 class MessagesController extends Controller
 {
@@ -17,16 +19,10 @@ class MessagesController extends Controller
      */
     public function index(): void
 	{
-        $messages = MessagesModel::select(['messages.*', 'u1.email AS sender_email', 'u2.email AS recipient_email'])
-            ->join('users AS u1', 'messages.sender', 'u1.id')
-            ->join('users AS u2', 'messages.recipient', 'u2.id')
-            ->where('messages.recipient', AuthHelper::getSession()->id)
-            ->orWhere('messages.sender', AuthHelper::getSession()->id)
-            ->orderDesc('messages.created_at')
-            ->paginate(20);
+        $messages = MessagesModel::get()->paginate(20);
 
         $messages_unread = MessagesModel::count()
-            ->where('recipient', AuthHelper::getSession()->id)
+            ->where('recipient', AuthHelper::user()->id)
             ->andWhere('status', 'unread')
             ->single()
             ->value;
@@ -42,12 +38,13 @@ class MessagesController extends Controller
     public function create(): void
 	{
         MessagesModel::insert([
-            'sender' => AuthHelper::getSession()->id,
+            'sender' => AuthHelper::user()->id,
             'recipient' => $this->request->recipient,
             'message' => $this->request->message
         ]);
 
-        $this->redirectBack()->withSuccess(__('message_sent'), '', 'toast');
+        ActivityHelper::log('Message sent to ' . UsersModel::find('id', $this->request->recipient)->single()->email);
+        $this->redirectBack()->withToast(__('message_sent'))->success();
 	}
 	
 	/**
@@ -58,13 +55,14 @@ class MessagesController extends Controller
     public function reply(): void
 	{
         $id = MessagesModel::insert([
-            'sender' => AuthHelper::getSession()->id,
+            'sender' => AuthHelper::user()->id,
             'recipient' => $this->request->recipient,
             'message' => $this->request->message
         ]);
 
         MessagesModel::update(['status' => 'read'])->where('id', $id)->persist();
-        $this->redirectBack()->withSuccess(__('message_sent'), '', 'toast');
+        ActivityHelper::log('Message replied to ' . UsersModel::find('id', $this->request->recipient)->single()->email);
+        $this->redirectBack()->withToast(__('message_sent'))->success();
 	}
 	
 	/**
@@ -76,11 +74,12 @@ class MessagesController extends Controller
 	public function update(int $id): void
 	{
         if (!MessagesModel::find('id', $id)->exists()) {
-            $this->redirectBack()->withError(__('message_not_found'), '', 'toast');
+            $this->redirectBack()->withToast(__('message_not_found'))->error();
         }
 
         MessagesModel::update(['status' => 'read'])->where('id', $id)->persist();
-        $this->redirectBack()->withSuccess(__('message_updated'), '', 'toast');
+        ActivityHelper::log('Message marked as read');
+        $this->redirectBack()->withToast(__('message_updated'))->success();
 	}
 
 	/**
@@ -93,18 +92,20 @@ class MessagesController extends Controller
 	{
         if (!is_null($id)) {
 			if (!MessagesModel::find('id', $id)->exists()) {
-				$this->redirectBack()->withError(__('message_not_found'), '', 'toast');
+				$this->redirectBack()->withToast(__('message_not_found'))->error();
 			}
 	
-			MessagesModel::delete()->where('id', $id)->persist();
-            $this->redirectBack()->withSuccess(__('message_deleted'), '', 'toast');
+            MessagesModel::delete()->where('id', $id)->persist();
+            ActivityHelper::log('Message deleted');
+            $this->redirectBack()->withToast(__('message_deleted'))->success();
 		} else {
             $messages_id = explode(',', $this->request->items);
 
 			foreach ($messages_id as $id) {
 				MessagesModel::delete()->where('id', $id)->persist();
 			}
-			
+            
+            ActivityHelper::log('Messages deleted');
 			$this->toast(__('messages_deleted'))->success();
 		}
 	}
@@ -129,6 +130,8 @@ class MessagesController extends Controller
         }
         
         $filename = 'messages_' . date('Y_m_d') . '.' . $this->request->file_type;
+
+        ActivityHelper::log('Messages exported');
 
 		ReportHelper::export($filename, $messages, [
 			'sender' => __('sender'), 

@@ -53,7 +53,7 @@ $config = [
         'enc_key' => base64_encode('write_something_here_to_generate_a_single_encryption_key'),
 
         'auth' => [
-            'max_attempts' => 5,
+            'max_attempts' => 50,
             'unlock_timeout' => 1,
             'email_confirmation' => false
         ]
