@@ -371,7 +371,7 @@ class Builder
 	/**
 	 * generate GROUP BY query
 	 *
-	 * @param  string of string $columns
+	 * @param  string[] $columns
 	 * @return \Framework\ORM\Builder
 	 */
 	public function groupBy(string ...$columns): self

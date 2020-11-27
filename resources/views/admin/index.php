@@ -1,5 +1,5 @@
 <?php $this->layout('admin/layout', [
-    'page_title' => 'TinyMVC | Administration dashboard'
+    'page_title' => 'TinyMVC | Dashboard'
 ]) ?>
 
 <?php $this->start('styles') ?>
@@ -10,18 +10,16 @@
 
 <?php $this->start('page_content') ?>
 
-<?php if (user_session()->alerts) :
-    if (!empty($alerts)) : $this->insert('partials/alert', $alerts); endif;
-endif ?>
+<?php if (user_session()->alerts && !empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
 
 <div class="row mb-4">
     <div class="col-md-4">
         <div class="card shadow-sm mb-4 mb-md-0">
-            <div class="card-header d-flex justify-content-between align-items-center ">
-                <span class=""><?= __('all_users') ?></span>
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><?= __('all_users') ?></span>
 
-                <a href="<?= absolute_url('/admin/resources/users') ?>" title="<?= __('view_all') ?>">
-                    <i class="fa fa-dot-circle text-dark"></i>
+                <a href="<?= absolute_url('/admin/resources/users') ?>" class="btn btn-outline-dark">
+                    <?= __('view_all') ?>
                 </a>
             </div>
 
@@ -42,7 +40,7 @@ endif ?>
     <div class="col-md-8">
         <div class="card shadow-sm">
             <div class="card-header d-flex justify-content-between align-items-center ">
-                <span class=""><?= __('registered_users') ?></span>
+                <span><?= __('registered_users') ?></span>
 
                 <div class="d-flex">
                     <select id="users-trends-bars" name="users-trends-bars" class="custom-select" data-url="<?= absolute_url('/api/metrics/users') ?>">
@@ -69,7 +67,7 @@ endif ?>
         <div class="card shadow-sm mb-4 mb-md-0">
             <div class="card-header">
                 <div class="d-flex flex-lg-row flex-column align-items-lg-center justify-content-lg-between">
-                    <span class=""><?= __('latest_messages') ?></span>
+                    <span><?= __('latest_messages') ?></span>
 
                     <div class="d-flex flex-lg-row flex-column mt-lg-0 mt-2">
                         <send-message
@@ -130,7 +128,7 @@ endif ?>
     <div class="col-md-6">
         <div class="card shadow-sm">
             <div class="card-header d-flex justify-content-between align-items-center ">
-                <span class=""><?= __('latest_notifications') ?></span>
+                <span><?= __('latest_notifications') ?></span>
 
                 <div class="d-flex flex-lg-row flex-column mt-lg-0 mt-2">
                     <create-notification 

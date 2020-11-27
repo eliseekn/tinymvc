@@ -15,9 +15,7 @@
     </div>
 </div>
 
-<?php if (user_session()->alerts) :
-    if (!empty($alerts)) : $this->insert('partials/alert', $alerts); endif;
-endif ?>
+<?php if (user_session()->alerts && !empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
 
 <div class="card shadow-sm">
     <div class="card-header">
@@ -90,7 +88,7 @@ endif ?>
                             </div>
                         </td>
 
-                        <td><?= $key + 1 ?></td>
+                        <td><?= $roles->getFirstItem() + $key + 1 ?></td>
                         <td><?= $role->title ?></td>
                         <td><?= $role->slug ?></td>
                         <td><?= html_entity_decode($role->description) ?></td>
@@ -121,6 +119,7 @@ endif ?>
 
     <div class="card-footer d-flex align-items-center justify-content-between">
         <span><?= __('total_results') ?> <span class="font-weight-bold"><?= $roles->getTotalItems() ?></span></span>
+        <span>Showing <span class="font-weight-bold"><?= $roles->getPageTotalItems() === 0 ? $roles->getFirstItem() : $roles->getFirstItem() + 1 ?></span> to <span class="font-weight-bold"><?= $roles->getPageTotalItems() + $roles->getFirstItem() ?></span></span>
 
         <?php $this->insert('partials/pagination', [
             'pagination' => $roles

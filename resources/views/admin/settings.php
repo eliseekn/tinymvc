@@ -4,9 +4,7 @@
 
 <?php $this->start('page_content') ?>
 
-<?php if (user_session()->alerts) :
-    if (!empty($alerts)) : $this->insert('partials/alert', $alerts); endif;
-endif ?>
+<?php if (user_session()->alerts && !empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
 
 <form method="post" action="<?= absolute_url('/admin/account/settings/update/' . user_session()->id) ?>">
     <?= csrf_token_input() ?>

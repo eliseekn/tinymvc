@@ -58,8 +58,8 @@ class RolesController extends Controller
 	 */
 	public function create(): void
 	{
-        $validator = Validator::validate((array) $this->request->only('title'), ['title' => 'required|alpha_space']);
-        
+        $validator = Validator::validate((array) $this->request->only('title'), ['title' => 'required|alpha_space|max_len,255']);
+
         if ($validator->fails()) {
             $this->session('errors', $validator->errors());
             $this->session('inputs', (array) $this->request->only('title', 'editor'));
@@ -111,7 +111,7 @@ class RolesController extends Controller
 	 */
 	public function update(int $id): void
 	{
-        $validator = Validator::validate((array) $this->request->only('title'), ['title' => 'required|alpha_space']);
+        $validator = Validator::validate((array) $this->request->only('title'), ['title' => 'required|alpha_space|max_len,255']);
         
         if ($validator->fails()) {
             $this->toast(__('role_not_updated'))->error();

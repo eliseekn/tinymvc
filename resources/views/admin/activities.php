@@ -15,9 +15,7 @@
     </div>
 </div>
 
-<?php if (user_session()->alerts) :
-    if (!empty($alerts)) : $this->insert('partials/alert', $alerts); endif;
-endif ?>
+<?php if (user_session()->alerts && !empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
 
 <div class="card shadow-sm">
     <div class="card-header">
@@ -72,7 +70,6 @@ endif ?>
 
                 <tbody>
                     <?php foreach ($activities as $key => $activity) : ?>
-
                     <tr>
                         <td>
                             <div class="custom-control custom-checkbox">
@@ -81,7 +78,7 @@ endif ?>
                             </div>
                         </td>
 
-                        <td><?= $key + 1 ?></td>
+                        <td><?= $activities->getFirstItem() + $key + 1 ?></td>
                         <td><?= $activity->user ?></td>
                         <td><?= $activity->url ?></td>
                         <td><?= $activity->method ?></td>
@@ -97,7 +94,6 @@ endif ?>
                             </confirm-delete>
                         </td>
                     </tr>
-
                     <?php endforeach ?>
                 </tbody>
             </table>
@@ -106,6 +102,7 @@ endif ?>
 
     <div class="card-footer d-flex align-items-center justify-content-between">
         <span><?= __('total_results') ?> <span class="font-weight-bold"><?= $activities->getTotalItems() ?></span></span>
+        <span>Showing <span class="font-weight-bold"><?= $activities->getPageTotalItems() === 0 ? $activities->getFirstItem() : $activities->getFirstItem() + 1 ?></span> to <span class="font-weight-bold"><?= $activities->getPageTotalItems() + $activities->getFirstItem() ?></span></span>
 
         <?php $this->insert('partials/pagination', [
             'pagination' => $activities

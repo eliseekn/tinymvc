@@ -23,8 +23,8 @@ class UsersController extends Controller
     public function index(): void
     {
         $this->render('admin/resources/users/index', [
-            'users' => UsersModel::select()->orderAsc('name')->paginate(20),
-			'active_users' => UsersModel::find('active', 1)->all(),
+            'users' => UsersModel::find('role', '!=', 'administrator')->orderAsc('name')->paginate(20),
+			'active_users' => UsersModel::select()->where('active', 1)->andWhere('role', '!=', 'administrator')->all(),
         ]);
     }
 

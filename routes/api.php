@@ -71,6 +71,6 @@ Route::get('api/messages', [
 //get users list
 Route::get('api/users', [
     'handler' => function () {
-        Response::sendJson(['users' => UsersModel::find('id', '<>', AuthHelper::user()->id)->all()]);
+        Response::sendJson(['users' => UsersModel::find('id', '!=', AuthHelper::user()->id)->all()]);
     }
 ]);

@@ -14,6 +14,7 @@ use Framework\HTTP\Redirect;
 use Framework\HTTP\Response;
 use Framework\Support\Alert;
 use Framework\Support\Session;
+use Framework\Support\Validator;
 
 /**
  * Main controller class
@@ -24,7 +25,7 @@ class Controller
      * @var \Framework\HTTP\Request $request
      */
     public $request;
-    
+
     /**
      * __construct
      *
@@ -171,5 +172,24 @@ class Controller
     public function session(string $key, $data): void
     {
         Session::create($key, $data);
+    }
+    
+    /**
+     * validate inputs and set flash session data
+     *
+     * @param  array|null $inputs
+     * @return \Framework\Routing\Controller
+     */
+    public function validate(?array $inputs = null, array $rules = [], array $messages = []): self
+    {
+        $inputs = is_null($inputs) ? $this->request->inputs() : $inputs;
+        $validator = Validator::validate($inputs, $rules, $messages);
+
+        if ($validator->fails()) {
+            $this->session('errors', $validator->errors());
+            $this->session('inputs', $validator->inputs());
+        }
+
+        return $this;
     }
 }

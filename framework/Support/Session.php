@@ -18,47 +18,47 @@ class Session
     /**
      * create new session
      *
-     * @param  string $key
+     * @param  string $name
      * @param  mixed $data
      * @return void
      */
-    public static function create(string $key, $data): void
+    public static function create(string $name, $data): void
     {
-        create_session($key, $data);
+        create_session($name, $data);
     }
     
     /**
      * get session data
      *
-     * @param  string $key
+     * @param  string $name
      * @return mixed
      */
-    public static function get(string $key)
+    public static function get(string $name)
     {
-        return get_session($key);
+        return get_session($name);
     }
     
     /**
      * check if session exists
      *
-     * @param  string $key
+     * @param  string $name
      * @return bool
      */
-    public static function has(string $key): bool
+    public static function has(string $name): bool
     {
-        return session_has($key);
+        return session_has($name);
     }
     
     /**
      * close session
      *
-     * @param  string[] $key
+     * @param  string[] $name
      * @return void
      */
-    public static function close(string ...$keys): void
+    public static function close(string ...$names): void
     {
-        foreach ($keys as $key) {
-            close_session($key);
+        foreach ($names as $name) {
+            close_session($name);
         }
     }
     

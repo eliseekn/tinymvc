@@ -9,6 +9,7 @@
 namespace Framework\Support;
 
 use Framework\HTTP\Request;
+use Prophecy\Promise\ReturnPromise;
 
 /**
  * Generate pagination from database 
@@ -18,20 +19,28 @@ class Pager
     /**
      * generated pagination array
      *
-     * @var array
+     * @var array $pagination
      */
     protected $pagination = [];
-    
+
+    /**
+     * database items
+     * 
+     * @var $array $items
+     */
+    protected $items = [];
+
     /**
      * instantiates class
      *
-     * @param  mixed $items database items
-     * @param  array $pagination pagination parameters
+     * @param  mixed $items
+     * @param  array $pagination
      * @return void
      */
     public function __construct($items, array $pagination)
     {
         $this->pagination = $pagination;
+        $this->items = $items;
 
         //add items as properties
         foreach ($items as $key => $value) {
@@ -40,7 +49,7 @@ class Pager
     }
     
     /**
-     * getFirstItem
+     * get page first item
      *
      * @return int
      */
@@ -50,7 +59,7 @@ class Pager
     }
     
     /**
-     * getTotalItems
+     * get total items
      *
      * @return int
      */
@@ -60,7 +69,17 @@ class Pager
     }
     
     /**
-     * getItemsPerPage
+     * get page total items
+     *
+     * @return int
+     */
+    public function getPageTotalItems(): int
+    {
+        return count($this->items);
+    }
+    
+    /**
+     * get items count per pages
      *
      * @return int
      */
@@ -70,7 +89,7 @@ class Pager
     }
     
     /**
-     * returns current page number
+     * get current page number
      *
      * @return int
      */
@@ -88,7 +107,7 @@ class Pager
     }
     
     /**
-     * returns previous page number
+     * get previous page number
      *
      * @return int
      */
@@ -98,7 +117,7 @@ class Pager
     }
     
     /**
-     * returns next page number
+     * get next page number
      *
      * @return int
      */
@@ -128,7 +147,7 @@ class Pager
     }
     
     /**
-     * returns total pages
+     * get total pages
      *
      * @return int
      */

@@ -4,9 +4,7 @@
 
 <?php $this->start('page_content') ?>
 
-<?php if (user_session()->alerts) :
-    if (!empty($alerts)) : $this->insert('partials/alert', $alerts); endif;
-endif ?>
+<?php if (user_session()->alerts && !empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
 
 <div class="card shadow-sm">
     <div class="card-header"><?= __('edit') ?></div>

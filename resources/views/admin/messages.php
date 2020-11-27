@@ -24,9 +24,7 @@
     </div>
 </div>
 
-<?php if (user_session()->alerts) :
-    if (!empty($alerts)) : $this->insert('partials/alert', $alerts); endif;
-endif ?>
+<?php if (user_session()->alerts && !empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
 
 <div class="card shadow-sm">
     <div class="card-header">
@@ -95,7 +93,6 @@ endif ?>
 
                 <tbody>
                     <?php foreach ($messages as $key => $message) : ?>
-
                     <tr>
                         <td>
                             <div class="custom-control custom-checkbox">
@@ -104,7 +101,7 @@ endif ?>
                             </div>
                         </td>
 
-                        <td><?= $key + 1 ?></td>
+                        <td><?= $messages->getFirstItem() + $key + 1 ?></td>
                         <td><?= $message->sender_email ?></td>
                         <td><?= $message->recipient_email ?></td>
                         <td><?= $message->message ?></td>
@@ -138,7 +135,6 @@ endif ?>
                             </confirm-delete>
                         </td>
                     </tr>
-
                     <?php endforeach ?>
                 </tbody>
             </table>
@@ -147,6 +143,7 @@ endif ?>
 
     <div class="card-footer d-flex align-items-center justify-content-between">
         <span><?= __('total_results') ?> <span class="font-weight-bold"><?= $messages->getTotalItems() ?></span></span>
+        <span>Showing <span class="font-weight-bold"><?= $messages->getPageTotalItems() === 0 ? $messages->getFirstItem() : $messages->getFirstItem() + 1 ?></span> to <span class="font-weight-bold"><?= $messages->getPageTotalItems() + $messages->getFirstItem() ?></span></span>
 
         <?php $this->insert('partials/pagination', [
             'pagination' => $messages

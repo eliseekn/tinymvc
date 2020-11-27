@@ -16,7 +16,7 @@ class Cookies
     /**
      * create cookie
      *
-     * @param  string $key
+     * @param  string $name
      * @param  string $value
      * @param  int $expires
      * @param  string $domain
@@ -24,45 +24,45 @@ class Cookies
      * @return bool
      */
     public static function create(
-        string $key,
+        string $name,
         string $value,
         int $expires = 3600,
         string $domain = '',
         bool $secure = false
     ): bool {
-        return create_cookie($key, $value, $expires, $domain, $secure);
+        return create_cookie($name, $value, $expires, $domain, $secure);
     }
     
     /**
      * get cookie data
      *
-     * @param  string $key
+     * @param  string $name
      * @return string
      */
-    public static function get(string $key): string
+    public static function get(string $name): string
     {
-        return get_cookie(config('app.name') . '_' . $key);
+        return get_cookie($name);
     }
     
     /**
      * check if cookie exists
      *
-     * @param  string $key
+     * @param  string $name
      * @return bool
      */
-    public static function has(string $key): bool
+    public static function has(string $name): bool
     {
-        return cookie_has(config('app.name') . '_' . $key);
+        return cookie_has($name);
     }
     
     /**
      * delete cookie
      *
-     * @param  string $key
+     * @param  string $name
      * @return bool
      */
-    public static function delete(string $key): bool
+    public static function delete(string $name): bool
     {
-        return delete_cookie(config('app.name') . '_' . $key);
+        return delete_cookie($name);
     }
 }

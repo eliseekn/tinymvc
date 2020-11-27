@@ -336,6 +336,34 @@ class Model
     }
     
     /**
+     * add RIGHT JOIN query
+     *
+     * @param  string $table
+     * @param  string $second_column
+     * @param  string $first_column
+     * @return \Framework\ORM\Model
+     */
+    public function rightJoin(string $table, string $second_column, string $first_column): self
+    {
+        self::$query->rightJoin($table, $second_column, $first_column);
+        return $this;
+    }
+
+    /**
+     * add FULL JOIN query
+     *
+     * @param  string $table
+     * @param  string $second_column
+     * @param  string $first_column
+     * @return \Framework\ORM\Model
+     */
+    public function fullJoin(string $table, string $second_column, string $first_column): self
+    {
+        self::$query->fullJoin($table, $second_column, $first_column);
+        return $this;
+    }
+    
+    /**
      * add ORDER BY clause
      *
      * @param  string $column

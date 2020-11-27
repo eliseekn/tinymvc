@@ -24,9 +24,7 @@
     </div>
 </div>
 
-<?php if (user_session()->alerts) :
-    if (!empty($alerts)) : $this->insert('partials/alert', $alerts); endif;
-endif ?>
+<?php if (user_session()->alerts && !empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
 
 <div class="card shadow-sm">
     <div class="card-header">
@@ -104,7 +102,7 @@ endif ?>
                             <?php endif ?>
                         </td>
 
-                        <td><?= $key + 1 ?></td>
+                        <td><?= $users->getFirstItem() + $key + 1 ?></td>
                         <td><?= $user->name ?></td>
                         <td><?= $user->email ?></td>
                         <td><?= $user->phone ?></td>
@@ -148,6 +146,7 @@ endif ?>
 
     <div class="card-footer d-flex align-items-center justify-content-between">
         <span><?= __('total_results') ?> <span class="font-weight-bold"><?= $users->getTotalItems() ?></span></span>
+        <span>Showing <span class="font-weight-bold"><?= $users->getPageTotalItems() === 0 ? $users->getFirstItem() : $users->getFirstItem() + 1 ?></span> to <span class="font-weight-bold"><?= $users->getPageTotalItems() + $users->getFirstItem() ?></span></span>
 
         <?php $this->insert('partials/pagination', [
             'pagination' => $users

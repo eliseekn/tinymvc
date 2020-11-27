@@ -24,9 +24,7 @@
     </div>
 </div>
 
-<?php if (user_session()->alerts) :
-    if (!empty($alerts)) : $this->insert('partials/alert', $alerts); endif;
-endif ?>
+<?php if (user_session()->alerts && !empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
 
 <div class="card shadow-sm">
     <div class="card-header">
@@ -81,7 +79,6 @@ endif ?>
 
                 <tbody>
                     <?php foreach ($notifications as $key => $notification) : ?>
-
                     <tr>
                         <td>
                             <div class="custom-control custom-checkbox">
@@ -90,7 +87,7 @@ endif ?>
                             </div>
                         </td>
 
-                        <td><?= $key + 1 ?></td>
+                        <td><?= $notifications->getFirstItem() + $key + 1 ?></td>
                         <td><?= $notification->message ?></td>
                         <td><?= time_elapsed(\Carbon\Carbon::parse($notification->created_at, user_session()->timezone)->locale(user_session()->lang), 1) ?></td>
 
@@ -110,7 +107,6 @@ endif ?>
                             </confirm-delete>
                         </td>
                     </tr>
-
                     <?php endforeach ?>
                 </tbody>
             </table>
@@ -119,6 +115,7 @@ endif ?>
 
     <div class="card-footer d-flex align-items-center justify-content-between">
         <span><?= __('total_results') ?> <span class="font-weight-bold"><?= $notifications->getTotalItems() ?></span></span>
+        <span>Showing <span class="font-weight-bold"><?= $notifications->getPageTotalItems() === 0 ? $notifications->getFirstItem() : $notifications->getFirstItem() + 1 ?></span> to <span class="font-weight-bold"><?= $notifications->getPageTotalItems() + $notifications->getFirstItem() ?></span></span>
 
         <?php $this->insert('partials/pagination', [
             'pagination' => $notifications

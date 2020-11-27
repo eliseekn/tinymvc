@@ -12,10 +12,10 @@ class RegisterUser extends Validator
      * @var array
      */
     protected static $rules = [
-        'name' => 'required|alpha_space',
-        'email' => 'required|valid_email',
-        'phone' => 'required|numeric',
-        'password' => 'required'
+        'name' => 'required|alpha_space|max_len,255',
+        'email' => 'required|valid_email|max_len,255',
+        'phone' => 'required|numeric|max_len,255',
+        'password' => 'required|max_len,255'
     ];
 
     /**
