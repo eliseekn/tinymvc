@@ -4,13 +4,6 @@
 
 <?php $this->start('page_content') ?>
 
-<?php $this->insert('partials/breadcrumb', [
-    'items' => [
-        'Documentation' => absolute_url('/docs'),
-        'HTTP Client' => ''
-    ]
-]) ?>
-
 <div class="card mb-5" id="basic-routing">
     <div class="card-header ">
         <span class=" lead">HTTP Client</span>
@@ -21,23 +14,19 @@
         <p>TinyMVC HTTP client uses <span class="bg-light text-danger">curl</span> library to handle requests :</p>
         
         <div class="card mb-4">
-            <div class="card-body bg-light">
-                <code class="text-danger">Client::send(string $method, array $urls, array $headers = [], ?array $data = null, bool $json_data = false);</code>
-            </div>
+            <pre class="m-0"><code class="p-3">Client::send(string $method, array $urls, array $headers = [], ?array $data = null, bool $json_data = false);</code></pre>
         </div>
 
         <p class="font-weight-bold">HTTP methods</p>
         <p>Here are defined all HTTP methods shortcuts you can use to send HTTP requests :</p>
 
         <div class="card mb-4">
-            <div class="card-body bg-light">
-                <pre class="m-0 text-danger"><code>Client::get(array $urls, array $headers = [], ?array $data = null, bool $json_data = false)
+            <pre class="m-0"><code class="p-3">Client::get(array $urls, array $headers = [], ?array $data = null, bool $json_data = false)
 Client::post(array $urls, array $headers = [], ?array $data = null, bool $json_data = false)
 Client::put(array $urls, array $headers = [], ?array $data = null, bool $json_data = false)
 Client::patch(array $urls, array $headers = [], ?array $data = null, bool $json_data = false)
 Client::delete(array $urls, array $headers = [], ?array $data = null, bool $json_data = false)
 Client::options(array $urls, array $headers = [], ?array $data = null, bool $json_data = false)</code></pre>
-            </div>
         </div>
     </div>
 

@@ -12,22 +12,18 @@
         <p>To use TinyMVC framework, you server need to meets the following requirements :</p>
 
         <div class="card mb-4">
-            <div class="card-body bg-light">
-                <pre class="m-0 text-danger"><code>PHP >= 7.2
+            <pre class="m-0"><code class="p-3">PHP >= 7.2
 MySQL server
 Node
 Composer
 Yarn</code></pre>
-            </div>
         </div>
 
         <p class="font-weight-bold">Installing TinyMVC</p>
-        <p>Download project <a href="https://github.com/eliseekn/TinyMVC">here</a> or clone the github repository by running the following command on your terminal :</p>
+        <p>Download project <a href="https://github.com/eliseekn/tinymvc">here</a> or clone the github repository by running the following command on your terminal :</p>
 
         <div class="card">
-            <div class="card-body bg-light">
-                <code class="text-danger">git clone https://github.com/eliseekn/TinyMVC</code>
-            </div>
+            <pre class="m-0"><code class="p-3">git clone https://github.com/eliseekn/tinymvc</code></pre>
         </div>
     </div>
 
@@ -48,12 +44,10 @@ Yarn</code></pre>
         </p>
 
         <div class="card mb-4">
-            <div class="card-body bg-light">
-                <pre class="m-0 text-danger"><code>RewriteEngine on
+            <pre class="m-0"><code class="p-3">RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-l
 RewriteRule ^(.*)$ index.php</code></pre>
-            </div>
         </div>
 
         <p>
@@ -61,13 +55,11 @@ RewriteRule ^(.*)$ index.php</code></pre>
         </p>
 
         <div class="card mb-4">
-            <div class="card-body bg-light">
-                <pre class="m-0 text-danger"><code>server {
+            <pre class="m-0"><code class="p-3">server {
     location / {
         try_files $uri $uri/ /index.php;
     }
 }</code></pre>
-            </div>
         </div>
 
         <p class="font-weight-bold">Application configuration</p>

@@ -3,7 +3,7 @@
 /**
  * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
- * @link https://github.com/eliseekn/TinyMVC
+ * @link https://github.com/eliseekn/tinymvc
  */
 
 namespace Framework\Routing;
@@ -44,9 +44,9 @@ class Controller
      * @param  array $data
      * @return void
      */
-    public function render(string $view, array $data = []): void
+    public function render(string $view, array $data = [], int $status_code = 200): void
     {
-        View::render($view, $data);
+        View::render($view, $data, $status_code);
     }
     
     /**

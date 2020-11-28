@@ -21,36 +21,35 @@
         </p>
 
         <div class="card mb-4">
-            <div class="card-body bg-light">
-                <pre class="m-0 text-danger"><code>&lt;form method="POST" action="/uri"&gt;
+            <pre class="m-0"><code class="p-3">&lt;form method="POST" action="/uri"&gt;
     &lt;?= csrf_token_input() ?&gt;
                 
 &lt;/form&gt;</code></pre>
-            </div>
         </div>
 
         <p>This function generate an hidden input with generated token as value :</p>
 
         <div class="card mb-4">
-            <div class="card-body bg-light">
-                <code class="text-danger">&lt;input type="hidden" name="csrf_token" id="csrf_token" value="$csrf_token"&gt;</code>
-            </div>
+            <pre class="m-0"><code class="p-3">&lt;input type="hidden" name="csrf_token" id="csrf_token" value="csrf_token_value"&gt;</code></pre>
         </div>
 
         <p class="font-weight-bold">Rendering</p>
-        <p>You can render a view template from your application by using the <span class="bg-light text-danger">View</span> class : </p>
+        <p>You can render a view template by using the <span class="bg-light text-danger">render</span> method inside a <span class="bg-light text-danger">Controller</span> class :</p>
+
+        <div class="card mb-4">
+            <pre class="m-0"><code class="p-3">$this->render(string $view, array $data = [], int $status_code = 200);</code></pre>
+        </div>
+
+        <p>Or by using the <span class="bg-light text-danger">View</span> class : </p>
     
         <div class="card mb-4">
-            <div class="card-body bg-light">
-                <code class="text-danger">View::render(string $view, array $data = [], int $status_code = 200);</code>
-            </div>
+            <pre class="m-0"><code class="p-3">View::render(string $view, array $data = [], int $status_code = 200);</code></pre>
         </div>
 
         <p>Example :</p>
 
         <div class="card">
-            <div class="card-body bg-light">
-                <pre class="m-0 text-danger"><code>&lt;?php
+            <pre class="m-0"><code class="p-3">&lt;?php
 
 namespace App\Controllers;
 
@@ -63,16 +62,15 @@ class MyController
      */
     public function index(): void
     {
-        View::render('index');
+        $this->render('index'); //or View::render('index')
     }
 }</code></pre>
-            </div>
         </div>
     </div>
 
     <div class="card-footer d-flex justify-content-between">
-        <span>Next: <a href="<?= absolute_url('/docs/requests') ?>">HTTP Requests</a></span>
-        <span>Previous: <a href="<?= absolute_url('/docs/controllers') ?>">Controllers</a></span>
+        <span>Next: <a href="<?= absolute_url('/docs/guides/requests') ?>">HTTP Requests</a></span>
+        <span>Previous: <a href="<?= absolute_url('/docs/guides/controllers') ?>">Controllers</a></span>
     </div>
 </div>
 

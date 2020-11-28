@@ -21,6 +21,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import Notifications from './components/react/notifications'
 import Messages from './components/react/messages'
+import hjs from './vendor/highlight.pack'
 
 window.customElements.define('upload-modal', UploadModal)
 window.customElements.define('export-modal', ExportModal)
@@ -45,3 +46,6 @@ if (document.querySelector('#notifications-bell')) {
 if (document.querySelector('#messages-icon')) {
     ReactDOM.render(<Messages />, document.querySelector('#messages-icon'))
 }
+
+//init hightlight js
+hjs.initHighlightingOnLoad()

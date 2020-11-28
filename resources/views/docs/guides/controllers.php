@@ -14,8 +14,7 @@
         </p>
 
         <div class="card">
-            <div class="card-body bg-light">
-                <pre class="m-0 text-danger"><code>&lt;?php
+            <pre class="m-0"><code class="p-3">&lt;?php
 
 namespace App\Controllers;
 
@@ -31,7 +30,6 @@ class MyController extends Controller
         $this->response('Hello world!');
     }
 }</code></pre>
-            </div>
         </div>
     </div>
 

@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="robots" content="noindex, nofollow">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.4.0/styles/dracula.min.css">
     <link rel="stylesheet" href="<?= absolute_url('/public/css/docs.css') ?>">
     <title><?= $page_title ?></title>
 </head>
@@ -83,7 +84,7 @@
         <div class="wrapper__content">
             <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm px-5 sticky-top">
                 <button class="btn px-1 sidebar-toggler" title="Toggle sidebar">
-                    <i class="fa fa-bars"></i>
+                    <i class="fa fa-bars text-white"></i>
                 </button>
             </nav>
 

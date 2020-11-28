@@ -15,46 +15,38 @@
         </p>
 
         <div class="card mb-4">
-            <div class="card-body bg-light">
-                <pre class="m-0 text-danger"><code>Route::add('home', [
+            <pre class="m-0"><code class="p-3">Route::add('home', [
     'method' => 'GET',
     'handler' => function () {
         Response::send('Hello world!');
     }
 ]);</code></pre>
-            </div>
         </div>
 
         <p class="font-weight-bold">Routes methods</p>
         <p>Here are defined all routes methods shortcuts you can use to handle HTTP requests :</p>
 
         <div class="card mb-4">
-            <div class="card-body bg-light">
-                <pre class="m-0 text-danger"><code>Route::get(string $uri, array $parameters)
+            <pre class="m-0"><code class="p-3">Route::get(string $uri, array $parameters)
 Route::post(string $uri, array $parameters)
 Route::put(string $uri, array $parameters)
 Route::patch(string $uri, array $parameters)
 Route::delete(string $uri, array $parameters)
 Route::options(string $uri, array $parameters)</code></pre>
-            </div>
         </div>
 
         <p>You can also handle multiple HTTP requests methods like in the example below :</p>
 
         <div class="card mb-4">
-            <div class="card-body bg-light">
-                <pre class="m-0 text-danger"><code>Route::add(string $uri, [
+            <pre class="m-0"><code class="p-3">Route::add(string $uri, [
     'method' => 'GET|POST|PUT'
 ]);</code></pre>
-            </div>
         </div>
 
         <p>Or you can handle all HTTP requests methods by using the shortcut method <span class="bg-light text-danger">any</span> :</p>
 
         <div class="card">
-            <div class="card-body bg-light">
-                <code class="text-danger">Route::any(string $uri, array $parameters)</code>
-            </div>
+            <pre class="m-0"><code class="p-3">Route::any(string $uri, array $parameters)</code></pre>
         </div>
     </div>
 
@@ -115,31 +107,26 @@ Route::options(string $uri, array $parameters)</code></pre>
         <p class="font-weight-bold">Basic route parameters definition</p>
 
         <div class="card mb-4">
-            <div class="card-body bg-light">
-                <pre class="m-0 text-danger"><code>Route::get('home', [
+            <pre class="m-0"><code class="p-3">Route::get('home', [
     'handler' => 'HomeController::index',
     'name' => 'home',
     'middlewares' => [
         'CsrfProtection'
     ]
 ]);</code></pre>
-            </div>
         </div>
 
         <p class="font-weight-bold" id="routes-grouping">Routes grouping</p>
         <p>TinyMVC provides a method for grouping routes with same parameters :</p>
 
         <div class="card mb-4">
-            <div class="card-body bg-light">
-                <code class="text-danger">Route::group(array $routes)->by(array $parameters);</code>
-            </div>
+            <pre class="m-0"><code class="p-3">Route::group(array $routes)->by(array $parameters);</code></pre>
         </div>
 
         <p>Example :</p>
 
         <div class="card">
-            <div class="card-body bg-light">
-                <pre class="m-0 text-danger"><code>Route::group([
+            <pre class="m-0"><code class="p-3">Route::group([
     'index' => [],
     'home' => []
 ])->by([
@@ -147,7 +134,6 @@ Route::options(string $uri, array $parameters)</code></pre>
     'handler' => 'HomeController@index',
     'name' => 'home'
 ]);</code></pre>
-            </div>
         </div>
     </div>
 
@@ -165,13 +151,11 @@ Route::options(string $uri, array $parameters)</code></pre>
         <p>You can capture required URI parameters :</p>
 
         <div class="card mb-4">
-            <div class="card-body bg-light">
-                <pre class="m-0 text-danger"><code>Route::get('welcome/{name:str}', [
+            <pre class="m-0"><code class="p-3">Route::get('welcome/{name:str}', [
     'handler' => function ($name) {
         Response::send('Welcome ' . $name . '!');       
     }
 ]);</code></pre>
-            </div>
         </div>
 
         <p class="font-weight-bold">List of URI parameters with name and descripton</p>
@@ -217,14 +201,12 @@ Route::options(string $uri, array $parameters)</code></pre>
         <p>You specify optionals parameters by adding a <span class="bg-light text-danger">?</span> mark at the end of parameter definition :</p>
 
         <div class="card mb-4">
-            <div class="card-body bg-light">
-                <pre class="m-0 text-danger"><code>Route::get('welcome/{name:str}?', [
+            <pre class="m-0"><code class="p-3">Route::get('welcome/{name:str}?', [
     'handler' => function (?string $name = null) {
         $visitor = is_null($name) ? 'Visitor' : $name;
         Response::send('Welcome ' . $visitor . '!');       
     }
 ]);</code></pre>
-            </div>
         </div>
     </div>
 

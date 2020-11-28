@@ -4,13 +4,6 @@
 
 <?php $this->start('page_content') ?>
 
-<?php $this->insert('partials/breadcrumb', [
-    'items' => [
-        'Documentation' => absolute_url('/docs'),
-        'HTTP Responses' => ''
-    ]
-]) ?>
-
 <div class="card mb-5" id="basic-routing">
     <div class="card-header ">
         <span class=" lead">HTTP Responses</span>
@@ -20,25 +13,19 @@
         <p class="font-weight-bold">Send basic HTTP response</p>
         
         <div class="card mb-4">
-            <div class="card-body bg-light">
-                <code class="text-danger">Response::send($body, array $headers = [], int $status_code = 200);</code>
-            </div>
+            <pre class="m-0"><code class="p-3">Response::send($body, array $headers = [], int $status_code = 200);</code></pre>
         </div>
 
         <p class="font-weight-bold">Send JSON response</p>
         
         <div class="card mb-4">
-            <div class="card-body bg-light">
-                <code class="text-danger">Response::sendJson(array $body, array $headers = [], int $status_code = 200);</code>
-            </div>
+            <pre class="m-0"><code class="p-3">Response::sendJson(array $body, array $headers = [], int $status_code = 200);</code></pre>
         </div>
 
         <p class="font-weight-bold">Send HTTP headers only</p>
         
         <div class="card mb-4">
-            <div class="card-body bg-light">
-                <code class="text-danger">Response::sendHeaders(array $headers, int $status_code = 200);</code>
-            </div>
+            <pre class="m-0"><code class="p-3">Response::sendHeaders(array $headers, int $status_code = 200);</code></pre>
         </div>
     </div>
 

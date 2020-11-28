@@ -3,7 +3,7 @@
 /**
  * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
- * @link https://github.com/eliseekn/TinyMVC
+ * @link https://github.com/eliseekn/tinymvc
  */
 
 namespace Framework\HTTP;
@@ -46,12 +46,12 @@ class Request
     /**
      * retrieves single header value
      *
-     * @param  string $field
+     * @param  string $key
      * @return string returns header value
      */
-    public static function getHeader(string $field): string
+    public static function getHeader(string $key): string
     {
-        return self::getHeaders()[$field] ?? '';
+        return self::getHeaders()[$key] ?? '';
     }
 
     /**
@@ -67,41 +67,41 @@ class Request
     /**
      * retrieves single query value
      *
-     * @param  string $field
+     * @param  string $key
      * @return string returns query value
      */
-    public static function getQuery(string $field): string
+    public static function getQuery(string $key): string
     {
-        return self::getQueries()[$field] ?? '';
+        return self::getQueries()[$key] ?? '';
     }
 
     /**
      * check if get query exists
      *
-     * @param  string $field
+     * @param  string $key
      * @return bool
      */
-    public static function hasQuery(string $field) : bool
+    public static function hasQuery(string $key) : bool
     {
-        return !empty(self::getQuery($field));
+        return !empty(self::getQuery($key));
     }
     
     /**
      * set query value
      *
-     * @param  string $query
+     * @param  string $key
      * @param  mixed $value
      * @return void
      */
-    public static function setQuery(string $query, $value): void
+    public static function setQuery(string $ey, $value): void
     {
-        $_GET[$query] = $value;
+        $_GET[$ey] = $value;
     }
 
     /**
-     * retrieves post fields
+     * retrieves post inputs
      *
-     * @return array returns post fields
+     * @return array returns post inputs
      */
     public static function getInputs(): array
     {
@@ -109,37 +109,37 @@ class Request
     }
 
     /**
-     * retrieves single post field
+     * retrieves single post input
      *
-     * @param  string $field
-     * @return mixed returns field value
+     * @param  string $input
+     * @return mixed returns input value
      */
-    public static function getInput(string $field) 
+    public static function getInput(string $input) 
     {
-        return self::getInputs()[$field] ?? '';
+        return self::getInputs()[$input] ?? '';
     }
 
     /**
-     * check if post field exists
+     * check if post input exists
      *
-     * @param  string $field
+     * @param  string $input
      * @return bool
      */
-    public static function hasInput(string $field) : bool
+    public static function hasInput(string $input) : bool
     {
-        return !empty(self::getInput($field));
+        return !empty(self::getInput($input));
     }
     
     /**
-     * set field value
+     * set input value
      *
-     * @param  string $field
+     * @param  string $input
      * @param  mixed $value
      * @return void
      */
-    public static function setInput(string $field, $value): void
+    public static function setInput(string $input, $value): void
     {
-        $_POST[$field] = $value;
+        $_POST[$input] = $value;
     }
 
     /**
@@ -155,42 +155,42 @@ class Request
     /**
      * retrieves single file
      *
-     * @param  string $field
+     * @param  string $input
      * @param  array $allowed_extensions
      * @return \Framework\Support\Uploader returns uploader instance
      */
-    public static function getFile(string $field, array $allowed_extensions = []): Uploader
+    public static function getFile(string $input, array $allowed_extensions = []): Uploader
     {
         return new Uploader([
-            'name' => $_FILES[$field]['name'],
-            'tmp_name' => $_FILES[$field]['tmp_name'],
-            'size' => $_FILES[$field]['size'],
-            'type' => $_FILES[$field]['type'],
-            'error' => $_FILES[$field]['error']
+            'name' => $_FILES[$input]['name'],
+            'tmp_name' => $_FILES[$input]['tmp_name'],
+            'size' => $_FILES[$input]['size'],
+            'type' => $_FILES[$input]['type'],
+            'error' => $_FILES[$input]['error']
         ], $allowed_extensions);
     }
 
     /**
      * retrieves multiple files
      *
-     * @param  string $field
+     * @param  string $input
      * @param  array $allowed_extensions
      * @return array returns array of uploader instance
      */
-    public static function getFiles(string $field, array $allowed_extensions = []): array
+    public static function getFiles(string $input, array $allowed_extensions = []): array
     {
         $files = [];
 
-        if (isset($_FILES[$field]) && !empty($_FILES[$field])) {
-            $count = is_array($_FILES[$field]['tmp_name']) ? count($_FILES[$field]['tmp_name']) : 1;
+        if (isset($_FILES[$input]) && !empty($_FILES[$input])) {
+            $count = is_array($_FILES[$input]['tmp_name']) ? count($_FILES[$input]['tmp_name']) : 1;
 
             for ($i = 0; $i < $count; $i++) {
                 $files[] = new Uploader([
-                    'name' => $_FILES[$field]['name'][$i],
-                    'tmp_name' => $_FILES[$field]['tmp_name'][$i],
-                    'size' => $_FILES[$field]['size'][$i],
-                    'type' => $_FILES[$field]['type'][$i],
-                    'error' => $_FILES[$field]['error'][$i]
+                    'name' => $_FILES[$input]['name'][$i],
+                    'tmp_name' => $_FILES[$input]['tmp_name'][$i],
+                    'size' => $_FILES[$input]['size'][$i],
+                    'type' => $_FILES[$input]['type'][$i],
+                    'error' => $_FILES[$input]['error'][$i]
                 ], $allowed_extensions);
             }
         }
@@ -255,14 +255,14 @@ class Request
     /**
      * files
      *
-     * @param  string $field
+     * @param  string $input
      * @param  array $allowed_extensions
      * @param  bool $mutliple
      * @return \Framework\Support\Uploader|array
      */
-    public function files(string $field, array $allowed_extensions = [], bool $mutliple = false)
+    public function files(string $input, array $allowed_extensions = [], bool $mutliple = false)
     {
-        return $mutliple ? self::getFiles($field, $allowed_extensions) : self::getFile($field, $allowed_extensions);
+        return $mutliple ? self::getFiles($input, $allowed_extensions) : self::getFile($input, $allowed_extensions);
     }
     
     /**
@@ -274,7 +274,37 @@ class Request
     {
         return self::getHeaders();
     }
+        
+    /**
+     * method
+     *
+     * @return string
+     */
+    public function method(): string
+    {
+        return self::getMethod();
+    }
     
+    /**
+     * fullUri
+     *
+     * @return string
+     */
+    public function fullUri(): string
+    {
+        return self::getFullUri();
+    }
+    
+    /**
+     * uri
+     *
+     * @return string
+     */
+    public function uri(): string
+    {
+        return self::getUri();
+    }
+
     /**
      * inputs
      *
@@ -286,6 +316,18 @@ class Request
     }
     
     /**
+     * set POST input
+     *
+     * @param  string $input
+     * @param  mixed $value
+     * @return void
+     */
+    public function input(string $input, $value): void
+    {
+        self::setInput($input, $value);
+    }
+    
+    /**
      * queries
      *
      * @return array
@@ -293,6 +335,18 @@ class Request
     public function queries(): array
     {
         return self::getQueries();
+    }
+    
+    /**
+     * query
+     *
+     * @param  string $key
+     * @param  mixed $value
+     * @return void
+     */
+    public function query(string $key, $value): void
+    {
+        self::setQuery($key, $value);
     }
     
     /**

@@ -14,7 +14,7 @@
     <hr class="my-5 w-25">
 
     <span>
-        <a href="https://github.com/eliseekn/TinyMVC" class="btn btn-dark">
+        <a href="https://github.com/eliseekn/tinymvc" class="btn btn-dark">
             <i class="fab fa-github"></i> Github
         </a>
         

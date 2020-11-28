@@ -13,7 +13,7 @@ Yarn
 
 ## Installation
 
-1\. Download your TinyMVC framework copy [here](https://github.com/eliseekn/TinyMVC/archive/master.zip)
+1\. Download your TinyMVC framework copy [here](https://github.com/eliseekn/tinymvc/archive/master.zip)
 
 2\. Setup your web server configuration
 
