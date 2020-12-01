@@ -92,8 +92,8 @@
                         <td><?= $role->title ?></td>
                         <td><?= $role->slug ?></td>
                         <td><?= html_entity_decode($role->description) ?></td>
-                        <td><?= \Carbon\Carbon::parse($role->created_at, user_session()->timezone)->locale(user_session()->lang)->isoFormat('MMM Do, YYYY') ?></td>
-                        <td><?php $role->updated_at !== $role->created_at ? print(\Carbon\Carbon::parse($role->updated_at, user_session()->timezone)->locale(user_session()->lang)->isoFormat('MMM Do, YYYY')) : print('-') ?></td>
+                        <td><?= \App\Helpers\DateHelper::format($role->created_at)->human() ?></td>
+                        <td><?php $role->updated_at !== $role->created_at ? print(\App\Helpers\DateHelper::format($role->updated_at)->human()) : print('-') ?></td>
 
                         <td>
                             <a class="btn text-dark p-1" href="<?= absolute_url('/admin/resources/roles/view/' . $role->id) ?>" title="View item">

@@ -94,12 +94,10 @@
                     <?php foreach ($users as $key => $user) : ?>
                     <tr>
                         <td>
-                            <?php if ($user->role !== 'admin') : ?>
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox" class="custom-control-input" id="<?= $user->id ?>" data-id="<?= $user->id ?>">
                                 <label class="custom-control-label" for="<?= $user->id ?>"></label>
                             </div>
-                            <?php endif ?>
                         </td>
 
                         <td><?= $users->getFirstItem() + $key + 1 ?></td>
@@ -117,11 +115,10 @@
                             <?php endif ?>
                         </td>
 
-                        <td><?= \Carbon\Carbon::parse($user->created_at, user_session()->timezone)->locale(user_session()->lang)->isoFormat('MMM Do, YYYY') ?></td>
-                        <td><?php $user->updated_at !== $user->created_at ? print(\Carbon\Carbon::parse($user->updated_at, user_session()->timezone)->locale(user_session()->lang)->isoFormat('MMM Do, YYYY')) : print('-') ?></td>
+                        <td><?= \App\Helpers\DateHelper::format($user->created_at)->human() ?></td>
+                        <td><?php $user->updated_at !== $user->created_at ? print(\App\Helpers\DateHelper::format($user->updated_at)->human()) : print('-') ?></td>
 
                         <td>
-                            <?php if ($user->role !== 'administrator') : ?>
                             <a class="btn text-dark p-1" href="<?= absolute_url('/admin/resources/users/view/' . $user->id) ?>" title="View item">
                                 <i class="fa fa-eye"></i>
                             </a>
@@ -135,7 +132,6 @@
                                 content='<i class="fa fa-trash-alt"></i>' 
                                 action="<?= absolute_url('/admin/resources/users/delete/' . $user->id) ?>">
                             </confirm-delete>
-                            <?php endif ?>
                         </td>
                     </tr>
                     <?php endforeach ?>

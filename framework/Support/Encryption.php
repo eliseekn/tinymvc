@@ -24,7 +24,7 @@ class Encryption
      * encrypt
      *
      * @param  string $str
-     * @return mixed returns false or encrypted string
+     * @return bool|string
      */
     public static function encrypt(string $str)
     {
@@ -37,7 +37,7 @@ class Encryption
      * decrypt
      *
      * @param  string $enc_str
-     * @return mixed returns false or decrypted string
+     * @return bool|string
      */
     public static function decrypt(string $enc_str)
     {
@@ -54,7 +54,7 @@ class Encryption
      */
     public static function hash(string $str): string
     {
-        return hash_string($str);
+        return password_hash($str, PASSWORD_DEFAULT);
     }
 
     /**
@@ -64,8 +64,8 @@ class Encryption
      * @param  string $hash
      * @return bool
      */
-    public static function verify(string $str, string $hash): bool
+    public static function compare(string $str, string $hash): bool
     {
-        return compare_hash($str, $hash);
+        return password_verify($str, $hash);
     }
 }

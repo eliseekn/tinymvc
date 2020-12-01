@@ -2,10 +2,11 @@
 
 namespace App\Controllers\Admin;
 
-use Carbon\Carbon;
 use App\Helpers\ReportHelper;
 use Framework\Routing\Controller;
 use App\Database\Models\ActivitiesModel;
+use App\Helpers\AuthHelper;
+use App\Helpers\DateHelper;
 
 class ActivitiesController extends Controller
 {
@@ -16,8 +17,14 @@ class ActivitiesController extends Controller
      */
     public function index(): void
 	{
+        if (AuthHelper::user()->role === 'administrator') {
+            $activities = ActivitiesModel::select();
+        } else {
+            $activities = ActivitiesModel::find('user', AuthHelper::user()->email);
+        }
+
 		$this->render('admin/activities', [
-            'activities' => ActivitiesModel::select()->orderDesc('created_at')->paginate(20)
+            'activities' => $activities->orderDesc('created_at')->paginate(20)
         ]);
 	}
 
@@ -59,7 +66,7 @@ class ActivitiesController extends Controller
 
 		if (!is_null($date_start) && !is_null($date_end)) {
 			$activities = ActivitiesModel::select()
-                ->between('created_at', Carbon::parse($date_start)->toDateTimeString(), Carbon::parse($date_end)->toDateTimeString())
+                ->between('created_at', DateHelper::format($date_start)->dateOnly(), DateHelper::format($date_end)->dateOnly())
                 ->orderDesc('created_at')
                 ->all();
 		} else {

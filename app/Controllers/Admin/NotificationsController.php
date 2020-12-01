@@ -5,6 +5,8 @@ namespace App\Controllers\Admin;
 use App\Helpers\ActivityHelper;
 use Framework\Routing\Controller;
 use App\Database\Models\NotificationsModel;
+use App\Helpers\AuthHelper;
+use App\Helpers\NotificationHelper;
 
 class NotificationsController extends Controller
 {
@@ -15,10 +17,15 @@ class NotificationsController extends Controller
      */
     public function index(): void
     {
-        $this->render('admin/notifications', [
-            'notifications' => NotificationsModel::select()->orderDesc('created_at')->paginate(20),
-            'notifications_unread' => NotificationsModel::count()->where('status', 'unread')->single()->value,
-        ]);
+        $notifications = NotificationsModel::find('user_id', AuthHelper::user()->id)->orderDesc('created_at')->paginate(20);
+
+        $notifications_unread = NotificationsModel::count()
+            ->where('status', 'unread')
+            ->andWhere('user_id', AuthHelper::user()->id)
+            ->single()
+            ->value;
+
+        $this->render('admin/notifications', compact('notifications', 'notifications_unread'));
     }
 
 	/**
@@ -28,8 +35,8 @@ class NotificationsController extends Controller
 	 */
 	public function create(): void
 	{
-        NotificationsModel::insert(['message' => $this->request->message]);
-        $this->toast(__('notifications_created'))->success();
+        NotificationHelper::create($this->request->message);
+        $this->redirectBack()->withToast(__('notifications_created'))->success();
     }
     
 	/**

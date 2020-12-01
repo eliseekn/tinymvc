@@ -7,6 +7,7 @@
  */
 
 use Carbon\Carbon;
+use Framework\Support\Encryption;
 
 /**
  * Sessions management functions
@@ -40,7 +41,7 @@ if (!function_exists('create_session')) {
 	 */
 	function create_session(string $name, $data): void
 	{
-		start_session();
+        start_session();
 		$_SESSION[config('app.name') . '_' . $name] = $data;
 	}
 }
@@ -54,7 +55,7 @@ if (!function_exists('get_session')) {
 	 */
 	function get_session(string $name)
 	{
-		start_session();
+        start_session();
 		return $_SESSION[config('app.name') . '_' . $name] ?? '';
 	}
 }

@@ -67,7 +67,7 @@ class SendMessage extends HTMLElement {
 
                             <div class="form-group">
                                 <label for="message">Message</label>
-                                <textarea id="message" name="message" rows="3"></textarea>
+                                <textarea id="message" name="message" rows="3" class="form-control"></textarea>
                             </div>
                         </div>
 

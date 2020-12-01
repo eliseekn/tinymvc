@@ -1584,7 +1584,7 @@ var SendMessage = /*#__PURE__*/function (_HTMLElement) {
       element.classList.add('modal', 'fade');
       element.innerHTML = "\n            <div class=\"modal-dialog modal-dialog-centered\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-header bg-light text-dark align-items-center py-2\">\n                        <h5 class=\"modal-title\">".concat(this.getAttribute('modal_title'), "</h5>\n                        <button type=\"button\" class=\"btn\" data-dismiss=\"modal\" aria-label=\"Close\">\n                            <i class=\"fa fa-times\"></i>\n                        </button>\n                    </div>\n\n                    <form method=\"post\" action=\"").concat(this.getAttribute('action'), "\">\n                        ").concat(this.getAttribute('csrf_token'), "\n                        \n                        <div class=\"modal-body\">\n                            <div class=\"form-group\">\n                                <label for=\"recipient\">User</label>\n                                <select id=\"recipient\" name=\"recipient\" class=\"custom-select\">\n                                    <option selected disabled>Select user</option>\n\n                                    ").concat(this.users.map(function (user) {
         return "<option value=\"".concat(user.id, "\" ").concat(user.id == _this3.getAttribute('recipient') ? 'selected' : '', ">").concat(user.email, "</option>");
-      }), "\n                                </select>\n                            </div>\n\n                            <div class=\"form-group\">\n                                <label for=\"message\">Message</label>\n                                <textarea id=\"message\" name=\"message\" rows=\"3\"></textarea>\n                            </div>\n                        </div>\n\n                        <div class=\"modal-footer\">\n                            <button type=\"submit\" class=\"btn btn-dark loading\">").concat(this.getAttribute('modal_button_title'), "</button>\n                            <button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">").concat(this.getAttribute('modal_button_cancel'), "</button>\n                        </div>\n                    </form>\n                </div>\n            </div>\n        ");
+      }), "\n                                </select>\n                            </div>\n\n                            <div class=\"form-group\">\n                                <label for=\"message\">Message</label>\n                                <textarea id=\"message\" name=\"message\" rows=\"3\" class=\"form-control\"></textarea>\n                            </div>\n                        </div>\n\n                        <div class=\"modal-footer\">\n                            <button type=\"submit\" class=\"btn btn-dark loading\">").concat(this.getAttribute('modal_button_title'), "</button>\n                            <button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">").concat(this.getAttribute('modal_button_cancel'), "</button>\n                        </div>\n                    </form>\n                </div>\n            </div>\n        ");
       document.body.appendChild(element);
       $('#send-message').modal({
         backdrop: 'static',
@@ -31357,7 +31357,7 @@ var Notifications = /*#__PURE__*/function (_React$Component) {
       this.getNotifications();
       this.intervalID = window.setInterval(function () {
         return _this3.getNotifications();
-      }, 30 * 1000); //every 30 seconds
+      }, 10 * 1000); //every 10 seconds
     }
   }, {
     key: "componentWillUnmount",
@@ -31459,7 +31459,7 @@ var Icon = function Icon(props) {
   return props.count > 0 ? /*#__PURE__*/_react.default.createElement("span", {
     className: "bg-danger notifications-icon"
   }) : '';
-}; //single notification item
+}; //single message item
 
 
 var Message = function Message(props) {
@@ -31522,7 +31522,7 @@ var Messages = /*#__PURE__*/function (_React$Component) {
       this.getMessages();
       this.intervalID = window.setInterval(function () {
         return _this3.getMessages();
-      }, 30 * 1000); //every 30 seconds
+      }, 10 * 1000); //every 10 seconds
     }
   }, {
     key: "componentWillUnmount",
@@ -33527,7 +33527,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "33153" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "45481" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

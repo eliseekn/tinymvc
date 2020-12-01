@@ -42,7 +42,7 @@ class Notifications extends React.Component {
 
     componentDidMount() {
         this.getNotifications()
-        this.intervalID = window.setInterval(() => this.getNotifications(), 30 * 1000) //every 30 seconds
+        this.intervalID = window.setInterval(() => this.getNotifications(), 10 * 1000) //every 10 seconds
     }
 
     componentWillUnmount() {

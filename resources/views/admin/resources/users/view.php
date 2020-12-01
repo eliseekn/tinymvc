@@ -38,14 +38,14 @@
         <div class="form-group row">
             <p class="col-sm-2 col-form-label"><?= __('created_at') ?></p>
             <div class="col-form-label col-sm-10 font-weight-bold">
-                <?= \Carbon\Carbon::parse($user->created_at, user_session()->timezone)->locale(user_session()->lang)->isoFormat('MMM Do, YYYY') ?>
+                <?= \App\Helpers\DateHelper::format($user->created_at)->human() ?>
             </div>
         </div>
 
         <div class="form-group row">
             <p class="col-sm-2 col-form-label"><?= __('updated_at') ?></p>
             <div class="col-form-label col-sm-10 font-weight-bold">
-                <?php $user->updated_at !== $user->created_at ? print(\Carbon\Carbon::parse($user->updated_at, user_session()->timezone)->locale(user_session()->lang)->isoFormat('MMM Do, YYYY')) : print('-') ?>
+                <?php $user->updated_at !== $user->created_at ? print(\App\Helpers\DateHelper::format($user->updated_at)->human()) : print('-') ?>
             </div>
         </div>
 

@@ -18,7 +18,7 @@ class AuthPolicy
     public static function handle(): void
     {
         if (AuthHelper::checkSession()) {
-            if (AuthHelper::hasRole('administrator')) {
+            if (!AuthHelper::hasRole('visitor')) {
                 Redirect::toUrl('/admin/dashboard')->withToast(__('welcome') . ' ' . AuthHelper::user()->name)->success();
             } else {
                 Redirect::toUrl('/')->withToast(__('welcome') . ' ' . AuthHelper::user()->name)->success();

@@ -25,7 +25,8 @@ class MessagesTable
             ->addBigInt('sender')
             ->addBigInt('recipient')
             ->addText('message')
-            ->addString('status')->default('unread')
+            ->addString('sender_status')->default('unread')
+            ->addString('recipient_status')->default('unread')
             ->create();
     }
     

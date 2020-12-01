@@ -2,7 +2,6 @@
 
 namespace App\Controllers\Admin;
 
-use Carbon\Carbon;
 use App\Requests\UpdateUser;
 use App\Helpers\ReportHelper;
 use App\Requests\RegisterUser;
@@ -12,6 +11,8 @@ use Framework\Routing\Controller;
 use Framework\Support\Encryption;
 use App\Database\Models\RolesModel;
 use App\Database\Models\UsersModel;
+use App\Helpers\AuthHelper;
+use App\Helpers\DateHelper;
 
 class UsersController extends Controller
 {
@@ -22,10 +23,17 @@ class UsersController extends Controller
      */
     public function index(): void
     {
-        $this->render('admin/resources/users/index', [
-            'users' => UsersModel::find('role', '!=', 'administrator')->orderAsc('name')->paginate(20),
-			'active_users' => UsersModel::select()->where('active', 1)->andWhere('role', '!=', 'administrator')->all(),
-        ]);
+        $users = UsersModel::select()
+            ->where('id', '!=', AuthHelper::user()->id)
+            ->orderAsc('name')
+            ->paginate(20);
+
+        $active_users = UsersModel::select()
+            ->where('active', 1)
+            ->andWhere('id', '!=', AuthHelper::user()->id)
+            ->all();
+
+        $this->render('admin/resources/users/index', compact('users', 'active_users'));
     }
 
 	/**
@@ -87,7 +95,7 @@ class UsersController extends Controller
             'email' => $this->request->email,
             'phone' => $this->request->phone,
             'company' => $this->request->company,
-            'password' => Encryption::encrypt($this->request->password)
+            'password' => Encryption::hash($this->request->password)
 		]);
 
         ActivityHelper::log('User created');
@@ -239,7 +247,7 @@ class UsersController extends Controller
 
 		if (!is_null($date_start) && !is_null($date_end)) {
 			$users = UsersModel::select()
-                ->between('created_at', Carbon::parse($date_start)->toDateTimeString(), Carbon::parse($date_end)->toDateTimeString())
+                ->between('created_at', DateHelper::format($date_start)->dateOnly(), DateHelper::format($date_end)->dateOnly())
                 ->orderDesc('created_at')
                 ->all();
 		} else {

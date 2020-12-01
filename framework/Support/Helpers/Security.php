@@ -26,33 +26,6 @@ if (!function_exists('escape')) {
     }
 }
 
-if (!function_exists('hash_string')) {
-	/**
-     * hash string with password_hash() PHP function
-     *
-     * @param  string $str string to be hashed
-     * @return string
-     */
-    function hash_string(string $str): string
-    {
-        return password_hash($str, PASSWORD_DEFAULT);
-    }
-}
-
-if (!function_exists('compare_hash')) {
-    /**
-     * compare hashed string with password_verify() PHP function
-     *
-     * @param  string $str
-     * @param  string $hash hashed string 
-     * @return bool
-     */
-    function compare_hash(string $str, string $hash): bool
-    {
-        return password_verify($str, $hash);
-    }
-}
-
 if (!function_exists('generate_csrf_token')) {
     /**
      * generate crsf token

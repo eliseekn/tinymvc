@@ -23,7 +23,7 @@ class AdminPolicy
             Redirect::toUrl('/login')->withAlert(__('not_logged_error', true))->error('');
         }
         
-        if (!AuthHelper::hasRole('administrator')) {
+        if (AuthHelper::hasRole('visitor')) {
             if (!empty(config('errors.views.403'))) {
                 View::render(config('errors.views.403'), [], 403);
             } else {

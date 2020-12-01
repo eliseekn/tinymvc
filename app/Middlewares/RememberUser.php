@@ -21,10 +21,10 @@ class RememberUser
     public static function handle(): void
     {
         if (AuthHelper::checkCookie()) {
-            $user = UsersModel::find('email', Encryption::decrypt(Cookies::getUser()))->single();
+            $user = UsersModel::find('email', Cookies::get('user'))->single();
 
             if ($user !== false) {
-                Session::getUser($user);
+                Session::create('user', $user);
             }
         }
         

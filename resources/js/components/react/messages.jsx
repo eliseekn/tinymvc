@@ -6,7 +6,7 @@ const Icon = (props) => {
     return props.count > 0 ? <span className="bg-danger notifications-icon"></span> : ''
 }
 
-//single notification item
+//single message item
 const Message = (props) => {
     return (
         <div className="dropdown-item py-2" style={{ width: '350px' }}>
@@ -46,7 +46,7 @@ class Messages extends React.Component {
 
     componentDidMount() {
         this.getMessages()
-        this.intervalID = window.setInterval(() => this.getMessages(), 30 * 1000) //every 30 seconds
+        this.intervalID = window.setInterval(() => this.getMessages(), 10 * 1000) //every 10 seconds
     }
 
     componentWillUnmount() {

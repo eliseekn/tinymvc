@@ -11,7 +11,6 @@ use Framework\Support\Encryption;
 use App\Database\Models\RolesModel;
 use App\Database\Models\UsersModel;
 use App\Database\Models\TokensModel;
-use Framework\Support\Validator;
 
 class AuthHelper
 {
@@ -44,7 +43,7 @@ class AuthHelper
     {
         $user = UsersModel::find('email', $request->email)->single();
 
-        if (!($user !== false && Encryption::verify($request->password, $user->password))) {
+        if (!($user !== false && Encryption::compare($request->password, $user->password))) {
             ActivityHelper::log('Log in attempts failed', $request->email);
             
             self::setAttempts();
@@ -80,8 +79,8 @@ class AuthHelper
 
         Session::create('user', $user);
             
-        if (isset($request->remember) && !empty($request->remember)) {
-            Cookies::create('user', Encryption::encrypt($request->email), 3600 * 24 * 365);
+        if ($request->has('remember')) {
+            Cookies::create('user', $request->email, 3600 * 24 * 365);
         }
         
         ActivityHelper::log('Log in attempts succeeded');

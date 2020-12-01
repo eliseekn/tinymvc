@@ -24,6 +24,7 @@ class NotificationsTable
             ->addBigInt('id')->primaryKey()
             ->addText('message')
             ->addString('status')->default('unread')
+            ->addBigInt('user_id')
             ->create();
     }
     

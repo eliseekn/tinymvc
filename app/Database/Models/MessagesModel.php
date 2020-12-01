@@ -39,7 +39,7 @@ class MessagesModel extends Model
         return self::select(['messages.*', 'users.email AS sender_email', 'users.name AS sender_name'])
             ->join('users', 'messages.sender', 'users.id')
             ->where('messages.recipient', AuthHelper::user()->id)
-            ->andWhere('messages.status', 'unread')
+            ->andWhere('messages.recipient_status', 'unread')
             ->orderDesc('messages.created_at');
     }
 }

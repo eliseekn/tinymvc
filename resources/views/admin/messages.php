@@ -105,11 +105,12 @@
                         <td><?= $message->sender_email ?></td>
                         <td><?= $message->recipient_email ?></td>
                         <td><?= $message->message ?></td>
-                        <td><?= time_elapsed(\Carbon\Carbon::parse($message->created_at, user_session()->timezone)->locale(user_session()->lang), 1) ?></td>
+                        <td><?= time_elapsed(\App\Helpers\DateHelper::format($message->created_at)->get(), 1) ?></td>
 
                         <td>
-                            <a class="btn text-dark p-1 <?php if ($message->status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('/admin/account/messages/update/' . $message->id) ?>" <?php if ($message->status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
-                                <?php if ($message->status === 'unread') : ?>
+                            <?php if ($message->sender_email !== user_session()->email) : ?>
+                            <a class="btn text-dark p-1 <?php if ($message->recipient_status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('/admin/account/messages/update/' . $message->id) ?>" <?php if ($message->recipient_status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
+                                <?php if ($message->recipient_status === 'unread') : ?>
                                 <i class="fa fa-eye-slash"></i>
                                 <?php else : ?>
                                 <i class="fa fa-eye"></i>
@@ -127,6 +128,7 @@
                                 modal_button_cancel="<?= __('cancel') ?>" 
                                 csrf_token='<?= csrf_token_input() ?>'>
                             </send-message>
+                            <?php endif ?>
 
                             <confirm-delete 
                                 type="icon" 

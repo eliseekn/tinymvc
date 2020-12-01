@@ -76,7 +76,6 @@
 
                 <tbody>
                     <?php foreach ($RESSOURCENAMEs as $key => $RESSOURCENAME) : ?>
-
                     <tr>
                         <td>
                             <div class="custom-control custom-checkbox">
@@ -86,7 +85,7 @@
                         </td>
 
                         <td><?= $key + 1 ?></td>
-                        <td><?= \Carbon\Carbon::parse($RESSOURCENAME->created_at, user_session()->timezone)->locale(user_session()->lang)->isoFormat('MMM Do, YYYY') ?></td>
+                        <td><?= \App\Helpers\DateHelper::format($RESSOURCENAME->created_at)->human() ?></td>
 
                         <td>
                             <a class="btn text-dark p-1" href="<?= absolute_url('/admin/resources/RESSOURCENAMEs/view/' . $RESSOURCENAME->id) ?>" title="View item">
@@ -104,7 +103,6 @@
                             </confirm-delete>
                         </td>
                     </tr>
-
                     <?php endforeach ?>
                 </tbody>
             </table>
@@ -113,6 +111,7 @@
 
     <div class="card-footer d-flex align-items-center justify-content-between">
         <span><?= __('total_results') ?> <span class="font-weight-bold"><?= $RESSOURCENAMEs->getTotalItems() ?></span></span>
+        <span>Showing <span class="font-weight-bold"><?= $RESSOURCENAMEs->getPageTotalItems() === 0 ? $RESSOURCENAMEs->getFirstItem() : $RESSOURCENAMEs->getFirstItem() + 1 ?></span> to <span class="font-weight-bold"><?= $RESSOURCENAMEs->getPageTotalItems() + $RESSOURCENAMEs->getFirstItem() ?></span></span>
 
         <?php $this->insert('partials/pagination', [
             'pagination' => $RESSOURCENAMEs

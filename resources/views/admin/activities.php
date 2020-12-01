@@ -84,7 +84,7 @@
                         <td><?= $activity->method ?></td>
                         <td><?= $activity->ip_address ?></td>
                         <td><?= $activity->action ?></td>
-                        <td><?= time_elapsed(\Carbon\Carbon::parse($activity->created_at, user_session()->timezone)->locale(user_session()->lang), 1) ?></td>
+                        <td><?= time_elapsed(\App\Helpers\DateHelper::format($activity->created_at)->get(), 1) ?></td>
 
                         <td>
                             <confirm-delete 

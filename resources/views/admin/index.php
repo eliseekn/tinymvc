@@ -12,6 +12,7 @@
 
 <?php if (user_session()->alerts && !empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
 
+<?php if (user_session()->role !== 'customer') :?>
 <div class="row mb-4">
     <div class="col-md-4">
         <div class="card shadow-sm mb-4 mb-md-0">
@@ -61,6 +62,7 @@
         </div>
     </div>
 </div>
+<?php endif ?>
 
 <div class="row mb-4">
     <div class="col-md-6">
@@ -105,10 +107,10 @@
                         <tr>
                             <td><?= $message->sender_email ?></td>
                             <td><?= $message->message ?></td>
-                            <td><?= time_elapsed(\Carbon\Carbon::parse($message->created_at, user_session()->timezone)->locale(user_session()->lang), 1) ?></td>
+                            <td><?= time_elapsed(\App\Helpers\DateHelper::format($message->created_at)->get(), 1) ?></td>
                             <td>
-                                <a class="btn text-dark p-1 <?php if ($message->status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('/admin/account/messages/update/' . $message->id) ?>" <?php if ($message->status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
-                                    <?php if ($message->status === 'unread') : ?>
+                                <a class="btn text-dark p-1 <?php if ($message->recipient_status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('/admin/account/messages/update/' . $message->id) ?>" <?php if ($message->recipient_status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
+                                    <?php if ($message->recipient_status === 'unread') : ?>
                                     <i class="fa fa-eye-slash"></i>
                                     <?php else : ?>
                                     <i class="fa fa-eye"></i>
@@ -119,8 +121,6 @@
                         <?php endforeach ?>
                     </tbody>
                 </table>
-
-                
             </div>
         </div>
     </div>
@@ -160,7 +160,7 @@
                         <?php foreach ($notifications as $notification) : ?>
                         <tr>
                             <td><?= $notification->message ?></td>
-                            <td><?= time_elapsed(\Carbon\Carbon::parse($notification->created_at, user_session()->timezone)->locale(user_session()->lang), 1) ?></td>
+                            <td><?= time_elapsed(\App\Helpers\DateHelper::format($notification->created_at)->get(), 1) ?></td>
                             <td>
                                 <a class="btn text-dark p-1 <?php if ($notification->status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('/admin/account/notifications/update/' . $notification->id) ?>" <?php if ($notification->status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
                                     <?php if ($notification->status === 'unread') : ?>
@@ -174,8 +174,6 @@
                         <?php endforeach ?>
                     </tbody>
                 </table>
-
-                
             </div>
         </div>
     </div>

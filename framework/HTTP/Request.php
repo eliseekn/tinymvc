@@ -360,6 +360,16 @@ class Request
     }
     
     /**
+     * remoteIP
+     *
+     * @return string
+     */
+    public function remoteIP(): string
+    {
+        return self::getRemoteIP();
+    }
+    
+    /**
      * has
      *
      * @param  string $item
@@ -367,7 +377,7 @@ class Request
      */
     public function has(string $item): bool
     {
-        return isset($this->{$item});
+        return isset($this->{$item}) && !empty($this->{$item});
     }
     
     /**

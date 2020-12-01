@@ -6,6 +6,8 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
+use Framework\Support\Encryption;
+
 /**
  * Cookies management functions
  */
@@ -28,7 +30,8 @@ if (!function_exists('create_cookie')) {
 		string $domain = '',
 		bool $secure = false
 	): bool {
-		return setcookie(config('app.name') . '_' . $name, $value, time() + $expires, '/', $domain, $secure, true);
+        $value = config('security.enc_cookies') ? Encryption::encrypt($value) : $value;
+		return setcookie(config('app.name') . '_' . $name, Encryption::encrypt($value), time() + $expires, '/', $domain, $secure, true);
 	}
 }
 
@@ -41,7 +44,8 @@ if (!function_exists('get_cookie')) {
 	 */
 	function get_cookie(string $name): string
 	{
-		return $_COOKIE[config('app.name') . '_' . $name] ?? '';
+        $value = $_COOKIE[config('app.name') . '_' . $name] ?? '';
+		return config('security.enc_cookies') ? Encryption::decrypt($value) : $value;
 	}
 }
 

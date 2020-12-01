@@ -21,7 +21,7 @@ class DashboardController extends Controller
         $active_users = UsersModel::count()->where('active', 1)->single()->value;
         $inactive_users = $total_users - $active_users;
         $users_metrics = UsersModel::metrics('id', Metrics::COUNT, Metrics::MONTHS);
-        $notifications = NotificationsModel::find('status', 'unread')->orderDesc('created_at')->firstOf(5);
+        $notifications = NotificationsModel::get()->firstOf(5);
         $messages = MessagesModel::recipients()->firstOf(5);
 
 		$this->render('admin/index', compact('total_users', 'inactive_users', 'active_users', 'users_metrics', 'notifications', 'messages'));

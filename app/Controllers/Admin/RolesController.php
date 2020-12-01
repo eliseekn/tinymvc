@@ -2,7 +2,7 @@
 
 namespace App\Controllers\Admin;
 
-use Carbon\Carbon;
+use App\Helpers\DateHelper;
 use App\Helpers\ReportHelper;
 use App\Helpers\ActivityHelper;
 use Framework\Support\Validator;
@@ -223,7 +223,7 @@ class RolesController extends Controller
 
 		if (!is_null($date_start) && !is_null($date_end)) {
 			$roles = RolesModel::select()
-                ->between('created_at', Carbon::parse($date_start)->toDateTimeString(), Carbon::parse($date_end)->toDateTimeString())
+                ->between('created_at', DateHelper::format($date_start)->dateOnly(), DateHelper::format($date_end)->dateOnly())
                 ->orderDesc('created_at')
                 ->all();
 		} else {

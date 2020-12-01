@@ -89,7 +89,7 @@
 
                         <td><?= $notifications->getFirstItem() + $key + 1 ?></td>
                         <td><?= $notification->message ?></td>
-                        <td><?= time_elapsed(\Carbon\Carbon::parse($notification->created_at, user_session()->timezone)->locale(user_session()->lang), 1) ?></td>
+                        <td><?= time_elapsed(\App\Helpers\DateHelper::format($notification->created_at)->get(), 1) ?></td>
 
                         <td>
                             <a class="btn text-dark p-1 <?php if ($notification->status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('/admin/account/notifications/update/' . $notification->id) ?>" <?php if ($notification->status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>

@@ -6,15 +6,14 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-use Carbon\Carbon;
 use App\Helpers\AuthHelper;
+use App\Helpers\DateHelper;
 use Framework\HTTP\Response;
 use Framework\Routing\Route;
 use Framework\Support\Metrics;
 use App\Database\Models\UsersModel;
 use App\Database\Models\MessagesModel;
 use App\Database\Models\NotificationsModel;
-use Framework\ORM\Builder;
 
 /**
  * API routes
@@ -29,10 +28,10 @@ Response::sendHeaders([
 //get notifications list
 Route::get('api/notifications', [
     'handler' => function() {
-        $notifications = NotificationsModel::find('status', 'unread')->orderDesc('created_at')->firstOf(5);
+        $notifications = NotificationsModel::get()->firstOf(5);
 
         foreach ($notifications as $notification) {
-            $notification->created_at = time_elapsed(Carbon::parse($notification->created_at, user_session()->timezone)->locale(user_session()->lang), 1);
+            $notification->created_at = time_elapsed(DateHelper::format($notification->created_at), 1);
         }
 
         Response::sendJson([
@@ -57,7 +56,7 @@ Route::get('api/messages', [
         $messages = MessagesModel::recipients()->firstOf(5);
 
         foreach ($messages as $message) {
-            $message->created_at = time_elapsed(Carbon::parse($message->created_at, user_session()->timezone)->locale(user_session()->lang), 1);
+            $message->created_at = time_elapsed(DateHelper::format(($message->created_at), 1));
         }
 
         Response::sendJson([

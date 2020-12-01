@@ -18,7 +18,7 @@
         <div class="form-group row">
             <p class="col-sm-2 col-form-label"><?= __('created_at') ?></p>
             <div class="col-form-label col-sm-10 font-weight-bold">
-                <?= \Carbon\Carbon::parse($RESSOURCENAME->created_at, user_session()->timezone)->locale(user_session()->lang)->isoFormat('MMM Do, YYYY') ?>
+                <?= \App\Helpers\DateHelper::format($RESSOURCENAME->created_at)->human() ?>
             </div>
         </div>
     </div>

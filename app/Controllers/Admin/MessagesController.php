@@ -2,13 +2,13 @@
 
 namespace App\Controllers\Admin;
 
-use Carbon\Carbon;
 use App\Helpers\AuthHelper;
 use App\Helpers\ReportHelper;
 use Framework\Routing\Controller;
 use App\Database\Models\MessagesModel;
 use App\Database\Models\UsersModel;
 use App\Helpers\ActivityHelper;
+use App\Helpers\DateHelper;
 
 class MessagesController extends Controller
 {
@@ -23,7 +23,7 @@ class MessagesController extends Controller
 
         $messages_unread = MessagesModel::count()
             ->where('recipient', AuthHelper::user()->id)
-            ->andWhere('status', 'unread')
+            ->andWhere('recipient_status', 'unread')
             ->single()
             ->value;
 
@@ -37,12 +37,13 @@ class MessagesController extends Controller
 	 */
     public function create(): void
 	{
-        MessagesModel::insert([
+        $id = MessagesModel::insert([
             'sender' => AuthHelper::user()->id,
             'recipient' => $this->request->recipient,
             'message' => $this->request->message
         ]);
 
+        MessagesModel::update(['sender_status' => 'read'])->where('id', $id)->persist();
         ActivityHelper::log('Message sent to ' . UsersModel::find('id', $this->request->recipient)->single()->email);
         $this->redirectBack()->withToast(__('message_sent'))->success();
 	}
@@ -60,7 +61,7 @@ class MessagesController extends Controller
             'message' => $this->request->message
         ]);
 
-        MessagesModel::update(['status' => 'read'])->where('id', $id)->persist();
+        MessagesModel::update(['sender_status' => 'read'])->where('id', $id)->persist();
         ActivityHelper::log('Message replied to ' . UsersModel::find('id', $this->request->recipient)->single()->email);
         $this->redirectBack()->withToast(__('message_sent'))->success();
 	}
@@ -77,7 +78,7 @@ class MessagesController extends Controller
             $this->redirectBack()->withToast(__('message_not_found'))->error();
         }
 
-        MessagesModel::update(['status' => 'read'])->where('id', $id)->persist();
+        MessagesModel::update(['recipient_status' => 'read'])->where('id', $id)->persist();
         ActivityHelper::log('Message marked as read');
         $this->redirectBack()->withToast(__('message_updated'))->success();
 	}
@@ -122,7 +123,7 @@ class MessagesController extends Controller
 
 		if (!is_null($date_start) && !is_null($date_end)) {
 			$messages = MessagesModel::select()
-                ->between('created_at', Carbon::parse($date_start)->toDateTimeString(), Carbon::parse($date_end)->toDateTimeString())
+                ->between('created_at', DateHelper::format($date_start)->dateOnly(), DateHelper::format($date_end)->dateOnly())
                 ->orderDesc('created_at')
                 ->all();
 		} else {

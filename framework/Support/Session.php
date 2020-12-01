@@ -71,13 +71,12 @@ class Session
     {
         $url = self::get('history');
 
-        foreach (config('session.history.excludes') as $exclude) {
-            if (!url_exists($exclude)) {
-                if (empty($url)) {
-                    $url = [Request::getFullUri()];
-                } else {
-                    $url[] = Request::getFullUri();
-                }
+        //excludes api uri from browser history
+        if (!url_exists('api')) {
+            if (empty($url)) {
+                $url = [Request::getFullUri()];
+            } else {
+                $url[] = Request::getFullUri();
             }
         }
 

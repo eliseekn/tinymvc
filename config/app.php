@@ -51,10 +51,11 @@ $config = [
 
     'security' => [
         'enc_key' => base64_encode('write_something_here_to_generate_a_single_encryption_key'),
+        'enc_cookies' => true,
 
         'auth' => [
-            'max_attempts' => 50,
-            'unlock_timeout' => 1,
+            'max_attempts' => 5,
+            'unlock_timeout' => 1, //in minute
             'email_confirmation' => false
         ]
     ],
@@ -73,12 +74,6 @@ $config = [
     ],
 
     'session' => [
-        'lifetime' => 3600 * 2, //1 hour in seconds
-        
-        'history' => [
-            'excludes' => [
-                'api'
-            ]
-        ]
+        'lifetime' => 3600 * 2, //2 hours in seconds
     ]
 ];

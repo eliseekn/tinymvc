@@ -27,6 +27,12 @@ class RoleSeed
         ]);
 
         Seeder::add(self::$table, [
+            'title' => 'Customer',
+            'slug' => 'customer',
+            'description' => 'Can access administration dashboard'
+        ]);
+
+        Seeder::add(self::$table, [
             'title' => 'Visitor',
             'slug' => 'visitor',
             'description' => 'Can only view website pages'
