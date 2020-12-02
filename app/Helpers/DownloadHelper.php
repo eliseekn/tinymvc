@@ -9,10 +9,7 @@ use Framework\HTTP\Response;
 class DownloadHelper
 {   
     /**
-     * known mimes types
-     * 
-     * @var arrray
-     * @link application/x-rar-compressed
+     * @var arrray $mimes_types
      */
     protected static array $mimes_types = [
         'htm' => 'text/html',

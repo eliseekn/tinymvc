@@ -21,6 +21,9 @@ class NotificationsModel extends Model
      */
     public static function get(): \Framework\ORM\Model
     {
-        return self::select()->where('status', 'unread')->andWhere('user_id', AuthHelper::user()->id)->orderDesc('created_at');
+        return self::select()
+            ->where('status', 'unread')
+            ->andWhere('user_id', AuthHelper::user()->id)
+            ->orderDesc('created_at');
     }
 }

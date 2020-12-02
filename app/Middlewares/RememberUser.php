@@ -5,7 +5,6 @@ namespace App\Middlewares;
 use App\Helpers\AuthHelper;
 use Framework\Support\Cookies;
 use Framework\Support\Session;
-use Framework\Support\Encryption;
 use App\Database\Models\UsersModel;
 
 /**

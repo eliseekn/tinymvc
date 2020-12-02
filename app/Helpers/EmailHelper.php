@@ -71,7 +71,7 @@ class EmailHelper
      * send authentication email
      *
      * @param  string $email
-     * @param  string $app site or application name
+     * @param  string $token
      * @return bool
      */
     public static function sendAuth(string $email, string $token): bool
