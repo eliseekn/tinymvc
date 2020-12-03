@@ -8,7 +8,7 @@
     <div class="col-md-4 mb-md-0 mb-4">
         <div class="card card-metrics bg-light shadow-sm">
             <div class="card-body d-flex align-items-center justify-content-between">
-                <p><i class="fa fa-bell fa-lg"></i> Total</p>
+                <p><i class="fa fa-envelope fa-lg"></i> Total</p>
                 <p class="font-weight-bold"><?= $messages->getTotalItems() ?></p>
             </div>
         </div>

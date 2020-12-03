@@ -2,11 +2,11 @@
 
 namespace App\Controllers\Admin;
 
-use App\Helpers\ActivityHelper;
+use App\Helpers\Auth;
+use App\Helpers\Activity;
 use Framework\Routing\Controller;
-use App\Database\Models\NotificationsModel;
-use App\Helpers\AuthHelper;
 use App\Helpers\NotificationHelper;
+use App\Database\Models\NotificationsModel;
 
 class NotificationsController extends Controller
 {
@@ -17,11 +17,11 @@ class NotificationsController extends Controller
      */
     public function index(): void
     {
-        $notifications = NotificationsModel::find('user_id', AuthHelper::user()->id)->orderDesc('created_at')->paginate(20);
+        $notifications = NotificationsModel::find('user_id', Auth::user()->id)->orderDesc('created_at')->paginate(20);
 
         $notifications_unread = NotificationsModel::count()
             ->where('status', 'unread')
-            ->andWhere('user_id', AuthHelper::user()->id)
+            ->andWhere('user_id', Auth::user()->id)
             ->single()
             ->value;
 
@@ -53,7 +53,7 @@ class NotificationsController extends Controller
 			}
 	
             NotificationsModel::update(['status' => 'read'])->where('id', $id)->persist();
-            ActivityHelper::log('Notification marked as read');
+            Activity::log('Notification marked as read');
             $this->redirectBack()->withToast(__('notification_updated'))->success();
 		} else {
 			$notifications_id = explode(',', $this->request->items);
@@ -62,7 +62,7 @@ class NotificationsController extends Controller
 				NotificationsModel::update(['status' => 'read'])->where('id', $id)->persist();
 			}
 			
-            ActivityHelper::log('Notifications marked as read');
+            Activity::log('Notifications marked as read');
 			$this->toast(__('notifications_updated'))->success();
 		}
     }
@@ -81,7 +81,7 @@ class NotificationsController extends Controller
 			}
 	
 			NotificationsModel::delete()->where('id', $id)->persist();
-            ActivityHelper::log('Notification deleted');
+            Activity::log('Notification deleted');
 			$this->redirectBack()->withToast(__('notification_deleted'))->success();
 		} else {
             $notifications_id = explode(',', $this->request->items);
@@ -90,7 +90,7 @@ class NotificationsController extends Controller
 				NotificationsModel::delete()->where('id', $id)->persist();
 			}
 			
-            ActivityHelper::log('Notifications deleted');
+            Activity::log('Notifications deleted');
 			$this->toast(__('notifications_deleted'))->success();
 		}
 	}

@@ -4,7 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Requests\UpdateUser;
 use Framework\Support\Session;
-use App\Helpers\ActivityHelper;
+use App\Helpers\Activity;
 use Framework\Routing\Controller;
 use Framework\Support\Encryption;
 use App\Database\Models\UsersModel;
@@ -72,7 +72,7 @@ class SettingsController extends Controller
             Session::create('user', $user);
         }
 
-        ActivityHelper::log('Settings saved');
+        Activity::log('Settings saved');
         $this->redirectBack()->withToast(__('changes_saved'))->success();
     }
 }

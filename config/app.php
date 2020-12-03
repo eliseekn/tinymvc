@@ -42,10 +42,12 @@ $config = [
 
     'errors' => [
         'display' => true,
+        'log' => false,
 
         'views' => [
+            '403' => 'errors' . DIRECTORY_SEPARATOR . '403',
             '404' => 'errors' . DIRECTORY_SEPARATOR . '404',
-            '403' => 'errors' . DIRECTORY_SEPARATOR . '404'
+            '500' => 'errors' . DIRECTORY_SEPARATOR . '500'
         ]
     ],
 
@@ -70,7 +72,8 @@ $config = [
         'controllers' => APP_ROOT . 'app' . DIRECTORY_SEPARATOR . 'Controllers' . DIRECTORY_SEPARATOR,
         'models' => APP_ROOT . 'app' . DIRECTORY_SEPARATOR . 'Database' . DIRECTORY_SEPARATOR . 'Models' . DIRECTORY_SEPARATOR,
         'middlewares' => APP_ROOT . 'app' . DIRECTORY_SEPARATOR . 'Middlewares' . DIRECTORY_SEPARATOR,
-        'requests' => APP_ROOT . 'app' . DIRECTORY_SEPARATOR . 'Requests' . DIRECTORY_SEPARATOR
+        'requests' => APP_ROOT . 'app' . DIRECTORY_SEPARATOR . 'Requests' . DIRECTORY_SEPARATOR,
+        'logs' => APP_ROOT . 'logs' . DIRECTORY_SEPARATOR
     ],
 
     'session' => [

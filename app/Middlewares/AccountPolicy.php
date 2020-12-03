@@ -2,7 +2,7 @@
 
 namespace App\Middlewares;
 
-use App\Helpers\AuthHelper;
+use App\Helpers\Auth;
 use Framework\HTTP\Redirect;
 
 /**
@@ -18,7 +18,7 @@ class AccountPolicy
     public static function handle(): void
     {
         if (config('security.auth.email_confirmation') === true) {
-            if (!AuthHelper::user()->active) {
+            if (!Auth::user()->active) {
                 Redirect::toUrl('/login')->withAlert(__('account_not_activated', true))->error();
             }
         }

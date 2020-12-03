@@ -2,7 +2,7 @@
 
 namespace App\Middlewares;
 
-use App\Helpers\AuthHelper;
+use App\Helpers\Auth;
 use Framework\HTTP\Redirect;
 
 /**
@@ -17,11 +17,11 @@ class AuthPolicy
      */
     public static function handle(): void
     {
-        if (AuthHelper::checkSession()) {
-            if (!AuthHelper::hasRole('visitor')) {
-                Redirect::toUrl('/admin/dashboard')->withToast(__('welcome') . ' ' . AuthHelper::user()->name)->success();
+        if (Auth::check()) {
+            if (!Auth::hasRole('visitor')) {
+                Redirect::toUrl('/admin/dashboard')->withToast(__('welcome') . ' ' . Auth::user()->name)->success();
             } else {
-                Redirect::toUrl('/')->withToast(__('welcome') . ' ' . AuthHelper::user()->name)->success();
+                Redirect::toUrl('/')->withToast(__('welcome') . ' ' . Auth::user()->name)->success();
             }
         }
     }

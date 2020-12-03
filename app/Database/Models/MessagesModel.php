@@ -3,7 +3,7 @@
 namespace App\Database\Models;
 
 use Framework\ORM\Model;
-use App\Helpers\AuthHelper;
+use App\Helpers\Auth;
 
 class MessagesModel extends Model
 {
@@ -24,8 +24,8 @@ class MessagesModel extends Model
         return self::select(['messages.*', 'u1.email AS sender_email', 'u2.email AS recipient_email'])
             ->join('users AS u1', 'messages.sender', 'u1.id')
             ->join('users AS u2', 'messages.recipient', 'u2.id')
-            ->where('messages.recipient', AuthHelper::user()->id)
-            ->orWhere('messages.sender', AuthHelper::user()->id)
+            ->where('messages.recipient', Auth::user()->id)
+            ->orWhere('messages.sender', Auth::user()->id)
             ->orderDesc('messages.created_at');
     }
         
@@ -38,7 +38,7 @@ class MessagesModel extends Model
     {
         return self::select(['messages.*', 'users.email AS sender_email', 'users.name AS sender_name'])
             ->join('users', 'messages.sender', 'users.id')
-            ->where('messages.recipient', AuthHelper::user()->id)
+            ->where('messages.recipient', Auth::user()->id)
             ->andWhere('messages.recipient_status', 'unread')
             ->orderDesc('messages.created_at');
     }

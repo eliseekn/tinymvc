@@ -5,7 +5,7 @@ namespace App\Helpers;
 use Framework\HTTP\Request;
 use App\Database\Models\ActivitiesModel;
 
-class ActivityHelper
+class Activity
 {    
     /**
      * log user action
@@ -16,7 +16,7 @@ class ActivityHelper
      */
     public static function log(string $action, ?string $user = null): void
     {
-        $user = is_null($user) ? AuthHelper::user()->email : $user;
+        $user = is_null($user) ? Auth::user()->email : $user;
 
         ActivitiesModel::insert([
             'user' => $user,

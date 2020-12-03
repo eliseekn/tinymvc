@@ -1,0 +1,31 @@
+Route::group([
+    'resources/RESOURCENAME' => ['handler' => 'Admin\CLASSNAME@index'],
+    'resources/RESOURCENAME/new' => ['handler' => 'Admin\CLASSNAME@new'],
+    'resources/RESOURCENAME/edit/{id:num}' => ['handler' => 'Admin\CLASSNAME@edit'],
+    'resources/RESOURCENAME/view/{id:num}' => ['handler' => 'Admin\CLASSNAME@view'],
+    'resources/RESOURCENAME/delete/{id:num}' => ['handler' => 'Admin\CLASSNAME@delete']
+])->by([
+    'method' => 'GET',
+    'prefix' => 'admin',
+    'middlewares' => [
+        'RememberUser',
+        'DashboardPolicy'
+    ]
+]);
+
+Route::group([
+    'resources/RESOURCENAME/create' => ['handler' => 'Admin\CLASSNAME@create'],
+    'resources/RESOURCENAME/update/{id:num}' => ['handler' => 'Admin\CLASSNAME@update'],
+    'resources/RESOURCENAME/import' => ['handler' => 'Admin\CLASSNAME@import'],
+    'resources/RESOURCENAME/export' => ['handler' => 'Admin\CLASSNAME@export'],
+    'resources/RESOURCENAME/delete' => ['handler' => 'Admin\CLASSNAME@delete']
+])->by([
+    'method' => 'POST',
+    'prefix' => 'admin',
+    'middlewares' => [
+        'RememberUser',
+        'CsrfProtection',
+        'SanitizeFields',
+        'DashboardPolicy'
+    ]
+]);

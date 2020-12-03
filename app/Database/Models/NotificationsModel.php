@@ -3,7 +3,7 @@
 namespace App\Database\Models;
 
 use Framework\ORM\Model;
-use App\Helpers\AuthHelper;
+use App\Helpers\Auth;
 
 class NotificationsModel extends Model
 {    
@@ -23,7 +23,7 @@ class NotificationsModel extends Model
     {
         return self::select()
             ->where('status', 'unread')
-            ->andWhere('user_id', AuthHelper::user()->id)
+            ->andWhere('user_id', Auth::user()->id)
             ->orderDesc('created_at');
     }
 }

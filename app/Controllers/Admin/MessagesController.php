@@ -2,13 +2,13 @@
 
 namespace App\Controllers\Admin;
 
-use App\Helpers\AuthHelper;
+use App\Helpers\Auth;
+use App\Helpers\Activity;
+use App\Helpers\DateHelper;
 use App\Helpers\ReportHelper;
 use Framework\Routing\Controller;
-use App\Database\Models\MessagesModel;
 use App\Database\Models\UsersModel;
-use App\Helpers\ActivityHelper;
-use App\Helpers\DateHelper;
+use App\Database\Models\MessagesModel;
 
 class MessagesController extends Controller
 {
@@ -22,7 +22,7 @@ class MessagesController extends Controller
         $messages = MessagesModel::get()->paginate(20);
 
         $messages_unread = MessagesModel::count()
-            ->where('recipient', AuthHelper::user()->id)
+            ->where('recipient', Auth::user()->id)
             ->andWhere('recipient_status', 'unread')
             ->single()
             ->value;
@@ -38,13 +38,13 @@ class MessagesController extends Controller
     public function create(): void
 	{
         $id = MessagesModel::insert([
-            'sender' => AuthHelper::user()->id,
+            'sender' => Auth::user()->id,
             'recipient' => $this->request->recipient,
             'message' => $this->request->message
         ]);
 
         MessagesModel::update(['sender_status' => 'read'])->where('id', $id)->persist();
-        ActivityHelper::log('Message sent to ' . UsersModel::find('id', $this->request->recipient)->single()->email);
+        Activity::log('Message sent to ' . UsersModel::find('id', $this->request->recipient)->single()->email);
         $this->redirectBack()->withToast(__('message_sent'))->success();
 	}
 	
@@ -56,13 +56,13 @@ class MessagesController extends Controller
     public function reply(): void
 	{
         $id = MessagesModel::insert([
-            'sender' => AuthHelper::user()->id,
+            'sender' => Auth::user()->id,
             'recipient' => $this->request->recipient,
             'message' => $this->request->message
         ]);
 
         MessagesModel::update(['sender_status' => 'read'])->where('id', $id)->persist();
-        ActivityHelper::log('Message replied to ' . UsersModel::find('id', $this->request->recipient)->single()->email);
+        Activity::log('Message replied to ' . UsersModel::find('id', $this->request->recipient)->single()->email);
         $this->redirectBack()->withToast(__('message_sent'))->success();
 	}
 	
@@ -79,7 +79,7 @@ class MessagesController extends Controller
         }
 
         MessagesModel::update(['recipient_status' => 'read'])->where('id', $id)->persist();
-        ActivityHelper::log('Message marked as read');
+        Activity::log('Message marked as read');
         $this->redirectBack()->withToast(__('message_updated'))->success();
 	}
 
@@ -97,7 +97,7 @@ class MessagesController extends Controller
 			}
 	
             MessagesModel::delete()->where('id', $id)->persist();
-            ActivityHelper::log('Message deleted');
+            Activity::log('Message deleted');
             $this->redirectBack()->withToast(__('message_deleted'))->success();
 		} else {
             $messages_id = explode(',', $this->request->items);
@@ -106,7 +106,7 @@ class MessagesController extends Controller
 				MessagesModel::delete()->where('id', $id)->persist();
 			}
             
-            ActivityHelper::log('Messages deleted');
+            Activity::log('Messages deleted');
 			$this->toast(__('messages_deleted'))->success();
 		}
 	}
@@ -132,7 +132,7 @@ class MessagesController extends Controller
         
         $filename = 'messages_' . date('Y_m_d') . '.' . $this->request->file_type;
 
-        ActivityHelper::log('Messages exported');
+        Activity::log('Messages exported');
 
 		ReportHelper::export($filename, $messages, [
 			'sender' => __('sender'), 

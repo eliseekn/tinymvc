@@ -6,7 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-use App\Helpers\AuthHelper;
+use App\Helpers\Auth;
 use App\Helpers\DateHelper;
 use Framework\HTTP\Response;
 use Framework\Routing\Route;
@@ -70,6 +70,6 @@ Route::get('api/messages', [
 //get users list
 Route::get('api/users', [
     'handler' => function () {
-        Response::sendJson(['users' => UsersModel::find('id', '!=', AuthHelper::user()->id)->all()]);
+        Response::sendJson(['users' => UsersModel::find('id', '!=', Auth::user()->id)->all()]);
     }
 ]);

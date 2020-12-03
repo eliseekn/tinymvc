@@ -12,7 +12,9 @@
     <div class="row mb-4">
         <div class="col-12 col-lg-6 mb-4 mb-lg-0">
             <div class="card shadow-sm h-100">
-                <div class="card-header "><?= __('profile') ?></div>
+                <div class="card-header">
+                    <i class="fa fa-user"></i> <?= __('profile') ?>
+                </div>
 
                 <div class="card-body">
                     <div class="form-group row">
@@ -79,7 +81,9 @@
 
         <div class="col-12 col-lg-6">
             <div class="card shadow-sm h-100">
-                <div class="card-header "><?= __('security') ?></div>
+                <div class="card-header">
+                    <i class="fa fa-shield-alt"></i> <?= __('security') ?>
+                </div>
 
                 <div class="card-body">
                     <div class="form-group row">
@@ -111,7 +115,9 @@
     <div class="row mb-4">
         <div class="col-12 col-lg-6 mb-4 mb-lg-0">
             <div class="card shadow-sm h-100">
-                <div class="card-header "><?= __('preferences') ?></div>
+                <div class="card-header">
+                    <i class="fa fa-tools"></i> <?= __('preferences') ?>
+                </div>
 
                 <div class="card-body">
                     <div class="form-group row">
@@ -146,7 +152,9 @@
 
         <div class="col-12 col-lg-6">
             <div class="card shadow-sm h-100">
-                <div class="card-header "><?= __('dashboard') ?></div>
+                <div class="card-header">
+                    <i class="fa fa-home"></i> <?= __('dashboard') ?>
+                </div>
 
                 <div class="card-body">
                     <div class="form-group row d-flex align-items-center">

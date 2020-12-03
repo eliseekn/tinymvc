@@ -28,7 +28,7 @@ class Middleware
      * @param  string $middleware name of middleware
      * @return void
      */
-    private static function execute(string $middleware): void
+    public static function execute(string $middleware): void
     {
         $middleware = 'App\Middlewares\\' . $middleware;
 

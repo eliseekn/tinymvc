@@ -2,15 +2,15 @@
 
 namespace App\Middlewares;
 
-use App\Helpers\AuthHelper;
+use App\Helpers\Auth;
 use Framework\Routing\View;
 use Framework\HTTP\Redirect;
 use Framework\HTTP\Response;
 
 /**
- * Check user permissions and role
+ * Check user role
  */
-class AdminPolicy
+class DashboardPolicy
 {    
     /**
      * handle function
@@ -19,11 +19,11 @@ class AdminPolicy
      */
     public static function handle(): void
     {
-        if (!AuthHelper::checkSession()) {
+        if (!Auth::check()) {
             Redirect::toUrl('/login')->withAlert(__('not_logged_error', true))->error('');
         }
         
-        if (AuthHelper::hasRole('visitor')) {
+        if (Auth::hasRole('visitor')) {
             if (!empty(config('errors.views.403'))) {
                 View::render(config('errors.views.403'), [], 403);
             } else {

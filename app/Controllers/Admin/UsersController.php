@@ -2,17 +2,17 @@
 
 namespace App\Controllers\Admin;
 
+use App\Helpers\Auth;
+use App\Helpers\DateHelper;
 use App\Requests\UpdateUser;
 use App\Helpers\ReportHelper;
 use App\Requests\RegisterUser;
 use Framework\Support\Session;
-use App\Helpers\ActivityHelper;
+use App\Helpers\Activity;
 use Framework\Routing\Controller;
 use Framework\Support\Encryption;
 use App\Database\Models\RolesModel;
 use App\Database\Models\UsersModel;
-use App\Helpers\AuthHelper;
-use App\Helpers\DateHelper;
 
 class UsersController extends Controller
 {
@@ -24,13 +24,13 @@ class UsersController extends Controller
     public function index(): void
     {
         $users = UsersModel::select()
-            ->where('id', '!=', AuthHelper::user()->id)
+            ->where('id', '!=', Auth::user()->id)
             ->orderAsc('name')
             ->paginate(20);
 
         $active_users = UsersModel::select()
             ->where('active', 1)
-            ->andWhere('id', '!=', AuthHelper::user()->id)
+            ->andWhere('id', '!=', Auth::user()->id)
             ->all();
 
         $this->render('admin/resources/users/index', compact('users', 'active_users'));
@@ -98,7 +98,7 @@ class UsersController extends Controller
             'password' => Encryption::hash($this->request->password)
 		]);
 
-        ActivityHelper::log('User created');
+        Activity::log('User created');
         $this->redirect('admin/resources/users/view', $id)->withToast(__('user_created'))->success();
     }
 	
@@ -174,7 +174,7 @@ class UsersController extends Controller
             Session::create('user', $user);
         }
 
-        ActivityHelper::log('User updated');
+        Activity::log('User updated');
         $this->redirect('admin/resources/users/view', $id)->withToast(__('user_updated'))->success();
     }
 
@@ -192,7 +192,7 @@ class UsersController extends Controller
 			}
 	
 			UsersModel::delete()->where('id', $id)->persist();
-            ActivityHelper::log('User deleted');
+            Activity::log('User deleted');
             $this->redirectBack()->withToast(__('user_deleted'))->success();
 		} else {
             $users_id = explode(',', $this->request->items);
@@ -201,7 +201,7 @@ class UsersController extends Controller
 				UsersModel::delete()->where('id', $id)->persist();
 			}
 			
-            ActivityHelper::log('Users deleted');
+            Activity::log('Users deleted');
             $this->toast(__('users_deleted'))->success();
 		}
 	}
@@ -231,7 +231,7 @@ class UsersController extends Controller
 			'password' => __('password')
 		]);
 
-        ActivityHelper::log('Users imported');
+        Activity::log('Users imported');
 		$this->redirectBack()->withToast(__('data_imported'))->success();
 	}
 	
@@ -256,7 +256,7 @@ class UsersController extends Controller
         
         $filename = 'users_' . date('Y_m_d') . '.' . $this->request->file_type;
 
-        ActivityHelper::log('Users exported');
+        Activity::log('Users exported');
         
 		ReportHelper::export($filename, $users, [
 			'name' => __('name'), 

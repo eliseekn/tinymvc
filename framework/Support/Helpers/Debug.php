@@ -6,26 +6,23 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
+use Framework\Support\Storage;
+
 /**
- * Debug
- * 
- * Debugging class
+ * Debugging helpers function
  */
 
-if (!function_exists('write_log')) {
+if (!function_exists('save_log')) {
     /**
 	 * save log message to file
 	 *
-	 * @param  string $folder
-	 * @param  string $type (INFOS, ERROR, DEBUG...)
 	 * @param  string $message 
 	 * @return void
 	 */
-	function write_log(string $folder, string $type, string $message): void
+	function save_log(string $message): void
 	{
-		$log = '[' . date('H:i:s') . '] [' . $type . '] ' . $message . PHP_EOL;
-		$log_file = APP_ROOT . $folder . DIRECTORY_SEPARATOR . 'logs_' . date('m_d_y') . '.txt';
-		file_put_contents($log_file, $log, FILE_APPEND | LOCK_EX);
+        Storage::path(config('storage.logs'))->createDir();
+        error_log($message);
 	}
 }
 

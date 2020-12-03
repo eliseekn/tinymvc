@@ -2,7 +2,7 @@
 
 namespace App\Middlewares;
 
-use App\Helpers\AuthHelper;
+use App\Helpers\Auth;
 use Framework\Support\Cookies;
 use Framework\Support\Session;
 use App\Database\Models\UsersModel;
@@ -19,7 +19,7 @@ class RememberUser
      */
     public static function handle(): void
     {
-        if (AuthHelper::checkCookie()) {
+        if (Auth::remember()) {
             $user = UsersModel::find('email', Cookies::get('user'))->single();
 
             if ($user !== false) {

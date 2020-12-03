@@ -12,14 +12,14 @@ use App\Database\Models\RolesModel;
 use App\Database\Models\UsersModel;
 use App\Database\Models\TokensModel;
 
-class AuthHelper
+class Auth
 {
     /**
      * return authentication attempts count
      *
      * @return int
      */
-    public static function getAttempts(): int
+    private static function getAttempts(): int
     {
         return Session::has('auth_attempts') ? Session::get('auth_attempts') : 0;
     }
@@ -39,12 +39,13 @@ class AuthHelper
      *
      * @return mixed
      */
-    public static function authenticate(Request $request)
+    public static function attempt(Request $request)
     {
         $user = UsersModel::find('email', $request->email)->single();
 
+        //check credentials
         if (!($user !== false && Encryption::compare($request->password, $user->password))) {
-            ActivityHelper::log('Log in attempts failed', $request->email);
+            Activity::log('Log in attempts failed', $request->email);
             
             self::setAttempts();
 
@@ -57,8 +58,7 @@ class AuthHelper
         }
 
         //reset authentication attempts and disable lock
-        Session::close('auth_attempts');
-        Session::close('auth_attempts_timeout');
+        Session::close('auth_attempts', 'auth_attempts_timeout');
 
         //check if two factor authentication is enabled
         if ($user->two_steps) {
@@ -77,25 +77,17 @@ class AuthHelper
             }
         }
 
-        Session::create('user', $user);
+        //set user session
+        self::set($user);
             
+        //set user cookie
         if ($request->has('remember')) {
             Cookies::create('user', $request->email, 3600 * 24 * 365);
         }
         
-        ActivityHelper::log('Log in attempts succeeded');
+        Activity::log('Log in attempts succeeded');
     }
     
-    /**
-     * email authentication
-     *
-     * @return void
-     */
-    public static function authEmail(string $email): void
-    {
-        Session::create('user', UsersModel::find('email', $email)->single());
-    }
-
     /**
      * create new user
      *
@@ -125,7 +117,7 @@ class AuthHelper
      *
      * @return bool
      */
-    public static function checkSession(): bool
+    public static function check(): bool
     {
         return Session::has('user');
     }
@@ -135,7 +127,7 @@ class AuthHelper
      *
      * @return bool
      */
-    public static function checkCookie(): bool
+    public static function remember(): bool
     {
         return Cookies::has('user');
     }
@@ -147,7 +139,18 @@ class AuthHelper
      */
     public static function user()
     {
-        return Session::get('user');;
+        return Session::get('user');
+    }
+    
+    /**
+     * set user session
+     *
+     * @param  mixed $user
+     * @return void
+     */
+    public static function set($user): void
+    {
+        Session::create('user', $user);
     }
     
     /**
@@ -157,15 +160,15 @@ class AuthHelper
      */
     public static function forget(): void
     {
-        if (self::checkSession()) {
-            ActivityHelper::log('Logged out');
+        if (self::check()) {
+            Activity::log('Logged out');
         }
 
-        if (self::checkSession()) {
+        if (self::check()) {
             Session::close('user', 'history', 'csrf_token');
         }
 
-        if (self::checkCookie()) {
+        if (self::remember()) {
             Cookies::delete('user');
         }
     }

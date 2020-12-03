@@ -1,5 +1,5 @@
 <?php $this->layout('admin/layout', [
-    'page_title' => __('RESSOURCENAMEs') . ' | Administration'
+    'page_title' => __('RESOURCENAMEs') . ' | Administration'
 ]) ?>
 
 <?php $this->start('page_content') ?>
@@ -9,7 +9,7 @@
         <div class="card card-metrics bg-light shadow-sm">
             <div class="card-body d-flex align-items-center justify-content-between">
                 <p><i class="fa fa-cog fa-lg"></i> <?= __('total') ?></p>
-                <p class="font-weight-bold"><?= $RESSOURCENAMEs->getTotalItems() ?></p>
+                <p class="font-weight-bold"><?= $RESOURCENAMEs->getTotalItems() ?></p>
             </div>
         </div>
     </div>
@@ -20,7 +20,7 @@
 <div class="card shadow-sm">
     <div class="card-header">
         <div class="d-flex flex-lg-row flex-column align-items-lg-center justify-content-lg-between">
-            <span><?= __('RESSOURCENAMEs') ?></span>
+            <span><?= __('RESOURCENAMEs') ?></span>
 
             <div class="d-flex flex-lg-row flex-column mt-lg-0 mt-2">
                 <span class="mr-md-3">
@@ -28,10 +28,12 @@
                 </span>
 
                 <span class="mt-lg-0 mt-2">
-                    <a href="<?= absolute_url('/admin/resources/RESSOURCENAMEs/new') ?>" class="btn btn-primary"><?= __('new') ?></a>
+                    <a href="<?= absolute_url('/admin/resources/RESOURCENAMEs/new') ?>" class="btn btn-outline-dark">
+                        <?= __('new') ?>
+                    </a>
                     
                     <upload-modal 
-                        action="<?= absolute_url('/admin/resources/RESSOURCENAMEs/import') ?>" 
+                        action="<?= absolute_url('/admin/resources/RESOURCENAMEs/import') ?>" 
                         title="<?= __('import') ?>" 
                         modal_title="<?= __('upload_modal_title') ?>" 
                         modal_button_title="<?= __('submit') ?>" 
@@ -40,7 +42,7 @@
                     </upload-modal>
 
                     <export-modal 
-                        action="<?= absolute_url('/admin/resources/RESSOURCENAMEs/export') ?>" 
+                        action="<?= absolute_url('/admin/resources/RESOURCENAMEs/export') ?>" 
                         title="<?= __('export') ?>" 
                         modal_title="<?= __('export') ?>" 
                         modal_button_title="<?= __('export') ?>" 
@@ -48,7 +50,7 @@
                         csrf_token='<?= csrf_token_input() ?>'>
                     </export-modal>
 
-                    <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('/admin/resources/RESSOURCENAMEs/delete') ?>">
+                    <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('/admin/resources/RESOURCENAMEs/delete') ?>">
                         <?= __('delete') ?>
                     </button>
                 </span>
@@ -75,31 +77,31 @@
                 </thead>
 
                 <tbody>
-                    <?php foreach ($RESSOURCENAMEs as $key => $RESSOURCENAME) : ?>
+                    <?php foreach ($RESOURCENAMEs as $key => $RESOURCENAME) : ?>
                     <tr>
                         <td>
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="<?= $RESSOURCENAME->id ?>" data-id="<?= $RESSOURCENAME->id ?>">
-                                <label class="custom-control-label" for="<?= $RESSOURCENAME->id ?>"></label>
+                                <input type="checkbox" class="custom-control-input" id="<?= $RESOURCENAME->id ?>" data-id="<?= $RESOURCENAME->id ?>">
+                                <label class="custom-control-label" for="<?= $RESOURCENAME->id ?>"></label>
                             </div>
                         </td>
 
-                        <td><?= $key + 1 ?></td>
-                        <td><?= \App\Helpers\DateHelper::format($RESSOURCENAME->created_at)->human() ?></td>
+                        <td><?= $RESOURCENAMEs->getFirstItem() + $key + 1 ?></td>
+                        <td><?= \App\Helpers\DateHelper::format($RESOURCENAME->created_at)->human() ?></td>
 
                         <td>
-                            <a class="btn text-dark p-1" href="<?= absolute_url('/admin/resources/RESSOURCENAMEs/view/' . $RESSOURCENAME->id) ?>" title="View item">
+                            <a class="btn text-dark p-1" href="<?= absolute_url('/admin/resources/RESOURCENAMEs/view/' . $RESOURCENAME->id) ?>" title="View item">
                                 <i class="fa fa-eye"></i>
                             </a>
 
-                            <a class="btn text-dark p-1" href="<?= absolute_url('/admin/resources/RESSOURCENAMEs/edit/' . $RESSOURCENAME->id) ?>" title="Edit item">
+                            <a class="btn text-dark p-1" href="<?= absolute_url('/admin/resources/RESOURCENAMEs/edit/' . $RESOURCENAME->id) ?>" title="Edit item">
                                 <i class="fa fa-edit"></i>
                             </a>
 
                             <confirm-delete 
                                 type="icon" 
                                 content='<i class="fa fa-trash-alt"></i>' 
-                                action="<?= absolute_url('/admin/resources/RESSOURCENAMEs/delete/' . $RESSOURCENAME->id) ?>">
+                                action="<?= absolute_url('/admin/resources/RESOURCENAMEs/delete/' . $RESOURCENAME->id) ?>">
                             </confirm-delete>
                         </td>
                     </tr>
@@ -110,11 +112,11 @@
     </div>
 
     <div class="card-footer d-flex align-items-center justify-content-between">
-        <span><?= __('total_results') ?> <span class="font-weight-bold"><?= $RESSOURCENAMEs->getTotalItems() ?></span></span>
-        <span>Showing <span class="font-weight-bold"><?= $RESSOURCENAMEs->getPageTotalItems() === 0 ? $RESSOURCENAMEs->getFirstItem() : $RESSOURCENAMEs->getFirstItem() + 1 ?></span> to <span class="font-weight-bold"><?= $RESSOURCENAMEs->getPageTotalItems() + $RESSOURCENAMEs->getFirstItem() ?></span></span>
+        <span><?= __('total_results') ?> <span class="font-weight-bold"><?= $RESOURCENAMEs->getTotalItems() ?></span></span>
+        <span>Showing <span class="font-weight-bold"><?= $RESOURCENAMEs->getPageTotalItems() === 0 ? $RESOURCENAMEs->getFirstItem() : $RESOURCENAMEs->getFirstItem() + 1 ?></span> to <span class="font-weight-bold"><?= $RESOURCENAMEs->getPageTotalItems() + $RESOURCENAMEs->getFirstItem() ?></span></span>
 
         <?php $this->insert('partials/pagination', [
-            'pagination' => $RESSOURCENAMEs
+            'pagination' => $RESOURCENAMEs
         ]) ?>
     </div>
 </div>

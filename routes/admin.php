@@ -17,11 +17,7 @@ Route::group([
     'admin/dashboard' => []
 ])->by([
     'method' => 'GET',
-    'handler' => 'Admin\DashboardController@index',
-    'middlewares' => [
-        'RememberUser',
-        'AdminPolicy'
-    ]
+    'handler' => 'Admin\DashboardController@index'
 ]);
 
 Route::group([
@@ -55,7 +51,7 @@ Route::group([
     'prefix' => 'admin',
     'middlewares' => [
         'RememberUser',
-        'AdminPolicy'
+        'DashboardPolicy'
     ]
 ]);
 
@@ -93,6 +89,6 @@ Route::group([
         'RememberUser',
         'CsrfProtection',
         'SanitizeFields',
-        'AdminPolicy'
+        'DashboardPolicy'
     ]
 ]);

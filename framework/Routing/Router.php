@@ -40,7 +40,15 @@ class Router
         try {
             $this->dispatch(Route::$routes);
         } catch (Exception $e) {
-            exit($e->getMessage());
+            //save exception message log
+            save_log($e->getMessage());
+
+            //send 500 response
+            if (!empty(config('errors.views.500'))) {
+                View::render(config('errors.views.500'), [], 500);
+            } else {
+                Response::send('Try to refresh the page or feel free to contact us if the problem persists', [], 500);
+            }
         }
     }
     

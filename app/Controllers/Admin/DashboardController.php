@@ -9,7 +9,17 @@ use App\Database\Models\MessagesModel;
 use App\Database\Models\NotificationsModel;
 
 class DashboardController extends Controller
-{
+{    
+    /**
+     * __construct
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('RememberUser', 'DashboardPolicy');
+    }
+
 	/**
 	 * display dashboard page
 	 *

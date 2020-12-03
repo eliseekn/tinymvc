@@ -192,4 +192,17 @@ class Controller
 
         return $this;
     }
+    
+    /**
+     * call middlewares
+     *
+     * @param  string[] $middlewares
+     * @return void
+     */
+    public function middleware(string ...$middlewares): void
+    {
+        foreach ($middlewares as $middleware) {
+            Middleware::execute($middleware);
+        }
+    }
 }

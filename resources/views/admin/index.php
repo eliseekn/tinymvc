@@ -1,5 +1,5 @@
 <?php $this->layout('admin/layout', [
-    'page_title' => 'TinyMVC | Dashboard'
+    'page_title' => config('app.name') . ' | Dashboard'
 ]) ?>
 
 <?php $this->start('styles') ?>

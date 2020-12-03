@@ -2,11 +2,11 @@
 
 namespace App\Controllers\Admin;
 
+use App\Helpers\Auth;
+use App\Helpers\DateHelper;
 use App\Helpers\ReportHelper;
 use Framework\Routing\Controller;
 use App\Database\Models\ActivitiesModel;
-use App\Helpers\AuthHelper;
-use App\Helpers\DateHelper;
 
 class ActivitiesController extends Controller
 {
@@ -17,10 +17,10 @@ class ActivitiesController extends Controller
      */
     public function index(): void
 	{
-        if (AuthHelper::user()->role === 'administrator') {
+        if (Auth::user()->role === 'administrator') {
             $activities = ActivitiesModel::select();
         } else {
-            $activities = ActivitiesModel::find('user', AuthHelper::user()->email);
+            $activities = ActivitiesModel::find('user', Auth::user()->email);
         }
 
 		$this->render('admin/activities', [

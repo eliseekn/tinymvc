@@ -50,20 +50,31 @@ class Storage
     public function add(string $path): self
     {
         self::$path .= $path . DIRECTORY_SEPARATOR;
-        return new self();
+        return $this;
+    }
+
+    /**
+     * add file to current path
+     *
+     * @return string
+     */
+    public function addFile(string $filename): string
+    {
+        self::$path .= $filename;
+        return $this->get();
     }
 
     /**
      * create new directory
      *
      * @param  string $pathname
-     * @param  int $mode creation mode
-     * @param  bool $recursive create folders recursively
+     * @param  int $mode
+     * @param  bool $recursive
      * @return bool
      */
-    public function createDir(string $pathname, bool $recursive = false, int $mode = 0777): bool
+    public function createDir(?string $pathname = null, bool $recursive = false, int $mode = 0777): bool
     {
-        return mkdir(self::$path . $pathname, $mode, $recursive);
+        return is_null($pathname) ? mkdir(self::$path, $mode, $recursive) : mkdir(self::$path . $pathname, $mode, $recursive);
     }
     
     /**
@@ -71,11 +82,17 @@ class Storage
      *
      * @param  string $filename
      * @param  mixed $content
-     * @param  bool $append write content at the end of the file
+     * @param  bool $append
      * @return bool
      */
     public function writeFile(string $filename, $content, bool $append = false): bool
     {
+        if (!$this->isDir()) {
+            if (!$this->createDir()) {
+                return false;
+            }
+        }
+
         $flag = $append ? FILE_APPEND | LOCK_EX : 0;
         $success = file_put_contents(self::$path . $filename, $content, $flag);
         return $success === false ? false : true;
@@ -143,12 +160,12 @@ class Storage
     /**
      * check if folder exists
      *
-     * @param  string $pathname
+     * @param  string|null $pathname
      * @return bool
      */
-    public function isDir(string $pathname): bool
+    public function isDir(?string $pathname = null): bool
     {
-        return is_dir(self::$path . $pathname);
+        return is_null($pathname) ? is_dir(self::$path) : is_dir(self::$path . $pathname);
     }
     
     /**

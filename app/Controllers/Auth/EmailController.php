@@ -3,7 +3,7 @@
 namespace App\Controllers\Auth;
 
 use Carbon\Carbon;
-use App\Helpers\AuthHelper;
+use App\Helpers\Auth;
 use App\Helpers\EmailHelper;
 use App\Middlewares\AuthPolicy;
 use Framework\Routing\Controller;
@@ -50,7 +50,7 @@ class EmailController extends Controller
 
         TokensModel::delete()->where('email', $auth_token->email)->persist();
 
-        AuthHelper::authEmail($auth_token->email);
+        Auth::set(UsersModel::find('email', $auth_token->email)->single());
         AuthPolicy::handle();
     }
 }

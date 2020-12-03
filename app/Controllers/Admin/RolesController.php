@@ -2,9 +2,9 @@
 
 namespace App\Controllers\Admin;
 
+use App\Helpers\Activity;
 use App\Helpers\DateHelper;
 use App\Helpers\ReportHelper;
-use App\Helpers\ActivityHelper;
 use Framework\Support\Validator;
 use Framework\Routing\Controller;
 use App\Database\Models\RolesModel;
@@ -82,7 +82,7 @@ class RolesController extends Controller
 		]);
 
 		$this->toast(__('role_created'))->success();
-        ActivityHelper::log('Role created');
+        Activity::log('Role created');
         $this->jsonResponse(['redirect' => absolute_url('admin/resources/roles/view/' . $id)]);
     }
 	
@@ -152,7 +152,7 @@ class RolesController extends Controller
             ->persist();
 
         $this->toast(__('role_updated'))->success();
-        ActivityHelper::log('Role updated');
+        Activity::log('Role updated');
 		$this->jsonResponse(['redirect' => absolute_url('admin/resources/roles/view/' . $id)]);
     }
 
@@ -170,7 +170,7 @@ class RolesController extends Controller
 			}
 	
 			RolesModel::delete()->where('id', $id)->persist();
-            ActivityHelper::log('Role deleted');
+            Activity::log('Role deleted');
             $this->redirectBack()->withToast(__('role_deleted'))->success();
 		} else {
 			$roles_id = explode(',', $this->request->items);
@@ -179,7 +179,7 @@ class RolesController extends Controller
 				RolesModel::delete()->where('id', $id)->persist();
 			}
 			
-            ActivityHelper::log('Roles deleted');
+            Activity::log('Roles deleted');
 			$this->toast(__('roles_deleted'))->success();
 		}
 	}
@@ -207,7 +207,7 @@ class RolesController extends Controller
 			'description' => __('description')
 		]);
 
-        ActivityHelper::log('Roles imported');
+        Activity::log('Roles imported');
         $this->redirectBack()->withToast(__('data_imported'))->success();
 	}
 	
@@ -232,7 +232,7 @@ class RolesController extends Controller
         
         $filename = 'roles_' . date('Y_m_d') . '.' . $this->request->file_type;
 
-        ActivityHelper::log('Roles exported');
+        Activity::log('Roles exported');
 
 		ReportHelper::export($filename, $roles, [
 			'title' => __('title'), 

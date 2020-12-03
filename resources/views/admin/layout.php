@@ -33,7 +33,6 @@
                     <i class="fa fa-home <?php if (url_exists('dashboard')) : echo 'text-primary'; endif ?>"></i> <?= __('dashboard') ?>
                 </a>
 
-                <?php if (user_session()->role !== 'customer') :?>
                 <button class="list-group-item list-group-item-action" id="dropdown-btn" data-target="resources-dropdown-menu">
                     <i class="fa fa-layer-group <?php if (url_exists('resources')) : echo 'text-primary'; endif ?>"></i> <?= __('resources') ?>
 
@@ -47,14 +46,15 @@
                 </button>
 
                 <div class="<?php if (!url_exists('resources')) : echo 'd-none'; endif ?> border-bottom" id="resources-dropdown-menu">
+                    <?php if (user_session()->role !== 'customer') :?>
                     <a href="<?= absolute_url('/admin/resources/roles') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (url_exists('roles')) : echo 'text-primary'; endif ?>"></i> <?= __('roles') ?>
                     </a>
                     <a href="<?= absolute_url('/admin/resources/users') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (url_exists('users')) : echo 'text-primary'; endif ?>"></i> <?= __('users') ?>
                     </a>
+                    <?php endif ?>
                 </div>
-                <?php endif ?>
 
                 <button class="list-group-item list-group-item-action" id="dropdown-btn" data-target="account-dropdown-menu">
                     <i class="fa fa-user <?php if (url_exists('account')) : echo 'text-primary'; endif ?>"></i> <?= __('account') ?>

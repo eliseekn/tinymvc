@@ -25,6 +25,7 @@ class Database
      */
     private static function getMigration(string $table): string
     {
+        $table = ucfirst($table) . 'Table';
         return 'App\Database\Migrations\\' . $table;
     }
     
@@ -36,11 +37,16 @@ class Database
      */
     private static function getSeed(string $seed): string
     {
+        if ($seed[-1] === 's') {
+            $seed = rtrim($seed, 's');
+        }
+
+        $seed = ucfirst($seed) . 'Seed';
         return 'App\Database\Seeds\\' . $seed;
     }
     
     /**
-     * handle cli
+     * handle command line arguments
      *
      * @param  array $options
      * @return void
@@ -49,7 +55,7 @@ class Database
     {
         if (
             array_key_exists('migration', $options) &&
-            !array_keys_exists('seed', $options) &&
+            !array_key_exists('seed', $options) &&
             !array_key_exists('delete', $options) &&
             !array_key_exists('reset', $options) &&
             !array_key_exists('schema', $options) &&
@@ -88,7 +94,7 @@ class Database
             } else {
                 foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
                     $table = explode('.', $file)[0];
-                    $table = self::getMigration($table);
+                    $table = 'App\Database\Migrations\\' . $table;
                     
                     try {
                         $table::migrate();
@@ -141,7 +147,7 @@ class Database
             } else {
                 foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
                     $table = explode('.', $file)[0];
-                    $table = self::getMigration($table);
+                    $table = 'App\Database\Migrations\\' . $table;
                     
                     try {
                         $table::migrate();
@@ -183,7 +189,7 @@ class Database
             } else {
                 foreach (Storage::path(config('storage.seeds'))->getFiles() as $file) {
                     $seed = explode('.', $file)[0];
-                    $seed = self::getSeed($seed);
+                    $seed = 'App\Database\Seeds\\' . $seed;
                     
                     try {
                         $seed::insert();
@@ -236,7 +242,7 @@ class Database
             } else {
                 foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
                     $table = explode('.', $file)[0];
-                    $table = self::getMigration($table);
+                    $table = 'App\Database\Migrations\\' . $table;
                     
                     try {
                         $table::reset();
@@ -278,7 +284,7 @@ class Database
             } else {
                 foreach (Storage::path(config('storage.seeds'))->getFiles() as $file) {
                     $seed = explode('.', $file)[0];
-                    $seed = self::getSeed($seed);
+                    $seed = 'App\Database\Seeds\\' . $seed;
 
                     try {
                         $seed::insert();
@@ -331,7 +337,7 @@ class Database
             } else {
                 foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
                     $table = explode('.', $file)[0];
-                    $table = self::getMigration($table);
+                    $table = 'App\Database\Migrations\\' . $table;
                     
                     try {
                         $table::reset();
@@ -384,7 +390,7 @@ class Database
             } else {
                 foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
                     $table = explode('.', $file)[0];
-                    $table = self::getMigration($table);
+                    $table = 'App\Database\Migrations\\' . $table;
                     
                     try {
                         $table::reset();
@@ -437,7 +443,7 @@ class Database
             } else {
                 foreach (Storage::path(config('storage.seeds'))->getFiles() as $file) {
                     $seed = explode('.', $file)[0];
-                    $seed = self::getSeed($seed);
+                    $seed = 'App\Database\Seeds\\' . $seed;
                     
                     try {
                         $seed::insert();
@@ -537,13 +543,7 @@ class Database
                 echo '[!] ' . $e->getMessage();
             }
 
-            if ($options['fetch'] === 'single') {
-                print_r($stmt->fetch());
-            } else if ($options['fetch'] === 'all') {
-                print_r($stmt->fetchAll());
-            } else {
-                exit('[-] Invalid fetch option');
-            }
+            print_r($stmt->fetchAll());
         }
 
         else if (

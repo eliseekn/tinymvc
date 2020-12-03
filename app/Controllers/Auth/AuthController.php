@@ -3,7 +3,7 @@
 namespace App\Controllers\Auth;
 
 use Carbon\Carbon;
-use App\Helpers\AuthHelper;
+use App\Helpers\Auth;
 use App\Helpers\EmailHelper;
 use App\Requests\AuthRequest;
 use App\Requests\RegisterUser;
@@ -31,7 +31,7 @@ class AuthController extends Controller
                 ->withAlert(__('login_failed', true))->error('');
         }
 
-        AuthHelper::authenticate($this->request);
+        Auth::attempt($this->request);
         AuthPolicy::handle();
     }
         
@@ -49,7 +49,7 @@ class AuthController extends Controller
                 ->withAlert(__('signup_failed', true))->error('');
         }
 
-        if (!AuthHelper::create($this->request)) {
+        if (!Auth::create($this->request)) {
             $this->redirectBack()->withInputs($validator->inputs())
                 ->withAlert(__('user_already_exists', true))->error('');
         }
@@ -81,7 +81,7 @@ class AuthController extends Controller
 	 */
 	public function logout(): void
 	{
-		AuthHelper::forget();
+		Auth::forget();
 		$this->redirect('/')->only();
 	}
 }
