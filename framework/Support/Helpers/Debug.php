@@ -21,24 +21,10 @@ if (!function_exists('save_log')) {
 	 */
 	function save_log(string $message): void
 	{
-        Storage::path(config('storage.logs'))->createDir();
+        if (!Storage::path(config('storage.logs'))->isDir()) {
+            Storage::path(config('storage.logs'))->createDir();
+        }
+
         error_log($message);
-	}
-}
-
-if (!function_exists('dump_vars')) {
-    /**
-	 * print informations about variables and exit
-	 *
-	 * @param  mixed $data
-	 * @return void
-	 */
-	function dump_vars(...$data): void
-	{
-		foreach ($data as $d) {
-			krumo($d);
-		}
-
-		exit();
-	}
+    }
 }

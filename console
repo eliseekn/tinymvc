@@ -9,11 +9,12 @@
  */
 
 /**
- * Database console interface
+ * Application command line interface
  */
 
 require 'vendor/autoload.php';
 require_once 'config/env.php';
+require_once 'config/errors.php';
 
 //get command line arguments
 $options = getopt('', [

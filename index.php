@@ -15,6 +15,7 @@ use Framework\Application;
 //load packages and main configuration
 require 'vendor/autoload.php';
 require_once 'config/env.php';
+require_once 'config/errors.php';
 
 //start application
 $app = new Application();

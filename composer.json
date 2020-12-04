@@ -38,7 +38,6 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5",
-        "fzaninotto/faker": "^1.9",
-        "mmucklo/krumo": "*"
+        "fzaninotto/faker": "^1.9"
     }
 }

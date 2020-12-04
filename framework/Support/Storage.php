@@ -58,10 +58,9 @@ class Storage
      *
      * @return string
      */
-    public function addFile(string $filename): string
+    public function file(string $filename): string
     {
-        self::$path .= $filename;
-        return $this->get();
+        return self::$path .= $filename;
     }
 
     /**

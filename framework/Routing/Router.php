@@ -40,8 +40,10 @@ class Router
         try {
             $this->dispatch(Route::$routes);
         } catch (Exception $e) {
-            //save exception message log
-            save_log($e->getMessage());
+            //log exception message
+            if (config('errors.log') === true) {
+                save_log('Application Exception: ' . $e->getMessage());
+            }
 
             //send 500 response
             if (!empty(config('errors.views.500'))) {
