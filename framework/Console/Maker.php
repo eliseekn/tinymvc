@@ -98,7 +98,7 @@ class Maker
      */
     public static function makeRoute(string $controller_name, string $controller_class): void
     {
-        echo '[+] Generating routes for ' . $controller_class . '...' . PHP_EOL;
+        echo '[*] Generating routes for ' . $controller_class . '...' . PHP_EOL;
 
         $data = self::stubs()->readFile('Route.stub');
         $data = str_replace('CLASSNAME', $controller_class, $data);
@@ -112,7 +112,7 @@ class Maker
             exit('[!] Failed to generate routes for ' . $controller_class . PHP_EOL);
         }
         
-        echo '[+] Routes for ' . $controller_class . ' generated successfully' . PHP_EOL;
+        echo '[*] Routes for ' . $controller_class . ' generated successfully' . PHP_EOL;
     }
     
     /**
@@ -124,7 +124,7 @@ class Maker
      */
     public static function makeController(string $controller, ?string $namespace = null): void
     {
-        echo '[+] Generating controller...' . PHP_EOL;
+        echo '[*] Generating controller...' . PHP_EOL;
 
         list($controller_name, $controller_class) = self::generateClass($controller, 'controller');
 
@@ -144,7 +144,7 @@ class Maker
             exit('[!] Failed to generate controller ' . $controller_class . PHP_EOL);
         }
         
-        echo '[+] Controller ' . $controller_class . ' generated successfully' . PHP_EOL;
+        echo '[*] Controller ' . $controller_class . ' generated successfully' . PHP_EOL;
 
         //generating routes
         self::makeRoute($controller_name, $controller_class);
@@ -158,7 +158,7 @@ class Maker
      */
     public static function makeViews(string $resource): void
     {
-        echo '[+] Generating views...' . PHP_EOL;
+        echo '[*] Generating views...' . PHP_EOL;
 
         list($resource_name, $resource_folder) = self::generateResource($resource);
 
@@ -172,7 +172,7 @@ class Maker
             }
         }
 
-        echo '[+] Views for ' . $resource . ' generated successfully' . PHP_EOL;
+        echo '[*] Views for ' . $resource . ' generated successfully' . PHP_EOL;
     }
 
     /**
@@ -183,7 +183,7 @@ class Maker
      */
     public static function makeModel(string $model): void
     {
-        echo '[+] Generating model...' . PHP_EOL;
+        echo '[*] Generating model...' . PHP_EOL;
 
         list($model_name, $model_class) = self::generateClass($model, 'model');
 
@@ -196,7 +196,7 @@ class Maker
             exit('[!] Failed to generate model ' . $model_class . PHP_EOL);
         }
         
-        echo '[+] Model ' . $model_class . ' generated successfully' . PHP_EOL;
+        echo '[*] Model ' . $model_class . ' generated successfully' . PHP_EOL;
     }
  
     /**
@@ -207,7 +207,7 @@ class Maker
      */
     public static function makeMigration(string $migration): void
     {
-        echo '[+] Generating migration...' . PHP_EOL;
+        echo '[*] Generating migration...' . PHP_EOL;
 
         list($migration_name, $migration_class) = self::generateClass($migration, 'migration');
 
@@ -220,7 +220,7 @@ class Maker
             exit('[!] Failed to generate migration ' . $migration_class . PHP_EOL);
         }
         
-        echo '[+] Migration ' . $migration_class . ' generated successfully' . PHP_EOL;
+        echo '[*] Migration ' . $migration_class . ' generated successfully' . PHP_EOL;
     }
 
     /**
@@ -231,7 +231,7 @@ class Maker
      */
     public static function makeSeed(string $seed): void
     {
-        echo '[+] Generating seed...' . PHP_EOL;
+        echo '[*] Generating seed...' . PHP_EOL;
 
         list($seed_name, $seed_class) = self::generateClass($seed, 'seed');
 
@@ -244,7 +244,7 @@ class Maker
             exit('[!] Failed to generate seed ' . $seed_class . PHP_EOL);
         }
         
-        echo '[+] Seed ' . $seed_class . ' generated successfully' . PHP_EOL;
+        echo '[*] Seed ' . $seed_class . ' generated successfully' . PHP_EOL;
     }
 
     /**
@@ -379,7 +379,7 @@ class Maker
             !array_key_exists('middleware', $options) &&
             !array_key_exists('resources', $options)
         ) {
-            echo '[+] Generating request validator...' . PHP_EOL;
+            echo '[*] Generating request validator...' . PHP_EOL;
 
             $data = self::stubs()->readFile('Request.stub');
             $data = str_replace('NAMESPACE', 'App\Requests', $data);
@@ -389,7 +389,7 @@ class Maker
                 exit('[!] Failed to generate request ' . $options['request'] . '.php' . PHP_EOL);
             }
 
-            echo '[+] Request validator ' . $options['request'] . '.php generated successfully' . PHP_EOL;
+            echo '[*] Request validator ' . $options['request'] . '.php generated successfully' . PHP_EOL;
         }
 
         else if (
@@ -402,7 +402,7 @@ class Maker
             !array_key_exists('request', $options) &&
             !array_key_exists('resources', $options)
         ) {
-            echo '[+] Generating middleware...' . PHP_EOL;
+            echo '[*] Generating middleware...' . PHP_EOL;
 
             $data = self::stubs()->readFile('Middleware.stub');
             $data = str_replace('NAMESPACE', 'App\Middlewares', $data);
@@ -412,7 +412,7 @@ class Maker
                 exit('[!] Failed to generate middleware ' . $options['middleware'] . '.php' . PHP_EOL);
             }
 
-            echo '[+] Middleware ' . $options['middleware'] . '.php generated successfully' . PHP_EOL;
+            echo '[*] Middleware ' . $options['middleware'] . '.php generated successfully' . PHP_EOL;
         }
         
         exit('[+] All operations done' . PHP_EOL);

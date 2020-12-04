@@ -193,7 +193,7 @@ class UsersController extends Controller
 	
 			UsersModel::delete()->where('id', $id)->persist();
             Activity::log('User deleted');
-            $this->redirectBack()->withToast(__('user_deleted'))->success();
+            $this->redirect('admin/resources/users')->withToast(__('user_deleted'))->success();
 		} else {
             $users_id = explode(',', $this->request->items);
 

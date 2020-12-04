@@ -24,7 +24,9 @@
     </div>
 
     <div class="card-footer">
-        <a href="<?= absolute_url('/admin/resources/RESOURCENAMEs/edit/' . $RESOURCENAME->id) ?>" class="btn btn-outline-dark"><?= __('edit') ?></a>
+        <a href="<?= absolute_url('/admin/resources/RESOURCENAMEs/edit/' . $RESOURCENAME->id) ?>" class="btn btn-outline-dark">
+            <?= __('edit') ?>
+        </a>
         
         <confirm-delete 
             type="text" 
@@ -32,7 +34,9 @@
             action="<?= absolute_url('/admin/resources/RESOURCENAMEs/delete/' . $RESOURCENAME->id) ?>">
         </confirm-delete>
         
-        <a href="<?= absolute_url('/admin/resources/RESOURCENAMEs') ?>" class="btn btn-outline-dark ml-2"><?= __('cancel') ?></a>
+        <a href="<?= absolute_url('/admin/resources/RESOURCENAMEs') ?>" class="btn btn-outline-dark ml-2">
+            <?= __('cancel') ?>
+        </a>
     </div>
 </div>
 

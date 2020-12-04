@@ -68,13 +68,19 @@
     </div>
 
     <div class="card-footer">
-        <a href="<?= absolute_url('/admin/resources/users/edit/' . $user->id) ?>" class="btn btn-outline-dark"><?= __('edit') ?></a>
+        <a href="<?= absolute_url('/admin/resources/users/edit/' . $user->id) ?>" class="btn btn-outline-dark">
+            <?= __('edit') ?>
+        </a>
 
         <confirm-delete 
             type="text" 
             content="<?= __('delete') ?>" 
             action="<?= absolute_url('/admin/resources/users/delete/' . $user->id) ?>">
         </confirm-delete>
+
+        <a href="<?= absolute_url('/admin/resources/users') ?>" class="btn btn-outline-dark ml-2">
+            <?= __('back') ?>
+        </a>
     </div>
 </div>
 

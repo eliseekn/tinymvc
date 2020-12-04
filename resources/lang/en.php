@@ -104,6 +104,7 @@ $method = 'Method';
 $ip_address = 'IP Address';
 $action = 'Action';
 $target = 'Target';
+$back = 'Back';
 
 //pagination
 $previous = 'Previous';

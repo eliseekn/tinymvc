@@ -100,7 +100,7 @@ class CLASSNAME extends Controller
 			}
 	
 			RESOURCEMODEL::delete()->where('id', $id)->persist();
-            $this->redirectBack()->only();
+            $this->redirect('admin/resources/RESOURCENAME')->only();
 		} else {
             $users_id = explode(',', $this->request->items);
 

@@ -178,19 +178,18 @@ class Controller
      * validate inputs and set flash session data
      *
      * @param  array|null $inputs
-     * @return \Framework\Routing\Controller
+     * @param  array $rules
+     * @param  array $messages
+     * @return void
      */
-    public function validate(?array $inputs = null, array $rules = [], array $messages = []): self
+    public function validate(?array $inputs = null, array $rules = [], array $messages = []): void
     {
         $inputs = is_null($inputs) ? $this->request->inputs() : $inputs;
         $validator = Validator::validate($inputs, $rules, $messages);
 
         if ($validator->fails()) {
-            $this->session('errors', $validator->errors());
-            $this->session('inputs', $validator->inputs());
+            $this->redirectBack()->withErrors($validator->errors())->withInputs($validator->inputs());
         }
-
-        return $this;
     }
     
     /**

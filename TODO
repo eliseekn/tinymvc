@@ -1,2 +1,4 @@
+- fix foreign keys attributes
 - add custom modal confirm dialog
+- updated default alert design
 - migrate to bootstrap 5

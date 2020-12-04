@@ -171,7 +171,7 @@ class RolesController extends Controller
 	
 			RolesModel::delete()->where('id', $id)->persist();
             Activity::log('Role deleted');
-            $this->redirectBack()->withToast(__('role_deleted'))->success();
+            $this->redirect('admin/resources/roles')->withToast(__('role_deleted'))->success();
 		} else {
 			$roles_id = explode(',', $this->request->items);
 

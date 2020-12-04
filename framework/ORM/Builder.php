@@ -220,7 +220,7 @@ class Builder
 	 */
 	public function references(string $table, string $column): self
 	{
-		self::$query .= " REFERENCES $table($column)";
+		self::$query .= " REFERENCES " . config('db.table_prefix') . "$table($column)";
         return $this;
 	}
 	

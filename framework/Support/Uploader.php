@@ -21,11 +21,11 @@ class Uploader
     private $file = [];
     
     /**
-     * filename destination path
+     * uploaded filename
      *
      * @var string
      */
-    public $filepath = '';
+    public $filename = '';
 
     /**
      * allowed file extensions
@@ -145,8 +145,15 @@ class Uploader
      */
     public function moveFile(string $destination, ?string $filename = null): bool
     {
-        $filename = is_null($filename) ? $this->getOriginalFilename() : $filename;
-        $this->filepath = $destination . DIRECTORY_SEPARATOR . $filename;
-        return move_uploaded_file($this->getTempFilename(), config('storage.public') . $this->filepath);
+        $this->filename = is_null($filename) ? $this->getOriginalFilename() : $filename;
+
+        //create destination directory
+        if (!Storage::path($destination)->isDir()) {
+            if (!Storage::path($destination)->createDir(null, true)) {
+                return false;
+            }
+        }
+
+        return move_uploaded_file($this->getTempFilename(), Storage::path($destination)->file($this->filename));
     }
 }

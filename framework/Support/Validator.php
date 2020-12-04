@@ -77,7 +77,7 @@ class Validator
     {
         $validation_errors = [];
 
-        foreach (static::$errors as $error) {
+        foreach ((array) static::$errors as $error) {
             foreach (static::$inputs as $key => $input) {
                 if (strpos(strtolower($error), $key) !== false) {
                     $validation_errors = array_merge($validation_errors, [

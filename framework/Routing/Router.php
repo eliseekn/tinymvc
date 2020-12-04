@@ -42,14 +42,18 @@ class Router
         } catch (Exception $e) {
             //log exception message
             if (config('errors.log') === true) {
-                save_log('Application Exception: ' . $e->getMessage());
+                save_log('Application Error: ' . $e->getMessage());
             }
 
             //send 500 response
-            if (!empty(config('errors.views.500'))) {
-                View::render(config('errors.views.500'), [], 500);
+            if (config('errors.display') === true) {
+                die($e->getMessage());
             } else {
-                Response::send('Try to refresh the page or feel free to contact us if the problem persists', [], 500);
+                if (!empty(config('errors.views.500'))) {
+                    View::render(config('errors.views.500'), [], 500);
+                } else {
+                    Response::send('Try to refresh the page or feel free to contact us if the problem persists', [], 500);
+                }
             }
         }
     }

@@ -44,6 +44,30 @@ class Migration
     }
 
     /**
+     * add column of type float
+     *
+     * @param  string $name
+     * @return \Framework\ORM\Migration
+     */
+    public function addFloat(string $name): self 
+    {
+        self::$query->column($name, "FLOAT");
+        return $this;
+    }
+
+    /**
+     * add column of type double
+     *
+     * @param  string $name
+     * @return \Framework\ORM\Migration
+     */
+    public function addDouble(string $name): self 
+    {
+        self::$query->column($name, "DOUBLE");
+        return $this;
+    }
+
+    /**
      * add column of type small integer
      *
      * @param  string $name
@@ -130,6 +154,18 @@ class Migration
         return $this;
     }
 
+    /**
+     * add column of type time
+     *
+     * @param  string $name
+     * @return \Framework\ORM\Migration
+     */
+    public function addTime(string $name): self 
+    {
+        self::$query->column($name, 'TIME');
+        return $this;
+    }
+    
     /**
      * add column of type datetime
      *
