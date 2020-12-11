@@ -33,8 +33,7 @@ class ReportHelper
 				$to_import[$key] = $row[$value];
 			}
 
-            $function = [$model, 'insert'];
-			call_user_func_array($function, [$to_import]);
+			call_user_func_array([$model, 'insert'], [$to_import]);
 		}
     }
     

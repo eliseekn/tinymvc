@@ -1,5 +1,5 @@
 <?php $this->layout('admin/layout', [
-    'page_title' => __('summary') . ' | Administration'
+    'page_title' => __('details') . ' | Administration'
 ]) ?>
 
 <?php $this->start('page_content') ?>
@@ -7,7 +7,7 @@
 <?php if (user_session()->alerts && !empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
 
 <div class="card shadow-sm">
-    <div class="card-header"><?= __('summary') ?></div>
+    <div class="card-header"><?= __('details') ?></div>
 
     <div class="card-body">
         <div class="form-group row">
@@ -27,7 +27,11 @@
         <a href="<?= absolute_url('/admin/resources/RESOURCENAMEs/edit/' . $RESOURCENAME->id) ?>" class="btn btn-outline-dark">
             <?= __('edit') ?>
         </a>
-        
+
+        <a href="<?= absolute_url('/admin/resources/RESOURCENAMEs/new') ?>" class="btn btn-outline-dark ml-2">
+            <?= __('new') ?>
+        </a>
+
         <confirm-delete 
             type="text" 
             content="<?= __('delete') ?>" 

@@ -96,9 +96,11 @@ class Maker
      * @param  string $controller
      * @return void
      */
-    public static function makeRoute(string $controller_name, string $controller_class): void
+    public static function makeRoute(string $controller): void
     {
-        echo '[*] Generating routes for ' . $controller_class . '...' . PHP_EOL;
+        echo '[*] Generating routes...' . PHP_EOL;
+
+        list($controller_name, $controller_class) = self::generateClass($controller, 'controller');
 
         $data = self::stubs()->readFile('Route.stub');
         $data = str_replace('CLASSNAME', $controller_class, $data);
@@ -145,9 +147,6 @@ class Maker
         }
         
         echo '[*] Controller ' . $controller_class . ' generated successfully' . PHP_EOL;
-
-        //generating routes
-        self::makeRoute($controller_name, $controller_class);
     }
     
     /**
@@ -284,6 +283,7 @@ class Maker
             self::makeModel($options['controller']);
             self::makeSeed($options['controller']);
             self::makeMigration($options['controller']);
+            self::makeRoute($options['controller']);
         }
         
         else if (
@@ -314,6 +314,7 @@ class Maker
             self::makeModel($options['controller']);
             self::makeSeed($options['controller']);
             self::makeMigration($options['controller']);
+            self::makeRoute($options['controller']);
         }
 
         else if (

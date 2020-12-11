@@ -83,6 +83,7 @@
                         </th>
 
                         <th scope="col"><i class="fa fa-sort"></i> #</th>
+                        <th scope="col"><i class="fa fa-sort"></i> ID</th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('sender') ?></th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('recipient') ?></th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('message') ?></th>
@@ -102,6 +103,7 @@
                         </td>
 
                         <td><?= $messages->getFirstItem() + $key + 1 ?></td>
+                        <td><?= $message->id ?></td>
                         <td><?= $message->sender_email ?></td>
                         <td><?= $message->recipient_email ?></td>
                         <td><?= $message->message ?></td>

@@ -52,6 +52,8 @@ class Metrics
      * @param  string $trends
      * @return array
      * @link   https://www.tutsmake.com/mysql-get-data-of-current-date-week-month-year/
+     *         https://www.tutsmake.com/query-for-get-data-of-last-day-week-month-year-mysql/
+     *         https://www.plus2net.com/sql_tutorial/date-lastweek.php
      */
     public function getTrends(string $type, string $column, string $trends): array
     {
@@ -69,8 +71,7 @@ class Metrics
                     ->where('DATE(created_at)', '>', date('Y-m-d', strtotime('-7 days')))
                     ->andWhere('MONTH(created_at)', '=', date('m'))
                     ->andWhere('YEAR(created_at)', '=', date('Y'))
-                    ->groupBy('DAYNAME(created_at)')
-                    ->orderBy('DAYNAME(created_at)', 'ASC')
+                    ->groupBy('day')
                     ->execute()
                     ->fetchAll();
 
@@ -78,16 +79,14 @@ class Metrics
                 return Builder::select($type . '(' . $column . ') AS value', 'MONTHNAME(created_at) AS month')
                     ->from($this->table)
                     ->where('YEAR(created_at)', '=', date('Y'))
-                    ->groupBy('MONTHNAME(created_at)')
-                    ->orderBy('MONTHNAME(created_at)', 'ASC')
+                    ->groupBy('month')
                     ->execute()
                     ->fetchAll();
             
             case 'years':
                 return Builder::select($type . '(' . $column . ') AS value', 'YEAR(created_at) AS year')
                     ->from($this->table)
-                    ->groupBy('YEAR(created_at)')
-                    ->orderBy('YEAR(created_at)', 'ASC')
+                    ->groupBy('year')
                     ->execute()
                     ->fetchAll();
         }

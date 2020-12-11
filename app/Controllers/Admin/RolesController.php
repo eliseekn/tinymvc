@@ -194,11 +194,11 @@ class RolesController extends Controller
         $file = $this->request->files('file', ['csv']);
 
 		if (!$file->isAllowed()) {
-            $this->redirectBack()->withToast(__('import_file_type_error'))->success();
+            $this->redirect('admin/resources/roles')->withToast(__('import_file_type_error'))->success();
 		}
 
 		if (!$file->isUploaded()) {
-			$this->redirectBack()->withToast(__('import_data_error'))->error();
+			$this->redirect('admin/resources/roles')->withToast(__('import_data_error'))->error();
 		}
 
 		ReportHelper::import($file->getTempFilename(), RolesModel::class, [
@@ -208,7 +208,7 @@ class RolesController extends Controller
 		]);
 
         Activity::log('Roles imported');
-        $this->redirectBack()->withToast(__('data_imported'))->success();
+        $this->redirect('admin/resources/roles')->withToast(__('data_imported'))->success();
 	}
 	
 	/**

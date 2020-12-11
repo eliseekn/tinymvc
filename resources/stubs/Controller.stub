@@ -120,18 +120,18 @@ class CLASSNAME extends Controller
 		$file = $this->request->files('file', ['csv']);
 
 		if (!$file->isAllowed()) {
-            $this->redirectBack()->only();
+            $this->redirect('admin/resources/RESOURCENAME')->only();
 		}
 
 		if (!$file->isUploaded()) {
-			$this->redirectBack()->only();
+			$this->redirect('admin/resources/RESOURCENAME')->only();
 		}
 
 		ReportHelper::import($file->getTempFilename(), RESOURCEMODEL::class, [
 			//
 		]);
 
-		$this->redirectBack()->only();
+		$this->redirect('admin/resources/RESOURCENAME')->only();
 	}
 	
 	/**

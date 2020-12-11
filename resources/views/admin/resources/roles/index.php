@@ -69,6 +69,7 @@
                         </th>
 
                         <th scope="col"><i class="fa fa-sort"></i> #</th>
+                        <th scope="col"><i class="fa fa-sort"></i> ID</th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('title') ?></th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('slug') ?></th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('description') ?></th>
@@ -89,6 +90,7 @@
                         </td>
 
                         <td><?= $roles->getFirstItem() + $key + 1 ?></td>
+                        <td><?= $role->id ?></td>
                         <td><?= $role->title ?></td>
                         <td><?= $role->slug ?></td>
                         <td><?= html_entity_decode($role->description) ?></td>

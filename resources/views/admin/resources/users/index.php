@@ -78,6 +78,7 @@
                         </th>
 
                         <th scope="col"><i class="fa fa-sort"></i> #</th>
+                        <th scope="col"><i class="fa fa-sort"></i> ID</th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('name') ?></th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('email') ?></th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('phone') ?></th>
@@ -101,6 +102,7 @@
                         </td>
 
                         <td><?= $users->getFirstItem() + $key + 1 ?></td>
+                        <td><?= $user->id ?></td>
                         <td><?= $user->name ?></td>
                         <td><?= $user->email ?></td>
                         <td><?= $user->phone ?></td>

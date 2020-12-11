@@ -71,6 +71,7 @@
                         </th>
 
                         <th scope="col"><i class="fa fa-sort"></i> #</th>
+                        <th scope="col"><i class="fa fa-sort"></i> ID</th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('message') ?></th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('created_at') ?></th>
                         <th scope="col"></th>
@@ -88,6 +89,7 @@
                         </td>
 
                         <td><?= $notifications->getFirstItem() + $key + 1 ?></td>
+                        <td><?= $notification->id ?></td>
                         <td><?= $notification->message ?></td>
                         <td><?= time_elapsed(\App\Helpers\DateHelper::format($notification->created_at)->get(), 1) ?></td>
 

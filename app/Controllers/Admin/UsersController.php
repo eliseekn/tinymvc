@@ -216,11 +216,11 @@ class UsersController extends Controller
         $file = $this->request->files('file', ['csv']);
 
 		if (!$file->isAllowed()) {
-            $this->redirectBack()->withToast(__('import_file_type_error'))->success();
+            $this->redirect('admin/resources/users')->withToast(__('import_file_type_error'))->success();
 		}
 
 		if (!$file->isUploaded()) {
-			$this->redirectBack()->withToast(__('import_data_error'))->error();
+			$this->redirect('admin/resources/users')->withToast(__('import_data_error'))->error();
 		}
 
 		ReportHelper::import($file->getTempFilename(), UsersModel::class, [
@@ -232,7 +232,7 @@ class UsersController extends Controller
 		]);
 
         Activity::log('Users imported');
-		$this->redirectBack()->withToast(__('data_imported'))->success();
+		$this->redirect('admin/resources/users')->withToast(__('data_imported'))->success();
 	}
 	
 	/**

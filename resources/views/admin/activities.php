@@ -58,6 +58,7 @@
                         </th>
 
                         <th scope="col"><i class="fa fa-sort"></i> #</th>
+                        <th scope="col"><i class="fa fa-sort"></i> ID</th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('user') ?></th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('url') ?></th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('method') ?></th>
@@ -79,6 +80,7 @@
                         </td>
 
                         <td><?= $activities->getFirstItem() + $key + 1 ?></td>
+                        <td><?= $activity->id ?></td>
                         <td><?= $activity->user ?></td>
                         <td><?= $activity->url ?></td>
                         <td><?= $activity->method ?></td>

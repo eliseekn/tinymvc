@@ -94,17 +94,35 @@ if (!function_exists('get_file_extension')) {
 	/**
 	 * get file extension
 	 *
-	 * @param  string $filename
+	 * @param  string $file
 	 * @return string
 	 */
-	function get_file_extension(string $filename): string
+	function get_file_extension(string $file): string
 	{
-		if (empty($filename) || strpos($filename, '.') === false) {
+		if (empty($file) || strpos($file, '.') === false) {
             return '';
 		}
 		
-		$file_ext = explode('.', $filename);
+		$file_ext = explode('.', $file);
 		return $file_ext === false ? '' : end($file_ext);
+	}
+}
+
+if (!function_exists('get_file_name')) {	
+	/**
+	 * get file name
+	 *
+	 * @param  string $file
+	 * @return string
+	 */
+	function get_file_name(string $file): string
+	{
+		if (empty($file) || strpos($file, '.') === false) {
+            return '';
+		}
+		
+		$filename = explode('.', $file);
+		return $filename === false ? '' : $filename[0];
 	}
 }
 
