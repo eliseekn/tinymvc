@@ -19,18 +19,8 @@ class DateHelper
      */
     public static function format($date = null): self
     {
-        self::$date = Carbon::parse($date, user_session()->timezone)->locale(user_session()->lang);
+        self::$date = Carbon::parse($date, auth()->timezone)->locale(auth()->lang);
         return new self();
-    }
-    
-    /**
-     * get formatted date
-     *
-     * @return mixed
-     */
-    public function get()
-    {
-        return self::$date;
     }
     
     /**
@@ -44,12 +34,32 @@ class DateHelper
     }
     
     /**
+     * get date and time in SQL like format
+     *
+     * @return string
+     */
+    public function timestamp(): string
+    {
+        return self::$date->toDateTimeString();
+    }
+    
+    /**
      * get date in 'Y-m-d' format
      *
      * @return string
      */
-    public function dateOnly(): string
+    public function date(): string
     {
-        return self::$date->toDateTimeString();
+        return self::$date->toDateString();
+    }
+    
+    /**
+     * get time format
+     *
+     * @return string
+     */
+    public function time(): string
+    {
+        return self::$date->toTimeString();
     }
 }

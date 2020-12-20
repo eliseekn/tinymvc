@@ -24,7 +24,7 @@
     </div>
 </div>
 
-<?php if (user_session()->alerts && !empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
+<?php if (auth()->alerts && !empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
 
 <div class="card shadow-sm">
     <div class="card-header">
@@ -39,7 +39,7 @@
                 <span class="mt-lg-0 mt-2">
                     <send-message
                         type="button" 
-                        action="<?= absolute_url('/admin/account/messages/create') ?>" 
+                        action="<?= absolute_url('admin/account/messages/create') ?>" 
                         title="<?= __('new') ?>" 
                         content='<?= __('new') ?>'
                         recipient="0"
@@ -49,12 +49,12 @@
                         csrf_token='<?= csrf_token_input() ?>'>
                     </send-message>
 
-                    <button class="btn btn-outline-dark" id="bulk-read" data-url="<?= absolute_url('/admin/account/messages/update') ?>">
+                    <button class="btn btn-outline-dark" id="bulk-read" data-url="<?= absolute_url('admin/account/messages/update') ?>">
                         <?= __('mark_as_read') ?>
                     </button>
 
                     <export-modal 
-                        action="<?= absolute_url('/admin/account/messages/export') ?>" 
+                        action="<?= absolute_url('admin/account/messages/export') ?>" 
                         title="<?= __('export') ?>" 
                         modal_title="<?= __('export') ?>" 
                         modal_button_title="<?= __('export') ?>" 
@@ -62,7 +62,7 @@
                         csrf_token='<?= csrf_token_input() ?>'>
                     </export-modal>
 
-                    <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('/admin/account/messages/delete') ?>">
+                    <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('admin/account/messages/delete') ?>">
                         <?= __('delete') ?>
                     </button>
                 </span>
@@ -107,11 +107,11 @@
                         <td><?= $message->sender_email ?></td>
                         <td><?= $message->recipient_email ?></td>
                         <td><?= $message->message ?></td>
-                        <td><?= time_elapsed(\App\Helpers\DateHelper::format($message->created_at)->get(), 1) ?></td>
+                        <td><?= time_elapsed(\App\Helpers\DateHelper::format($message->created_at)->timestamp(), 1) ?></td>
 
                         <td>
-                            <?php if ($message->sender_email !== user_session()->email) : ?>
-                            <a class="btn text-dark p-1 <?php if ($message->recipient_status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('/admin/account/messages/update/' . $message->id) ?>" <?php if ($message->recipient_status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
+                            <?php if ($message->sender_email !== auth()->email) : ?>
+                            <a class="btn text-dark p-1 <?php if ($message->recipient_status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('admin/account/messages/update/' . $message->id) ?>" <?php if ($message->recipient_status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
                                 <?php if ($message->recipient_status === 'unread') : ?>
                                 <i class="fa fa-eye-slash"></i>
                                 <?php else : ?>
@@ -121,7 +121,7 @@
 
                             <send-message
                                 type="icon" 
-                                action="<?= absolute_url('/admin/account/messages/reply') ?>" 
+                                action="<?= absolute_url('admin/account/messages/reply') ?>" 
                                 title="<?= __('reply') ?>" 
                                 content='<i class="fa fa-reply-all"></i>'
                                 recipient="<?= $message->sender ?>"
@@ -135,7 +135,7 @@
                             <confirm-delete 
                                 type="icon" 
                                 content='<i class="fa fa-trash-alt"></i>' 
-                                action="<?= absolute_url('/admin/account/messages/delete/' . $message->id) ?>">
+                                action="<?= absolute_url('admin/account/messages/delete/' . $message->id) ?>">
                             </confirm-delete>
                         </td>
                     </tr>

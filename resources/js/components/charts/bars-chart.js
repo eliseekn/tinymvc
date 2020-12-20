@@ -2,14 +2,15 @@ class BarsChart extends HTMLElement {
     constructor() {
         super()
 
-        this.displayChart = this.displayChart.bind(this)
+        this.drawChart = this.drawChart.bind(this)
+        this.displayData = this.displayData.bind(this)
     }
 
-    displayChart(data, xkey) {
-        this.innerHTML = '<div id="users-bars" style="height: 200px"></div>'
+    drawChart(data, xkey) {
+        this.innerHTML = `<div id="${this.getAttribute('el')}" style="height: 200px"></div>`
         
         new Morris.Bar({
-            element: 'users-bars',
+            element: this.getAttribute('el'),
             resize: true,
             data: data,
             xkey: xkey,
@@ -17,9 +18,17 @@ class BarsChart extends HTMLElement {
             labels: JSON.parse(this.getAttribute('labels'))
         })
     }
+
+    displayData() {
+        if (JSON.parse(this.getAttribute('data')).length == 0) {
+            this.innerHTML = '<div class="d-flex justify-content-center align-items-center" style="height: 200px">No data found</div>'
+        } else {
+            this.drawChart(JSON.parse(this.getAttribute('data')), this.getAttribute('xkey'))
+        }
+    }
     
     connectedCallback() {
-        this.displayChart(JSON.parse(this.getAttribute('data')), this.getAttribute('xkey'))
+        this.displayData()
     }
 
     static get observedAttributes() {
@@ -27,7 +36,7 @@ class BarsChart extends HTMLElement {
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
-        this.displayChart(JSON.parse(this.getAttribute('data')), this.getAttribute('xkey'))
+        this.displayData()
     }
 }
 

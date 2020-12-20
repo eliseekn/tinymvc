@@ -4,12 +4,12 @@
 
 <?php $this->start('page_content') ?>
 
-<?php if (user_session()->alerts && !empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
+<?php if (auth()->alerts && !empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
 
 <div class="card shadow-sm">
     <div class="card-header"><?= __('new') ?></div>
 
-    <form method="post" action="<?= absolute_url('/admin/resources/users/create') ?>">
+    <form method="post" action="<?= absolute_url('admin/resources/users/create') ?>">
         <?= csrf_token_input() ?>
 
         <div class="card-body">
@@ -83,7 +83,7 @@
         <div class="card-footer">
             <button type="submit" class="btn btn-outline-dark loading"><?= __('create') ?></button>
             <button type="reset" class="btn btn-outline-dark mx-2"><?= __('reset') ?></button>
-            <a href="<?= absolute_url('/admin/resources/users') ?>" class="btn btn-outline-dark"><?= __('cancel') ?></a>
+            <a href="<?= absolute_url('admin/resources/users') ?>" class="btn btn-outline-dark"><?= __('cancel') ?></a>
         </div>
     </form>
 </div>

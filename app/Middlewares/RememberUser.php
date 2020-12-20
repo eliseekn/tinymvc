@@ -20,7 +20,7 @@ class RememberUser
     public static function handle(): void
     {
         if (Auth::remember()) {
-            $user = UsersModel::find('email', Cookies::get('user'))->single();
+            $user = UsersModel::findBy('email', Cookies::get('user'))->single();
 
             if ($user !== false) {
                 Session::create('user', $user);

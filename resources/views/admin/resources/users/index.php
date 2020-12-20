@@ -24,7 +24,7 @@
     </div>
 </div>
 
-<?php if (user_session()->alerts && !empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
+<?php if (auth()->alerts && !empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
 
 <div class="card shadow-sm">
     <div class="card-header">
@@ -37,10 +37,10 @@
                 </span>
 
                 <span class="mt-lg-0 mt-2">
-                    <a href="<?= absolute_url('/admin/resources/users/new') ?>" class="btn btn-outline-dark"><?= __('new') ?></a>
+                    <a href="<?= absolute_url('admin/resources/users/new') ?>" class="btn btn-outline-dark"><?= __('new') ?></a>
                     
                     <upload-modal 
-                        action="<?= absolute_url('/admin/resources/users/import') ?>" 
+                        action="<?= absolute_url('admin/resources/users/import') ?>" 
                         title="<?= __('import') ?>" 
                         modal_title="<?= __('upload_modal_title') ?>" 
                         modal_button_title="<?= __('submit') ?>" 
@@ -49,7 +49,7 @@
                     </upload-modal>
                     
                     <export-modal 
-                        action="<?= absolute_url('/admin/resources/users/export') ?>" 
+                        action="<?= absolute_url('admin/resources/users/export') ?>" 
                         title="<?= __('export') ?>" 
                         modal_title="<?= __('export') ?>" 
                         modal_button_title="<?= __('export') ?>" 
@@ -57,7 +57,7 @@
                         csrf_token='<?= csrf_token_input() ?>'>
                     </export-modal>
 
-                    <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('/admin/resources/users/delete') ?>">
+                    <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('admin/resources/users/delete') ?>">
                         <?= __('delete') ?>
                     </button>
                 </span>
@@ -121,18 +121,18 @@
                         <td><?php $user->updated_at !== $user->created_at ? print(\App\Helpers\DateHelper::format($user->updated_at)->human()) : print('-') ?></td>
 
                         <td>
-                            <a class="btn text-dark p-1" href="<?= absolute_url('/admin/resources/users/view/' . $user->id) ?>" title="View item">
+                            <a class="btn text-dark p-1" href="<?= absolute_url('admin/resources/users/view/' . $user->id) ?>" title="View item">
                                 <i class="fa fa-eye"></i>
                             </a>
 
-                            <a class="btn text-dark p-1" href="<?= absolute_url('/admin/resources/users/edit/' . $user->id) ?>" title="Edit item">
+                            <a class="btn text-dark p-1" href="<?= absolute_url('admin/resources/users/edit/' . $user->id) ?>" title="Edit item">
                                 <i class="fa fa-edit"></i>
                             </a>
 
                             <confirm-delete 
                                 type="icon" 
                                 content='<i class="fa fa-trash-alt"></i>' 
-                                action="<?= absolute_url('/admin/resources/users/delete/' . $user->id) ?>">
+                                action="<?= absolute_url('admin/resources/users/delete/' . $user->id) ?>">
                             </confirm-delete>
                         </td>
                     </tr>

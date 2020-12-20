@@ -1,8 +1,8 @@
 <?php
 
-namespace NAMESPACE;
+namespace App\Database\Models;
 
-use Framework\ORM\Model;
+use Framework\Database\Model;
 
 class CLASSNAME extends Model
 {

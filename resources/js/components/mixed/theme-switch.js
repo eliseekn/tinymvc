@@ -6,12 +6,12 @@ class ThemeSwitch extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
             <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" name="theme" id="theme" ${this.getAttribute('checked')}>
-                <label class="custom-control-label" for="theme"></label>
+                <input type="checkbox" class="custom-control-input" name="dark_theme" id="dark_theme" ${this.getAttribute('checked')}>
+                <label class="custom-control-label" for="dark_theme"></label>
             </div>
         `
 
-        document.querySelector('#theme').addEventListener('change', () => {
+        document.querySelector('#dark_theme').addEventListener('change', () => {
             document.querySelectorAll('.card-header').forEach(element => {
                 element.classList.toggle('bg-dark')
                 element.classList.toggle('text-white')

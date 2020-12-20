@@ -1,8 +1,8 @@
 <?php
 
-namespace NAMESPACE;
+namespace App\Database\Migrations;
 
-use Framework\ORM\Migration;
+use Framework\Database\Migration;
 
 class CLASSNAME
 {         

@@ -3,8 +3,10 @@
 namespace App\Controllers\Auth;
 
 use Carbon\Carbon;
-use App\Helpers\Auth;
 use App\Helpers\EmailHelper;
+use Framework\HTTP\Redirect;
+use Framework\HTTP\Response;
+use Framework\Support\Session;
 use App\Middlewares\AuthPolicy;
 use Framework\Routing\Controller;
 use App\Database\Models\UsersModel;
@@ -22,12 +24,12 @@ class EmailController extends Controller
 	 */
 	public function confirm(): void
 	{
-		if (UsersModel::find('email', $this->request->email)->exists()) {
+		if (UsersModel::findBy('email', $this->request->email)->exists()) {
             UsersModel::update(['active' => 1])->where('email', $this->request->email)->persist();
             EmailHelper::sendWelcome($this->request->email);
-            $this->redirect('/login')->withAlert(__('user_activated', true))->success('');
+            Redirect::url('login')->withAlert(__('user_activated', true))->success('');
         } else {
-            $this->redirect('/signup')->withAlert(__('user_not_registered', true))->error('');
+            Redirect::url('signup')->withAlert(__('user_not_registered', true))->error('');
         }
     }
         
@@ -38,19 +40,19 @@ class EmailController extends Controller
      */
     public function auth(): void
     {
-        $auth_token = TokensModel::find('email', $this->request->email)->single();
+        $auth_token = TokensModel::findBy('email', $this->request->email)->single();
 
         if ($auth_token === false || $auth_token->token !== $this->request->token) {
-			$this->response(__('invalid_two_steps_link', true));
+			Response::send(__('invalid_two_steps_link', true));
 		}
 
 		if ($auth_token->expires < Carbon::now()->toDateTimeString()) {
-			$this->response(__('expired_two_steps_link', true));
+			Response::send(__('expired_two_steps_link', true));
 		}
 
         TokensModel::delete()->where('email', $auth_token->email)->persist();
 
-        Auth::set(UsersModel::find('email', $auth_token->email)->single());
+        Session::create('user', UsersModel::findBy('email', $auth_token->email)->single());
         AuthPolicy::handle();
     }
 }

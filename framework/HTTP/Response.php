@@ -52,7 +52,7 @@ class Response
      * @param  int $status_code
      * @return void
      */
-    public static function sendJson(array $body, array $headers = [], int $status_code = 200): void
+    public static function json(array $body, array $headers = [], int $status_code = 200): void
     {
         if (empty($body)) {
             return;
@@ -86,7 +86,7 @@ class Response
      * @param  int $status_code
      * @return void
      */
-    public static function sendHeaders(array $headers, int $status_code = 200): void
+    public static function headers(array $headers, int $status_code = 200): void
     {
         //send response status code
         http_response_code($status_code);

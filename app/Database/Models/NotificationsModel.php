@@ -2,7 +2,7 @@
 
 namespace App\Database\Models;
 
-use Framework\ORM\Model;
+use Framework\Database\Model;
 use App\Helpers\Auth;
 
 class NotificationsModel extends Model
@@ -17,13 +17,13 @@ class NotificationsModel extends Model
     /**
      * get notifications
      *
-     * @return \Framework\ORM\Model
+     * @return \Framework\Database\Model
      */
-    public static function get(): \Framework\ORM\Model
+    public static function get(): \Framework\Database\Model
     {
         return self::select()
             ->where('status', 'unread')
-            ->andWhere('user_id', Auth::user()->id)
+            ->and('user_id', Auth::get()->id)
             ->orderDesc('created_at');
     }
 }

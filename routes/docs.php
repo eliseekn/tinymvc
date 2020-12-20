@@ -54,6 +54,26 @@ Route::group([
 
     'guides/redirections' => ['handler' => function() {
         View::render('docs/guides/redirections');
+    }],
+
+    'orm/database' => ['handler' => function() {
+        View::render('docs/orm/database');
+    }],
+
+    'orm/query-builder' => ['handler' => function() {
+        View::render('docs/orm/query-builder');
+    }],
+
+    'orm/model' => ['handler' => function() {
+        View::render('docs/orm/model');
+    }],
+
+    'orm/migrations' => ['handler' => function() {
+        View::render('docs/orm/migrations');
+    }],
+
+    'orm/seeds' => ['handler' => function() {
+        View::render('docs/orm/seeds');
     }]
 ])->by([
     'method' => 'GET',

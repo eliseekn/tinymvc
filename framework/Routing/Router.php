@@ -34,7 +34,7 @@ class Router
     public function __construct()
     {
         //set history
-        Session::history();
+        $this->setHistory();
         
         //dispatch routes
         try {
@@ -59,20 +59,24 @@ class Router
     }
     
     /**
-     * format uri to add '/' before or remove '/' at the end
+     * set history sesssion
      *
-     * @param  string $uri
-     * @return string
+     * @return void
      */
-    private function formatUri(string $uri): string
+    private function setHistory(): void
     {
-        if (strlen($uri) > 1) {
-            if ($uri[strlen($uri) - 1] === '/') {
-                $uri = rtrim($uri, '/');
+        $url = Session::get('history');
+
+        //excludes api uri from browser history
+        if (!in_url('api')) {
+            if (empty($url)) {
+                $url = [Request::getFullUri()];
+            } else {
+                $url[] = Request::getFullUri();
             }
         }
 
-        return $uri;
+        Session::create('history', $url);
     }
     
     /**
@@ -87,15 +91,12 @@ class Router
 
         if (!empty($routes)) {
             foreach ($routes as $route => $options) {
-                if (preg_match('/' . strtoupper($options['method']) . '/', $request->getMethod())) {
-                    $pattern = preg_replace('/{([a-zA-Z-_]+):([^\}]+)}/i', '$2', $route);
-                    $pattern = preg_replace('/{([a-zA-Z-_]+):([^\}]+)}?/i', '$2', $pattern);
-                    $pattern = preg_replace('/\bstr\b/', '([a-zA-Z-_]+)', $pattern);
-                    $pattern = preg_replace('/\bnum\b/', '(\d+)', $pattern);
-                    $pattern = preg_replace('/\bany\b/', '([^/]+)', $pattern);
-                    $pattern = '#^' . $pattern . '$#';
+                if (preg_match('/' . strtoupper($options['method']) . '/', $request->method())) {
+                    $pattern = preg_replace('/{str}/i', '([a-zA-Z-_]+)', $route);
+                    $pattern = preg_replace('/{num}/i', '(\d+)', $pattern);
+                    $pattern = preg_replace('/{any}/i', '([^/]+)', $pattern);
 
-                    if (preg_match($pattern, $this->formatUri($request->getUri()), $params)) {
+                    if (preg_match('#^' . $pattern . '$#', $request->uri(), $params)) {
                         array_shift($params);
 
                         if (is_callable($options['handler'])) {

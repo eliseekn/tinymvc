@@ -2,7 +2,7 @@
 
 namespace App\Database\Migrations;
 
-use Framework\ORM\Migration;
+use Framework\Database\Migration;
 
 class NotificationsTable
 {         

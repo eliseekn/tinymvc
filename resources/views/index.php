@@ -26,11 +26,11 @@
                 <i class="fab fa-github"></i> Github
             </a>
             
-            <a href="<?= absolute_url('/docs') ?>" class="ml-3 btn btn-primary">
+            <a href="<?= absolute_url('docs') ?>" class="ml-3 btn btn-primary">
                 <i class="fa fa-book"></i> Documentation
             </a>
             
-            <a href="<?= absolute_url('/login') ?>" class="ml-3 btn btn-success">
+            <a href="<?= absolute_url('login') ?>" class="ml-3 btn btn-success">
                 <i class="fa fa-user"></i> Log in
             </a>
         </span>

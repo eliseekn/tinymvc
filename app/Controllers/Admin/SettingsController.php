@@ -2,9 +2,11 @@
 
 namespace App\Controllers\Admin;
 
-use App\Requests\UpdateUser;
-use Framework\Support\Session;
+use App\Helpers\Auth;
 use App\Helpers\Activity;
+use App\Requests\UpdateUser;
+use Framework\HTTP\Redirect;
+use Framework\Support\Session;
 use Framework\Routing\Controller;
 use Framework\Support\Encryption;
 use App\Database\Models\UsersModel;
@@ -20,10 +22,10 @@ class SettingsController extends Controller
 	 */
 	public function index(int $id): void
 	{
-        $user = UsersModel::find('id', $id)->single();
+        $user = UsersModel::find($id)->single();
 		
 		if ($user === false) {
-			$this->redirectBack()->withToast(__('user_not_found'))->success();
+			Redirect::back()->withToast(__('user_not_found'))->success();
         }
         
         $countries = CountriesModel::select()->orderAsc('name')->all();
@@ -41,7 +43,7 @@ class SettingsController extends Controller
         $validator = UpdateUser::validate($this->request->inputs());
         
         if ($validator->fails()) {
-            $this->redirectBack()->withErrors($validator->errors())->withInputs($validator->inputs())
+            Redirect::back()->withErrors($validator->errors())->withInputs($validator->inputs())
                 ->withToast(__('changes_not_saved'))->error();
         }
 
@@ -51,11 +53,11 @@ class SettingsController extends Controller
             'country' => $this->request->country,
             'company' => $this->request->company ?? '',
             'phone' => $this->request->phone,
-            'two_steps' => $this->request->has('two-steps') ? 1 : 0,
+            'two_steps' => $this->request->has('two_steps') ? 1 : 0,
             'lang' => $this->request->lang,
             'timezone' => $this->request->timezone,
             'currency' => $this->request->currency,
-            'theme' => $this->request->theme ? 'dark' : 'light',
+            'dark_theme' => $this->request->has('dark_theme') ? 1 : 0,
             'alerts' => $this->request->has('alerts') ? 1 : 0,
             'email_notifications' => $this->request->has('email-notifications') ? 1 : 0
 		];
@@ -66,13 +68,11 @@ class SettingsController extends Controller
 
         UsersModel::update($data)->where('id', $id)->persist();
 
-        $user = UsersModel::find('id', $id)->single();
-    
-        if (Session::get('user')->id === $id) {
-            Session::create('user', $user);
+        if (Session::get('user')->id == $id) {
+            Auth::set(UsersModel::find($id)->single());
         }
 
         Activity::log('Settings saved');
-        $this->redirectBack()->withToast(__('changes_saved'))->success();
+        Redirect::back()->withToast(__('changes_saved'))->success();
     }
 }

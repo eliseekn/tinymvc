@@ -16,7 +16,7 @@
         
         <p class="lead mt-4" style="line-height: 1.8">
             The page you've requested doesn't exists. <br>
-            <a href="<?= absolute_url('/') ?>">Go back home</a>
+            <a href="<?= absolute_url() ?>">Go back home</a>
         </p>
     </div>
 </body>

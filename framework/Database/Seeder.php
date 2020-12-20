@@ -6,7 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Framework\ORM;
+namespace Framework\Database;
 
 /**
  * Manage database seeds

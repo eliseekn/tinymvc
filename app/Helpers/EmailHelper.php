@@ -40,7 +40,7 @@ class EmailHelper
             ->subject('Password reset notification')
             ->html('
                 <p>You are seeing this email because we received a password reset request for your account. Click the link below to reset your password:</p>
-                <p><a href="' . absolute_url('/password/reset?email=' . $email . '&token=' . $token) . '">' . absolute_url('/password/reset?email=' . $email . '&token=' . $token) . '</a></p>
+                <p><a href="' . absolute_url('password/reset?email=' . $email . '&token=' . $token) . '">' . absolute_url('password/reset?email=' . $email . '&token=' . $token) . '</a></p>
                 <p>If you did not requested a password reset, no further action is required.</p>
             ')
             ->send();
@@ -61,7 +61,7 @@ class EmailHelper
 			->subject('Email confirmation')
             ->html('
                 <p>You are seeing this email because you have registered an account to ' . config('app.name') . '. Click the link below to confirm your email email:</p>
-                <p><a href="' . absolute_url('/email/confirm?email=' . $email . '&token=' . $token) . '">' . absolute_url('/email/confirm?email=' . $email . '&token=' . $token) . '</a></p>
+                <p><a href="' . absolute_url('email/confirm?email=' . $email . '&token=' . $token) . '">' . absolute_url('email/confirm?email=' . $email . '&token=' . $token) . '</a></p>
                 <p>If you did not registered an account, no further action is required.</p>
             ')
 			->send();
@@ -82,7 +82,7 @@ class EmailHelper
 			->subject('Two-Factor authentication')
             ->html('
                 <p>You are seeing this email because you have requested connexion to your account on ' . config('app.name') . '. Click the link below to process log in:</p>
-                <p><a href="' . absolute_url('/email/auth?email=' . $email . '&token=' . $token) . '">' . absolute_url('/email/auth?email=' . $email . '&token=' . $token) . '</a></p>
+                <p><a href="' . absolute_url('email/auth?email=' . $email . '&token=' . $token) . '">' . absolute_url('email/auth?email=' . $email . '&token=' . $token) . '</a></p>
                 <p>If you did not registered an account, no further action is required.</p>
             ')
 			->send();

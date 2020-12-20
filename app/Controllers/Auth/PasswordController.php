@@ -4,6 +4,8 @@ namespace App\Controllers\Auth;
 
 use Carbon\Carbon;
 use App\Helpers\EmailHelper;
+use Framework\HTTP\Redirect;
+use Framework\HTTP\Response;
 use App\Requests\AuthRequest;
 use Framework\Routing\Controller;
 use Framework\Support\Encryption;
@@ -31,9 +33,9 @@ class PasswordController extends Controller
 				'expires' => Carbon::now()->addHour()->toDateTimeString()
             ]);
             
-			$this->redirectBack()->withAlert(__('password_reset_link_sent', true))->success('');
+			Redirect::back()->withAlert(__('password_reset_link_sent', true))->success('');
 		} else {
-			$this->redirectBack()->withAlert(__('password_reset_link_not_sent', true))->error('');
+			Redirect::back()->withAlert(__('password_reset_link_not_sent', true))->error('');
 		}
 	}
 	
@@ -44,14 +46,14 @@ class PasswordController extends Controller
 	 */
 	public function reset(): void
 	{
-        $reset_token = TokensModel::find('email', $this->request->email)->single();
+        $reset_token = TokensModel::findBy('email', $this->request->email)->single();
 
         if ($reset_token === false || $reset_token->token !== $this->request->token) {
-			$this->response(__('invalid_password_reset_link', true));
+			Response::send(__('invalid_password_reset_link', true));
 		}
 
 		if ($reset_token->expires < Carbon::now()->toDateTimeString()) {
-			$this->response(__('expired_password_reset_link', true));
+			Response::send(__('expired_password_reset_link', true));
 		}
 
 		TokensModel::delete()->where('email', $reset_token->email)->persist();
@@ -71,13 +73,13 @@ class PasswordController extends Controller
 		$validator = AuthRequest::validate($this->request->inputs());
         
         if ($validator->fails()) {
-            $this->redirectBack()->withAlert($validator->errors())->error('');
+            Redirect::back()->withAlert($validator->errors())->error('');
         }
 
         UsersModel::update(['password' => Encryption::hash($this->request->password)])
             ->where('email', $this->request->email)
             ->persist();
 		
-		$this->redirect('/login')->withAlert(__('password_resetted', true))->success('');
+		Redirect::url('login')->withAlert(__('password_resetted', true))->success('');
 	}
 }

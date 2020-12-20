@@ -4,9 +4,11 @@ namespace App\Controllers\Admin;
 
 use App\Helpers\Auth;
 use App\Helpers\Activity;
+use Framework\Support\Alert;
 use Framework\Routing\Controller;
 use App\Helpers\NotificationHelper;
 use App\Database\Models\NotificationsModel;
+use Framework\HTTP\Redirect;
 
 class NotificationsController extends Controller
 {
@@ -17,11 +19,11 @@ class NotificationsController extends Controller
      */
     public function index(): void
     {
-        $notifications = NotificationsModel::find('user_id', Auth::user()->id)->orderDesc('created_at')->paginate(20);
+        $notifications = NotificationsModel::findBy('user_id', Auth::get()->id)->orderDesc('created_at')->paginate(20);
 
         $notifications_unread = NotificationsModel::count()
             ->where('status', 'unread')
-            ->andWhere('user_id', Auth::user()->id)
+            ->and('user_id', Auth::get()->id)
             ->single()
             ->value;
 
@@ -36,7 +38,7 @@ class NotificationsController extends Controller
 	public function create(): void
 	{
         NotificationHelper::create($this->request->message);
-        $this->redirectBack()->withToast(__('notifications_created'))->success();
+        Redirect::back()->withToast(__('notifications_created'))->success();
     }
     
 	/**
@@ -48,13 +50,13 @@ class NotificationsController extends Controller
 	public function update(?int $id = null): void
 	{
         if (!is_null($id)) {
-			if (!NotificationsModel::find('id', $id)->exists()) {
-				$this->redirectBack()->withToast(__('notification_not_found'))->error();
+			if (!NotificationsModel::find($id)->exists()) {
+				Redirect::back()->withToast(__('notification_not_found'))->error();
 			}
 	
             NotificationsModel::update(['status' => 'read'])->where('id', $id)->persist();
             Activity::log('Notification marked as read');
-            $this->redirectBack()->withToast(__('notification_updated'))->success();
+            Redirect::back()->withToast(__('notification_updated'))->success();
 		} else {
 			$notifications_id = explode(',', $this->request->items);
 
@@ -63,7 +65,7 @@ class NotificationsController extends Controller
 			}
 			
             Activity::log('Notifications marked as read');
-			$this->toast(__('notifications_updated'))->success();
+			Alert::toast(__('notifications_updated'))->success();
 		}
     }
 	
@@ -76,22 +78,22 @@ class NotificationsController extends Controller
 	public function delete(?int $id = null): void
 	{
 		if (!is_null($id)) {
-			if (!NotificationsModel::find('id', $id)->exists()) {
-				$this->redirectBack()->withToast(__('notification_not_found'))->error();
+			if (!NotificationsModel::find($id)->exists()) {
+				Redirect::back()->withToast(__('notification_not_found'))->error();
 			}
 	
-			NotificationsModel::delete()->where('id', $id)->persist();
+			NotificationsModel::deleteWhere('id', $id);
             Activity::log('Notification deleted');
-			$this->redirectBack()->withToast(__('notification_deleted'))->success();
+			Redirect::back()->withToast(__('notification_deleted'))->success();
 		} else {
             $notifications_id = explode(',', $this->request->items);
 
 			foreach ($notifications_id as $id) {
-				NotificationsModel::delete()->where('id', $id)->persist();
+				NotificationsModel::deleteWhere('id', $id);
 			}
 			
             Activity::log('Notifications deleted');
-			$this->toast(__('notifications_deleted'))->success();
+			Alert::toast(__('notifications_deleted'))->success();
 		}
 	}
 }

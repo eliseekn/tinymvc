@@ -40,7 +40,7 @@ class CLASSNAME extends Controller
     public function edit(int $id): void
 	{
 		$this->render('admin/resources/RESOURCENAME/edit', [
-            'RESOURCENAME' => RESOURCEMODEL::find('id', $id)->single()
+            'RESOURCENAME' => RESOURCEMODEL::find($id)->single()
         ]);
 	}
 
@@ -67,7 +67,7 @@ class CLASSNAME extends Controller
 	public function view(int $id): void
 	{
 		$this->render('admin/resources/RESOURCENAME/view', [
-            'RESOURCENAME' => RESOURCEMODEL::find('id', $id)->single()
+            'RESOURCENAME' => RESOURCEMODEL::find($id)->single()
         ]);
 	}
     
@@ -95,7 +95,7 @@ class CLASSNAME extends Controller
 	public function delete(?int $id = null): void
 	{
         if (!is_null($id)) {
-			if (!RESOURCEMODEL::find('id', $id)->exists()) {
+			if (!RESOURCEMODEL::find($id)->exists()) {
 				$this->redirectBack()->only();
 			}
 	
@@ -146,7 +146,7 @@ class CLASSNAME extends Controller
 
 		if (!is_null($date_start) && !is_null($date_end)) {
 			$RESOURCENAME = RESOURCEMODEL::select()
-                ->between('created_at', DateHelper::format($date_start)->dateOnly(), DateHelper::format($date_end)->dateOnly())
+                ->whereBetween('created_at', $date_start, $date_end)
                 ->orderDesc('created_at')
                 ->all();
 		} else {

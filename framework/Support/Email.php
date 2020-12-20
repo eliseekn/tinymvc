@@ -17,9 +17,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 class Email
 {
     /**
-     * PHPMailer variable instance
-     * 
-     * @var mixed
+     * @var PHPMailer\PHPMailer\PHPMailer $mail
      */
     protected static $mail;
 
@@ -70,6 +68,32 @@ class Email
     public function replyTo(string $address, string $name = ''): self
     {
         self::$mail->addReplyTo($address, $name);
+        return $this;
+    }
+    
+    /**
+     * cc
+     *
+     * @param  mixed $address
+     * @param  mixed $name
+     * @return self
+     */
+    public function cc(string $address, string $name = ''): self
+    {
+        self::$mail->addCC($address, $name);
+        return $this;
+    }
+    
+    /**
+     * bcc
+     *
+     * @param  mixed $address
+     * @param  mixed $name
+     * @return self
+     */
+    public function bcc(string $address, string $name = ''): self
+    {
+        self::$mail->addBCC($address, $name);
         return $this;
     }
 

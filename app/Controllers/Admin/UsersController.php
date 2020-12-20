@@ -3,12 +3,13 @@
 namespace App\Controllers\Admin;
 
 use App\Helpers\Auth;
+use App\Helpers\Activity;
 use App\Helpers\DateHelper;
 use App\Requests\UpdateUser;
+use Framework\HTTP\Redirect;
+use Framework\Support\Alert;
 use App\Helpers\ReportHelper;
 use App\Requests\RegisterUser;
-use Framework\Support\Session;
-use App\Helpers\Activity;
 use Framework\Routing\Controller;
 use Framework\Support\Encryption;
 use App\Database\Models\RolesModel;
@@ -24,13 +25,13 @@ class UsersController extends Controller
     public function index(): void
     {
         $users = UsersModel::select()
-            ->where('id', '!=', Auth::user()->id)
+            ->where('id', '!=', Auth::get()->id)
             ->orderAsc('name')
             ->paginate(20);
 
         $active_users = UsersModel::select()
             ->where('active', 1)
-            ->andWhere('id', '!=', Auth::user()->id)
+            ->and('id', '!=', Auth::get()->id)
             ->all();
 
         $this->render('admin/resources/users/index', compact('users', 'active_users'));
@@ -56,11 +57,11 @@ class UsersController extends Controller
 	 */
 	public function edit(int $id): void
 	{
-		$user = UsersModel::find('id', $id)->single();
+		$user = UsersModel::find($id)->single();
 		$roles = RolesModel::select()->all();
 
 		if ($user === false) {
-			$this->redirectBack()->withToast(__('user_not_found'))->error();
+			Redirect::back()->withToast(__('user_not_found'))->error();
 		}
 
 		$this->render('admin/resources/users/edit', compact('user', 'roles'));
@@ -76,17 +77,17 @@ class UsersController extends Controller
         $validator = RegisterUser::validate($this->request->inputs());
         
         if ($validator->fails()) {
-            $this->redirectBack()->withErrors($validator->errors())->withInputs($validator->inputs())
+            Redirect::back()->withErrors($validator->errors())->withInputs($validator->inputs())
                 ->withToast(__('user_not_created', true))->error();
         }
 
 		if (
             UsersModel::select()
                 ->where('email', $this->request->email)
-                ->orWhere('phone', $this->request->phone)
+                ->or('phone', $this->request->phone)
                 ->exists()
         ) {
-            $this->redirectBack()->withInputs($validator->inputs())
+            Redirect::back()->withInputs($validator->inputs())
                 ->withToast(__('user_already_exists'))->error();
 		}
 
@@ -99,7 +100,7 @@ class UsersController extends Controller
 		]);
 
         Activity::log('User created');
-        $this->redirect('admin/resources/users/view', $id)->withToast(__('user_created'))->success();
+        Redirect::url('admin/resources/users/view', $id)->withToast(__('user_created'))->success();
     }
 	
 	/**
@@ -110,10 +111,10 @@ class UsersController extends Controller
 	 */
 	public function view(int $id): void
 	{
-		$user = UsersModel::find('id', $id)->single();
+		$user = UsersModel::find($id)->single();
 		
 		if ($user === false) {
-			$this->redirectBack()->withToast(__('user_not_found'))->error();
+			Redirect::back()->withToast(__('user_not_found'))->error();
 		}
 
 		$this->render('admin/resources/users/view', compact('user'));
@@ -130,14 +131,14 @@ class UsersController extends Controller
 		$validator = UpdateUser::validate($this->request->inputs());
         
         if ($validator->fails()) {
-            $this->redirectBack()->withErrors($validator->errors())->withInputs($validator->inputs())
+            Redirect::back()->withErrors($validator->errors())->withInputs($validator->inputs())
                 ->withToast(__('user_not_updated', true))->error();
         }
 
-        $user = UsersModel::find('id', $id)->single();
+        $user = UsersModel::find($id)->single();
 
 		if ($user === false) {
-            $this->redirectBack()->withInputs($validator->inputs())
+            Redirect::back()->withInputs($validator->inputs())
                 ->withToast(__('user_not_found'))->error();
         }
 
@@ -145,10 +146,10 @@ class UsersController extends Controller
             if (
                 UsersModel::select()
                     ->where('email', $this->request->email)
-                    ->orWhere('phone', $this->request->phone)
+                    ->or('phone', $this->request->phone)
                     ->exists()
             ) {
-                $this->redirectBack()->withInputs($validator->inputs())
+                Redirect::back()->withInputs($validator->inputs())
                     ->withToast(__('user_already_exists'))->error();
             }
         }
@@ -167,15 +168,9 @@ class UsersController extends Controller
 		}
 
         UsersModel::update($data)->where('id', $id)->persist();
-
-        $user = UsersModel::find('id', $id)->single();
         
-        if (Session::get('user')->id === $id) {
-            Session::create('user', $user);
-        }
-
         Activity::log('User updated');
-        $this->redirect('admin/resources/users/view', $id)->withToast(__('user_updated'))->success();
+        Redirect::url('admin/resources/users/view', $id)->withToast(__('user_updated'))->success();
     }
 
 	/**
@@ -187,22 +182,22 @@ class UsersController extends Controller
 	public function delete(?int $id = null): void
 	{
 		if (!is_null($id)) {
-			if (!UsersModel::find('id', $id)->exists()) {
-				$this->redirectBack()->withToast(__('user_not_found'))->error();
+			if (!UsersModel::find($id)->exists()) {
+				Redirect::back()->withToast(__('user_not_found'))->error();
 			}
 	
-			UsersModel::delete()->where('id', $id)->persist();
+			UsersModel::deleteWhere('id', $id);
             Activity::log('User deleted');
-            $this->redirect('admin/resources/users')->withToast(__('user_deleted'))->success();
+            Redirect::url('admin/resources/users')->withToast(__('user_deleted'))->success();
 		} else {
             $users_id = explode(',', $this->request->items);
 
 			foreach ($users_id as $id) {
-				UsersModel::delete()->where('id', $id)->persist();
+				UsersModel::deleteWhere('id', $id);
 			}
 			
             Activity::log('Users deleted');
-            $this->toast(__('users_deleted'))->success();
+            Alert::toast(__('users_deleted'))->success();
 		}
 	}
 
@@ -216,11 +211,11 @@ class UsersController extends Controller
         $file = $this->request->files('file', ['csv']);
 
 		if (!$file->isAllowed()) {
-            $this->redirect('admin/resources/users')->withToast(__('import_file_type_error'))->success();
+            Redirect::url('admin/resources/users')->withToast(__('import_file_type_error'))->success();
 		}
 
 		if (!$file->isUploaded()) {
-			$this->redirect('admin/resources/users')->withToast(__('import_data_error'))->error();
+			Redirect::url('admin/resources/users')->withToast(__('import_data_error'))->error();
 		}
 
 		ReportHelper::import($file->getTempFilename(), UsersModel::class, [
@@ -232,7 +227,7 @@ class UsersController extends Controller
 		]);
 
         Activity::log('Users imported');
-		$this->redirect('admin/resources/users')->withToast(__('data_imported'))->success();
+		Redirect::url('admin/resources/users')->withToast(__('data_imported'))->success();
 	}
 	
 	/**
@@ -247,7 +242,7 @@ class UsersController extends Controller
 
 		if (!is_null($date_start) && !is_null($date_end)) {
 			$users = UsersModel::select()
-                ->between('created_at', DateHelper::format($date_start)->dateOnly(), DateHelper::format($date_end)->dateOnly())
+                ->whereBetween('created_at', $date_start, $date_end)
                 ->orderDesc('created_at')
                 ->all();
 		} else {

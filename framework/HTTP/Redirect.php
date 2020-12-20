@@ -9,6 +9,7 @@
 namespace Framework\HTTP;
 
 use Framework\Support\Alert;
+use Framework\Support\Cookies;
 use Framework\Support\Session;
 
 /**
@@ -19,12 +20,12 @@ class Redirect
     /**
      * url to redirect
      *
-     * @var string
+     * @var string $url
      */
-    protected static $redirect_url = '';
+    protected static $url = '';
 
     /**
-     * @var \Framework\Support\Alert
+     * @var \Framework\Support\Alert $alert
      */
     protected $alert;
     
@@ -35,7 +36,7 @@ class Redirect
      */
     private function redirect(): void
     {
-        redirect_to(self::$redirect_url);
+        redirect_to(self::$url);
     } 
 
     /**
@@ -45,10 +46,10 @@ class Redirect
      * @param  array|string $params
      * @return \Framework\HTTP\Redirect
      */
-    public static function toUrl(string $url, $params = null): self
+    public static function url(string $url = '/', $params = null): self
     {
         $params = is_array($params) ? (empty($params) ? '' : implode('/', $params)) : $params;
-        self::$redirect_url = is_null($params) ? $url : $url . '/' . $params;
+        self::$url = is_null($params) ? $url : $url . '/' . $params;
         return new self();
     }
 
@@ -59,9 +60,9 @@ class Redirect
      * @param  array|string $params
      * @return \Framework\HTTP\Redirect
      */
-    public static function toRoute(string $name, $params = null): self
+    public static function route(string $name, $params = null): self
     {
-        self::$redirect_url = route_url($name, $params);
+        self::$url = route_url($name, $params);
         return new self();
     }
 
@@ -76,7 +77,7 @@ class Redirect
 
         if (!empty($history)) {
             end($history);
-            self::$redirect_url = prev($history);
+            self::$url = prev($history);
         }
 
         return new self();
@@ -93,20 +94,36 @@ class Redirect
     }
     
     /**
-     * redirects with session data
+     * redirects and create session data
      *
      * @param  string $key
      * @param  mixed $data
-     * @return void
+     * @return \Framework\HTTP\Redirect
      */
-    public function with(string $key, $data): void
+    public function with(string $key, $data): self
     {
         Session::create($key, $data);
-        $this->redirect();
+        return $this;
     }
     
     /**
-     * redirects with errors
+     * redirects and create cookie
+     *
+     * @param  string $name
+     * @param  string $value
+     * @param  int $expires in seconds
+     * @param  bool $secure
+     * @param  string $domain
+     * @return \Framework\HTTP\Redirect
+     */
+    public function withCookie(string $name, string $value, int $expires = 3600, bool $secure = false, string $domain = ''): self
+    {
+        Cookies::create($name, $value, $expires, $secure, $domain);
+        return $this;
+    }
+    
+    /**
+     * redirects with errors session data
      *
      * @param  array $errors
      * @return \Framework\HTTP\Redirect
@@ -118,7 +135,7 @@ class Redirect
     }
 
     /**
-     * redirects with inputs
+     * redirects with inputs session data
      *
      * @param  array $inputs
      * @return \Framework\HTTP\Redirect
@@ -132,37 +149,37 @@ class Redirect
     /**
      * redirects with default alert message
      *
-     * @param  mixed $messages
+     * @param  mixed $message
      * @param  bool $dismiss
      * @return \Framework\HTTP\Redirect
      */
-    public function withAlert($messages, bool $dismiss = true): self
+    public function withAlert($message, bool $dismiss = true): self
     {
-        $this->alert = Alert::default($messages, $dismiss);
+        $this->alert = Alert::default($message, $dismiss);
         return $this;
     }
 
     /**
      * redirects with toast message
      *
-     * @param  mixed $messages
+     * @param  mixed $message
      * @return \Framework\HTTP\Redirect
      */
-    public function withToast($messages): self
+    public function withToast($message): self
     {
-        $this->alert = Alert::toast($messages);
+        $this->alert = Alert::toast($message);
         return $this;
     }
     
     /**
      * redirects with popup message
      *
-     * @param  mixed $messages
+     * @param  mixed $message
      * @return \Framework\HTTP\Redirect
      */
-    public function withPopup($messages): self
+    public function withPopup($message): self
     {
-        $this->alert = Alert::popup($messages);
+        $this->alert = Alert::popup($message);
         return $this;
     }
         

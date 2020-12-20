@@ -14,9 +14,7 @@ namespace Framework\Support;
 class Storage
 {
     /**
-     * storage path
-     * 
-     * @var string
+     * @var string $path
      */
     protected static $path = '';
     
@@ -87,7 +85,7 @@ class Storage
     public function writeFile(string $filename, $content, bool $append = false): bool
     {
         if (!$this->isDir()) {
-            if (!$this->createDir()) {
+            if (!$this->createDir(null, true)) {
                 return false;
             }
         }

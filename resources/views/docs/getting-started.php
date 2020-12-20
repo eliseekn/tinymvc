@@ -67,7 +67,7 @@ RewriteRule ^(.*)$ index.php</code></pre>
     </div>
 
     <div class="card-footer d-flex justify-content-between">
-        <span>Next: <a href="<?= absolute_url('/docs/guides/routing') ?>">Routing</a></span>
+        <span>Next: <a href="<?= absolute_url('docs/guides/routing') ?>">Routing</a></span>
         <span>Previous: <a href="#installation">Installation</a></span>
     </div>
 </div>

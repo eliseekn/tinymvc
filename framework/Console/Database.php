@@ -10,7 +10,7 @@ namespace Framework\Console;
 
 use Exception;
 use Framework\Support\Storage;
-use Framework\ORM\Database as DB;
+use Framework\Database\DBConnection;
 
 /**
  * Manage migrations and seeds from command line interface
@@ -63,7 +63,7 @@ class Database
             !array_key_exists('fetch', $options) &&
             !array_key_exists('execute', $options)
         ) {
-            echo '[+] Migrating tables...' . PHP_EOL;
+            echo '[...] Migrating tables' . PHP_EOL;
 
             if ($options['migration'] !== 'all') {
                 $table = $options['migration'];
@@ -93,7 +93,7 @@ class Database
                 }
             } else {
                 foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
-                    $table = explode('.', $file)[0];
+                    $table = get_file_name($file);
                     $table = 'App\Database\Migrations\\' . $table;
                     
                     try {
@@ -116,7 +116,7 @@ class Database
             !array_key_exists('fetch', $options) &&
             !array_key_exists('execute', $options)
         ) {
-            echo '[+] Migrating tables...' . PHP_EOL;
+            echo '[...] Migrating tables' . PHP_EOL;
 
             if ($options['migration'] !== 'all') {
                 $table = $options['migration'];
@@ -146,7 +146,7 @@ class Database
                 }
             } else {
                 foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
-                    $table = explode('.', $file)[0];
+                    $table = get_file_name($file);
                     $table = 'App\Database\Migrations\\' . $table;
                     
                     try {
@@ -158,7 +158,7 @@ class Database
                 }
             }
         
-            echo '[+] Inserting seeds...' . PHP_EOL;
+            echo '[...] Inserting seeds' . PHP_EOL;
 
             if ($options['seed'] !== 'all') {
                 $seed = $options['seed'];
@@ -188,7 +188,7 @@ class Database
                 }
             } else {
                 foreach (Storage::path(config('storage.seeds'))->getFiles() as $file) {
-                    $seed = explode('.', $file)[0];
+                    $seed = get_file_name($file);
                     $seed = 'App\Database\Seeds\\' . $seed;
                     
                     try {
@@ -211,7 +211,7 @@ class Database
             !array_key_exists('fetch', $options) &&
             !array_key_exists('execute', $options)
         ) {
-            echo '[+] Reseting tables...' . PHP_EOL;
+            echo '[...] Reseting tables' . PHP_EOL;
 
             if ($options['migration'] !== 'all') {
                 $table = $options['migration'];
@@ -241,7 +241,7 @@ class Database
                 }
             } else {
                 foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
-                    $table = explode('.', $file)[0];
+                    $table = get_file_name($file);
                     $table = 'App\Database\Migrations\\' . $table;
                     
                     try {
@@ -253,7 +253,7 @@ class Database
                 }
             }
         
-            echo '[+] Inserting seeds...' . PHP_EOL;
+            echo '[...] Inserting seeds' . PHP_EOL;
 
             if ($options['seed'] !== 'all') {
                 $seed = $options['seed'];
@@ -283,7 +283,7 @@ class Database
                 }
             } else {
                 foreach (Storage::path(config('storage.seeds'))->getFiles() as $file) {
-                    $seed = explode('.', $file)[0];
+                    $seed = get_file_name($file);
                     $seed = 'App\Database\Seeds\\' . $seed;
 
                     try {
@@ -306,7 +306,7 @@ class Database
             !array_key_exists('fetch', $options) &&
             !array_key_exists('execute', $options)
         ) {
-            echo '[+] Reseting tables...' . PHP_EOL;
+            echo '[...] Reseting tables' . PHP_EOL;
 
             if ($options['migration'] !== 'all') {
                 $table = $options['migration'];
@@ -336,7 +336,7 @@ class Database
                 }
             } else {
                 foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
-                    $table = explode('.', $file)[0];
+                    $table = get_file_name($file);
                     $table = 'App\Database\Migrations\\' . $table;
                     
                     try {
@@ -359,7 +359,7 @@ class Database
             !array_key_exists('fetch', $options) &&
             !array_key_exists('execute', $options)
         ) {
-            echo '[+] Deleting tables...' . PHP_EOL;
+            echo '[...] Deleting tables' . PHP_EOL;
 
             if ($options['migration'] !== 'all') {
                 $table = $options['migration'];
@@ -389,7 +389,7 @@ class Database
                 }
             } else {
                 foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
-                    $table = explode('.', $file)[0];
+                    $table = get_file_name($file);
                     $table = 'App\Database\Migrations\\' . $table;
                     
                     try {
@@ -412,7 +412,7 @@ class Database
             !array_key_exists('fetch', $options) &&
             !array_key_exists('execute', $options)
         ) {
-            echo '[+] Inserting seeds...' . PHP_EOL;
+            echo '[...] Inserting seeds' . PHP_EOL;
 
             if ($options['seed'] !== 'all') {
                 $seed = $options['seed'];
@@ -442,7 +442,7 @@ class Database
                 }
             } else {
                 foreach (Storage::path(config('storage.seeds'))->getFiles() as $file) {
-                    $seed = explode('.', $file)[0];
+                    $seed = get_file_name($file);
                     $seed = 'App\Database\Seeds\\' . $seed;
                     
                     try {
@@ -465,13 +465,13 @@ class Database
             !array_key_exists('fetch', $options) &&
             !array_key_exists('execute', $options)
         ) {
-            echo '[+] Creating databases...' . PHP_EOL;
+            echo '[...] Creating databases' . PHP_EOL;
 
             if (strpos($options['schema'], ',') === false) {
                 $database = $options['schema'];
                 
                 try {
-                    DB::getInstance()->executeQuery("CREATE DATABASE IF NOT EXISTS $database CHARACTER SET " . config('db.charset') . " COLLATE " . config('db.collation'));
+                    DBConnection::getInstance()->executeQuery("CREATE DATABASE IF NOT EXISTS $database CHARACTER SET " . config('db.charset') . " COLLATE " . config('db.collation'));
                     echo '[+] ' . $database . ' created successfully' . PHP_EOL;
                 } catch(Exception $e) {
                     echo '[!] ' . $e->getMessage();
@@ -481,7 +481,7 @@ class Database
 
                 foreach ($db as $database) {
                     try {
-                        DB::getInstance()->executeQuery("CREATE DATABASE IF NOT EXISTS $database CHARACTER SET " . config('db.charset') . " COLLATE " . config('db.collation'));
+                        DBConnection::getInstance()->executeQuery("CREATE DATABASE IF NOT EXISTS $database CHARACTER SET " . config('db.charset') . " COLLATE " . config('db.collation'));
                         echo '[+] ' . $database . ' created successfully' . PHP_EOL;
                     } catch(Exception $e) {
                         echo '[!] ' . $e->getMessage();
@@ -500,13 +500,13 @@ class Database
             !array_key_exists('fetch', $options) &&
             !array_key_exists('execute', $options)
         ) {
-            echo '[+] Deleting databases...' . PHP_EOL;
+            echo '[...] Deleting databases' . PHP_EOL;
 
             if (strpos($options['schema'], ',') === false) {
                 $database = $options['schema'];
                 
                 try {
-                    DB::getInstance()->executeQuery("DROP DATABASE IF EXISTS $database");
+                    DBConnection::getInstance()->executeQuery("DROP DATABASE IF EXISTS $database");
                     echo '[+] ' .$database . ' deleted successfully' . PHP_EOL;
                 } catch(Exception $e) {
                     echo '[!] ' . $e->getMessage();
@@ -516,7 +516,7 @@ class Database
 
                 foreach ($db as $database) {
                     try {
-                        DB::getInstance()->executeQuery("DROP DATABASE IF EXISTS $database");
+                        DBConnection::getInstance()->executeQuery("DROP DATABASE IF EXISTS $database");
                         echo '[+] ' .$database . ' deleted successfully' . PHP_EOL;
                     } catch(Exception $e) {
                         echo '[!] ' . $e->getMessage();
@@ -535,10 +535,10 @@ class Database
             !array_key_exists('delete', $options) &&
             !array_key_exists('reset', $options)
         ) {
-            echo '[+] Executing MySQL query...' . PHP_EOL;
+            echo '[...] Executing MySQL query' . PHP_EOL;
 
             try {
-                $stmt = DB::getInstance()->executeQuery($options['query']);
+                $stmt = DBConnection::getInstance()->executeQuery($options['query']);
             } catch(Exception $e) {
                 echo '[!] ' . $e->getMessage();
             }
@@ -556,10 +556,10 @@ class Database
             !array_key_exists('delete', $options) &&
             !array_key_exists('reset', $options)
         ) {
-            echo '[+] Executing MySQL query...' . PHP_EOL;
+            echo '[...] Executing MySQL query' . PHP_EOL;
 
             try {
-                DB::getInstance()->executeQuery($options['query']);
+                DBConnection::getInstance()->executeQuery($options['query']);
             } catch(Exception $e) {
                 echo '[!] ' . $e->getMessage();
             }

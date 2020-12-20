@@ -19,9 +19,9 @@ class AuthPolicy
     {
         if (Auth::check()) {
             if (!Auth::hasRole('visitor')) {
-                Redirect::toUrl('/admin/dashboard')->withToast(__('welcome') . ' ' . Auth::user()->name)->success();
+                Redirect::url('admin/dashboard')->withToast(__('welcome') . ' ' . Auth::get()->name)->success();
             } else {
-                Redirect::toUrl('/')->withToast(__('welcome') . ' ' . Auth::user()->name)->success();
+                Redirect::url()->withToast(__('welcome') . ' ' . Auth::get()->name)->success();
             }
         }
     }

@@ -4,6 +4,8 @@ namespace App\Controllers\Admin;
 
 use App\Helpers\Auth;
 use App\Helpers\DateHelper;
+use Framework\HTTP\Redirect;
+use Framework\Support\Alert;
 use App\Helpers\ReportHelper;
 use Framework\Routing\Controller;
 use App\Database\Models\ActivitiesModel;
@@ -17,10 +19,10 @@ class ActivitiesController extends Controller
      */
     public function index(): void
 	{
-        if (Auth::user()->role === 'administrator') {
+        if (Auth::get()->role === 'administrator') {
             $activities = ActivitiesModel::select();
         } else {
-            $activities = ActivitiesModel::find('user', Auth::user()->email);
+            $activities = ActivitiesModel::findBy('user', Auth::get()->email);
         }
 
 		$this->render('admin/activities', [
@@ -37,20 +39,20 @@ class ActivitiesController extends Controller
 	public function delete(?int $id = null): void
 	{
         if (!is_null($id)) {
-			if (!ActivitiesModel::find('id', $id)->exists()) {
-				$this->redirectBack()->withToast(__('activity_not_found'))->error();
+			if (!ActivitiesModel::find($id)->exists()) {
+				Redirect::back()->withToast(__('activity_not_found'))->error();
 			}
 	
-			ActivitiesModel::delete()->where('id', $id)->persist();
-            $this->redirectBack()->withToast(__('activity_deleted'))->success();
+			ActivitiesModel::deleteWhere('id', $id);
+            Redirect::back()->withToast(__('activity_deleted'))->success();
 		} else {
 			$activities_id = explode(',', $this->request->items);
 
 			foreach ($activities_id as $id) {
-				ActivitiesModel::delete()->where('id', $id)->persist();
+				ActivitiesModel::deleteWhere('id', $id);
 			}
 			
-			$this->toast(__('activities_deleted'))->success();
+			Alert::toast(__('activities_deleted'))->success();
 		}
 	}
 
@@ -66,7 +68,7 @@ class ActivitiesController extends Controller
 
 		if (!is_null($date_start) && !is_null($date_end)) {
 			$activities = ActivitiesModel::select()
-                ->between('created_at', DateHelper::format($date_start)->dateOnly(), DateHelper::format($date_end)->dateOnly())
+                ->whereBetween('created_at', $date_start, $date_end)
                 ->orderDesc('created_at')
                 ->all();
 		} else {

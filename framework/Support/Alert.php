@@ -14,7 +14,7 @@ namespace Framework\Support;
 class Alert
 {
     /**
-     * @var array
+     * @var array $alert
      */
     protected static $alert = [];
 

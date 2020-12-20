@@ -98,11 +98,11 @@ class Maker
      */
     public static function makeRoute(string $controller): void
     {
-        echo '[*] Generating routes...' . PHP_EOL;
+        echo '[...] Generating routes' . PHP_EOL;
 
         list($controller_name, $controller_class) = self::generateClass($controller, 'controller');
 
-        $data = self::stubs()->readFile('Route.stub');
+        $data = self::stubs()->add('admin')->readFile('Route.stub');
         $data = str_replace('CLASSNAME', $controller_class, $data);
         $data = str_replace('RESOURCENAME', $controller_name, $data);
 
@@ -114,7 +114,7 @@ class Maker
             exit('[!] Failed to generate routes for ' . $controller_class . PHP_EOL);
         }
         
-        echo '[*] Routes for ' . $controller_class . ' generated successfully' . PHP_EOL;
+        echo '[+] Routes for ' . $controller_class . ' generated successfully' . PHP_EOL;
     }
     
     /**
@@ -126,7 +126,7 @@ class Maker
      */
     public static function makeController(string $controller, ?string $namespace = null): void
     {
-        echo '[*] Generating controller...' . PHP_EOL;
+        echo '[...] Generating controller' . PHP_EOL;
 
         list($controller_name, $controller_class) = self::generateClass($controller, 'controller');
 
@@ -146,7 +146,7 @@ class Maker
             exit('[!] Failed to generate controller ' . $controller_class . PHP_EOL);
         }
         
-        echo '[*] Controller ' . $controller_class . ' generated successfully' . PHP_EOL;
+        echo '[+] Controller ' . $controller_class . ' generated successfully' . PHP_EOL;
     }
     
     /**
@@ -157,12 +157,12 @@ class Maker
      */
     public static function makeViews(string $resource): void
     {
-        echo '[*] Generating views...' . PHP_EOL;
+        echo '[...] Generating views' . PHP_EOL;
 
         list($resource_name, $resource_folder) = self::generateResource($resource);
 
-        foreach(self::stubs()->add('Resource')->getFiles() as $file) {
-            $data = self::stubs()->add('Resource')->readFile($file);
+        foreach(self::stubs()->add('admin/views')->getFiles() as $file) {
+            $data = self::stubs()->add('admin/views')->readFile($file);
             $data = str_replace('RESOURCENAME', $resource_name, $data);
             $file = str_replace('stub', 'php', $file);
 
@@ -171,7 +171,7 @@ class Maker
             }
         }
 
-        echo '[*] Views for ' . $resource . ' generated successfully' . PHP_EOL;
+        echo '[+] Views for ' . $resource . ' generated successfully' . PHP_EOL;
     }
 
     /**
@@ -182,12 +182,11 @@ class Maker
      */
     public static function makeModel(string $model): void
     {
-        echo '[*] Generating model...' . PHP_EOL;
+        echo '[...] Generating model' . PHP_EOL;
 
         list($model_name, $model_class) = self::generateClass($model, 'model');
 
         $data = self::stubs()->readFile('Model.stub');
-        $data = str_replace('NAMESPACE', 'App\Database\Models', $data);
         $data = str_replace('CLASSNAME', $model_class, $data);
         $data = str_replace('TABLENAME', $model_name, $data);
 
@@ -195,7 +194,7 @@ class Maker
             exit('[!] Failed to generate model ' . $model_class . PHP_EOL);
         }
         
-        echo '[*] Model ' . $model_class . ' generated successfully' . PHP_EOL;
+        echo '[+] Model ' . $model_class . ' generated successfully' . PHP_EOL;
     }
  
     /**
@@ -206,12 +205,11 @@ class Maker
      */
     public static function makeMigration(string $migration): void
     {
-        echo '[*] Generating migration...' . PHP_EOL;
+        echo '[...] Generating migration' . PHP_EOL;
 
         list($migration_name, $migration_class) = self::generateClass($migration, 'migration');
 
         $data = self::stubs()->readFile('Migration.stub');
-        $data = str_replace('NAMESPACE', 'App\Database\Migrations', $data);
         $data = str_replace('CLASSNAME', $migration_class, $data);
         $data = str_replace('TABLENAME', $migration_name, $data);
 
@@ -219,7 +217,7 @@ class Maker
             exit('[!] Failed to generate migration ' . $migration_class . PHP_EOL);
         }
         
-        echo '[*] Migration ' . $migration_class . ' generated successfully' . PHP_EOL;
+        echo '[+] Migration ' . $migration_class . ' generated successfully' . PHP_EOL;
     }
 
     /**
@@ -230,12 +228,11 @@ class Maker
      */
     public static function makeSeed(string $seed): void
     {
-        echo '[*] Generating seed...' . PHP_EOL;
+        echo '[...] Generating seed' . PHP_EOL;
 
         list($seed_name, $seed_class) = self::generateClass($seed, 'seed');
 
         $data = self::stubs()->readFile('Seed.stub');
-        $data = str_replace('NAMESPACE', 'App\Database\Seeds', $data);
         $data = str_replace('CLASSNAME', $seed_class, $data);
         $data = str_replace('TABLENAME', $seed_name . 's', $data);
 
@@ -243,7 +240,7 @@ class Maker
             exit('[!] Failed to generate seed ' . $seed_class . PHP_EOL);
         }
         
-        echo '[*] Seed ' . $seed_class . ' generated successfully' . PHP_EOL;
+        echo '[+] Seed ' . $seed_class . ' generated successfully' . PHP_EOL;
     }
 
     /**
@@ -262,28 +259,10 @@ class Maker
             !array_key_exists('seed', $options) &&
             !array_key_exists('request', $options) &&
             !array_key_exists('middleware', $options) &&
-            !array_key_exists('resources', $options)
+            !array_key_exists('admin', $options) &&
+            !array_key_exists('m', $options)
         ) {
             self::makeController($options['controller']);
-        }
-
-        else if (
-            array_key_exists('controller', $options) &&
-            array_key_exists('resources', $options) &&
-            !array_key_exists('namespace', $options) &&
-            !array_key_exists('model', $options) &&
-            !array_key_exists('migration', $options) &&
-            !array_key_exists('seed', $options) &&
-            !array_key_exists('request', $options) &&
-            !array_key_exists('middleware', $options) &&
-            !array_key_exists('table', $options)
-        ) {
-            self::makeController($options['controller']);
-            self::makeViews($options['controller']);
-            self::makeModel($options['controller']);
-            self::makeSeed($options['controller']);
-            self::makeMigration($options['controller']);
-            self::makeRoute($options['controller']);
         }
         
         else if (
@@ -294,22 +273,24 @@ class Maker
             !array_key_exists('seed', $options) &&
             !array_key_exists('request', $options) &&
             !array_key_exists('middleware', $options) &&
-            !array_key_exists('resources', $options)
+            !array_key_exists('admin', $options) &&
+            !array_key_exists('m', $options)
         ) {
             self::makeController($options['controller'], $options['namespace']);
         }
 
         else if (
             array_key_exists('controller', $options) &&
-            array_key_exists('namespace', $options) &&
-            array_key_exists('resources', $options) &&
+            array_key_exists('admin', $options) &&
+            !array_key_exists('namespace', $options) &&
             !array_key_exists('model', $options) &&
             !array_key_exists('migration', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('request', $options) &&
-            !array_key_exists('middleware', $options)
+            !array_key_exists('middleware', $options) &&
+            !array_key_exists('m', $options)
         ) {
-            self::makeController($options['controller'], $options['namespace']);
+            self::makeController($options['controller'], 'admin');
             self::makeViews($options['controller']);
             self::makeModel($options['controller']);
             self::makeSeed($options['controller']);
@@ -325,7 +306,8 @@ class Maker
             !array_key_exists('seed', $options) &&
             !array_key_exists('request', $options) &&
             !array_key_exists('middleware', $options) &&
-            !array_key_exists('resources', $options)
+            !array_key_exists('admin', $options) &&
+            !array_key_exists('m', $options)
         ) {
             self::makeModel($options['model']);
         }
@@ -338,23 +320,25 @@ class Maker
             !array_key_exists('seed', $options) &&
             !array_key_exists('request', $options) &&
             !array_key_exists('middleware', $options) &&
-            !array_key_exists('resources', $options)
+            !array_key_exists('admin', $options) &&
+            !array_key_exists('m', $options)
         ) {
             self::makeMigration($options['migration']);
         }
 
         else if (
             array_key_exists('migration', $options) &&
-            array_key_exists('model', $options) &&
+            array_key_exists('m', $options) &&
             !array_key_exists('controller', $options) &&
             !array_key_exists('namespace', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('request', $options) &&
             !array_key_exists('middleware', $options) &&
-            !array_key_exists('resources', $options)
+            !array_key_exists('admin', $options) &&
+            !array_key_exists('model', $options)
         ) {
             self::makeMigration($options['migration']);
-            self::makeModel($options['model']);
+            self::makeModel($options['migration']);
         }
 
         else if (
@@ -365,7 +349,8 @@ class Maker
             !array_key_exists('migration', $options) &&
             !array_key_exists('request', $options) &&
             !array_key_exists('middleware', $options) &&
-            !array_key_exists('resources', $options)
+            !array_key_exists('admin', $options) &&
+            !array_key_exists('m', $options)
         ) {
             self::makeSeed($options['seed']);
         }
@@ -378,19 +363,19 @@ class Maker
             !array_key_exists('migration', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('middleware', $options) &&
-            !array_key_exists('resources', $options)
+            !array_key_exists('admin', $options) &&
+            !array_key_exists('m', $options)
         ) {
-            echo '[*] Generating request validator...' . PHP_EOL;
+            echo '[...] Generating request validator' . PHP_EOL;
 
             $data = self::stubs()->readFile('Request.stub');
-            $data = str_replace('NAMESPACE', 'App\Requests', $data);
             $data = str_replace('CLASSNAME', $options['request'], $data);
 
             if (!Storage::path(config('storage.requests'))->writeFile($options['request'] . '.php', $data)) {
                 exit('[!] Failed to generate request ' . $options['request'] . '.php' . PHP_EOL);
             }
 
-            echo '[*] Request validator ' . $options['request'] . '.php generated successfully' . PHP_EOL;
+            echo '[...] Request validator ' . $options['request'] . ' generated successfully' . PHP_EOL;
         }
 
         else if (
@@ -401,19 +386,19 @@ class Maker
             !array_key_exists('migration', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('request', $options) &&
-            !array_key_exists('resources', $options)
+            !array_key_exists('admin', $options) &&
+            !array_key_exists('m', $options)
         ) {
-            echo '[*] Generating middleware...' . PHP_EOL;
+            echo '[...] Generating middleware' . PHP_EOL;
 
             $data = self::stubs()->readFile('Middleware.stub');
-            $data = str_replace('NAMESPACE', 'App\Middlewares', $data);
             $data = str_replace('CLASSNAME', $options['middleware'], $data);
 
             if (!Storage::path(config('storage.middlewares'))->writeFile($options['middleware'] . '.php', $data)) {
                 exit('[!] Failed to generate middleware ' . $options['middleware'] . '.php' . PHP_EOL);
             }
 
-            echo '[*] Middleware ' . $options['middleware'] . '.php generated successfully' . PHP_EOL;
+            echo '[...] Middleware ' . $options['middleware'] . ' generated successfully' . PHP_EOL;
         }
         
         exit('[+] All operations done' . PHP_EOL);

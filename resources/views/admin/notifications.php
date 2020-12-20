@@ -24,7 +24,7 @@
     </div>
 </div>
 
-<?php if (user_session()->alerts && !empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
+<?php if (auth()->alerts && !empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
 
 <div class="card shadow-sm">
     <div class="card-header">
@@ -39,18 +39,18 @@
                 <span class="mt-lg-0 mt-2">
                     <create-notification 
                         title="<?= __('create') ?>"
-                        action="<?= absolute_url('/admin/account/notifications/create') ?>" 
+                        action="<?= absolute_url('admin/account/notifications/create') ?>" 
                         modal_title="<?= __('create_notification') ?>" 
                         modal_button_title="<?= __('submit') ?>" 
                         modal_button_cancel="<?= __('cancel') ?>" 
                         csrf_token='<?= csrf_token_input() ?>'>
                     </create-notification>
 
-                    <button class="btn btn-outline-dark mr-2" id="bulk-read" data-url="<?= absolute_url('/admin/account/notifications/update') ?>">
+                    <button class="btn btn-outline-dark mr-2" id="bulk-read" data-url="<?= absolute_url('admin/account/notifications/update') ?>">
                         <?= __('mark_as_read') ?>
                     </button>
 
-                    <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('/admin/account/notifications/delete') ?>">
+                    <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('admin/account/notifications/delete') ?>">
                         <?= __('delete') ?>
                     </button>
                 </span>
@@ -91,10 +91,10 @@
                         <td><?= $notifications->getFirstItem() + $key + 1 ?></td>
                         <td><?= $notification->id ?></td>
                         <td><?= $notification->message ?></td>
-                        <td><?= time_elapsed(\App\Helpers\DateHelper::format($notification->created_at)->get(), 1) ?></td>
+                        <td><?= time_elapsed(\App\Helpers\DateHelper::format($notification->created_at)->timestamp(), 1) ?></td>
 
                         <td>
-                            <a class="btn text-dark p-1 <?php if ($notification->status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('/admin/account/notifications/update/' . $notification->id) ?>" <?php if ($notification->status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
+                            <a class="btn text-dark p-1 <?php if ($notification->status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('admin/account/notifications/update/' . $notification->id) ?>" <?php if ($notification->status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
                                 <?php if ($notification->status === 'unread') : ?>
                                 <i class="fa fa-eye-slash"></i>
                                 <?php else : ?>
@@ -105,7 +105,7 @@
                             <confirm-delete 
                                 type="icon" 
                                 content='<i class="fa fa-trash-alt"></i>' 
-                                action="<?= absolute_url('/admin/account/notifications/delete/' . $notification->id) ?>">
+                                action="<?= absolute_url('admin/account/notifications/delete/' . $notification->id) ?>">
                             </confirm-delete>
                         </td>
                     </tr>

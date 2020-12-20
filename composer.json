@@ -11,15 +11,8 @@
     ],
     "autoload": {
         "files": [
-            "app/Functions.php",
-            "framework/Support/Helpers/Cookies.php",
-            "framework/Support/Helpers/Curl.php",
-            "framework/Support/Helpers/Debug.php",
-            "framework/Support/Helpers/Pagination.php",
-            "framework/Support/Helpers/Security.php",
-            "framework/Support/Helpers/Session.php",
-            "framework/Support/Helpers/Url.php",
-            "framework/Support/Helpers/Utils.php"
+            "app/Helpers.php",
+            "framework/Support/Helpers.php"
         ],
         "psr-4": {
             "App\\" : "app/",

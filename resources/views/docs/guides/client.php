@@ -28,11 +28,40 @@ Client::patch(array $urls, array $headers = [], ?array $data = null, bool $json_
 Client::delete(array $urls, array $headers = [], ?array $data = null, bool $json_data = false)
 Client::options(array $urls, array $headers = [], ?array $data = null, bool $json_data = false)</code></pre>
         </div>
+
+        <p class="font-weight-bold">Send HTTP GET and POST requests inside Controller class</p>
+        <p>Example :</p>
+
+        <div class="card">
+            <pre class="m-0"><code class="p-3">&lt;?php
+
+namespace App\Controllers;
+
+use Framework\Routing\Controller;
+
+class MyController extends Controller
+{
+    /**
+     * @return void
+     */
+    public function index(): void
+    {
+        //send HTTP GET request
+        $rates = $this->get(['https://api.exchangeratesapi.io/latest?base=USD'])->getBody();
+        $this->jsonResponse(json_decode($rates[0], true));
+
+        //send HTTP POST request
+        $response = $this->post(['https://api.exchangeratesapi.io/latest'], [], ['base' => 'USD'])->getBody();
+        $this->jsonResponse(json_decode($response[0], true));
+    }
+}</code></pre>
+        </div>
     </div>
 
+
     <div class="card-footer d-flex justify-content-between">
-        <span>Next: <a href="<?= absolute_url('/docs/redirections') ?>">URL Redirection</a></span>
-        <span>Previous: <a href="<?= absolute_url('/docs/responses') ?>">HTTP Responses</a></span>
+        <span>Next: <a href="<?= absolute_url('docs/guides/redirections') ?>">URL Redirections</a></span>
+        <span>Previous: <a href="<?= absolute_url('docs/guides/responses') ?>">HTTP Responses</a></span>
     </div>
 </div>
 

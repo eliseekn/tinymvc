@@ -52,7 +52,7 @@ Route::options(string $uri, array $parameters)</code></pre>
 
     <div class="card-footer d-flex justify-content-between">
         <span>Next: <a href="#route-parameters">Route parameters</a></span>
-        <span>Previous: <a href="<?= absolute_url('/docs/guides/getting-started') ?>">Getting started</a></span>
+        <span>Previous: <a href="<?= absolute_url('docs/guides/getting-started') ?>">Getting started</a></span>
     </div>
 </div>
 
@@ -151,7 +151,7 @@ Route::options(string $uri, array $parameters)</code></pre>
         <p>You can capture required URI parameters :</p>
 
         <div class="card mb-4">
-            <pre class="m-0"><code class="p-3">Route::get('welcome/{name:str}', [
+            <pre class="m-0"><code class="p-3">Route::get('welcome/{str}', [
     'handler' => function ($name) {
         Response::send('Welcome ' . $name . '!');       
     }
@@ -180,28 +180,28 @@ Route::options(string $uri, array $parameters)</code></pre>
                 </tr>
                 <tr>
                     <th scope="row">num</th>
-                    <td>digit</td>
+                    <td>numeric</td>
                     <td>
-                        Accept digit character in the range of <span class="bg-light text-danger">0-9</span> with 1 or more digit. The 
+                        Accept numerics character in the range of <span class="bg-light text-danger">0-9</span> with 1 or more numerics. The 
                         corresponding regular expression is <span class="bg-light text-danger">\d+</span>
                     </td>
                 </tr>
                 <tr>
                     <th scope="row">any</th>
-                    <td>all</td>
+                    <td>any</td>
                     <td>
-                        Accept both <span class="bg-light text-danger">str</span> and <span class="bg-light text-danger">num</span> characters 
-                        except <span class="bg-light text-danger">/</span>. The corresponding regular expression is <span class="bg-light text-danger">[^/]+</span>
+                        Accept both <span class="bg-light text-danger">str</span> and <span class="bg-light text-danger">num</span> types. 
+                        The corresponding regular expression is <span class="bg-light text-danger">[^/]+</span>
                     </td>
                 </tr>
             </tbody>
         </table>
 
         <p class="font-weight-bold">Optionals parameters</p>
-        <p>You specify optionals parameters by adding a <span class="bg-light text-danger">?</span> mark at the end of parameter definition :</p>
+        <p>You specify optionals parameters by adding two <span class="bg-light text-danger">?</span> mark around parameter definition :</p>
 
         <div class="card mb-4">
-            <pre class="m-0"><code class="p-3">Route::get('welcome/{name:str}?', [
+            <pre class="m-0"><code class="p-3">Route::get('welcome/?{str}?', [
     'handler' => function (?string $name = null) {
         $visitor = is_null($name) ? 'Visitor' : $name;
         Response::send('Welcome ' . $visitor . '!');       
@@ -211,7 +211,7 @@ Route::options(string $uri, array $parameters)</code></pre>
     </div>
 
     <div class="card-footer d-flex justify-content-between">
-        <span>Next: <a href="<?= absolute_url('/docs/guides/middlewares') ?>">Middlewares</a></span>
+        <span>Next: <a href="<?= absolute_url('docs/guides/middlewares') ?>">Middlewares</a></span>
         <span>Previous: <a href="#route-parameters">Route parameters</a></span>
     </div>
 </div>

@@ -9,7 +9,7 @@ use Framework\HTTP\Response;
 class DownloadHelper
 {   
     /**
-     * @var arrray $mimes_types
+     * @var array $mimes_types
      */
     protected static array $mimes_types = [
         'htm' => 'text/html',
@@ -50,7 +50,7 @@ class DownloadHelper
             $content_type = 'text/plain';
         }
 
-		Response::sendHeaders([
+		Response::headers([
 			'Content-Description' => 'File Transfer',
             'Content-Type' => $content_type,
 			'Content-Disposition' => 'attachment; filename="' . $filename . '"',

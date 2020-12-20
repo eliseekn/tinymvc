@@ -2,7 +2,7 @@
 
 namespace App\Database\Seeds;
 
-use Framework\ORM\Seeder;
+use Framework\Database\Seeder;
 use PragmaRX\Countries\Package\Countries;
 
 class CountrySeed

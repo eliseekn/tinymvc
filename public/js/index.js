@@ -253,14 +253,30 @@ document.addEventListener('DOMContentLoaded', function () {
   } //metrics trends
 
 
-  if (document.querySelector('#users-trends-bars')) {
-    document.querySelector('#users-trends-bars').addEventListener('change', function (event) {
-      fetch(event.target.dataset.url + '/' + event.target.value).then(function (response) {
-        return response.json();
-      }).then(function (data) {
-        document.querySelector('bars-chart').setAttribute('data', data.metrics);
-        event.target.value === 'weeks' ? document.querySelector('bars-chart').setAttribute('xkey', 'day') : document.querySelector('bars-chart').setAttribute('xkey', 'month');
-      });
+  if (document.querySelector('#users-trends')) {
+    document.querySelector('#users-trends').addEventListener('change', function (event) {
+      if (event.target.value === 'last-years') {
+        fetch(event.target.dataset.url + '/years/3').then(function (response) {
+          return response.json();
+        }).then(function (data) {
+          document.querySelector('bars-chart').setAttribute('data', data.metrics);
+          document.querySelector('bars-chart').setAttribute('xkey', 'year');
+        });
+      } else if (event.target.value === 'last-weeks') {
+        fetch(event.target.dataset.url + '/weeks/4').then(function (response) {
+          return response.json();
+        }).then(function (data) {
+          document.querySelector('bars-chart').setAttribute('data', data.metrics);
+          document.querySelector('bars-chart').setAttribute('xkey', 'day');
+        });
+      } else {
+        fetch(event.target.dataset.url + '/' + event.target.value).then(function (response) {
+          return response.json();
+        }).then(function (data) {
+          document.querySelector('bars-chart').setAttribute('data', data.metrics);
+          event.target.value === 'weeks' ? document.querySelector('bars-chart').setAttribute('xkey', 'day') : document.querySelector('bars-chart').setAttribute('xkey', 'month');
+        });
+      }
     });
   }
 });
@@ -1107,16 +1123,17 @@ var BarsChart = /*#__PURE__*/function (_HTMLElement) {
     _classCallCheck(this, BarsChart);
 
     _this = _super.call(this);
-    _this.displayChart = _this.displayChart.bind(_assertThisInitialized(_this));
+    _this.drawChart = _this.drawChart.bind(_assertThisInitialized(_this));
+    _this.displayData = _this.displayData.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(BarsChart, [{
-    key: "displayChart",
-    value: function displayChart(data, xkey) {
-      this.innerHTML = '<div id="users-bars" style="height: 200px"></div>';
+    key: "drawChart",
+    value: function drawChart(data, xkey) {
+      this.innerHTML = "<div id=\"".concat(this.getAttribute('el'), "\" style=\"height: 200px\"></div>");
       new Morris.Bar({
-        element: 'users-bars',
+        element: this.getAttribute('el'),
         resize: true,
         data: data,
         xkey: xkey,
@@ -1125,14 +1142,23 @@ var BarsChart = /*#__PURE__*/function (_HTMLElement) {
       });
     }
   }, {
+    key: "displayData",
+    value: function displayData() {
+      if (JSON.parse(this.getAttribute('data')).length == 0) {
+        this.innerHTML = '<div class="d-flex justify-content-center align-items-center" style="height: 200px">No data found</div>';
+      } else {
+        this.drawChart(JSON.parse(this.getAttribute('data')), this.getAttribute('xkey'));
+      }
+    }
+  }, {
     key: "connectedCallback",
     value: function connectedCallback() {
-      this.displayChart(JSON.parse(this.getAttribute('data')), this.getAttribute('xkey'));
+      this.displayData();
     }
   }, {
     key: "attributeChangedCallback",
     value: function attributeChangedCallback(name, oldValue, newValue) {
-      this.displayChart(JSON.parse(this.getAttribute('data')), this.getAttribute('xkey'));
+      this.displayData();
     }
   }], [{
     key: "observedAttributes",
@@ -1262,8 +1288,8 @@ var ThemeSwitch = /*#__PURE__*/function (_HTMLElement) {
   _createClass(ThemeSwitch, [{
     key: "connectedCallback",
     value: function connectedCallback() {
-      this.innerHTML = "\n            <div class=\"custom-control custom-switch\">\n                <input type=\"checkbox\" class=\"custom-control-input\" name=\"theme\" id=\"theme\" ".concat(this.getAttribute('checked'), ">\n                <label class=\"custom-control-label\" for=\"theme\"></label>\n            </div>\n        ");
-      document.querySelector('#theme').addEventListener('change', function () {
+      this.innerHTML = "\n            <div class=\"custom-control custom-switch\">\n                <input type=\"checkbox\" class=\"custom-control-input\" name=\"dark_theme\" id=\"dark_theme\" ".concat(this.getAttribute('checked'), ">\n                <label class=\"custom-control-label\" for=\"dark_theme\"></label>\n            </div>\n        ");
+      document.querySelector('#dark_theme').addEventListener('change', function () {
         document.querySelectorAll('.card-header').forEach(function (element) {
           element.classList.toggle('bg-dark');
           element.classList.toggle('text-white');
@@ -33527,7 +33553,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "33945" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44121" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

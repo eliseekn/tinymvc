@@ -16,7 +16,7 @@
         
         <p class="lead mt-4" style="line-height: 1.8">
             You do not have permission to access this page. <br>
-            <a href="<?= absolute_url('/') ?>">Go back home</a>
+            <a href="<?= absolute_url() ?>">Go back home</a>
         </p>
     </div>
 </body>

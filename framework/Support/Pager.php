@@ -9,7 +9,6 @@
 namespace Framework\Support;
 
 use Framework\HTTP\Request;
-use Prophecy\Promise\ReturnPromise;
 
 /**
  * Generate pagination from database 
@@ -26,7 +25,7 @@ class Pager
     /**
      * database items
      * 
-     * @var $array $items
+     * @var array $items
      */
     protected $items = [];
 
@@ -159,51 +158,56 @@ class Pager
     /**
      * generate first page url
      *
+     * @param  bool $full_url
      * @return string
      */
-    public function firstPageUrl(): string
+    public function firstPageUrl(bool $full_url = false): string
     {
-        return absolute_url(Request::getUri() . '?page=1');
+        return absolute_url(($full_url ? Request::getFullUri() : Request::getUri()) . '?page=1');
     }
 
     /**
      * generate previous page url
      *
+     * @param  bool $full_url
      * @return string
      */
-    public function previousPageUrl(): string
+    public function previousPageUrl(bool $full_url = false): string
     {
-        return absolute_url(Request::getUri() . '?page=' . $this->previousPage());
+        return absolute_url(($full_url ? Request::getFullUri() : Request::getUri()) . '?page=' . $this->previousPage());
     }
     
     /**
      * generate next page url
      *
+     * @param  bool $full_url
      * @return string
      */
-    public function nextPageUrl(): string
+    public function nextPageUrl(bool $full_url = false): string
     {
-        return absolute_url(Request::getUri() . '?page=' . $this->nextPage());
+        return absolute_url(($full_url ? Request::getFullUri() : Request::getUri()) . '?page=' . $this->nextPage());
     }
 
     /**
      * generate last page url
      *
+     * @param  bool $full_url
      * @return string
      */
-    public function lastPageUrl(): string
+    public function lastPageUrl(bool $full_url = false): string
     {
-        return absolute_url(Request::getUri() . '?page=' . $this->totalPages());
+        return absolute_url(($full_url ? Request::getFullUri() : Request::getUri()) . '?page=' . $this->totalPages());
     }
     
     /**
      * generate page url
      *
      * @param  int $page
+     * @param  bool $full_url
      * @return string
      */
-    public function pageUrl(int $page): string
+    public function pageUrl(int $page, bool $full_url = false): string
     {
-        return absolute_url(Request::getUri() . '?page=' . $page);
+        return absolute_url(($full_url ? Request::getFullUri() : Request::getUri()) . '?page=' . $page);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace NAMESPACE;
+namespace App\Requests;
 
 use Framework\Support\Validator;
 

@@ -2,7 +2,7 @@
 
 namespace App\Database\Models;
 
-use Framework\ORM\Model;
+use Framework\Database\Model;
 
 class CountriesModel extends Model
 {

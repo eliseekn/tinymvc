@@ -13,8 +13,8 @@
 $config = [
     'app' => [
         'name' => 'TinyMVC',
-        'folder' => '/tinymvc', //or leave empty if you are using 'www' root
-        'url' => 'http://localhost/tinymvc', //do not forget to remove folder if you are using 'www' root
+        'folder' => '/tinymvc', //leave empty if you are using 'www' root
+        'url' => 'http://localhost/tinymvc', //remove folder if you are using 'www' root
         'lang' => 'en'
     ],
 
@@ -53,10 +53,10 @@ $config = [
 
     'security' => [
         'enc_key' => base64_encode('write_something_here_to_generate_a_single_encryption_key'),
-        'enc_cookies' => true,
+        'encrypt_cookies' => true,
 
         'auth' => [
-            'max_attempts' => 5,
+            'max_attempts' => 3, //set to 0 to disable
             'unlock_timeout' => 1, //in minute
             'email_confirmation' => false
         ]

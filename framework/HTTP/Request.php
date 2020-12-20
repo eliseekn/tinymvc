@@ -9,6 +9,7 @@
 namespace Framework\HTTP;
 
 use Framework\Support\Uploader;
+use Framework\Support\Validator;
 
 /**
  * Handle HTTP requests
@@ -17,11 +18,6 @@ class Request
 {
     public function __construct()
     {
-        //add headers as properties
-        foreach (self::getHeaders() as $key => $value) {
-            $this->{$key} = $value;
-        }
-
         //add fields as properties
         foreach (self::getInputs() as $key => $value) {
             $this->{$key} = $value;
@@ -384,9 +380,9 @@ class Request
      * only
      *
      * @param  string[] $items
-     * @return mixed
+     * @return array
      */
-    public function only(string ...$items)
+    public function only(string ...$items): array
     {
         $result = [];
 
@@ -398,16 +394,16 @@ class Request
             }
         }
 
-        return (object) $result;
+        return $result;
     }
     
     /**
      * except
      *
      * @param  string[] $items
-     * @return mixed
+     * @return array
      */
-    public function except(string ...$items)
+    public function except(string ...$items): array
     {
         $result = [];
 
@@ -421,6 +417,34 @@ class Request
             }
         }
 
-        return (object) $result;
+        return $result;
+    }
+    
+    /**
+     * all
+     *
+     * @return array
+     */
+    public function all(): array
+    {
+        return array_merge($this->inputs(), $this->queries());
+    }
+
+    /**
+     * validate inputs and set flash session data
+     *
+     * @param  array|null $inputs
+     * @param  array $rules
+     * @param  array $messages
+     * @return void
+     */
+    public function validate(?array $inputs = null, array $rules = [], array $messages = []): void
+    {
+        $inputs = is_null($inputs) ? $this->inputs() : $inputs;
+        $validator = Validator::validate($inputs, $rules, $messages);
+
+        if ($validator->fails()) {
+            Redirect::back()->withErrors($validator->errors())->withInputs($validator->inputs());
+        }
     }
 }

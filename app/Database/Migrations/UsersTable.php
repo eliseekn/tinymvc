@@ -2,7 +2,7 @@
 
 namespace App\Database\Migrations;
 
-use Framework\ORM\Migration;
+use Framework\Database\Migration;
 
 class UsersTable
 {         
@@ -32,7 +32,7 @@ class UsersTable
             ->addSmallInt('country')->default(209)
             ->addString('currency')->default('USD')
             ->addString('timezone')->default('UTC')
-            ->addString('theme')->default('light')
+            ->addBoolean('dark_theme')->default(1)
             ->addBoolean('active')->default(0)
             ->addBoolean('two_steps')->default(0)
             ->addBoolean('alerts')->default(1)

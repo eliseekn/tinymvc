@@ -6,7 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Framework\ORM;
+namespace Framework\Database;
 
 use Carbon\Carbon;
 
@@ -33,7 +33,7 @@ class Builder
      * generate CREATE TABLE query 
      *
      * @param  string $name
-     * @return \Framework\ORM\Builder
+     * @return \Framework\Database\Builder
      */
     public static function table(string $name): self
     {
@@ -45,7 +45,7 @@ class Builder
 	 * generate SELECT query
 	 *
 	 * @param  string $columns
-	 * @return \Framework\ORM\Builder
+	 * @return \Framework\Database\Builder
 	 */
 	public static function select(string ...$columns): self
 	{
@@ -64,7 +64,7 @@ class Builder
 	 *
 	 * @param  string $table
 	 * @param  array $items
-	 * @return \Framework\ORM\Builder
+	 * @return \Framework\Database\Builder
 	 */
 	public static function insert(string $table, array $items): self
 	{
@@ -92,7 +92,7 @@ class Builder
 	 * generate UPDATE query
 	 *
 	 * @param  string $table
-	 * @return \Framework\ORM\Builder
+	 * @return \Framework\Database\Builder
 	 */
 	public static function update(string $table): self
 	{
@@ -104,7 +104,7 @@ class Builder
 	 * generate DELETE FROM query
 	 * 
 	 * @param  string $table
-	 * @return \Framework\ORM\Builder
+	 * @return \Framework\Database\Builder
 	 */
 	public static function delete(string $table): self
 	{
@@ -116,7 +116,7 @@ class Builder
 	 * generate DROP TABLE query
 	 *
 	 * @param  string $table
-	 * @return \Framework\ORM\Builder
+	 * @return \Framework\Database\Builder
 	 */
 	public static function drop(string $table): self
 	{
@@ -129,7 +129,7 @@ class Builder
 	 *
 	 * @param  string $table
 	 * @param  string $key foreign key name
-	 * @return \Framework\ORM\Builder
+	 * @return \Framework\Database\Builder
 	 */
 	public static function dropForeign(string $table, string $key): self
 	{
@@ -153,7 +153,7 @@ class Builder
     /**
      * add primary key and auto increment attributes
      *
-     * @return \Framework\ORM\Builder
+     * @return \Framework\Database\Builder
      */
     public function primaryKey(): self
     {
@@ -165,7 +165,7 @@ class Builder
     /**
      * add null attribute
      * 
-     * @return \Framework\ORM\Builder
+     * @return \Framework\Database\Builder
      */
     public function null(): self
     {
@@ -176,7 +176,7 @@ class Builder
     /**
      * add unique attribute
      *
-     * @return \Framework\ORM\Builder
+     * @return \Framework\Database\Builder
      */
     public function unique(): self
     {
@@ -189,7 +189,7 @@ class Builder
      * add default attribute
      *
      * @param  mixed $default
-     * @return \Framework\ORM\Builder
+     * @return \Framework\Database\Builder
      */
     public function default($default): self
     {
@@ -199,13 +199,13 @@ class Builder
 	}
 		
 	/**
-	 * add foreign key
+	 * add foreign key constraint
 	 *
 	 * @param  string $name
 	 * @param  string $column
-	 * @return \Framework\ORM\Builder
+	 * @return \Framework\Database\Builder
 	 */
-	public function foreign(string $name, string $column): self
+	public function foreignKey(string $name, string $column): self
 	{
 		self::$query .= " CONSTRAINT $name FOREIGN KEY ($column)";
         return $this;
@@ -216,7 +216,7 @@ class Builder
 	 *
 	 * @param  string $table
 	 * @param  string $column
-	 * @return \Framework\ORM\Builder
+	 * @return \Framework\Database\Builder
 	 */
 	public function references(string $table, string $column): self
 	{
@@ -227,10 +227,11 @@ class Builder
 	/**
 	 * onUpdate
 	 *
-	 * @return \Framework\ORM\Builder
+	 * @return \Framework\Database\Builder
 	 */
 	public function onUpdate(): self
 	{
+        self::$query = rtrim(self::$query, ', ');
 		self::$query .= " ON UPDATE";
         return $this;
 	}
@@ -238,10 +239,11 @@ class Builder
 	/**
 	 * onDelete
 	 *
-	 * @return \Framework\ORM\Builder
+	 * @return \Framework\Database\Builder
 	 */
 	public function onDelete(): self
 	{
+        self::$query = rtrim(self::$query, ', ');
 		self::$query .= " ON DELETE";
         return $this;
 	}
@@ -249,29 +251,29 @@ class Builder
 	/**
 	 * cascade
 	 *
-	 * @return \Framework\ORM\Builder
+	 * @return \Framework\Database\Builder
 	 */
 	public function cascade(): self
 	{
-		self::$query .= " CASCADE";
+		self::$query .= " CASCADE, ";
         return $this;
 	}
 	
 	/**
 	 * setNull
 	 *
-	 * @return \Framework\ORM\Builder
+	 * @return \Framework\Database\Builder
 	 */
 	public function setNull(): self
 	{
-		self::$query .= " SET NULL";
+		self::$query .= " SET NULL, ";
         return $this;
 	}
     
     /**
      * create new table
      *
-     * @return \Framework\ORM\Builder
+     * @return \Framework\Database\Builder
      */
     public function create(): self
     {
@@ -287,7 +289,7 @@ class Builder
 	 * generate FROM query
 	 *
 	 * @param  string $table
-	 * @return \Framework\ORM\Builder
+	 * @return \Framework\Database\Builder
 	 */
 	public function from(string $table): self
 	{
@@ -301,7 +303,7 @@ class Builder
 	 * @param  string $column
 	 * @param  string $operator
 	 * @param  mixed $value
-	 * @return \Framework\ORM\Builder
+	 * @return \Framework\Database\Builder
 	 */
 	public function where(string $column, string $operator, $value): self
 	{
@@ -311,17 +313,152 @@ class Builder
 	}
 
 	/**
-	 * generate HAVING query
+	 * generate WHERE NOT query
 	 *
 	 * @param  string $column
 	 * @param  string $operator
 	 * @param  mixed $value
-	 * @return \Framework\ORM\Builder
+	 * @return \Framework\Database\Builder
 	 */
-	public function having(string $column, string $operator, $value): self
+	public function whereNot(string $column, string $operator, $value): self
 	{
-		self::$query .= " HAVING $column $operator ? ";
+		self::$query .= " WHERE NOT $column $operator ? ";
 		self::$args[] = $value;
+		return $this;
+	}
+
+	/**
+	 * generate WHERE query
+	 *
+	 * @param  string $column
+	 * @return \Framework\Database\Builder
+	 */
+	public function whereColumn(string $column): self
+	{
+		self::$query .= " WHERE $column ";
+		return $this;
+	}
+
+	/**
+	 * generate OR query
+	 *
+	 * @param  string $column
+	 * @return \Framework\Database\Builder
+	 */
+	public function orColumn(string $column): self
+	{
+		self::$query .= " OR $column ";
+		return $this;
+	}
+
+	/**
+	 * generate AND query
+	 *
+	 * @param  string $column
+	 * @return \Framework\Database\Builder
+	 */
+	public function andColumn(string $column): self
+	{
+		self::$query .= " AND $column ";
+		return $this;
+	}
+
+	/**
+	 * generate IS NULL query
+	 *
+	 * @return \Framework\Database\Builder
+	 */
+	public function isNull(): self
+	{
+		self::$query .= ' IS NULL ';
+		return $this;
+	}
+
+	/**
+	 * generate IS NOT NULL query
+	 *
+	 * @param  string $column
+	 * @param  string $operator
+	 * @param  mixed $value
+	 * @return \Framework\Database\Builder
+	 */
+	public function isNotNull(): self
+	{
+		self::$query .= ' IS NOT NULL ';
+		return $this;
+	}
+
+	/**
+	 * generate IN query
+	 *
+	 * @param  string $column
+	 * @return \Framework\Database\Builder
+	 */
+	public function in(array $values): self
+	{
+		self::$query .= ' IN (' . implode(',', $values) . ') ';
+		return $this;
+    }
+    
+	/**
+	 * generate NOT IN query
+	 *
+	 * @param  string $column
+	 * @return \Framework\Database\Builder
+	 */
+	public function notIn(array $values): self
+	{
+		self::$query .= ' NOT IN (' . implode(',', $values) . ') ';
+		return $this;
+    }
+
+	/**
+	 * generate BETWEEN query
+	 *
+	 * @param  mixed $start
+	 * @param  mixed $end
+	 * @return \Framework\Database\Builder
+	 */
+	public function between($start, $end): self
+	{
+		self::$query .= " BETWEEN $start AND $end ";
+		return $this;
+    }
+    
+	/**
+	 * generate NOT BETWEEN query
+	 *
+	 * @param  mixed $start
+	 * @param  mixed $end
+	 * @return \Framework\Database\Builder
+	 */
+	public function notBetween($start, $end): self
+	{
+		self::$query .= " NOT BETWEEN $start AND $end ";
+		return $this;
+    }
+
+	/**
+	 * generate LIKE query
+	 *
+	 * @param  mixed $value
+	 * @return \Framework\Database\Builder
+	 */
+	public function like($value): self
+	{
+		self::$query .= " LIKE '%$value%' ";
+		return $this;
+	}
+
+	/**
+	 * generate NOT LIKE query
+	 *
+	 * @param  mixed $value
+	 * @return \Framework\Database\Builder
+	 */
+	public function notLike($value): self
+	{
+		self::$query .= " NOT LIKE '%$value%' ";
 		return $this;
 	}
 
@@ -331,9 +468,9 @@ class Builder
 	 * @param  string $column
 	 * @param  string $operator
 	 * @param  mixed $value
-	 * @return \Framework\ORM\Builder
+	 * @return \Framework\Database\Builder
 	 */
-	public function andWhere(string $column, string $operator, $value): self
+	public function and(string $column, string $operator, $value): self
 	{
 		self::$query .= " AND $column $operator ? ";
 		self::$args[] = $value;
@@ -346,11 +483,26 @@ class Builder
 	 * @param  string $column
 	 * @param  string $operator
 	 * @param  mixed $value
-	 * @return \Framework\ORM\Builder
+	 * @return \Framework\Database\Builder
 	 */
-	public function orWhere(string $column, string $operator, $value): self
+	public function or(string $column, string $operator, $value): self
 	{
 		self::$query .= " OR $column $operator ? ";
+		self::$args[] = $value;
+		return $this;
+	}
+
+	/**
+	 * generate HAVING query
+	 *
+	 * @param  string $column
+	 * @param  string $operator
+	 * @param  mixed $value
+	 * @return \Framework\Database\Builder
+	 */
+	public function having(string $column, string $operator, $value): self
+	{
+		self::$query .= " HAVING $column $operator ? ";
 		self::$args[] = $value;
 		return $this;
 	}
@@ -360,7 +512,7 @@ class Builder
 	 *
 	 * @param  string $column
 	 * @param  string $direction (ASC or DESC)
-	 * @return \Framework\ORM\Builder
+	 * @return \Framework\Database\Builder
 	 */
 	public function orderBy(string $column, string $direction): self
 	{
@@ -372,7 +524,7 @@ class Builder
 	 * generate GROUP BY query
 	 *
 	 * @param  string[] $columns
-	 * @return \Framework\ORM\Builder
+	 * @return \Framework\Database\Builder
 	 */
 	public function groupBy(string ...$columns): self
 	{
@@ -387,63 +539,11 @@ class Builder
 	}
 
 	/**
-	 * generate LIKE query
-	 *
-	 * @param  string $column
-	 * @param  mixed $value
-	 * @return \Framework\ORM\Builder
-	 */
-	public function like(string $column, $value): self
-	{
-		self::$query .= " WHERE $column LIKE '%$value%' ";
-		return $this;
-	}
-
-	/**
-	 * generate NOT LIKE query
-	 *
-	 * @param  string $column
-	 * @param  mixed $value
-	 * @return \Framework\ORM\Builder
-	 */
-	public function notLike(string $column, $value): self
-	{
-		self::$query .= " WHERE $column NOT LIKE '%$value%' ";
-		return $this;
-	}
-
-	/**
-	 * generate OR LIKE query
-	 *
-	 * @param  string $column
-	 * @param  mixed $value
-	 * @return \Framework\ORM\Builder
-	 */
-	public function orLike(string $column, $value): self
-	{
-		self::$query .= " OR $column LIKE '%$value%' ";
-		return $this;
-	}
-
-	/**
-	 * generate OR NOT LIKE query
-	 *
-	 * @param  string $column
-	 * @param  mixed $value
-	 * @return \Framework\ORM\Builder
-	 */
-	public function orNotLike(string $column, $value): self
-	{
-		self::$query .= " OR $column NOT LIKE '%$value%' ";
-		return $this;
-	}
-
-	/**
 	 * generate LIMIT query
 	 *
 	 * @param  int $limit
 	 * @param  int $offset
-	 * @return \Framework\ORM\Builder
+	 * @return \Framework\Database\Builder
 	 */
 	public function limit(int $limit, ?int $offset = null): self
 	{
@@ -462,7 +562,7 @@ class Builder
 	 * @param  string $table
 	 * @param  string $second_column
 	 * @param  string $first_column
-	 * @return \Framework\ORM\Builder
+	 * @return \Framework\Database\Builder
 	 */
 	public function innerJoin(string $table, string $second_column, string $first_column): self
 	{
@@ -476,7 +576,7 @@ class Builder
 	 * @param  string $table
 	 * @param  string $second_column
 	 * @param  string $first_column
-	 * @return \Framework\ORM\Builder
+	 * @return \Framework\Database\Builder
 	 */
 	public function leftJoin(string $table, string $second_column, string $first_column): self
 	{
@@ -490,7 +590,7 @@ class Builder
 	 * @param  string $table
 	 * @param  string $second_column
 	 * @param  string $first_column
-	 * @return \Framework\ORM\Builder
+	 * @return \Framework\Database\Builder
 	 */
 	public function rightJoin(string $table, string $second_column, string $first_column): self
 	{
@@ -504,7 +604,7 @@ class Builder
 	 * @param  string $table
 	 * @param  string $second_column
 	 * @param  string $first_column
-	 * @return \Framework\ORM\Builder
+	 * @return \Framework\Database\Builder
 	 */
 	public function fullJoin(string $table, string $second_column, string $first_column): self
 	{
@@ -513,10 +613,24 @@ class Builder
 	}
 
 	/**
+	 * generate FULL OUTER JOIN query
+	 *
+	 * @param  string $table
+	 * @param  string $second_column
+	 * @param  string $first_column
+	 * @return \Framework\Database\Builder
+	 */
+	public function outerJoin(string $table, string $second_column, string $first_column): self
+	{
+		self::$query .= " FULL OUTER JOIN " . config('db.table_prefix') . "$table ON $first_column = $second_column";
+		return $this;
+	}
+
+	/**
 	 * generate SET query
 	 *
 	 * @param  array $items
-	 * @return \Framework\ORM\Builder
+	 * @return \Framework\Database\Builder
 	 */
 	public function set(array $items): self
 	{
@@ -543,7 +657,7 @@ class Builder
 	 *
 	 * @return array
 	 */
-	public function get(): array
+	public function toSQL(): array
 	{
 		return [self::$query, self::$args];
 	}
@@ -551,15 +665,17 @@ class Builder
 	/**
 	 * set query string and arguments
 	 *
-	 * @return \Framework\ORM\Builder
+     * @param  string $query
+     * @param  array $args
+	 * @return \Framework\Database\Builder
 	 */
-	public static function query(string $query, array $args = []): self
+	public static function rawQuery(string $query, array $args = []): self
 	{
 		self::$query = $query;
 		self::$args = $args;
 
 		return new self();
-	}
+    }
 	
 	/**
 	 * execute query with arguments
@@ -568,8 +684,8 @@ class Builder
 	 */
 	public function execute(): \PDOStatement
 	{
-        $stmt = Database::getInstance()->executeStatement(self::$query, self::$args);
-		self::query('');
+        $stmt = DBConnection::getInstance()->executeStatement(self::$query, self::$args);
+		self::rawQuery('');
 		return $stmt;
 	}
 }

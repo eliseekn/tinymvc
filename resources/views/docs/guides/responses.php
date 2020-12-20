@@ -10,28 +10,55 @@
     </div>
 
     <div class="card-body">
-        <p class="font-weight-bold">Send basic HTTP response</p>
+        <p class="font-weight-bold">Send HTTP responses from Response class</p>
+        <p>Send basic HTTP response</p>
         
         <div class="card mb-4">
             <pre class="m-0"><code class="p-3">Response::send($body, array $headers = [], int $status_code = 200);</code></pre>
         </div>
 
-        <p class="font-weight-bold">Send JSON response</p>
+        <p>Send JSON response</p>
         
         <div class="card mb-4">
-            <pre class="m-0"><code class="p-3">Response::sendJson(array $body, array $headers = [], int $status_code = 200);</code></pre>
+            <pre class="m-0"><code class="p-3">Response::json(array $body, array $headers = [], int $status_code = 200);</code></pre>
         </div>
 
-        <p class="font-weight-bold">Send HTTP headers only</p>
+        <p>Send HTTP headers only</p>
         
         <div class="card mb-4">
-            <pre class="m-0"><code class="p-3">Response::sendHeaders(array $headers, int $status_code = 200);</code></pre>
+            <pre class="m-0"><code class="p-3">Response::headers(array $headers, int $status_code = 200);</code></pre>
+        </div>
+
+        <p class="font-weight-bold">Send HTTP responses inside Controller class</p>
+        <p>Example :</p>
+        
+        <div class="card">
+            <pre class="m-0"><code class="p-3">&lt;?php
+
+namespace App\Controllers;
+
+use Framework\Routing\Controller;
+
+class MyController extends Controller
+{
+    /**
+     * @return void
+     */
+    public function index(): void
+    {
+        $this->headers(['Access-Control-Allow-Origin' => '*']); //send response headers only
+        //or
+        $this->response('Hello world!'); //send basic HTTP response
+        //or
+        $this->jsonResponse('Hello world!'); //send JSON response
+    }
+}</code></pre>
         </div>
     </div>
 
     <div class="card-footer d-flex justify-content-between">
-        <span>Next: <a href="<?= absolute_url('/docs/redirections') ?>">URL Redirection</a></span>
-        <span>Previous: <a href="<?= absolute_url('/docs/requests') ?>">HTTP Requests</a></span>
+        <span>Next: <a href="<?= absolute_url('docs/guides/client') ?>">HTTP Client</a></span>
+        <span>Previous: <a href="<?= absolute_url('docs/guides/requests') ?>">HTTP Requests</a></span>
     </div>
 </div>
 

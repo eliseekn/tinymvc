@@ -20,7 +20,7 @@ use App\Database\Models\NotificationsModel;
  */
 
 //send basic headers
-Response::sendHeaders([
+Response::headers([
     'Access-Control-Allow-Origin' => '*',
     'Access-Control-Allow-Headers' => 'X-Requested-With',
 ]);
@@ -28,13 +28,13 @@ Response::sendHeaders([
 //get notifications list
 Route::get('api/notifications', [
     'handler' => function() {
-        $notifications = NotificationsModel::get()->firstOf(5);
+        $notifications = NotificationsModel::get()->take(5);
 
         foreach ($notifications as $notification) {
-            $notification->created_at = time_elapsed(DateHelper::format($notification->created_at), 1);
+            $notification->created_at = time_elapsed(DateHelper::format($notification->created_at)->timestamp(), 1);
         }
 
-        Response::sendJson([
+        Response::json([
             'notifications' => $notifications,
             'title' => __('notifications'),
             'view_all' => __('view_all')
@@ -43,23 +43,23 @@ Route::get('api/notifications', [
 ]);
 
 //get metrics trends
-Route::get('api/metrics/users/{trends:str}', [
-    'handler' => function (string $trends) {
-        $metrics = UsersModel::metrics('id', Metrics::COUNT, $trends);
-        Response::sendJson(['metrics' => json_encode($metrics)]);
+Route::get('api/metrics/users/{str}/?{num}?', [
+    'handler' => function (string $trends, int $interval = 0) {
+        $metrics = UsersModel::metrics('id', Metrics::COUNT, $trends, $interval);
+        Response::json(['metrics' => json_encode($metrics)]);
     }
 ]);
 
 //get messages list
 Route::get('api/messages', [
     'handler' => function () {
-        $messages = MessagesModel::recipients()->firstOf(5);
+        $messages = MessagesModel::recipients()->take(5);
 
         foreach ($messages as $message) {
-            $message->created_at = time_elapsed(DateHelper::format(($message->created_at), 1));
+            $message->created_at = time_elapsed(DateHelper::format($message->created_at)->timestamp(), 1);
         }
 
-        Response::sendJson([
+        Response::json([
             'messages' => $messages,
             'title' => __('messages'),
             'view_all' => __('view_all')
@@ -70,6 +70,6 @@ Route::get('api/messages', [
 //get users list
 Route::get('api/users', [
     'handler' => function () {
-        Response::sendJson(['users' => UsersModel::find('id', '!=', Auth::user()->id)->all()]);
+        Response::json(['users' => UsersModel::find('!=', Auth::get()->id)->all()]);
     }
 ]);

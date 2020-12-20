@@ -1,37 +1,104 @@
 <?php $this->layout('docs/layout', [
-    'page_title' => 'URL Redirection | Documentation'
+    'page_title' => 'URL Redirections | Documentation'
 ]) ?>
 
 <?php $this->start('page_content') ?>
 
 <div class="card mb-5" id="basic-routing">
     <div class="card-header ">
-        <span class=" lead">URL Redirection</span>
+        <span class=" lead">URL Redirections</span>
     </div>
 
     <div class="card-body">
-        <p class="font-weight-bold">Send basic HTTP response</p>
-        
+        <p class="font-weight-bold">Make HTTP redirections using Redirect class</p>
+        <p>Redirect to url :</p>
+
         <div class="card mb-4">
-            <pre class="m-0"><code class="p-3">Response::send($body, array $headers = [], int $status_code = 200);</code></pre>
+            <pre class="m-0"><code class="p-3">Redirect::toUrl(string $url, $params = null)->only()</code></pre>
         </div>
 
-        <p class="font-weight-bold">Send JSON response</p>
-        
+        <p>Redirect to route :</p>
+
         <div class="card mb-4">
-            <pre class="m-0"><code class="p-3">Response::sendJson(array $body, array $headers = [], int $status_code = 200);</code></pre>
+            <pre class="m-0"><code class="p-3">Redirect::toRoute(string $url, $params = null)->only()</code></pre>
         </div>
 
-        <p class="font-weight-bold">Send HTTP headers only</p>
-        
+        <p>Redirect back :</p>
+
         <div class="card mb-4">
-            <pre class="m-0"><code class="p-3">Response::sendHeaders(array $headers, int $status_code = 200);</code></pre>
+            <pre class="m-0"><code class="p-3">Redirect::back()->only()</code></pre>
+        </div>
+
+        <p class="font-weight-bold">Make HTTP redirections with actions</p>
+        <p>Redirect with custom flash session data :</p>
+
+        <div class="card mb-4">
+            <pre class="m-0"><code class="p-3">Redirect::back()->with(string $key, $data)->only()</code></pre>
+        </div>
+
+        <p>Redirect with alert message :</p>
+
+        <div class="card mb-4">
+            <pre class="m-0"><code class="p-3">Redirect::back()->withAlert($message, bool $dismiss = true)->success()
+Redirect::back()->withAlert($message, bool $dismiss = true)->error()
+Redirect::back()->withAlert($message, bool $dismiss = true)->warning()
+Redirect::back()->withAlert($message, bool $dismiss = true)->info()</code></pre>
+        </div>
+
+        <p>Redirect with toast message :</p>
+
+        <div class="card mb-4">
+            <pre class="m-0"><code class="p-3">Redirect::back()->withToast($message)->success()
+Redirect::back()->withToast($message)->error()
+Redirect::back()->withToast($message)->warning()
+Redirect::back()->withToast($message)->info()</code></pre>
+        </div>
+
+        <p>Redirect with popup message :</p>
+
+        <div class="card mb-4">
+            <pre class="m-0"><code class="p-3">Redirect::back()->withPopup($message)->success()
+Redirect::back()->withPopup($message)->error()
+Redirect::back()->withPopup($message)->warning()
+Redirect::back()->withPopup($message)->info()</code></pre>
+        </div>
+
+        <p>Redirect and create cookie :</p>
+
+        <div class="card mb-4">
+            <pre class="m-0"><code class="p-3">Redirect::back()->withCookie(string $name, string $value, int $expires = 3600, bool $secure = false, string $domain = '')->only()</code></pre>
+        </div>
+
+        <p class="font-weight-bold">Make redirections inside Controller class</p>
+        <p>Example :</p>
+
+        <div class="card">
+            <pre class="m-0"><code class="p-3">&lt;?php
+
+namespace App\Controllers;
+
+use Framework\Routing\Controller;
+
+class MyController extends Controller
+{
+    /**
+     * @return void
+     */
+    public function index(): void
+    {
+        //redirect to url or route name
+        $this->redirect('home')->only();
+
+        //redirect back
+        $this->redirectBack()->only();
+    }
+}</code></pre>
         </div>
     </div>
 
     <div class="card-footer d-flex justify-content-between">
-        <span>Next: <a href="<?= absolute_url('/docs/responses') ?>">HTTP Redirect</a></span>
-        <span>Previous: <a href="<?= absolute_url('/docs/requests') ?>">HTTP Requests</a></span>
+        <span>Next: <a href="<?= absolute_url('docs/guides/orm') ?>">ORM</a></span>
+        <span>Previous: <a href="<?= absolute_url('docs/guides/client') ?>">HTTP Client</a></span>
     </div>
 </div>
 

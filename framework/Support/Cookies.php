@@ -8,8 +8,10 @@
 
 namespace Framework\Support;
 
+use Framework\Support\Encryption;
+
 /**
- * Manage cookie
+ * Manage cookies
  */
 class Cookies
 {    
@@ -18,19 +20,15 @@ class Cookies
      *
      * @param  string $name
      * @param  string $value
-     * @param  int $expires
-     * @param  string $domain
+     * @param  int $expires in seconds
      * @param  bool $secure
+     * @param  string $domain
      * @return bool
      */
-    public static function create(
-        string $name,
-        string $value,
-        int $expires = 3600,
-        string $domain = '',
-        bool $secure = false
-    ): bool {
-        return create_cookie($name, $value, $expires, $domain, $secure);
+    public static function create(string $name, string $value, int $expires = 3600, bool $secure = false, string $domain = ''): bool 
+    {
+        $value = config('security.encrypt_cookies') ? Encryption::encrypt($value) : $value;
+		return setcookie(config('app.name') . '_' . $name, $value, time() + $expires, '/', $domain, $secure, true);
     }
     
     /**
@@ -41,7 +39,8 @@ class Cookies
      */
     public static function get(string $name): string
     {
-        return get_cookie($name);
+        $value = $_COOKIE[config('app.name') . '_' . $name] ?? '';
+		return config('security.encrypt_cookies') ? Encryption::decrypt($value) : $value;
     }
     
     /**
@@ -52,7 +51,7 @@ class Cookies
      */
     public static function has(string $name): bool
     {
-        return cookie_has($name);
+        return isset($_COOKIE[config('app.name') . '_' . $name]);
     }
     
     /**
@@ -63,6 +62,6 @@ class Cookies
      */
     public static function delete(string $name): bool
     {
-        return delete_cookie($name);
+        return setcookie(config('app.name') . '_' . $name, '', time() - 3600, '/');
     }
 }

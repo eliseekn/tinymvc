@@ -141,7 +141,7 @@ class Uploader
      *
      * @return string
      */
-    public function getErrors(): string
+    public function getError(): string
     {
         if ($this->file['error'] != UPLOAD_ERR_OK) {
             switch($this->file['error']) {

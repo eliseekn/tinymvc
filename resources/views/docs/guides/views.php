@@ -69,8 +69,8 @@ class MyController
     </div>
 
     <div class="card-footer d-flex justify-content-between">
-        <span>Next: <a href="<?= absolute_url('/docs/guides/requests') ?>">HTTP Requests</a></span>
-        <span>Previous: <a href="<?= absolute_url('/docs/guides/controllers') ?>">Controllers</a></span>
+        <span>Next: <a href="<?= absolute_url('docs/guides/requests') ?>">HTTP Requests</a></span>
+        <span>Previous: <a href="<?= absolute_url('docs/guides/controllers') ?>">Controllers</a></span>
     </div>
 </div>
 

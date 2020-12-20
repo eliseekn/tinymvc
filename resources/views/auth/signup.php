@@ -17,7 +17,7 @@
         <?php if (!empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
 
         <div class="card shadow p-4">
-            <form method="post" action="<?= absolute_url('/register') ?>">
+            <form method="post" action="<?= absolute_url('register') ?>">
                 <div class="form-group">
                     <label for="name"><?= __('name', true) ?></label>
                     <input type="text" class="form-control <?php isset($errors->name) ? print('is-invalid') : print('') ?>" value="<?= $inputs->name ?? '' ?>" aria-describedby="name-error" name="name" id="name">
@@ -77,7 +77,7 @@
                 <button type="submit" class="btn btn-block btn-primary loading"><?= __('submit', true) ?></button>
             </form>
 
-            <p class="mt-4 text-center"><?= __('have_account', true) ?> <a href="<?= absolute_url('/login') ?>"><?= __('login_here', true) ?></a> </p>
+            <p class="mt-4 text-center"><?= __('have_account', true) ?> <a href="<?= absolute_url('login') ?>"><?= __('login_here', true) ?></a> </p>
         </div>
     </div>
 
@@ -85,7 +85,7 @@
     <script defer src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script defer src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-    <script defer src="<?= absolute_url('/public/js/index.js') ?>"></script>
+    <script defer src="<?= absolute_url('public/js/index.js') ?>"></script>
 </body>
 
 </html>

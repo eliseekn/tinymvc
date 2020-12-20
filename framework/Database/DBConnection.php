@@ -6,7 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Framework\ORM;
+namespace Framework\Database;
 
 use PDO;
 use PDOException;
@@ -14,7 +14,7 @@ use PDOException;
 /**
  * Connection to database
  */
-class Database
+class DBConnection
 {
 	/**
 	 * database class instance
@@ -54,7 +54,7 @@ class Database
 	/**
 	 * create single instance of database class
 	 *
-	 * @return \Framework\ORM\Database
+	 * @return \Framework\Database\Database
 	 */
 	public static function getInstance(): self
 	{

@@ -154,7 +154,7 @@ $invalid_password_reset_link = 'Lien de réinitialisation de mot de passe invali
 $expired_password_reset_link = 'Lien de réinitialisation de mot de passe expiré';
 $password_resetted = 'Mot de passe réinitialisé avec succès';
 $login_failed = 'Mot de passe ou adresse email incorrecte';
-$auth_attempts_exceeded = "Nombre de tentatives de connexions dépassé. Réessayez dans " . config('security.auth.unlock_timeout') . " minute(s)";
+$auth_attempts_exceeded = "Nombre maximum de tentatives de connexions dépassé. Veuillez réessayez dans " . config('security.auth.unlock_timeout') . " minute(s)";
 $activity_not_found = 'Activité non trouvée';
 $activity_deleted = 'Activité supprimée avec succès';
 $activities_deleted = 'Activitées supprimées avec succès';
@@ -168,13 +168,13 @@ $messages_deleted = 'Messages supprimés avec succès';
 //misc
 $ago = ' environ';
 $now = "à l'instant";
-$year = 'an(s)';
+$year = 'an';
 $month = 'mois';
-$week = 'sem(s)';
-$day = 'jr(s)';
-$hr = 'hr(s)';
-$min = 'min(s)';
-$sec = 'sec(s)';
+$week = 'semaine';
+$day = 'jour';
+$hour = 'heure';
+$minute = 'minute';
+$second = 'seconde';
 
 //upload & exports
 $upload_modal_title = 'Importer';

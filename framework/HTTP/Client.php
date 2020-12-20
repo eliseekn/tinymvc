@@ -23,27 +23,18 @@ class Client
     protected static $response = [];
 
     /**
-     * send request to url
+     * send request to urls
      *
      * @param  string $method
      * @param  array $urls
      * @param  array $headers
-     * @param  array|null $data data to send
-     * @param  bool $is_json send data in json format
+     * @param  array|null $data
+     * @param  bool $json send data in json format
      * @return \Framework\HTTP\Client
      */
-    public static function send(
-        string $method,
-        array $urls,
-        array $headers = [],
-        ?array $data = null,
-        bool $is_json = false
-    ): self {
-        if (empty($urls)) {
-            throw new Exception('Cannot send HTTP request to empty url');
-        }
-
-        self::$response = curl($method, $urls, $headers, $data, $is_json);
+    public static function send(string $method, array $urls, array $headers = [], ?array $data = null, bool $json = false): self 
+    {
+        self::$response = curl($method, $urls, $headers, $data, $json);
         return new self();
     }
 
@@ -52,17 +43,12 @@ class Client
      *
      * @param  array $urls
      * @param  array $headers
-     * @param  array|null $data data to send
-     * @param  bool $is_json send data in json
+     * @param  array|null $data
+     * @param  bool $json send data in json
      * @return \Framework\HTTP\Client
      */
-    public static function get(
-        array $urls,
-        array $headers = [],
-        ?array $data = null,
-        bool $is_json = false
-    ): self {
-        return self::send('GET', $urls, $headers, $data, $is_json);
+    public static function get(array $urls, array $headers = [], ?array $data = null, bool $json = false): self {
+        return self::send('GET', $urls, $headers, $data, $json);
     }
     
     /**
@@ -70,17 +56,12 @@ class Client
      *
      * @param  array $urls
      * @param  array $headers
-     * @param  array|null $data data to send
-     * @param  bool $is_json send data in json format
+     * @param  array|null $data
+     * @param  bool $json send data in json format
      * @return \Framework\HTTP\Client
      */
-    public static function post(
-        array $urls,
-        array $headers = [],
-        ?array $data = null,
-        bool $is_json = false
-    ): self {
-        return self::send('POST', $urls, $headers, $data, $is_json);
+    public static function post(array $urls, array $headers = [], ?array $data = null, bool $json = false): self {
+        return self::send('POST', $urls, $headers, $data, $json);
     }
 
     /**
@@ -88,17 +69,12 @@ class Client
      *
      * @param  array $urls
      * @param  array $headers
-     * @param  array|null $data data to send
-     * @param  bool $is_json send data in json format
+     * @param  array|null $data
+     * @param  bool $json send data in json format
      * @return \Framework\HTTP\Client
      */
-    public static function put(
-        array $urls,
-        array $headers = [],
-        ?array $data = null,
-        bool $is_json = false
-    ): self {
-        return self::send('PUT', $urls, $headers, $data, $is_json);
+    public static function put(array $urls, array $headers = [], ?array $data = null, bool $json = false): self {
+        return self::send('PUT', $urls, $headers, $data, $json);
     }
 
     /**
@@ -106,17 +82,12 @@ class Client
      *
      * @param  array $urls
      * @param  array $headers
-     * @param  array|null $data data to send
-     * @param  bool $is_json send data in json
+     * @param  array|null $data
+     * @param  bool $json send data in json
      * @return \Framework\HTTP\Client
      */
-    public static function delete(
-        array $urls,
-        array $headers = [],
-        ?array $data = null,
-        bool $is_json = false
-    ): self {
-        return self::send('DELETE', $urls, $headers, $data, $is_json);
+    public static function delete(array $urls, array $headers = [], ?array $data = null, bool $json = false): self {
+        return self::send('DELETE', $urls, $headers, $data, $json);
     }
 
     /**
@@ -124,17 +95,12 @@ class Client
      *
      * @param  array $urls
      * @param  array $headers
-     * @param  array|null $data data to send
-     * @param  bool $is_json send data in json format
+     * @param  array|null $data
+     * @param  bool $json send data in json format
      * @return \Framework\HTTP\Client
      */
-    public static function option(
-        array $urls,
-        array $headers = [],
-        ?array $data = null,
-        bool $is_json = false
-    ): self {
-        return self::send('OPTIONS', $urls, $headers, $data, $is_json);
+    public static function option(array $urls, array $headers = [], ?array $data = null, bool $json = false): self {
+        return self::send('OPTIONS', $urls, $headers, $data, $json);
     }
 
     /**
@@ -142,17 +108,12 @@ class Client
      *
      * @param  array $urls
      * @param  array $headers
-     * @param  array|null $data data to send
-     * @param  bool $is_json send data in json format
+     * @param  array|null $data
+     * @param  bool $json send data in json format
      * @return \Framework\HTTP\Client
      */
-    public static function patch(
-        array $urls,
-        array $headers = [],
-        ?array $data = null,
-        bool $is_json = false
-    ): self {
-        return self::send('PATCH', $urls, $headers, $data, $is_json);
+    public static function patch(array $urls, array $headers = [], ?array $data = null, bool $json = false): self {
+        return self::send('PATCH', $urls, $headers, $data, $json);
     }
 
     /**

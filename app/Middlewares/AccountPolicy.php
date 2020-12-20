@@ -18,8 +18,8 @@ class AccountPolicy
     public static function handle(): void
     {
         if (config('security.auth.email_confirmation') === true) {
-            if (!Auth::user()->active) {
-                Redirect::toUrl('/login')->withAlert(__('account_not_activated', true))->error();
+            if (!Auth::get()->active) {
+                Redirect::url('login')->withAlert(__('account_not_activated', true))->error();
             }
         }
     }

@@ -4,9 +4,9 @@
 
 <?php $this->start('page_content') ?>
 
-<?php if (user_session()->alerts && !empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
+<?php if (auth()->alerts && !empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
 
-<form method="post" action="<?= absolute_url('/admin/account/settings/update/' . user_session()->id) ?>">
+<form method="post" action="<?= absolute_url('admin/account/settings/update/' . auth()->id) ?>">
     <?= csrf_token_input() ?>
 
     <div class="row mb-4">
@@ -99,11 +99,11 @@
                     </div>
 
                     <div class="form-group row d-flex align-items-center">
-                        <label for="two-steps" class="col-sm-3 col-form-label">Two-Steps auth.</label>
+                        <label for="two_steps" class="col-sm-3 col-form-label">Two-Steps auth.</label>
                         <div class="col-sm-9">
                             <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" name="two-steps" id="two-steps" <?php if ($user->two_steps) : echo 'checked'; endif ?>>
-                                <label class="custom-control-label" for="two-steps"></label>
+                                <input type="checkbox" class="custom-control-input" name="two_steps" id="two_steps" <?php if ($user->two_steps) : echo 'checked'; endif ?>>
+                                <label class="custom-control-label" for="two_steps"></label>
                             </div>
                         </div>
                     </div>
@@ -160,7 +160,7 @@
                     <div class="form-group row d-flex align-items-center">
                         <label for="theme" class="col-sm-5 col-form-label">Dark theme</label>
                         <div class="col-sm-7">
-                            <theme-switch checked="<?php if ($user->theme === 'dark') : echo 'checked'; endif ?>"></theme-switch>
+                            <theme-switch checked="<?php if ($user->dark_theme) : echo 'checked'; endif ?>"></theme-switch>
                         </div>
                     </div>
 

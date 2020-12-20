@@ -2,7 +2,7 @@
 
 namespace App\Database\Seeds;
 
-use Framework\ORM\Seeder;
+use Framework\Database\Seeder;
 
 class RoleSeed
 {     

@@ -11,13 +11,32 @@ namespace Framework\Routing;
 use Exception;
 use League\Plates\Engine;
 use Framework\HTTP\Response;
+use Framework\Support\Session;
 use Framework\Support\Storage;
 
 /**
  * Main view class
  */
 class View
-{    
+{        
+    /**
+     * get session flash data
+     *
+     * @return array
+     */
+    private static function getFlashData(): array
+    {
+        $data = [
+            'inputs' => (object) Session::get('inputs'), 
+            'errors' => (object) Session::get('errors'), 
+            'alerts' => Session::get('alerts')
+        ];
+
+        Session::close('inputs', 'errors', 'alerts');
+
+        return $data;
+    }
+
     /**
      * get view content
      *
@@ -32,15 +51,7 @@ class View
         }
 
         $engine = new Engine(Storage::path(config('storage.views'))->get());
-
-        //session flash data
-        $data = array_merge($data, [
-            'inputs' => get_inputs(), 
-            'errors' => get_errors(), 
-            'alerts' => get_alerts()
-        ]);
-
-        return $engine->render($view, $data);
+        return $engine->render($view, array_merge($data, self::getFlashData()));
     }
 
     /**

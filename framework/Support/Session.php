@@ -8,13 +8,27 @@
 
 namespace Framework\Support;
 
-use Framework\HTTP\Request;
-
 /**
  * Manage session
  */
 class Session
 {    
+    /**
+	 * start session
+	 *
+	 * @return void
+	 */
+    private static function start(): void
+	{
+		if (session_status() === PHP_SESSION_NONE) {
+            //https://stackoverflow.com/questions/8311320/how-to-change-the-session-timeout-in-php/8311400
+            ini_set('session.gc_maxlifetime', config('session.lifetime'));
+            session_set_cookie_params(config('session.lifetime'));
+            
+			session_start();
+		}
+	}
+
     /**
      * create new session
      *
@@ -24,7 +38,8 @@ class Session
      */
     public static function create(string $name, $data): void
     {
-        create_session($name, $data);
+        self::start();
+		$_SESSION[config('app.name') . '_' . $name] = $data;
     }
     
     /**
@@ -35,7 +50,8 @@ class Session
      */
     public static function get(string $name)
     {
-        return get_session($name);
+        self::start();
+		return $_SESSION[config('app.name') . '_' . $name] ?? '';
     }
     
     /**
@@ -46,40 +62,22 @@ class Session
      */
     public static function has(string $name): bool
     {
-        return session_has($name);
+        self::start();
+		return isset($_SESSION[config('app.name') . '_' . $name]);
     }
     
     /**
      * close session
      *
-     * @param  string[] $name
+     * @param  string[] $names
      * @return void
      */
     public static function close(string ...$names): void
     {
+        self::start();
+        
         foreach ($names as $name) {
-            close_session($name);
+            unset($_SESSION[config('app.name') . '_' . $name]);
         }
-    }
-    
-    /**
-     * set history sesssion
-     *
-     * @return void
-     */
-    public static function history(): void
-    {
-        $url = self::get('history');
-
-        //excludes api uri from browser history
-        if (!url_exists('api')) {
-            if (empty($url)) {
-                $url = [Request::getFullUri()];
-            } else {
-                $url[] = Request::getFullUri();
-            }
-        }
-
-        self::create('history', $url);
     }
 }

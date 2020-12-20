@@ -4,7 +4,7 @@
 
 <?php $this->start('page_content') ?>
 
-<?php if (user_session()->alerts && !empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
+<?php if (auth()->alerts && !empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
 
 <div class="card shadow-sm">
     <div class="card-header"><?= __('details') ?></div>
@@ -68,21 +68,21 @@
     </div>
 
     <div class="card-footer">
-        <a href="<?= absolute_url('/admin/resources/users/edit/' . $user->id) ?>" class="btn btn-outline-dark">
+        <a href="<?= absolute_url('admin/resources/users/edit/' . $user->id) ?>" class="btn btn-outline-dark">
             <?= __('edit') ?>
         </a>
 
-        <a href="<?= absolute_url('/admin/resources/users/new') ?>" class="btn btn-outline-dark ml-2">
+        <a href="<?= absolute_url('admin/resources/users/new') ?>" class="btn btn-outline-dark ml-2">
             <?= __('new') ?>
         </a>
         
         <confirm-delete 
             type="text" 
             content="<?= __('delete') ?>" 
-            action="<?= absolute_url('/admin/resources/users/delete/' . $user->id) ?>">
+            action="<?= absolute_url('admin/resources/users/delete/' . $user->id) ?>">
         </confirm-delete>
 
-        <a href="<?= absolute_url('/admin/resources/users') ?>" class="btn btn-outline-dark ml-2">
+        <a href="<?= absolute_url('admin/resources/users') ?>" class="btn btn-outline-dark ml-2">
             <?= __('back') ?>
         </a>
     </div>

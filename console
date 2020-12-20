@@ -12,9 +12,8 @@
  * Application command line interface
  */
 
-require 'vendor/autoload.php';
+require_once 'vendor/autoload.php';
 require_once 'config/env.php';
-require_once 'config/errors.php';
 
 //get command line arguments
 $options = getopt('', [
@@ -34,7 +33,8 @@ $options = getopt('', [
     'migration::', 
     'request::', 
     'middleware::', 
-    'resources'
+    'admin',
+    'm'
 ]);
 
 //handle command line arguments
@@ -70,8 +70,8 @@ else {
     $help_message .= '      --migration=posts,comments              Migrate posts and comments tables only' . PHP_EOL;
     $help_message .= '      --migration=all --seed=all              Migrate all tables and insert all seeds' . PHP_EOL;
     $help_message .= '      --migration=posts,comments --delete     Drop posts and comments tables only' . PHP_EOL;
-    $help_message .= '      --migration=all --reset                 Reset all migration files' . PHP_EOL;
-    $help_message .= '      --migration=all --reset --seed=all      Reset all migration files and insert all seeds' . PHP_EOL;
+    $help_message .= '      --migration=all --reset                 Reset all migrations' . PHP_EOL;
+    $help_message .= '      --migration=all --reset --seed=all      Reset all migrations and insert all seeds' . PHP_EOL;
     $help_message .= PHP_EOL;
     $help_message .= '      --seed=all                              Insert all seeds' . PHP_EOL;
     $help_message .= '      --seed=user                             Insert user seed only' . PHP_EOL;
@@ -83,11 +83,12 @@ else {
     $help_message .= '  --make (Manage resources build operations)' . PHP_EOL;
     $help_message .= '      --controller=posts                      Create posts controller' . PHP_EOL;
     $help_message .= '      --controller=posts --namespace=blog     Create posts controller in app\Controllers\Blog folder' . PHP_EOL;
-    $help_message .= '      --controller=posts --resources          Create posts controller and admin resources' . PHP_EOL;
+    $help_message .= '      --controller=posts --admin         Create posts controller and admin resources' . PHP_EOL;
     $help_message .= PHP_EOL;
     $help_message .= '      --model=posts                           Create posts model' . PHP_EOL;
     $help_message .= PHP_EOL;
     $help_message .= '      --migration=posts                       Create posts migration' . PHP_EOL;
+    $help_message .= '      --migration=posts -m                    Create posts migration and model' . PHP_EOL;
     $help_message .= PHP_EOL;
     $help_message .= '      --seed=post                             Create post seed' . PHP_EOL;
     $help_message .= PHP_EOL;
