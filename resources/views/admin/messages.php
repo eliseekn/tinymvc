@@ -44,8 +44,6 @@
                         content='<?= __('new') ?>'
                         recipient="0"
                         modal_title="<?= __('new') ?>" 
-                        modal_button_title="<?= __('submit') ?>" 
-                        modal_button_cancel="<?= __('cancel') ?>" 
                         csrf_token='<?= csrf_token_input() ?>'>
                     </send-message>
 
@@ -57,8 +55,6 @@
                         action="<?= absolute_url('admin/account/messages/export') ?>" 
                         title="<?= __('export') ?>" 
                         modal_title="<?= __('export') ?>" 
-                        modal_button_title="<?= __('export') ?>" 
-                        modal_button_cancel="<?= __('cancel') ?>" 
                         csrf_token='<?= csrf_token_input() ?>'>
                     </export-modal>
 
@@ -126,14 +122,13 @@
                                 content='<i class="fa fa-reply-all"></i>'
                                 recipient="<?= $message->sender ?>"
                                 modal_title="<?= __('reply') ?>" 
-                                modal_button_title="<?= __('submit') ?>" 
-                                modal_button_cancel="<?= __('cancel') ?>" 
                                 csrf_token='<?= csrf_token_input() ?>'>
                             </send-message>
                             <?php endif ?>
 
                             <confirm-delete 
                                 type="icon" 
+                                title="<?= __('delete') ?>"
                                 content='<i class="fa fa-trash-alt"></i>' 
                                 action="<?= absolute_url('admin/account/messages/delete/' . $message->id) ?>">
                             </confirm-delete>
@@ -147,7 +142,7 @@
 
     <div class="card-footer d-flex align-items-center justify-content-between">
         <span><?= __('total_results') ?> <span class="font-weight-bold"><?= $messages->getTotalItems() ?></span></span>
-        <span>Showing <span class="font-weight-bold"><?= $messages->getPageTotalItems() === 0 ? $messages->getFirstItem() : $messages->getFirstItem() + 1 ?></span> to <span class="font-weight-bold"><?= $messages->getPageTotalItems() + $messages->getFirstItem() ?></span></span>
+        <span><?= __('showing') ?> <span class="font-weight-bold"><?= $messages->getPageTotalItems() === 0 ? $messages->getFirstItem() : $messages->getFirstItem() + 1 ?></span> <?= __('to') ?> <span class="font-weight-bold"><?= $messages->getPageTotalItems() + $messages->getFirstItem() ?></span></span>
 
         <?php $this->insert('partials/pagination', [
             'pagination' => $messages

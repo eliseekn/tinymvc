@@ -8,7 +8,7 @@
 
 namespace Framework\Database;
 
-use Framework\HTTP\Request;
+use Framework\Http\Request;
 use Framework\Support\Pager;
 use Framework\Support\Metrics;
 
@@ -40,7 +40,42 @@ class Model
     }
     
     /**
-     * generate select where = query
+     * retrieves single row
+     *
+     * @param  array $columns
+     * @return void
+     */
+    public static function selectSingle(array $columns = ['*'])
+    {
+        return self::select($columns)->single();
+    }
+    
+    /**
+     * retrieves all rows
+     *
+     * @param  array $columns
+     * @return array
+     */
+    public static function selectAll(array $columns = ['*']): array
+    {
+        return self::select($columns)->all();
+    }
+
+    /**
+     * select rows with raw query
+     *
+     * @param  string $query
+     * @param  array $args
+     * @return \Framework\Database\Model
+     */
+    public static function selectRaw(string $query, array $args = []): self
+    {
+        self::$query = Builder::selectRaw($query, $args);
+        return new self();
+    }
+    
+    /**
+     * generate select where query
      *
 	 * @param  mixed $operator
 	 * @param  mixed $value
@@ -52,7 +87,7 @@ class Model
 	}
     
     /**
-     * generate select where = query
+     * generate select where query
      *
 	 * @param  string $column
 	 * @param  mixed $operator
@@ -62,6 +97,68 @@ class Model
     public static function findBy(string $column, $operator = null, $value = null): self
 	{
         return self::select()->where($column, $operator, $value);
+	}
+    
+    /**
+     * generate select where query
+     *
+	 * @param  mixed $operator
+	 * @param  mixed $value
+     * @return mixed
+     */
+    public static function findSingle($operator = null, $value = null)
+	{
+        return self::select()->where('id', $operator, $value)->single();
+	}
+    
+    /**
+     * generate select where query
+     *
+	 * @param  string $column
+	 * @param  mixed $operator
+	 * @param  mixed $value
+     * @return mixed
+     */
+    public static function findSingleBy(string $column, $operator = null, $value = null)
+	{
+        return self::select()->where($column, $operator, $value)->single();
+	}
+    
+    /**
+     * generate select where query
+     *
+	 * @param  mixed $operator
+	 * @param  mixed $value
+     * @return array
+     */
+    public static function findAll($operator = null, $value = null): array
+	{
+        return self::select()->where('id', $operator, $value)->all();
+	}
+    
+    /**
+     * generate select where query
+     *
+	 * @param  string $column
+	 * @param  mixed $operator
+	 * @param  mixed $value
+     * @return array
+     */
+    public static function findAllBy(string $column, $operator = null, $value = null): array
+	{
+        return self::select()->where($column, $operator, $value)->all();
+	}
+    
+    /**
+     * generate select where query with raw query
+     *
+	 * @param  string $query
+	 * @param  array $args
+     * @return \Framework\Database\Model
+     */
+    public static function findRaw(string $query, array $args = []): self
+	{
+        return self::select()->whereRaw($query, $args);
 	}
     
     /**
@@ -254,7 +351,20 @@ class Model
         }
 
 		return $this;
-	}
+    }
+        
+    /**
+     * whereRaw
+     *
+     * @param  string $query
+     * @param  array $args
+     * @return \Framework\Database\Model
+     */
+    public function whereRaw(string $query, array $args = []): self
+    {
+        self::$query->whereRaw($query, $args);
+        return $this;
+    }
 
 	/**
 	 * add AND clause
@@ -491,15 +601,16 @@ class Model
      * add INNER JOIN query
      *
      * @param  string $table
-     * @param  string $second_column
      * @param  string $first_column
+     * @param  string $operator
+     * @param  string $second_column
      * @param  string $type
      * @return \Framework\Database\Model
      */
-    public function join(string $table, string $second_column, string $first_column, string $type = 'inner'): self
+    public function join(string $table, string $first_column, string $operator, string $second_column, string $type = 'inner'): self
     {
         $method = $type . 'Join';
-        self::$query->$method($table, $second_column, $first_column);
+        self::$query->$method($table, $second_column, $operator, $first_column);
 
         return $this;
     }
@@ -637,12 +748,12 @@ class Model
         list($query, $args) = self::$query->toSQL();
 
         $page = empty(Request::getQuery('page')) ? 1 : Request::getQuery('page');
-        $total_items = count(Builder::rawQuery($query, $args)->execute()->fetchAll());
+        $total_items = count(Builder::setQuery($query, $args)->execute()->fetchAll());
         $pagination = generate_pagination($page, $total_items, $items_per_pages);
         
         $items = $items_per_pages > 0 ? 
-            Builder::rawQuery($query, $args)->limit($pagination['first_item'], $items_per_pages)->execute()->fetchAll() : 
-            Builder::rawQuery($query, $args)->execute()->fetchAll();
+            Builder::setQuery($query, $args)->limit($pagination['first_item'], $items_per_pages)->execute()->fetchAll() : 
+            Builder::setQuery($query, $args)->execute()->fetchAll();
         
         return new Pager($items, $pagination);
     }
@@ -665,5 +776,30 @@ class Model
     public function toSQL(): array
     {
         return self::$query->toSQL();
+    }
+
+    /**
+     * add custom query string with arguments
+     *
+     * @param  mixed $query
+     * @param  mixed $args
+     * @return \Framework\Database\Model
+     */
+    public function raw(string $query, array $args = []): self
+    {
+        self::$query->rawQuery($query, $args);
+        return $this;
+    }
+    
+    /**
+     * generate sub query
+     *
+     * @param  mixed $function
+     * @return \Framework\Database\Model
+     */
+    public function subQuery(callable $function): self
+    {
+        call_user_func_array($function, [$this]);
+        return $this;
     }
 }

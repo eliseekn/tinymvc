@@ -3,9 +3,8 @@
 namespace App\Controllers\Admin;
 
 use App\Helpers\Activity;
-use App\Helpers\DateHelper;
-use Framework\HTTP\Redirect;
-use Framework\HTTP\Response;
+use Framework\Http\Redirect;
+use Framework\Http\Response;
 use Framework\Support\Alert;
 use App\Helpers\ReportHelper;
 use Framework\Support\Session;
@@ -46,7 +45,7 @@ class RolesController extends Controller
 	 */
 	public function edit(int $id): void
 	{
-		$role = RolesModel::find($id)->single();
+		$role = RolesModel::findSingle($id);
 
 		if ($role === false) {
 			Redirect::back()->withToast(__('role_not_found'))->error();
@@ -98,7 +97,7 @@ class RolesController extends Controller
 	 */
 	public function view(int $id): void
 	{
-		$role = RolesModel::find($id)->single();
+		$role = RolesModel::findSingle($id);
 
 		if ($role === false) {
 			Redirect::back()->withToast(__('role_not_found'))->error();
@@ -177,9 +176,7 @@ class RolesController extends Controller
             Activity::log('Role deleted');
             Redirect::url('admin/resources/roles')->withToast(__('role_deleted'))->success();
 		} else {
-			$roles_id = explode(',', $this->request->items);
-
-			foreach ($roles_id as $id) {
+			foreach (explode(',', $this->request->items) as $id) {
 				RolesModel::deleteWhere('id', $id);
 			}
 			

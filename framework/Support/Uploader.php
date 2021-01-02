@@ -158,13 +158,13 @@ class Uploader
     }
 
     /**
-     * move uploaded file
+     * save uploaded file
      *
      * @param  string $destination
      * @param  string|null $filename
      * @return bool
      */
-    public function moveFile(string $destination, ?string $filename = null): bool
+    public function save(string $destination, ?string $filename = null): bool
     {
         $this->filename = is_null($filename) ? $this->getOriginalFilename() : $filename;
 

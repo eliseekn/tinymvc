@@ -14,7 +14,7 @@
     </div>
 
     <div class="card-footer d-flex justify-content-between">
-        <span>Next: <a href="<?= absolute_url('docs/orm/query-builder') ?>">Query Builder</a></span>
+        <span>Next: <a href="<?= absolute_url('docs/database/query-builder') ?>">Query Builder</a></span>
         <span>Previous: <a href="<?= absolute_url('docs/guides/redirections') ?>">URL Redirections</a></span>
     </div>
 </div>

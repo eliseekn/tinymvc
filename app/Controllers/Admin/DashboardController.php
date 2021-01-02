@@ -7,7 +7,6 @@ use Framework\Routing\Controller;
 use App\Database\Models\UsersModel;
 use App\Database\Models\MessagesModel;
 use App\Database\Models\NotificationsModel;
-use Framework\Support\Session;
 
 class DashboardController extends Controller
 {    
@@ -28,11 +27,6 @@ class DashboardController extends Controller
 	 */
 	public function index(): void
 	{
-        /* dd(
-            Session::get('auth_attempts'),
-            Session::get('auth_attempts_timeout')
-        ); */
-
         $total_users = UsersModel::count()->single()->value;
         $active_users = UsersModel::count()->where('active', 1)->single()->value;
         $inactive_users = UsersModel::count()->where('active', 0)->single()->value;

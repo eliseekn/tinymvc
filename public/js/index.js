@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var innerHTML = event.target.innerHTML;
       event.target.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>';
 
-      if (window.confirm('Are you sure want to delete all selected items?')) {
+      if (window.confirm('Are you sure you want to delete all selected items?')) {
         items = [];
         document.querySelectorAll('.table input[type=checkbox]').forEach(function (element) {
           if (element.id !== 'select-all' && element.checked) {
@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var innerHTML = event.target.innerHTML;
       event.target.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>';
 
-      if (window.confirm('Are you sure want to mark all selected notifications as read?')) {
+      if (window.confirm('Are you sure you want to mark all selected notifications as read?')) {
         items = [];
         document.querySelectorAll('.table input[type=checkbox]').forEach(function (element) {
           if (element.id !== 'select-all' && element.checked) {
@@ -385,6 +385,8 @@ var UploadModal = /*#__PURE__*/function (_HTMLElement) {
     _classCallCheck(this, UploadModal);
 
     _this = _super.call(this);
+    _this.translations = {};
+    _this.getTranslations = _this.getTranslations.bind(_assertThisInitialized(_this));
     _this.showDialog = _this.showDialog.bind(_assertThisInitialized(_this));
 
     _this.addEventListener('click', _this.showDialog);
@@ -393,9 +395,21 @@ var UploadModal = /*#__PURE__*/function (_HTMLElement) {
   }
 
   _createClass(UploadModal, [{
+    key: "getTranslations",
+    value: function getTranslations() {
+      var _this2 = this;
+
+      fetch('/tinymvc/api/translations').then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        return _this2.translations = data.translations;
+      });
+    }
+  }, {
     key: "connectedCallback",
     value: function connectedCallback() {
       this.innerHTML = "<button class=\"btn btn-outline-dark ml-2\">".concat(this.getAttribute('title'), "</button>");
+      this.getTranslations();
     }
   }, {
     key: "showDialog",
@@ -405,7 +419,7 @@ var UploadModal = /*#__PURE__*/function (_HTMLElement) {
       element.setAttribute('tabindex', '-1');
       element.setAttribute('role', 'dialog');
       element.classList.add('modal', 'fade');
-      element.innerHTML = "\n            <div class=\"modal-dialog modal-dialog-centered\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-header bg-light text-dark align-items-center py-2\">\n                        <h5 class=\"modal-title\">".concat(this.getAttribute('modal_title'), "</h5>\n                        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                            <span aria-hidden=\"true\">&times;</span>\n                        </button>\n                    </div>\n\n                    <form method=\"post\" action=\"").concat(this.getAttribute('action'), "\" enctype=\"multipart/form-data\">\n                        ").concat(this.getAttribute('csrf_token'), "\n\n                        <div class=\"modal-body\">\n                            <input type=\"file\" name=\"file\" id=\"file\" class=\"form-group-file\" required>\n                        </div>\n\n                        <div class=\"modal-footer\">\n                            <button type=\"submit\" class=\"btn btn-dark\">").concat(this.getAttribute('modal_button_title'), "</button>\n                            <button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">").concat(this.getAttribute('modal_button_cancel'), "</button>\n                        </div>\n                    </form>\n                </div>\n            </div>\n        ");
+      element.innerHTML = "\n            <div class=\"modal-dialog modal-dialog-centered\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-header bg-light text-dark align-items-center py-2\">\n                        <h5 class=\"modal-title\">".concat(this.getAttribute('modal_title'), "</h5>\n                        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                            <span aria-hidden=\"true\">&times;</span>\n                        </button>\n                    </div>\n\n                    <form method=\"post\" action=\"").concat(this.getAttribute('action'), "\" enctype=\"multipart/form-data\">\n                        ").concat(this.getAttribute('csrf_token'), "\n\n                        <div class=\"modal-body\">\n                            <input type=\"file\" name=\"file\" id=\"file\" class=\"form-group-file\" required>\n                        </div>\n\n                        <div class=\"modal-footer\">\n                            <button type=\"submit\" class=\"btn btn-dark\">").concat(this.translations.submit, "</button>\n                            <button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">").concat(this.translations.cancel, "</button>\n                        </div>\n                    </form>\n                </div>\n            </div>\n        ");
       document.body.appendChild(element);
       $('#upload-modal').modal({
         backdrop: 'static',
@@ -470,6 +484,8 @@ var ExportModal = /*#__PURE__*/function (_HTMLElement) {
     _classCallCheck(this, ExportModal);
 
     _this = _super.call(this);
+    _this.translations = {};
+    _this.getTranslations = _this.getTranslations.bind(_assertThisInitialized(_this));
     _this.showDialog = _this.showDialog.bind(_assertThisInitialized(_this));
 
     _this.addEventListener('click', _this.showDialog);
@@ -478,9 +494,21 @@ var ExportModal = /*#__PURE__*/function (_HTMLElement) {
   }
 
   _createClass(ExportModal, [{
+    key: "getTranslations",
+    value: function getTranslations() {
+      var _this2 = this;
+
+      fetch('/tinymvc/api/translations').then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        return _this2.translations = data.translations;
+      });
+    }
+  }, {
     key: "connectedCallback",
     value: function connectedCallback() {
       this.innerHTML = "<button class=\"btn btn-outline-dark mx-2\">".concat(this.getAttribute('title'), "</button>");
+      this.getTranslations();
     }
   }, {
     key: "showDialog",
@@ -490,7 +518,7 @@ var ExportModal = /*#__PURE__*/function (_HTMLElement) {
       element.setAttribute('tabindex', '-1');
       element.setAttribute('role', 'dialog');
       element.classList.add('modal', 'fade');
-      element.innerHTML = "\n            <div class=\"modal-dialog modal-dialog-centered\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-header bg-light text-dark align-items-center py-2\">\n                        <h5 class=\"modal-title\">".concat(this.getAttribute('modal_title'), "</h5>\n                        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                            <span aria-hidden=\"true\">&times;</span>\n                        </button>\n                    </div>\n\n                    <form method=\"post\" action=\"").concat(this.getAttribute('action'), "\">\n                        ").concat(this.getAttribute('csrf_token'), "\n\n                        <div class=\"modal-body\">\n                            <fieldset class=\"form-group\">\n                                <div class=\"row\">\n                                    <legend class=\"col-form-label col-sm-4 pt-0\">File type</legend>\n\n                                    <div class=\"col-sm-8\">\n                                        <div class=\"custom-control custom-radio custom-control-inline\">\n                                            <input class=\"custom-control-input\" type=\"radio\" name=\"file_type\" id=\"csv\" value=\"csv\" checked>\n                                            <label class=\"custom-control-label\" for=\"csv\">CSV</label>\n                                        </div>\n                                        <div class=\"custom-control custom-radio custom-control-inline\">\n                                            <input class=\"custom-control-input\" type=\"radio\" name=\"file_type\" id=\"pdf\" value=\"pdf\">\n                                            <label class=\"custom-control-label\" for=\"pdf\">PDF</label>\n                                        </div>\n                                    </div>\n                                </div>\n                            </fieldset>\n\n                            <div class=\"form-group row\">\n                                <p class=\"col-sm-4 col-form-label\">Period <small>(optional)</small></p>\n\n                                <div class=\"col-sm-8\">\n                                    <div class=\"input-group mb-3\">\n                                        <div class=\"input-group-prepend\">\n                                            <div class=\"input-group-text\">\n                                                <i class=\"fa fa-calendar-alt\"></i>\n                                            </div>\n                                        </div>\n\n                                        <input type=\"date\" class=\"form-control\" name=\"date_start\" id=\"date_start\">\n                                    </div>\n\n                                    <div class=\"input-group\">\n                                        <div class=\"input-group-prepend\">\n                                            <div class=\"input-group-text\">\n                                                <i class=\"fa fa-calendar-alt\"></i>\n                                            </div>\n                                        </div>\n\n                                        <input type=\"date\" class=\"form-control\" name=\"date_end\" id=\"date_end\">\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n\n                        <div class=\"modal-footer\">\n                            <button type=\"submit\" class=\"btn btn-dark\">").concat(this.getAttribute('modal_button_title'), "</button>\n                            <button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">").concat(this.getAttribute('modal_button_cancel'), "</button>\n                        </div>\n                    </form>\n                </div>\n            </div>\n        ");
+      element.innerHTML = "\n            <div class=\"modal-dialog modal-dialog-centered\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-header bg-light text-dark align-items-center py-2\">\n                        <h5 class=\"modal-title\">".concat(this.getAttribute('modal_title'), "</h5>\n                        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                            <span aria-hidden=\"true\">&times;</span>\n                        </button>\n                    </div>\n\n                    <form method=\"post\" action=\"").concat(this.getAttribute('action'), "\">\n                        ").concat(this.getAttribute('csrf_token'), "\n\n                        <div class=\"modal-body\">\n                            <fieldset class=\"form-group\">\n                                <div class=\"row\">\n                                    <legend class=\"col-form-label col-sm-4 pt-0\">").concat(this.translations.file_type, "</legend>\n\n                                    <div class=\"col-sm-8\">\n                                        <div class=\"custom-control custom-radio custom-control-inline\">\n                                            <input class=\"custom-control-input\" type=\"radio\" name=\"file_type\" id=\"csv\" value=\"csv\" checked>\n                                            <label class=\"custom-control-label\" for=\"csv\">CSV</label>\n                                        </div>\n                                        <div class=\"custom-control custom-radio custom-control-inline\">\n                                            <input class=\"custom-control-input\" type=\"radio\" name=\"file_type\" id=\"pdf\" value=\"pdf\">\n                                            <label class=\"custom-control-label\" for=\"pdf\">PDF</label>\n                                        </div>\n                                    </div>\n                                </div>\n                            </fieldset>\n\n                            <div class=\"form-group row\">\n                                <p class=\"col-sm-4 col-form-label\">").concat(this.translations.period, " <small>(").concat(this.translations.optional, ")</small></p>\n\n                                <div class=\"col-sm-8\">\n                                    <div class=\"input-group mb-3\">\n                                        <div class=\"input-group-prepend\">\n                                            <div class=\"input-group-text\">\n                                                <i class=\"fa fa-calendar-alt\"></i>\n                                            </div>\n                                        </div>\n\n                                        <input type=\"date\" class=\"form-control\" name=\"date_start\" id=\"date_start\">\n                                    </div>\n\n                                    <div class=\"input-group\">\n                                        <div class=\"input-group-prepend\">\n                                            <div class=\"input-group-text\">\n                                                <i class=\"fa fa-calendar-alt\"></i>\n                                            </div>\n                                        </div>\n\n                                        <input type=\"date\" class=\"form-control\" name=\"date_end\" id=\"date_end\">\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n\n                        <div class=\"modal-footer\">\n                            <button type=\"submit\" class=\"btn btn-dark\">").concat(this.translations.submit, "</button>\n                            <button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">").concat(this.translations.cancel, "</button>\n                        </div>\n                    </form>\n                </div>\n            </div>\n        ");
       document.body.appendChild(element);
       $('#export-modal').modal({
         backdrop: 'static',
@@ -740,6 +768,8 @@ var ConfirmDelete = /*#__PURE__*/function (_HTMLElement) {
     _classCallCheck(this, ConfirmDelete);
 
     _this = _super.call(this);
+    _this.translations = {};
+    _this.getTranslations = _this.getTranslations.bind(_assertThisInitialized(_this));
     _this.showDialog = _this.showDialog.bind(_assertThisInitialized(_this));
 
     _this.addEventListener('click', _this.showDialog);
@@ -748,13 +778,26 @@ var ConfirmDelete = /*#__PURE__*/function (_HTMLElement) {
   }
 
   _createClass(ConfirmDelete, [{
+    key: "getTranslations",
+    value: function getTranslations() {
+      var _this2 = this;
+
+      fetch('/tinymvc/api/translations').then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        return _this2.translations = data.translations;
+      });
+    }
+  }, {
     key: "connectedCallback",
     value: function connectedCallback() {
       if (this.getAttribute('type') === 'icon') {
-        this.innerHTML = "<a class=\"btn text-danger p-1\" title=\"Delete item\">".concat(this.getAttribute('content'), "</a>");
+        this.innerHTML = "<a class=\"btn text-danger p-1\" title=\"".concat(this.getAttribute('title'), "\">").concat(this.getAttribute('content'), "</a>");
       } else {
         this.innerHTML = "<a class=\"btn btn-danger ml-2\" href=\"#\">".concat(this.getAttribute('content'), "</a>");
       }
+
+      this.getTranslations();
     }
   }, {
     key: "showDialog",
@@ -762,7 +805,7 @@ var ConfirmDelete = /*#__PURE__*/function (_HTMLElement) {
       var innerHTML = this.childNodes[0].innerHTML;
       this.childNodes[0].innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>';
 
-      if (window.confirm('Are you sure you want to delete this item?')) {
+      if (window.confirm(this.translations.delete_item)) {
         window.location.href = this.getAttribute('action');
       }
 
@@ -1482,6 +1525,8 @@ var CreateNotification = /*#__PURE__*/function (_HTMLElement) {
     _classCallCheck(this, CreateNotification);
 
     _this = _super.call(this);
+    _this.translations = {};
+    _this.getTranslations = _this.getTranslations.bind(_assertThisInitialized(_this));
     _this.showDialog = _this.showDialog.bind(_assertThisInitialized(_this));
 
     _this.addEventListener('click', _this.showDialog);
@@ -1490,9 +1535,21 @@ var CreateNotification = /*#__PURE__*/function (_HTMLElement) {
   }
 
   _createClass(CreateNotification, [{
+    key: "getTranslations",
+    value: function getTranslations() {
+      var _this2 = this;
+
+      fetch('/tinymvc/api/translations').then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        return _this2.translations = data.translations;
+      });
+    }
+  }, {
     key: "connectedCallback",
     value: function connectedCallback() {
       this.innerHTML = "<button class=\"btn btn-outline-dark mr-2\">".concat(this.getAttribute('title'), "</button>");
+      this.getTranslations();
     }
   }, {
     key: "showDialog",
@@ -1502,7 +1559,7 @@ var CreateNotification = /*#__PURE__*/function (_HTMLElement) {
       element.setAttribute('tabindex', '-1');
       element.setAttribute('role', 'dialog');
       element.classList.add('modal', 'fade');
-      element.innerHTML = "\n            <div class=\"modal-dialog modal-dialog-centered\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-header bg-light text-dark align-items-center py-2\">\n                        <h5 class=\"modal-title\">".concat(this.getAttribute('modal_title'), "</h5>\n                        <button type=\"button\" class=\"btn\" data-dismiss=\"modal\" aria-label=\"Close\">\n                            <i class=\"fa fa-times\"></i>\n                        </button>\n                    </div>\n\n                    <form method=\"post\" action=\"").concat(this.getAttribute('action'), "\">\n                        ").concat(this.getAttribute('csrf_token'), "\n\n                        <div class=\"modal-body\">\n                            <div class=\"form-group\">\n                                <label for=\"message\">Message</label>\n                                <input type=\"text\" name=\"message\" id=\"message\" class=\"form-control\" required>\n                            </div>\n                        </div>\n\n                        <div class=\"modal-footer\">\n                            <button type=\"submit\" class=\"btn btn-dark loading\">").concat(this.getAttribute('modal_button_title'), "</button>\n                            <button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">").concat(this.getAttribute('modal_button_cancel'), "</button>\n                        </div>\n                    </form>\n                </div>\n            </div>\n        ");
+      element.innerHTML = "\n            <div class=\"modal-dialog modal-dialog-centered\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-header bg-light text-dark align-items-center py-2\">\n                        <h5 class=\"modal-title\">".concat(this.translations.create_notification, "</h5>\n                        <button type=\"button\" class=\"btn\" data-dismiss=\"modal\" aria-label=\"Close\">\n                            <i class=\"fa fa-times\"></i>\n                        </button>\n                    </div>\n\n                    <form method=\"post\" action=\"").concat(this.getAttribute('action'), "\">\n                        ").concat(this.getAttribute('csrf_token'), "\n\n                        <div class=\"modal-body\">\n                            <div class=\"form-group\">\n                                <label for=\"message\">").concat(this.translations.message, "</label>\n                                <input type=\"text\" name=\"message\" id=\"message\" class=\"form-control\" required>\n                            </div>\n                        </div>\n\n                        <div class=\"modal-footer\">\n                            <button type=\"submit\" class=\"btn btn-dark loading\">").concat(this.translations.submit, "</button>\n                            <button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">").concat(this.translations.cancel, "</button>\n                        </div>\n                    </form>\n                </div>\n            </div>\n        ");
       document.body.appendChild(element);
       $('#create-notification').modal({
         backdrop: 'static',
@@ -1568,6 +1625,8 @@ var SendMessage = /*#__PURE__*/function (_HTMLElement) {
 
     _this = _super.call(this);
     _this.users = [];
+    _this.translations = {};
+    _this.getTranslations = _this.getTranslations.bind(_assertThisInitialized(_this));
     _this.getUsers = _this.getUsers.bind(_assertThisInitialized(_this));
     _this.showDialog = _this.showDialog.bind(_assertThisInitialized(_this));
 
@@ -1588,6 +1647,17 @@ var SendMessage = /*#__PURE__*/function (_HTMLElement) {
       });
     }
   }, {
+    key: "getTranslations",
+    value: function getTranslations() {
+      var _this3 = this;
+
+      fetch('/tinymvc/api/translations').then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        return _this3.translations = data.translations;
+      });
+    }
+  }, {
     key: "connectedCallback",
     value: function connectedCallback() {
       if (this.getAttribute('type') === 'icon') {
@@ -1596,21 +1666,22 @@ var SendMessage = /*#__PURE__*/function (_HTMLElement) {
         this.innerHTML = "\n                <button class=\"btn btn-outline-dark mr-2\">\n                    ".concat(this.getAttribute('content'), "\n                </button>\n            ");
       }
 
+      this.getTranslations();
       this.getUsers();
     }
   }, {
     key: "showDialog",
     value: function showDialog() {
-      var _this3 = this;
+      var _this4 = this;
 
       var element = document.createElement('div');
       element.id = 'send-message';
       element.setAttribute('tabindex', '-1');
       element.setAttribute('role', 'dialog');
       element.classList.add('modal', 'fade');
-      element.innerHTML = "\n            <div class=\"modal-dialog modal-dialog-centered\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-header bg-light text-dark align-items-center py-2\">\n                        <h5 class=\"modal-title\">".concat(this.getAttribute('modal_title'), "</h5>\n                        <button type=\"button\" class=\"btn\" data-dismiss=\"modal\" aria-label=\"Close\">\n                            <i class=\"fa fa-times\"></i>\n                        </button>\n                    </div>\n\n                    <form method=\"post\" action=\"").concat(this.getAttribute('action'), "\">\n                        ").concat(this.getAttribute('csrf_token'), "\n                        \n                        <div class=\"modal-body\">\n                            <div class=\"form-group\">\n                                <label for=\"recipient\">User</label>\n                                <select id=\"recipient\" name=\"recipient\" class=\"custom-select\">\n                                    <option selected disabled>Select user</option>\n\n                                    ").concat(this.users.map(function (user) {
-        return "<option value=\"".concat(user.id, "\" ").concat(user.id == _this3.getAttribute('recipient') ? 'selected' : '', ">").concat(user.email, "</option>");
-      }), "\n                                </select>\n                            </div>\n\n                            <div class=\"form-group\">\n                                <label for=\"message\">Message</label>\n                                <textarea id=\"message\" name=\"message\" rows=\"3\" class=\"form-control\"></textarea>\n                            </div>\n                        </div>\n\n                        <div class=\"modal-footer\">\n                            <button type=\"submit\" class=\"btn btn-dark loading\">").concat(this.getAttribute('modal_button_title'), "</button>\n                            <button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">").concat(this.getAttribute('modal_button_cancel'), "</button>\n                        </div>\n                    </form>\n                </div>\n            </div>\n        ");
+      element.innerHTML = "\n            <div class=\"modal-dialog modal-dialog-centered\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-header bg-light text-dark align-items-center py-2\">\n                        <h5 class=\"modal-title\">".concat(this.getAttribute('modal_title'), "</h5>\n                        <button type=\"button\" class=\"btn\" data-dismiss=\"modal\" aria-label=\"Close\">\n                            <i class=\"fa fa-times\"></i>\n                        </button>\n                    </div>\n\n                    <form method=\"post\" action=\"").concat(this.getAttribute('action'), "\">\n                        ").concat(this.getAttribute('csrf_token'), "\n                        \n                        <div class=\"modal-body\">\n                            <div class=\"form-group\">\n                                <label for=\"recipient\">").concat(this.translations.user, "</label>\n                                <select id=\"recipient\" name=\"recipient\" class=\"custom-select\">\n                                    <option selected disabled>").concat(this.translations.select_user, "</option>\n\n                                    ").concat(this.users.map(function (user) {
+        return "<option value=\"".concat(user.id, "\" ").concat(user.id == _this4.getAttribute('recipient') ? 'selected' : '', ">").concat(user.email, "</option>");
+      }), "\n                                </select>\n                            </div>\n\n                            <div class=\"form-group\">\n                                <label for=\"message\">").concat(this.translations.message, "</label>\n                                <textarea id=\"message\" name=\"message\" rows=\"3\" class=\"form-control\"></textarea>\n                            </div>\n                        </div>\n\n                        <div class=\"modal-footer\">\n                            <button type=\"submit\" class=\"btn btn-dark loading\">").concat(this.translations.submit, "</button>\n                            <button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">").concat(this.translations.cancel, "</button>\n                        </div>\n                    </form>\n                </div>\n            </div>\n        ");
       document.body.appendChild(element);
       $('#send-message').modal({
         backdrop: 'static',
@@ -31352,10 +31423,9 @@ var Notifications = /*#__PURE__*/function (_React$Component) {
     _this = _super.call(this);
     _this.state = {
       notifications: [],
-      title: '',
-      markAsRead: '',
-      viewAll: ''
+      translations: {}
     };
+    _this.getTranslations = _this.getTranslations.bind(_assertThisInitialized(_this));
     _this.getNotifications = _this.getNotifications.bind(_assertThisInitialized(_this));
     return _this;
   }
@@ -31369,20 +31439,32 @@ var Notifications = /*#__PURE__*/function (_React$Component) {
         return response.json();
       }).then(function (data) {
         return _this2.setState({
-          notifications: data.notifications,
-          title: data.title,
-          viewAll: data.view_all
+          notifications: data.notifications
+        });
+      });
+    }
+  }, {
+    key: "getTranslations",
+    value: function getTranslations() {
+      var _this3 = this;
+
+      fetch('/tinymvc/api/translations').then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        return _this3.setState({
+          translations: data.translations
         });
       });
     }
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
-      var _this3 = this;
+      var _this4 = this;
 
+      this.getTranslations();
       this.getNotifications();
       this.intervalID = window.setInterval(function () {
-        return _this3.getNotifications();
+        return _this4.getNotifications();
       }, 10 * 1000); //every 10 seconds
     }
   }, {
@@ -31393,8 +31475,6 @@ var Notifications = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this4 = this;
-
       return /*#__PURE__*/_react.default.createElement("div", {
         className: "dropdown"
       }, /*#__PURE__*/_react.default.createElement("button", {
@@ -31404,7 +31484,7 @@ var Notifications = /*#__PURE__*/function (_React$Component) {
         "data-toggle": "dropdown",
         "aria-haspopup": "true",
         "aria-expanded": "false",
-        title: this.state.title
+        title: this.state.translations.notifications
       }, /*#__PURE__*/_react.default.createElement("i", {
         className: "fa fa-bell fa-lg"
       }), /*#__PURE__*/_react.default.createElement(Icon, {
@@ -31417,16 +31497,14 @@ var Notifications = /*#__PURE__*/function (_React$Component) {
         }
       }, /*#__PURE__*/_react.default.createElement("p", {
         className: "font-weight-bold px-4 py-2 text-center"
-      }, this.state.title, " (", this.state.notifications.length, ")"), /*#__PURE__*/_react.default.createElement("div", {
+      }, this.state.translations.notifications, " (", this.state.notifications.length, ")"), /*#__PURE__*/_react.default.createElement("div", {
         className: "dropdown-divider my-0"
       }), this.state.notifications.map(function (notification) {
         return /*#__PURE__*/_react.default.createElement(Notification, {
           key: notification.id,
           id: notification.id,
           message: notification.message,
-          markAsRead: _this4.state.markAsRead,
-          createdAt: notification.created_at,
-          handleSubmit: _this4.handleSubmit
+          createdAt: notification.created_at
         });
       }), /*#__PURE__*/_react.default.createElement("div", {
         className: "dropdown-divider my-0"
@@ -31435,7 +31513,7 @@ var Notifications = /*#__PURE__*/function (_React$Component) {
       }, /*#__PURE__*/_react.default.createElement("a", {
         className: "text-primary",
         href: "/tinymvc/admin/account/notifications"
-      }, this.state.viewAll))));
+      }, this.state.translations.view_all))));
     }
   }]);
 
@@ -31517,11 +31595,10 @@ var Messages = /*#__PURE__*/function (_React$Component) {
     _this = _super.call(this);
     _this.state = {
       messages: [],
-      title: '',
-      markAsRead: '',
-      viewAll: ''
+      translations: {}
     };
     _this.getMessages = _this.getMessages.bind(_assertThisInitialized(_this));
+    _this.getTranslations = _this.getTranslations.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -31534,20 +31611,32 @@ var Messages = /*#__PURE__*/function (_React$Component) {
         return response.json();
       }).then(function (data) {
         return _this2.setState({
-          messages: data.messages,
-          title: data.title,
-          viewAll: data.view_all
+          messages: data.messages
+        });
+      });
+    }
+  }, {
+    key: "getTranslations",
+    value: function getTranslations() {
+      var _this3 = this;
+
+      fetch('/tinymvc/api/translations').then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        return _this3.setState({
+          translations: data.translations
         });
       });
     }
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.getMessages();
+      this.getTranslations();
       this.intervalID = window.setInterval(function () {
-        return _this3.getMessages();
+        return _this4.getMessages();
       }, 10 * 1000); //every 10 seconds
     }
   }, {
@@ -31558,8 +31647,6 @@ var Messages = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this4 = this;
-
       return /*#__PURE__*/_react.default.createElement("div", {
         className: "dropdown"
       }, /*#__PURE__*/_react.default.createElement("button", {
@@ -31569,7 +31656,7 @@ var Messages = /*#__PURE__*/function (_React$Component) {
         "data-toggle": "dropdown",
         "aria-haspopup": "true",
         "aria-expanded": "false",
-        title: this.state.title
+        title: this.state.translations.messages
       }, /*#__PURE__*/_react.default.createElement("i", {
         className: "fa fa-envelope fa-lg"
       }), /*#__PURE__*/_react.default.createElement(Icon, {
@@ -31582,7 +31669,7 @@ var Messages = /*#__PURE__*/function (_React$Component) {
         }
       }, /*#__PURE__*/_react.default.createElement("p", {
         className: "font-weight-bold px-4 py-2 text-center"
-      }, this.state.title, " (", this.state.messages.length, ")"), /*#__PURE__*/_react.default.createElement("div", {
+      }, this.state.translations.messages, " (", this.state.messages.length, ")"), /*#__PURE__*/_react.default.createElement("div", {
         className: "dropdown-divider my-0"
       }), this.state.messages.map(function (message) {
         return /*#__PURE__*/_react.default.createElement(Message, {
@@ -31591,9 +31678,7 @@ var Messages = /*#__PURE__*/function (_React$Component) {
           sender_email: message.sender_email,
           sender_name: message.sender_name,
           message: message.message,
-          markAsRead: _this4.state.markAsRead,
-          createdAt: message.created_at,
-          handleSubmit: _this4.handleSubmit
+          createdAt: message.created_at
         });
       }), /*#__PURE__*/_react.default.createElement("div", {
         className: "dropdown-divider my-0"
@@ -31602,7 +31687,7 @@ var Messages = /*#__PURE__*/function (_React$Component) {
       }, /*#__PURE__*/_react.default.createElement("a", {
         className: "text-primary",
         href: "/tinymvc/admin/account/messages"
-      }, this.state.viewAll))));
+      }, this.state.translations.view_all))));
     }
   }]);
 
@@ -33553,7 +33638,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44121" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "32891" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

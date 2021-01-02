@@ -6,13 +6,9 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-use App\Database\Models\UsersModel;
-use Carbon\Carbon;
-use Framework\HTTP\Client;
 use Framework\Routing\View;
-use Framework\HTTP\Response;
+use Framework\Http\Response;
 use Framework\Routing\Route;
-use Framework\Support\Session;
 
 /**
  * Web routes
@@ -30,8 +26,6 @@ Route::get('/home', [
 
 Route::get('test', [
     'handler' => function() {
-        Session::close('user');
-        //dd(Carbon::now()->toTimeString());
-        //Response::json(UsersModel::select()->orderAsc()->first());
+        Response::send('Just to test things');
     }
 ]);

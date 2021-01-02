@@ -3,6 +3,7 @@
 namespace App\Middlewares;
 
 use App\Helpers\Auth;
+use Framework\Http\Request;
 use Framework\Support\Cookies;
 use Framework\Support\Session;
 use App\Database\Models\UsersModel;
@@ -17,10 +18,10 @@ class RememberUser
      *
      * @return void
      */
-    public static function handle(): void
+    public static function handle(Request $request): void
     {
         if (Auth::remember()) {
-            $user = UsersModel::findBy('email', Cookies::get('user'))->single();
+            $user = UsersModel::findSingleBy('email', Cookies::get('user'));
 
             if ($user !== false) {
                 Session::create('user', $user);

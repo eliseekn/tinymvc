@@ -20,7 +20,7 @@ class Seeder
      * @param  array $items
      * @return void
      */
-    public static function add(string $table, array $items): void
+    public static function insert(string $table, array $items): void
     {
         Builder::insert($table, $items)->execute();
     }

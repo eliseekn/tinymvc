@@ -2,12 +2,21 @@ class ExportModal extends HTMLElement {
     constructor() {
         super()
 
+        this.translations = {}
+        this.getTranslations = this.getTranslations.bind(this)
         this.showDialog = this.showDialog.bind(this)
         this.addEventListener('click', this.showDialog)
     }
 
+    getTranslations() {
+        fetch('/tinymvc/api/translations')
+            .then(response => response.json())
+            .then(data => this.translations = data.translations)
+    }
+
     connectedCallback() {
         this.innerHTML = `<button class="btn btn-outline-dark mx-2">${this.getAttribute('title')}</button>`
+        this.getTranslations()
     }
 
     showDialog() {
@@ -32,7 +41,7 @@ class ExportModal extends HTMLElement {
                         <div class="modal-body">
                             <fieldset class="form-group">
                                 <div class="row">
-                                    <legend class="col-form-label col-sm-4 pt-0">File type</legend>
+                                    <legend class="col-form-label col-sm-4 pt-0">${this.translations.file_type}</legend>
 
                                     <div class="col-sm-8">
                                         <div class="custom-control custom-radio custom-control-inline">
@@ -48,7 +57,7 @@ class ExportModal extends HTMLElement {
                             </fieldset>
 
                             <div class="form-group row">
-                                <p class="col-sm-4 col-form-label">Period <small>(optional)</small></p>
+                                <p class="col-sm-4 col-form-label">${this.translations.period} <small>(${this.translations.optional})</small></p>
 
                                 <div class="col-sm-8">
                                     <div class="input-group mb-3">
@@ -75,8 +84,8 @@ class ExportModal extends HTMLElement {
                         </div>
 
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-dark">${this.getAttribute('modal_button_title')}</button>
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">${this.getAttribute('modal_button_cancel')}</button>
+                            <button type="submit" class="btn btn-dark">${this.translations.submit}</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">${this.translations.cancel}</button>
                         </div>
                     </form>
                 </div>

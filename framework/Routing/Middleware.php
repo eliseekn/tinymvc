@@ -9,6 +9,7 @@
 namespace Framework\Routing;
 
 use Exception;
+use Framework\Http\Request;
 
 /**
  * Events handlers
@@ -28,7 +29,7 @@ class Middleware
      * @param  string $middleware name of middleware
      * @return void
      */
-    public static function execute(string $middleware): void
+    public static function execute(string $middleware, Request $request): void
     {
         $middleware = 'App\Middlewares\\' . $middleware;
 
@@ -37,7 +38,7 @@ class Middleware
             throw new Exception('Middleware "' . $middleware . '" not found.');
         }
 
-        $middleware::handle();
+        $middleware::handle($request);
     }
     
     /**
@@ -46,11 +47,11 @@ class Middleware
      * @param  string $route name of route
      * @return void
      */
-    public static function check(string $route): void
+    public static function check(string $route, Request $request): void
     {
         if (array_key_exists($route, self::$middlewares)) {
             foreach (self::$middlewares[$route] as $middleware) {
-                self::execute($middleware);
+                self::execute($middleware, $request);
             }
         }
     }

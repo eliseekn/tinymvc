@@ -6,7 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Framework\HTTP;
+namespace Framework\Http;
 
 /**
  * Send HTTP responses

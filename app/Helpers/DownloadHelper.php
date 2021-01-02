@@ -4,7 +4,7 @@ namespace App\Helpers;
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
-use Framework\HTTP\Response;
+use Framework\Http\Response;
 
 class DownloadHelper
 {   
@@ -64,6 +64,8 @@ class DownloadHelper
     
     /**
      * send file content
+     *
+     * @return void
      */
     public function send(): void
     {

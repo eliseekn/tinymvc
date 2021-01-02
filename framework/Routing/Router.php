@@ -9,9 +9,9 @@
 namespace Framework\Routing;
 
 use Exception;
-use Framework\HTTP\Request;
+use Framework\Http\Request;
 use Framework\Routing\View;
-use Framework\HTTP\Response;
+use Framework\Http\Response;
 use Framework\Support\Session;
 
 /**
@@ -101,7 +101,7 @@ class Router
 
                         if (is_callable($options['handler'])) {
                             //check for middlewares to execute
-                            Middleware::check($route);
+                            Middleware::check($route, $request);
 
                             //execute function
                             call_user_func_array($options['handler'], array_values($params));
@@ -112,7 +112,7 @@ class Router
                             //chekc if controller class and method exist
                             if (class_exists($controller) && method_exists($controller, $action)) {
                                 //check for middlewares to execute
-                                Middleware::check($route);
+                                Middleware::check($route, $request);
 
                                 //execute controller with action and parameter
                                 call_user_func_array([new $controller($request), $action], array_values($params));

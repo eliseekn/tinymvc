@@ -4,8 +4,8 @@ namespace App\Controllers\Auth;
 
 use Carbon\Carbon;
 use App\Helpers\EmailHelper;
-use Framework\HTTP\Redirect;
-use Framework\HTTP\Response;
+use Framework\Http\Redirect;
+use Framework\Http\Response;
 use Framework\Support\Session;
 use App\Middlewares\AuthPolicy;
 use Framework\Routing\Controller;
@@ -40,7 +40,7 @@ class EmailController extends Controller
      */
     public function auth(): void
     {
-        $auth_token = TokensModel::findBy('email', $this->request->email)->single();
+        $auth_token = TokensModel::findSingleBy('email', $this->request->email);
 
         if ($auth_token === false || $auth_token->token !== $this->request->token) {
 			Response::send(__('invalid_two_steps_link', true));
@@ -53,6 +53,6 @@ class EmailController extends Controller
         TokensModel::delete()->where('email', $auth_token->email)->persist();
 
         Session::create('user', UsersModel::findBy('email', $auth_token->email)->single());
-        AuthPolicy::handle();
+        AuthPolicy::handle($this->request);
     }
 }

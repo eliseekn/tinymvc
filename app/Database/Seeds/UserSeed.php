@@ -21,7 +21,7 @@ class UserSeed
      */
     public static function insert(): void
     {
-        Seeder::add(self::$table, [
+        Seeder::insert(self::$table, [
             'name' => 'admin',
             'email' => 'admin@mail.com',
             'password' => Encryption::hash('admin'),
@@ -32,7 +32,7 @@ class UserSeed
             'phone' => '00000000'
         ]);
 
-        Seeder::add(self::$table, [
+        Seeder::insert(self::$table, [
             'name' => 'customer',
             'email' => 'customer@mail.com',
             'password' => Encryption::hash('customer'),
@@ -43,7 +43,7 @@ class UserSeed
             'phone' => '00000001'
         ]);
 
-        Seeder::add(self::$table, [
+        Seeder::insert(self::$table, [
             'name' => 'visitor',
             'email' => 'visitor@mail.com',
             'password' => Encryption::hash('visitor'),

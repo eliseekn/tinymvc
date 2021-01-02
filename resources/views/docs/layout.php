@@ -67,11 +67,11 @@
                     </a>
                 </div>
 
-                <button class="list-group-item list-group-item-action" id="dropdown-btn" data-target="orm-dropdown-menu">
-                    <i class="fa fa-database <?php if (in_url('orm')) : echo 'text-primary'; endif ?>"></i> ORM
+                <button class="list-group-item list-group-item-action" id="dropdown-btn" data-target="database-dropdown-menu">
+                    <i class="fa fa-database <?php if (in_url('database')) : echo 'text-primary'; endif ?>"></i> database
 
                     <span class="float-right dropdown-caret">
-                        <?php if (in_url('orm')) : ?>
+                        <?php if (in_url('database')) : ?>
                         <i class="fa fa-caret-up"></i>
                         <?php else : ?>
                         <i class="fa fa-caret-down"></i>
@@ -79,20 +79,20 @@
                     </span>
                 </button>
 
-                <div class="<?php if (!in_url('orm')) : echo 'd-none'; endif ?> border-bottom" id="orm-dropdown-menu">
-                    <a href="<?= absolute_url('docs/orm/database') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                <div class="<?php if (!in_url('database')) : echo 'd-none'; endif ?> border-bottom" id="database-dropdown-menu">
+                    <a href="<?= absolute_url('docs/database/database') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (in_url('database')) : echo 'text-primary'; endif ?>"></i> Database
                     </a>
-                    <a href="<?= absolute_url('docs/orm/query-builder') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                    <a href="<?= absolute_url('docs/database/query-builder') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (in_url('query-builder')) : echo 'text-primary'; endif ?>"></i> Query Builder
                     </a>
-                    <a href="<?= absolute_url('docs/orm/model') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                    <a href="<?= absolute_url('docs/database/model') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (in_url('model')) : echo 'text-primary'; endif ?>"></i> Model
                     </a>
-                    <a href="<?= absolute_url('docs/orm/migrations') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                    <a href="<?= absolute_url('docs/database/migrations') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (in_url('migrations')) : echo 'text-primary'; endif ?>"></i> Migrations
                     </a>
-                    <a href="<?= absolute_url('docs/orm/seed') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                    <a href="<?= absolute_url('docs/database/seed') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (in_url('seed')) : echo 'text-primary'; endif ?>"></i> Seeds
                     </a>
                 </div>

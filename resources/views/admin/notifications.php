@@ -40,9 +40,6 @@
                     <create-notification 
                         title="<?= __('create') ?>"
                         action="<?= absolute_url('admin/account/notifications/create') ?>" 
-                        modal_title="<?= __('create_notification') ?>" 
-                        modal_button_title="<?= __('submit') ?>" 
-                        modal_button_cancel="<?= __('cancel') ?>" 
                         csrf_token='<?= csrf_token_input() ?>'>
                     </create-notification>
 
@@ -104,6 +101,7 @@
 
                             <confirm-delete 
                                 type="icon" 
+                                title="<?= __('delete') ?>"
                                 content='<i class="fa fa-trash-alt"></i>' 
                                 action="<?= absolute_url('admin/account/notifications/delete/' . $notification->id) ?>">
                             </confirm-delete>
@@ -117,7 +115,7 @@
 
     <div class="card-footer d-flex align-items-center justify-content-between">
         <span><?= __('total_results') ?> <span class="font-weight-bold"><?= $notifications->getTotalItems() ?></span></span>
-        <span>Showing <span class="font-weight-bold"><?= $notifications->getPageTotalItems() === 0 ? $notifications->getFirstItem() : $notifications->getFirstItem() + 1 ?></span> to <span class="font-weight-bold"><?= $notifications->getPageTotalItems() + $notifications->getFirstItem() ?></span></span>
+        <span><?= __('showing') ?> <span class="font-weight-bold"><?= $notifications->getPageTotalItems() === 0 ? $notifications->getFirstItem() : $notifications->getFirstItem() + 1 ?></span> <?= __('to') ?> <span class="font-weight-bold"><?= $notifications->getPageTotalItems() + $notifications->getFirstItem() ?></span></span>
 
         <?php $this->insert('partials/pagination', [
             'pagination' => $notifications

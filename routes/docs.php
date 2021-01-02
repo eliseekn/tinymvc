@@ -56,24 +56,24 @@ Route::group([
         View::render('docs/guides/redirections');
     }],
 
-    'orm/database' => ['handler' => function() {
-        View::render('docs/orm/database');
+    'database/database' => ['handler' => function() {
+        View::render('docs/database/database');
     }],
 
-    'orm/query-builder' => ['handler' => function() {
-        View::render('docs/orm/query-builder');
+    'database/query-builder' => ['handler' => function() {
+        View::render('docs/database/query-builder');
     }],
 
-    'orm/model' => ['handler' => function() {
-        View::render('docs/orm/model');
+    'database/model' => ['handler' => function() {
+        View::render('docs/database/model');
     }],
 
-    'orm/migrations' => ['handler' => function() {
-        View::render('docs/orm/migrations');
+    'database/migrations' => ['handler' => function() {
+        View::render('docs/database/migrations');
     }],
 
-    'orm/seeds' => ['handler' => function() {
-        View::render('docs/orm/seeds');
+    'database/seeds' => ['handler' => function() {
+        View::render('docs/database/seeds');
     }]
 ])->by([
     'method' => 'GET',

@@ -4,8 +4,8 @@ namespace App\Controllers\Auth;
 
 use Carbon\Carbon;
 use App\Helpers\EmailHelper;
-use Framework\HTTP\Redirect;
-use Framework\HTTP\Response;
+use Framework\Http\Redirect;
+use Framework\Http\Response;
 use App\Requests\AuthRequest;
 use Framework\Routing\Controller;
 use Framework\Support\Encryption;
@@ -46,7 +46,7 @@ class PasswordController extends Controller
 	 */
 	public function reset(): void
 	{
-        $reset_token = TokensModel::findBy('email', $this->request->email)->single();
+        $reset_token = TokensModel::findSingleBy('email', $this->request->email);
 
         if ($reset_token === false || $reset_token->token !== $this->request->token) {
 			Response::send(__('invalid_password_reset_link', true));

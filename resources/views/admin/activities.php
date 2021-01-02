@@ -32,8 +32,6 @@
                         action="<?= absolute_url('admin/account/activities/export') ?>" 
                         title="<?= __('export') ?>" 
                         modal_title="<?= __('export') ?>" 
-                        modal_button_title="<?= __('export') ?>" 
-                        modal_button_cancel="<?= __('cancel') ?>"
                         csrf_token='<?= csrf_token_input() ?>'>
                     </export-modal>
 
@@ -91,6 +89,7 @@
                         <td>
                             <confirm-delete 
                                 type="icon" 
+                                title="<?= __('delete') ?>"
                                 content='<i class="fa fa-trash-alt"></i>' 
                                 action="<?= absolute_url('admin/account/activities/delete/' . $activity->id) ?>">
                             </confirm-delete>
@@ -104,7 +103,7 @@
 
     <div class="card-footer d-flex align-items-center justify-content-between">
         <span><?= __('total_results') ?> <span class="font-weight-bold"><?= $activities->getTotalItems() ?></span></span>
-        <span>Showing <span class="font-weight-bold"><?= $activities->getPageTotalItems() === 0 ? $activities->getFirstItem() : $activities->getFirstItem() + 1 ?></span> to <span class="font-weight-bold"><?= $activities->getPageTotalItems() + $activities->getFirstItem() ?></span></span>
+        <span><?= __('showing') ?> <span class="font-weight-bold"><?= $activities->getPageTotalItems() === 0 ? $activities->getFirstItem() : $activities->getFirstItem() + 1 ?></span> <?= __('to') ?> <span class="font-weight-bold"><?= $activities->getPageTotalItems() + $activities->getFirstItem() ?></span></span>
 
         <?php $this->insert('partials/pagination', [
             'pagination' => $activities

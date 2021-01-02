@@ -3,9 +3,10 @@
 namespace App\Middlewares;
 
 use App\Helpers\Auth;
+use Framework\Http\Request;
 use Framework\Routing\View;
-use Framework\HTTP\Redirect;
-use Framework\HTTP\Response;
+use Framework\Http\Redirect;
+use Framework\Http\Response;
 
 /**
  * Check user role
@@ -17,7 +18,7 @@ class DashboardPolicy
      *
      * @return void
      */
-    public static function handle(): void
+    public static function handle(Request $request): void
     {
         if (!Auth::check()) {
             Redirect::url('login')->withAlert(__('not_logged_error', true))->error('');

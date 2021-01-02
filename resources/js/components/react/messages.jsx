@@ -26,26 +26,32 @@ class Messages extends React.Component {
 
         this.state = {
             messages: [],
-            title: '',
-            markAsRead: '',
-            viewAll: ''
+            translations: {}
         }
 
         this.getMessages = this.getMessages.bind(this)
+        this.getTranslations = this.getTranslations.bind(this)
     }
 
     getMessages() {
         fetch('/tinymvc/api/messages')
             .then(response => response.json())
             .then(data => this.setState({ 
-                messages: data.messages,
-                title: data.title,
-                viewAll: data.view_all
+                messages: data.messages
+            }))
+    }
+
+    getTranslations() {
+        fetch('/tinymvc/api/translations')
+            .then(response => response.json())
+            .then(data => this.setState({
+                translations: data.translations
             }))
     }
 
     componentDidMount() {
         this.getMessages()
+        this.getTranslations()
         this.intervalID = window.setInterval(() => this.getMessages(), 10 * 1000) //every 10 seconds
     }
 
@@ -56,7 +62,7 @@ class Messages extends React.Component {
     render() {
         return (
             <div className="dropdown">
-                <button className="btn btn-sm" type="button" id="dropdown-messages" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title={this.state.title}>
+                <button className="btn btn-sm" type="button" id="dropdown-messages" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title={this.state.translations.messages}>
                     <i className="fa fa-envelope fa-lg"></i>
                     
                     <Icon count={this.state.messages.length} />
@@ -64,7 +70,7 @@ class Messages extends React.Component {
 
                 <div className="dropdown-menu dropdown-menu-right py-0" aria-labelledby="dropdown-messages" style={{ zIndex: 1111 }}>
                     <p className="font-weight-bold px-4 py-2 text-center">
-                        {this.state.title} ({this.state.messages.length})
+                        {this.state.translations.messages} ({this.state.messages.length})
                     </p>
 
                     <div className="dropdown-divider my-0"></div>
@@ -78,9 +84,7 @@ class Messages extends React.Component {
                                     sender_email={message.sender_email}
                                     sender_name={message.sender_name}
                                     message={message.message}
-                                    markAsRead={this.state.markAsRead}
-                                    createdAt={message.created_at}
-                                    handleSubmit={this.handleSubmit} />
+                                    createdAt={message.created_at} />
                             )
                         })
                     }
@@ -89,7 +93,7 @@ class Messages extends React.Component {
 
                     <div className="text-center px-4 py-2 bg-light">
                         <a className="text-primary" href="/tinymvc/admin/account/messages">
-                            {this.state.viewAll}
+                            {this.state.translations.view_all}
                         </a>
                     </div>
                 </div>

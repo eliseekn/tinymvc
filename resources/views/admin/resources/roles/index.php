@@ -34,8 +34,6 @@
                         action="<?= absolute_url('admin/resources/roles/import') ?>" 
                         title="<?= __('import') ?>" 
                         modal_title="<?= __('upload_modal_title') ?>" 
-                        modal_button_title="<?= __('submit') ?>" 
-                        modal_button_cancel="<?= __('cancel') ?>" 
                         csrf_token='<?= csrf_token_input() ?>'>
                     </upload-modal>
                     
@@ -43,8 +41,6 @@
                         action="<?= absolute_url('admin/resources/roles/export') ?>" 
                         title="<?= __('export') ?>" 
                         modal_title="<?= __('export') ?>" 
-                        modal_button_title="<?= __('export') ?>" 
-                        modal_button_cancel="<?= __('cancel') ?>" 
                         csrf_token='<?= csrf_token_input() ?>'>
                     </export-modal>
 
@@ -98,16 +94,17 @@
                         <td><?php $role->updated_at !== $role->created_at ? print(\App\Helpers\DateHelper::format($role->updated_at)->human()) : print('-') ?></td>
 
                         <td>
-                            <a class="btn text-dark p-1" href="<?= absolute_url('admin/resources/roles/view/' . $role->id) ?>" title="View item">
+                            <a class="btn text-dark p-1" href="<?= absolute_url('admin/resources/roles/view/' . $role->id) ?>" title="<?= __('details') ?>">
                                 <i class="fa fa-eye"></i>
                             </a>
 
-                            <a class="btn text-dark p-1" href="<?= absolute_url('admin/resources/roles/edit/' . $role->id) ?>" title="Edit item">
+                            <a class="btn text-dark p-1" href="<?= absolute_url('admin/resources/roles/edit/' . $role->id) ?>" title="<?= __('edit') ?>">
                                 <i class="fa fa-edit"></i>
                             </a>
 
                             <confirm-delete 
                                 type="icon" 
+                                title="<?= __('delete') ?>"
                                 content='<i class="fa fa-trash-alt"></i>' 
                                 action="<?= absolute_url('admin/resources/roles/delete/' . $role->id) ?>">
                             </confirm-delete>
@@ -121,7 +118,7 @@
 
     <div class="card-footer d-flex align-items-center justify-content-between">
         <span><?= __('total_results') ?> <span class="font-weight-bold"><?= $roles->getTotalItems() ?></span></span>
-        <span>Showing <span class="font-weight-bold"><?= $roles->getPageTotalItems() === 0 ? $roles->getFirstItem() : $roles->getFirstItem() + 1 ?></span> to <span class="font-weight-bold"><?= $roles->getPageTotalItems() + $roles->getFirstItem() ?></span></span>
+        <span><?= __('showing') ?> <span class="font-weight-bold"><?= $roles->getPageTotalItems() === 0 ? $roles->getFirstItem() : $roles->getFirstItem() + 1 ?></span> <?= __('to') ?> <span class="font-weight-bold"><?= $roles->getPageTotalItems() + $roles->getFirstItem() ?></span></span>
 
         <?php $this->insert('partials/pagination', [
             'pagination' => $roles

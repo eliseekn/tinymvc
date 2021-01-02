@@ -106,11 +106,7 @@ class Maker
         $data = str_replace('CLASSNAME', $controller_class, $data);
         $data = str_replace('RESOURCENAME', $controller_name, $data);
 
-        if (!Storage::path(config('storage.routes'))->isFile('resources.php')) {
-            $data = '<?php' . PHP_EOL . PHP_EOL . 'use Framework\Routing\Route;' . PHP_EOL . PHP_EOL . $data . PHP_EOL;
-        }
-
-        if (!Storage::path(config('storage.routes'))->writeFile('resources.php', $data, true)) {
+        if (!Storage::path(config('storage.routes'))->writeFile('admin.php', $data, true)) {
             exit('[!] Failed to generate routes for ' . $controller_class . PHP_EOL);
         }
         

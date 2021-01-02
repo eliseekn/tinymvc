@@ -3,6 +3,8 @@ class SendMessage extends HTMLElement {
         super()
 
         this.users = []
+        this.translations = {}
+        this.getTranslations = this.getTranslations.bind(this)
         this.getUsers = this.getUsers.bind(this)
         this.showDialog = this.showDialog.bind(this)
         this.addEventListener('click', this.showDialog)
@@ -12,6 +14,12 @@ class SendMessage extends HTMLElement {
         fetch('/tinymvc/api/users')
             .then(response => response.json())
             .then(data => this.users = data.users)
+    }
+
+    getTranslations() {
+        fetch('/tinymvc/api/translations')
+            .then(response => response.json())
+            .then(data => this.translations = data.translations)
     }
 
     connectedCallback() {
@@ -29,6 +37,7 @@ class SendMessage extends HTMLElement {
             `
         }
 
+        this.getTranslations()
         this.getUsers()
     }
 
@@ -53,9 +62,9 @@ class SendMessage extends HTMLElement {
                         
                         <div class="modal-body">
                             <div class="form-group">
-                                <label for="recipient">User</label>
+                                <label for="recipient">${this.translations.user}</label>
                                 <select id="recipient" name="recipient" class="custom-select">
-                                    <option selected disabled>Select user</option>
+                                    <option selected disabled>${this.translations.select_user}</option>
 
                                     ${
                                         this.users.map(user => {
@@ -66,14 +75,14 @@ class SendMessage extends HTMLElement {
                             </div>
 
                             <div class="form-group">
-                                <label for="message">Message</label>
+                                <label for="message">${this.translations.message}</label>
                                 <textarea id="message" name="message" rows="3" class="form-control"></textarea>
                             </div>
                         </div>
 
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-dark loading">${this.getAttribute('modal_button_title')}</button>
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">${this.getAttribute('modal_button_cancel')}</button>
+                            <button type="submit" class="btn btn-dark loading">${this.translations.submit}</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">${this.translations.cancel}</button>
                         </div>
                     </form>
                 </div>

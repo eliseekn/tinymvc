@@ -8,9 +8,8 @@
 
 namespace Framework\Routing;
 
-use Framework\HTTP\Request;
-use Framework\HTTP\Redirect;
-use Framework\HTTP\Response;
+use Framework\Http\Request;
+use Framework\Routing\Middleware;
 
 /**
  * Main controller class
@@ -18,14 +17,14 @@ use Framework\HTTP\Response;
 class Controller
 {
     /**
-     * @var \Framework\HTTP\Request $request
+     * @var \Framework\Http\Request $request
      */
     public $request;
 
     /**
      * __construct
      *
-     * @param  \Framework\HTTP\Request $request
+     * @param  \Framework\Http\Request $request
      * @return void
      */
     public function __construct(Request $request)
@@ -54,7 +53,7 @@ class Controller
     public function middlewares(string ...$middlewares): void
     {
         foreach ($middlewares as $middleware) {
-            Middleware::execute($middleware);
+            Middleware::execute($middleware, new Request());
         }
     }
 }

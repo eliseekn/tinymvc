@@ -45,10 +45,10 @@
 
                 <div class="d-flex">
                     <select id="users-trends" class="custom-select" data-url="<?= absolute_url('api/metrics/users') ?>">
-                        <option value="weeks">This Week</option>
-                        <option value="months" selected>This Year</option>
-                        <option value="last-weeks">Last 4 weeks</option>
-                        <option value="last-years">Last 3 years</option>
+                        <option value="weeks"><?= __('this_week') ?></option>
+                        <option value="months" selected><?= __('this_year') ?></option>
+                        <option value="last-weeks"><?= __('last_4_weeks') ?></option>
+                        <option value="last-years"><?= __('last_3_years') ?></option>
                     </select>
                 </div>
             </div>
@@ -81,9 +81,7 @@
                             title="<?= __('new') ?>" 
                             content='<?= __('new') ?>'
                             recipient="0"
-                            modal_title="<?= __('new') ?>" 
-                            modal_button_title="<?= __('submit') ?>" 
-                            modal_button_cancel="<?= __('cancel') ?>" 
+                            modal_title="<?= __('new') ?>"
                             csrf_token='<?= csrf_token_input() ?>'>
                         </send-message>
 
@@ -137,9 +135,6 @@
                     <create-notification 
                         title="<?= __('create') ?>"
                         action="<?= absolute_url('admin/account/notifications/create') ?>" 
-                        modal_title="<?= __('create_notification') ?>" 
-                        modal_button_title="<?= __('submit') ?>" 
-                        modal_button_cancel="<?= __('cancel') ?>" 
                         csrf_token='<?= csrf_token_input() ?>'>
                     </create-notification>
 

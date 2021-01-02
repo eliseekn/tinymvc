@@ -8,7 +8,7 @@ use Framework\Support\Alert;
 use Framework\Routing\Controller;
 use App\Helpers\NotificationHelper;
 use App\Database\Models\NotificationsModel;
-use Framework\HTTP\Redirect;
+use Framework\Http\Redirect;
 
 class NotificationsController extends Controller
 {
@@ -58,9 +58,7 @@ class NotificationsController extends Controller
             Activity::log('Notification marked as read');
             Redirect::back()->withToast(__('notification_updated'))->success();
 		} else {
-			$notifications_id = explode(',', $this->request->items);
-
-			foreach ($notifications_id as $id) {
+			foreach (explode(',', $this->request->items) as $id) {
 				NotificationsModel::update(['status' => 'read'])->where('id', $id)->persist();
 			}
 			

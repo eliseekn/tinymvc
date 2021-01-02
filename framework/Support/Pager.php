@@ -8,7 +8,7 @@
 
 namespace Framework\Support;
 
-use Framework\HTTP\Request;
+use Framework\Http\Request;
 
 /**
  * Generate pagination from database 

@@ -8,7 +8,7 @@
 
 use App\Helpers\Auth;
 use App\Helpers\DateHelper;
-use Framework\HTTP\Response;
+use Framework\Http\Response;
 use Framework\Routing\Route;
 use Framework\Support\Metrics;
 use App\Database\Models\UsersModel;
@@ -34,11 +34,7 @@ Route::get('api/notifications', [
             $notification->created_at = time_elapsed(DateHelper::format($notification->created_at)->timestamp(), 1);
         }
 
-        Response::json([
-            'notifications' => $notifications,
-            'title' => __('notifications'),
-            'view_all' => __('view_all')
-        ]);
+        Response::json(['notifications' => $notifications]);
     }
 ]);
 
@@ -59,11 +55,7 @@ Route::get('api/messages', [
             $message->created_at = time_elapsed(DateHelper::format($message->created_at)->timestamp(), 1);
         }
 
-        Response::json([
-            'messages' => $messages,
-            'title' => __('messages'),
-            'view_all' => __('view_all')
-        ]);
+        Response::json(['messages' => $messages]);
     }
 ]);
 
@@ -71,5 +63,15 @@ Route::get('api/messages', [
 Route::get('api/users', [
     'handler' => function () {
         Response::json(['users' => UsersModel::find('!=', Auth::get()->id)->all()]);
+    }
+]);
+
+//get translations
+Route::get('api/translations', [
+    'handler' => function() {
+        $lang = Auth::get()->lang;
+        require 'resources/lang/' . $lang . '.php';
+
+        Response::json(['translations' => $config]);
     }
 ]);

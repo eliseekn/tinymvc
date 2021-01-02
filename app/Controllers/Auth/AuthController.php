@@ -5,7 +5,7 @@ namespace App\Controllers\Auth;
 use Carbon\Carbon;
 use App\Helpers\Auth;
 use App\Helpers\EmailHelper;
-use Framework\HTTP\Redirect;
+use Framework\Http\Redirect;
 use App\Requests\AuthRequest;
 use App\Requests\RegisterUser;
 use Framework\Routing\Controller;

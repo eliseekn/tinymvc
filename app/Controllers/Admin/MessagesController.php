@@ -4,8 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Helpers\Auth;
 use App\Helpers\Activity;
-use App\Helpers\DateHelper;
-use Framework\HTTP\Redirect;
+use Framework\Http\Redirect;
 use Framework\Support\Alert;
 use App\Helpers\ReportHelper;
 use Framework\Routing\Controller;
@@ -46,7 +45,7 @@ class MessagesController extends Controller
         ]);
 
         MessagesModel::update(['sender_status' => 'read'])->where('id', $id)->persist();
-        Activity::log('Message sent to ' . UsersModel::find($this->request->recipient)->single()->email);
+        Activity::log('Message sent to ' . UsersModel::findSingle($this->request->recipient)->email);
         Redirect::back()->withToast(__('message_sent'))->success();
 	}
 	
@@ -64,7 +63,7 @@ class MessagesController extends Controller
         ]);
 
         MessagesModel::update(['sender_status' => 'read'])->where('id', $id)->persist();
-        Activity::log('Message replied to ' . UsersModel::find($this->request->recipient)->single()->email);
+        Activity::log('Message replied to ' . UsersModel::findSingle($this->request->recipient)->email);
         Redirect::back()->withToast(__('message_sent'))->success();
 	}
 	
@@ -102,9 +101,7 @@ class MessagesController extends Controller
             Activity::log('Message deleted');
             Redirect::back()->withToast(__('message_deleted'))->success();
 		} else {
-            $messages_id = explode(',', $this->request->items);
-
-			foreach ($messages_id as $id) {
+			foreach (explode(',', $this->request->items) as $id) {
 				MessagesModel::deleteWhere('id', $id);
 			}
             

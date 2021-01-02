@@ -6,7 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Framework\HTTP;
+namespace Framework\Http;
 
 use Framework\Support\Alert;
 use Framework\Support\Cookies;
@@ -44,7 +44,7 @@ class Redirect
      *
      * @param  string $url
      * @param  array|string $params
-     * @return \Framework\HTTP\Redirect
+     * @return \Framework\Http\Redirect
      */
     public static function url(string $url = '/', $params = null): self
     {
@@ -58,7 +58,7 @@ class Redirect
      *
      * @param  string $name
      * @param  array|string $params
-     * @return \Framework\HTTP\Redirect
+     * @return \Framework\Http\Redirect
      */
     public static function route(string $name, $params = null): self
     {
@@ -69,7 +69,7 @@ class Redirect
     /**
      * go to previous page
      *
-     * @return \Framework\HTTP\Redirect
+     * @return \Framework\Http\Redirect
      */
     public static function back(): self
     {
@@ -98,7 +98,7 @@ class Redirect
      *
      * @param  string $key
      * @param  mixed $data
-     * @return \Framework\HTTP\Redirect
+     * @return \Framework\Http\Redirect
      */
     public function with(string $key, $data): self
     {
@@ -114,7 +114,7 @@ class Redirect
      * @param  int $expires in seconds
      * @param  bool $secure
      * @param  string $domain
-     * @return \Framework\HTTP\Redirect
+     * @return \Framework\Http\Redirect
      */
     public function withCookie(string $name, string $value, int $expires = 3600, bool $secure = false, string $domain = ''): self
     {
@@ -126,7 +126,7 @@ class Redirect
      * redirects with errors session data
      *
      * @param  array $errors
-     * @return \Framework\HTTP\Redirect
+     * @return \Framework\Http\Redirect
      */
     public function withErrors(array $errors): self
     {
@@ -138,7 +138,7 @@ class Redirect
      * redirects with inputs session data
      *
      * @param  array $inputs
-     * @return \Framework\HTTP\Redirect
+     * @return \Framework\Http\Redirect
      */
     public function withInputs(array $inputs): self
     {
@@ -151,7 +151,7 @@ class Redirect
      *
      * @param  mixed $message
      * @param  bool $dismiss
-     * @return \Framework\HTTP\Redirect
+     * @return \Framework\Http\Redirect
      */
     public function withAlert($message, bool $dismiss = true): self
     {
@@ -163,7 +163,7 @@ class Redirect
      * redirects with toast message
      *
      * @param  mixed $message
-     * @return \Framework\HTTP\Redirect
+     * @return \Framework\Http\Redirect
      */
     public function withToast($message): self
     {
@@ -175,7 +175,7 @@ class Redirect
      * redirects with popup message
      *
      * @param  mixed $message
-     * @return \Framework\HTTP\Redirect
+     * @return \Framework\Http\Redirect
      */
     public function withPopup($message): self
     {

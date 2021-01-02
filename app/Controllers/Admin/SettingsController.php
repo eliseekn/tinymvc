@@ -2,10 +2,9 @@
 
 namespace App\Controllers\Admin;
 
-use App\Helpers\Auth;
 use App\Helpers\Activity;
 use App\Requests\UpdateUser;
-use Framework\HTTP\Redirect;
+use Framework\Http\Redirect;
 use Framework\Support\Session;
 use Framework\Routing\Controller;
 use Framework\Support\Encryption;
@@ -22,7 +21,7 @@ class SettingsController extends Controller
 	 */
 	public function index(int $id): void
 	{
-        $user = UsersModel::find($id)->single();
+        $user = UsersModel::findSingle($id);
 		
 		if ($user === false) {
 			Redirect::back()->withToast(__('user_not_found'))->success();
@@ -69,7 +68,7 @@ class SettingsController extends Controller
         UsersModel::update($data)->where('id', $id)->persist();
 
         if (Session::get('user')->id == $id) {
-            Auth::set(UsersModel::find($id)->single());
+            Session::create('user', UsersModel::findSingle($id));
         }
 
         Activity::log('Settings saved');

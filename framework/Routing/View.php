@@ -10,7 +10,7 @@ namespace Framework\Routing;
 
 use Exception;
 use League\Plates\Engine;
-use Framework\HTTP\Response;
+use Framework\Http\Response;
 use Framework\Support\Session;
 use Framework\Support\Storage;
 

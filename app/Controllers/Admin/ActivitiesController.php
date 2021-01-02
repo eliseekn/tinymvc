@@ -3,8 +3,7 @@
 namespace App\Controllers\Admin;
 
 use App\Helpers\Auth;
-use App\Helpers\DateHelper;
-use Framework\HTTP\Redirect;
+use Framework\Http\Redirect;
 use Framework\Support\Alert;
 use App\Helpers\ReportHelper;
 use Framework\Routing\Controller;
@@ -46,9 +45,7 @@ class ActivitiesController extends Controller
 			ActivitiesModel::deleteWhere('id', $id);
             Redirect::back()->withToast(__('activity_deleted'))->success();
 		} else {
-			$activities_id = explode(',', $this->request->items);
-
-			foreach ($activities_id as $id) {
+			foreach (explode(',', $this->request->items) as $id) {
 				ActivitiesModel::deleteWhere('id', $id);
 			}
 			

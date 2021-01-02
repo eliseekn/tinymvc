@@ -6,7 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Framework\HTTP;
+namespace Framework\Http;
 
 use Exception;
 
@@ -30,7 +30,7 @@ class Client
      * @param  array $headers
      * @param  array|null $data
      * @param  bool $json send data in json format
-     * @return \Framework\HTTP\Client
+     * @return \Framework\Http\Client
      */
     public static function send(string $method, array $urls, array $headers = [], ?array $data = null, bool $json = false): self 
     {
@@ -45,7 +45,7 @@ class Client
      * @param  array $headers
      * @param  array|null $data
      * @param  bool $json send data in json
-     * @return \Framework\HTTP\Client
+     * @return \Framework\Http\Client
      */
     public static function get(array $urls, array $headers = [], ?array $data = null, bool $json = false): self {
         return self::send('GET', $urls, $headers, $data, $json);
@@ -58,7 +58,7 @@ class Client
      * @param  array $headers
      * @param  array|null $data
      * @param  bool $json send data in json format
-     * @return \Framework\HTTP\Client
+     * @return \Framework\Http\Client
      */
     public static function post(array $urls, array $headers = [], ?array $data = null, bool $json = false): self {
         return self::send('POST', $urls, $headers, $data, $json);
@@ -71,7 +71,7 @@ class Client
      * @param  array $headers
      * @param  array|null $data
      * @param  bool $json send data in json format
-     * @return \Framework\HTTP\Client
+     * @return \Framework\Http\Client
      */
     public static function put(array $urls, array $headers = [], ?array $data = null, bool $json = false): self {
         return self::send('PUT', $urls, $headers, $data, $json);
@@ -84,7 +84,7 @@ class Client
      * @param  array $headers
      * @param  array|null $data
      * @param  bool $json send data in json
-     * @return \Framework\HTTP\Client
+     * @return \Framework\Http\Client
      */
     public static function delete(array $urls, array $headers = [], ?array $data = null, bool $json = false): self {
         return self::send('DELETE', $urls, $headers, $data, $json);
@@ -97,7 +97,7 @@ class Client
      * @param  array $headers
      * @param  array|null $data
      * @param  bool $json send data in json format
-     * @return \Framework\HTTP\Client
+     * @return \Framework\Http\Client
      */
     public static function option(array $urls, array $headers = [], ?array $data = null, bool $json = false): self {
         return self::send('OPTIONS', $urls, $headers, $data, $json);
@@ -110,7 +110,7 @@ class Client
      * @param  array $headers
      * @param  array|null $data
      * @param  bool $json send data in json format
-     * @return \Framework\HTTP\Client
+     * @return \Framework\Http\Client
      */
     public static function patch(array $urls, array $headers = [], ?array $data = null, bool $json = false): self {
         return self::send('PATCH', $urls, $headers, $data, $json);

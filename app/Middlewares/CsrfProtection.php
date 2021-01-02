@@ -2,9 +2,9 @@
 
 namespace App\Middlewares;
 
-use Framework\HTTP\Request;
+use Framework\Http\Request;
 use Framework\Routing\View;
-use Framework\HTTP\Response;
+use Framework\Http\Response;
 
 /**
  * CSRF token validator
@@ -16,9 +16,9 @@ class CsrfProtection
      *
      * @return void
      */
-    public static function handle(): void
+    public static function handle(Request $request): void
     {
-        if (!valid_csrf_token(Request::getInput('csrf_token'))) {
+        if (!valid_csrf_token($request->csrf_token)) {
             if (!empty(config('errors.views.403'))) {
                 View::render(config('errors.views.403'), [], 403);
             } else {

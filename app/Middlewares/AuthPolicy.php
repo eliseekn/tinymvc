@@ -3,7 +3,8 @@
 namespace App\Middlewares;
 
 use App\Helpers\Auth;
-use Framework\HTTP\Redirect;
+use Framework\Http\Redirect;
+use Framework\Http\Request;
 
 /**
  * Check if user is authenticated
@@ -15,7 +16,7 @@ class AuthPolicy
      *
      * @return void
      */
-    public static function handle(): void
+    public static function handle(Request $request): void
     {
         if (Auth::check()) {
             if (!Auth::hasRole('visitor')) {

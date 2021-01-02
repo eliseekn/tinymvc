@@ -19,6 +19,9 @@
             "Framework\\" : "framework/"
         }
     },
+    "config": {
+        "optimize-autoloader": true
+    },
     "require": {
         "php": "^7.2",
         "league/plates": "^3.3",

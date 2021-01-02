@@ -22,8 +22,8 @@ class MessagesModel extends Model
     public static function get(): \Framework\Database\Model
     {
         return self::select(['messages.*', 'u1.email AS sender_email', 'u2.email AS recipient_email'])
-            ->join('users AS u1', 'messages.sender', 'u1.id')
-            ->join('users AS u2', 'messages.recipient', 'u2.id')
+            ->join('users AS u1', 'messages.sender', '=', 'u1.id')
+            ->join('users AS u2', 'messages.recipient', '=', 'u2.id')
             ->where('messages.recipient', Auth::get()->id)
             ->or('messages.sender', Auth::get()->id)
             ->orderDesc('messages.created_at');
@@ -37,7 +37,7 @@ class MessagesModel extends Model
     public static function recipients(): \Framework\Database\Model
     {
         return self::select(['messages.*', 'users.email AS sender_email', 'users.name AS sender_name'])
-            ->join('users', 'messages.sender', 'users.id')
+            ->join('users', 'messages.sender', '=', 'users.id')
             ->where('messages.recipient', Auth::get()->id)
             ->and('messages.recipient_status', 'unread')
             ->orderDesc('messages.created_at');

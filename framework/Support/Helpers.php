@@ -491,8 +491,8 @@ if (!function_exists('__')) {
     {
         $lang = $app_config ? config('app.lang') : auth()->lang;
 
-        require 'resources/lang/' . $lang . '.php';
-        return $$expr;
+        $config = ConfigFactory::loadPath('resources/lang/' . $lang . '.php');
+		return $config($expr, '');
     }
 }
 

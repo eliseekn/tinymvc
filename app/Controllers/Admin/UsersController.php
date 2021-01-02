@@ -4,9 +4,8 @@ namespace App\Controllers\Admin;
 
 use App\Helpers\Auth;
 use App\Helpers\Activity;
-use App\Helpers\DateHelper;
 use App\Requests\UpdateUser;
-use Framework\HTTP\Redirect;
+use Framework\Http\Redirect;
 use Framework\Support\Alert;
 use App\Helpers\ReportHelper;
 use App\Requests\RegisterUser;
@@ -45,7 +44,7 @@ class UsersController extends Controller
 	public function new(): void
 	{
 		$this->render('admin/resources/users/new', [
-			'roles' => RolesModel::select()->all()
+			'roles' => RolesModel::selectAll()
 		]);
 	}
 	
@@ -57,8 +56,8 @@ class UsersController extends Controller
 	 */
 	public function edit(int $id): void
 	{
-		$user = UsersModel::find($id)->single();
-		$roles = RolesModel::select()->all();
+		$user = UsersModel::findSingle($id);
+		$roles = RolesModel::selectAll();
 
 		if ($user === false) {
 			Redirect::back()->withToast(__('user_not_found'))->error();
@@ -82,8 +81,7 @@ class UsersController extends Controller
         }
 
 		if (
-            UsersModel::select()
-                ->where('email', $this->request->email)
+            UsersModel::findBy('email', $this->request->email)
                 ->or('phone', $this->request->phone)
                 ->exists()
         ) {
@@ -111,7 +109,7 @@ class UsersController extends Controller
 	 */
 	public function view(int $id): void
 	{
-		$user = UsersModel::find($id)->single();
+		$user = UsersModel::findSingle($id);
 		
 		if ($user === false) {
 			Redirect::back()->withToast(__('user_not_found'))->error();
@@ -144,8 +142,7 @@ class UsersController extends Controller
 
         if ($user->email !== $this->request->email || $user->phone !== $this->request->phone) {
             if (
-                UsersModel::select()
-                    ->where('email', $this->request->email)
+                UsersModel::findBy('email', $this->request->email)
                     ->or('phone', $this->request->phone)
                     ->exists()
             ) {
@@ -190,9 +187,7 @@ class UsersController extends Controller
             Activity::log('User deleted');
             Redirect::url('admin/resources/users')->withToast(__('user_deleted'))->success();
 		} else {
-            $users_id = explode(',', $this->request->items);
-
-			foreach ($users_id as $id) {
+			foreach (explode(',', $this->request->items) as $id) {
 				UsersModel::deleteWhere('id', $id);
 			}
 			

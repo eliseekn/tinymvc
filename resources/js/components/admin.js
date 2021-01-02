@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const innerHTML = event.target.innerHTML
             event.target.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>'
 
-            if (window.confirm('Are you sure want to delete all selected items?')) {
+            if (window.confirm('Are you sure you want to delete all selected items?')) {
                 items = []
 
                 document.querySelectorAll('.table input[type=checkbox]').forEach(element => {
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const innerHTML = event.target.innerHTML
             event.target.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>'
 
-            if (window.confirm('Are you sure want to mark all selected notifications as read?')) {
+            if (window.confirm('Are you sure you want to mark all selected notifications as read?')) {
                 items = []
 
                 document.querySelectorAll('.table input[type=checkbox]').forEach(element => {

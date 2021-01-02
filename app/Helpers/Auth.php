@@ -3,8 +3,8 @@
 namespace App\Helpers;
 
 use Carbon\Carbon;
-use Framework\HTTP\Request;
-use Framework\HTTP\Redirect;
+use Framework\Http\Request;
+use Framework\Http\Redirect;
 use Framework\Support\Cookies;
 use Framework\Support\Session;
 use App\Middlewares\AuthPolicy;
@@ -35,7 +35,7 @@ class Auth
         //increment authentication attempts
         Session::create('auth_attempts', (self::getAttempts() + 1));
 
-        $user = UsersModel::findBy('email', $request->email)->single();
+        $user = UsersModel::findSingleBy('email', $request->email);
 
         //check credentials
         if ($user !== false && Encryption::compare($request->password, $user->password)) {
@@ -70,7 +70,7 @@ class Auth
             Activity::log('Log in attempts succeeded');
 
             //process to logged user redirection
-            AuthPolicy::handle();
+            AuthPolicy::handle($request);
         }
 
         //authentication failed

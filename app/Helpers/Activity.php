@@ -2,7 +2,7 @@
 
 namespace App\Helpers;
 
-use Framework\HTTP\Request;
+use Framework\Http\Request;
 use App\Database\Models\ActivitiesModel;
 
 class Activity

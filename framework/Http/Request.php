@@ -6,7 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Framework\HTTP;
+namespace Framework\Http;
 
 use Framework\Support\Uploader;
 use Framework\Support\Validator;
@@ -249,19 +249,6 @@ class Request
     }
     
     /**
-     * files
-     *
-     * @param  string $input
-     * @param  array $allowed_extensions
-     * @param  bool $mutliple
-     * @return \Framework\Support\Uploader|array
-     */
-    public function files(string $input, array $allowed_extensions = [], bool $mutliple = false)
-    {
-        return $mutliple ? self::getFiles($input, $allowed_extensions) : self::getFile($input, $allowed_extensions);
-    }
-    
-    /**
      * headers
      *
      * @return array
@@ -353,6 +340,19 @@ class Request
     public function raw()
     {
         return self::getRawData();
+    }
+    
+    /**
+     * files
+     *
+     * @param  string $input
+     * @param  array $allowed_extensions
+     * @param  bool $mutliple
+     * @return \Framework\Support\Uploader|array
+     */
+    public function files(string $input, array $allowed_extensions = [], bool $mutliple = false)
+    {
+        return $mutliple ? self::getFiles($input, $allowed_extensions) : self::getFile($input, $allowed_extensions);
     }
     
     /**

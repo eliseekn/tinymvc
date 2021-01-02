@@ -5,6 +5,7 @@ namespace NAMESPACE;
 use App\Helpers\DateHelper;
 use App\Helpers\ReportHelper;
 use Framework\Routing\Controller;
+use Framework\Http\Redirect;
 use App\Database\Models\RESOURCEMODEL;
 
 class CLASSNAME extends Controller
@@ -40,7 +41,7 @@ class CLASSNAME extends Controller
     public function edit(int $id): void
 	{
 		$this->render('admin/resources/RESOURCENAME/edit', [
-            'RESOURCENAME' => RESOURCEMODEL::find($id)->single()
+            'RESOURCENAME' => RESOURCEMODEL::findSingle($id)
         ]);
 	}
 
@@ -55,7 +56,7 @@ class CLASSNAME extends Controller
             //
         ]);
 
-		$this->redirect('admin/resources/RESOURCENAME/view', $id)->only();
+		Redirect::url('admin/resources/RESOURCENAME/view', $id)->only();
 	}
 	
 	/**
@@ -67,7 +68,7 @@ class CLASSNAME extends Controller
 	public function view(int $id): void
 	{
 		$this->render('admin/resources/RESOURCENAME/view', [
-            'RESOURCENAME' => RESOURCEMODEL::find($id)->single()
+            'RESOURCENAME' => RESOURCEMODEL::findSingle($id)
         ]);
 	}
     
@@ -83,7 +84,7 @@ class CLASSNAME extends Controller
             //
         ])->where('id', $id)->persist();
 
-		$this->redirect('admin/resources/RESOURCENAME/view', $id)->only();
+		Redirect::url('admin/resources/RESOURCENAME/view', $id)->only();
 	}
 
 	/**
@@ -96,16 +97,14 @@ class CLASSNAME extends Controller
 	{
         if (!is_null($id)) {
 			if (!RESOURCEMODEL::find($id)->exists()) {
-				$this->redirectBack()->only();
+				Redirect::back()->only();
 			}
 	
-			RESOURCEMODEL::delete()->where('id', $id)->persist();
-            $this->redirect('admin/resources/RESOURCENAME')->only();
+			RESOURCEMODEL::deleteWhere('id', $id);
+            Redirect::url('admin/resources/RESOURCENAME')->only();
 		} else {
-            $users_id = explode(',', $this->request->items);
-
-			foreach ($users_id as $id) {
-				RESOURCEMODEL::delete()->where('id', $id)->persist();
+			foreach (explode(',', $this->request->items) as $id) {
+				RESOURCEMODEL::deleteWhere('id', $id);
 			}
 		}
 	}
@@ -120,18 +119,18 @@ class CLASSNAME extends Controller
 		$file = $this->request->files('file', ['csv']);
 
 		if (!$file->isAllowed()) {
-            $this->redirect('admin/resources/RESOURCENAME')->only();
+            Redirect::url('admin/resources/RESOURCENAME')->only();
 		}
 
 		if (!$file->isUploaded()) {
-			$this->redirect('admin/resources/RESOURCENAME')->only();
+			Redirect::url('admin/resources/RESOURCENAME')->only();
 		}
 
 		ReportHelper::import($file->getTempFilename(), RESOURCEMODEL::class, [
 			//
 		]);
 
-		$this->redirect('admin/resources/RESOURCENAME')->only();
+		Redirect::url('admin/resources/RESOURCENAME')->only();
 	}
 	
 	/**

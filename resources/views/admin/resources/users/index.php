@@ -43,8 +43,6 @@
                         action="<?= absolute_url('admin/resources/users/import') ?>" 
                         title="<?= __('import') ?>" 
                         modal_title="<?= __('upload_modal_title') ?>" 
-                        modal_button_title="<?= __('submit') ?>" 
-                        modal_button_cancel="<?= __('cancel') ?>" 
                         csrf_token='<?= csrf_token_input() ?>'>
                     </upload-modal>
                     
@@ -52,8 +50,6 @@
                         action="<?= absolute_url('admin/resources/users/export') ?>" 
                         title="<?= __('export') ?>" 
                         modal_title="<?= __('export') ?>" 
-                        modal_button_title="<?= __('export') ?>" 
-                        modal_button_cancel="<?= __('cancel') ?>" 
                         csrf_token='<?= csrf_token_input() ?>'>
                     </export-modal>
 
@@ -121,16 +117,17 @@
                         <td><?php $user->updated_at !== $user->created_at ? print(\App\Helpers\DateHelper::format($user->updated_at)->human()) : print('-') ?></td>
 
                         <td>
-                            <a class="btn text-dark p-1" href="<?= absolute_url('admin/resources/users/view/' . $user->id) ?>" title="View item">
+                            <a class="btn text-dark p-1" href="<?= absolute_url('admin/resources/users/view/' . $user->id) ?>" title="<?= __('details') ?>">
                                 <i class="fa fa-eye"></i>
                             </a>
 
-                            <a class="btn text-dark p-1" href="<?= absolute_url('admin/resources/users/edit/' . $user->id) ?>" title="Edit item">
+                            <a class="btn text-dark p-1" href="<?= absolute_url('admin/resources/users/edit/' . $user->id) ?>" title="<?= __('edit') ?>">
                                 <i class="fa fa-edit"></i>
                             </a>
 
                             <confirm-delete 
                                 type="icon" 
+                                title="<?= __('delete') ?>"
                                 content='<i class="fa fa-trash-alt"></i>' 
                                 action="<?= absolute_url('admin/resources/users/delete/' . $user->id) ?>">
                             </confirm-delete>
@@ -144,7 +141,7 @@
 
     <div class="card-footer d-flex align-items-center justify-content-between">
         <span><?= __('total_results') ?> <span class="font-weight-bold"><?= $users->getTotalItems() ?></span></span>
-        <span>Showing <span class="font-weight-bold"><?= $users->getPageTotalItems() === 0 ? $users->getFirstItem() : $users->getFirstItem() + 1 ?></span> to <span class="font-weight-bold"><?= $users->getPageTotalItems() + $users->getFirstItem() ?></span></span>
+        <span><?= __('showing') ?> <span class="font-weight-bold"><?= $users->getPageTotalItems() === 0 ? $users->getFirstItem() : $users->getFirstItem() + 1 ?></span> <?= __('to') ?> <span class="font-weight-bold"><?= $users->getPageTotalItems() + $users->getFirstItem() ?></span></span>
 
         <?php $this->insert('partials/pagination', [
             'pagination' => $users

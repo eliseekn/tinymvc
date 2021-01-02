@@ -2,7 +2,7 @@
 
 namespace App\Middlewares;
 
-use Framework\HTTP\Request;
+use Framework\Http\Request;
 
 /**
  * Sanitize form fields
@@ -14,10 +14,10 @@ class SanitizeFields
      * 
      * @return void
      */
-    public static function handle(): void
+    public static function handle(Request $request): void
     {
-        foreach (Request::getInputs() as $field => $value) {
-            Request::setInput($field, escape($value));
+        foreach ($request->inputs() as $field => $value) {
+            $request->input($field, escape($value));
         }
     }
 }

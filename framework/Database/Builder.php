@@ -58,6 +58,21 @@ class Builder
 		self::$query = rtrim(self::$query, ', ');
 		return new self();
 	}
+        
+    /**
+     * generate SELECT with raw query
+     *
+     * @param  string $query
+     * @param  array $args
+     * @return \Framework\Database\Builder
+     */
+    public static function selectRaw(string $query, array $args = []): self
+    {
+        self::$query = 'SELECT ' . $query;
+        self::$args = array_merge(self::$args, $args);
+
+        return new self();
+    }
 
 	/**
 	 * generate INSERT query
@@ -281,7 +296,8 @@ class Builder
             self::$query .= "created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
 			    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)";
         }
-        
+
+        self::$query .= " ENGINE='" . config('db.storage_engine') . "'";
 		return $this;
     }
 
@@ -311,6 +327,20 @@ class Builder
 		self::$args[] = $value;
 		return $this;
 	}
+        
+    /**
+     * generate WHERE with raw query
+     *
+     * @param  string $query
+     * @param  array $args
+     * @return \Framework\Database\Builder
+     */
+    public function whereRaw(string $query, array $args = []): self
+    {
+        self::$query .= ' WHERE ' . $query;
+        self::$args = array_merge(self::$args, $args);
+        return $this;
+    }
 
 	/**
 	 * generate WHERE NOT query
@@ -506,6 +536,20 @@ class Builder
 		self::$args[] = $value;
 		return $this;
 	}
+        
+    /**
+     * generate HAVING with raw query
+     *
+     * @param  string $query
+     * @param  array $args
+     * @return \Framework\Database\Builder
+     */
+    public function havingRaw(string $query, array $args = []): self
+    {
+        self::$query .= ' HAVING ' . $query;
+        self::$args = array_merge(self::$args, $args);
+        return $this;
+    }
 
 	/**
 	 * generate ORDER BY query
@@ -560,13 +604,14 @@ class Builder
 	 * generate INNER JOIN query
 	 *
 	 * @param  string $table
-	 * @param  string $second_column
 	 * @param  string $first_column
+     * @param  string $operator
+	 * @param  string $second_column
 	 * @return \Framework\Database\Builder
 	 */
-	public function innerJoin(string $table, string $second_column, string $first_column): self
+	public function innerJoin(string $table, string $first_column, string $operator, string $second_column): self
 	{
-		self::$query .= " INNER JOIN " . config('db.table_prefix') . "$table ON $first_column = $second_column";
+		self::$query .= " INNER JOIN " . config('db.table_prefix') . "$table ON $first_column $operator $second_column";
 		return $this;
 	}
 
@@ -574,13 +619,14 @@ class Builder
 	 * generate LEFT JOIN query
 	 *
 	 * @param  string $table
-	 * @param  string $second_column
 	 * @param  string $first_column
+     * @param  string $operator
+	 * @param  string $second_column
 	 * @return \Framework\Database\Builder
 	 */
-	public function leftJoin(string $table, string $second_column, string $first_column): self
+	public function leftJoin(string $table, string $first_column, string $operator, string $second_column): self
 	{
-		self::$query .= " LEFT JOIN " . config('db.table_prefix') . "$table ON $first_column = $second_column";
+		self::$query .= " LEFT JOIN " . config('db.table_prefix') . "$table ON $first_column $operator $second_column";
 		return $this;
 	}
 
@@ -588,13 +634,14 @@ class Builder
 	 * generate RIGHT JOIN query
 	 *
 	 * @param  string $table
-	 * @param  string $second_column
 	 * @param  string $first_column
+     * @param  string $operator
+	 * @param  string $second_column
 	 * @return \Framework\Database\Builder
 	 */
-	public function rightJoin(string $table, string $second_column, string $first_column): self
+	public function rightJoin(string $table, string $first_column, string $operator, string $second_column): self
 	{
-		self::$query .= " RIGHT JOIN " . config('db.table_prefix') . "$table ON $first_column = $second_column";
+		self::$query .= " RIGHT JOIN " . config('db.table_prefix') . "$table ON $first_column $operator $second_column";
 		return $this;
 	}
 
@@ -602,13 +649,14 @@ class Builder
 	 * generate FULL JOIN query
 	 *
 	 * @param  string $table
-	 * @param  string $second_column
 	 * @param  string $first_column
+     * @param  string $operator
+	 * @param  string $second_column
 	 * @return \Framework\Database\Builder
 	 */
-	public function fullJoin(string $table, string $second_column, string $first_column): self
+	public function fullJoin(string $table, string $first_column, string $operator, string $second_column): self
 	{
-		self::$query .= " FULL JOIN " . config('db.table_prefix') . "$table ON $first_column = $second_column";
+		self::$query .= " FULL JOIN " . config('db.table_prefix') . "$table ON $first_column $operator $second_column";
 		return $this;
 	}
 
@@ -616,13 +664,14 @@ class Builder
 	 * generate FULL OUTER JOIN query
 	 *
 	 * @param  string $table
-	 * @param  string $second_column
 	 * @param  string $first_column
+     * @param  string $operator
+	 * @param  string $second_column
 	 * @return \Framework\Database\Builder
 	 */
-	public function outerJoin(string $table, string $second_column, string $first_column): self
+	public function outerJoin(string $table, string $first_column, string $operator, string $second_column): self
 	{
-		self::$query .= " FULL OUTER JOIN " . config('db.table_prefix') . "$table ON $first_column = $second_column";
+		self::$query .= " FULL OUTER JOIN " . config('db.table_prefix') . "$table ON $first_column $operator $second_column";
 		return $this;
 	}
 
@@ -650,7 +699,7 @@ class Builder
 
 		self::$query = rtrim(self::$query, ', ');
 		return $this;
-	}
+    }
 
 	/**
 	 * returns query string and arguments
@@ -669,12 +718,39 @@ class Builder
      * @param  array $args
 	 * @return \Framework\Database\Builder
 	 */
-	public static function rawQuery(string $query, array $args = []): self
+	public static function setQuery(string $query, array $args = []): self
 	{
 		self::$query = $query;
 		self::$args = $args;
 
 		return new self();
+    }
+    
+    /**
+     * add custom query string with arguments
+     *
+     * @param  mixed $query
+     * @param  mixed $args
+     * @return \Framework\Database\Builder
+     */
+    public function rawQuery(string $query, array $args = []): self
+    {
+        self::$query .= $query;
+        self::$args = array_merge(self::$args, $args);
+        
+        return $this;
+    }
+    
+    /**
+     * generate sub query
+     *
+     * @param  mixed $function
+     * @return \Framework\Database\Builder
+     */
+    public function subQuery(callable $function): self
+    {
+        call_user_func_array($function, [$this]);
+        return $this;
     }
 	
 	/**
@@ -685,7 +761,7 @@ class Builder
 	public function execute(): \PDOStatement
 	{
         $stmt = DBConnection::getInstance()->executeStatement(self::$query, self::$args);
-		self::rawQuery('');
+		self::setQuery('');
 		return $stmt;
 	}
 }

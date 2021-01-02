@@ -3,7 +3,8 @@
 namespace App\Middlewares;
 
 use App\Helpers\Auth;
-use Framework\HTTP\Redirect;
+use Framework\Http\Request;
+use Framework\Http\Redirect;
 
 /**
  * Check if user has admin role
@@ -15,7 +16,7 @@ class AccountPolicy
      *
      * @return void
      */
-    public static function handle(): void
+    public static function handle(Request $request): void
     {
         if (config('security.auth.email_confirmation') === true) {
             if (!Auth::get()->active) {

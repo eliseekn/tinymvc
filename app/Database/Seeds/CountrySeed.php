@@ -25,7 +25,7 @@ class CountrySeed
             $country_name = $country['name_' . config('app.lang')];
 
             if (!is_null($country_name) && !empty($country_name)) {
-                Seeder::add(static::$table, [
+                Seeder::insert(static::$table, [
                     'name' => utf8_decode($country_name)
                 ]);
             }

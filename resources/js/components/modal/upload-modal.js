@@ -2,12 +2,21 @@ class UploadModal extends HTMLElement {
     constructor() {
         super()
 
+        this.translations = {}
+        this.getTranslations = this.getTranslations.bind(this)
         this.showDialog = this.showDialog.bind(this)
         this.addEventListener('click', this.showDialog)
     }
 
+    getTranslations() {
+        fetch('/tinymvc/api/translations')
+            .then(response => response.json())
+            .then(data => this.translations = data.translations)
+    }
+
     connectedCallback() {
         this.innerHTML = `<button class="btn btn-outline-dark ml-2">${this.getAttribute('title')}</button>`
+        this.getTranslations()
     }
 
     showDialog() {
@@ -34,8 +43,8 @@ class UploadModal extends HTMLElement {
                         </div>
 
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-dark">${this.getAttribute('modal_button_title')}</button>
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">${this.getAttribute('modal_button_cancel')}</button>
+                            <button type="submit" class="btn btn-dark">${this.translations.submit}</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">${this.translations.cancel}</button>
                         </div>
                     </form>
                 </div>

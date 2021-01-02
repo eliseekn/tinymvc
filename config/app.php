@@ -27,7 +27,9 @@ $config = [
         'username' => 'root',
         'password' => 'root',
         'table_prefix' => '',
-        'timestamps' => true
+        'timestamps' => true,
+        'storage_engine' => 'InnoDB'
+
     ],
 
     //smtp
