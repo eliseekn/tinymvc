@@ -16,11 +16,11 @@ class EmailHelper
     {
         return Email::to($email)
             ->from(config('mailer.from'), config('mailer.name'))
-            ->replyTo(config('mailer.from'), config('mailer.name'))
+            ->reply(config('mailer.from'), config('mailer.name'))
 			->subject('Welcome')
             ->html('
-                <p>Hello,</p>
-                <p>Congratulations, your account has been created successfully.</p>
+                <p>Hello!</p>
+                <p>Congratulations, your account has been successfully created.</p>
             ')
 			->send();
     }
@@ -36,7 +36,7 @@ class EmailHelper
     {
         return Email::to($email)
             ->from(config('mailer.from'), config('mailer.name'))
-            ->replyTo(config('mailer.from'), config('mailer.name'))
+            ->reply(config('mailer.from'), config('mailer.name'))
             ->subject('Password reset notification')
             ->html('
                 <p>You are seeing this email because we received a password reset request for your account. Click the link below to reset your password:</p>
@@ -57,7 +57,7 @@ class EmailHelper
     {
         return Email::to($email)
             ->from(config('mailer.from'), config('mailer.name'))
-            ->replyTo(config('mailer.from'), config('mailer.name'))
+            ->reply(config('mailer.from'), config('mailer.name'))
 			->subject('Email confirmation')
             ->html('
                 <p>You are seeing this email because you have registered an account to ' . config('app.name') . '. Click the link below to confirm your email email:</p>
@@ -78,8 +78,8 @@ class EmailHelper
     {
         return Email::to($email)
             ->from(config('mailer.from'), config('mailer.name'))
-            ->replyTo(config('mailer.from'), config('mailer.name'))
-			->subject('Two-Factor authentication')
+            ->reply(config('mailer.from'), config('mailer.name'))
+			->subject('Two-Steps authentication')
             ->html('
                 <p>You are seeing this email because you have requested connexion to your account on ' . config('app.name') . '. Click the link below to process log in:</p>
                 <p><a href="' . absolute_url('email/auth?email=' . $email . '&token=' . $token) . '">' . absolute_url('email/auth?email=' . $email . '&token=' . $token) . '</a></p>

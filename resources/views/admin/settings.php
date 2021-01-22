@@ -6,7 +6,7 @@
 
 <?php if (auth()->alerts && !empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
 
-<form method="post" action="<?= absolute_url('admin/account/settings/update/' . auth()->id) ?>">
+<form method="post" action="<?= absolute_url('admin/account/settings/update', auth()->id) ?>">
     <?= csrf_token_input() ?>
 
     <div class="row mb-4">

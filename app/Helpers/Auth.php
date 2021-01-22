@@ -67,14 +67,14 @@ class Auth
                 Cookies::create('user', $request->email, 3600 * 24 * 365);
             }
             
-            Activity::log('Log in attempts succeeded');
+            Activity::log(__('login_attempts_succeeded', true));
 
             //process to logged user redirection
             AuthPolicy::handle($request);
         }
 
         //authentication failed
-        Activity::log('Log in attempts failed', $request->email);
+        Activity::log(__('login_attempts_failed', true), $request->email);
 
         if (config('security.auth.max_attempts') > 0 && self::getAttempts() >= config('security.auth.max_attempts')) {
             Redirect::back()->with('auth_attempts_timeout', Carbon::now()->addMinutes(config('security.auth.unlock_timeout'))->toDateTimeString())->only();
@@ -145,7 +145,7 @@ class Auth
     public static function forget(): void
     {
         if (self::check()) {
-            Activity::log('Logged out');
+            Activity::log(__('logged_out'), true);
         }
 
         if (self::check()) {
@@ -163,7 +163,7 @@ class Auth
      * @param  string $role
      * @return bool
      */
-    public static function hasRole(string $role): bool
+    public static function role(string $role): bool
     {
         return RolesModel::findBy('slug', $role)->exists() && self::get()->role === $role;
     }

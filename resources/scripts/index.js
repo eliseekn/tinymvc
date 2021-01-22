@@ -12,7 +12,6 @@ import TimezonePicker from './components/mixed/timezone-picker'
 import CurrencyPicker from './components/mixed/currency-picker'
 import DonutChart from './components/charts/donut-chart'
 import BarsChart from './components/charts/bars-chart'
-import LinesChart from './components/charts/lines-chart'
 import ThemeSwitch from './components/mixed/theme-switch'
 import AvatarIcon from './components/mixed/avatar-icon'
 import CreateNotification from './components/modal/create-notification'
@@ -31,7 +30,6 @@ window.customElements.define('confirm-delete', ConfirmDelete)
 window.customElements.define('text-editor', TextEditor)
 window.customElements.define('donut-chart', DonutChart)
 window.customElements.define('bars-chart', BarsChart)
-window.customElements.define('lines-chart', LinesChart)
 window.customElements.define('timezone-picker', TimezonePicker)
 window.customElements.define('currency-picker', CurrencyPicker)
 window.customElements.define('theme-switch', ThemeSwitch)

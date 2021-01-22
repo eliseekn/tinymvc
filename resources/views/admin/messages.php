@@ -107,7 +107,7 @@
 
                         <td>
                             <?php if ($message->sender_email !== auth()->email) : ?>
-                            <a class="btn text-dark p-1 <?php if ($message->recipient_status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('admin/account/messages/update/' . $message->id) ?>" <?php if ($message->recipient_status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
+                            <a class="btn text-dark p-1 <?php if ($message->recipient_status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('admin/account/messages/update', $message->id) ?>" <?php if ($message->recipient_status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
                                 <?php if ($message->recipient_status === 'unread') : ?>
                                 <i class="fa fa-eye-slash"></i>
                                 <?php else : ?>
@@ -130,7 +130,7 @@
                                 type="icon" 
                                 title="<?= __('delete') ?>"
                                 content='<i class="fa fa-trash-alt"></i>' 
-                                action="<?= absolute_url('admin/account/messages/delete/' . $message->id) ?>">
+                                action="<?= absolute_url('admin/account/messages/delete', $message->id) ?>">
                             </confirm-delete>
                         </td>
                     </tr>

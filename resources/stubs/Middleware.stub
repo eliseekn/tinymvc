@@ -2,6 +2,8 @@
 
 namespace App\Middlewares;
 
+use Framework\Http\Request;
+
 class CLASSNAME
 {    
     /**
@@ -9,7 +11,7 @@ class CLASSNAME
      *
      * @return void
      */
-    public static function handle(): void
+    public static function handle(Request $request): void
     {
        //
     }

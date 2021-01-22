@@ -85,10 +85,6 @@ Route::options(string $uri, array $parameters)</code></pre>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row">name</th>
-                    <td>string</td>
-                    <td>Defines route unique name</td>
-                </tr>
                     <th scope="row">prefix</th>
                     <td>string</td>
                     <td>
@@ -109,7 +105,6 @@ Route::options(string $uri, array $parameters)</code></pre>
         <div class="card mb-4">
             <pre class="m-0"><code class="p-3">Route::get('home', [
     'handler' => 'HomeController::index',
-    'name' => 'home',
     'middlewares' => [
         'CsrfProtection'
     ]
@@ -131,8 +126,7 @@ Route::options(string $uri, array $parameters)</code></pre>
     'home' => []
 ])->by([
     'method' => 'GET',
-    'handler' => 'HomeController@index',
-    'name' => 'home'
+    'handler' => 'HomeController@index'
 ]);</code></pre>
         </div>
     </div>

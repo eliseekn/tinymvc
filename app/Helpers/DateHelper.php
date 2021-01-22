@@ -30,7 +30,7 @@ class DateHelper
      */
     public function human(): string
     {
-        return self::$date->isoFormat('MMM Do, YYYY');
+        return ucfirst(self::$date->isoFormat('MMM Do, YYYY'));
     }
     
     /**

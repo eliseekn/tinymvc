@@ -151,18 +151,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
   if (document.querySelector('#bulk-delete')) {
     document.querySelector('#bulk-delete').addEventListener('click', function (event) {
-      var innerHTML = event.target.innerHTML;
-      event.target.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>';
+      var items = [];
+      document.querySelectorAll('.table input[type=checkbox]').forEach(function (element) {
+        if (element.id !== 'select-all' && element.checked) {
+          items.push(element.dataset.id);
+        }
+      });
+      fetch('/tinymvc/api/translations').then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        var innerHTML = event.target.innerHTML;
+        event.target.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>';
 
-      if (window.confirm('Are you sure you want to delete all selected items?')) {
-        items = [];
-        document.querySelectorAll('.table input[type=checkbox]').forEach(function (element) {
-          if (element.id !== 'select-all' && element.checked) {
-            items.push(element.dataset.id);
-          }
-        });
+        if (items.length === 0) {
+          alert(data.translations.items_not_checked);
+          event.target.innerHTML = innerHTML;
+          return;
+        }
 
-        if (items.length > 0) {
+        if (window.confirm(data.translations.delete_items)) {
           var formData = new FormData();
           formData.append('csrf_token', document.querySelector('#csrf_token').value);
           formData.append('items', items);
@@ -173,28 +180,34 @@ document.addEventListener('DOMContentLoaded', function () {
             return window.location.reload();
           });
         }
-      }
 
-      event.target.innerHTML = innerHTML;
+        event.target.innerHTML = innerHTML;
+      });
     });
   } //mark notifications as read
 
 
   if (document.querySelector('#bulk-read')) {
     document.querySelector('#bulk-read').addEventListener('click', function (event) {
-      var innerHTML = event.target.innerHTML;
-      event.target.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>';
+      var items = [];
+      document.querySelectorAll('.table input[type=checkbox]').forEach(function (element) {
+        if (element.id !== 'select-all' && element.checked) {
+          items.push(element.dataset.id);
+        }
+      });
+      fetch('/tinymvc/api/translations').then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        var innerHTML = event.target.innerHTML;
+        event.target.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>';
 
-      if (window.confirm('Are you sure you want to mark all selected notifications as read?')) {
-        items = [];
-        document.querySelectorAll('.table input[type=checkbox]').forEach(function (element) {
-          if (element.id !== 'select-all' && element.checked) {
-            items.push(element.dataset.id);
-          }
-        });
+        if (items.length === 0) {
+          alert(data.translations.items_not_checked);
+          event.target.innerHTML = innerHTML;
+          return;
+        }
 
-        if (items.length > 0) {
-          console.log(items);
+        if (window.confirm(data.translations.mark_items_as_read)) {
           var formData = new FormData();
           formData.append('csrf_token', document.querySelector('#csrf_token').value);
           formData.append('items', items);
@@ -205,9 +218,9 @@ document.addEventListener('DOMContentLoaded', function () {
             return window.location.reload();
           });
         }
-      }
 
-      event.target.innerHTML = innerHTML;
+        event.target.innerHTML = innerHTML;
+      });
     });
   } //filter tables
   //https://stackoverflow.com/questions/51187477/how-to-filter-a-html-table-using-simple-javascript
@@ -256,7 +269,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (document.querySelector('#users-trends')) {
     document.querySelector('#users-trends').addEventListener('change', function (event) {
       if (event.target.value === 'last-years') {
-        fetch(event.target.dataset.url + '/years/3').then(function (response) {
+        fetch(event.target.dataset.url + '/years/5').then(function (response) {
           return response.json();
         }).then(function (data) {
           document.querySelector('bars-chart').setAttribute('data', data.metrics);
@@ -275,6 +288,34 @@ document.addEventListener('DOMContentLoaded', function () {
         }).then(function (data) {
           document.querySelector('bars-chart').setAttribute('data', data.metrics);
           event.target.value === 'weeks' ? document.querySelector('bars-chart').setAttribute('xkey', 'day') : document.querySelector('bars-chart').setAttribute('xkey', 'month');
+        });
+      }
+    });
+  } //metrics trends
+
+
+  if (document.querySelector('#users-trends-lines')) {
+    document.querySelector('#users-trends-lines').addEventListener('change', function (event) {
+      if (event.target.value === 'last-years') {
+        fetch(event.target.dataset.url + '/years/5').then(function (response) {
+          return response.json();
+        }).then(function (data) {
+          document.querySelector('lines-chart').setAttribute('data', data.metrics);
+          document.querySelector('lines-chart').setAttribute('xkey', 'year');
+        });
+      } else if (event.target.value === 'last-weeks') {
+        fetch(event.target.dataset.url + '/weeks/4').then(function (response) {
+          return response.json();
+        }).then(function (data) {
+          document.querySelector('lines-chart').setAttribute('data', data.metrics);
+          document.querySelector('lines-chart').setAttribute('xkey', 'day');
+        });
+      } else {
+        fetch(event.target.dataset.url + '/' + event.target.value).then(function (response) {
+          return response.json();
+        }).then(function (data) {
+          document.querySelector('lines-chart').setAttribute('data', data.metrics);
+          event.target.value === 'weeks' ? document.querySelector('lines-chart').setAttribute('xkey', 'day') : document.querySelector('lines-chart').setAttribute('xkey', 'month');
         });
       }
     });
@@ -419,7 +460,7 @@ var UploadModal = /*#__PURE__*/function (_HTMLElement) {
       element.setAttribute('tabindex', '-1');
       element.setAttribute('role', 'dialog');
       element.classList.add('modal', 'fade');
-      element.innerHTML = "\n            <div class=\"modal-dialog modal-dialog-centered\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-header bg-light text-dark align-items-center py-2\">\n                        <h5 class=\"modal-title\">".concat(this.getAttribute('modal_title'), "</h5>\n                        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                            <span aria-hidden=\"true\">&times;</span>\n                        </button>\n                    </div>\n\n                    <form method=\"post\" action=\"").concat(this.getAttribute('action'), "\" enctype=\"multipart/form-data\">\n                        ").concat(this.getAttribute('csrf_token'), "\n\n                        <div class=\"modal-body\">\n                            <input type=\"file\" name=\"file\" id=\"file\" class=\"form-group-file\" required>\n                        </div>\n\n                        <div class=\"modal-footer\">\n                            <button type=\"submit\" class=\"btn btn-dark\">").concat(this.translations.submit, "</button>\n                            <button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">").concat(this.translations.cancel, "</button>\n                        </div>\n                    </form>\n                </div>\n            </div>\n        ");
+      element.innerHTML = "\n            <div class=\"modal-dialog modal-dialog-centered\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-header bg-light text-dark align-items-center py-2\">\n                        <h5 class=\"modal-title\">".concat(this.translations.upload, "</h5>\n                        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                            <span aria-hidden=\"true\">&times;</span>\n                        </button>\n                    </div>\n\n                    <form method=\"post\" action=\"").concat(this.getAttribute('action'), "\" enctype=\"multipart/form-data\">\n                        ").concat(this.getAttribute('csrf_token'), "\n\n                        <div class=\"modal-body\">\n                            <input type=\"file\" name=\"file\" id=\"file\" class=\"form-group-file\" required>\n                        </div>\n\n                        <div class=\"modal-footer\">\n                            <button type=\"submit\" class=\"btn btn-dark\">").concat(this.translations.submit, "</button>\n                            <button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">").concat(this.translations.cancel, "</button>\n                        </div>\n                    </form>\n                </div>\n            </div>\n        ");
       document.body.appendChild(element);
       $('#upload-modal').modal({
         backdrop: 'static',
@@ -518,7 +559,7 @@ var ExportModal = /*#__PURE__*/function (_HTMLElement) {
       element.setAttribute('tabindex', '-1');
       element.setAttribute('role', 'dialog');
       element.classList.add('modal', 'fade');
-      element.innerHTML = "\n            <div class=\"modal-dialog modal-dialog-centered\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-header bg-light text-dark align-items-center py-2\">\n                        <h5 class=\"modal-title\">".concat(this.getAttribute('modal_title'), "</h5>\n                        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                            <span aria-hidden=\"true\">&times;</span>\n                        </button>\n                    </div>\n\n                    <form method=\"post\" action=\"").concat(this.getAttribute('action'), "\">\n                        ").concat(this.getAttribute('csrf_token'), "\n\n                        <div class=\"modal-body\">\n                            <fieldset class=\"form-group\">\n                                <div class=\"row\">\n                                    <legend class=\"col-form-label col-sm-4 pt-0\">").concat(this.translations.file_type, "</legend>\n\n                                    <div class=\"col-sm-8\">\n                                        <div class=\"custom-control custom-radio custom-control-inline\">\n                                            <input class=\"custom-control-input\" type=\"radio\" name=\"file_type\" id=\"csv\" value=\"csv\" checked>\n                                            <label class=\"custom-control-label\" for=\"csv\">CSV</label>\n                                        </div>\n                                        <div class=\"custom-control custom-radio custom-control-inline\">\n                                            <input class=\"custom-control-input\" type=\"radio\" name=\"file_type\" id=\"pdf\" value=\"pdf\">\n                                            <label class=\"custom-control-label\" for=\"pdf\">PDF</label>\n                                        </div>\n                                    </div>\n                                </div>\n                            </fieldset>\n\n                            <div class=\"form-group row\">\n                                <p class=\"col-sm-4 col-form-label\">").concat(this.translations.period, " <small>(").concat(this.translations.optional, ")</small></p>\n\n                                <div class=\"col-sm-8\">\n                                    <div class=\"input-group mb-3\">\n                                        <div class=\"input-group-prepend\">\n                                            <div class=\"input-group-text\">\n                                                <i class=\"fa fa-calendar-alt\"></i>\n                                            </div>\n                                        </div>\n\n                                        <input type=\"date\" class=\"form-control\" name=\"date_start\" id=\"date_start\">\n                                    </div>\n\n                                    <div class=\"input-group\">\n                                        <div class=\"input-group-prepend\">\n                                            <div class=\"input-group-text\">\n                                                <i class=\"fa fa-calendar-alt\"></i>\n                                            </div>\n                                        </div>\n\n                                        <input type=\"date\" class=\"form-control\" name=\"date_end\" id=\"date_end\">\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n\n                        <div class=\"modal-footer\">\n                            <button type=\"submit\" class=\"btn btn-dark\">").concat(this.translations.submit, "</button>\n                            <button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">").concat(this.translations.cancel, "</button>\n                        </div>\n                    </form>\n                </div>\n            </div>\n        ");
+      element.innerHTML = "\n            <div class=\"modal-dialog modal-dialog-centered\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-header bg-light text-dark align-items-center py-2\">\n                        <h5 class=\"modal-title\">".concat(this.translations.export, "</h5>\n                        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                            <span aria-hidden=\"true\">&times;</span>\n                        </button>\n                    </div>\n\n                    <form method=\"post\" action=\"").concat(this.getAttribute('action'), "\">\n                        ").concat(this.getAttribute('csrf_token'), "\n\n                        <div class=\"modal-body\">\n                            <fieldset class=\"form-group\">\n                                <div class=\"row\">\n                                    <legend class=\"col-form-label col-sm-4 pt-0\">").concat(this.translations.file_type, "</legend>\n\n                                    <div class=\"col-sm-8\">\n                                        <div class=\"custom-control custom-radio custom-control-inline\">\n                                            <input class=\"custom-control-input\" type=\"radio\" name=\"file_type\" id=\"csv\" value=\"csv\" checked>\n                                            <label class=\"custom-control-label\" for=\"csv\">CSV</label>\n                                        </div>\n                                        <div class=\"custom-control custom-radio custom-control-inline\">\n                                            <input class=\"custom-control-input\" type=\"radio\" name=\"file_type\" id=\"pdf\" value=\"pdf\">\n                                            <label class=\"custom-control-label\" for=\"pdf\">PDF</label>\n                                        </div>\n                                    </div>\n                                </div>\n                            </fieldset>\n\n                            <div class=\"form-group row\">\n                                <p class=\"col-sm-4 col-form-label\">").concat(this.translations.period, " <small>(").concat(this.translations.optional, ")</small></p>\n\n                                <div class=\"col-sm-8\">\n                                    <div class=\"input-group mb-3\">\n                                        <div class=\"input-group-prepend\">\n                                            <div class=\"input-group-text\">\n                                                <i class=\"fa fa-calendar-alt\"></i>\n                                            </div>\n                                        </div>\n\n                                        <input type=\"date\" class=\"form-control\" name=\"date_start\" id=\"date_start\">\n                                    </div>\n\n                                    <div class=\"input-group\">\n                                        <div class=\"input-group-prepend\">\n                                            <div class=\"input-group-text\">\n                                                <i class=\"fa fa-calendar-alt\"></i>\n                                            </div>\n                                        </div>\n\n                                        <input type=\"date\" class=\"form-control\" name=\"date_end\" id=\"date_end\">\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n\n                        <div class=\"modal-footer\">\n                            <button type=\"submit\" class=\"btn btn-dark\">").concat(this.translations.submit, "</button>\n                            <button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">").concat(this.translations.cancel, "</button>\n                        </div>\n                    </form>\n                </div>\n            </div>\n        ");
       document.body.appendChild(element);
       $('#export-modal').modal({
         backdrop: 'static',
@@ -1166,12 +1207,33 @@ var BarsChart = /*#__PURE__*/function (_HTMLElement) {
     _classCallCheck(this, BarsChart);
 
     _this = _super.call(this);
+    _this.translations = {};
+    _this.getTranslations = _this.getTranslations.bind(_assertThisInitialized(_this));
+    _this.setDefaultInnerHTML = _this.setDefaultInnerHTML.bind(_assertThisInitialized(_this));
     _this.drawChart = _this.drawChart.bind(_assertThisInitialized(_this));
     _this.displayData = _this.displayData.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(BarsChart, [{
+    key: "getTranslations",
+    value: function getTranslations() {
+      var _this2 = this;
+
+      fetch('/tinymvc/api/translations').then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        _this2.translations = data.translations;
+
+        _this2.setDefaultInnerHTML();
+      });
+    }
+  }, {
+    key: "setDefaultInnerHTML",
+    value: function setDefaultInnerHTML() {
+      this.innerHTML = "\n            <div class=\"d-flex justify-content-center align-items-center\" style=\"height: 200px\">\n                ".concat(this.translations.no_data_found, "\n            </div>\n        ");
+    }
+  }, {
     key: "drawChart",
     value: function drawChart(data, xkey) {
       this.innerHTML = "<div id=\"".concat(this.getAttribute('el'), "\" style=\"height: 200px\"></div>");
@@ -1188,7 +1250,7 @@ var BarsChart = /*#__PURE__*/function (_HTMLElement) {
     key: "displayData",
     value: function displayData() {
       if (JSON.parse(this.getAttribute('data')).length == 0) {
-        this.innerHTML = '<div class="d-flex justify-content-center align-items-center" style="height: 200px">No data found</div>';
+        this.setDefaultInnerHTML();
       } else {
         this.drawChart(JSON.parse(this.getAttribute('data')), this.getAttribute('xkey'));
       }
@@ -1196,6 +1258,7 @@ var BarsChart = /*#__PURE__*/function (_HTMLElement) {
   }, {
     key: "connectedCallback",
     value: function connectedCallback() {
+      this.getTranslations();
       this.displayData();
     }
   }, {
@@ -1214,72 +1277,6 @@ var BarsChart = /*#__PURE__*/function (_HTMLElement) {
 }( /*#__PURE__*/_wrapNativeSuper(HTMLElement));
 
 var _default = BarsChart;
-exports.default = _default;
-},{}],"components/charts/lines-chart.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _wrapNativeSuper(Class) { var _cache = typeof Map === "function" ? new Map() : undefined; _wrapNativeSuper = function _wrapNativeSuper(Class) { if (Class === null || !_isNativeFunction(Class)) return Class; if (typeof Class !== "function") { throw new TypeError("Super expression must either be null or a function"); } if (typeof _cache !== "undefined") { if (_cache.has(Class)) return _cache.get(Class); _cache.set(Class, Wrapper); } function Wrapper() { return _construct(Class, arguments, _getPrototypeOf(this).constructor); } Wrapper.prototype = Object.create(Class.prototype, { constructor: { value: Wrapper, enumerable: false, writable: true, configurable: true } }); return _setPrototypeOf(Wrapper, Class); }; return _wrapNativeSuper(Class); }
-
-function _construct(Parent, args, Class) { if (_isNativeReflectConstruct()) { _construct = Reflect.construct; } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function _isNativeFunction(fn) { return Function.toString.call(fn).indexOf("[native code]") !== -1; }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-var LinesChart = /*#__PURE__*/function (_HTMLElement) {
-  _inherits(LinesChart, _HTMLElement);
-
-  var _super = _createSuper(LinesChart);
-
-  function LinesChart() {
-    _classCallCheck(this, LinesChart);
-
-    return _super.call(this);
-  }
-
-  _createClass(LinesChart, [{
-    key: "connectedCallback",
-    value: function connectedCallback() {
-      new Morris.Line({
-        element: this.getAttribute('el'),
-        resize: true,
-        data: JSON.parse(this.getAttribute('data')),
-        xkey: this.getAttribute('xkey'),
-        ykeys: JSON.parse(this.getAttribute('ykeys')),
-        labels: JSON.parse(this.getAttribute('labels'))
-      });
-    }
-  }]);
-
-  return LinesChart;
-}( /*#__PURE__*/_wrapNativeSuper(HTMLElement));
-
-var _default = LinesChart;
 exports.default = _default;
 },{}],"components/mixed/theme-switch.js":[function(require,module,exports) {
 "use strict";
@@ -33562,8 +33559,6 @@ var _donutChart = _interopRequireDefault(require("./components/charts/donut-char
 
 var _barsChart = _interopRequireDefault(require("./components/charts/bars-chart"));
 
-var _linesChart = _interopRequireDefault(require("./components/charts/lines-chart"));
-
 var _themeSwitch = _interopRequireDefault(require("./components/mixed/theme-switch"));
 
 var _avatarIcon = _interopRequireDefault(require("./components/mixed/avatar-icon"));
@@ -33592,7 +33587,6 @@ window.customElements.define('confirm-delete', _confirmDelete.default);
 window.customElements.define('text-editor', _textEditor.default);
 window.customElements.define('donut-chart', _donutChart.default);
 window.customElements.define('bars-chart', _barsChart.default);
-window.customElements.define('lines-chart', _linesChart.default);
 window.customElements.define('timezone-picker', _timezonePicker.default);
 window.customElements.define('currency-picker', _currencyPicker.default);
 window.customElements.define('theme-switch', _themeSwitch.default);
@@ -33610,7 +33604,7 @@ if (document.querySelector('#messages-icon')) {
 
 
 _highlight.default.initHighlightingOnLoad();
-},{"./components/admin":"components/admin.js","./components/sidebar":"components/sidebar.js","./components/loading-button":"components/loading-button.js","./components/password-toggler":"components/password-toggler.js","./components/modal/upload-modal":"components/modal/upload-modal.js","./components/modal/export-modal":"components/modal/export-modal.js","./components/alert/alert-popup":"components/alert/alert-popup.js","./components/alert/alert-toast":"components/alert/alert-toast.js","./components/mixed/confirm-delete":"components/mixed/confirm-delete.js","./components/mixed/text-editor":"components/mixed/text-editor.js","./components/mixed/timezone-picker":"components/mixed/timezone-picker.js","./components/mixed/currency-picker":"components/mixed/currency-picker.js","./components/charts/donut-chart":"components/charts/donut-chart.js","./components/charts/bars-chart":"components/charts/bars-chart.js","./components/charts/lines-chart":"components/charts/lines-chart.js","./components/mixed/theme-switch":"components/mixed/theme-switch.js","./components/mixed/avatar-icon":"components/mixed/avatar-icon.js","./components/modal/create-notification":"components/modal/create-notification.js","./components/modal/send-message":"components/modal/send-message.js","react":"../../node_modules/react/index.js","react-dom":"../../node_modules/react-dom/index.js","./components/react/notifications":"components/react/notifications.jsx","./components/react/messages":"components/react/messages.jsx","./vendor/highlight.pack":"vendor/highlight.pack.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./components/admin":"components/admin.js","./components/sidebar":"components/sidebar.js","./components/loading-button":"components/loading-button.js","./components/password-toggler":"components/password-toggler.js","./components/modal/upload-modal":"components/modal/upload-modal.js","./components/modal/export-modal":"components/modal/export-modal.js","./components/alert/alert-popup":"components/alert/alert-popup.js","./components/alert/alert-toast":"components/alert/alert-toast.js","./components/mixed/confirm-delete":"components/mixed/confirm-delete.js","./components/mixed/text-editor":"components/mixed/text-editor.js","./components/mixed/timezone-picker":"components/mixed/timezone-picker.js","./components/mixed/currency-picker":"components/mixed/currency-picker.js","./components/charts/donut-chart":"components/charts/donut-chart.js","./components/charts/bars-chart":"components/charts/bars-chart.js","./components/mixed/theme-switch":"components/mixed/theme-switch.js","./components/mixed/avatar-icon":"components/mixed/avatar-icon.js","./components/modal/create-notification":"components/modal/create-notification.js","./components/modal/send-message":"components/modal/send-message.js","react":"../../node_modules/react/index.js","react-dom":"../../node_modules/react-dom/index.js","./components/react/notifications":"components/react/notifications.jsx","./components/react/messages":"components/react/messages.jsx","./vendor/highlight.pack":"vendor/highlight.pack.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -33638,7 +33632,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "32891" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "32951" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright 2021 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -20,59 +20,20 @@ use Framework\Support\Session;
 class Router
 {
     /**
-     * route uri
-     *
-     * @var string
-     */
-    protected $uri = '';
-
-    /**
-     * set url parameters from uri
+     * set sesssion history 
      *
      * @return void
      */
-    public function __construct()
-    {
-        //set history
-        $this->setHistory();
-        
-        //dispatch routes
-        try {
-            $this->dispatch(Route::$routes);
-        } catch (Exception $e) {
-            //log exception message
-            if (config('errors.log') === true) {
-                save_log('Application Error: ' . $e->getMessage());
-            }
-
-            //send 500 response
-            if (config('errors.display') === true) {
-                die($e->getMessage());
-            } else {
-                if (!empty(config('errors.views.500'))) {
-                    View::render(config('errors.views.500'), [], 500);
-                } else {
-                    Response::send('Try to refresh the page or feel free to contact us if the problem persists', [], 500);
-                }
-            }
-        }
-    }
-    
-    /**
-     * set history sesssion
-     *
-     * @return void
-     */
-    private function setHistory(): void
+    public static function  history(Request $request): void
     {
         $url = Session::get('history');
 
-        //excludes api uri from browser history
+        //excludes api uri from browsing history
         if (!in_url('api')) {
             if (empty($url)) {
-                $url = [Request::getFullUri()];
+                $url = [$request->uri(true)];
             } else {
-                $url[] = Request::getFullUri();
+                $url[] = $request->uri(true);
             }
         }
 
@@ -85,10 +46,8 @@ class Router
      * @param  array $routes routes
      * @return void
      */
-    private function dispatch(array $routes): void
+    public static function dispatch(Request $request, array $routes): void
     {
-        $request = new Request();
-
         if (!empty($routes)) {
             foreach ($routes as $route => $options) {
                 if (preg_match('/' . strtoupper($options['method']) . '/', $request->method())) {
@@ -99,11 +58,11 @@ class Router
                     if (preg_match('#^' . $pattern . '$#', $request->uri(), $params)) {
                         array_shift($params);
 
-                        if (is_callable($options['handler'])) {
-                            //check for middlewares to execute
-                            Middleware::check($route, $request);
+                        //check for middlewares to execute
+                        Middleware::check($route, $request);
 
-                            //execute function
+                        if (is_callable($options['handler'])) {
+                            //execute function with parameters
                             call_user_func_array($options['handler'], array_values($params));
                         } else {
                             list($controller, $action) = explode('@', $options['handler']);
@@ -111,10 +70,7 @@ class Router
 
                             //chekc if controller class and method exist
                             if (class_exists($controller) && method_exists($controller, $action)) {
-                                //check for middlewares to execute
-                                Middleware::check($route, $request);
-
-                                //execute controller with action and parameter
+                                //execute controller with method and parameters
                                 call_user_func_array([new $controller($request), $action], array_values($params));
                             } else {
                                 throw new Exception('Handler "' . $options['handler'] . '" not found.');
@@ -128,7 +84,7 @@ class Router
             if (!empty(config('errors.views.404'))) {
                 View::render(config('errors.views.404'), [], 404);
             } else {
-                Response::send('The page you have requested does not exists', [], 404);
+                Response::send('The page you have requested does not exists', false, [], 404);
             }
         } else {
             throw new Exception('No route defines in configuration');

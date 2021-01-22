@@ -46,7 +46,7 @@
                 </button>
 
                 <div class="<?php if (!in_url('resources')) : echo 'd-none'; endif ?> border-bottom" id="resources-dropdown-menu">
-                    <?php if (auth()->role !== 'customer') :?>
+                    <?php if (auth()->role === \App\Database\Models\RolesModel::ROLES[0]) :?>
                     <a href="<?= absolute_url('admin/resources/roles') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (in_url('roles')) : echo 'text-primary'; endif ?>"></i> <?= __('roles') ?>
                     </a>
@@ -54,6 +54,10 @@
                         <i class="fa fa-dot-circle <?php if (in_url('users')) : echo 'text-primary'; endif ?>"></i> <?= __('users') ?>
                     </a>
                     <?php endif ?>
+
+                    <a href="<?= absolute_url('admin/resources/medias') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                        <i class="fa fa-dot-circle <?php if (in_url('medias')) : echo 'text-primary'; endif ?>"></i> <?= __('medias') ?>
+                    </a>
                 </div>
 
                 <button class="list-group-item list-group-item-action" id="dropdown-btn" data-target="account-dropdown-menu">
@@ -78,7 +82,7 @@
                     <a href="<?= absolute_url('admin/account/activities') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (in_url('activities')) : echo 'text-primary'; endif ?>"></i> <?= __('activities') ?>
                     </a>
-                    <a href="<?= absolute_url('admin/account/settings/' . auth()->id) ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                    <a href="<?= absolute_url('admin/account/settings', auth()->id) ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (in_url('settings')) : echo 'text-primary'; endif ?>"></i> <?= __('settings') ?>
                     </a>
                 </div>
@@ -96,7 +100,7 @@
 
                     <div id="notifications-bell"></div>
 
-                    <a class="btn btn-sm" href="<?= absolute_url('admin/account/settings/' . auth()->id) ?>" title="<?= __('settings') ?>">
+                    <a class="btn btn-sm" href="<?= absolute_url('admin/account/settings', auth()->id) ?>" title="<?= __('settings') ?>">
                         <i class="fa fa-cog fa-lg"></i>
                     </a>
 

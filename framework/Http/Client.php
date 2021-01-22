@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright 2021 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -43,12 +43,10 @@ class Client
      *
      * @param  array $urls
      * @param  array $headers
-     * @param  array|null $data
-     * @param  bool $json send data in json
      * @return \Framework\Http\Client
      */
-    public static function get(array $urls, array $headers = [], ?array $data = null, bool $json = false): self {
-        return self::send('GET', $urls, $headers, $data, $json);
+    public static function get(array $urls, array $headers = []): self {
+        return self::send('GET', $urls, $headers);
     }
     
     /**

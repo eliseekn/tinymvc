@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright 2021 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -249,17 +249,18 @@ class Request
     }
     
     /**
-     * headers
+     * retrieves headers
      *
+     * @param  string|null $key
      * @return array
      */
-    public function headers(): array
+    public function headers(?string $key = null): array
     {
-        return self::getHeaders();
+        return is_null($key) ? self::getHeaders() : self::getHeader($key);
     }
         
     /**
-     * method
+     * retrieves method
      *
      * @return string
      */
@@ -269,33 +270,25 @@ class Request
     }
     
     /**
-     * fullUri
+     * retrieves uri
      *
+     * @param  bool $full
      * @return string
      */
-    public function fullUri(): string
+    public function uri(bool $full = false): string
     {
-        return self::getFullUri();
-    }
-    
-    /**
-     * uri
-     *
-     * @return string
-     */
-    public function uri(): string
-    {
-        return self::getUri();
+        return $full ? self::getFullUri() : self::getUri();
     }
 
     /**
-     * inputs
+     * retrieves POST inputs
      *
+     * @param  string|null $input
      * @return array
      */
-    public function inputs(): array
+    public function inputs(?string $input = null): array
     {
-        return self::getInputs();
+        return is_null($input) ? self::getInputs() : self::getInput($input);
     }
     
     /**
@@ -311,17 +304,18 @@ class Request
     }
     
     /**
-     * queries
+     * retrieves GET queries
      *
+     * @param  string|null $key
      * @return array
      */
-    public function queries(): array
+    public function queries(?string $key = null): array
     {
-        return self::getQueries();
+        return  is_null($key) ? self::getQueries() : self::getQuery($key);
     }
     
     /**
-     * query
+     * set GET query
      *
      * @param  string $key
      * @param  mixed $value
@@ -333,17 +327,17 @@ class Request
     }
     
     /**
-     * raw
+     * retrieves raw data
      *
      * @return mixed
      */
-    public function raw()
+    public function rawData()
     {
         return self::getRawData();
     }
     
     /**
-     * files
+     * retrieves files
      *
      * @param  string $input
      * @param  array $allowed_extensions
@@ -356,7 +350,7 @@ class Request
     }
     
     /**
-     * remoteIP
+     * retrieves remote IP
      *
      * @return string
      */
@@ -366,7 +360,7 @@ class Request
     }
     
     /**
-     * has
+     * check if request has POST or GET item
      *
      * @param  string $item
      * @return bool
@@ -377,7 +371,7 @@ class Request
     }
     
     /**
-     * only
+     * retrieves certains items only
      *
      * @param  string[] $items
      * @return array
@@ -398,7 +392,7 @@ class Request
     }
     
     /**
-     * except
+     * retrieves all items except certains
      *
      * @param  string[] $items
      * @return array
@@ -421,7 +415,7 @@ class Request
     }
     
     /**
-     * all
+     * retrieves all items from POST and GET
      *
      * @return array
      */
@@ -431,7 +425,7 @@ class Request
     }
 
     /**
-     * validate inputs and set flash session data
+     * validate inputs and redirect with flash session data
      *
      * @param  array|null $inputs
      * @param  array $rules

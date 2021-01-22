@@ -15,7 +15,7 @@
 <div class="card shadow-sm">
     <div class="card-header"><?= __('edit') ?></div>
 
-    <form id="update-role" data-url="<?= absolute_url('admin/resources/roles/update/' . $role->id) ?>">
+    <form id="update-role" data-url="<?= absolute_url('admin/resources/roles/update', $role->id) ?>">
         <?= csrf_token_input() ?>
 
         <div class="card-body">
@@ -41,7 +41,8 @@
         </div>
 
         <div class="card-footer">
-            <button type="submit" class="btn btn-outline-dark mr-2 loading"><?= __('update') ?></button>
+            <button type="submit" class="btn btn-outline-dark loading"><?= __('update') ?></button>
+            <button type="reset" class="btn btn-outline-dark mx-2"><?= __('reset') ?></button>
             <a href="<?= absolute_url('admin/resources/roles') ?>" class="btn btn-outline-dark"><?= __('cancel') ?></a>
         </div>
     </form>

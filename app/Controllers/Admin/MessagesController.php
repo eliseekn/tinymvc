@@ -4,11 +4,9 @@ namespace App\Controllers\Admin;
 
 use App\Helpers\Auth;
 use App\Helpers\Activity;
-use Framework\Http\Redirect;
 use Framework\Support\Alert;
 use App\Helpers\ReportHelper;
 use Framework\Routing\Controller;
-use App\Database\Models\UsersModel;
 use App\Database\Models\MessagesModel;
 
 class MessagesController extends Controller
@@ -45,8 +43,8 @@ class MessagesController extends Controller
         ]);
 
         MessagesModel::update(['sender_status' => 'read'])->where('id', $id)->persist();
-        Activity::log('Message sent to ' . UsersModel::findSingle($this->request->recipient)->email);
-        Redirect::back()->withToast(__('message_sent'))->success();
+        Activity::log(__('message_sent'));
+        $this->redirect()->withToast(__('message_sent'))->success();
 	}
 	
 	/**
@@ -63,8 +61,8 @@ class MessagesController extends Controller
         ]);
 
         MessagesModel::update(['sender_status' => 'read'])->where('id', $id)->persist();
-        Activity::log('Message replied to ' . UsersModel::findSingle($this->request->recipient)->email);
-        Redirect::back()->withToast(__('message_sent'))->success();
+        Activity::log(__('message_sent'));
+        $this->redirect()->withToast(__('message_sent'))->success();
 	}
 	
 	/**
@@ -76,12 +74,12 @@ class MessagesController extends Controller
 	public function update(int $id): void
 	{
         if (!MessagesModel::find($id)->exists()) {
-            Redirect::back()->withToast(__('message_not_found'))->error();
+            $this->redirect()->withToast(__('message_not_found'))->error();
         }
 
         MessagesModel::update(['recipient_status' => 'read'])->where('id', $id)->persist();
-        Activity::log('Message marked as read');
-        Redirect::back()->withToast(__('message_updated'))->success();
+        Activity::log(__('message_updated'));
+        $this->redirect()->withToast(__('message_updated'))->success();
 	}
 
 	/**
@@ -94,18 +92,18 @@ class MessagesController extends Controller
 	{
         if (!is_null($id)) {
 			if (!MessagesModel::find($id)->exists()) {
-				Redirect::back()->withToast(__('message_not_found'))->error();
+				$this->redirect()->withToast(__('message_not_found'))->error();
 			}
 	
             MessagesModel::deleteWhere('id', $id);
-            Activity::log('Message deleted');
-            Redirect::back()->withToast(__('message_deleted'))->success();
+            Activity::log(__('message_deleted'));
+            $this->redirect()->withToast(__('message_deleted'))->success();
 		} else {
 			foreach (explode(',', $this->request->items) as $id) {
 				MessagesModel::deleteWhere('id', $id);
 			}
             
-            Activity::log('Messages deleted');
+            Activity::log(__('messages_deleted'));
 			Alert::toast(__('messages_deleted'))->success();
 		}
 	}
@@ -117,12 +115,9 @@ class MessagesController extends Controller
 	 */
     public function export(): void
 	{
-        $date_start = $this->request->has('date_start') ? $this->request->date_start : null;
-        $date_end = $this->request->has('date_end') ? $this->request->date_end : null;
-
-		if (!is_null($date_start) && !is_null($date_end)) {
+        if ($this->request->has('date_start') && $this->request->has('date_end')) {
 			$messages = MessagesModel::select()
-                ->whereBetween('created_at', $date_start, $date_end)
+                ->whereBetween('created_at', $this->request->date_start, $this->request->date_end)
                 ->orderDesc('created_at')
                 ->all();
 		} else {
@@ -131,7 +126,7 @@ class MessagesController extends Controller
         
         $filename = 'messages_' . date('Y_m_d') . '.' . $this->request->file_type;
 
-        Activity::log('Messages exported');
+        Activity::log(__('data_exported'));
 
 		ReportHelper::export($filename, $messages, [
 			'sender' => __('sender'), 

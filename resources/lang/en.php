@@ -14,7 +14,7 @@
     'reset_password' => 'Reset password',
     'submit' => 'Submit',
     'no_account' => "Don't have an account?",
-    'have_account' => 'Already have an account?',
+    'have_account' => 'Already registered?',
     'signup_here' => 'Sign up here',
     'login_here' => 'Log in here',
     'signup' => 'Sign up',
@@ -36,6 +36,8 @@
     'sender' => 'Sender',
     'recipient' => 'Recipient',
     'reply' => 'Reply',
+    'medias' => 'Medias',
+    'media' => 'Media',
 
     //navabar
     'mark_as_read' => 'Mark as read',
@@ -57,7 +59,7 @@
     'this_year' => 'This year',
     'this_week' => 'This week',
     'last_4_weeks' => 'Last 4 weeks',
-    'last_3_years' => 'Last 3 years',
+    'last_5_years' => 'Last 5 years',
 
     //settings
     'profile' => 'Profile',
@@ -145,6 +147,7 @@
     'import_file_type_error' => 'File type not allowed',
     'import_data_error' => 'Failed to import data',
     'data_imported' => 'Data imported successfully',
+    'data_exported' => 'Data exported successfully',
     'account_not_activated' => 'Account not activated.',
     'not_logged_error' => 'Log in before access this page',
     'no_access_permission' => 'You do not have permission to access this page',
@@ -160,6 +163,9 @@
     'expired_password_reset_link' => 'Password reset link expired',
     'password_resetted' => 'Password resetted succesfully',
     'login_failed' => 'Incorrect email address or password',
+    'login_attempts_failed' => 'Log in attempts failed',
+    'login_attempts_succeeded' => 'Log in attempts succeeded',
+    'logged_out' => 'Logged out',
     'auth_attempts_exceeded' => 'Max authentication attempts exceeded. Please retry in ' . config('security.auth.unlock_timeout') . ' minute(s)',
     'activity_not_found' => 'Activity not found',
     'activity_deleted' => 'Activity deleted successfully',
@@ -188,9 +194,11 @@
     'mark_items_as_read' => 'Are you sure you want to mark all selected notifications as read?',
     'yes' => 'Yes',
     'no' => 'No',
+    'no_data_found' => 'No data found',
+    'items_not_checked' => 'You must check at least one item',
 
     //modals
-    'upload_modal_title' => 'Upload',
+    'upload' => 'Upload',
     'file_type' => 'File type',
     'period' => 'Period',
     'optional' => 'optional',

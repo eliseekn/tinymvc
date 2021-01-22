@@ -3,6 +3,7 @@
 namespace App\Database\Seeds;
 
 use Framework\Database\Seeder;
+use App\Database\Models\RolesModel;
 
 class RoleSeed
 {     
@@ -22,20 +23,20 @@ class RoleSeed
     {
         Seeder::insert(self::$table, [
             'title' => 'Administrator',
-            'slug' => 'administrator',
+            'slug' => RolesModel::ROLES[0],
             'description' => 'Can access administration dashboard and has all permissions'
         ]);
 
         Seeder::insert(self::$table, [
             'title' => 'Customer',
-            'slug' => 'customer',
-            'description' => 'Can access administration dashboard'
+            'slug' => RolesModel::ROLES[1],
+            'description' => 'Can access administration dashboard but has not all permissions'
         ]);
 
         Seeder::insert(self::$table, [
             'title' => 'Visitor',
-            'slug' => 'visitor',
-            'description' => 'Can only view website pages'
+            'slug' => RolesModel::ROLES[2],
+            'description' => 'Can only view website pages and post comments'
         ]);
     }
 }

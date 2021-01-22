@@ -1,1 +1,2 @@
 - migrate to bootstrap 5
+- add sqlite3 option to db options

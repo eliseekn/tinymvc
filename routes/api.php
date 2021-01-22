@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright 2021 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -34,7 +34,7 @@ Route::get('api/notifications', [
             $notification->created_at = time_elapsed(DateHelper::format($notification->created_at)->timestamp(), 1);
         }
 
-        Response::json(['notifications' => $notifications]);
+        Response::send(['notifications' => $notifications], true);
     }
 ]);
 
@@ -42,7 +42,7 @@ Route::get('api/notifications', [
 Route::get('api/metrics/users/{str}/?{num}?', [
     'handler' => function (string $trends, int $interval = 0) {
         $metrics = UsersModel::metrics('id', Metrics::COUNT, $trends, $interval);
-        Response::json(['metrics' => json_encode($metrics)]);
+        Response::send(['metrics' => json_encode($metrics)], true);
     }
 ]);
 
@@ -55,14 +55,14 @@ Route::get('api/messages', [
             $message->created_at = time_elapsed(DateHelper::format($message->created_at)->timestamp(), 1);
         }
 
-        Response::json(['messages' => $messages]);
+        Response::send(['messages' => $messages], true);
     }
 ]);
 
 //get users list
 Route::get('api/users', [
     'handler' => function () {
-        Response::json(['users' => UsersModel::find('!=', Auth::get()->id)->all()]);
+        Response::send(['users' => UsersModel::find('!=', Auth::get()->id)->all()], true);
     }
 ]);
 
@@ -72,6 +72,6 @@ Route::get('api/translations', [
         $lang = Auth::get()->lang;
         require 'resources/lang/' . $lang . '.php';
 
-        Response::json(['translations' => $config]);
+        Response::send(['translations' => $config], true);
     }
 ]);

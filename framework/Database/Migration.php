@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright 2021 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -14,9 +14,9 @@ namespace Framework\Database;
 class Migration
 {
     /**
-	 * @var \Framework\Database\Builder $query
+	 * @var \Framework\Database\Builder $builder
 	 */
-    protected static $query;
+    protected static $builder;
     
     /**
      * generate CREATE TABLE query 
@@ -26,7 +26,7 @@ class Migration
      */
     public static function table(string $name): self
     {
-        self::$query = Builder::table($name);
+        self::$builder = Builder::table($name);
         return new self();
     }
 
@@ -40,7 +40,7 @@ class Migration
      */
     public function addInt(string $name, int $size = 11, bool $unsigned = false): self 
     {
-        self::$query->column($name, "INT($size)" . ($unsigned ? ' UNSIGNED' : ''));
+        self::$builder->column($name, "INT($size)" . ($unsigned ? ' UNSIGNED' : ''));
         return $this;
     }
 
@@ -54,7 +54,7 @@ class Migration
      */
     public function addTinyInt(string $name, int $size = 4, bool $unsigned = false): self 
     {
-        self::$query->column($name, "TINYINT($size)" . ($unsigned ? ' UNSIGNED' : ''));
+        self::$builder->column($name, "TINYINT($size)" . ($unsigned ? ' UNSIGNED' : ''));
         return $this;
     }
 
@@ -68,7 +68,7 @@ class Migration
      */
     public function addSmallInt(string $name, int $size = 6, bool $unsigned = false): self 
     {
-        self::$query->column($name, "SMALLINT($size)" . ($unsigned ? ' UNSIGNED' : ''));
+        self::$builder->column($name, "SMALLINT($size)" . ($unsigned ? ' UNSIGNED' : ''));
         return $this;
     }
 
@@ -82,7 +82,7 @@ class Migration
      */
     public function addMediumInt(string $name, int $size = 8, bool $unsigned = false): self 
     {
-        self::$query->column($name, "MEDIUMINT($size)" . ($unsigned ? ' UNSIGNED' : ''));
+        self::$builder->column($name, "MEDIUMINT($size)" . ($unsigned ? ' UNSIGNED' : ''));
         return $this;
     }
 
@@ -96,7 +96,7 @@ class Migration
      */
     public function addBigInt(string $name, int $size = 20, bool $unsigned = false): self 
     {
-        self::$query->column($name, "BIGINT($size)" . ($unsigned ? ' UNSIGNED' : ''));
+        self::$builder->column($name, "BIGINT($size)" . ($unsigned ? ' UNSIGNED' : ''));
         return $this;
     }
 
@@ -110,7 +110,7 @@ class Migration
      */
     public function addFloat(string $name, int $size = 10, int $precision = 2): self 
     {
-        self::$query->column($name, "FLOAT($size, $precision)");
+        self::$builder->column($name, "FLOAT($size, $precision)");
         return $this;
     }
 
@@ -124,7 +124,7 @@ class Migration
      */
     public function addDouble(string $name, int $size = 10, int $precision = 2): self 
     {
-        self::$query->column($name, "DOUBLE($size, $precision)");
+        self::$builder->column($name, "DOUBLE($size, $precision)");
         return $this;
     }
 
@@ -138,7 +138,7 @@ class Migration
      */
     public function addDecimal(string $name, int $size = 10, int $precision = 2): self 
     {
-        self::$query->column($name, "DECIMAL($size, $precision)");
+        self::$builder->column($name, "DECIMAL($size, $precision)");
         return $this;
     }
 
@@ -150,7 +150,7 @@ class Migration
      */
     public function addChar(string $name): self 
     {
-        self::$query->column($name, 'CHAR(1)');
+        self::$builder->column($name, 'CHAR(1)');
         return $this;
     }
 
@@ -163,7 +163,7 @@ class Migration
      */
     public function addString(string $name, int $size = 255): self 
     {
-        self::$query->column($name, "VARCHAR($size)");
+        self::$builder->column($name, "VARCHAR($size)");
         return $this;
     }
 
@@ -175,7 +175,7 @@ class Migration
      */
     public function addText(string $name): self 
     {
-        self::$query->column($name, 'TEXT');
+        self::$builder->column($name, 'TEXT');
         return $this;
     }
 
@@ -187,7 +187,7 @@ class Migration
      */
     public function addTinyText(string $name): self 
     {
-        self::$query->column($name, 'TINYTEXT');
+        self::$builder->column($name, 'TINYTEXT');
         return $this;
     }
 
@@ -199,7 +199,7 @@ class Migration
      */
     public function addMediumText(string $name): self 
     {
-        self::$query->column($name, 'MEDIUMTEXT');
+        self::$builder->column($name, 'MEDIUMTEXT');
         return $this;
     }
 
@@ -211,7 +211,7 @@ class Migration
      */
     public function addLongText(string $name): self 
     {
-        self::$query->column($name, 'LONGTEXT');
+        self::$builder->column($name, 'LONGTEXT');
         return $this;
     }
 
@@ -223,7 +223,7 @@ class Migration
      */
     public function addBlob(string $name): self 
     {
-        self::$query->column($name, 'BLOB');
+        self::$builder->column($name, 'BLOB');
         return $this;
     }
 
@@ -235,7 +235,7 @@ class Migration
      */
     public function addTinyBlob(string $name): self 
     {
-        self::$query->column($name, 'TINYBLOB');
+        self::$builder->column($name, 'TINYBLOB');
         return $this;
     }
 
@@ -247,7 +247,7 @@ class Migration
      */
     public function addMediumBlob(string $name): self 
     {
-        self::$query->column($name, 'MEDIUMBLOB');
+        self::$builder->column($name, 'MEDIUMBLOB');
         return $this;
     }
 
@@ -259,7 +259,7 @@ class Migration
      */
     public function addLongBlob(string $name): self 
     {
-        self::$query->column($name, 'LONGBLOB');
+        self::$builder->column($name, 'LONGBLOB');
         return $this;
     }
 
@@ -272,7 +272,7 @@ class Migration
      */
     public function addEnum(string $name, array $values): self 
     {
-        self::$query->column($name, 'ENUM(' . implode(',', $values) . ')');
+        self::$builder->column($name, 'ENUM(' . implode(',', $values) . ')');
         return $this;
     }
 
@@ -284,7 +284,7 @@ class Migration
      */
     public function addDate(string $name): self 
     {
-        self::$query->column($name, 'DATE');
+        self::$builder->column($name, 'DATE');
         return $this;
     }
 
@@ -296,7 +296,7 @@ class Migration
      */
     public function addTime(string $name): self 
     {
-        self::$query->column($name, 'TIME');
+        self::$builder->column($name, 'TIME');
         return $this;
     }
     
@@ -308,7 +308,7 @@ class Migration
      */
     public function addDateTime(string $name): self 
     {
-        self::$query->column($name, 'DATETIME');
+        self::$builder->column($name, 'DATETIME');
         return $this;
     }
 
@@ -320,7 +320,7 @@ class Migration
      */
     public function addTimestamp(string $name): self 
     {
-        self::$query->column($name, 'TIMESTAMP');
+        self::$builder->column($name, 'TIMESTAMP');
         return $this;
     }
 
@@ -332,7 +332,7 @@ class Migration
      */
     public function addYear(string $name): self 
     {
-        self::$query->column($name, 'YEAR');
+        self::$builder->column($name, 'YEAR');
         return $this;
     }
 
@@ -361,7 +361,7 @@ class Migration
             $name = 'fk_' . $column;
         }
 
-		self::$query->foreignKey($name, $column);
+		self::$builder->foreignKey($name, $column);
         return $this;
 	}
 	
@@ -374,7 +374,7 @@ class Migration
 	 */
 	public function references(string $table, string $column): self
 	{
-		self::$query->references($table, $column);
+		self::$builder->references($table, $column);
         return $this;
 	}
 	
@@ -385,7 +385,7 @@ class Migration
 	 */
 	public function onUpdate(): self
 	{
-		self::$query->onUpdate();
+		self::$builder->onUpdate();
         return $this;
 	}
 	
@@ -396,7 +396,7 @@ class Migration
 	 */
 	public function onDelete(): self
 	{
-		self::$query->onDelete();
+		self::$builder->onDelete();
         return $this;
 	}
 	
@@ -407,7 +407,7 @@ class Migration
 	 */
 	public function cascade(): self
 	{
-		self::$query->cascade();
+		self::$builder->cascade();
         return $this;
 	}
 	
@@ -418,7 +418,7 @@ class Migration
 	 */
 	public function setNull(): self
 	{
-		self::$query->setNull();
+		self::$builder->setNull();
         return $this;
 	}
     
@@ -429,7 +429,7 @@ class Migration
      */
     public function primaryKey(): self
     {
-        self::$query->primaryKey();
+        self::$builder->primaryKey();
         return $this;
     }
     
@@ -440,7 +440,7 @@ class Migration
      */
     public function null(): self
     {
-        self::$query->null();
+        self::$builder->null();
         return $this;
     }
 
@@ -451,7 +451,7 @@ class Migration
      */
     public function unique(): self
     {
-        self::$query->unique();
+        self::$builder->unique();
         return $this;
     }
 
@@ -463,7 +463,7 @@ class Migration
      */
     public function default($default) : self
     {
-        self::$query->default($default);
+        self::$builder->default($default);
         return $this;
     }
     
@@ -474,7 +474,7 @@ class Migration
      */
     public function create()
     {
-        self::$query->create()->execute();
+        self::$builder->create()->execute();
     }
 
     /**

@@ -3,7 +3,7 @@
 <?php
 
 /**
- * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright 2021 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -19,37 +19,38 @@ require_once 'config/env.php';
 $options = getopt('', [
     'help', 
     'make',
-    'db',
+    'database',
     'seed::',
     'schema::',
     'query::',
     'fetch::',
-    'execute',
-    'delete', 
-    'reset',
+    'db::',
     'controller::',
     'namespace::',
     'model::', 
     'migration::', 
     'request::', 
     'middleware::', 
+    'execute',
+    'delete', 
+    'reset',
     'admin',
     'm'
 ]);
 
 //handle command line arguments
 if (
-    array_key_exists('db', $options) &&
+    array_key_exists('database', $options) &&
     !array_key_exists('help', $options) &&
     !array_key_exists('make', $options)
 ) {
-    unset($options['db']);
+    unset($options['database']);
     \Framework\Console\Database::handle($options);
 }
 
 else if (
     array_key_exists('make', $options) &&
-    !array_key_exists('db', $options) &&
+    !array_key_exists('database', $options) &&
     !array_key_exists('help', $options)
 ) {
     unset($options['make']);
@@ -59,7 +60,7 @@ else if (
 else {
     $help_message = '[+] Command line arguments:' . PHP_EOL;
     $help_message .= PHP_EOL;
-    $help_message .= '  --db (Manage database operations)' . PHP_EOL;
+    $help_message .= '  --database (Manage database operations)' . PHP_EOL;
     $help_message .= '      --schema=posts                          Create posts database with utf8 encoding character' . PHP_EOL;
     $help_message .= '      --schema=posts,comments                 Create posts and comments databases' . PHP_EOL;
     $help_message .= '      --schema=posts --delete                 Delete posts database' . PHP_EOL;
@@ -77,18 +78,19 @@ else {
     $help_message .= '      --seed=user                             Insert user seed only' . PHP_EOL;
     $help_message .= '      --seed=user,comment                     Insert user and comment seeds only' . PHP_EOL;
     $help_message .= PHP_EOL;
-    $help_message .= "      --query='sql query' --fetch             Execute SQL query and fetch results" . PHP_EOL;
-    $help_message .= "      --query='sql query' --execute           Execute SQL query only" . PHP_EOL;
+    $help_message .= "      --query='query' --fetch                 Execute SQL query and fetch results" . PHP_EOL;
+    $help_message .= "      --query='query' --execute               Execute SQL query only" . PHP_EOL;
+    $help_message .= "      --query='query' --execute --db=tinymvc  Execute SQL query from the database 'tinmvc'" . PHP_EOL;
     $help_message .= PHP_EOL;
     $help_message .= '  --make (Manage resources build operations)' . PHP_EOL;
     $help_message .= '      --controller=posts                      Create posts controller' . PHP_EOL;
     $help_message .= '      --controller=posts --namespace=blog     Create posts controller in app\Controllers\Blog folder' . PHP_EOL;
-    $help_message .= '      --controller=posts --admin         Create posts controller and admin resources' . PHP_EOL;
+    $help_message .= '      --controller=posts --admin              Create posts controller and admin resources' . PHP_EOL;
     $help_message .= PHP_EOL;
     $help_message .= '      --model=posts                           Create posts model' . PHP_EOL;
     $help_message .= PHP_EOL;
     $help_message .= '      --migration=posts                       Create posts migration' . PHP_EOL;
-    $help_message .= '      --migration=posts -m                    Create posts migration and model' . PHP_EOL;
+    $help_message .= '      --migration=posts --m                   Create posts migration and model' . PHP_EOL;
     $help_message .= PHP_EOL;
     $help_message .= '      --seed=post                             Create post seed' . PHP_EOL;
     $help_message .= PHP_EOL;

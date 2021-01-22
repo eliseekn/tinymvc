@@ -34,7 +34,7 @@
         </div>
 
         <p class="font-weight-bold">Rendering</p>
-        <p>You can render a view template by using the <span class="bg-light text-danger">render</span> method inside a <span class="bg-light text-danger">Controller</span> class :</p>
+        <p>You can render a view template by using the <span class="bg-light text-danger">render</span> method inside a <span class="bg-light text-danger">Controller</span> :</p>
 
         <div class="card mb-4">
             <pre class="m-0"><code class="p-3">$this->render(string $view, array $data = [], int $status_code = 200);</code></pre>

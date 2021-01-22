@@ -9,7 +9,7 @@
 <div class="card shadow-sm">
     <div class="card-header"><?= __('edit') ?></div>
 
-    <form method="post" action="<?= absolute_url('admin/resources/users/update/' . $user->id) ?>">
+    <form method="post" action="<?= absolute_url('admin/resources/users/update', $user->id) ?>">
         <?= csrf_token_input() ?>
 
         <div class="card-body">
@@ -103,7 +103,8 @@
         </div>
 
         <div class="card-footer">
-            <button type="submit" class="btn btn-outline-dark mr-2 loading"><?= __('update') ?></button>
+            <button type="submit" class="btn btn-outline-dark loading"><?= __('update') ?></button>
+            <button type="reset" class="btn btn-outline-dark mx-2"><?= __('reset') ?></button>
             <a href="<?= absolute_url('admin/resources/users') ?>" class="btn btn-outline-dark"><?= __('cancel') ?></a>
         </div>
     </form>

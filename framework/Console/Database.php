@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright 2021 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -10,7 +10,7 @@ namespace Framework\Console;
 
 use Exception;
 use Framework\Support\Storage;
-use Framework\Database\DBConnection;
+use Framework\Database\DB;
 
 /**
  * Manage migrations and seeds from command line interface
@@ -61,7 +61,8 @@ class Database
             !array_key_exists('schema', $options) &&
             !array_key_exists('query', $options) &&
             !array_key_exists('fetch', $options) &&
-            !array_key_exists('execute', $options)
+            !array_key_exists('execute', $options) &&
+            !array_key_exists('db', $options)
         ) {
             echo '[...] Migrating tables' . PHP_EOL;
 
@@ -114,7 +115,8 @@ class Database
             !array_key_exists('schema', $options) &&
             !array_key_exists('query', $options) &&
             !array_key_exists('fetch', $options) &&
-            !array_key_exists('execute', $options)
+            !array_key_exists('execute', $options) &&
+            !array_key_exists('db', $options)
         ) {
             echo '[...] Migrating tables' . PHP_EOL;
 
@@ -209,7 +211,8 @@ class Database
             !array_key_exists('schema', $options) &&
             !array_key_exists('query', $options) &&
             !array_key_exists('fetch', $options) &&
-            !array_key_exists('execute', $options)
+            !array_key_exists('execute', $options) &&
+            !array_key_exists('db', $options)
         ) {
             echo '[...] Reseting tables' . PHP_EOL;
 
@@ -304,7 +307,8 @@ class Database
             !array_key_exists('schema', $options) &&
             !array_key_exists('query', $options) &&
             !array_key_exists('fetch', $options) &&
-            !array_key_exists('execute', $options)
+            !array_key_exists('execute', $options) &&
+            !array_key_exists('db', $options)
         ) {
             echo '[...] Reseting tables' . PHP_EOL;
 
@@ -357,7 +361,8 @@ class Database
             !array_key_exists('schema', $options) &&
             !array_key_exists('query', $options) &&
             !array_key_exists('fetch', $options) &&
-            !array_key_exists('execute', $options)
+            !array_key_exists('execute', $options) &&
+            !array_key_exists('db', $options)
         ) {
             echo '[...] Deleting tables' . PHP_EOL;
 
@@ -410,7 +415,8 @@ class Database
             !array_key_exists('schema', $options) &&
             !array_key_exists('query', $options) &&
             !array_key_exists('fetch', $options) &&
-            !array_key_exists('execute', $options)
+            !array_key_exists('execute', $options) &&
+            !array_key_exists('db', $options)
         ) {
             echo '[...] Inserting seeds' . PHP_EOL;
 
@@ -463,7 +469,8 @@ class Database
             !array_key_exists('reset', $options) &&
             !array_key_exists('query', $options) &&
             !array_key_exists('fetch', $options) &&
-            !array_key_exists('execute', $options)
+            !array_key_exists('execute', $options) &&
+            !array_key_exists('db', $options)
         ) {
             echo '[...] Creating databases' . PHP_EOL;
 
@@ -471,7 +478,7 @@ class Database
                 $database = $options['schema'];
                 
                 try {
-                    DBConnection::getInstance()->executeQuery("CREATE DATABASE IF NOT EXISTS $database CHARACTER SET " . config('db.charset') . " COLLATE " . config('db.collation'));
+                    DB::connection()->query("CREATE DATABASE IF NOT EXISTS $database CHARACTER SET " . config('db.charset') . " COLLATE " . config('db.collation'));
                     echo '[+] ' . $database . ' created successfully' . PHP_EOL;
                 } catch(Exception $e) {
                     echo '[!] ' . $e->getMessage();
@@ -481,7 +488,7 @@ class Database
 
                 foreach ($db as $database) {
                     try {
-                        DBConnection::getInstance()->executeQuery("CREATE DATABASE IF NOT EXISTS $database CHARACTER SET " . config('db.charset') . " COLLATE " . config('db.collation'));
+                        DB::connection()->query("CREATE DATABASE IF NOT EXISTS $database CHARACTER SET " . config('db.charset') . " COLLATE " . config('db.collation'));
                         echo '[+] ' . $database . ' created successfully' . PHP_EOL;
                     } catch(Exception $e) {
                         echo '[!] ' . $e->getMessage();
@@ -498,7 +505,8 @@ class Database
             !array_key_exists('reset', $options) &&
             !array_key_exists('query', $options) &&
             !array_key_exists('fetch', $options) &&
-            !array_key_exists('execute', $options)
+            !array_key_exists('execute', $options) &&
+            !array_key_exists('db', $options)
         ) {
             echo '[...] Deleting databases' . PHP_EOL;
 
@@ -506,7 +514,7 @@ class Database
                 $database = $options['schema'];
                 
                 try {
-                    DBConnection::getInstance()->executeQuery("DROP DATABASE IF EXISTS $database");
+                    DB::connection()->query("DROP DATABASE IF EXISTS $database");
                     echo '[+] ' .$database . ' deleted successfully' . PHP_EOL;
                 } catch(Exception $e) {
                     echo '[!] ' . $e->getMessage();
@@ -516,7 +524,7 @@ class Database
 
                 foreach ($db as $database) {
                     try {
-                        DBConnection::getInstance()->executeQuery("DROP DATABASE IF EXISTS $database");
+                        DB::connection()->query("DROP DATABASE IF EXISTS $database");
                         echo '[+] ' .$database . ' deleted successfully' . PHP_EOL;
                     } catch(Exception $e) {
                         echo '[!] ' . $e->getMessage();
@@ -533,17 +541,20 @@ class Database
             !array_key_exists('migration', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('delete', $options) &&
-            !array_key_exists('reset', $options)
+            !array_key_exists('reset', $options) &&
+            !array_key_exists('db', $options)
         ) {
             echo '[...] Executing MySQL query' . PHP_EOL;
 
             try {
-                $stmt = DBConnection::getInstance()->executeQuery($options['query']);
+                $stmt = DB::connection()->query($options['query']);
             } catch(Exception $e) {
                 echo '[!] ' . $e->getMessage();
             }
 
+            echo '<pre>';
             print_r($stmt->fetchAll());
+            echo '</pre>';
         }
 
         else if (
@@ -554,12 +565,57 @@ class Database
             !array_key_exists('migration', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('delete', $options) &&
+            !array_key_exists('reset', $options) &&
+            !array_key_exists('db', $options)
+        ) {
+            echo '[...] Executing MySQL query' . PHP_EOL;
+
+            try {
+                DB::connection()->query($options['query']);
+            } catch(Exception $e) {
+                echo '[!] ' . $e->getMessage();
+            }
+        }
+        
+        else if (
+            array_key_exists('query', $options) &&
+            array_key_exists('fetch', $options) &&
+            array_key_exists('db', $options) &&
+            !array_key_exists('execute', $options) &&
+            !array_key_exists('schema', $options) &&
+            !array_key_exists('migration', $options) &&
+            !array_key_exists('seed', $options) &&
+            !array_key_exists('delete', $options) &&
             !array_key_exists('reset', $options)
         ) {
             echo '[...] Executing MySQL query' . PHP_EOL;
 
             try {
-                DBConnection::getInstance()->executeQuery($options['query']);
+                $stmt = DB::connection($options['db'])->query($options['query']);
+            } catch(Exception $e) {
+                echo '[!] ' . $e->getMessage();
+            }
+
+            echo '<pre>';
+            print_r($stmt->fetchAll());
+            echo '</pre>';
+        }
+
+        else if (
+            array_key_exists('query', $options) &&
+            array_key_exists('execute', $options) &&
+            array_key_exists('db', $options) &&
+            !array_key_exists('fetch', $options) &&
+            !array_key_exists('schema', $options) &&
+            !array_key_exists('migration', $options) &&
+            !array_key_exists('seed', $options) &&
+            !array_key_exists('delete', $options) &&
+            !array_key_exists('reset', $options)
+        ) {
+            echo '[...] Executing MySQL query' . PHP_EOL;
+
+            try {
+                DB::connection($options['db'])->query($options['query']);
             } catch(Exception $e) {
                 echo '[!] ' . $e->getMessage();
             }

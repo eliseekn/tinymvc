@@ -4,6 +4,7 @@ namespace App\Database\Seeds;
 
 use Framework\Database\Seeder;
 use Framework\Support\Encryption;
+use App\Database\Models\RolesModel;
 
 class UserSeed
 {     
@@ -25,7 +26,7 @@ class UserSeed
             'name' => 'admin',
             'email' => 'admin@mail.com',
             'password' => Encryption::hash('admin'),
-            'role' => 'administrator',
+            'role' => RolesModel::ROLES[0],
             'active' => 1,
             'country' => 209,
             'company' => 'TinyMVC',
@@ -36,7 +37,7 @@ class UserSeed
             'name' => 'customer',
             'email' => 'customer@mail.com',
             'password' => Encryption::hash('customer'),
-            'role' => 'customer',
+            'role' => RolesModel::ROLES[1],
             'active' => 1,
             'country' => 209,
             'company' => 'TinyMVC',
@@ -47,7 +48,7 @@ class UserSeed
             'name' => 'visitor',
             'email' => 'visitor@mail.com',
             'password' => Encryption::hash('visitor'),
-            'role' => 'visitor',
+            'role' => RolesModel::ROLES[2],
             'active' => 1,
             'country' => 209,
             'company' => 'TinyMVC',

@@ -14,36 +14,38 @@
     'reset_password' => 'Réinitialiser le mote de passe',
     'submit' => 'Envoyer',
     'no_account' => 'Pas de compte?',
-    'have_account' => 'Déjà un compte?',
+    'have_account' => 'Déjà inscris?',
     'signup_here' => 'Inscrivez-vous ici',
     'login_here' => 'Connectez-vous ici',
     'signup' => 'Inscription',
-    'reset_password_instructions' => "Veuillez entrer l'adresse email associé à ce compte. Nous vous y enverrons un lien afin de réinitialiser votre de mote de passe.",
-    'signup_failed' => "Echech de l'inscription",
+    'reset_password_instructions' => "Veuillez entrer l'adresse email associée à ce compte. Nous vous y enverrons un lien afin de réinitialiser votre de mote de passe.",
+    'signup_failed' => "Echec de l'inscription",
     'welcome' => 'Bienvenue',
 
     //sidebar
     'dashboard' => 'Tableau de bord',
-    'roles' => 'Permissions',
+    'roles' => 'Rôles',
     'users' => 'Utilisateurs',
     'resources' => 'Ressources',
     'resource' => 'Ressource',
     'activities' => 'Activités',
     'builder' => 'Constructeur',
     'migrations' => 'Migrations',
-
-    //navabar
-    'mark_as_read' => 'Marquer comme lu',
-    'mark_all_as_read' => 'Mark tout comme lu',
-    'view_all' => 'Voir tout',
-    'settings' => 'Paramètres',
-    'logout' => 'Déconnexion',
-    'notifications' => 'Notifications',
     'messages' => 'Messages',
     'message' => 'Message',
     'sender' => 'Expéditeur',
     'recipient' => 'Destinataire',
     'reply' => 'Répondre',
+    'medias' => 'Médias',
+    'media' => 'Média',
+
+    //navabar
+    'mark_as_read' => 'Marquer comme lu',
+    'mark_all_as_read' => 'Marquer tout comme lu',
+    'view_all' => 'Voir tout',
+    'settings' => 'Paramètres',
+    'logout' => 'Déconnexion',
+    'notifications' => 'Notifications',
 
     //dashboard
     'total_users' => 'Total utilisateurs',
@@ -57,7 +59,7 @@
     'this_year' => 'Cette année',
     'this_week' => 'Cette semaine',
     'last_4_weeks' => 'Les 4 dernières semaines',
-    'last_3_years' => 'Les 3 dernières années',
+    'last_5_years' => 'Les 5 dernières années',
 
     //settings
     'profile' => 'Profil',
@@ -110,7 +112,7 @@
     'ip_address' => 'Adresse IP',
     'action' => 'Action',
     'target' => 'Cible',
-    'back' => 'Back',
+    'back' => 'Retour',
 
     //pagination
     'previous' => 'Précédent',
@@ -145,6 +147,7 @@
     'import_file_type_error' => 'Type de fichier non autorisé',
     'import_data_error' => "Echec de l'importation des données",
     'data_imported' => 'Données importées avec succès',
+    'data_exported' => 'Données exportées avec succès',
     'account_not_activated' => "Compte pas encore activé.",
     'not_logged_error' => 'Connectez-vous avant de pouvoir accéder à cette page',
     'no_access_permission' => "Vous n'avez pas les droits d'accès à cette page",
@@ -160,6 +163,9 @@
     'expired_password_reset_link' => 'Lien de réinitialisation de mot de passe expiré',
     'password_resetted' => 'Mot de passe réinitialisé avec succès',
     'login_failed' => 'Mot de passe ou adresse email incorrecte',
+    'login_attempts_failed' => 'Tentative de connexion échouée',
+    'login_attempts_succeeded' => 'Tentative de connexion réussie',
+    'logged_out' => 'Déconnecté',
     'auth_attempts_exceeded' => "Nombre maximum de tentatives de connexions dépassé. Veuillez réessayez dans " . config('security.auth.unlock_timeout') . " minute(s)",
     'activity_not_found' => 'Activité non trouvée',
     'activity_deleted' => 'Activité supprimée avec succès',
@@ -188,9 +194,11 @@
     'mark_items_as_read' => 'Etes-vous sûr de vouloir marquer les notifications sélectionnées comme lues?',
     'yes' => 'Oui',
     'no' => 'Non',
+    'no_data_found' => 'Aucune donnée disponible',
+    'items_not_checked' => 'Vous devez sélectionner au moins un élément',
 
     //modals
-    'upload_modal_title' => 'Importer',
+    'upload' => 'Importer',
     'file_type' => 'Type de fichier',
     'period' => 'Période',
     'optional' => 'optionnel',

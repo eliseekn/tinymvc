@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright 2021 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -23,9 +23,9 @@ class Model
     public static $table = '';
 
     /**
-     * @var \Framework\Database\Builder
+     * @var \Framework\Database\Builder $builder
      */
-    protected static $query;
+    protected static $builder;
 
     /**
      * select rows
@@ -35,7 +35,7 @@ class Model
      */
     public static function select(array $columns = ['*']): self
     {
-        self::$query = Builder::select(implode(',', $columns))->from(static::$table);
+        self::$builder = Builder::select(implode(',', $columns))->from(static::$table);
         return new self();
     }
     
@@ -43,7 +43,7 @@ class Model
      * retrieves single row
      *
      * @param  array $columns
-     * @return void
+     * @return mixed
      */
     public static function selectSingle(array $columns = ['*'])
     {
@@ -70,7 +70,7 @@ class Model
      */
     public static function selectRaw(string $query, array $args = []): self
     {
-        self::$query = Builder::selectRaw($query, $args);
+        self::$builder = Builder::selectRaw($query, $args);
         return new self();
     }
     
@@ -174,6 +174,18 @@ class Model
     }
     
     /**
+     * generate or search query
+     *
+     * @param  string $column
+	 * @param  mixed $value
+     * @return \Framework\Database\Model
+     */
+    public static function orSearch(string $column, $value): self
+    {
+        return self::select()->or($column, 'like', $value);
+    }
+    
+    /**
      * insert new row
      *
      * @param  array $items
@@ -182,7 +194,7 @@ class Model
     public static function insert(array $items): int
     {
         Builder::insert(static::$table, $items)->execute();
-        return DBConnection::getInstance()->lastInsertedId();
+        return DB::connection(config('db.name'))->lastInsertedId();
     }
     
     /**
@@ -193,7 +205,7 @@ class Model
      */
     public static function update(array $items): self
     {
-        self::$query = Builder::update(static::$table)->set($items);
+        self::$builder = Builder::update(static::$table)->set($items);
         return new self();
     }
     
@@ -204,7 +216,7 @@ class Model
      */
     public static function delete(): self
     {
-        self::$query = Builder::delete(static::$table);
+        self::$builder = Builder::delete(static::$table);
         return new self();
     }
     
@@ -292,15 +304,15 @@ class Model
         if (!is_null($operator) && is_null($value)) {
             switch(strtolower($operator)) {
                 case 'null':
-                    self::$query->whereColumn($column)->isNull();
+                    self::$builder->whereColumn($column)->isNull();
                     break;
 
                 case 'not null':
-                    self::$query->whereColumn($column)->isNotNull();
+                    self::$builder->whereColumn($column)->notNull();
                     break;
 
                 default:
-                    self::$query->where($column, '=', $operator);
+                    self::$builder->where($column, $operator);
                     break;
             }
         }
@@ -308,23 +320,23 @@ class Model
         else if (!is_null($operator) && !is_null($value)) {
             switch(strtolower($operator)) {
                 case 'in':
-                    self::$query->whereColumn($column)->in($value);
+                    self::$builder->whereColumn($column)->in($value);
                     break;
 
                 case 'not in':
-                    self::$query->whereColumn($column)->notIn($value);
+                    self::$builder->whereColumn($column)->notIn($value);
                     break;
 
                 case 'like':
-                    self::$query->whereColumn($column)->like($value);
+                    self::$builder->whereColumn($column)->like($value);
                     break;
 
                 case 'not like':
-                    self::$query->whereColumn($column)->notLike($value);
+                    self::$builder->whereColumn($column)->notLike($value);
                     break;
 
                 default:
-                    self::$query->where($column, $operator, $value);
+                    self::$builder->where($column, $operator, $value);
                     break;
             }
         }
@@ -343,11 +355,11 @@ class Model
     public function whereNot(string $column, $operator = null, $value = null): self
 	{
         if (!is_null($operator) && is_null($value)) {
-            self::$query->whereNot($column, '=', $operator);
+            self::$builder->whereNot($column, $operator);
         }
 
         else if (!is_null($operator) && !is_null($value)) {
-            self::$query->whereNot($column, $operator, $value);
+            self::$builder->whereNot($column, $operator, $value);
         }
 
 		return $this;
@@ -362,7 +374,7 @@ class Model
      */
     public function whereRaw(string $query, array $args = []): self
     {
-        self::$query->whereRaw($query, $args);
+        self::$builder->whereRaw($query, $args);
         return $this;
     }
 
@@ -379,15 +391,15 @@ class Model
         if (!is_null($operator) && is_null($value)) {
             switch(strtolower($operator)) {
                 case 'null':
-                    self::$query->andColumn($column)->isNull();
+                    self::$builder->andColumn($column)->isNull();
                     break;
 
                 case 'not null':
-                    self::$query->andColumn($column)->isNotNull();
+                    self::$builder->andColumn($column)->notNull();
                     break;
 
                 default:
-                    self::$query->and($column, '=', $operator);
+                    self::$builder->and($column, $operator);
                     break;
             }
         }
@@ -395,23 +407,23 @@ class Model
         else if (!is_null($operator) && !is_null($value)) {
             switch(strtolower($operator)) {
                 case 'in':
-                    self::$query->andColumn($column)->in($value);
+                    self::$builder->andColumn($column)->in($value);
                     break;
 
                 case 'not in':
-                    self::$query->andColumn($column)->notIn($value);
+                    self::$builder->andColumn($column)->notIn($value);
                     break;
 
                 case 'like':
-                    self::$query->andColumn($column)->like($value);
+                    self::$builder->andColumn($column)->like($value);
                     break;
 
                 case 'not like':
-                    self::$query->andColumn($column)->notLike($value);
+                    self::$builder->andColumn($column)->notLike($value);
                     break;
 
                 default:
-                    self::$query->and($column, $operator, $value);
+                    self::$builder->and($column, $operator, $value);
                     break;
             }
         }
@@ -432,15 +444,15 @@ class Model
         if (!is_null($operator) && is_null($value)) {
             switch(strtolower($operator)) {
                 case 'null':
-                    self::$query->orColumn($column)->isNull();
+                    self::$builder->orColumn($column)->isNull();
                     break;
 
                 case 'not null':
-                    self::$query->orColumn($column)->isNotNull();
+                    self::$builder->orColumn($column)->notNull();
                     break;
 
                 default:
-                    self::$query->or($column, '=', $operator);
+                    self::$builder->or($column, $operator);
                     break;
             }
         }
@@ -448,23 +460,23 @@ class Model
         else if (!is_null($operator) && !is_null($value)) {
             switch(strtolower($operator)) {
                 case 'in':
-                    self::$query->orColumn($column)->in($value);
+                    self::$builder->orColumn($column)->in($value);
                     break;
 
                 case 'not in':
-                    self::$query->orColumn($column)->notIn($value);
+                    self::$builder->orColumn($column)->notIn($value);
                     break;
 
                 case 'like':
-                    self::$query->orColumn($column)->like($value);
+                    self::$builder->orColumn($column)->like($value);
                     break;
 
                 case 'not like':
-                    self::$query->orColumn($column)->notLike($value);
+                    self::$builder->orColumn($column)->notLike($value);
                     break;
 
                 default:
-                    self::$query->or($column, $operator, $value);
+                    self::$builder->or($column, $operator, $value);
                     break;
             }
         }
@@ -483,15 +495,28 @@ class Model
     public function having(string $column, $operator = null, $value = null): self
 	{
         if (!is_null($operator) && is_null($value)) {
-            self::$query->having($column, '=', $operator);
+            self::$builder->having($column, $operator);
         }
 
         else if (!is_null($operator) && !is_null($value)) {
-            self::$query->having($column, $operator, $value);
+            self::$builder->having($column, $operator, $value);
         }
 
 		return $this;
 	}
+        
+    /**
+     * havingRaw
+     *
+     * @param  string $query
+     * @param  array $args
+     * @return \Framework\Database\Model
+     */
+    public function havingRaw(string $query, array $args = []): self
+    {
+        self::$builder->havingRaw($query, $args);
+        return $this;
+    }
     
     /**
      * add WHERE BETWEEN clause for range
@@ -503,7 +528,7 @@ class Model
      */
     public function whereBetween(string $column, $start, $end): self
     {
-        self::$query->whereColumn($column)->between($start, $end);
+        self::$builder->whereColumn($column)->between($start, $end);
         return $this;
     }
     
@@ -517,7 +542,7 @@ class Model
      */
     public function whereNotBetween(string $column, $start, $end): self
     {
-        self::$query->whereColumn($column)->notBetween($start, $end);
+        self::$builder->whereColumn($column)->notBetween($start, $end);
         return $this;
     }
 
@@ -529,7 +554,7 @@ class Model
 	 */
     public function whereNull(string $column): self
 	{
-        self::$query->whereColumn($column)->isNull();
+        self::$builder->whereColumn($column)->isNull();
 		return $this;
 	}
 
@@ -541,7 +566,7 @@ class Model
 	 */
     public function whereNotNull(string $column): self
 	{
-        self::$query->whereColumn($column)->isNotNull();
+        self::$builder->whereColumn($column)->notNull();
 		return $this;
 	}
 
@@ -554,7 +579,7 @@ class Model
 	 */
     public function whereLike(string $column, $value): self
 	{
-        self::$query->whereColumn($column)->like($value);
+        self::$builder->whereColumn($column)->like($value);
 		return $this;
 	}
 
@@ -567,7 +592,7 @@ class Model
 	 */
     public function whereNotLike(string $column, $value): self
 	{
-        self::$query->whereColumn($column)->notLike($value);
+        self::$builder->whereColumn($column)->notLike($value);
 		return $this;
 	}
 
@@ -580,7 +605,7 @@ class Model
 	 */
     public function whereIn(string $column, array $values): self
 	{
-        self::$query->whereColumn($column)->in($values);
+        self::$builder->whereColumn($column)->in($values);
 		return $this;
 	}
 
@@ -593,7 +618,7 @@ class Model
 	 */
     public function whereNotIn(string $column, $value): self
 	{
-        self::$query->whereColumn($column)->notIn($value);
+        self::$builder->whereColumn($column)->notIn($value);
 		return $this;
 	}
 
@@ -610,7 +635,7 @@ class Model
     public function join(string $table, string $first_column, string $operator, string $second_column, string $type = 'inner'): self
     {
         $method = $type . 'Join';
-        self::$query->$method($table, $second_column, $operator, $first_column);
+        self::$builder->$method($table, $second_column, $operator, $first_column);
 
         return $this;
     }
@@ -624,7 +649,7 @@ class Model
      */
     public function orderBy(string $column, string $direction): self
     {
-        self::$query->orderBy($column, $direction);
+        self::$builder->orderBy($column, $direction);
         return $this;
     }
     
@@ -658,7 +683,7 @@ class Model
      */
     public function group(array $columns): self
     {
-        self::$query->groupBy(implode(',', $columns));
+        self::$builder->groupBy(implode(',', $columns));
         return $this;
     }
 
@@ -722,7 +747,7 @@ class Model
      */
     public function range(int $start, int $end): array
     {
-        self::$query->limit($start, $end);
+        self::$builder->limit($start, $end);
         return $this->all();
     }
     
@@ -745,7 +770,7 @@ class Model
      */
     public function paginate(int $items_per_pages): Pager
     {
-        list($query, $args) = self::$query->toSQL();
+        list($query, $args) = self::$builder->toSQL();
 
         $page = empty(Request::getQuery('page')) ? 1 : Request::getQuery('page');
         $total_items = count(Builder::setQuery($query, $args)->execute()->fetchAll());
@@ -765,7 +790,7 @@ class Model
      */
     public function persist(): \PDOStatement
     {
-        return self::$query->execute();
+        return self::$builder->execute();
     }
     
     /**
@@ -775,7 +800,7 @@ class Model
      */
     public function toSQL(): array
     {
-        return self::$query->toSQL();
+        return self::$builder->toSQL();
     }
 
     /**
@@ -787,8 +812,21 @@ class Model
      */
     public function raw(string $query, array $args = []): self
     {
-        self::$query->rawQuery($query, $args);
+        self::$builder->rawQuery($query, $args);
         return $this;
+    }
+    
+    /**
+     * set query string and arguments
+     *
+     * @param  mixed $query
+     * @param  mixed $args
+     * @return \Framework\Database\Model
+     */
+    public static function query(string $query, array $args = []): self
+    {
+        self::$builder = Builder::setQuery($query, $args);
+        return new self();
     }
     
     /**

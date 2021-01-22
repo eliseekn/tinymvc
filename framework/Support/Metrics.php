@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright 2021 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -65,12 +65,10 @@ class Metrics
                         ->from($this->table)
                         ->where('DATE(created_at)', '>=', Carbon::now()->subDays($interval)->toDateString())
                         ->groupBy('DAYNAME(created_at)')
-                        ->execute()
                         ->fetchAll() :
                     Builder::select($type . '(' . $column . ') AS value')
                         ->from($this->table)
-                        ->where('DATE(created_at)', '=', Carbon::now()->toDateString())
-                        ->execute()
+                        ->where('DATE(created_at)', Carbon::now()->toDateString())
                         ->fetchAll();
 
             case 'weeks':
@@ -78,18 +76,16 @@ class Metrics
                     Builder::select($type . '(' . $column . ') AS value', 'DAYNAME(created_at) AS day')
                         ->from($this->table)
                         ->where('DATE(created_at)', '>', Carbon::now()->subWeeks($interval)->toDateString())
-                        ->and('MONTH(created_at)', '=', Carbon::now()->month)
-                        ->and('YEAR(created_at)', '=', Carbon::now()->year)
+                        ->and('MONTH(created_at)', Carbon::now()->month)
+                        ->and('YEAR(created_at)', Carbon::now()->year)
                         ->groupBy('DAYNAME(created_at)')
-                        ->execute()
                         ->fetchAll() :
                     Builder::select($type . '(' . $column . ') AS value', 'DAYNAME(created_at) AS day')
                         ->from($this->table)
-                        ->where('DATE(created_at)', '>', Carbon::now()->subWeeks()->toDateString())
-                        ->and('MONTH(created_at)', '=', Carbon::now()->month)
-                        ->and('YEAR(created_at)', '=', Carbon::now()->year)
+                        ->where('DATE(created_at)', '>', Carbon::now()->subWeek()->toDateString())
+                        ->and('MONTH(created_at)', Carbon::now()->month)
+                        ->and('YEAR(created_at)', Carbon::now()->year)
                         ->groupBy('DAYNAME(created_at)')
-                        ->execute()
                         ->fetchAll();
 
             case 'months':
@@ -97,15 +93,13 @@ class Metrics
                     Builder::select($type . '(' . $column . ') AS value', 'MONTHNAME(created_at) AS month')
                         ->from($this->table)
                         ->where('MONTH(created_at)', '>', Carbon::now()->subMonths($interval)->month)
-                        ->and('YEAR(created_at)', '=', Carbon::now()->year)
+                        ->and('YEAR(created_at)', Carbon::now()->year)
                         ->groupBy('MONTHNAME(created_at)')
-                        ->execute()
                         ->fetchAll() :
                     Builder::select($type . '(' . $column . ') AS value', 'MONTHNAME(created_at) AS month')
                         ->from($this->table)
-                        ->where('YEAR(created_at)', '=', Carbon::now()->year)
+                        ->where('YEAR(created_at)', Carbon::now()->year)
                         ->groupBy('MONTHNAME(created_at)')
-                        ->execute()
                         ->fetchAll();
             
             case 'years':
@@ -114,12 +108,10 @@ class Metrics
                         ->from($this->table)
                         ->where('YEAR(created_at)', '>', Carbon::now()->subYears($interval)->year)
                         ->groupBy('YEAR(created_at)')
-                        ->execute()
                         ->fetchAll() :
                     Builder::select($type . '(' . $column . ') AS value', 'YEAR(created_at) AS year')
                         ->from($this->table)
                         ->groupBy('YEAR(created_at)')
-                        ->execute()
                         ->fetchAll();
         }
     }

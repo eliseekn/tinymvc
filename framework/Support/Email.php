@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright 2021 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -65,7 +65,7 @@ class Email
      * @param  string $name
      * @return \Framework\Support\Email
      */
-    public function replyTo(string $address, string $name = ''): self
+    public function reply(string $address, string $name = ''): self
     {
         self::$mail->addReplyTo($address, $name);
         return $this;

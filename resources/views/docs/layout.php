@@ -53,22 +53,37 @@
                     <a href="<?= absolute_url('docs/guides/views') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (in_url('views')) : echo 'text-primary'; endif ?>"></i> Views
                     </a>
-                    <a href="<?= absolute_url('docs/guides/requests') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
-                        <i class="fa fa-dot-circle <?php if (in_url('requests')) : echo 'text-primary'; endif ?>"></i> HTTP Requests
+                </div>
+
+                <button class="list-group-item list-group-item-action" id="dropdown-btn" data-target="http-dropdown-menu">
+                    <i class="fa fa-server <?php if (in_url('http')) : echo 'text-primary'; endif ?>"></i> Http
+
+                    <span class="float-right dropdown-caret">
+                        <?php if (in_url('http')) : ?>
+                        <i class="fa fa-caret-up"></i>
+                        <?php else : ?>
+                        <i class="fa fa-caret-down"></i>
+                        <?php endif ?>
+                    </span>
+                </button>
+
+                <div class="<?php if (!in_url('http')) : echo 'd-none'; endif ?> border-bottom" id="http-dropdown-menu">
+                    <a href="<?= absolute_url('docs/http/requests') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                        <i class="fa fa-dot-circle <?php if (in_url('requests')) : echo 'text-primary'; endif ?>"></i> Requests
                     </a>
-                    <a href="<?= absolute_url('docs/guides/responses') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
-                        <i class="fa fa-dot-circle <?php if (in_url('responses')) : echo 'text-primary'; endif ?>"></i> HTTP Responses
+                    <a href="<?= absolute_url('docs/http/responses') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                        <i class="fa fa-dot-circle <?php if (in_url('responses')) : echo 'text-primary'; endif ?>"></i> Responses
                     </a>
-                    <a href="<?= absolute_url('docs/guides/client') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
-                        <i class="fa fa-dot-circle <?php if (in_url('client')) : echo 'text-primary'; endif ?>"></i> HTTP Client
+                    <a href="<?= absolute_url('docs/http/client') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                        <i class="fa fa-dot-circle <?php if (in_url('client')) : echo 'text-primary'; endif ?>"></i> Client
                     </a>
-                    <a href="<?= absolute_url('docs/guides/redirections') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
-                        <i class="fa fa-dot-circle <?php if (in_url('redirections')) : echo 'text-primary'; endif ?>"></i> URL Redirections
+                    <a href="<?= absolute_url('docs/http/redirections') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                        <i class="fa fa-dot-circle <?php if (in_url('redirections')) : echo 'text-primary'; endif ?>"></i> Redirections
                     </a>
                 </div>
 
                 <button class="list-group-item list-group-item-action" id="dropdown-btn" data-target="database-dropdown-menu">
-                    <i class="fa fa-database <?php if (in_url('database')) : echo 'text-primary'; endif ?>"></i> database
+                    <i class="fa fa-database <?php if (in_url('database')) : echo 'text-primary'; endif ?>"></i> Database
 
                     <span class="float-right dropdown-caret">
                         <?php if (in_url('database')) : ?>
@@ -80,8 +95,8 @@
                 </button>
 
                 <div class="<?php if (!in_url('database')) : echo 'd-none'; endif ?> border-bottom" id="database-dropdown-menu">
-                    <a href="<?= absolute_url('docs/database/database') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
-                        <i class="fa fa-dot-circle <?php if (in_url('database')) : echo 'text-primary'; endif ?>"></i> Database
+                    <a href="<?= absolute_url('docs/database/introduction') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                        <i class="fa fa-dot-circle <?php if (in_url('introduction')) : echo 'text-primary'; endif ?>"></i> Introduction
                     </a>
                     <a href="<?= absolute_url('docs/database/query-builder') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (in_url('query-builder')) : echo 'text-primary'; endif ?>"></i> Query Builder

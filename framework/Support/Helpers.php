@@ -1,14 +1,13 @@
 <?php
 
 /**
- * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright 2021 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
 
 use Carbon\Carbon;
 use Configula\ConfigFactory;
-use Framework\Routing\Route;
 use Framework\Support\Cookies;
 use Framework\Support\Session;
 use Framework\Support\Storage;
@@ -138,6 +137,11 @@ if (!function_exists('auth_attempts_exceeded')) {
      */
     function auth_attempts_exceeded(): bool
     {
+        //authentification attempts is disable
+        if (config('security.auth.max_attempts') === 0) {
+            return false;
+        }
+
         $unlock_timeout = Carbon::parse(get_session('auth_attempts_timeout'));
         $auth_attempts = get_session('auth_attempts');
         return !empty($auth_attempts) && ($auth_attempts >= config('security.auth.max_attempts')) && Carbon::now()->lt($unlock_timeout);
@@ -231,7 +235,7 @@ if (!function_exists('absolute_url')) {
 	 * @param  string $url
 	 * @return string
 	 */
-	function absolute_url(string $url = '/'): string
+	function absolute_url(string $url = '/', $params = null): string
 	{
 		if (empty($url)) {
 			$url = '/';
@@ -243,40 +247,9 @@ if (!function_exists('absolute_url')) {
 			}
         }
 
-		return config('app.url') . $url;
-	}
-}
+        $params = is_array($params) ? (empty($params) ? '' : implode('/', $params)) : $params;
 
-if (!function_exists('route_url')) {	
-	/**
-	 * generate absolute url from route name
-	 *
-	 * @param  string $name
-	 * @param  array|string $params
-	 * @return string
-	 */
-	function route_url(string $name, $params = null): string
-	{
-		$params = is_array($params) ? (empty($params) ? '' : implode('/', $params)) : $params;
-
-        //search key from value in a multidimensional array
-        //https://www.php.net/manual/en/function.array-search.php
-        $url = array_search(
-            $name, array_map(
-                function ($val) {
-                    if (isset($val['name'])) {
-                        return $val['name'];
-                    }
-                },
-                Route::$routes
-            )
-        );
-
-        if (empty($url)) {
-            throw new Exception('Route "' . $name . '" not found.');
-        }
-
-        return is_null($params) ? absolute_url($url) : absolute_url($url . '/' . $params);
+		return is_null($params) ? config('app.url') . $url : config('app.url') . $url . '/' . $params;
 	}
 }
 
@@ -316,13 +289,27 @@ if (!function_exists('in_url')) {
 	 */
 	function in_url(string $str): bool
 	{
-        return preg_match('/' . $str . '/', current_url());
+        return preg_match('/' . $str . '/', explode('//', current_url())[1]);
 	}
 }
 
 /**
  * Miscellaneous utils functions
  */
+
+if (!function_exists('absolute_path')) {    
+    /**
+     * get absolute path
+     *
+     * @param  string $path
+     * @return string
+     */
+    function absolute_path(string $path): string
+    {
+        $path = str_replace('.', DIRECTORY_SEPARATOR, $path);
+        return APP_ROOT . $path . DIRECTORY_SEPARATOR;
+    }
+}
 
 if (!function_exists('slugify')) {
 	/**
@@ -397,7 +384,7 @@ if (!function_exists('config')) {
 	 */
 	function config(string $path)
 	{
-		$config = ConfigFactory::loadPath(APP_ROOT . 'config' . DIRECTORY_SEPARATOR . 'app.php');
+		$config = ConfigFactory::loadPath(absolute_path('config') . 'app.php');
 		return $config($path, '');
 	}
 }
@@ -490,8 +477,7 @@ if (!function_exists('__')) {
     function __(string $expr, bool $app_config = false): string
     {
         $lang = $app_config ? config('app.lang') : auth()->lang;
-
-        $config = ConfigFactory::loadPath('resources/lang/' . $lang . '.php');
+        $config = ConfigFactory::loadPath(absolute_path('resources.lang') . $lang . '.php');
 		return $config($expr, '');
     }
 }

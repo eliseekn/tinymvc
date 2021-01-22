@@ -56,7 +56,7 @@ class CLASSNAME extends Controller
             //
         ]);
 
-		Redirect::url('admin/resources/RESOURCENAME/view', $id)->only();
+		$this->redirect('admin/resources/RESOURCENAME/view', $id)->only();
 	}
 	
 	/**
@@ -84,7 +84,7 @@ class CLASSNAME extends Controller
             //
         ])->where('id', $id)->persist();
 
-		Redirect::url('admin/resources/RESOURCENAME/view', $id)->only();
+		$this->redirect('admin/resources/RESOURCENAME/view', $id)->only();
 	}
 
 	/**
@@ -97,11 +97,11 @@ class CLASSNAME extends Controller
 	{
         if (!is_null($id)) {
 			if (!RESOURCEMODEL::find($id)->exists()) {
-				Redirect::back()->only();
+				$this->redirect()->only();
 			}
 	
 			RESOURCEMODEL::deleteWhere('id', $id);
-            Redirect::url('admin/resources/RESOURCENAME')->only();
+            $this->redirect('admin/resources/RESOURCENAME')->only();
 		} else {
 			foreach (explode(',', $this->request->items) as $id) {
 				RESOURCEMODEL::deleteWhere('id', $id);
@@ -119,18 +119,18 @@ class CLASSNAME extends Controller
 		$file = $this->request->files('file', ['csv']);
 
 		if (!$file->isAllowed()) {
-            Redirect::url('admin/resources/RESOURCENAME')->only();
+            $this->redirect('admin/resources/RESOURCENAME')->only();
 		}
 
 		if (!$file->isUploaded()) {
-			Redirect::url('admin/resources/RESOURCENAME')->only();
+			$this->redirect('admin/resources/RESOURCENAME')->only();
 		}
 
 		ReportHelper::import($file->getTempFilename(), RESOURCEMODEL::class, [
 			//
 		]);
 
-		Redirect::url('admin/resources/RESOURCENAME')->only();
+		$this->redirect('admin/resources/RESOURCENAME')->only();
 	}
 	
 	/**
@@ -140,12 +140,9 @@ class CLASSNAME extends Controller
 	 */
     public function export(): void
 	{
-		$date_start = $this->request->has('date_start') ? $this->request->date_start : null;
-        $date_end = $this->request->has('date_end') ? $this->request->date_end : null;
-
-		if (!is_null($date_start) && !is_null($date_end)) {
+		if ($this->request->has('date_start') && $this->request->has('date_end')) {
 			$RESOURCENAME = RESOURCEMODEL::select()
-                ->whereBetween('created_at', $date_start, $date_end)
+                ->whereBetween('created_at', $this->request->date_start, $this->request->date_end)
                 ->orderDesc('created_at')
                 ->all();
 		} else {

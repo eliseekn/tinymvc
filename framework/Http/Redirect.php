@@ -1,13 +1,15 @@
 <?php
 
 /**
- * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright 2021 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
 
 namespace Framework\Http;
 
+use Exception;
+use Framework\Routing\Route;
 use Framework\Support\Alert;
 use Framework\Support\Cookies;
 use Framework\Support\Session;
@@ -50,19 +52,6 @@ class Redirect
     {
         $params = is_array($params) ? (empty($params) ? '' : implode('/', $params)) : $params;
         self::$url = is_null($params) ? $url : $url . '/' . $params;
-        return new self();
-    }
-
-    /**
-     * redirect to route
-     *
-     * @param  string $name
-     * @param  array|string $params
-     * @return \Framework\Http\Redirect
-     */
-    public static function route(string $name, $params = null): self
-    {
-        self::$url = route_url($name, $params);
         return new self();
     }
 

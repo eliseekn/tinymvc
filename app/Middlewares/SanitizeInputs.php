@@ -7,7 +7,7 @@ use Framework\Http\Request;
 /**
  * Sanitize form fields
  */
-class SanitizeFields
+class SanitizeInputs
 {
     /**
      * handle function

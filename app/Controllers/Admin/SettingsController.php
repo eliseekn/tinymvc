@@ -4,7 +4,6 @@ namespace App\Controllers\Admin;
 
 use App\Helpers\Activity;
 use App\Requests\UpdateUser;
-use Framework\Http\Redirect;
 use Framework\Support\Session;
 use Framework\Routing\Controller;
 use Framework\Support\Encryption;
@@ -24,7 +23,7 @@ class SettingsController extends Controller
         $user = UsersModel::findSingle($id);
 		
 		if ($user === false) {
-			Redirect::back()->withToast(__('user_not_found'))->success();
+			$this->redirect()->withToast(__('user_not_found'))->success();
         }
         
         $countries = CountriesModel::select()->orderAsc('name')->all();
@@ -42,7 +41,7 @@ class SettingsController extends Controller
         $validator = UpdateUser::validate($this->request->inputs());
         
         if ($validator->fails()) {
-            Redirect::back()->withErrors($validator->errors())->withInputs($validator->inputs())
+            $this->redirect()->withErrors($validator->errors())->withInputs($validator->inputs())
                 ->withToast(__('changes_not_saved'))->error();
         }
 
@@ -71,7 +70,7 @@ class SettingsController extends Controller
             Session::create('user', UsersModel::findSingle($id));
         }
 
-        Activity::log('Settings saved');
-        Redirect::back()->withToast(__('changes_saved'))->success();
+        Activity::log(__('changes_saved'));
+        $this->redirect()->withToast(__('changes_saved'))->success();
     }
 }

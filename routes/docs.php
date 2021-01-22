@@ -1,11 +1,12 @@
 <?php
 
 /**
- * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright 2021 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
 
+use Framework\Http\Response;
 use Framework\Routing\View;
 use Framework\Routing\Route;
 
@@ -16,8 +17,8 @@ use Framework\Routing\Route;
 Route::get('docs', [
     'handler' => function() {
         View::render('docs/index');
-    }]
-);
+    }
+]);
 
 Route::group([
     'getting-started' => ['handler' => function() {
@@ -40,24 +41,24 @@ Route::group([
         View::render('docs/guides/views');
     }],
 
-    'guides/requests' => ['handler' => function() {
-        View::render('docs/guides/requests');
+    'http/requests' => ['handler' => function() {
+        View::render('docs/http/requests');
     }],
 
-    'guides/responses' => ['handler' => function() {
-        View::render('docs/guides/responses');
+    'http/responses' => ['handler' => function() {
+        View::render('docs/http/responses');
     }],
 
-    'guides/client' => ['handler' => function() {
-        View::render('docs/guides/client');
+    'http/client' => ['handler' => function() {
+        View::render('docs/http/client');
     }],
 
-    'guides/redirections' => ['handler' => function() {
-        View::render('docs/guides/redirections');
+    'http/redirections' => ['handler' => function() {
+        View::render('docs/http/redirections');
     }],
 
-    'database/database' => ['handler' => function() {
-        View::render('docs/database/database');
+    'database/introduction' => ['handler' => function() {
+        View::render('docs/database/introduction');
     }],
 
     'database/query-builder' => ['handler' => function() {

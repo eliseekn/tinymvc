@@ -19,12 +19,14 @@
 
 namespace App\Middlewares;
 
+use Framework\Http\Request;
+
 class MyCustomMiddleware 
 {
     /**
      * @return void
      */
-    public static function handle(): void
+    public static function handle(Request $request): void
     {
         //code to execute
     }
@@ -37,14 +39,13 @@ class MyCustomMiddleware
         <div class="card mb-4">
             <pre class="m-0"><code class="p-3">Route::get('home', [
     'handler' => 'HomeController::index',
-    'name' => 'home',
     'middlewares' => [
-        'CsrfProtection'
+        'MyCustomMiddleware'
     ]
 ]);</code></pre>
         </div>
 
-        <p>Execute middlewares inside Controller class :</p>
+        <p>Execute middlewares inside <span class="bg-light text-danger">Controller</span> :</p>
 
         <div class="card">
             <pre class="m-0"><code class="p-3">&lt;?php

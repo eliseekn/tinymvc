@@ -41,3 +41,11 @@ p {
     border-color: #343a40;
     color: white;
 }
+
+.modal-backdrop {
+    z-index: 111111;
+}
+
+.modal {
+    z-index: 11111111;
+}

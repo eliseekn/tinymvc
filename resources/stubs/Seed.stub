@@ -20,7 +20,7 @@ class CLASSNAME
      */
     public static function insert(): void
     {
-        Seeder::add(self::$table, [
+        Seeder::insert(self::$table, [
             //
         ]);
     }

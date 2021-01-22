@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright 2021 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -297,6 +297,10 @@ class Builder
 			    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)";
         }
 
+        if (self::$query[-1] !== ')') {
+            self::$query .= ')';
+        }
+
         self::$query .= " ENGINE='" . config('db.storage_engine') . "'";
 		return $this;
     }
@@ -317,12 +321,17 @@ class Builder
 	 * generate WHERE query
 	 *
 	 * @param  string $column
-	 * @param  string $operator
+	 * @param  mixed $operator
 	 * @param  mixed $value
 	 * @return \Framework\Database\Builder
 	 */
-	public function where(string $column, string $operator, $value): self
+	public function where(string $column, $operator = null, $value = null): self
 	{
+        if (!is_null($operator) && is_null($value)) {
+            $value = $operator;
+            $operator = '=';
+        }
+
 		self::$query .= " WHERE $column $operator ? ";
 		self::$args[] = $value;
 		return $this;
@@ -346,12 +355,17 @@ class Builder
 	 * generate WHERE NOT query
 	 *
 	 * @param  string $column
-	 * @param  string $operator
+	 * @param  mixed $operator
 	 * @param  mixed $value
 	 * @return \Framework\Database\Builder
 	 */
-	public function whereNot(string $column, string $operator, $value): self
+	public function whereNot(string $column, $operator = null, $value = null): self
 	{
+        if (!is_null($operator) && is_null($value)) {
+            $value = $operator;
+            $operator = '=';
+        }
+
 		self::$query .= " WHERE NOT $column $operator ? ";
 		self::$args[] = $value;
 		return $this;
@@ -412,7 +426,7 @@ class Builder
 	 * @param  mixed $value
 	 * @return \Framework\Database\Builder
 	 */
-	public function isNotNull(): self
+	public function notNull(): self
 	{
 		self::$query .= ' IS NOT NULL ';
 		return $this;
@@ -496,12 +510,17 @@ class Builder
 	 * generate AND query
 	 *
 	 * @param  string $column
-	 * @param  string $operator
+	 * @param  mixed $operator
 	 * @param  mixed $value
 	 * @return \Framework\Database\Builder
 	 */
-	public function and(string $column, string $operator, $value): self
+	public function and(string $column, $operator = null, $value = null): self
 	{
+        if (!is_null($operator) && is_null($value)) {
+            $value = $operator;
+            $operator = '=';
+        }
+
 		self::$query .= " AND $column $operator ? ";
 		self::$args[] = $value;
 		return $this;
@@ -511,12 +530,17 @@ class Builder
 	 * generate OR query
 	 *
 	 * @param  string $column
-	 * @param  string $operator
+	 * @param  mixed $operator
 	 * @param  mixed $value
 	 * @return \Framework\Database\Builder
 	 */
-	public function or(string $column, string $operator, $value): self
+	public function or(string $column, $operator = null, $value = null): self
 	{
+        if (!is_null($operator) && is_null($value)) {
+            $value = $operator;
+            $operator = '=';
+        }
+
 		self::$query .= " OR $column $operator ? ";
 		self::$args[] = $value;
 		return $this;
@@ -526,12 +550,17 @@ class Builder
 	 * generate HAVING query
 	 *
 	 * @param  string $column
-	 * @param  string $operator
+	 * @param  mixed $operator
 	 * @param  mixed $value
 	 * @return \Framework\Database\Builder
 	 */
-	public function having(string $column, string $operator, $value): self
+	public function having(string $column, $operator = null, $value = null): self
 	{
+        if (!is_null($operator) && is_null($value)) {
+            $value = $operator;
+            $operator = '=';
+        }
+
 		self::$query .= " HAVING $column $operator ? ";
 		self::$args[] = $value;
 		return $this;
@@ -701,6 +730,16 @@ class Builder
 		return $this;
     }
 
+    /**
+     * check if row exists
+     *
+     * @return bool
+     */
+    public function exists(): bool
+    {
+        return !$this->fetch() === false;
+    }
+
 	/**
 	 * returns query string and arguments
 	 *
@@ -729,8 +768,8 @@ class Builder
     /**
      * add custom query string with arguments
      *
-     * @param  mixed $query
-     * @param  mixed $args
+     * @param  string $query
+     * @param  array $args
      * @return \Framework\Database\Builder
      */
     public function rawQuery(string $query, array $args = []): self
@@ -760,8 +799,28 @@ class Builder
 	 */
 	public function execute(): \PDOStatement
 	{
-        $stmt = DBConnection::getInstance()->executeStatement(self::$query, self::$args);
+        $stmt = DB::connection(config('db.name'))->statement(self::$query, self::$args);
 		self::setQuery('');
 		return $stmt;
-	}
+    }
+
+    /**
+     * fetch single row
+     *
+     * @return mixed
+     */
+    public function fetch()
+    {
+        return $this->execute()->fetch();
+    }
+    
+    /**
+     * fetch all rows
+     *
+     * @return array
+     */
+    public function fetchAll(): array
+    {
+        return $this->execute()->fetchAll();
+    }
 }

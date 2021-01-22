@@ -16,16 +16,16 @@ class ConsoleHelper
     public static function execute(array $options)
     {
         if (
-            array_key_exists('db', $options) &&
+            array_key_exists('database', $options) &&
             !array_key_exists('make', $options)
         ) {
-            unset($options['db']);
+            unset($options['database']);
             Database::handle($options);
         }
         
         else if (
             array_key_exists('make', $options) &&
-            !array_key_exists('db', $options)
+            !array_key_exists('database', $options)
         ) {
             unset($options['make']);
             Maker::handle($options);

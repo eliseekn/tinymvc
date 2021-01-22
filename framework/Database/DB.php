@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright 2021 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -14,7 +14,7 @@ use PDOException;
 /**
  * Connection to database
  */
-class DBConnection
+class DB
 {
 	/**
 	 * database class instance
@@ -49,40 +49,55 @@ class DBConnection
 				die($e->getMessage());
 			}
 		}
-	}
+    }
+        
+    /**
+     * set database to use
+     *
+     * @param  string|null $name
+     * @return \Framework\Database\DB
+     */
+    private function setDB(?string $name = null): self
+    {
+        if (!is_null($name)) {
+            $this->connection->exec('USE ' . $name);
+        }
 
-	/**
-	 * create single instance of database class
-	 *
-	 * @return \Framework\Database\Database
-	 */
-	public static function getInstance(): self
-	{
-		if (is_null(self::$instance)) {
-			self::$instance = new self();
-		}
-
-		return self::$instance;
+        return $this;
     }
 
 	/**
-	 * returns database connection instance
+	 * get connection to database instance
 	 *
-	 * @return mixed
+     * @param  string|null $db 
+	 * @return \Framework\Database\DB
 	 */
-	public function getConnection()
+	public static function connection(?string $db = null): self
 	{
-		return $this->connection;
-	}
+		if (is_null(self::$instance)) {
+			self::$instance = new self();
+        }
+        
+        return self::$instance->setDB($db);
+    }
 
 	/**
 	 * execute sql query
 	 *
 	 * @return \PDOStatement
 	 */
-    public function executeQuery(string $query): \PDOStatement
+    public function query(string $query): \PDOStatement
     {
-        $stmt = $this->connection->query($query);
+        $stmt = null;
+
+        try {
+            $stmt = $this->connection->query($query);
+		} catch (PDOException $e) {
+			if (config('errors.display') == true) {
+				die($e->getMessage());
+			}
+        }
+        
         return $stmt;
     }
 
@@ -91,12 +106,11 @@ class DBConnection
 	 *
 	 * @return \PDOStatement
 	 */
-	public function executeStatement(string $query, array $args): \PDOStatement
+	public function statement(string $query, array $args): \PDOStatement
 	{
 		$stmt = null;
 
 		try {
-            $this->connection->exec('USE ' . config('db.name'));
 			$stmt = $this->connection->prepare(trim($query));
 			$stmt->execute($args);
 		} catch (PDOException $e) {

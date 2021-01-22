@@ -43,4 +43,4 @@ After installation open your browser and go to ```http://localhost/tinymvc/docs`
 [MIT](https://opensource.org/licenses/MIT)
 
 ## Copyright
-2019-2020 © N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+2021 © N'Guessan Kouadio Elisée (eliseekn@gmail.com)

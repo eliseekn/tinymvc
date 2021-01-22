@@ -12,7 +12,7 @@
 
 <?php if (auth()->alerts && !empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
 
-<?php if (auth()->role !== 'customer') :?>
+<?php if (auth()->role !== \App\Database\Models\RolesModel::ROLES[1]) :?>
 <div class="row mb-4">
     <div class="col-md-4">
         <div class="card shadow-sm mb-4 mb-md-0">
@@ -48,7 +48,7 @@
                         <option value="weeks"><?= __('this_week') ?></option>
                         <option value="months" selected><?= __('this_year') ?></option>
                         <option value="last-weeks"><?= __('last_4_weeks') ?></option>
-                        <option value="last-years"><?= __('last_3_years') ?></option>
+                        <option value="last-years"><?= __('last_5_years') ?></option>
                     </select>
                 </div>
             </div>
@@ -160,7 +160,7 @@
                             <td><?= $notification->message ?></td>
                             <td><?= time_elapsed(\App\Helpers\DateHelper::format($notification->created_at)->timestamp(), 1) ?></td>
                             <td>
-                                <a class="btn text-dark p-1 <?php if ($notification->status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('admin/account/notifications/update/' . $notification->id) ?>" <?php if ($notification->status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
+                                <a class="btn text-dark p-1 <?php if ($notification->status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('admin/account/notifications/update', $notification->id) ?>" <?php if ($notification->status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
                                     <?php if ($notification->status === 'unread') : ?>
                                     <i class="fa fa-eye-slash"></i>
                                     <?php else : ?>

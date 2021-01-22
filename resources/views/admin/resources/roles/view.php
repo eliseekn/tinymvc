@@ -46,7 +46,7 @@
     </div>
 
     <div class="card-footer">
-        <a href="<?= absolute_url('admin/resources/roles/edit/' . $role->id) ?>" class="btn btn-outline-dark">
+        <a href="<?= absolute_url('admin/resources/roles/edit', $role->id) ?>" class="btn btn-outline-dark">
             <?= __('edit') ?>
         </a>
 
@@ -57,7 +57,7 @@
         <confirm-delete 
             type="text" 
             content="<?= __('delete') ?>" 
-            action="<?= absolute_url('admin/resources/roles/delete/' . $role->id) ?>">
+            action="<?= absolute_url('admin/resources/roles/delete', $role->id) ?>">
         </confirm-delete>
 
         <a href="<?= absolute_url('admin/resources/roles') ?>" class="btn btn-outline-dark ml-2">

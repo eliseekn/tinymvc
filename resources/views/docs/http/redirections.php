@@ -5,22 +5,14 @@
 <?php $this->start('page_content') ?>
 
 <div class="card mb-5" id="basic-routing">
-    <div class="card-header ">
-        <span class=" lead">URL Redirections</span>
-    </div>
+    <div class="card-header">URL Redirections</div>
 
     <div class="card-body">
         <p class="font-weight-bold">Make HTTP redirections using Redirect class</p>
         <p>Redirect to url :</p>
 
         <div class="card mb-4">
-            <pre class="m-0"><code class="p-3">Redirect::toUrl(string $url, $params = null)->only()</code></pre>
-        </div>
-
-        <p>Redirect to route :</p>
-
-        <div class="card mb-4">
-            <pre class="m-0"><code class="p-3">Redirect::toRoute(string $url, $params = null)->only()</code></pre>
+            <pre class="m-0"><code class="p-3">Redirect::url(string $url = '/', $params = null)->only()</code></pre>
         </div>
 
         <p>Redirect back :</p>
@@ -86,18 +78,18 @@ class MyController extends Controller
      */
     public function index(): void
     {
-        //redirect to url or route name
+        //redirect to url
         $this->redirect('home')->only();
 
         //redirect back
-        $this->redirectBack()->only();
+        $this->redirect()->only();
     }
 }</code></pre>
         </div>
     </div>
 
     <div class="card-footer d-flex justify-content-between">
-        <span>Next: <a href="<?= absolute_url('docs/guides/orm') ?>">ORM</a></span>
+        <span>Next: <a href="<?= absolute_url('docs/database/introduction') ?>">Database</a></span>
         <span>Previous: <a href="<?= absolute_url('docs/guides/client') ?>">HTTP Client</a></span>
     </div>
 </div>

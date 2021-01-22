@@ -13,7 +13,6 @@
 
         <div class="card mb-4">
             <pre class="m-0"><code class="p-3">PHP >= 7.2
-MySQL server
 Node
 Composer
 Yarn</code></pre>

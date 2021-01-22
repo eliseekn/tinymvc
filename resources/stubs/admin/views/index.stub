@@ -35,14 +35,12 @@
                     <upload-modal 
                         action="<?= absolute_url('admin/resources/RESOURCENAMEs/import') ?>" 
                         title="<?= __('import') ?>" 
-                        modal_title="<?= __('upload_modal_title') ?>" 
                         csrf_token='<?= csrf_token_input() ?>'>
                     </upload-modal>
 
                     <export-modal 
                         action="<?= absolute_url('admin/resources/RESOURCENAMEs/export') ?>" 
                         title="<?= __('export') ?>" 
-                        modal_title="<?= __('export') ?>" 
                         csrf_token='<?= csrf_token_input() ?>'>
                     </export-modal>
 

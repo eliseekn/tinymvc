@@ -2,8 +2,28 @@ class BarsChart extends HTMLElement {
     constructor() {
         super()
 
+        this.translations = {}
+        this.getTranslations = this.getTranslations.bind(this)
+        this.setDefaultInnerHTML = this.setDefaultInnerHTML.bind(this)
         this.drawChart = this.drawChart.bind(this)
         this.displayData = this.displayData.bind(this)
+    }
+
+    getTranslations() {
+        fetch('/tinymvc/api/translations')
+            .then(response => response.json())
+            .then(data => {
+                this.translations = data.translations
+                this.setDefaultInnerHTML()
+            })
+    }
+
+    setDefaultInnerHTML() {
+        this.innerHTML = `
+            <div class="d-flex justify-content-center align-items-center" style="height: 200px">
+                ${this.translations.no_data_found}
+            </div>
+        ` 
     }
 
     drawChart(data, xkey) {
@@ -21,13 +41,14 @@ class BarsChart extends HTMLElement {
 
     displayData() {
         if (JSON.parse(this.getAttribute('data')).length == 0) {
-            this.innerHTML = '<div class="d-flex justify-content-center align-items-center" style="height: 200px">No data found</div>'
+            this.setDefaultInnerHTML()
         } else {
             this.drawChart(JSON.parse(this.getAttribute('data')), this.getAttribute('xkey'))
         }
     }
     
     connectedCallback() {
+        this.getTranslations()
         this.displayData()
     }
 

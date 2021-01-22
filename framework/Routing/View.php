@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright 2021 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -18,25 +18,7 @@ use Framework\Support\Storage;
  * Main view class
  */
 class View
-{        
-    /**
-     * get session flash data
-     *
-     * @return array
-     */
-    private static function getFlashData(): array
-    {
-        $data = [
-            'inputs' => (object) Session::get('inputs'), 
-            'errors' => (object) Session::get('errors'), 
-            'alerts' => Session::get('alerts')
-        ];
-
-        Session::close('inputs', 'errors', 'alerts');
-
-        return $data;
-    }
-
+{
     /**
      * get view content
      *
@@ -51,7 +33,12 @@ class View
         }
 
         $engine = new Engine(Storage::path(config('storage.views'))->get());
-        return $engine->render($view, array_merge($data, self::getFlashData()));
+
+        return $engine->render($view, array_merge($data, [
+            'inputs' => (object) Session::pull('inputs'), 
+            'errors' => (object) Session::pull('errors'), 
+            'alerts' => Session::pull('alerts')
+        ]));
     }
 
     /**
@@ -63,6 +50,6 @@ class View
      */
     public static function render(string $view, array $data = [], int $status_code = 200): void
     {
-        Response::send(self::getContent($view, $data), [], $status_code);
+        Response::send(self::getContent($view, $data), false, [], $status_code);
     }
 }

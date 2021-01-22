@@ -37,15 +37,17 @@ class DownloadHelper
      * force browser to download file
      *
      * @param  string $filename
-     * @return mixed
+     * @return \App\Helpers\DownloadHelper
      */
     public static function init(string $filename, bool $real_file = false)
     {
         static::$filename = $filename;
+
         $filename = $real_file ? basename(static::$filename) : static::$filename;
+        $file_extension = get_file_extension($filename);
         
-        if (array_key_exists(get_file_extension($filename), self::$mimes_types)) {
-            $content_type = self::$mimes_types[get_file_extension($filename)];
+        if (array_key_exists($file_extension, self::$mimes_types)) {
+            $content_type = self::$mimes_types[$file_extension];
         } else {
             $content_type = 'text/plain';
         }

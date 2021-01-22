@@ -8,7 +8,6 @@ use Framework\Support\Alert;
 use Framework\Routing\Controller;
 use App\Helpers\NotificationHelper;
 use App\Database\Models\NotificationsModel;
-use Framework\Http\Redirect;
 
 class NotificationsController extends Controller
 {
@@ -38,7 +37,7 @@ class NotificationsController extends Controller
 	public function create(): void
 	{
         NotificationHelper::create($this->request->message);
-        Redirect::back()->withToast(__('notifications_created'))->success();
+        $this->redirect()->withToast(__('notifications_created'))->success();
     }
     
 	/**
@@ -51,18 +50,18 @@ class NotificationsController extends Controller
 	{
         if (!is_null($id)) {
 			if (!NotificationsModel::find($id)->exists()) {
-				Redirect::back()->withToast(__('notification_not_found'))->error();
+				$this->redirect()->withToast(__('notification_not_found'))->error();
 			}
 	
             NotificationsModel::update(['status' => 'read'])->where('id', $id)->persist();
-            Activity::log('Notification marked as read');
-            Redirect::back()->withToast(__('notification_updated'))->success();
+            Activity::log(__('notification_updated'));
+            $this->redirect()->withToast(__('notification_updated'))->success();
 		} else {
 			foreach (explode(',', $this->request->items) as $id) {
 				NotificationsModel::update(['status' => 'read'])->where('id', $id)->persist();
 			}
 			
-            Activity::log('Notifications marked as read');
+            Activity::log(__('notifications_updated'));
 			Alert::toast(__('notifications_updated'))->success();
 		}
     }
@@ -77,12 +76,12 @@ class NotificationsController extends Controller
 	{
 		if (!is_null($id)) {
 			if (!NotificationsModel::find($id)->exists()) {
-				Redirect::back()->withToast(__('notification_not_found'))->error();
+				$this->redirect()->withToast(__('notification_not_found'))->error();
 			}
 	
 			NotificationsModel::deleteWhere('id', $id);
-            Activity::log('Notification deleted');
-			Redirect::back()->withToast(__('notification_deleted'))->success();
+            Activity::log(__('notification_deleted'));
+			$this->redirect()->withToast(__('notification_deleted'))->success();
 		} else {
             $notifications_id = explode(',', $this->request->items);
 
@@ -90,7 +89,7 @@ class NotificationsController extends Controller
 				NotificationsModel::deleteWhere('id', $id);
 			}
 			
-            Activity::log('Notifications deleted');
+            Activity::log(__('notifications_deleted'));
 			Alert::toast(__('notifications_deleted'))->success();
 		}
 	}

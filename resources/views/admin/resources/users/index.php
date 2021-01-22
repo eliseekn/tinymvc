@@ -18,7 +18,7 @@
         <div class="card card-metrics bg-light shadow-sm">
             <div class="card-body d-flex align-items-center justify-content-between">
                 <p><i class="fa fa-user-check fa-lg"></i> <?= __('active') ?></p>
-                <p class="font-weight-bold"><?= count($active_users) ?></p>
+                <p class="font-weight-bold"><?= $active_users ?></p>
             </div>
         </div>
     </div>
@@ -42,14 +42,12 @@
                     <upload-modal 
                         action="<?= absolute_url('admin/resources/users/import') ?>" 
                         title="<?= __('import') ?>" 
-                        modal_title="<?= __('upload_modal_title') ?>" 
                         csrf_token='<?= csrf_token_input() ?>'>
                     </upload-modal>
                     
                     <export-modal 
                         action="<?= absolute_url('admin/resources/users/export') ?>" 
                         title="<?= __('export') ?>" 
-                        modal_title="<?= __('export') ?>" 
                         csrf_token='<?= csrf_token_input() ?>'>
                     </export-modal>
 
@@ -99,7 +97,11 @@
 
                         <td><?= $users->getFirstItem() + $key + 1 ?></td>
                         <td><?= $user->id ?></td>
-                        <td><?= $user->name ?></td>
+
+                        <td>
+                            <avatar-icon name="<?= $user->name ?>"></avatar-icon>
+                        </td>
+
                         <td><?= $user->email ?></td>
                         <td><?= $user->phone ?></td>
                         <td><?= $user->company ?></td>
@@ -117,11 +119,11 @@
                         <td><?php $user->updated_at !== $user->created_at ? print(\App\Helpers\DateHelper::format($user->updated_at)->human()) : print('-') ?></td>
 
                         <td>
-                            <a class="btn text-dark p-1" href="<?= absolute_url('admin/resources/users/view/' . $user->id) ?>" title="<?= __('details') ?>">
+                            <a class="btn text-dark p-1" href="<?= absolute_url('admin/resources/users/view', $user->id) ?>" title="<?= __('details') ?>">
                                 <i class="fa fa-eye"></i>
                             </a>
 
-                            <a class="btn text-dark p-1" href="<?= absolute_url('admin/resources/users/edit/' . $user->id) ?>" title="<?= __('edit') ?>">
+                            <a class="btn text-dark p-1" href="<?= absolute_url('admin/resources/users/edit', $user->id) ?>" title="<?= __('edit') ?>">
                                 <i class="fa fa-edit"></i>
                             </a>
 
@@ -129,7 +131,7 @@
                                 type="icon" 
                                 title="<?= __('delete') ?>"
                                 content='<i class="fa fa-trash-alt"></i>' 
-                                action="<?= absolute_url('admin/resources/users/delete/' . $user->id) ?>">
+                                action="<?= absolute_url('admin/resources/users/delete', $user->id) ?>">
                             </confirm-delete>
                         </td>
                     </tr>

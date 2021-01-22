@@ -3,10 +3,10 @@
 namespace App\Controllers\Admin;
 
 use App\Helpers\Auth;
-use Framework\Http\Redirect;
 use Framework\Support\Alert;
 use App\Helpers\ReportHelper;
 use Framework\Routing\Controller;
+use App\Database\Models\RolesModel;
 use App\Database\Models\ActivitiesModel;
 
 class ActivitiesController extends Controller
@@ -18,7 +18,7 @@ class ActivitiesController extends Controller
      */
     public function index(): void
 	{
-        if (Auth::get()->role === 'administrator') {
+        if (Auth::role(RolesModel::ROLES[0])) {
             $activities = ActivitiesModel::select();
         } else {
             $activities = ActivitiesModel::findBy('user', Auth::get()->email);
@@ -39,11 +39,11 @@ class ActivitiesController extends Controller
 	{
         if (!is_null($id)) {
 			if (!ActivitiesModel::find($id)->exists()) {
-				Redirect::back()->withToast(__('activity_not_found'))->error();
+                $this->redirect()->withToast(__('activity_not_found'))->error();
 			}
 	
 			ActivitiesModel::deleteWhere('id', $id);
-            Redirect::back()->withToast(__('activity_deleted'))->success();
+            $this->redirect()->withToast(__('activity_deleted'))->success();
 		} else {
 			foreach (explode(',', $this->request->items) as $id) {
 				ActivitiesModel::deleteWhere('id', $id);
@@ -60,12 +60,9 @@ class ActivitiesController extends Controller
 	 */
     public function export(): void
 	{
-        $date_start = $this->request->has('date_start') ? $this->request->date_start : null;
-        $date_end = $this->request->has('date_end') ? $this->request->date_end : null;
-
-		if (!is_null($date_start) && !is_null($date_end)) {
+        if ($this->request->has('date_start') && $this->request->has('date_end')) {
 			$activities = ActivitiesModel::select()
-                ->whereBetween('created_at', $date_start, $date_end)
+                ->whereBetween('created_at', $this->request->date_start, $this->request->date_end)
                 ->orderDesc('created_at')
                 ->all();
 		} else {

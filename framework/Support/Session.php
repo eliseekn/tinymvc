@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright 2021 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -79,5 +79,18 @@ class Session
         foreach ($names as $name) {
             unset($_SESSION[config('app.name') . '_' . $name]);
         }
+    }
+    
+    /**
+     * get session data and close it
+     *
+     * @param  string $name
+     * @return mixed
+     */
+    public static function pull(string $name)
+    {
+        $data = self::get($name);
+        self::close($name);
+        return $data;
     }
 }

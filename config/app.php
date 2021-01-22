@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright 2021 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -58,24 +58,25 @@ $config = [
         'encrypt_cookies' => true,
 
         'auth' => [
-            'max_attempts' => 3, //set to 0 to disable
+            'max_attempts' => 5, //set to 0 to disable
             'unlock_timeout' => 1, //in minute
             'email_confirmation' => false
         ]
     ],
 
     'storage' => [
-        'public' => APP_ROOT . 'public' . DIRECTORY_SEPARATOR,
-        'routes' => APP_ROOT . 'routes' . DIRECTORY_SEPARATOR,
-        'views' => APP_ROOT . 'resources' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR,
-        'migrations' => APP_ROOT . 'app' . DIRECTORY_SEPARATOR . 'Database' . DIRECTORY_SEPARATOR . 'Migrations' . DIRECTORY_SEPARATOR,
-        'seeds' => APP_ROOT . 'app' . DIRECTORY_SEPARATOR . 'Database' . DIRECTORY_SEPARATOR . 'Seeds' . DIRECTORY_SEPARATOR,
-        'stubs' => APP_ROOT . 'resources' . DIRECTORY_SEPARATOR . 'stubs' . DIRECTORY_SEPARATOR,
-        'controllers' => APP_ROOT . 'app' . DIRECTORY_SEPARATOR . 'Controllers' . DIRECTORY_SEPARATOR,
-        'models' => APP_ROOT . 'app' . DIRECTORY_SEPARATOR . 'Database' . DIRECTORY_SEPARATOR . 'Models' . DIRECTORY_SEPARATOR,
-        'middlewares' => APP_ROOT . 'app' . DIRECTORY_SEPARATOR . 'Middlewares' . DIRECTORY_SEPARATOR,
-        'requests' => APP_ROOT . 'app' . DIRECTORY_SEPARATOR . 'Requests' . DIRECTORY_SEPARATOR,
-        'logs' => APP_ROOT . 'logs' . DIRECTORY_SEPARATOR
+        'storage' => absolute_path('storage'),
+        'public' => absolute_path('public'),
+        'routes' => absolute_path('routes'),
+        'views' => absolute_path('resources.views'),
+        'migrations' => absolute_path('app.Database.Migrations'),
+        'seeds' => absolute_path('app.Database.Seeds'),
+        'stubs' => absolute_path('resources.stubs'),
+        'controllers' => absolute_path('app.Controllers'),
+        'models' => absolute_path('app.Database.Models'),
+        'middlewares' => absolute_path('app.Middlewares'),
+        'requests' => absolute_path('app.Requests'),
+        'logs' => absolute_path('storage.logs')
     ],
 
     'session' => [

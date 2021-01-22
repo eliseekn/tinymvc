@@ -33,14 +33,12 @@
                     <upload-modal 
                         action="<?= absolute_url('admin/resources/roles/import') ?>" 
                         title="<?= __('import') ?>" 
-                        modal_title="<?= __('upload_modal_title') ?>" 
                         csrf_token='<?= csrf_token_input() ?>'>
                     </upload-modal>
                     
                     <export-modal 
                         action="<?= absolute_url('admin/resources/roles/export') ?>" 
                         title="<?= __('export') ?>" 
-                        modal_title="<?= __('export') ?>" 
                         csrf_token='<?= csrf_token_input() ?>'>
                     </export-modal>
 
@@ -94,11 +92,11 @@
                         <td><?php $role->updated_at !== $role->created_at ? print(\App\Helpers\DateHelper::format($role->updated_at)->human()) : print('-') ?></td>
 
                         <td>
-                            <a class="btn text-dark p-1" href="<?= absolute_url('admin/resources/roles/view/' . $role->id) ?>" title="<?= __('details') ?>">
+                            <a class="btn text-dark p-1" href="<?= absolute_url('admin/resources/roles/view', $role->id) ?>" title="<?= __('details') ?>">
                                 <i class="fa fa-eye"></i>
                             </a>
 
-                            <a class="btn text-dark p-1" href="<?= absolute_url('admin/resources/roles/edit/' . $role->id) ?>" title="<?= __('edit') ?>">
+                            <a class="btn text-dark p-1" href="<?= absolute_url('admin/resources/roles/edit', $role->id) ?>" title="<?= __('edit') ?>">
                                 <i class="fa fa-edit"></i>
                             </a>
 
@@ -106,7 +104,7 @@
                                 type="icon" 
                                 title="<?= __('delete') ?>"
                                 content='<i class="fa fa-trash-alt"></i>' 
-                                action="<?= absolute_url('admin/resources/roles/delete/' . $role->id) ?>">
+                                action="<?= absolute_url('admin/resources/roles/delete', $role->id) ?>">
                             </confirm-delete>
                         </td>
                     </tr>

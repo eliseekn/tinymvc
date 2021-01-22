@@ -5,9 +5,7 @@
 <?php $this->start('page_content') ?>
 
 <div class="card mb-5" id="http-requests">
-    <div class="card-header ">
-        <span class=" lead">HTTP Requests</span>
-    </div>
+    <div class="card-header">HTTP Requests</div>
 
     <div class="card-body">
         <p class="font-weight-bold">Accessing HTTP requests</p>
@@ -27,7 +25,8 @@ $headers = (new Request)->headers();</code></pre>
         <p>Single header :</p>
 
         <div class="card mb-4">
-            <pre class="m-0"><code class="p-3">$header = Request::getHeader(string $key);</code></pre>
+            <pre class="m-0"><code class="p-3">$header = Request::getHeader(string $key); //or 
+$headers = (new Request)->headers(string $key);</code></pre>
         </div>
 
         <p class="font-weight-bold">Retrieving method</p>
@@ -43,7 +42,7 @@ $method = (new Request)->method();</code></pre>
 
         <div class="card mb-4">
             <pre class="m-0"><code class="p-3">$uri = Request::getFullUri(); //or 
-$uri = (new Request)->fullUri();</code></pre>
+$uri = (new Request)->uri(true);</code></pre>
         </div>
 
         <p>URI without queries :</p>
@@ -65,7 +64,8 @@ $queries = (new Request)->queries();</code></pre>
 
         <div class="card mb-4">
             <pre class="m-0"><code class="p-3">$query = Request::getQuery(string $key); //or 
-$query = (new Request)->$key;</code></pre>
+$query = (new Request)->$key; //or 
+$query = (new Request)->queries(string $key);</code></pre>
         </div>
 
         <p>Set query value :</p>
@@ -80,14 +80,15 @@ $query = (new Request)->$key;</code></pre>
 
         <div class="card mb-4">
             <pre class="m-0"><code class="p-3">$inputs = Request::getInputs(); //or 
-(new Request)->inputs();</code></pre>
+$inputs = (new Request)->inputs()</code></pre>
         </div>
 
         <p>Single input :</p>
 
         <div class="card mb-4">
             <pre class="m-0"><code class="p-3">$input = Request::getInput(string $input); //or 
-(new Request)->input(string $input, $value);</code></pre>
+$input = (new Request)->$key; //or
+$input = (new Request)->inputs(string $input);</code></pre>
         </div>
 
         <p>Set input value :</p>
@@ -107,7 +108,9 @@ $query = (new Request)->$key;</code></pre>
         <p>Check if item exists :</p>
 
         <div class="card mb-4">
-            <pre class="m-0"><code class="p-3">$exists = (new Request)->has(string $item);</code></pre>
+            <pre class="m-0"><code class="p-3">$exists = Request::hasQuery(string $key)
+$exists = Request::hasInput(string $input); //or
+$exists = (new Request)->has(string $item); //query or input</code></pre>
         </div>
 
         <p>Retrieving only some items data :</p>
@@ -141,7 +144,7 @@ $query = (new Request)->$key;</code></pre>
         <p>Or you can user <span class="bg-light text-danger">files</span> method of Request class :</p>
 
         <div class="card mb-4">
-            <pre class="m-0"><code class="p-3">(new Request)->files(string $input, array $allowed_extensions = [], bool $multiple = false);</code></pre>
+            <pre class="m-0"><code class="p-3">$files = (new Request)->files(string $input, array $allowed_extensions = [], bool $multiple = false);</code></pre>
         </div>
 
         <p class="mb-4">To manage uploaded files, refer to <a href="<?= absolute_url('docs/guides/uploader') ?>" class="bg-light text-danger">Uploader</a> class.</p>
@@ -165,7 +168,7 @@ class MyController
      */
     public function index(): void
     {
-        $items = $this->request->all();
+        $items = $this->request->inputs(); //retrieves inputs from POST request
         
         $this->render('index', compact('items'));
     }

@@ -12,4 +12,15 @@ class RolesModel extends Model
      * @var string
      */
     public static $table = 'roles';
+
+    /**
+     * roles constants
+     * 
+     * @var array
+     */
+    public const ROLES = [
+        0 => 'administrator',
+        1 => 'customer',
+        2 => 'visitor'
+    ];
 }

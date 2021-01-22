@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2019-2020 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright 2021 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -51,7 +51,7 @@ Route::post('password/update', ['handler' => 'Auth\PasswordController@update']);
 //email routes
 Route::group([
     'confirm' => ['handler' => 'EmailController@confirm'],
-    'auth' => ['handler' => 'EmailController@auth'],
+    'auth' => ['handler' => 'EmailController@auth']
 ])->by([
     'method' => 'GET',
     'prefix' => 'email'

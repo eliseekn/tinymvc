@@ -4,8 +4,6 @@ namespace App\Controllers\Auth;
 
 use Carbon\Carbon;
 use App\Helpers\EmailHelper;
-use Framework\Http\Redirect;
-use Framework\Http\Response;
 use Framework\Support\Session;
 use App\Middlewares\AuthPolicy;
 use Framework\Routing\Controller;
@@ -27,9 +25,9 @@ class EmailController extends Controller
 		if (UsersModel::findBy('email', $this->request->email)->exists()) {
             UsersModel::update(['active' => 1])->where('email', $this->request->email)->persist();
             EmailHelper::sendWelcome($this->request->email);
-            Redirect::url('login')->withAlert(__('user_activated', true))->success('');
+            $this->redirect('login')->withAlert(__('user_activated', true))->success('');
         } else {
-            Redirect::url('signup')->withAlert(__('user_not_registered', true))->error('');
+            $this->redirect('signup')->withAlert(__('user_not_registered', true))->error('');
         }
     }
         
@@ -43,16 +41,16 @@ class EmailController extends Controller
         $auth_token = TokensModel::findSingleBy('email', $this->request->email);
 
         if ($auth_token === false || $auth_token->token !== $this->request->token) {
-			Response::send(__('invalid_two_steps_link', true));
+			$this->response(__('invalid_two_steps_link', true));
 		}
 
 		if ($auth_token->expires < Carbon::now()->toDateTimeString()) {
-			Response::send(__('expired_two_steps_link', true));
+			$this->response(__('expired_two_steps_link', true));
 		}
 
-        TokensModel::delete()->where('email', $auth_token->email)->persist();
+        TokensModel::deleteWhere('email', $auth_token->email);
 
-        Session::create('user', UsersModel::findBy('email', $auth_token->email)->single());
+        Session::create('user', UsersModel::findSingleBy('email', $auth_token->email));
         AuthPolicy::handle($this->request);
     }
 }

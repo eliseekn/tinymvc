@@ -5,9 +5,7 @@
 <?php $this->start('page_content') ?>
 
 <div class="card mb-5" id="basic-routing">
-    <div class="card-header ">
-        <span class=" lead">HTTP Client</span>
-    </div>
+    <div class="card-header">HTTP Client</div>
 
     <div class="card-body">
         <p class="font-weight-bold">Send basic HTTP request</p>
@@ -48,16 +46,15 @@ class MyController extends Controller
     {
         //send HTTP GET request
         $rates = $this->get(['https://api.exchangeratesapi.io/latest?base=USD'])->getBody();
-        $this->jsonResponse(json_decode($rates[0], true));
+        $this->response(json_decode($rates[0], true), true);
 
         //send HTTP POST request
-        $response = $this->post(['https://api.exchangeratesapi.io/latest'], [], ['base' => 'USD'])->getBody();
-        $this->jsonResponse(json_decode($response[0], true));
+        $response = $this->post(['https://url.of.api/'], ['data' => 'data'])->getBody();
+        $this->response(json_decode($response[0], true), true);
     }
 }</code></pre>
         </div>
     </div>
-
 
     <div class="card-footer d-flex justify-content-between">
         <span>Next: <a href="<?= absolute_url('docs/guides/redirections') ?>">URL Redirections</a></span>

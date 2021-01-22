@@ -5,22 +5,14 @@
 <?php $this->start('page_content') ?>
 
 <div class="card mb-5" id="basic-routing">
-    <div class="card-header ">
-        <span class=" lead">HTTP Responses</span>
-    </div>
+    <div class="card-header">HTTP Responses</div>
 
     <div class="card-body">
         <p class="font-weight-bold">Send HTTP responses from Response class</p>
         <p>Send basic HTTP response</p>
         
         <div class="card mb-4">
-            <pre class="m-0"><code class="p-3">Response::send($body, array $headers = [], int $status_code = 200);</code></pre>
-        </div>
-
-        <p>Send JSON response</p>
-        
-        <div class="card mb-4">
-            <pre class="m-0"><code class="p-3">Response::json(array $body, array $headers = [], int $status_code = 200);</code></pre>
+            <pre class="m-0"><code class="p-3">Response::send($body, bool $json = false, array $headers = [], int $status_code = 200);</code></pre>
         </div>
 
         <p>Send HTTP headers only</p>
@@ -29,7 +21,7 @@
             <pre class="m-0"><code class="p-3">Response::headers(array $headers, int $status_code = 200);</code></pre>
         </div>
 
-        <p class="font-weight-bold">Send HTTP responses inside Controller class</p>
+        <p class="font-weight-bold">Send HTTP responses inside Controller</p>
         <p>Example :</p>
         
         <div class="card">
@@ -50,7 +42,7 @@ class MyController extends Controller
         //or
         $this->response('Hello world!'); //send basic HTTP response
         //or
-        $this->jsonResponse('Hello world!'); //send JSON response
+        $this->response(['response' => 'Hello world!'], true); //send JSON response
     }
 }</code></pre>
         </div>

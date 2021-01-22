@@ -5,7 +5,6 @@ namespace App\Controllers\Auth;
 use Carbon\Carbon;
 use App\Helpers\Auth;
 use App\Helpers\EmailHelper;
-use Framework\Http\Redirect;
 use App\Requests\AuthRequest;
 use App\Requests\RegisterUser;
 use Framework\Routing\Controller;
@@ -26,7 +25,7 @@ class AuthController extends Controller
         $validator = AuthRequest::validate($this->request->inputs());
 
         if ($validator->fails()) {
-            Redirect::back()->withErrors($validator->errors())->withInputs($validator->inputs())
+            $this->redirect()->withErrors($validator->errors())->withInputs($validator->inputs())
                 ->withAlert(__('login_failed', true))->error('');
         }
 
@@ -43,18 +42,18 @@ class AuthController extends Controller
         $validator = RegisterUser::validate($this->request->inputs());
         
         if ($validator->fails()) {
-            Redirect::back()->withErrors($validator->errors())->withInputs($validator->inputs())
+            $this->redirect()->withErrors($validator->errors())->withInputs($validator->inputs())
                 ->withAlert(__('signup_failed', true))->error('');
         }
 
         if (!Auth::create($this->request)) {
-            Redirect::back()->withInputs($validator->inputs())
+            $this->redirect()->withInputs($validator->inputs())
                 ->withAlert(__('user_already_exists', true))->error('');
         }
 
         if (config('security.auth.email_confirmation') === false) {
             EmailHelper::sendWelcome($this->request->email);
-            Redirect::url('login')->withAlert(__('user_registered', true))->success('');
+            $this->redirect('login')->withAlert(__('user_registered', true))->success('');
         } else {
             $token = random_string(50, true);
 
@@ -65,9 +64,9 @@ class AuthController extends Controller
                     'expires' => Carbon::now()->addDay()->toDateTimeString()
                 ]);
 
-                Redirect::url('login')->withAlert(__('confirm_email_link_sent', true))->success('');
+                $this->redirect('login')->withAlert(__('confirm_email_link_sent', true))->success('');
             } else {
-                Redirect::url('login')->withAlert(__('confirm_email_link_not_sent', true))->error('');
+                $this->redirect('login')->withAlert(__('confirm_email_link_not_sent', true))->error('');
             }
         }
     }
@@ -80,6 +79,6 @@ class AuthController extends Controller
 	public function logout(): void
 	{
 		Auth::forget();
-		Redirect::url()->only();
+		$this->redirect('/')->only();
 	}
 }
