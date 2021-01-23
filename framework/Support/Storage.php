@@ -128,7 +128,7 @@ class Storage
      */
     public function renameFile(string $oldname, string $newname): bool
     {
-        return rename($oldname, $newname);
+        return rename(self::$path . $oldname, self::$path . $newname);
     } 
     
     /**
@@ -140,7 +140,7 @@ class Storage
      */
     public function moveFile(string $filename, string $destination): bool
     {
-        return $this->renameFile($filename, $destination);
+        return $this->renameFile(self::$path . $filename, self::$path . $destination);
     }
     
     /**

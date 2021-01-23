@@ -6,10 +6,11 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
+use Framework\Database\DB;
 use Framework\Routing\View;
 use Framework\Http\Response;
 use Framework\Routing\Route;
-use Framework\Database\DB;
+use App\Database\Models\MediasModel;
 
 /**
  * Web routes
@@ -27,9 +28,14 @@ Route::get('/home', [
 
 Route::get('test', [
     'handler' => function() {
-        $result = DB::connection('test')->statement('SELECT * FROM users WHERE active = :active', ['active' => 1]);
+        //$result = DB::connection('test')->statement('SELECT * FROM users WHERE active = :active', ['active' => 1]);
+        $allowed_extensions = array_merge(MediasModel::FORMATS[0], MediasModel::FORMATS[1], MediasModel::FORMATS[2]);
+        $ext = 'jpg';
 
-        Response::send($result->fetchAll(), true);
+        $b = in_array(strtolower($ext), $allowed_extensions);
+
+        dd($b)
+;        //Response::send();
         //Response::send('Just to test things');
     }
 ]);

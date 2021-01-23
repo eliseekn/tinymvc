@@ -2,10 +2,12 @@
 
 namespace App\Controllers\Admin;
 
-use App\Helpers\DateHelper;
-use App\Helpers\ReportHelper;
+use Carbon\Carbon;
+use App\Helpers\Activity;
+use App\Requests\MediaInfos;
+use Framework\Support\Alert;
+use Framework\Support\Storage;
 use Framework\Routing\Controller;
-use Framework\Http\Redirect;
 use App\Database\Models\MediasModel;
 
 class MediasController extends Controller
@@ -17,21 +19,22 @@ class MediasController extends Controller
      */
     public function index(): void
 	{
-		$this->render('admin/resources/medias/index', [
-            'medias' => MediasModel::select()->orderDesc('created_at')->paginate(20)
-        ]);
+        $medias = MediasModel::select()->orderDesc('created_at')->paginate(10);
+        $images  = 0; $videos = 0; $sounds = 0;
+
+        foreach(MediasModel::select()->orderDesc('created_at')->all() as $media) {
+            if (in_array(get_file_extension($media->filename), MediasModel::FORMATS[0])) {
+                $images++;
+            } elseif (in_array(get_file_extension($media->filename), MediasModel::FORMATS[1])) {
+                $videos++;
+            } elseif (in_array(get_file_extension($media->filename), MediasModel::FORMATS[2])) {
+                $sounds++;
+            }
+        }
+
+		$this->render('admin/resources/medias/index', compact('medias', 'images', 'videos', 'sounds'));
 	}
 
-    /**
-	 * display new page
-	 * 
-	 * @return void
-	 */
-    public function new(): void
-	{
-		$this->render('admin/resources/medias/new');
-	}
-	
 	/**
 	 * display edit page
 	 * 
@@ -41,7 +44,7 @@ class MediasController extends Controller
     public function edit(int $id): void
 	{
 		$this->render('admin/resources/medias/edit', [
-            'medias' => MediasModel::findSingle($id)
+            'media' => MediasModel::findSingle($id)
         ]);
 	}
 
@@ -52,11 +55,30 @@ class MediasController extends Controller
 	 */
     public function create(): void
 	{
-        $id = MediasModel::insert([
-            //
-        ]);
+        $allowed_extensions = array_merge(MediasModel::FORMATS[0], MediasModel::FORMATS[1], MediasModel::FORMATS[2]);
+        $medias = $this->request->files('files', $allowed_extensions, true);
 
-        $this->redirect('admin/resources/medias/view', $id)->only();
+        foreach($medias as $media) {
+            if (!$media->isAllowed()) {
+                $this->redirect('admin/resources/medias')->withToast(__('import_file_type_error') . implode(', ', $allowed_extensions))->error();
+            }
+    
+            if (!$media->isUploaded()) {
+                $this->redirect('admin/resources/medias')->withToast(__('import_data_error'))->error();
+            }
+    
+            if (!$media->save(absolute_path('storage.uploads.' . Carbon::now()->year. '.' . Carbon::now()->month))) {
+                $this->redirect('admin/resources/medias')->withToast(__('upload_error'))->error();
+            }
+
+            MediasModel::insert([
+                'filename' => $media->filename,
+                'url' => absolute_url('storage/uploads/' . Carbon::now()->year. '/' . Carbon::now()->month . '/' . $media->filename)
+            ]);
+        }
+
+        Activity::log(__('medias_created'));
+        $this->redirect('admin/resources/medias')->withToast(__('medias_created'))->success();
 	}
 	
 	/**
@@ -68,7 +90,7 @@ class MediasController extends Controller
 	public function view(int $id): void
 	{
 		$this->render('admin/resources/medias/view', [
-            'medias' => MediasModel::findSingle($id)
+            'media' => MediasModel::findSingle($id)
         ]);
 	}
     
@@ -80,11 +102,35 @@ class MediasController extends Controller
 	 */
 	public function update(int $id): void
 	{
+        $validator = MediaInfos::validate($this->request->inputs());
+
+        if ($validator->fails()) {
+            $this->redirect()->withErrors($validator->errors())->withInputs($validator->inputs())
+                ->withToast(__('media_not_updated', true))->error();
+        }
+
+        $media = MediasModel::findSingle($id);
+
+        //retrieves year and month folders of media
+        $folder = explode('/', $media->url);
+        end($folder);
+
+        $month = prev($folder);
+        $year = prev($folder);
+
+        if (!Storage::path(config('storage.uploads'))->add($year. '/' . $month)->renameFile($media->filename, $this->request->filename)) {
+            $this->redirect()->withToast(__('media_not_updated', true))->error();
+        }
+
         MediasModel::update([
-            //
+            'filename' => $this->request->filename,
+            'title' => $this->request->title,
+            'description' => $this->request->description,
+            'url' => absolute_url('storage/uploads/' . $year. '/' . $month . '/' . $this->request->filename)
         ])->where('id', $id)->persist();
 
-		$this->redirect('admin/resources/medias/view', $id)->only();
+        Activity::log(__('media_updated'));
+		$this->redirect()->withToast(__('media_updated'))->success();
 	}
 
 	/**
@@ -97,62 +143,19 @@ class MediasController extends Controller
 	{
         if (!is_null($id)) {
 			if (!MediasModel::find($id)->exists()) {
-				$this->redirect()->only();
+				$this->redirect()->withToast(__('media_not_found'))->error();
 			}
 	
 			MediasModel::deleteWhere('id', $id);
-            $this->redirect('admin/resources/medias')->only();
+            Activity::log(__('media_deleted'));
+            $this->redirect('admin/resources/medias')->withToast(__('media_deleted'))->success();
 		} else {
 			foreach (explode(',', $this->request->items) as $id) {
 				MediasModel::deleteWhere('id', $id);
-			}
+            }
+			
+            Activity::log(__('medias_deleted'));
+            Alert::toast(__('medias_deleted'))->success();
 		}
-	}
-
-	/**
-	 * import data
-	 *
-	 * @return void
-	 */
-    public function import(): void
-	{
-		$file = $this->request->files('file', ['csv']);
-
-		if (!$file->isAllowed()) {
-            $this->redirect('admin/resources/medias')->only();
-		}
-
-		if (!$file->isUploaded()) {
-			$this->redirect('admin/resources/medias')->only();
-		}
-
-		ReportHelper::import($file->getTempFilename(), MediasModel::class, [
-			//
-		]);
-
-		$this->redirect('admin/resources/medias')->only();
-	}
-	
-	/**
-	 * export data
-	 *
-	 * @return void
-	 */
-    public function export(): void
-	{
-		if ($this->request->has('date_start') && $this->request->has('date_end')) {
-			$medias = MediasModel::select()
-                ->whereBetween('created_at', $this->request->date_start, $this->request->date_end)
-                ->orderDesc('created_at')
-                ->all();
-		} else {
-			$medias = MediasModel::select()->orderAsc('name')->all();
-        }
-        
-        $filename = 'medias_' . date('Y_m_d') . '.' . $this->request->file_type;
-
-		ReportHelper::export($filename, $medias, [
-			//
-		]);
 	}
 }

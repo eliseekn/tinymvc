@@ -4,14 +4,14 @@ namespace App\Database\Migrations;
 
 use Framework\Database\Migration;
 
-class MediasTable
+class GalleriesTable
 {         
     /**
      * name of table
      *
      * @var string
      */
-    public static $table = 'medias';
+    public static $table = 'galleries';
 
     /**
      * create table
@@ -22,10 +22,9 @@ class MediasTable
     {
         Migration::table(self::$table)
             ->addBigInt('id')->primaryKey()
-            ->addString('filename')
-            ->addString('title')->default('')
-            ->addString('description')->default('')
-            ->addString('url')
+            ->addString('title')
+            ->addLongText('featured_media')
+            ->addLongText('medias')
             ->create();
     }
     

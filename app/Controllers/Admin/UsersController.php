@@ -205,7 +205,7 @@ class UsersController extends Controller
         $file = $this->request->files('file', ['csv']);
 
 		if (!$file->isAllowed()) {
-            $this->redirect('admin/resources/users')->withToast(__('import_file_type_error'))->success();
+            $this->redirect('admin/resources/users')->withToast(__('import_file_type_error') . 'csv')->success();
 		}
 
 		if (!$file->isUploaded()) {

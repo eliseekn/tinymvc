@@ -38,9 +38,16 @@ Route::group([
     //medias routes
     'resources/medias' => ['handler' => 'Admin\MediasController@index'],
     'resources/medias/new' => ['handler' => 'Admin\MediasController@new'],
-    'resources/medias/edit/{id:num}' => ['handler' => 'Admin\MediasController@edit'],
-    'resources/medias/view/{id:num}' => ['handler' => 'Admin\MediasController@view'],
-    'resources/medias/delete/{id:num}' => ['handler' => 'Admin\MediasController@delete'],
+    'resources/medias/edit/{num}' => ['handler' => 'Admin\MediasController@edit'],
+    'resources/medias/view/{num}' => ['handler' => 'Admin\MediasController@view'],
+    'resources/medias/delete/{num}' => ['handler' => 'Admin\MediasController@delete'],
+
+    //galleries routes
+    'resources/galleries' => ['handler' => 'Admin\GalleriesController@index'],
+    'resources/galleries/new' => ['handler' => 'Admin\GalleriesController@new'],
+    'resources/galleries/edit/{id:num}' => ['handler' => 'Admin\GalleriesController@edit'],
+    'resources/galleries/view/{id:num}' => ['handler' => 'Admin\GalleriesController@view'],
+    'resources/galleries/delete/{id:num}' => ['handler' => 'Admin\GalleriesController@delete'],
 
     //messages routes
     'account/messages' => ['handler' => 'Admin\MessagesController@index'],
@@ -84,10 +91,17 @@ Route::group([
 
     //medias routes
     'resources/medias/create' => ['handler' => 'Admin\MediasController@create'],
-    'resources/medias/update/{id:num}' => ['handler' => 'Admin\MediasController@update'],
+    'resources/medias/update/{num}' => ['handler' => 'Admin\MediasController@update'],
     'resources/medias/import' => ['handler' => 'Admin\MediasController@import'],
     'resources/medias/export' => ['handler' => 'Admin\MediasController@export'],
     'resources/medias/delete' => ['handler' => 'Admin\MediasController@delete'],
+
+    //galleries routes
+    'resources/galleries/create' => ['handler' => 'Admin\GalleriesController@create'],
+    'resources/galleries/update/{id:num}' => ['handler' => 'Admin\GalleriesController@update'],
+    'resources/galleries/import' => ['handler' => 'Admin\GalleriesController@import'],
+    'resources/galleries/export' => ['handler' => 'Admin\GalleriesController@export'],
+    'resources/galleries/delete' => ['handler' => 'Admin\GalleriesController@delete'],
 
     //notifications routes
     'account/notifications/create' => ['handler' => 'Admin\NotificationsController@create'],

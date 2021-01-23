@@ -23,7 +23,7 @@
             <span><?= __('activities') ?></span>
 
             <div class="d-flex flex-lg-row flex-column mt-lg-0 mt-2">
-                <span class="mr-md-3">
+                <span class="mr-md-2">
                     <input type="search" class="form-control" id="filter" placeholder="<?= __('search') ?>">
                 </span>
 
@@ -55,7 +55,6 @@
                             </div>
                         </th>
 
-                        <th scope="col"><i class="fa fa-sort"></i> #</th>
                         <th scope="col"><i class="fa fa-sort"></i> ID</th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('user') ?></th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('url') ?></th>
@@ -68,7 +67,7 @@
                 </thead>
 
                 <tbody>
-                    <?php foreach ($activities as $key => $activity) : ?>
+                    <?php foreach ($activities as $activity) : ?>
                     <tr>
                         <td>
                             <div class="custom-control custom-checkbox">
@@ -77,7 +76,6 @@
                             </div>
                         </td>
 
-                        <td><?= $activities->getFirstItem() + $key + 1 ?></td>
                         <td><?= $activity->id ?></td>
                         <td><?= $activity->user ?></td>
                         <td><?= $activity->url ?></td>

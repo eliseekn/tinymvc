@@ -65,7 +65,7 @@ $config = [
     ],
 
     'storage' => [
-        'storage' => absolute_path('storage'),
+        'uploads' => absolute_path('storage.uploads'),
         'public' => absolute_path('public'),
         'routes' => absolute_path('routes'),
         'views' => absolute_path('resources.views'),

@@ -33,6 +33,7 @@
                     <upload-modal 
                         action="<?= absolute_url('admin/resources/roles/import') ?>" 
                         title="<?= __('import') ?>" 
+                        multiple=""
                         csrf_token='<?= csrf_token_input() ?>'>
                     </upload-modal>
                     
@@ -62,7 +63,6 @@
                             </div>
                         </th>
 
-                        <th scope="col"><i class="fa fa-sort"></i> #</th>
                         <th scope="col"><i class="fa fa-sort"></i> ID</th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('title') ?></th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('slug') ?></th>
@@ -74,7 +74,7 @@
                 </thead>
 
                 <tbody>
-                    <?php foreach ($roles as $key => $role) : ?>
+                    <?php foreach ($roles as $role) : ?>
                     <tr>
                         <td>
                             <div class="custom-control custom-checkbox">
@@ -83,7 +83,6 @@
                             </div>
                         </td>
 
-                        <td><?= $roles->getFirstItem() + $key + 1 ?></td>
                         <td><?= $role->id ?></td>
                         <td><?= $role->title ?></td>
                         <td><?= $role->slug ?></td>

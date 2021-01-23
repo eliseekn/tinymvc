@@ -423,22 +423,4 @@ class Request
     {
         return array_merge($this->inputs(), $this->queries());
     }
-
-    /**
-     * validate inputs and redirect with flash session data
-     *
-     * @param  array|null $inputs
-     * @param  array $rules
-     * @param  array $messages
-     * @return void
-     */
-    public function validate(?array $inputs = null, array $rules = [], array $messages = []): void
-    {
-        $inputs = is_null($inputs) ? $this->inputs() : $inputs;
-        $validator = Validator::validate($inputs, $rules, $messages);
-
-        if ($validator->fails()) {
-            Redirect::back()->withErrors($validator->errors())->withInputs($validator->inputs());
-        }
-    }
 }

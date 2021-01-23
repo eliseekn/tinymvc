@@ -253,6 +253,19 @@ if (!function_exists('absolute_url')) {
 	}
 }
 
+if (!function_exists('assets')) {    
+    /**
+     * generate assets url from public folder
+     *
+     * @param  string $asset
+     * @return string
+     */
+    function assets(string $asset): string
+    {
+        return absolute_url('public/' . $asset);
+    }
+}
+
 if (!function_exists('current_url')) {
 	/**
 	 * get current url

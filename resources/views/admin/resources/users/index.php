@@ -42,6 +42,7 @@
                     <upload-modal 
                         action="<?= absolute_url('admin/resources/users/import') ?>" 
                         title="<?= __('import') ?>" 
+                        multiple=""
                         csrf_token='<?= csrf_token_input() ?>'>
                     </upload-modal>
                     
@@ -71,7 +72,6 @@
                             </div>
                         </th>
 
-                        <th scope="col"><i class="fa fa-sort"></i> #</th>
                         <th scope="col"><i class="fa fa-sort"></i> ID</th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('name') ?></th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('email') ?></th>
@@ -86,7 +86,7 @@
                 </thead>
 
                 <tbody>
-                    <?php foreach ($users as $key => $user) : ?>
+                    <?php foreach ($users as $user) : ?>
                     <tr>
                         <td>
                             <div class="custom-control custom-checkbox">
@@ -95,7 +95,6 @@
                             </div>
                         </td>
 
-                        <td><?= $users->getFirstItem() + $key + 1 ?></td>
                         <td><?= $user->id ?></td>
 
                         <td>

@@ -38,6 +38,10 @@
     'reply' => 'Reply',
     'medias' => 'Medias',
     'media' => 'Media',
+    'galleries' => 'Galleries',
+    'gallery' => 'Gallery',
+    'posts' => 'Posts',
+    'post' => 'Post',
 
     //navabar
     'mark_as_read' => 'Mark as read',
@@ -113,6 +117,19 @@
     'action' => 'Action',
     'target' => 'Target',
     'back' => 'Back',
+    'alt' => 'Alternative text',
+    'images' => 'Images',
+    'image' => 'Image',
+    'videos' => 'Videos',
+    'video' => 'Video',
+    'music' => 'Music',
+    'sounds' => 'Sounds',
+    'sound' => 'Sound',
+    'filename' => 'Filename',
+    'select_all' => 'Select all',
+    'featured_media' => 'Featured media',
+    'add' => 'Add',
+    'add_medias' => 'Add medias',
 
     //pagination
     'previous' => 'Previous',
@@ -144,7 +161,7 @@
     'user_registered' => 'Account successfully created',
     'user_activated' => 'Account successfully activated',
     'user_not_registered' => 'Account not registred',
-    'import_file_type_error' => 'File type not allowed',
+    'import_file_type_error' => 'File type not allowed. Allowed type are: ',
     'import_data_error' => 'Failed to import data',
     'data_imported' => 'Data imported successfully',
     'data_exported' => 'Data exported successfully',
@@ -176,6 +193,13 @@
     'messages_updated' => 'Messages marked as read',
     'message_deleted' => 'Message deleted successfully',
     'messages_deleted' => 'Messages deleted successfully',
+    'medias_created' => 'Medias created successfully',
+    'media_updated' => 'Media updated successfully',
+    'media_not_updated' => 'Failed to update media',
+    'medias_deleted' => 'Medias deleted successfully',
+    'media_deleted' => 'Media deleted successfully',
+    'media_not_found' => 'Media not found',
+    'upload_error' => 'Failed to upload files',
 
     //misc
     'ago' => ' ago',

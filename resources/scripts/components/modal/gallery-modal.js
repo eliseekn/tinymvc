@@ -1,9 +1,12 @@
-class UploadModal extends HTMLElement {
+class GalleryModal extends HTMLElement {
     constructor() {
         super()
 
         this.translations = {}
-        this.inputHTML = this.inputHTML.bind(this)
+        this.medias = [];
+        this.content = ''
+
+        this.getMedias = this.getMedias.bind(this)
         this.getTranslations = this.getTranslations.bind(this)
         this.showDialog = this.showDialog.bind(this)
         this.addEventListener('click', this.showDialog)
@@ -15,17 +18,20 @@ class UploadModal extends HTMLElement {
             .then(data => this.translations = data.translations)
     }
 
-    inputHTML() {
-        if (this.getAttribute('multiple') === "") {
-            return `<input type="file" name="file" id="file" class="form-group-file" required>`
-        } else {
-            return `<input type="file" name="files[]" id="files" class="form-group-file" required multiple>`
-        }
+    getMedias() {
+        fetch('/tinymvc/api/medias')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                this.medias = data.medias,
+                this.content = data.content
+            })
     }
 
     connectedCallback() {
-        this.innerHTML = `<button class="btn btn-outline-dark ml-2">${this.getAttribute('title')}</button>`
+        this.innerHTML = `<a href="#" class="btn btn-outline-dark mr-2">${this.translations.add_medias}</a>`;
         this.getTranslations()
+        this.getMedias()
     }
 
     showDialog() {
@@ -35,25 +41,16 @@ class UploadModal extends HTMLElement {
         element.setAttribute('role', 'dialog')
         element.classList.add('modal', 'fade')
         element.innerHTML = `
-            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-dialog modal-xl modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header bg-light text-dark align-items-center py-2">
-                        <h5 class="modal-title">${this.translations.upload}</h5>
+                        <h5 class="modal-title">${this.translations.medias}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
 
-                    <form method="post" action="${this.getAttribute('action')}" enctype="multipart/form-data">
-                        ${this.getAttribute('csrf_token')}
-
-                        <div class="modal-body">${this.inputHTML()}</div>
-
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-dark">${this.translations.submit}</button>
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">${this.translations.cancel}</button>
-                        </div>
-                    </form>
+                    ${this.content}
                 </div>
             </div>
         `
@@ -72,4 +69,4 @@ class UploadModal extends HTMLElement {
     }
 }
 
-export default UploadModal
+export default GalleryModal

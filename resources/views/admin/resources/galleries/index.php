@@ -1,5 +1,5 @@
 <?php $this->layout('admin/layout', [
-    'page_title' => __('RESOURCENAMEs') . ' | Administration'
+    'page_title' => __('galleries') . ' | Administration'
 ]) ?>
 
 <?php $this->start('page_content') ?>
@@ -8,8 +8,8 @@
     <div class="col-md-4 mb-md-0">
         <div class="card card-metrics bg-light shadow-sm">
             <div class="card-body d-flex align-items-center justify-content-between">
-                <p><i class="fa fa-cog fa-lg"></i> <?= __('total') ?></p>
-                <p class="font-weight-bold"><?= $RESOURCENAMEs->getTotalItems() ?></p>
+                <p><i class="fa fa-photo-video fa-lg"></i> <?= __('total') ?></p>
+                <p class="font-weight-bold"><?= $galleries->getTotalItems() ?></p>
             </div>
         </div>
     </div>
@@ -20,7 +20,7 @@
 <div class="card shadow-sm">
     <div class="card-header">
         <div class="d-flex flex-lg-row flex-column align-items-lg-center justify-content-lg-between">
-            <span><?= __('RESOURCENAMEs') ?></span>
+            <span><?= __('galleries') ?></span>
 
             <div class="d-flex flex-lg-row flex-column mt-lg-0 mt-2">
                 <span class="mr-md-3">
@@ -28,24 +28,11 @@
                 </span>
 
                 <span class="mt-lg-0 mt-2">
-                    <a href="<?= absolute_url('admin/resources/RESOURCENAMEs/new') ?>" class="btn btn-outline-dark">
+                    <a href="<?= absolute_url('admin/resources/galleries/new') ?>" class="btn btn-outline-dark">
                         <?= __('new') ?>
                     </a>
-                    
-                    <upload-modal 
-                        action="<?= absolute_url('admin/resources/RESOURCENAMEs/import') ?>" 
-                        title="<?= __('import') ?>" 
-                        multiple=""
-                        csrf_token='<?= csrf_token_input() ?>'>
-                    </upload-modal>
 
-                    <export-modal 
-                        action="<?= absolute_url('admin/resources/RESOURCENAMEs/export') ?>" 
-                        title="<?= __('export') ?>" 
-                        csrf_token='<?= csrf_token_input() ?>'>
-                    </export-modal>
-
-                    <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('admin/resources/RESOURCENAMEs/delete') ?>">
+                    <button class="btn btn-danger ml-2" id="bulk-delete" data-url="<?= absolute_url('admin/resources/galleries/delete') ?>">
                         <?= __('delete') ?>
                     </button>
                 </span>
@@ -66,30 +53,44 @@
                         </th>
 
                         <th scope="col"><i class="fa fa-sort"></i> ID</th>
+                        <th scope="col"><i class="fa fa-sort"></i> <?= __('title') ?></th>
+                        <th scope="col"><i class="fa fa-sort"></i> <?= __('featured_media') ?></th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('created_at') ?></th>
                         <th scope="col"></th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    <?php foreach ($RESOURCENAMEs as $RESOURCENAME) : ?>
+                    <?php foreach ($galleries as $gallery) : ?>
                     <tr>
                         <td>
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="<?= $RESOURCENAME->id ?>" data-id="<?= $RESOURCENAME->id ?>">
-                                <label class="custom-control-label" for="<?= $RESOURCENAME->id ?>"></label>
+                                <input type="checkbox" class="custom-control-input" id="<?= $gallery->id ?>" data-id="<?= $gallery->id ?>">
+                                <label class="custom-control-label" for="<?= $gallery->id ?>"></label>
                             </div>
                         </td>
 
-                        <td><?= $RESOURCENAME->id ?></td>
-                        <td><?= \App\Helpers\DateHelper::format($RESOURCENAME->created_at)->human() ?></td>
+                        <td><?= $gallery->id ?></td>
+                        <td><?= $gallery->title ?></td>
 
                         <td>
-                            <a class="btn text-dark p-1" href="<?= absolute_url('admin/resources/RESOURCENAMEs/view/' . $RESOURCENAME->id) ?>" title="<?= __('details') ?>">
+                            <?php if (in_array(get_file_extension($gallery->featured_media), \App\Database\Models\MediasModel::FORMATS[0])) : ?>
+                            <img class="card-img-top" src="<?= $gallery->url ?>" width="200" height="200">
+                            <?php elseif (in_array(get_file_extension($gallery->featured_media), \App\Database\Models\MediasModel::FORMATS[1])) : ?>
+                            <video class="card-img-top" width="200" height="200">
+                                <source src="<?= $gallery->url ?>"></source>
+                            </video>
+                            <?php endif ?>
+                        </td>
+
+                        <td><?= \App\Helpers\DateHelper::format($gallery->created_at)->human() ?></td>
+
+                        <td>
+                            <a class="btn text-dark p-1" href="<?= absolute_url('admin/resources/galleries/view/' . $gallery->id) ?>" title="<?= __('details') ?>">
                                 <i class="fa fa-eye"></i>
                             </a>
 
-                            <a class="btn text-dark p-1" href="<?= absolute_url('admin/resources/RESOURCENAMEs/edit/' . $RESOURCENAME->id) ?>" title="<?= __('edit') ?>">
+                            <a class="btn text-dark p-1" href="<?= absolute_url('admin/resources/galleries/edit/' . $gallery->id) ?>" title="<?= __('edit') ?>">
                                 <i class="fa fa-edit"></i>
                             </a>
 
@@ -97,7 +98,7 @@
                                 type="icon" 
                                 title="<?= __('delete') ?>"
                                 content='<i class="fa fa-trash-alt"></i>' 
-                                action="<?= absolute_url('admin/resources/RESOURCENAMEs/delete/' . $RESOURCENAME->id) ?>">
+                                action="<?= absolute_url('admin/resources/galleries/delete/' . $gallery->id) ?>">
                             </confirm-delete>
                         </td>
                     </tr>
@@ -108,11 +109,11 @@
     </div>
 
     <div class="card-footer d-flex align-items-center justify-content-between">
-        <span><?= __('total_results') ?> <span class="font-weight-bold"><?= $RESOURCENAMEs->getTotalItems() ?></span></span>
-        <span><?= __('showing') ?> <span class="font-weight-bold"><?= $RESOURCENAMEs->getPageTotalItems() === 0 ? $RESOURCENAMEs->getFirstItem() : $RESOURCENAMEs->getFirstItem() + 1 ?></span> <?= __('to') ?> <span class="font-weight-bold"><?= $RESOURCENAMEs->getPageTotalItems() + $RESOURCENAMEs->getFirstItem() ?></span></span>
+        <span><?= __('total_results') ?> <span class="font-weight-bold"><?= $galleries->getTotalItems() ?></span></span>
+        <span><?= __('showing') ?> <span class="font-weight-bold"><?= $galleries->getPageTotalItems() === 0 ? $galleries->getFirstItem() : $galleries->getFirstItem() + 1 ?></span> <?= __('to') ?> <span class="font-weight-bold"><?= $galleries->getPageTotalItems() + $galleries->getFirstItem() ?></span></span>
 
         <?php $this->insert('partials/pagination', [
-            'pagination' => $RESOURCENAMEs
+            'pagination' => $galleries
         ]) ?>
     </div>
 </div>

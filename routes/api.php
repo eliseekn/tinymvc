@@ -12,8 +12,10 @@ use Framework\Http\Response;
 use Framework\Routing\Route;
 use Framework\Support\Metrics;
 use App\Database\Models\UsersModel;
+use App\Database\Models\MediasModel;
 use App\Database\Models\MessagesModel;
 use App\Database\Models\NotificationsModel;
+use Framework\Routing\View;
 
 /**
  * API routes
@@ -25,7 +27,7 @@ Response::headers([
     'Access-Control-Allow-Headers' => 'X-Requested-With',
 ]);
 
-//get notifications list
+//retrieves notifications list
 Route::get('api/notifications', [
     'handler' => function() {
         $notifications = NotificationsModel::get()->take(5);
@@ -38,7 +40,7 @@ Route::get('api/notifications', [
     }
 ]);
 
-//get metrics trends
+//retrieves metrics trends
 Route::get('api/metrics/users/{str}/?{num}?', [
     'handler' => function (string $trends, int $interval = 0) {
         $metrics = UsersModel::metrics('id', Metrics::COUNT, $trends, $interval);
@@ -46,7 +48,7 @@ Route::get('api/metrics/users/{str}/?{num}?', [
     }
 ]);
 
-//get messages list
+//retrieves messages list
 Route::get('api/messages', [
     'handler' => function () {
         $messages = MessagesModel::recipients()->take(5);
@@ -59,19 +61,31 @@ Route::get('api/messages', [
     }
 ]);
 
-//get users list
+//retrieves users list
 Route::get('api/users', [
     'handler' => function () {
         Response::send(['users' => UsersModel::find('!=', Auth::get()->id)->all()], true);
     }
 ]);
 
-//get translations
+//retrieves translations
 Route::get('api/translations', [
     'handler' => function() {
         $lang = Auth::get()->lang;
         require 'resources/lang/' . $lang . '.php';
 
         Response::send(['translations' => $config], true);
+    }
+]);
+
+//retrieves medias list
+Route::get('api/medias', [
+    'handler' => function() {
+        $medias = MediasModel::select()->orderDesc('created_at')->all();
+
+        Response::send([
+            'medias' => $medias,
+            'content' => View::getContent('partials/medias', ['medias' => $medias])
+        ], true);
     }
 ]);

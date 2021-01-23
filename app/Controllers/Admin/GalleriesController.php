@@ -1,12 +1,13 @@
 <?php
 
-namespace NAMESPACE;
+namespace App\Controllers\Admin;
 
 use App\Helpers\ReportHelper;
 use Framework\Routing\Controller;
-use App\Database\Models\RESOURCEMODEL;
+use App\Database\Models\GalleriesModel;
+use App\Database\Models\MediasModel;
 
-class CLASSNAME extends Controller
+class GalleriesController extends Controller
 {
     /**
      * display list
@@ -15,8 +16,8 @@ class CLASSNAME extends Controller
      */
     public function index(): void
 	{
-		$this->render('admin/resources/RESOURCENAME/index', [
-            'RESOURCENAME' => RESOURCEMODEL::select()->orderDesc('created_at')->paginate(20)
+		$this->render('admin/resources/galleries/index', [
+            'galleries' => GalleriesModel::select()->orderDesc('created_at')->paginate(20)
         ]);
 	}
 
@@ -27,7 +28,9 @@ class CLASSNAME extends Controller
 	 */
     public function new(): void
 	{
-		$this->render('admin/resources/RESOURCENAME/new');
+		$this->render('admin/resources/galleries/new', [
+            'medias' => MediasModel::select()->orderDesc('created_at')->all()
+        ]);
 	}
 	
 	/**
@@ -38,8 +41,8 @@ class CLASSNAME extends Controller
 	 */
     public function edit(int $id): void
 	{
-		$this->render('admin/resources/RESOURCENAME/edit', [
-            'RESOURCENAME' => RESOURCEMODEL::findSingle($id)
+		$this->render('admin/resources/galleries/edit', [
+            'gallery' => GalleriesModel::findSingle($id)
         ]);
 	}
 
@@ -50,11 +53,11 @@ class CLASSNAME extends Controller
 	 */
     public function create(): void
 	{
-        $id = RESOURCEMODEL::insert([
+        $id = GalleriesModel::insert([
             //
         ]);
 
-		$this->redirect('admin/resources/RESOURCENAME/view', $id)->only();
+		$this->redirect('admin/resources/galleries/view', $id)->only();
 	}
 	
 	/**
@@ -65,8 +68,8 @@ class CLASSNAME extends Controller
 	 */
 	public function view(int $id): void
 	{
-		$this->render('admin/resources/RESOURCENAME/view', [
-            'RESOURCENAME' => RESOURCEMODEL::findSingle($id)
+		$this->render('admin/resources/galleries/view', [
+            'gallery' => GalleriesModel::findSingle($id)
         ]);
 	}
     
@@ -78,11 +81,11 @@ class CLASSNAME extends Controller
 	 */
 	public function update(int $id): void
 	{
-        RESOURCEMODEL::update([
+        GalleriesModel::update([
             //
         ])->where('id', $id)->persist();
 
-		$this->redirect('admin/resources/RESOURCENAME/view', $id)->only();
+		$this->redirect('admin/resources/galleries/view', $id)->only();
 	}
 
 	/**
@@ -94,15 +97,15 @@ class CLASSNAME extends Controller
 	public function delete(?int $id = null): void
 	{
         if (!is_null($id)) {
-			if (!RESOURCEMODEL::find($id)->exists()) {
+			if (!GalleriesModel::find($id)->exists()) {
 				$this->redirect()->only();
 			}
 	
-			RESOURCEMODEL::deleteWhere('id', $id);
-            $this->redirect('admin/resources/RESOURCENAME')->only();
+			GalleriesModel::deleteWhere('id', $id);
+            $this->redirect('admin/resources/galleries')->only();
 		} else {
 			foreach (explode(',', $this->request->items) as $id) {
-				RESOURCEMODEL::deleteWhere('id', $id);
+				GalleriesModel::deleteWhere('id', $id);
 			}
 		}
 	}
@@ -117,18 +120,18 @@ class CLASSNAME extends Controller
 		$file = $this->request->files('file', ['csv']);
 
 		if (!$file->isAllowed()) {
-            $this->redirect('admin/resources/RESOURCENAME')->only();
+            $this->redirect('admin/resources/galleries')->only();
 		}
 
 		if (!$file->isUploaded()) {
-			$this->redirect('admin/resources/RESOURCENAME')->only();
+			$this->redirect('admin/resources/galleries')->only();
 		}
 
-		ReportHelper::import($file->getTempFilename(), RESOURCEMODEL::class, [
+		ReportHelper::import($file->getTempFilename(), GalleriesModel::class, [
 			//
 		]);
 
-		$this->redirect('admin/resources/RESOURCENAME')->only();
+		$this->redirect('admin/resources/galleries')->only();
 	}
 	
 	/**
@@ -139,17 +142,17 @@ class CLASSNAME extends Controller
     public function export(): void
 	{
 		if ($this->request->has('date_start') && $this->request->has('date_end')) {
-			$RESOURCENAME = RESOURCEMODEL::select()
+			$galleries = GalleriesModel::select()
                 ->whereBetween('created_at', $this->request->date_start, $this->request->date_end)
                 ->orderDesc('created_at')
                 ->all();
 		} else {
-			$RESOURCENAME = RESOURCEMODEL::select()->orderAsc('name')->all();
+			$galleries = GalleriesModel::select()->orderAsc('name')->all();
         }
         
-        $filename = 'RESOURCENAME_' . date('Y_m_d') . '.' . $this->request->file_type;
+        $filename = 'galleries_' . date('Y_m_d') . '.' . $this->request->file_type;
 
-		ReportHelper::export($filename, $RESOURCENAME, [
+		ReportHelper::export($filename, $galleries, [
 			//
 		]);
 	}
