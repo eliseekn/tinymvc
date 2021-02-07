@@ -1,3 +1,9 @@
+/**
+ * affiche une fenêtre de création d'une notification
+ *
+ * @class CreateNotification
+ * @constructor
+ */
 class CreateNotification extends HTMLElement {
     constructor() {
         super()
@@ -8,6 +14,11 @@ class CreateNotification extends HTMLElement {
         this.addEventListener('click', this.showDialog)
     }
 
+    /**
+     * recupère les traductions
+     *
+     * @return
+     */
     getTranslations() {
         fetch('/tinymvc/api/translations')
             .then(response => response.json())
@@ -19,6 +30,11 @@ class CreateNotification extends HTMLElement {
         this.getTranslations()
     }
 
+    /**
+     * affiche la fenêtre modale
+     *
+     * @return
+     */
     showDialog() {
         let element = document.createElement('div')
         element.id = 'create-notification'

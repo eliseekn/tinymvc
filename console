@@ -25,6 +25,7 @@ $options = getopt('', [
     'query::',
     'fetch::',
     'db::',
+    'resource::',
     'controller::',
     'namespace::',
     'model::', 
@@ -34,8 +35,6 @@ $options = getopt('', [
     'execute',
     'delete', 
     'reset',
-    'admin',
-    'm'
 ]);
 
 //handle command line arguments
@@ -85,7 +84,7 @@ else {
     $help_message .= '  --make (Manage resources build operations)' . PHP_EOL;
     $help_message .= '      --controller=posts                      Create posts controller' . PHP_EOL;
     $help_message .= '      --controller=posts --namespace=blog     Create posts controller in app\Controllers\Blog folder' . PHP_EOL;
-    $help_message .= '      --controller=posts --admin              Create posts controller and admin resources' . PHP_EOL;
+    $help_message .= '      --resource=posts                        Create posts resources (controller, migration, model, views and routes)' . PHP_EOL;
     $help_message .= PHP_EOL;
     $help_message .= '      --model=posts                           Create posts model' . PHP_EOL;
     $help_message .= PHP_EOL;

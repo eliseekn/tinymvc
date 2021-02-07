@@ -16,7 +16,6 @@ import ThemeSwitch from './components/mixed/theme-switch'
 import AvatarIcon from './components/mixed/avatar-icon'
 import CreateNotification from './components/modal/create-notification'
 import SendMessage from './components/modal/send-message'
-import GalleryModal from './components/modal/gallery-modal'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Notifications from './components/react/notifications'
@@ -37,7 +36,6 @@ window.customElements.define('theme-switch', ThemeSwitch)
 window.customElements.define('avatar-icon', AvatarIcon)
 window.customElements.define('create-notification', CreateNotification)
 window.customElements.define('send-message', SendMessage)
-window.customElements.define('gallery-modal', GalleryModal)
 
 if (document.querySelector('#notifications-bell')) {
     ReactDOM.render(<Notifications />, document.querySelector('#notifications-bell'))

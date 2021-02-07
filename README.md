@@ -8,7 +8,7 @@ PHP >= 7.2
 MySQL server
 Node
 Composer
-Yarn
+Yarn or NPM
 ```
 
 ## Installation

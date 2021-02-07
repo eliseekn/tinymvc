@@ -22,9 +22,7 @@ class RolesTable
     {
         Migration::table(self::$table)
             ->addInt('id')->primaryKey()
-            ->addString('title')
-            ->addString('slug')->unique()
-            ->addText('description')
+            ->addString('name')->unique()
             ->create();
     }
     

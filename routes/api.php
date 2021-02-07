@@ -12,10 +12,8 @@ use Framework\Http\Response;
 use Framework\Routing\Route;
 use Framework\Support\Metrics;
 use App\Database\Models\UsersModel;
-use App\Database\Models\MediasModel;
 use App\Database\Models\MessagesModel;
 use App\Database\Models\NotificationsModel;
-use Framework\Routing\View;
 
 /**
  * API routes
@@ -30,7 +28,7 @@ Response::headers([
 //retrieves notifications list
 Route::get('api/notifications', [
     'handler' => function() {
-        $notifications = NotificationsModel::get()->take(5);
+        $notifications = NotificationsModel::messages()->take(5);
 
         foreach ($notifications as $notification) {
             $notification->created_at = time_elapsed(DateHelper::format($notification->created_at)->timestamp(), 1);
@@ -71,21 +69,8 @@ Route::get('api/users', [
 //retrieves translations
 Route::get('api/translations', [
     'handler' => function() {
-        $lang = Auth::get()->lang;
-        require 'resources/lang/' . $lang . '.php';
+        require_once 'resources/lang/' . Auth::get()->lang . '.php';
 
         Response::send(['translations' => $config], true);
-    }
-]);
-
-//retrieves medias list
-Route::get('api/medias', [
-    'handler' => function() {
-        $medias = MediasModel::select()->orderDesc('created_at')->all();
-
-        Response::send([
-            'medias' => $medias,
-            'content' => View::getContent('partials/medias', ['medias' => $medias])
-        ], true);
     }
 ]);

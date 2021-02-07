@@ -46,21 +46,14 @@
                 </button>
 
                 <div class="<?php if (!in_url('resources')) : echo 'd-none'; endif ?> border-bottom" id="resources-dropdown-menu">
-                    <?php if (auth()->role === \App\Database\Models\RolesModel::ROLES[0]) :?>
-                    <a href="<?= absolute_url('admin/resources/roles') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
-                        <i class="fa fa-dot-circle <?php if (in_url('roles')) : echo 'text-primary'; endif ?>"></i> <?= __('roles') ?>
-                    </a>
+                    <?php if (auth()->role === \App\Database\Models\RolesModel::ROLE[0]) :?>
                     <a href="<?= absolute_url('admin/resources/users') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (in_url('users')) : echo 'text-primary'; endif ?>"></i> <?= __('users') ?>
                     </a>
                     <?php endif ?>
 
-                    <a href="<?= absolute_url('admin/resources/medias') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
-                        <i class="fa fa-dot-circle <?php if (in_url('medias')) : echo 'text-primary'; endif ?>"></i> <?= __('medias') ?>
-                    </a>
-
-                    <a href="<?= absolute_url('admin/resources/galleries') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
-                        <i class="fa fa-dot-circle <?php if (in_url('galleries')) : echo 'text-primary'; endif ?>"></i> <?= __('galleries') ?>
+                    <a href="<?= absolute_url('admin/resources/files') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                        <i class="fa fa-dot-circle <?php if (in_url('files')) : echo 'text-primary'; endif ?>"></i> <?= __('files') ?>
                     </a>
                 </div>
 

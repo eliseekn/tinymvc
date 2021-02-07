@@ -80,7 +80,7 @@ class Controller
      * @param  mixed $params
      * @return Framework\Http\Redirect
      */
-    public function redirect(?string $url = null, $params = null): ?\Framework\Http\Redirect
+    public function redirect(?string $url = null, $params = null): \Framework\Http\Redirect
     {
         return is_null($url) ? Redirect::back() : Redirect::url($url, $params);
     }

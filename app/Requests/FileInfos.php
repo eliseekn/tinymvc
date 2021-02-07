@@ -4,7 +4,7 @@ namespace App\Requests;
 
 use Framework\Support\Validator;
 
-class MediaInfos extends Validator
+class FileInfos extends Validator
 {
     /**
      * rules

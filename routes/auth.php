@@ -28,7 +28,7 @@ Route::group([
 ])->by([
     'method' => 'GET',
     'middlewares' => [
-        'RememberUser',
+        'RememberUser', 
         'AuthPolicy'
     ]
 ]);

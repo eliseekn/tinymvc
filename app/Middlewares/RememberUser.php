@@ -27,6 +27,5 @@ class RememberUser
                 Session::create('user', $user);
             }
         }
-        
     }
 }

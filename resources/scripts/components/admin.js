@@ -159,36 +159,4 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         })
     }
-
-    //metrics trends
-    if (document.querySelector('#users-trends-lines')) {
-        document.querySelector('#users-trends-lines').addEventListener('change', event => {
-            if (event.target.value === 'last-years') {
-                fetch(event.target.dataset.url + '/years/5')
-                    .then(response => response.json())
-                    .then(data => {
-                        document.querySelector('lines-chart').setAttribute('data', data.metrics)
-                        document.querySelector('lines-chart').setAttribute('xkey', 'year')
-                    })
-            }
-            
-            else if (event.target.value === 'last-weeks') {
-                fetch(event.target.dataset.url + '/weeks/4')
-                    .then(response => response.json())
-                    .then(data => {
-                        document.querySelector('lines-chart').setAttribute('data', data.metrics)
-                        document.querySelector('lines-chart').setAttribute('xkey', 'day')
-                    })
-            }
-
-            else {
-                fetch(event.target.dataset.url + '/' + event.target.value)
-                    .then(response => response.json())
-                    .then(data => {
-                        document.querySelector('lines-chart').setAttribute('data', data.metrics)
-                        event.target.value === 'weeks' ? document.querySelector('lines-chart').setAttribute('xkey', 'day') : document.querySelector('lines-chart').setAttribute('xkey', 'month')
-                    })
-            }
-        })
-    }
 })

@@ -77,8 +77,8 @@
                     <div class="col-sm-10">
                         <?php foreach ($roles as $role) : ?>
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input class="custom-control-input" type="radio" name="role" id="<?= $role->slug ?>" value="<?= $role->slug ?>" <?php if ($user->role === $role->slug) : echo 'checked'; endif ?>>
-                            <label class="custom-control-label" for="<?= $role->slug ?>"><?= $role->title ?></label>
+                            <input class="custom-control-input" type="radio" name="role" id="<?= $role->name ?>" value="<?= $role->name ?>" <?php if ($user->role === $role->name) : echo 'checked'; endif ?>>
+                            <label class="custom-control-label" for="<?= $role->name ?>"><?= $role->name ?></label>
                         </div>
                         <?php endforeach ?>
                     </div>

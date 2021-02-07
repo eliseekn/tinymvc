@@ -18,7 +18,7 @@ class MessagesController extends Controller
      */
     public function index(): void
 	{
-        $messages = MessagesModel::get()->paginate(20);
+        $messages = MessagesModel::messages()->paginate(20);
 
         $messages_unread = MessagesModel::count()
             ->where('recipient', Auth::get()->id)
@@ -37,7 +37,7 @@ class MessagesController extends Controller
     public function create(): void
 	{
         $id = MessagesModel::insert([
-            'sender' => Auth::get()->id,
+            'sender' => Auth::get()->id,    
             'recipient' => $this->request->recipient,
             'message' => $this->request->message
         ]);

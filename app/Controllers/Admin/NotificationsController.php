@@ -83,9 +83,7 @@ class NotificationsController extends Controller
             Activity::log(__('notification_deleted'));
 			$this->redirect()->withToast(__('notification_deleted'))->success();
 		} else {
-            $notifications_id = explode(',', $this->request->items);
-
-			foreach ($notifications_id as $id) {
+			foreach (explode(',', $this->request->items) as $id) {
 				NotificationsModel::deleteWhere('id', $id);
 			}
 			

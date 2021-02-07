@@ -10,7 +10,7 @@ use Framework\Database\DB;
 use Framework\Routing\View;
 use Framework\Http\Response;
 use Framework\Routing\Route;
-use App\Database\Models\MediasModel;
+use App\Database\Models\FilesModel;
 
 /**
  * Web routes
@@ -29,7 +29,7 @@ Route::get('/home', [
 Route::get('test', [
     'handler' => function() {
         //$result = DB::connection('test')->statement('SELECT * FROM users WHERE active = :active', ['active' => 1]);
-        $allowed_extensions = array_merge(MediasModel::FORMATS[0], MediasModel::FORMATS[1], MediasModel::FORMATS[2]);
+        $allowed_extensions = array_merge(FilesModel::TYPE[0], FilesModel::TYPE[1], FilesModel::TYPE[2]);
         $ext = 'jpg';
 
         $b = in_array(strtolower($ext), $allowed_extensions);

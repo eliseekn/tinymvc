@@ -18,9 +18,9 @@ class RolesModel extends Model
      * 
      * @var array
      */
-    public const ROLES = [
-        0 => 'administrator',
+    public const ROLE = [
+        0 => 'admin',
         1 => 'customer',
-        2 => 'visitor'
+        2 => 'user'
     ];
 }

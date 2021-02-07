@@ -18,7 +18,7 @@ class ActivitiesController extends Controller
      */
     public function index(): void
 	{
-        if (Auth::role(RolesModel::ROLES[0])) {
+        if (Auth::role(RolesModel::ROLE[0])) {
             $activities = ActivitiesModel::select();
         } else {
             $activities = ActivitiesModel::findBy('user', Auth::get()->email);

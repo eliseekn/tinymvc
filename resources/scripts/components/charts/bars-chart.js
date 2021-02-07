@@ -1,4 +1,10 @@
-class BarsChart extends HTMLElement {
+/**
+ * affiche les graphiques de types barres
+ *
+ * @class BarsChart
+ * @constructor
+ */
+ class BarsChart extends HTMLElement {
     constructor() {
         super()
 
@@ -9,6 +15,11 @@ class BarsChart extends HTMLElement {
         this.displayData = this.displayData.bind(this)
     }
 
+    /**
+     * recupère les traductions
+     *
+     * @return
+     */
     getTranslations() {
         fetch('/tinymvc/api/translations')
             .then(response => response.json())

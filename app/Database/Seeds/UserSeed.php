@@ -26,7 +26,7 @@ class UserSeed
             'name' => 'admin',
             'email' => 'admin@mail.com',
             'password' => Encryption::hash('admin'),
-            'role' => RolesModel::ROLES[0],
+            'role' => RolesModel::ROLE[0],
             'active' => 1,
             'country' => 209,
             'company' => 'TinyMVC',
@@ -37,7 +37,7 @@ class UserSeed
             'name' => 'customer',
             'email' => 'customer@mail.com',
             'password' => Encryption::hash('customer'),
-            'role' => RolesModel::ROLES[1],
+            'role' => RolesModel::ROLE[1],
             'active' => 1,
             'country' => 209,
             'company' => 'TinyMVC',
@@ -45,10 +45,10 @@ class UserSeed
         ]);
 
         Seeder::insert(self::$table, [
-            'name' => 'visitor',
-            'email' => 'visitor@mail.com',
-            'password' => Encryption::hash('visitor'),
-            'role' => RolesModel::ROLES[2],
+            'name' => 'user',
+            'email' => 'user@mail.com',
+            'password' => Encryption::hash('user'),
+            'role' => RolesModel::ROLE[2],
             'active' => 1,
             'country' => 209,
             'company' => 'TinyMVC',

@@ -21,22 +21,8 @@ class RoleSeed
      */
     public static function insert(): void
     {
-        Seeder::insert(self::$table, [
-            'title' => 'Administrator',
-            'slug' => RolesModel::ROLES[0],
-            'description' => 'Can access administration dashboard and has all permissions'
-        ]);
-
-        Seeder::insert(self::$table, [
-            'title' => 'Customer',
-            'slug' => RolesModel::ROLES[1],
-            'description' => 'Can access administration dashboard but has not all permissions'
-        ]);
-
-        Seeder::insert(self::$table, [
-            'title' => 'Visitor',
-            'slug' => RolesModel::ROLES[2],
-            'description' => 'Can only view website pages and post comments'
-        ]);
+        for ($i = 0; $i < count(RolesModel::ROLE); $i++) {
+            Seeder::insert(self::$table, ['name' => RolesModel::ROLE[$i]]);
+        }
     }
 }

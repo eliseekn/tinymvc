@@ -19,7 +19,7 @@ class MessagesModel extends Model
      *
      * @return \Framework\Database\Model
      */
-    public static function get(): \Framework\Database\Model
+    public static function messages(): \Framework\Database\Model
     {
         return self::select(['messages.*', 'u1.email AS sender_email', 'u2.email AS recipient_email'])
             ->join('users AS u1', 'messages.sender', '=', 'u1.id')

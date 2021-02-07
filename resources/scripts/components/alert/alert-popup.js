@@ -1,11 +1,22 @@
+/**
+ * affiche une alerte de type popup
+ *
+ * @class AlertPopup
+ * @constructor
+ */
 class AlertPopup extends HTMLElement {
     constructor() {
         super()
 
-        this.modalIcon = this.modalIcon.bind(this)
+        this.popupIcon = this.popupIcon.bind(this)
     }
 
-    modalIcon() {
+    /**
+     * génère l'icône pour la fenêtre
+     *
+     * @return
+     */
+    popupIcon() {
         switch(this.getAttribute('type')) {
             case 'primary':
                 return '<i class="fa fa-info-circle text-primary fa-4x"></i>'
@@ -30,7 +41,7 @@ class AlertPopup extends HTMLElement {
                     <div class="position-relative bg-${this.getAttribute('type')} rounded-top" style="padding: .13em 0"></div>
 
                     <div class="modal-body text-center">
-                        ${this.modalIcon()}
+                        ${this.popupIcon()}
                         <h5 class="modal-title mt-2 text-${this.getAttribute('type')}">${this.getAttribute('title')}</h5>
                         <p class="modal-title my-2">${this.getAttribute('message')}</p>
                         <button type="button" class="btn btn-${this.getAttribute('type')}" data-dismiss="modal">OK</button>

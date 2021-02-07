@@ -1,10 +1,21 @@
-class AlertToast extends HTMLElement {
+/**
+ * affiche une alerte de type toast
+ *
+ * @class AlertToast
+ * @constructor
+ */
+ class AlertToast extends HTMLElement {
     constructor() {
         super()
 
         this.toastIcon = this.toastIcon.bind(this)
     }
 
+    /**
+     * génère l'icône pour la fenêtre
+     *
+     * @return
+     */
     toastIcon() {
         switch(this.getAttribute('type')) {
             case 'primary':

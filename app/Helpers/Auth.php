@@ -165,6 +165,6 @@ class Auth
      */
     public static function role(string $role): bool
     {
-        return RolesModel::findBy('slug', $role)->exists() && self::get()->role === $role;
+        return RolesModel::findBy('name', $role)->exists() && self::get()->role === $role;
     }
 }

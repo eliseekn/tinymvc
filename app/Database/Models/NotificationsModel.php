@@ -19,7 +19,7 @@ class NotificationsModel extends Model
      *
      * @return \Framework\Database\Model
      */
-    public static function get(): \Framework\Database\Model
+    public static function messages(): \Framework\Database\Model
     {
         return self::select()
             ->where('status', 'unread')

@@ -291,34 +291,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
       }
     });
-  } //metrics trends
-
-
-  if (document.querySelector('#users-trends-lines')) {
-    document.querySelector('#users-trends-lines').addEventListener('change', function (event) {
-      if (event.target.value === 'last-years') {
-        fetch(event.target.dataset.url + '/years/5').then(function (response) {
-          return response.json();
-        }).then(function (data) {
-          document.querySelector('lines-chart').setAttribute('data', data.metrics);
-          document.querySelector('lines-chart').setAttribute('xkey', 'year');
-        });
-      } else if (event.target.value === 'last-weeks') {
-        fetch(event.target.dataset.url + '/weeks/4').then(function (response) {
-          return response.json();
-        }).then(function (data) {
-          document.querySelector('lines-chart').setAttribute('data', data.metrics);
-          document.querySelector('lines-chart').setAttribute('xkey', 'day');
-        });
-      } else {
-        fetch(event.target.dataset.url + '/' + event.target.value).then(function (response) {
-          return response.json();
-        }).then(function (data) {
-          document.querySelector('lines-chart').setAttribute('data', data.metrics);
-          event.target.value === 'weeks' ? document.querySelector('lines-chart').setAttribute('xkey', 'day') : document.querySelector('lines-chart').setAttribute('xkey', 'month');
-        });
-      }
-    });
   }
 });
 },{}],"components/sidebar.js":[function(require,module,exports) {
@@ -360,7 +332,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.loading').forEach(function (element) {
       element.addEventListener('click', function (event) {
         event.target.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>';
-        event.target.setAttribute('disabled', 'disabled');
+        /* event.target.setAttribute('disabled', 'disabled') */
       });
     });
   }
@@ -623,6 +595,12 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
+/**
+ * affiche une alerte de type popup
+ *
+ * @class AlertPopup
+ * @constructor
+ */
 var AlertPopup = /*#__PURE__*/function (_HTMLElement) {
   _inherits(AlertPopup, _HTMLElement);
 
@@ -634,13 +612,19 @@ var AlertPopup = /*#__PURE__*/function (_HTMLElement) {
     _classCallCheck(this, AlertPopup);
 
     _this = _super.call(this);
-    _this.modalIcon = _this.modalIcon.bind(_assertThisInitialized(_this));
+    _this.popupIcon = _this.popupIcon.bind(_assertThisInitialized(_this));
     return _this;
   }
+  /**
+   * génère l'icône pour la fenêtre
+   *
+   * @return
+   */
+
 
   _createClass(AlertPopup, [{
-    key: "modalIcon",
-    value: function modalIcon() {
+    key: "popupIcon",
+    value: function popupIcon() {
       switch (this.getAttribute('type')) {
         case 'primary':
           return '<i class="fa fa-info-circle text-primary fa-4x"></i>';
@@ -663,7 +647,7 @@ var AlertPopup = /*#__PURE__*/function (_HTMLElement) {
       element.setAttribute('tabindex', '-1');
       element.setAttribute('role', 'dialog');
       element.classList.add('modal', 'fade');
-      element.innerHTML = "\n            <div class=\"modal-dialog modal-dialog-centered\">\n                <div class=\"modal-content\">\n                    <div class=\"position-relative bg-".concat(this.getAttribute('type'), " rounded-top\" style=\"padding: .13em 0\"></div>\n\n                    <div class=\"modal-body text-center\">\n                        ").concat(this.modalIcon(), "\n                        <h5 class=\"modal-title mt-2 text-").concat(this.getAttribute('type'), "\">").concat(this.getAttribute('title'), "</h5>\n                        <p class=\"modal-title my-2\">").concat(this.getAttribute('message'), "</p>\n                        <button type=\"button\" class=\"btn btn-").concat(this.getAttribute('type'), "\" data-dismiss=\"modal\">OK</button>\n                    </div>\n                </div>\n            </div>\n        ");
+      element.innerHTML = "\n            <div class=\"modal-dialog modal-dialog-centered\">\n                <div class=\"modal-content\">\n                    <div class=\"position-relative bg-".concat(this.getAttribute('type'), " rounded-top\" style=\"padding: .13em 0\"></div>\n\n                    <div class=\"modal-body text-center\">\n                        ").concat(this.popupIcon(), "\n                        <h5 class=\"modal-title mt-2 text-").concat(this.getAttribute('type'), "\">").concat(this.getAttribute('title'), "</h5>\n                        <p class=\"modal-title my-2\">").concat(this.getAttribute('message'), "</p>\n                        <button type=\"button\" class=\"btn btn-").concat(this.getAttribute('type'), "\" data-dismiss=\"modal\">OK</button>\n                    </div>\n                </div>\n            </div>\n        ");
       document.body.appendChild(element);
       $('#alert-popup').modal({
         backdrop: 'static',
@@ -714,6 +698,12 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
+/**
+ * affiche une alerte de type toast
+ *
+ * @class AlertToast
+ * @constructor
+ */
 var AlertToast = /*#__PURE__*/function (_HTMLElement) {
   _inherits(AlertToast, _HTMLElement);
 
@@ -728,6 +718,12 @@ var AlertToast = /*#__PURE__*/function (_HTMLElement) {
     _this.toastIcon = _this.toastIcon.bind(_assertThisInitialized(_this));
     return _this;
   }
+  /**
+   * génère l'icône pour la fenêtre
+   *
+   * @return
+   */
+
 
   _createClass(AlertToast, [{
     key: "toastIcon",
@@ -1206,6 +1202,12 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
+/**
+ * affiche les graphiques de types barres
+ *
+ * @class BarsChart
+ * @constructor
+ */
 var BarsChart = /*#__PURE__*/function (_HTMLElement) {
   _inherits(BarsChart, _HTMLElement);
 
@@ -1224,6 +1226,12 @@ var BarsChart = /*#__PURE__*/function (_HTMLElement) {
     _this.displayData = _this.displayData.bind(_assertThisInitialized(_this));
     return _this;
   }
+  /**
+   * recupère les traductions
+   *
+   * @return
+   */
+
 
   _createClass(BarsChart, [{
     key: "getTranslations",
@@ -1521,6 +1529,12 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
+/**
+ * affiche une fenêtre de création d'une notification
+ *
+ * @class CreateNotification
+ * @constructor
+ */
 var CreateNotification = /*#__PURE__*/function (_HTMLElement) {
   _inherits(CreateNotification, _HTMLElement);
 
@@ -1540,6 +1554,12 @@ var CreateNotification = /*#__PURE__*/function (_HTMLElement) {
 
     return _this;
   }
+  /**
+   * recupère les traductions
+   *
+   * @return
+   */
+
 
   _createClass(CreateNotification, [{
     key: "getTranslations",
@@ -1558,6 +1578,12 @@ var CreateNotification = /*#__PURE__*/function (_HTMLElement) {
       this.innerHTML = "<button class=\"btn btn-outline-dark mr-2\">".concat(this.getAttribute('title'), "</button>");
       this.getTranslations();
     }
+    /**
+     * affiche la fenêtre modale
+     *
+     * @return
+     */
+
   }, {
     key: "showDialog",
     value: function showDialog() {
@@ -1705,121 +1731,6 @@ var SendMessage = /*#__PURE__*/function (_HTMLElement) {
 }( /*#__PURE__*/_wrapNativeSuper(HTMLElement));
 
 var _default = SendMessage;
-exports.default = _default;
-},{}],"components/modal/gallery-modal.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _wrapNativeSuper(Class) { var _cache = typeof Map === "function" ? new Map() : undefined; _wrapNativeSuper = function _wrapNativeSuper(Class) { if (Class === null || !_isNativeFunction(Class)) return Class; if (typeof Class !== "function") { throw new TypeError("Super expression must either be null or a function"); } if (typeof _cache !== "undefined") { if (_cache.has(Class)) return _cache.get(Class); _cache.set(Class, Wrapper); } function Wrapper() { return _construct(Class, arguments, _getPrototypeOf(this).constructor); } Wrapper.prototype = Object.create(Class.prototype, { constructor: { value: Wrapper, enumerable: false, writable: true, configurable: true } }); return _setPrototypeOf(Wrapper, Class); }; return _wrapNativeSuper(Class); }
-
-function _construct(Parent, args, Class) { if (_isNativeReflectConstruct()) { _construct = Reflect.construct; } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function _isNativeFunction(fn) { return Function.toString.call(fn).indexOf("[native code]") !== -1; }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-var GalleryModal = /*#__PURE__*/function (_HTMLElement) {
-  _inherits(GalleryModal, _HTMLElement);
-
-  var _super = _createSuper(GalleryModal);
-
-  function GalleryModal() {
-    var _this;
-
-    _classCallCheck(this, GalleryModal);
-
-    _this = _super.call(this);
-    _this.translations = {};
-    _this.medias = [];
-    _this.content = '';
-    _this.getMedias = _this.getMedias.bind(_assertThisInitialized(_this));
-    _this.getTranslations = _this.getTranslations.bind(_assertThisInitialized(_this));
-    _this.showDialog = _this.showDialog.bind(_assertThisInitialized(_this));
-
-    _this.addEventListener('click', _this.showDialog);
-
-    return _this;
-  }
-
-  _createClass(GalleryModal, [{
-    key: "getTranslations",
-    value: function getTranslations() {
-      var _this2 = this;
-
-      fetch('/tinymvc/api/translations').then(function (response) {
-        return response.json();
-      }).then(function (data) {
-        return _this2.translations = data.translations;
-      });
-    }
-  }, {
-    key: "getMedias",
-    value: function getMedias() {
-      var _this3 = this;
-
-      fetch('/tinymvc/api/medias').then(function (response) {
-        return response.json();
-      }).then(function (data) {
-        console.log(data);
-        _this3.medias = data.medias, _this3.content = data.content;
-      });
-    }
-  }, {
-    key: "connectedCallback",
-    value: function connectedCallback() {
-      this.innerHTML = "<a href=\"#\" class=\"btn btn-outline-dark mr-2\">".concat(this.translations.add_medias, "</a>");
-      this.getTranslations();
-      this.getMedias();
-    }
-  }, {
-    key: "showDialog",
-    value: function showDialog() {
-      var element = document.createElement('div');
-      element.id = 'upload-modal';
-      element.setAttribute('tabindex', '-1');
-      element.setAttribute('role', 'dialog');
-      element.classList.add('modal', 'fade');
-      element.innerHTML = "\n            <div class=\"modal-dialog modal-xl modal-dialog-centered\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-header bg-light text-dark align-items-center py-2\">\n                        <h5 class=\"modal-title\">".concat(this.translations.medias, "</h5>\n                        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                            <span aria-hidden=\"true\">&times;</span>\n                        </button>\n                    </div>\n\n                    ").concat(this.content, "\n                </div>\n            </div>\n        ");
-      document.body.appendChild(element);
-      $('#upload-modal').modal({
-        backdrop: 'static',
-        keyboard: false,
-        show: true
-      });
-      $('#upload-modal').on('hidden.bs.modal', function (e) {
-        document.body.removeChild(element);
-      });
-    }
-  }]);
-
-  return GalleryModal;
-}( /*#__PURE__*/_wrapNativeSuper(HTMLElement));
-
-var _default = GalleryModal;
 exports.default = _default;
 },{}],"../../node_modules/object-assign/index.js":[function(require,module,exports) {
 /*
@@ -33692,8 +33603,6 @@ var _createNotification = _interopRequireDefault(require("./components/modal/cre
 
 var _sendMessage = _interopRequireDefault(require("./components/modal/send-message"));
 
-var _galleryModal = _interopRequireDefault(require("./components/modal/gallery-modal"));
-
 var _react = _interopRequireDefault(require("react"));
 
 var _reactDom = _interopRequireDefault(require("react-dom"));
@@ -33720,7 +33629,6 @@ window.customElements.define('theme-switch', _themeSwitch.default);
 window.customElements.define('avatar-icon', _avatarIcon.default);
 window.customElements.define('create-notification', _createNotification.default);
 window.customElements.define('send-message', _sendMessage.default);
-window.customElements.define('gallery-modal', _galleryModal.default);
 
 if (document.querySelector('#notifications-bell')) {
   _reactDom.default.render( /*#__PURE__*/_react.default.createElement(_notifications.default, null), document.querySelector('#notifications-bell'));
@@ -33732,7 +33640,7 @@ if (document.querySelector('#messages-icon')) {
 
 
 _highlight.default.initHighlightingOnLoad();
-},{"./components/admin":"components/admin.js","./components/sidebar":"components/sidebar.js","./components/loading-button":"components/loading-button.js","./components/password-toggler":"components/password-toggler.js","./components/modal/upload-modal":"components/modal/upload-modal.js","./components/modal/export-modal":"components/modal/export-modal.js","./components/alert/alert-popup":"components/alert/alert-popup.js","./components/alert/alert-toast":"components/alert/alert-toast.js","./components/mixed/confirm-delete":"components/mixed/confirm-delete.js","./components/mixed/text-editor":"components/mixed/text-editor.js","./components/mixed/timezone-picker":"components/mixed/timezone-picker.js","./components/mixed/currency-picker":"components/mixed/currency-picker.js","./components/charts/donut-chart":"components/charts/donut-chart.js","./components/charts/bars-chart":"components/charts/bars-chart.js","./components/mixed/theme-switch":"components/mixed/theme-switch.js","./components/mixed/avatar-icon":"components/mixed/avatar-icon.js","./components/modal/create-notification":"components/modal/create-notification.js","./components/modal/send-message":"components/modal/send-message.js","./components/modal/gallery-modal":"components/modal/gallery-modal.js","react":"../../node_modules/react/index.js","react-dom":"../../node_modules/react-dom/index.js","./components/react/notifications":"components/react/notifications.jsx","./components/react/messages":"components/react/messages.jsx","./vendor/highlight.pack":"vendor/highlight.pack.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./components/admin":"components/admin.js","./components/sidebar":"components/sidebar.js","./components/loading-button":"components/loading-button.js","./components/password-toggler":"components/password-toggler.js","./components/modal/upload-modal":"components/modal/upload-modal.js","./components/modal/export-modal":"components/modal/export-modal.js","./components/alert/alert-popup":"components/alert/alert-popup.js","./components/alert/alert-toast":"components/alert/alert-toast.js","./components/mixed/confirm-delete":"components/mixed/confirm-delete.js","./components/mixed/text-editor":"components/mixed/text-editor.js","./components/mixed/timezone-picker":"components/mixed/timezone-picker.js","./components/mixed/currency-picker":"components/mixed/currency-picker.js","./components/charts/donut-chart":"components/charts/donut-chart.js","./components/charts/bars-chart":"components/charts/bars-chart.js","./components/mixed/theme-switch":"components/mixed/theme-switch.js","./components/mixed/avatar-icon":"components/mixed/avatar-icon.js","./components/modal/create-notification":"components/modal/create-notification.js","./components/modal/send-message":"components/modal/send-message.js","react":"../../node_modules/react/index.js","react-dom":"../../node_modules/react-dom/index.js","./components/react/notifications":"components/react/notifications.jsx","./components/react/messages":"components/react/messages.jsx","./vendor/highlight.pack":"vendor/highlight.pack.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -33760,7 +33668,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "42701" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38747" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

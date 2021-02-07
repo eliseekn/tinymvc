@@ -28,26 +28,12 @@ Route::group([
     'resources/users/view/{num}' => ['handler' => 'Admin\UsersController@view'],
     'resources/users/delete/{num}' => ['handler' => 'Admin\UsersController@delete'],
 
-    //roles routes
-    'resources/roles' => ['handler' => 'Admin\RolesController@index'],
-    'resources/roles/new' => ['handler' => 'Admin\RolesController@new'],
-    'resources/roles/edit/{num}' => ['handler' => 'Admin\RolesController@edit'],
-    'resources/roles/view/{num}' => ['handler' => 'Admin\RolesController@view'],
-    'resources/roles/delete/{num}' => ['handler' => 'Admin\RolesController@delete'],
-
-    //medias routes
-    'resources/medias' => ['handler' => 'Admin\MediasController@index'],
-    'resources/medias/new' => ['handler' => 'Admin\MediasController@new'],
-    'resources/medias/edit/{num}' => ['handler' => 'Admin\MediasController@edit'],
-    'resources/medias/view/{num}' => ['handler' => 'Admin\MediasController@view'],
-    'resources/medias/delete/{num}' => ['handler' => 'Admin\MediasController@delete'],
-
-    //galleries routes
-    'resources/galleries' => ['handler' => 'Admin\GalleriesController@index'],
-    'resources/galleries/new' => ['handler' => 'Admin\GalleriesController@new'],
-    'resources/galleries/edit/{id:num}' => ['handler' => 'Admin\GalleriesController@edit'],
-    'resources/galleries/view/{id:num}' => ['handler' => 'Admin\GalleriesController@view'],
-    'resources/galleries/delete/{id:num}' => ['handler' => 'Admin\GalleriesController@delete'],
+    //files routes
+    'resources/files' => ['handler' => 'Admin\FilesController@index'],
+    'resources/files/new' => ['handler' => 'Admin\FilesController@new'],
+    'resources/files/edit/{num}' => ['handler' => 'Admin\FilesController@edit'],
+    'resources/files/view/{num}' => ['handler' => 'Admin\FilesController@view'],
+    'resources/files/delete/{num}' => ['handler' => 'Admin\FilesController@delete'],
 
     //messages routes
     'account/messages' => ['handler' => 'Admin\MessagesController@index'],
@@ -82,26 +68,12 @@ Route::group([
     'resources/users/export' => ['handler' => 'Admin\UsersController@export'],
     'resources/users/delete' => ['handler' => 'Admin\UsersController@delete'],
 
-    //roles routes
-    'resources/roles/create' => ['handler' => 'Admin\RolesController@create'],
-    'resources/roles/update/{num}' => ['handler' => 'Admin\RolesController@update'],
-    'resources/roles/import' => ['handler' => 'Admin\RolesController@import'],
-    'resources/roles/export' => ['handler' => 'Admin\RolesController@export'],
-    'resources/roles/delete' => ['handler' => 'Admin\RolesController@delete'],
-
-    //medias routes
-    'resources/medias/create' => ['handler' => 'Admin\MediasController@create'],
-    'resources/medias/update/{num}' => ['handler' => 'Admin\MediasController@update'],
-    'resources/medias/import' => ['handler' => 'Admin\MediasController@import'],
-    'resources/medias/export' => ['handler' => 'Admin\MediasController@export'],
-    'resources/medias/delete' => ['handler' => 'Admin\MediasController@delete'],
-
-    //galleries routes
-    'resources/galleries/create' => ['handler' => 'Admin\GalleriesController@create'],
-    'resources/galleries/update/{id:num}' => ['handler' => 'Admin\GalleriesController@update'],
-    'resources/galleries/import' => ['handler' => 'Admin\GalleriesController@import'],
-    'resources/galleries/export' => ['handler' => 'Admin\GalleriesController@export'],
-    'resources/galleries/delete' => ['handler' => 'Admin\GalleriesController@delete'],
+    //files routes
+    'resources/files/create' => ['handler' => 'Admin\FilesController@create'],
+    'resources/files/update/{num}' => ['handler' => 'Admin\FilesController@update'],
+    'resources/files/import' => ['handler' => 'Admin\FilesController@import'],
+    'resources/files/export' => ['handler' => 'Admin\FilesController@export'],
+    'resources/files/delete' => ['handler' => 'Admin\FilesController@delete'],
 
     //notifications routes
     'account/notifications/create' => ['handler' => 'Admin\NotificationsController@create'],

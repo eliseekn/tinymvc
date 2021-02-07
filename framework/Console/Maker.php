@@ -255,7 +255,7 @@ class Maker
             !array_key_exists('seed', $options) &&
             !array_key_exists('request', $options) &&
             !array_key_exists('middleware', $options) &&
-            !array_key_exists('admin', $options) &&
+            !array_key_exists('resource', $options) &&
             !array_key_exists('m', $options)
         ) {
             self::makeController($options['controller']);
@@ -269,15 +269,15 @@ class Maker
             !array_key_exists('seed', $options) &&
             !array_key_exists('request', $options) &&
             !array_key_exists('middleware', $options) &&
-            !array_key_exists('admin', $options) &&
+            !array_key_exists('resource', $options) &&
             !array_key_exists('m', $options)
         ) {
             self::makeController($options['controller'], $options['namespace']);
         }
 
         else if (
-            array_key_exists('controller', $options) &&
-            array_key_exists('admin', $options) &&
+            array_key_exists('resource', $options) &&
+            !array_key_exists('controller', $options) &&
             !array_key_exists('namespace', $options) &&
             !array_key_exists('model', $options) &&
             !array_key_exists('migration', $options) &&
@@ -302,7 +302,7 @@ class Maker
             !array_key_exists('seed', $options) &&
             !array_key_exists('request', $options) &&
             !array_key_exists('middleware', $options) &&
-            !array_key_exists('admin', $options) &&
+            !array_key_exists('resource', $options) &&
             !array_key_exists('m', $options)
         ) {
             self::makeModel($options['model']);
@@ -316,7 +316,7 @@ class Maker
             !array_key_exists('seed', $options) &&
             !array_key_exists('request', $options) &&
             !array_key_exists('middleware', $options) &&
-            !array_key_exists('admin', $options) &&
+            !array_key_exists('resource', $options) &&
             !array_key_exists('m', $options)
         ) {
             self::makeMigration($options['migration']);
@@ -330,7 +330,7 @@ class Maker
             !array_key_exists('seed', $options) &&
             !array_key_exists('request', $options) &&
             !array_key_exists('middleware', $options) &&
-            !array_key_exists('admin', $options) &&
+            !array_key_exists('resource', $options) &&
             !array_key_exists('model', $options)
         ) {
             self::makeMigration($options['migration']);
@@ -345,7 +345,7 @@ class Maker
             !array_key_exists('migration', $options) &&
             !array_key_exists('request', $options) &&
             !array_key_exists('middleware', $options) &&
-            !array_key_exists('admin', $options) &&
+            !array_key_exists('resource', $options) &&
             !array_key_exists('m', $options)
         ) {
             self::makeSeed($options['seed']);
@@ -359,7 +359,7 @@ class Maker
             !array_key_exists('migration', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('middleware', $options) &&
-            !array_key_exists('admin', $options) &&
+            !array_key_exists('resource', $options) &&
             !array_key_exists('m', $options)
         ) {
             echo '[...] Generating request validator' . PHP_EOL;
@@ -382,7 +382,7 @@ class Maker
             !array_key_exists('migration', $options) &&
             !array_key_exists('seed', $options) &&
             !array_key_exists('request', $options) &&
-            !array_key_exists('admin', $options) &&
+            !array_key_exists('resource', $options) &&
             !array_key_exists('m', $options)
         ) {
             echo '[...] Generating middleware' . PHP_EOL;
