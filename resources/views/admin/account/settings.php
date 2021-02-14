@@ -8,6 +8,7 @@
 
 <form method="post" action="<?= absolute_url('admin/account/settings/update', auth()->id) ?>">
     <?= csrf_token_input() ?>
+    <?= method_input('patch') ?>
 
     <div class="row mb-4">
         <div class="col-12 col-lg-6 mb-4 mb-lg-0">

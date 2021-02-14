@@ -37,10 +37,8 @@
                 </span>
 
                 <span class="mt-lg-0 mt-2">
-                    <create-notification 
-                        title="<?= __('create') ?>"
-                        action="<?= absolute_url('admin/account/notifications/create') ?>" 
-                        csrf_token='<?= csrf_token_input() ?>'>
+                    <create-notification action="<?= absolute_url('admin/account/notifications/create') ?>">
+                        <button class="btn btn-outline-dark mr-2"><?= __('create') ?></button>
                     </create-notification>
 
                     <button class="btn btn-outline-dark mr-2" id="bulk-read" data-url="<?= absolute_url('admin/account/notifications/update') ?>">
@@ -86,23 +84,24 @@
 
                         <td><?= $notification->id ?></td>
                         <td><?= $notification->message ?></td>
-                        <td><?= \App\Helpers\DateHelper::format($notification->created_at)->timestamp() ?></td>
+                        <td><?= \App\Helpers\DateHelper::format($notification->created_at)->time_elapsed() ?></td>
 
                         <td>
-                            <a class="btn text-dark p-1 <?php if ($notification->status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('admin/account/notifications/update', $notification->id) ?>" <?php if ($notification->status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
-                                <?php if ($notification->status === 'unread') : ?>
-                                <i class="fa fa-eye-slash"></i>
-                                <?php else : ?>
-                                <i class="fa fa-eye"></i>
-                                <?php endif ?>
-                            </a>
+                            <update-item action="<?= absolute_url('admin/account/notifications/update', $notification->id) ?>">
+                                <button type="submit" class="btn text-dark p-1 <?php if ($notification->status === 'read') : echo 'disabled'; endif ?>" <?php if ($notification->status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
+                                    <?php if ($notification->status === 'unread') : ?>
+                                    <i class="fa fa-eye-slash"></i>
+                                    <?php else : ?>
+                                    <i class="fa fa-eye"></i>
+                                    <?php endif ?>
+                                </button>
+                            </update-item>
 
-                            <confirm-delete 
-                                type="icon" 
-                                title="<?= __('delete') ?>"
-                                content='<i class="fa fa-trash-alt"></i>' 
-                                action="<?= absolute_url('admin/account/notifications/delete', $notification->id) ?>">
-                            </confirm-delete>
+                            <delete-item action="<?= absolute_url('admin/account/notifications/delete', $notification->id) ?>">
+                                <a class="btn text-danger p-1" title="<?= __('delete') ?>">
+                                    <i class="fa fa-trash-alt"></i>
+                                </a>
+                            </delete-item>
                         </td>
                     </tr>
                     <?php endforeach ?>

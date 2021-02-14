@@ -39,17 +39,12 @@
                 <span class="mt-lg-0 mt-2">
                     <a href="<?= absolute_url('admin/resources/users/new') ?>" class="btn btn-outline-dark"><?= __('new') ?></a>
                     
-                    <upload-modal 
-                        action="<?= absolute_url('admin/resources/users/import') ?>" 
-                        title="<?= __('import') ?>" 
-                        multiple=""
-                        csrf_token='<?= csrf_token_input() ?>'>
+                    <upload-modal action="<?= absolute_url('admin/resources/users/import') ?>" multiple="">
+                        <button class="btn btn-outline-dark ml-2"><?= __('import') ?></button>
                     </upload-modal>
                     
-                    <export-modal 
-                        action="<?= absolute_url('admin/resources/users/export') ?>" 
-                        title="<?= __('export') ?>" 
-                        csrf_token='<?= csrf_token_input() ?>'>
+                    <export-modal action="<?= absolute_url('admin/resources/users/export') ?>">
+                        <button class="btn btn-outline-dark mx-2"><?= __('export') ?></button>
                     </export-modal>
 
                     <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('admin/resources/users/delete') ?>">
@@ -126,12 +121,11 @@
                                 <i class="fa fa-edit"></i>
                             </a>
 
-                            <confirm-delete 
-                                type="icon" 
-                                title="<?= __('delete') ?>"
-                                content='<i class="fa fa-trash-alt"></i>' 
-                                action="<?= absolute_url('admin/resources/users/delete', $user->id) ?>">
-                            </confirm-delete>
+                            <delete-item action="<?= absolute_url('admin/resources/users/delete', $user->id) ?>">
+                                <a class="btn text-danger p-1" title="<?= __('delete') ?>">
+                                    <i class="fa fa-trash-alt"></i>
+                                </a>
+                            </delete-item>
                         </td>
                     </tr>
                     <?php endforeach ?>

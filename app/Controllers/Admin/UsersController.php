@@ -184,12 +184,12 @@ class UsersController extends Controller
 				$this->redirect()->withToast(__('user_not_found'))->error();
 			}
 	
-			UsersModel::deleteWhere('id', $id);
+			UsersModel::deleteIfExists($id);
             Activity::log(__('user_deleted'));
             $this->redirect('admin/users')->withToast(__('user_deleted'))->success();
 		} else {
 			foreach (explode(',', $this->request->items) as $id) {
-				UsersModel::deleteWhere('id', $id);
+				UsersModel::deleteIfExists($id);
 			}
 			
             Activity::log(__('users_deleted'));

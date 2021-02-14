@@ -24,7 +24,6 @@ class UploadModal extends HTMLElement {
     }
 
     connectedCallback() {
-        this.innerHTML = `<button class="btn btn-outline-dark ml-2">${this.getAttribute('title')}</button>`
         this.getTranslations()
     }
 
@@ -45,7 +44,7 @@ class UploadModal extends HTMLElement {
                     </div>
 
                     <form method="post" action="${this.getAttribute('action')}" enctype="multipart/form-data">
-                        ${this.getAttribute('csrf_token')}
+                        <input type="hidden" name="csrf_token" value="${document.querySelector('#csrf_token').value}">
 
                         <div class="modal-body">${this.inputHTML()}</div>
 

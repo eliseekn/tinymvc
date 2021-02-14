@@ -37,25 +37,18 @@
                 </span>
 
                 <span class="mt-lg-0 mt-2">
-                    <send-message
-                        type="button" 
-                        action="<?= absolute_url('admin/account/messages/create') ?>" 
-                        title="<?= __('new') ?>" 
-                        content='<?= __('new') ?>'
-                        recipient="0"
-                        modal_title="<?= __('new') ?>" 
-                        csrf_token='<?= csrf_token_input() ?>'>
+                    <send-message action="<?= absolute_url('admin/account/messages/create') ?>"  recipient="0" modal_title="<?= __('new') ?>">
+                        <button class="btn btn-outline-dark mr-2" title="<?= __('new') ?>">
+                            <?= __('new') ?>
+                        </button>
                     </send-message>
 
                     <button class="btn btn-outline-dark" id="bulk-read" data-url="<?= absolute_url('admin/account/messages/update') ?>">
                         <?= __('mark_as_read') ?>
                     </button>
 
-                    <export-modal 
-                        action="<?= absolute_url('admin/account/messages/export') ?>" 
-                        title="<?= __('export') ?>" 
-                        modal_title="<?= __('export') ?>" 
-                        csrf_token='<?= csrf_token_input() ?>'>
+                    <export-modal action="<?= absolute_url('admin/account/messages/export') ?>">
+                        <button class="btn btn-outline-dark mx-2"><?= __('export') ?></button>
                     </export-modal>
 
                     <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('admin/account/messages/delete') ?>">
@@ -105,31 +98,28 @@
 
                         <td>
                             <?php if ($message->sender_email !== auth()->email) : ?>
-                            <a class="btn text-dark p-1 <?php if ($message->recipient_status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('admin/account/messages/update', $message->id) ?>" <?php if ($message->recipient_status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
-                                <?php if ($message->recipient_status === 'unread') : ?>
-                                <i class="fa fa-eye-slash"></i>
-                                <?php else : ?>
-                                <i class="fa fa-eye"></i>
-                                <?php endif ?>
-                            </a>
+                            <update-item action="<?= absolute_url('admin/account/messages/update', $message->id) ?>">
+                                <button type="submit" class="btn text-dark p-1 <?php if ($message->recipient_status === 'read') : echo 'disabled'; endif ?>" <?php if ($message->recipient_status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
+                                    <?php if ($message->recipient_status === 'unread') : ?>
+                                    <i class="fa fa-eye-slash"></i>
+                                    <?php else : ?>
+                                    <i class="fa fa-eye"></i>
+                                    <?php endif ?>
+                                </button>
+                            </update-item>
 
-                            <send-message
-                                type="icon" 
-                                action="<?= absolute_url('admin/account/messages/reply') ?>" 
-                                title="<?= __('reply') ?>" 
-                                content='<i class="fa fa-reply-all"></i>'
-                                recipient="<?= $message->sender ?>"
-                                modal_title="<?= __('reply') ?>" 
-                                csrf_token='<?= csrf_token_input() ?>'>
+                            <send-message action="<?= absolute_url('admin/account/messages/reply') ?>"  recipient="<?= $message->sender ?>" modal_title="<?= __('reply') ?>">
+                                <a class="btn text-dark p-1" href="#" title="<?= __('reply') ?>">
+                                    <i class="fa fa-reply-all"></i>
+                                </a>
                             </send-message>
                             <?php endif ?>
 
-                            <confirm-delete 
-                                type="icon" 
-                                title="<?= __('delete') ?>"
-                                content='<i class="fa fa-trash-alt"></i>' 
-                                action="<?= absolute_url('admin/account/messages/delete', $message->id) ?>">
-                            </confirm-delete>
+                            <delete-item action="<?= absolute_url('admin/account/messages/delete', $message->id) ?>">
+                                <a class="btn text-danger p-1" title="<?= __('delete') ?>">
+                                    <i class="fa fa-trash-alt"></i>
+                                </a>
+                            </delete-item>
                         </td>
                     </tr>
                     <?php endforeach ?>

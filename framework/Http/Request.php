@@ -48,6 +48,18 @@ class Request
     {
         return self::getHeaders()[$key] ?? '';
     }
+    
+    /**
+     * set header value
+     *
+     * @param  string $key
+     * @param  mixed $value
+     * @return void
+     */
+    public static function setHeader(string $ey, $value): void
+    {
+        $_SERVER[$ey] = $value;
+    }
 
     /**
      * retrieves queries
@@ -201,6 +213,17 @@ class Request
     public static function getMethod(): string
     {
         return self::getHeader('REQUEST_METHOD');
+    }
+
+    /**
+     * set request method
+     *
+     * @param  string $value
+     * @return void
+     */
+    public static function setMethod(string $value): void
+    {
+        self::setHeader('REQUEST_METHOD', $value);
     }
 
     /**

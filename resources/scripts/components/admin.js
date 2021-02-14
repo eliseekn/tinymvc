@@ -38,15 +38,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     
                     if (window.confirm(data.translations.delete_items)) {
-                        let formData = new FormData()
-                        formData.append('csrf_token', document.querySelector('#csrf_token').value)
-                        formData.append('items', items)
-        
-                        fetch(event.target.dataset.url, {
-                            method: 'post',
-                            body: formData
+                        fetch(event.target.dataset.url + '?csrf_token=' + document.querySelector('#csrf_token').value + '&items=' + items, {
+                            method: 'DELETE'
                         })
-                            .then(() => window.location.reload())
+                            .then(response => response.json())
+                            .then(data => window.location.href = data.redirect)
                     } 
 
                     event.target.innerHTML = innerHTML
@@ -78,15 +74,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
 
                     if (window.confirm(data.translations.mark_items_as_read)) {
-                        let formData = new FormData()
-                        formData.append('csrf_token', document.querySelector('#csrf_token').value)
-                        formData.append('items', items)
-
-                        fetch(event.target.dataset.url, {
-                            method: 'post',
-                            body: formData
+                        fetch(event.target.dataset.url + '?csrf_token=' + document.querySelector('#csrf_token').value + '&items=' + items, {
+                            method: 'PATCH'
                         })
-                            .then(() => window.location.reload())
+                            .then(response => response.json())
+                            .then(data => window.location.href = data.redirect)
                     } 
                     
                     event.target.innerHTML = innerHTML

@@ -54,7 +54,7 @@ class PasswordController extends Controller
 			$this->response(__('expired_password_reset_link', true));
 		}
 
-		TokensModel::deleteWhere('email', $reset_token->email);
+		TokensModel::deleteBy('email', $reset_token->email);
 		
 		$this->render('auth.password.new', ['email' => $reset_token->email]);
 	}
@@ -72,9 +72,7 @@ class PasswordController extends Controller
             $this->redirect()->withAlert($validator->errors())->error('');
         }
 
-        UsersModel::update(['password' => Encryption::hash($this->request->password)])
-            ->where('email', $this->request->email)
-            ->persist();
+        UsersModel::updateBy(['email', $this->request->email], ['password' => Encryption::hash($this->request->password)]);
 		
         $this->redirect('login')->withAlert(__('password_resetted', true))->success('');
 	}

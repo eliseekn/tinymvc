@@ -3,6 +3,7 @@
 namespace App\Controllers\Admin;
 
 use Exception;
+use App\Helpers\Auth;
 use App\Helpers\Activity;
 use App\Requests\UpdateUser;
 use Framework\Support\Session;
@@ -66,9 +67,9 @@ class SettingsController extends Controller
 			$data['password'] = Encryption::hash($this->request->password);
 		}
 
-        UsersModel::update($data)->where('id', $id)->persist();
+        UsersModel::updateIfExists($id, $data);
 
-        if (Session::get('user')->id == $id) {
+        if (Auth::get()->id == $id) {
             Session::create('user', UsersModel::findSingle($id));
         }
 

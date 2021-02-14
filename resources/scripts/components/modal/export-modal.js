@@ -15,7 +15,6 @@ class ExportModal extends HTMLElement {
     }
 
     connectedCallback() {
-        this.innerHTML = `<button class="btn btn-outline-dark mx-2">${this.getAttribute('title')}</button>`
         this.getTranslations()
     }
 
@@ -36,7 +35,7 @@ class ExportModal extends HTMLElement {
                     </div>
 
                     <form method="post" action="${this.getAttribute('action')}">
-                        ${this.getAttribute('csrf_token')}
+                        <input type="hidden" name="csrf_token" value="${document.querySelector('#csrf_token').value}">
 
                         <div class="modal-body">
                             <fieldset class="form-group">

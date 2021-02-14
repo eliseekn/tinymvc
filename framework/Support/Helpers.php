@@ -211,6 +211,19 @@ if (!function_exists('csrf_token_input')) {
     }
 }
 
+if (!function_exists('method_input')) {
+    /**
+     * generate method input
+     *
+     * @param  string $method
+     * @return string
+     */
+    function method_input(string $method): string
+    {
+        return '<input type="hidden" name="request_method" value="' . $method . '">';
+    }
+}
+
 if (!function_exists('valid_csrf_token')) {
     /**
      * check if crsf token is valid

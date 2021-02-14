@@ -51,20 +51,19 @@ class NotificationsController extends Controller
 	public function update(?int $id = null): void
 	{
         if (!is_null($id)) {
-			if (!NotificationsModel::find($id)->exists()) {
-				$this->redirect()->withToast(__('notification_not_found'))->error();
-			}
-	
-            NotificationsModel::update(['status' => 'read'])->where('id', $id)->persist();
+            NotificationsModel::updateIfExists($id, ['status' => 'read']);
+
             Activity::log(__('notification_updated'));
             $this->redirect()->withToast(__('notification_updated'))->success();
 		} else {
 			foreach (explode(',', $this->request->items) as $id) {
-				NotificationsModel::update(['status' => 'read'])->where('id', $id)->persist();
+				NotificationsModel::updateIfExists($id, ['status' => 'read']);
 			}
 			
             Activity::log(__('notifications_updated'));
 			Alert::toast(__('notifications_updated'))->success();
+
+            $this->response(['redirect' => absolute_url('admin/account/notifications')], true);
 		}
     }
 	
@@ -77,20 +76,19 @@ class NotificationsController extends Controller
 	public function delete(?int $id = null): void
 	{
 		if (!is_null($id)) {
-			if (!NotificationsModel::find($id)->exists()) {
-				$this->redirect()->withToast(__('notification_not_found'))->error();
-			}
-	
-			NotificationsModel::deleteWhere('id', $id);
+			NotificationsModel::deleteIfExists($id);
+
             Activity::log(__('notification_deleted'));
-			$this->redirect()->withToast(__('notification_deleted'))->success();
+            $this->redirect()->withToast(__('notification_deleted'))->success();
 		} else {
 			foreach (explode(',', $this->request->items) as $id) {
-				NotificationsModel::deleteWhere('id', $id);
+				NotificationsModel::deleteIfExists($id);
 			}
 			
             Activity::log(__('notifications_deleted'));
 			Alert::toast(__('notifications_deleted'))->success();
+
+			$this->response(['redirect' => absolute_url('admin/account/notifications')], true);
 		}
 	}
 }

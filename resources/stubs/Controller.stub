@@ -94,11 +94,11 @@ class CLASSNAME extends Controller
 				$this->redirect()->only();
 			}
 	
-			RESOURCEMODEL::deleteWhere('id', $id);
+			RESOURCEMODEL::deleteIfExists($id);
             $this->redirect('admin/resources/RESOURCENAME')->only();
 		} else {
 			foreach (explode(',', $this->request->items) as $id) {
-				RESOURCEMODEL::deleteWhere('id', $id);
+				RESOURCEMODEL::deleteIfExists($id);
 			}
 		}
 	}

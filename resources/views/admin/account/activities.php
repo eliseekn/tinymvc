@@ -28,11 +28,8 @@
                 </span>
 
                 <span class="mt-lg-0 mt-2">
-                    <export-modal 
-                        action="<?= absolute_url('admin/account/activities/export') ?>" 
-                        title="<?= __('export') ?>" 
-                        modal_title="<?= __('export') ?>" 
-                        csrf_token='<?= csrf_token_input() ?>'>
+                    <export-modal action="<?= absolute_url('admin/account/activities/export') ?>">
+                        <button class="btn btn-outline-dark mx-2"><?= __('export') ?></button>
                     </export-modal>
 
                     <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('admin/account/activities/delete') ?>">

@@ -38,10 +38,11 @@ class ActivitiesController extends Controller
 	public function delete(): void
 	{
         foreach (explode(',', $this->request->items) as $id) {
-            ActivitiesModel::deleteWhere('id', $id);
+            ActivitiesModel::deleteIfExists($id);
         }
         
         Alert::toast(__('activities_deleted'))->success();
+        $this->response(['redirect' => 'admin/account/activities'], true);
 	}
 
 	/**

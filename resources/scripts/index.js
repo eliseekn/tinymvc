@@ -6,7 +6,6 @@ import UploadModal from './components/modal/upload-modal'
 import ExportModal from './components/modal/export-modal'
 import AlertPopup from './components/alert/alert-popup'
 import AlertToast from './components/alert/alert-toast'
-import ConfirmDelete from './components/mixed/confirm-delete'
 import TextEditor from './components/mixed/text-editor'
 import TimezonePicker from './components/mixed/timezone-picker'
 import CurrencyPicker from './components/mixed/currency-picker'
@@ -16,6 +15,8 @@ import ThemeSwitch from './components/mixed/theme-switch'
 import AvatarIcon from './components/mixed/avatar-icon'
 import CreateNotification from './components/modal/create-notification'
 import SendMessage from './components/modal/send-message'
+import UpdateItem from './components/forms/update-item'
+import DeleteItem from './components/forms/delete-item'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Notifications from './components/react/notifications'
@@ -26,7 +27,6 @@ window.customElements.define('upload-modal', UploadModal)
 window.customElements.define('export-modal', ExportModal)
 window.customElements.define('alert-popup', AlertPopup)
 window.customElements.define('alert-toast', AlertToast)
-window.customElements.define('confirm-delete', ConfirmDelete)
 window.customElements.define('text-editor', TextEditor)
 window.customElements.define('donut-chart', DonutChart)
 window.customElements.define('bars-chart', BarsChart)
@@ -36,6 +36,8 @@ window.customElements.define('theme-switch', ThemeSwitch)
 window.customElements.define('avatar-icon', AvatarIcon)
 window.customElements.define('create-notification', CreateNotification)
 window.customElements.define('send-message', SendMessage)
+window.customElements.define('update-item', UpdateItem)
+window.customElements.define('delete-item', DeleteItem)
 
 if (document.querySelector('#notifications-bell')) {
     ReactDOM.render(<Notifications />, document.querySelector('#notifications-bell'))

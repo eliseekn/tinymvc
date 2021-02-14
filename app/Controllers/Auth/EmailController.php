@@ -23,7 +23,7 @@ class EmailController extends Controller
 	public function confirm(): void
 	{
 		if (UsersModel::findBy('email', $this->request->email)->exists()) {
-            UsersModel::update(['active' => 1])->where('email', $this->request->email)->persist();
+            UsersModel::updateBy(['email', $this->request->email], ['active' => 1]);
             EmailHelper::sendWelcome($this->request->email);
             
             $this->redirect('login')->withAlert(__('user_activated', true))->success('');
@@ -49,7 +49,7 @@ class EmailController extends Controller
 			$this->response(__('expired_two_steps_link', true));
 		}
 
-        TokensModel::deleteWhere('email', $auth_token->email);
+        TokensModel::deleteBy('email', $auth_token->email);
 
         Session::create('user', UsersModel::findSingleBy('email', $auth_token->email));
         AuthPolicy::handle($this->request);

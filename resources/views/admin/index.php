@@ -19,7 +19,7 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <span><?= __('all_users') ?></span>
 
-                <a href="<?= absolute_url('admin/users') ?>" class="btn btn-outline-dark">
+                <a href="<?= absolute_url('admin/resources/users') ?>" class="btn btn-outline-dark">
                     <?= __('view_all') ?>
                 </a>
             </div>
@@ -75,17 +75,13 @@
                     <span><?= __('latest_messages') ?></span>
 
                     <div class="d-flex flex-lg-row flex-column mt-lg-0 mt-2">
-                        <send-message
-                            type="button" 
-                            action="<?= absolute_url('admin/messages/create') ?>" 
-                            title="<?= __('new') ?>" 
-                            content='<?= __('new') ?>'
-                            recipient="0"
-                            modal_title="<?= __('new') ?>"
-                            csrf_token='<?= csrf_token_input() ?>'>
+                        <send-message action="<?= absolute_url('admin/account/messages/create') ?>"  recipient="0" modal_title="<?= __('new') ?>">
+                            <button class="btn btn-outline-dark mr-2" title="<?= __('new') ?>">
+                                <?= __('new') ?>
+                            </button>
                         </send-message>
 
-                        <a href="<?= absolute_url('admin/messages') ?>" class="btn btn-outline-dark">
+                        <a href="<?= absolute_url('admin/account/messages') ?>" class="btn btn-outline-dark">
                             <?= __('view_all') ?>
                         </a>
                     </div>
@@ -110,13 +106,15 @@
                             <td><?= $message->message ?></td>
                             <td><?= \App\Helpers\DateHelper::format($message->created_at)->time_elapsed() ?></td>
                             <td>
-                                <a class="btn text-dark p-1 <?php if ($message->recipient_status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('admin/messages/update/' . $message->id) ?>" <?php if ($message->recipient_status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
-                                    <?php if ($message->recipient_status === 'unread') : ?>
-                                    <i class="fa fa-eye-slash"></i>
-                                    <?php else : ?>
-                                    <i class="fa fa-eye"></i>
-                                    <?php endif ?>
-                                </a>
+                                <update-item action="<?= absolute_url('admin/account/messages/update', $message->id) ?>">
+                                    <button type="submit" class="btn text-dark p-1 <?php if ($message->recipient_status === 'read') : echo 'disabled'; endif ?>" <?php if ($message->recipient_status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
+                                        <?php if ($message->recipient_status === 'unread') : ?>
+                                        <i class="fa fa-eye-slash"></i>
+                                        <?php else : ?>
+                                        <i class="fa fa-eye"></i>
+                                        <?php endif ?>
+                                    </button>
+                                </update-item>
                             </td>
                         </tr>
                         <?php endforeach ?>
@@ -132,13 +130,11 @@
                 <span><?= __('latest_notifications') ?></span>
 
                 <div class="d-flex flex-lg-row flex-column mt-lg-0 mt-2">
-                    <create-notification 
-                        title="<?= __('create') ?>"
-                        action="<?= absolute_url('admin/notifications/create') ?>" 
-                        csrf_token='<?= csrf_token_input() ?>'>
+                    <create-notification action="<?= absolute_url('admin/account/notifications/create') ?>">
+                        <button class="btn btn-outline-dark mr-2"><?= __('create') ?></button>
                     </create-notification>
 
-                    <a href="<?= absolute_url('admin/notifications') ?>" class="btn btn-outline-dark">
+                    <a href="<?= absolute_url('admin/account/notifications') ?>" class="btn btn-outline-dark">
                         <?= __('view_all') ?>
                     </a>
                 </div>
@@ -160,13 +156,15 @@
                             <td><?= $notification->message ?></td>
                             <td><?= \App\Helpers\DateHelper::format($notification->created_at)->time_elapsed() ?></td>
                             <td>
-                                <a class="btn text-dark p-1 <?php if ($notification->status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('admin/notifications/update', $notification->id) ?>" <?php if ($notification->status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
-                                    <?php if ($notification->status === 'unread') : ?>
-                                    <i class="fa fa-eye-slash"></i>
-                                    <?php else : ?>
-                                    <i class="fa fa-eye"></i>
-                                    <?php endif ?>
-                                </a>
+                                <update-item action="<?= absolute_url('admin/account/notifications/update', $notification->id) ?>">
+                                    <button type="submit" class="btn text-dark p-1 <?php if ($notification->status === 'read') : echo 'disabled'; endif ?>" <?php if ($notification->status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
+                                        <?php if ($notification->status === 'unread') : ?>
+                                        <i class="fa fa-eye-slash"></i>
+                                        <?php else : ?>
+                                        <i class="fa fa-eye"></i>
+                                        <?php endif ?>
+                                    </button>
+                                </update-item>
                             </td>
                         </tr>
                         <?php endforeach ?>

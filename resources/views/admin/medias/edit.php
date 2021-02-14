@@ -11,6 +11,7 @@
 
     <form method="post" action="<?= absolute_url('admin/resources/medias/update/' . $media->id) ?>">
         <?= csrf_token_input() ?>
+        <?= method_input('patch') ?>
 
         <div class="card-body">
             <div class="form-group row">

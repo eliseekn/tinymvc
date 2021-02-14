@@ -55,11 +55,8 @@
                 </span>
 
                 <span class="mt-lg-0 mt-2">
-                    <upload-modal 
-                        action="<?= absolute_url('admin/resources/medias/create') ?>" 
-                        title="<?= __('new') ?>" 
-                        multiple="multiple"
-                        csrf_token='<?= csrf_token_input() ?>'>
+                    <upload-modal action="<?= absolute_url('admin/resources/medias/create') ?>" multiple="multiple">
+                        <button class="btn btn-outline-dark ml-2"><?= __('new') ?></button>
                     </upload-modal>
                     
                     <button class="btn btn-danger ml-2" id="bulk-delete" data-url="<?= absolute_url('admin/resources/medias/delete') ?>">
@@ -105,6 +102,7 @@
 
                                     <div class="card-body text-center p-2" style="z-index: 111111">
                                         <p class="mb-0"><?= $media->filename ?></p>
+                                        <p class="mb-0 text-muted"><?= \App\Helpers\DateHelper::format($media->created_at)->date() ?></p>
 
                                         <a class="btn text-dark p-1" href="<?= absolute_url('admin/resources/medias/view/' . $media->id) ?>" title="<?= __('details') ?>">
                                             <i class="fa fa-eye"></i>
@@ -114,12 +112,11 @@
                                             <i class="fa fa-edit"></i>
                                         </a>
 
-                                        <confirm-delete 
-                                            type="icon" 
-                                            title="<?= __('delete') ?>"
-                                            content='<i class="fa fa-trash-alt"></i>' 
-                                            action="<?= absolute_url('admin/resources/medias/delete/' . $media->id) ?>">
-                                        </confirm-delete>
+                                        <delete-item action="<?= absolute_url('admin/resources/medias/delete', $media->id) ?>">
+                                            <a class="btn text-danger p-1" title="<?= __('delete') ?>">
+                                                <i class="fa fa-trash-alt"></i>
+                                            </a>
+                                        </delete-item>
 
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input" id="<?= $media->id ?>" data-id="<?= $media->id ?>">

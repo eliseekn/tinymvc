@@ -42,7 +42,8 @@ class MessagesController extends Controller
             'message' => $this->request->message
         ]);
 
-        MessagesModel::update(['sender_status' => 'read'])->where('id', $id)->persist();
+        MessagesModel::updateIfExists($id, ['sender_status' => 'read']);
+
         Activity::log(__('message_sent'));
         $this->redirect()->withToast(__('message_sent'))->success();
 	}
@@ -60,7 +61,8 @@ class MessagesController extends Controller
             'message' => $this->request->message
         ]);
 
-        MessagesModel::update(['sender_status' => 'read'])->where('id', $id)->persist();
+        MessagesModel::updateIfExists($id, ['sender_status' => 'read']);
+
         Activity::log(__('message_sent'));
         $this->redirect()->withToast(__('message_sent'))->success();
 	}
@@ -68,18 +70,31 @@ class MessagesController extends Controller
 	/**
 	 * update
 	 *
-     * @param  int $id
+     * @param  int|null $id
 	 * @return void
 	 */
-	public function update(int $id): void
+	public function update(?int $id = null): void
 	{
-        if (!MessagesModel::find($id)->exists()) {
-            $this->redirect()->withToast(__('message_not_found'))->error();
-        }
+        /* MessagesModel::updateIfExists($id, ['recipient_status' => 'read']);
 
-        MessagesModel::update(['recipient_status' => 'read'])->where('id', $id)->persist();
         Activity::log(__('message_updated'));
-        $this->redirect()->withToast(__('message_updated'))->success();
+        $this->redirect()->withToast(__('message_updated'))->success(); */
+
+        if (!is_null($id)) {
+            MessagesModel::updateIfExists($id, ['recipient_status' => 'read']);
+
+            Activity::log(__('message_updated'));
+            $this->redirect()->withToast(__('message_updated'))->success();
+		} else {
+			foreach (explode(',', $this->request->items) as $id) {
+				MessagesModel::updateIfExists($id, ['recipient_status' => 'read']);
+			}
+			
+            Activity::log(__('messages_updated'));
+			Alert::toast(__('messages_updated'))->success();
+
+            $this->response(['redirect' => absolute_url('admin/account/messages')], true);
+		}
 	}
 
 	/**
@@ -91,20 +106,19 @@ class MessagesController extends Controller
 	public function delete(?int $id = null): void
 	{
         if (!is_null($id)) {
-			if (!MessagesModel::find($id)->exists()) {
-				$this->redirect()->withToast(__('message_not_found'))->error();
-			}
-	
-            MessagesModel::deleteWhere('id', $id);
+            MessagesModel::deleteIfExists($id);
+            
             Activity::log(__('message_deleted'));
             $this->redirect()->withToast(__('message_deleted'))->success();
 		} else {
 			foreach (explode(',', $this->request->items) as $id) {
-				MessagesModel::deleteWhere('id', $id);
+				MessagesModel::deleteIfExists($id);
 			}
             
             Activity::log(__('messages_deleted'));
 			Alert::toast(__('messages_deleted'))->success();
+
+            $this->response(['redirect' => absolute_url('admin/account/messages')], true);
 		}
 	}
 

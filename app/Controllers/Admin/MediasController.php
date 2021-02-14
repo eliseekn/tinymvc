@@ -22,7 +22,7 @@ class MediasController extends Controller
 	{
         $medias = MediasModel::findBy('user_id', Auth::get()->id)
             ->orderDesc('created_at')
-            ->paginate(1);
+            ->paginate(10);
 
         $images = 0; $videos = 0; $sounds = 0;
 
@@ -48,10 +48,11 @@ class MediasController extends Controller
 	{
         $medias = MediasModel::findBy('user_id', Auth::get()->id)
             ->and('filename', 'like', $this->request->q)
+            ->or('created_at', 'like', $this->request->q)
             ->orderDesc('created_at')
-            ->paginate(1);
+            ->paginate(10);
 
-        $images = 0; $videos = 0; $sounds = 0; $q = $this->request->q ?? '';
+        $q = $this->request->q ?? ''; $images = 0; $videos = 0; $sounds = 0;
 
         foreach(
             MediasModel::findBy('user_id', Auth::get()->id)
@@ -147,12 +148,12 @@ class MediasController extends Controller
             $this->redirect()->withToast(__('media_not_updated', true))->error();
         }
 
-        MediasModel::update([
+        MediasModel::updateIfExists($id, [
             'filename' => $this->request->filename,
             'title' => $this->request->title,
             'description' => $this->request->description,
             'url' => absolute_url('storage/uploads/' . $year. '/' . $month . '/' . $this->request->filename)
-        ])->where('id', $id)->persist();
+        ]);
 
         Activity::log(__('media_updated'));
 		$this->redirect()->withToast(__('media_updated'))->success();
@@ -167,31 +168,35 @@ class MediasController extends Controller
 	public function delete(?int $id = null): void
 	{
         if (!is_null($id)) {
-			if (!MediasModel::find($id)->exists()) {
+            $media = MediasModel::findSingle($id);
+
+            if ($media === false) {
 				$this->redirect()->withToast(__('media_not_found'))->error();
 			}
-	
-            $media = MediasModel::findSingle($id);
-            list($month, $year) = $this->getMediasFolders($media);
 
+            list($month, $year) = $this->getMediasFolders($media);
             Storage::path(config('storage.uploads'))->add($year. '/' . $month)->deleteFile($media->filename);
 
-			MediasModel::deleteWhere('id', $id);
+			MediasModel::deleteIfExists($id);
 
             Activity::log(__('media_deleted'));
-            $this->redirect('admin/resources/medias')->withToast(__('media_deleted'))->success();
+            $this->redirect()->withToast(__('media_deleted'))->success();
 		} else {
 			foreach (explode(',', $this->request->items) as $id) {
                 $media = MediasModel::findSingle($id);
-                list($month, $year) = $this->getMediasFolders($media);
+                
+                if ($media !== false) {
+                    list($month, $year) = $this->getMediasFolders($media);
+                    Storage::path(config('storage.uploads'))->add($year. '/' . $month)->deleteFile($media->filename);
 
-                Storage::path(config('storage.uploads'))->add($year. '/' . $month)->deleteFile($media->filename);
-
-				MediasModel::deleteWhere('id', $id);
+                    MediasModel::deleteIfExists($id);
+                }
             }
 			
             Activity::log(__('medias_deleted'));
             Alert::toast(__('medias_deleted'))->success();
+
+            $this->response(['redirect' => absolute_url('admin/resources/medias')], true);
 		}
 	}
     

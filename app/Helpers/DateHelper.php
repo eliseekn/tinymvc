@@ -44,23 +44,25 @@ class DateHelper
     }
     
     /**
-     * get date in 'Y-m-d' format
+     * get date in custom format
      *
+     * @param  string $f date format
      * @return string
      */
-    public function date(): string
+    public function date(string $f = 'Y-m-d'): string
     {
-        return self::$date->toDateString();
+        return self::$date->format($f);
     }
     
     /**
-     * get time format
+     * get time
      *
+     * @param  string $f time format
      * @return string
      */
-    public function time(): string
+    public function time(string $f = 'h:i:s a'): string
     {
-        return self::$date->toTimeString();
+        return self::$date->format($f);
     }
     
     /**

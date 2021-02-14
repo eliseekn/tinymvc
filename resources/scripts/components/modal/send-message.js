@@ -23,20 +23,6 @@ class SendMessage extends HTMLElement {
     }
 
     connectedCallback() {
-        if (this.getAttribute('type') === 'icon') {
-            this.innerHTML = `
-                <a class="btn text-dark p-1" href="#" title="${this.getAttribute('title')}">
-                    ${this.getAttribute('content')}
-                </a>
-            `
-        } else {
-            this.innerHTML = `
-                <button class="btn btn-outline-dark mr-2">
-                    ${this.getAttribute('content')}
-                </button>
-            `
-        }
-
         this.getTranslations()
         this.getUsers()
     }
@@ -58,7 +44,7 @@ class SendMessage extends HTMLElement {
                     </div>
 
                     <form method="post" action="${this.getAttribute('action')}">
-                        ${this.getAttribute('csrf_token')}
+                        <input type="hidden" name="csrf_token" value="${document.querySelector('#csrf_token').value}">
                         
                         <div class="modal-body">
                             <div class="form-group">

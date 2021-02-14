@@ -35,14 +35,11 @@
                     <upload-modal 
                         action="<?= absolute_url('admin/resources/RESOURCENAMEs/import') ?>" 
                         title="<?= __('import') ?>" 
-                        multiple=""
-                        csrf_token='<?= csrf_token_input() ?>'>
+                        multiple="">
                     </upload-modal>
 
-                    <export-modal 
-                        action="<?= absolute_url('admin/resources/RESOURCENAMEs/export') ?>" 
-                        title="<?= __('export') ?>" 
-                        csrf_token='<?= csrf_token_input() ?>'>
+                    <export-modal action="<?= absolute_url('admin/resources/RESOURCENAMEs/export') ?>">
+                        <button class="btn btn-outline-dark mx-2"><?= __('export') ?></button>
                     </export-modal>
 
                     <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('admin/resources/RESOURCENAMEs/delete') ?>">

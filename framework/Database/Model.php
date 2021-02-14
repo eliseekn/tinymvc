@@ -228,6 +228,36 @@ class Model
         self::$builder = Builder::update(static::$table)->set($items);
         return new self();
     }
+
+    /**
+     * update row with where clause
+     *
+	 * @param  array $data
+     * @param  array $items
+     * @return void
+     */
+    public static function updateBy(array $data, array $items): void
+    {
+        if (!isset($data[2])) {
+            $data[2] = null;
+        }
+
+        if (self::findBy($data[0], $data[1], $data[2])->exists()) {
+            self::update($items)->where($data[0], $data[1], $data[2])->persist();
+        }
+    }
+    
+    /**
+     * update row with where clause
+     *
+	 * @param  mixed $id
+     * @param  array $items
+     * @return void
+     */
+    public static function updateIfExists($id, array $items): void
+    {
+        self::updateBy(['id', $id], $items);
+    }
     
     /**
      * add DELETE clause
@@ -248,10 +278,24 @@ class Model
 	 * @param  mixed $value
      * @return void
      */
-    public static function deleteWhere(string $column, $operator = null, $value = null): void
+    public static function deleteBy(string $column, $operator = null, $value = null): void
     {
-        self::delete()->where($column, $operator, $value)->persist();
+        if (self::findBy($column, $operator, $value)->exists()) {
+            self::delete()->where($column, $operator, $value)->persist();
+        }
     }
+    
+    /**
+     * add DELETE and WEHRE clauses
+     *
+	 * @param  mixed $id
+     * @return void
+     */
+    public static function deleteIfExists($id): void
+    {
+        self::deleteBy('id', $id);
+    }
+    
     
     /**
      * get column count value
