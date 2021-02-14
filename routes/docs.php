@@ -6,7 +6,6 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-use Framework\Http\Response;
 use Framework\Routing\View;
 use Framework\Routing\Route;
 
@@ -16,65 +15,65 @@ use Framework\Routing\Route;
 
 Route::get('docs', [
     'handler' => function() {
-        View::render('docs/index');
+        View::render('docs.index');
     }
 ]);
 
 Route::group([
     'getting-started' => ['handler' => function() {
-        View::render('docs/getting-started');
+        View::render('docs.getting-started');
     }],
 
     'guides/routing' => ['handler' => function() {
-        View::render('docs/guides/routing');
+        View::render('docs.guides.routing');
     }],
 
     'guides/middlewares' => ['handler' => function() {
-        View::render('docs/guides/middlewares');
+        View::render('docs.guides.middlewares');
     }],
 
     'guides/controllers' => ['handler' => function() {
-        View::render('docs/guides/controllers');
+        View::render('docs.guides.controllers');
     }],
 
     'guides/views' => ['handler' => function() {
-        View::render('docs/guides/views');
+        View::render('docs.guides.views');
     }],
 
     'http/requests' => ['handler' => function() {
-        View::render('docs/http/requests');
+        View::render('docs.http.requests');
     }],
 
     'http/responses' => ['handler' => function() {
-        View::render('docs/http/responses');
+        View::render('docs.http.responses');
     }],
 
     'http/client' => ['handler' => function() {
-        View::render('docs/http/client');
+        View::render('docs.http.client');
     }],
 
     'http/redirections' => ['handler' => function() {
-        View::render('docs/http/redirections');
+        View::render('docs.http.redirections');
     }],
 
     'database/introduction' => ['handler' => function() {
-        View::render('docs/database/introduction');
+        View::render('docs.database.introduction');
     }],
 
     'database/query-builder' => ['handler' => function() {
-        View::render('docs/database/query-builder');
+        View::render('docs.database.query-builder');
     }],
 
     'database/model' => ['handler' => function() {
-        View::render('docs/database/model');
+        View::render('docs.database.model');
     }],
 
     'database/migrations' => ['handler' => function() {
-        View::render('docs/database/migrations');
+        View::render('docs.database.migrations');
     }],
 
     'database/seeds' => ['handler' => function() {
-        View::render('docs/database/seeds');
+        View::render('docs.database.seeds');
     }]
 ])->by([
     'method' => 'GET',

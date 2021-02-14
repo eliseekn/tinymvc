@@ -18,39 +18,30 @@ class ActivitiesController extends Controller
      */
     public function index(): void
 	{
-        if (Auth::role(RolesModel::ROLE[0])) {
-            $activities = ActivitiesModel::select();
-        } else {
-            $activities = ActivitiesModel::findBy('user', Auth::get()->email);
-        }
+        $activities = ActivitiesModel::select()
+            ->subQuery(function ($query) {
+                if (Auth::get()->role !== RolesModel::ROLE[0]) {
+                    $query->where('user', Auth::get()->email);
+                }
+            })
+            ->orderDesc('created_at')
+            ->paginate(20);
 
-		$this->render('admin/activities', [
-            'activities' => $activities->orderDesc('created_at')->paginate(20)
-        ]);
+		$this->render('admin.account.activities', compact('activities'));
 	}
 
 	/**
 	 * delete
 	 *
-     * @param  int|null $id
 	 * @return void
 	 */
-	public function delete(?int $id = null): void
+	public function delete(): void
 	{
-        if (!is_null($id)) {
-			if (!ActivitiesModel::find($id)->exists()) {
-                $this->redirect()->withToast(__('activity_not_found'))->error();
-			}
-	
-			ActivitiesModel::deleteWhere('id', $id);
-            $this->redirect()->withToast(__('activity_deleted'))->success();
-		} else {
-			foreach (explode(',', $this->request->items) as $id) {
-				ActivitiesModel::deleteWhere('id', $id);
-			}
-			
-			Alert::toast(__('activities_deleted'))->success();
-		}
+        foreach (explode(',', $this->request->items) as $id) {
+            ActivitiesModel::deleteWhere('id', $id);
+        }
+        
+        Alert::toast(__('activities_deleted'))->success();
 	}
 
 	/**
@@ -60,14 +51,14 @@ class ActivitiesController extends Controller
 	 */
     public function export(): void
 	{
-        if ($this->request->has('date_start') && $this->request->has('date_end')) {
-			$activities = ActivitiesModel::select()
-                ->whereBetween('created_at', $this->request->date_start, $this->request->date_end)
-                ->orderDesc('created_at')
-                ->all();
-		} else {
-			$activities = ActivitiesModel::select()->orderAsc('name')->all();
-        }
+        $activities = ActivitiesModel::select()
+            ->subQuery(function ($query) {
+                if ($this->request->has('date_start') && $this->request->has('date_end')) {
+                    $query->whereBetween('created_at', $this->request->date_start, $this->request->date_end);
+                }
+            })
+            ->orderDesc('created_at')
+            ->all();
         
         $filename = 'activities_' . date('Y_m_d') . '.' . $this->request->file_type;
 

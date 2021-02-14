@@ -28,6 +28,8 @@ class View
      */
     public static function getContent(string $view, array $data = []): string
     {
+        $view = real_path($view);
+
         if (!Storage::path(config('storage.views'))->isFile($view . '.php')) {
             throw new Exception('File "' . Storage::path(config('storage.views'))->get() . $view . '.php" not found.');
         }

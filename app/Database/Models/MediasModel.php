@@ -4,14 +4,14 @@ namespace App\Database\Models;
 
 use Framework\Database\Model;
 
-class FilesModel extends Model
+class MediasModel extends Model
 {
     /**
      * name of table
      *
      * @var string
      */
-    public static $table = 'files';
+    public static $table = 'medias';
 
     /**
      * medias extensions constants
@@ -21,7 +21,6 @@ class FilesModel extends Model
     public const TYPE = [
         0 => ['jpg', 'jpeg', 'png', 'gif', 'svg'],
         1 => ['mp4', 'flv', 'mpeg', 'webm'],
-        2 => ['mp3', 'wav'],
-        3 => ['pdf', 'docx', 'doc', 'xls', 'xlsx', 'txt', 'ppt', 'pptx']
+        2 => ['mp3', 'wav']
     ];
 }

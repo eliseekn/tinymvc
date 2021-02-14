@@ -783,12 +783,12 @@ class Builder
     /**
      * generate sub query
      *
-     * @param  mixed $function
+     * @param  mixed $callback
      * @return \Framework\Database\Builder
      */
-    public function subQuery(callable $function): self
+    public function subQuery(callable $callback): self
     {
-        call_user_func_array($function, [$this]);
+        call_user_func_array($callback, [$this]);
         return $this;
     }
 	

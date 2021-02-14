@@ -29,6 +29,7 @@ class TextEditor extends HTMLElement {
                     [{ 'list': 'ordered'}, { 'list': 'bullet' }],
                     [{ 'script': 'sub'}, { 'script': 'super' }],
                     [{ 'color': [] }, { 'background': [] }],
+                    [{ 'indent': '-1'}, { 'indent': '+1' }],
                     ['clean']
                 ]
             },

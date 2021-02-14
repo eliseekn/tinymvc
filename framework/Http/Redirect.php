@@ -8,8 +8,6 @@
 
 namespace Framework\Http;
 
-use Exception;
-use Framework\Routing\Route;
 use Framework\Support\Alert;
 use Framework\Support\Cookies;
 use Framework\Support\Session;

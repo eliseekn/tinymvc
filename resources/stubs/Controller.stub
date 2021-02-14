@@ -15,7 +15,7 @@ class CLASSNAME extends Controller
      */
     public function index(): void
 	{
-		$this->render('admin/resources/RESOURCENAME/index', [
+		$this->render('admin.RESOURCENAME.index', [
             'RESOURCENAME' => RESOURCEMODEL::select()->orderDesc('created_at')->paginate(20)
         ]);
 	}
@@ -27,7 +27,7 @@ class CLASSNAME extends Controller
 	 */
     public function new(): void
 	{
-		$this->render('admin/resources/RESOURCENAME/new');
+		$this->render('admin.RESOURCENAME.new');
 	}
 	
 	/**
@@ -38,9 +38,7 @@ class CLASSNAME extends Controller
 	 */
     public function edit(int $id): void
 	{
-		$this->render('admin/resources/RESOURCENAME/edit', [
-            'RESOURCENAME' => RESOURCEMODEL::findSingle($id)
-        ]);
+		$this->render('admin.RESOURCENAME.edit', ['RESOURCENAME' => RESOURCEMODEL::findSingle($id)]);
 	}
 
 	/**
@@ -65,9 +63,7 @@ class CLASSNAME extends Controller
 	 */
 	public function view(int $id): void
 	{
-		$this->render('admin/resources/RESOURCENAME/view', [
-            'RESOURCENAME' => RESOURCEMODEL::findSingle($id)
-        ]);
+		$this->render('admin.RESOURCENAME.view', ['RESOURCENAME' => RESOURCEMODEL::findSingle($id)]);
 	}
     
 	/**
@@ -138,14 +134,14 @@ class CLASSNAME extends Controller
 	 */
     public function export(): void
 	{
-		if ($this->request->has('date_start') && $this->request->has('date_end')) {
-			$RESOURCENAME = RESOURCEMODEL::select()
-                ->whereBetween('created_at', $this->request->date_start, $this->request->date_end)
-                ->orderDesc('created_at')
-                ->all();
-		} else {
-			$RESOURCENAME = RESOURCEMODEL::select()->orderAsc('name')->all();
-        }
+        $RESOURCENAME = RESOURCEMODEL::select()
+            ->subQuery(function ($query) {
+                if ($this->request->has('date_start') && $this->request->has('date_end')) {
+                    $query->whereBetween('created_at', $this->request->date_start, $this->request->date_end);
+                }
+            })
+            ->orderDesc('created_at')
+            ->all();
         
         $filename = 'RESOURCENAME_' . date('Y_m_d') . '.' . $this->request->file_type;
 

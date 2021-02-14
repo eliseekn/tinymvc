@@ -25,7 +25,7 @@
             .then(response => response.json())
             .then(data => {
                 this.translations = data.translations
-                this.setDefaultInnerHTML()
+                this.displayData()
             })
     }
 

@@ -1,5 +1,2 @@
-- fix search input for medias index page
-- add lightbox to medias pages
-
 - migrate to bootstrap 5
 - add sqlite3 option to db options

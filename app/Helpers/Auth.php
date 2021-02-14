@@ -42,6 +42,11 @@ class Auth
             //reset authentication attempts and disable lock
             Session::close('auth_attempts', 'auth_attempts_timeout');
 
+            //check user state
+            if (!$user->active) {
+                Redirect::back()->withAlert(__('user_not_activated'))->error('');
+            }
+
             //check if two factor authentication is enabled
             if ($user->two_steps) {
                 $token = random_string(50, true);
@@ -145,7 +150,7 @@ class Auth
     public static function forget(): void
     {
         if (self::check()) {
-            Activity::log(__('logged_out'), true);
+            Activity::log(__('logged_out', true), self::get()->email);
         }
 
         if (self::check()) {
@@ -155,16 +160,5 @@ class Auth
         if (self::remember()) {
             Cookies::delete('user');
         }
-    }
-    
-    /**
-     * check user role
-     *
-     * @param  string $role
-     * @return bool
-     */
-    public static function role(string $role): bool
-    {
-        return RolesModel::findBy('name', $role)->exists() && self::get()->role === $role;
     }
 }

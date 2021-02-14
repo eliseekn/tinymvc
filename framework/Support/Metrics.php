@@ -52,11 +52,12 @@ class Metrics
      * @param  string $column
      * @param  string $trends
      * @param  int $interval
+     * @param  array|null $query
      * @return array
      * @link   https://www.tutsmake.com/mysql-get-data-of-current-date-week-month-year/
      *         https://www.tutsmake.com/query-for-get-data-of-last-day-week-month-year-mysql/
      */
-    public function getTrends(string $type, string $column, string $trends, int $interval = 0): array
+    public function getTrends(string $type, string $column, string $trends, int $interval = 0, array $query = null): array
     {
         switch ($trends) {
             case 'days':
@@ -64,10 +65,20 @@ class Metrics
                     Builder::select($type . '(' . $column . ') AS value', 'DAYNAME(created_at) AS day')
                         ->from($this->table)
                         ->where('DATE(created_at)', '>=', Carbon::now()->subDays($interval)->toDateString())
+                        ->subQuery(function ($q) use ($query) {
+                            if (!is_null($query) && !empty($query)) {
+                                $q->rawQuery($query[0], $query[1]);
+                            }
+                        })
                         ->groupBy('DAYNAME(created_at)')
                         ->fetchAll() :
                     Builder::select($type . '(' . $column . ') AS value')
                         ->from($this->table)
+                        ->subQuery(function ($q) use ($query) {
+                            if (!is_null($query) && !empty($query)) {
+                                $q->rawQuery($query[0], $query[1]);
+                            }
+                        })
                         ->where('DATE(created_at)', Carbon::now()->toDateString())
                         ->fetchAll();
 
@@ -78,6 +89,11 @@ class Metrics
                         ->where('DATE(created_at)', '>', Carbon::now()->subWeeks($interval)->toDateString())
                         ->and('MONTH(created_at)', Carbon::now()->month)
                         ->and('YEAR(created_at)', Carbon::now()->year)
+                        ->subQuery(function ($q) use ($query) {
+                            if (!is_null($query) && !empty($query)) {
+                                $q->rawQuery($query[0], $query[1]);
+                            }
+                        })
                         ->groupBy('DAYNAME(created_at)')
                         ->fetchAll() :
                     Builder::select($type . '(' . $column . ') AS value', 'DAYNAME(created_at) AS day')
@@ -85,6 +101,11 @@ class Metrics
                         ->where('DATE(created_at)', '>', Carbon::now()->subWeek()->toDateString())
                         ->and('MONTH(created_at)', Carbon::now()->month)
                         ->and('YEAR(created_at)', Carbon::now()->year)
+                        ->subQuery(function ($q) use ($query) {
+                            if (!is_null($query) && !empty($query)) {
+                                $q->rawQuery($query[0], $query[1]);
+                            }
+                        })
                         ->groupBy('DAYNAME(created_at)')
                         ->fetchAll();
 
@@ -94,11 +115,21 @@ class Metrics
                         ->from($this->table)
                         ->where('MONTH(created_at)', '>', Carbon::now()->subMonths($interval)->month)
                         ->and('YEAR(created_at)', Carbon::now()->year)
+                        ->subQuery(function ($q) use ($query) {
+                            if (!is_null($query) && !empty($query)) {
+                                $q->rawQuery($query[0], $query[1]);
+                            }
+                        })
                         ->groupBy('MONTHNAME(created_at)')
                         ->fetchAll() :
                     Builder::select($type . '(' . $column . ') AS value', 'MONTHNAME(created_at) AS month')
                         ->from($this->table)
                         ->where('YEAR(created_at)', Carbon::now()->year)
+                        ->subQuery(function ($q) use ($query) {
+                            if (!is_null($query) && !empty($query)) {
+                                $q->rawQuery($query[0], $query[1]);
+                            }
+                        })
                         ->groupBy('MONTHNAME(created_at)')
                         ->fetchAll();
             
@@ -107,10 +138,20 @@ class Metrics
                     Builder::select($type . '(' . $column . ') AS value', 'YEAR(created_at) AS year')
                         ->from($this->table)
                         ->where('YEAR(created_at)', '>', Carbon::now()->subYears($interval)->year)
+                        ->subQuery(function ($q) use ($query) {
+                            if (!is_null($query) && !empty($query)) {
+                                $q->rawQuery($query[0], $query[1]);
+                            }
+                        })
                         ->groupBy('YEAR(created_at)')
                         ->fetchAll() :
                     Builder::select($type . '(' . $column . ') AS value', 'YEAR(created_at) AS year')
                         ->from($this->table)
+                        ->subQuery(function ($q) use ($query) {
+                            if (!is_null($query) && !empty($query)) {
+                                $q->rawQuery($query[0], $query[1]);
+                            }
+                        })
                         ->groupBy('YEAR(created_at)')
                         ->fetchAll();
         }

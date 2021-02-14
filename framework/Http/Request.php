@@ -9,7 +9,6 @@
 namespace Framework\Http;
 
 use Framework\Support\Uploader;
-use Framework\Support\Validator;
 
 /**
  * Handle HTTP requests
@@ -212,7 +211,7 @@ class Request
     public static function getFullUri(): string
     {
         $uri = self::getHeader('REQUEST_URI');
-        $uri = str_replace(config('app.folder'), '', $uri); //remove app folder if exists 
+        $uri = str_replace('/' . config('app.folder'), '', $uri); //remove app folder if exists
         return $uri;
     }
 
@@ -225,13 +224,13 @@ class Request
     {
         $uri = self::getFullUri();
 
-        //looks for "?page=" or something like and remove it from uri
+        //removes queries from uri
         if (strpos($uri, '?') !== false) {
             $uri = substr($uri, strpos($uri, '/'), strpos($uri, '?'));
-            
-            if ($uri !== '/') {
-                $uri = rtrim($uri, '/');
-            }
+        }
+ 
+        if ($uri !== '/') {
+            $uri = rtrim($uri, '/');
         }
 
         //return sanitized url
@@ -402,7 +401,7 @@ class Request
         $result = [];
 
         foreach ($items as $item) {
-            foreach ($this->inputs() as $key => $input) {
+            foreach ($this->all() as $key => $input) {
                 if ($item !== $key) {
                     $result = array_merge($result, [
                         $key => $input

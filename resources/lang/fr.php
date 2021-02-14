@@ -40,6 +40,8 @@
     'files' => 'Files',
     'posts' => 'Articles',
     'post' => 'Article',
+    'medias' => 'Medias',
+    'media' => 'Media',
 
     //navabar
     'mark_as_read' => 'Marquer comme lu',
@@ -160,6 +162,7 @@
     'users_deleted' => 'Utilisateurs supprimés avec succès',
     'user_registered' => 'Compte créé avec succès',
     'user_activated' => 'Compte activé avec succès',
+    'user_not_activated' => 'Votre compte est inactif',
     'user_not_registered' => 'Compte inexistant',
     'import_file_type_error' => 'Format de fichier non autorisé. Les formats autorisés sont: ',
     'import_data_error' => "Echec de l'importation des données",
@@ -193,12 +196,12 @@
     'messages_updated' => 'Messages marqués comme lus',
     'message_deleted' => 'Message supprimé avec succès',
     'messages_deleted' => 'Messages supprimés avec succès',
-    'files_created' => 'Fichiers créé avec succès',
-    'file_updated' => 'Fichier mis à jour avec succès',
-    'file_not_updated' => 'Echec de la mise à jour du fichier',
-    'files_deleted' => 'Fichiers supprimés avec succès',
-    'file_deleted' => 'Fichier supprimé avec succès',
-    'file_not_found' => 'Fichier non trouvé',
+    'medias_uploaded' => 'Médias téléversés avec succès',
+    'media_updated' => 'Média mis à jour avec succès',
+    'media_not_updated' => 'Echec de la mise à jour du média',
+    'medias_deleted' => 'Médias supprimés avec succès',
+    'media_deleted' => 'Média supprimé avec succès',
+    'media_not_found' => 'Média non trouvé',
     'upload_error' => 'Echec de téléversement des fichiers',
 
     //misc
@@ -220,10 +223,11 @@
     'no' => 'Non',
     'no_data_found' => 'Aucune donnée disponible',
     'items_not_checked' => 'Vous devez sélectionner au moins un élément',
+    'click_to_enlarge' => 'Cliquez pour agrandir',
 
     //modals
     'upload' => 'Importer',
-    'file_type' => 'Type de fichier',
+    'media_type' => 'Type de fichier',
     'period' => 'Période',
     'optional' => 'optionnel',
     'select_user' => 'Sélectionnez un utilisateur'

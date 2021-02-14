@@ -1,4 +1,4 @@
-<?php $this->layout('admin/layout', [
+<?php $this->layout('layouts/admin', [
     'page_title' => __('messages') . ' | Administration'
 ]) ?>
 
@@ -101,7 +101,7 @@
                         <td><?= $message->sender_email ?></td>
                         <td><?= $message->recipient_email ?></td>
                         <td><?= $message->message ?></td>
-                        <td><?= time_elapsed(\App\Helpers\DateHelper::format($message->created_at)->timestamp(), 1) ?></td>
+                        <td><?= \App\Helpers\DateHelper::format($message->created_at)->time_elapsed() ?></td>
 
                         <td>
                             <?php if ($message->sender_email !== auth()->email) : ?>

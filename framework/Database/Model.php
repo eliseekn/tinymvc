@@ -8,6 +8,7 @@
 
 namespace Framework\Database;
 
+use Exception;
 use Framework\Http\Request;
 use Framework\Support\Pager;
 use Framework\Support\Metrics;
@@ -162,6 +163,25 @@ class Model
 	}
     
     /**
+     * retrieves data or throw exception if not exists
+     *
+     * @param  string $column
+     * @param  mixed $operator
+     * @param  mixed $value
+     * @return mixed
+     */
+    public static function findOrFail(string $column, $operator = null, $value = null)
+    {
+        $result = self::findSingleBy($column, $operator, $value);
+
+        if ($result === false) {
+            throw new Exception('Data not found.');
+        }
+
+        return $result;
+    }
+    
+    /**
      * generate search query
      *
      * @param  string $column
@@ -284,11 +304,12 @@ class Model
      * @param  string $type
      * @param  string $trends
      * @param  int $interval
+     * @param  array|null $query
      * @return array
      */
-    public static function metrics(string $column, string $type, string $trends, int $interval = 0): array
+    public static function metrics(string $column, string $type, string $trends, int $interval = 0, array $query = null): array
     {
-        return (new Metrics(static::$table))->getTrends($type, $column, $trends, $interval);
+        return (new Metrics(static::$table))->getTrends($type, $column, $trends, $interval, $query);
     }
     
 	/**
@@ -832,12 +853,12 @@ class Model
     /**
      * generate sub query
      *
-     * @param  mixed $function
+     * @param  mixed $callback
      * @return \Framework\Database\Model
      */
-    public function subQuery(callable $function): self
+    public function subQuery(callable $callback): self
     {
-        call_user_func_array($function, [$this]);
+        call_user_func_array($callback, [$this]);
         return $this;
     }
 }

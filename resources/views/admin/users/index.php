@@ -1,4 +1,4 @@
-<?php $this->layout('admin/layout', [
+<?php $this->layout('layouts/admin', [
     'page_title' => __('users') . ' | Administration'
 ]) ?>
 
@@ -144,9 +144,7 @@
         <span><?= __('total_results') ?> <span class="font-weight-bold"><?= $users->getTotalItems() ?></span></span>
         <span><?= __('showing') ?> <span class="font-weight-bold"><?= $users->getPageTotalItems() === 0 ? $users->getFirstItem() : $users->getFirstItem() + 1 ?></span> <?= __('to') ?> <span class="font-weight-bold"><?= $users->getPageTotalItems() + $users->getFirstItem() ?></span></span>
 
-        <?php $this->insert('partials/pagination', [
-            'pagination' => $users
-        ]) ?>
+        <?php $this->insert('partials/pagination', ['pagination' => $users]) ?>
     </div>
 </div>
 

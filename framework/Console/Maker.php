@@ -37,7 +37,7 @@ class Maker
             $resource = $resource . 's';
         }
 
-        return 'admin/resources/' . $resource;
+        return 'admin/' . $resource;
     }
     
     /**
@@ -286,12 +286,12 @@ class Maker
             !array_key_exists('middleware', $options) &&
             !array_key_exists('m', $options)
         ) {
-            self::makeController($options['controller'], 'admin');
-            self::makeViews($options['controller']);
-            self::makeModel($options['controller']);
-            self::makeSeed($options['controller']);
-            self::makeMigration($options['controller']);
-            self::makeRoute($options['controller']);
+            self::makeController($options['resource'], 'admin');
+            self::makeViews($options['resource']);
+            self::makeModel($options['resource']);
+            self::makeSeed($options['resource']);
+            self::makeMigration($options['resource']);
+            self::makeRoute($options['resource']);
         }
 
         else if (

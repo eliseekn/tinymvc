@@ -159,4 +159,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         })
     }
+
+    //media search
+    if (document.querySelector('#media-search')) {
+        document.querySelector('#media-search').addEventListener('keypress', event => {
+            if (event.keyCode == 13) {
+                window.location.href = event.target.dataset.url + event.target.value
+            }
+        })
+    }
 })

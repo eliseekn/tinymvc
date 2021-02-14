@@ -65,7 +65,7 @@
         $('#alert-toast').on('shown.bs.modal', function (e) {
             window.setTimeout(function () {
                 $('#alert-toast').modal('hide');
-            }, 2500)
+            }, 3000)
         })
     }
 }

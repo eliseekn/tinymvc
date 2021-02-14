@@ -4,14 +4,14 @@ namespace App\Database\Migrations;
 
 use Framework\Database\Migration;
 
-class FilesTable
+class MediasTable
 {         
     /**
      * name of table
      *
      * @var string
      */
-    public static $table = 'files';
+    public static $table = 'medias';
 
     /**
      * create table

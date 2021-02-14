@@ -1,4 +1,4 @@
-<?php $this->layout('admin/layout', [
+<?php $this->layout('layouts/admin', [
     'page_title' => __('activities') . ' | Administration'
 ]) ?>
 
@@ -62,7 +62,6 @@
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('ip_address') ?></th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('action') ?></th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('created_at') ?></th>
-                        <th scope="col"></th>
                     </tr>
                 </thead>
 
@@ -82,16 +81,7 @@
                         <td><?= $activity->method ?></td>
                         <td><?= $activity->ip_address ?></td>
                         <td><?= $activity->action ?></td>
-                        <td><?= time_elapsed(\App\Helpers\DateHelper::format($activity->created_at)->timestamp(), 1) ?></td>
-
-                        <td>
-                            <confirm-delete 
-                                type="icon" 
-                                title="<?= __('delete') ?>"
-                                content='<i class="fa fa-trash-alt"></i>' 
-                                action="<?= absolute_url('admin/account/activities/delete/' . $activity->id) ?>">
-                            </confirm-delete>
-                        </td>
+                        <td><?= \App\Helpers\DateHelper::format($activity->created_at)->time_elapsed() ?></td>
                     </tr>
                     <?php endforeach ?>
                 </tbody>

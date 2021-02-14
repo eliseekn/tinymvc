@@ -52,9 +52,9 @@ class Validator
     public static function validate(array $inputs, array $rules = [], array $messages = []): self
     {
         $validators = empty($rules) ? static::$rules : $rules;
-        $inputs_error_messages = empty($messages) ? static::$messages : $messages;
+        $error_messages = empty($messages) ? static::$messages : $messages;
         static::$inputs = $inputs;
-        static::$errors = GUMP::is_valid(static::$inputs, $validators, $inputs_error_messages);
+        static::$errors = GUMP::is_valid(static::$inputs, $validators, $error_messages);
         return new self();
     }
     
@@ -75,19 +75,17 @@ class Validator
      */
     public function errors(): array
     {
-        $validation_errors = [];
+        $errors = [];
 
         foreach ((array) static::$errors as $error) {
             foreach (static::$inputs as $key => $input) {
                 if (strpos(strtolower($error), $key) !== false) {
-                    $validation_errors = array_merge($validation_errors, [
-                        $key => $error
-                    ]);
+                    $errors = array_merge($errors, [$key => $error]);
                 }
             }
         }
 
-        return $validation_errors;
+        return $errors;
     }
     
     /**

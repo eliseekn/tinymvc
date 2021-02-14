@@ -13,7 +13,7 @@
 $config = [
     'app' => [
         'name' => 'TinyMVC',
-        'folder' => '/tinymvc', //leave empty if you are using 'www' root
+        'folder' => 'tinymvc', //leave empty if you are using 'www' root
         'url' => 'http://localhost/tinymvc', //remove folder if you are using 'www' root
         'lang' => 'en'
     ],
@@ -80,6 +80,6 @@ $config = [
     ],
 
     'session' => [
-        'lifetime' => 3600 * 2, //2 hours in seconds
+        'lifetime' => 3600 * 5, //5 hours in seconds
     ]
 ];

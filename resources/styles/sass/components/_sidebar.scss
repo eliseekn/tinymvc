@@ -22,7 +22,7 @@
         left: 0;
         overflow-x: hidden;
         margin-left: -20em;
-        @include transition(margin, .25s, ease-in-out);
+        @include transition(margin, .3s, ease-in-out);
 
         .sidebar-title {
             padding: .55em 1.25em;

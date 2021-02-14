@@ -158,56 +158,82 @@ class Pager
     /**
      * generate first page url
      *
-     * @param  bool $full_url
      * @return string
      */
-    public function firstPageUrl(bool $full_url = false): string
+    public function firstPageUrl(): string
     {
-        return absolute_url(($full_url ? Request::getFullUri() : Request::getUri()) . '?page=1');
+        return absolute_url($this->generateUri(1));
     }
 
     /**
      * generate previous page url
      *
-     * @param  bool $full_url
      * @return string
      */
-    public function previousPageUrl(bool $full_url = false): string
+    public function previousPageUrl(): string
     {
-        return absolute_url(($full_url ? Request::getFullUri() : Request::getUri()) . '?page=' . $this->previousPage());
+        return absolute_url($this->generateUri($this->previousPage()));
     }
     
     /**
      * generate next page url
      *
-     * @param  bool $full_url
      * @return string
      */
-    public function nextPageUrl(bool $full_url = false): string
+    public function nextPageUrl(): string
     {
-        return absolute_url(($full_url ? Request::getFullUri() : Request::getUri()) . '?page=' . $this->nextPage());
+        return absolute_url($this->generateUri($this->nextPage()));
     }
 
     /**
      * generate last page url
      *
-     * @param  bool $full_url
      * @return string
      */
-    public function lastPageUrl(bool $full_url = false): string
+    public function lastPageUrl(): string
     {
-        return absolute_url(($full_url ? Request::getFullUri() : Request::getUri()) . '?page=' . $this->totalPages());
+        return absolute_url($this->generateUri($this->totalPages()));
     }
     
     /**
      * generate page url
      *
      * @param  int $page
-     * @param  bool $full_url
      * @return string
      */
-    public function pageUrl(int $page, bool $full_url = false): string
+    public function pageUrl(int $page): string
     {
-        return absolute_url(($full_url ? Request::getFullUri() : Request::getUri()) . '?page=' . $page);
+        return absolute_url($this->generateUri($page));
+    }
+    
+    /**
+     * generate uri with queries or not
+     *
+     * @param  mixed $page
+     * @return string
+     */
+    private function generateUri(int $page): string
+    {
+        $uri = Request::getFullUri();
+
+        if (strpos($uri, '?') !== false) {
+            $queries = substr($uri, strpos($uri, '?'), strlen($uri));
+        }
+
+        if (isset($queries)) {
+            if (strpos($queries, '&page=') !== false) {
+                $queries = substr($queries, strpos($queries, '?'), -1);
+                $uri = Request::getUri() . $queries . $page;
+            } else if (strpos($queries, '?page=') !== false) {
+                $queries = substr($queries, strpos($queries, '?'), -1);
+                $uri = Request::getUri() . $queries . $page;
+            } else  {
+                $uri = Request::getUri() . $queries . '&page=' . $page;
+            }
+        } else {
+            $uri = Request::getUri() . '?page=' . $page;
+        }
+
+        return $uri;
     }
 }

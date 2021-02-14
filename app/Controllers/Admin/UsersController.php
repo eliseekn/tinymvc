@@ -2,6 +2,7 @@
 
 namespace App\Controllers\Admin;
 
+use Exception;
 use App\Helpers\Auth;
 use App\Helpers\Activity;
 use App\Requests\UpdateUser;
@@ -23,7 +24,7 @@ class UsersController extends Controller
     public function index(): void
     {
         $users = UsersModel::find('!=', Auth::get()->id)
-            ->orderAsc('name')
+            ->orderDesc('created_at')
             ->paginate(20);
 
         $active_users = UsersModel::count()
@@ -32,7 +33,7 @@ class UsersController extends Controller
             ->single()
             ->value;
 
-        $this->render('admin/resources/users/index', compact('users', 'active_users'));
+        $this->render('admin.users.index', compact('users', 'active_users'));
     }
 
 	/**
@@ -42,9 +43,7 @@ class UsersController extends Controller
 	 */
 	public function new(): void
 	{
-		$this->render('admin/resources/users/new', [
-			'roles' => RolesModel::selectAll()
-		]);
+		$this->render('admin.users.new', ['roles' => RolesModel::selectAll()]);
 	}
 	
 	/**
@@ -55,14 +54,15 @@ class UsersController extends Controller
 	 */
 	public function edit(int $id): void
 	{
-		$user = UsersModel::findSingle($id);
+        try {
+            $user = UsersModel::findOrFail('id', $id);
+        } catch (Exception $e) {
+            $this->redirect('admin/resources/users')->withToast(__('user_not_found'))->error();
+        }
+
 		$roles = RolesModel::selectAll();
 
-		if ($user === false) {
-			$this->redirect()->withToast(__('user_not_found'))->error();
-		}
-
-		$this->render('admin/resources/users/edit', compact('user', 'roles'));
+		$this->render('admin.users.edit', compact('user', 'roles'));
 	}
 
 	/**
@@ -93,7 +93,9 @@ class UsersController extends Controller
             'email' => $this->request->email,
             'phone' => $this->request->phone,
             'company' => $this->request->company,
-            'password' => Encryption::hash($this->request->password)
+            'password' => Encryption::hash($this->request->password),
+            'active' => 1,
+            'role' => RolesModel::ROLE[1]
 		]);
 
         Activity::log(__('user_created'));
@@ -108,13 +110,13 @@ class UsersController extends Controller
 	 */
 	public function view(int $id): void
 	{
-		$user = UsersModel::findSingle($id);
-		
-		if ($user === false) {
-			$this->redirect()->withToast(__('user_not_found'))->error();
-		}
+        try {
+            $user = UsersModel::findOrFail('id', $id);
+        } catch (Exception $e) {
+            $this->redirect('admin/resources/users')->withToast(__('user_not_found'))->error();
+        }
 
-		$this->render('admin/resources/users/view', compact('user'));
+		$this->render('admin.users.view', compact('user'));
 	}
     
 	/**
@@ -132,22 +134,22 @@ class UsersController extends Controller
                 ->withToast(__('user_not_updated', true))->error();
         }
 
-        $user = UsersModel::find($id)->single();
+        try {
+            $user = UsersModel::findOrFail('id', $id);
 
-		if ($user === false) {
+            if ($user->email !== $this->request->email || $user->phone !== $this->request->phone) {
+                if (
+                    UsersModel::findBy('email', $this->request->email)
+                        ->or('phone', $this->request->phone)
+                        ->exists()
+                ) {
+                    $this->redirect()->withInputs($validator->inputs())
+                        ->withToast(__('user_already_exists'))->error();
+                }
+            }
+        } catch (Exception $e) {
             $this->redirect()->withInputs($validator->inputs())
                 ->withToast(__('user_not_found'))->error();
-        }
-
-        if ($user->email !== $this->request->email || $user->phone !== $this->request->phone) {
-            if (
-                UsersModel::findBy('email', $this->request->email)
-                    ->or('phone', $this->request->phone)
-                    ->exists()
-            ) {
-                $this->redirect()->withInputs($validator->inputs())
-                    ->withToast(__('user_already_exists'))->error();
-            }
         }
 
 		$data = [
@@ -184,7 +186,7 @@ class UsersController extends Controller
 	
 			UsersModel::deleteWhere('id', $id);
             Activity::log(__('user_deleted'));
-            $this->redirect('admin/resources/users')->withToast(__('user_deleted'))->success();
+            $this->redirect('admin/users')->withToast(__('user_deleted'))->success();
 		} else {
 			foreach (explode(',', $this->request->items) as $id) {
 				UsersModel::deleteWhere('id', $id);
@@ -205,23 +207,24 @@ class UsersController extends Controller
         $file = $this->request->files('file', ['csv']);
 
 		if (!$file->isAllowed()) {
-            $this->redirect('admin/resources/users')->withToast(__('import_file_type_error') . 'csv')->success();
+            $this->redirect('admin/users')->withToast(__('import_file_type_error') . 'csv')->success();
 		}
 
 		if (!$file->isUploaded()) {
-			$this->redirect('admin/resources/users')->withToast(__('import_data_error'))->error();
+			$this->redirect('admin/users')->withToast(__('import_data_error'))->error();
 		}
 
-		ReportHelper::import($file->getTempFilename(), UsersModel::class, [
+		ReportHelper::import($file, UsersModel::class, [
 			'name' => __('name'), 
             'email' => __('email'), 
             'phone' => __('phone'),
             'company' => __('company'),
+			'role' => __('role'), 
 			'password' => __('password')
 		]);
 
         Activity::log(__('data_imported'));
-		$this->redirect('admin/resources/users')->withToast(__('data_imported'))->success();
+		$this->redirect('admin/users')->withToast(__('data_imported'))->success();
 	}
 	
 	/**
@@ -231,14 +234,14 @@ class UsersController extends Controller
 	 */
 	public function export(): void
 	{
-		if ($this->request->has('date_start') && $this->request->has('date_end')) {
-			$users = UsersModel::select()
-                ->whereBetween('created_at', $this->request->date_start, $this->request->date_end)
-                ->orderDesc('created_at')
-                ->all();
-		} else {
-			$users = UsersModel::select()->orderAsc('name')->all();
-        }
+		$users = UsersModel::select()
+            ->subQuery(function ($query) {
+                if ($this->request->has('date_start') && $this->request->has('date_end')) {
+                    $query->whereBetween('created_at', $this->request->date_start, $this->request->date_end);
+                }
+            })
+            ->orderDesc('created_at')
+            ->all();
         
         $filename = 'users_' . date('Y_m_d') . '.' . $this->request->file_type;
 

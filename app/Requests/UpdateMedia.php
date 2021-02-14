@@ -4,7 +4,7 @@ namespace App\Requests;
 
 use Framework\Support\Validator;
 
-class FileInfos extends Validator
+class UpdateMedia extends Validator
 {
     /**
      * rules
@@ -22,7 +22,5 @@ class FileInfos extends Validator
      * 
      * @var array
      */
-    protected static $error_messages = [
-        //
-    ];
+    protected static $messages = [];
 }

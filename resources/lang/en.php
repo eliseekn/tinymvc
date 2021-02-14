@@ -40,6 +40,8 @@
     'files' => 'Files',
     'posts' => 'Posts',
     'post' => 'Post',
+    'medias' => 'Medias',
+    'media' => 'Media',
 
     //navabar
     'mark_as_read' => 'Mark as read',
@@ -160,6 +162,7 @@
     'users_deleted' => 'Users deleted successfully',
     'user_registered' => 'Account successfully created',
     'user_activated' => 'Account successfully activated',
+    'user_not_activated' => 'Account not activated',
     'user_not_registered' => 'Account not registred',
     'import_file_type_error' => 'File type not allowed. Allowed type are: ',
     'import_data_error' => 'Failed to import data',
@@ -193,12 +196,12 @@
     'messages_updated' => 'Messages marked as read',
     'message_deleted' => 'Message deleted successfully',
     'messages_deleted' => 'Messages deleted successfully',
-    'files_created' => 'Files created successfully',
-    'file_updated' => 'File updated successfully',
-    'file_not_updated' => 'Failed to update file',
-    'files_deleted' => 'Files deleted successfully',
-    'file_deleted' => 'File deleted successfully',
-    'file_not_found' => 'File not found',
+    'medias_uploaded' => 'Medias uploaded successfully',
+    'media_updated' => 'Media updated successfully',
+    'media_not_updated' => 'Failed to update media',
+    'medias_deleted' => 'Medias deleted successfully',
+    'media_deleted' => 'Media deleted successfully',
+    'media_not_found' => 'Media not found',
     'upload_error' => 'Failed to upload files',
 
     //misc
@@ -220,10 +223,11 @@
     'no' => 'No',
     'no_data_found' => 'No data found',
     'items_not_checked' => 'You must check at least one item',
+    'click_to_enlarge' => 'Click to enlarge',
 
     //modals
     'upload' => 'Upload',
-    'file_type' => 'File type',
+    'media_type' => 'File type',
     'period' => 'Period',
     'optional' => 'optional',
     'select_user' => 'Select user'

@@ -56,9 +56,7 @@ class PasswordController extends Controller
 
 		TokensModel::deleteWhere('email', $reset_token->email);
 		
-		$this->render('auth/password/new', [
-			'email' => $reset_token->email
-		]);
+		$this->render('auth.password.new', ['email' => $reset_token->email]);
 	}
 	
 	/**

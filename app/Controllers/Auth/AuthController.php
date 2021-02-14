@@ -79,6 +79,6 @@ class AuthController extends Controller
 	public function logout(): void
 	{
 		Auth::forget();
-		$this->redirect('/')->only();
+		$this->redirect('login')->only();
 	}
 }

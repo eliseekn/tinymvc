@@ -26,7 +26,7 @@ class MessagesController extends Controller
             ->single()
             ->value;
 
-		$this->render('admin/messages', compact('messages', 'messages_unread'));
+		$this->render('admin.account.messages', compact('messages', 'messages_unread'));
 	}
 
 	/**
@@ -115,14 +115,14 @@ class MessagesController extends Controller
 	 */
     public function export(): void
 	{
-        if ($this->request->has('date_start') && $this->request->has('date_end')) {
-			$messages = MessagesModel::select()
-                ->whereBetween('created_at', $this->request->date_start, $this->request->date_end)
-                ->orderDesc('created_at')
-                ->all();
-		} else {
-			$messages = MessagesModel::select()->orderDesc('created_at')->all();
-        }
+        $messages = MessagesModel::select()
+            ->subQuery(function ($query) {
+                if ($this->request->has('date_start') && $this->request->has('date_end')) {
+                    $query->whereBetween('created_at', $this->request->date_start, $this->request->date_end);
+                }
+            })
+            ->orderDesc('created_at')
+            ->all();
         
         $filename = 'messages_' . date('Y_m_d') . '.' . $this->request->file_type;
 

@@ -3,21 +3,22 @@
 namespace App\Helpers;
 
 use Framework\Routing\View;
+use Framework\Support\Uploader;
 
 class ReportHelper
 {    
     /**
      * import data from csv
      *
-     * @param  string $filename
+     * @param  \Framework\Support\Uploader $file
 	 * @param  string $model
 	 * @param  array $vars headers and colunms names
      * @return void
 	 * @link   https://www.php.net/manual/en/function.str-getcsv.php
      */
-    public static function import(string $filename, string $model, array $vars): void
+    public static function import(Uploader $file, string $model, array $vars): void
     {
-		$csv = array_map('str_getcsv', file($filename));
+		$csv = array_map('str_getcsv', file($file->getTempFilename()));
 
 		array_walk($csv, function(&$a) use ($csv) {
 			$a = array_combine($csv[0], $a);

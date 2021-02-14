@@ -108,7 +108,7 @@ class Storage
     }
     
     /**
-     * copy file
+     * copy file or folder
      *
      * @param  string $filename
      * @param  string $destination
@@ -116,11 +116,11 @@ class Storage
      */
     public function copyFile(string $filename, string $destination): bool
     {
-        return copy($filename, $destination);
+        return copy(self::$path . $filename, self::$path . $destination);
     } 
     
     /**
-     * rename file
+     * rename file or folder
      *
      * @param  string $oldname
      * @param  string $newname
@@ -132,7 +132,7 @@ class Storage
     } 
     
     /**
-     * move file
+     * move file or folder
      *
      * @param  string $filename
      * @param  string $destination
@@ -140,7 +140,7 @@ class Storage
      */
     public function moveFile(string $filename, string $destination): bool
     {
-        return $this->renameFile(self::$path . $filename, self::$path . $destination);
+        return $this->renameFile($filename, $destination);
     }
     
     /**

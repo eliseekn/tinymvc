@@ -18,7 +18,9 @@ class NotificationsController extends Controller
      */
     public function index(): void
     {
-        $notifications = NotificationsModel::findBy('user_id', Auth::get()->id)->orderDesc('created_at')->paginate(20);
+        $notifications = NotificationsModel::findBy('user_id', Auth::get()->id)
+            ->orderDesc('created_at')
+            ->paginate(20);
 
         $notifications_unread = NotificationsModel::count()
             ->where('status', 'unread')
@@ -26,7 +28,7 @@ class NotificationsController extends Controller
             ->single()
             ->value;
 
-        $this->render('admin/notifications', compact('notifications', 'notifications_unread'));
+        $this->render('admin.account.notifications', compact('notifications', 'notifications_unread'));
     }
 
 	/**

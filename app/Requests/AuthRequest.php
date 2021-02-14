@@ -21,5 +21,5 @@ class AuthRequest extends Validator
      * 
      * @var array
      */
-    protected static $error_messages = [];
+    protected static $messages = [];
 }

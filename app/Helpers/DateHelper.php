@@ -62,4 +62,15 @@ class DateHelper
     {
         return self::$date->toTimeString();
     }
+    
+    /**
+     * get time elapsed
+     *
+     * @param  int $level
+     * @return string
+     */
+    public function time_elapsed(int $level = 1): string
+    {
+        return time_elapsed($this->timestamp(), $level);
+    }
 }

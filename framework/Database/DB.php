@@ -54,13 +54,13 @@ class DB
     /**
      * set database to use
      *
-     * @param  string|null $name
+     * @param  string|null $db
      * @return \Framework\Database\DB
      */
-    private function setDB(?string $name = null): self
+    private function setDB(?string $db = null): self
     {
-        if (!is_null($name)) {
-            $this->connection->exec('USE ' . $name);
+        if (!is_null($db)) {
+            $this->connection->exec('USE ' . $db);
         }
 
         return $this;

@@ -6,36 +6,43 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-use Framework\Database\DB;
-use Framework\Routing\View;
+use Framework\Http\Request;
 use Framework\Http\Response;
 use Framework\Routing\Route;
-use App\Database\Models\FilesModel;
 
 /**
  * Web routes
  */
 
-Route::get('/', [
-    'handler' => function() {
-        View::render('index');
-    }
-]);
+Route::get('/', ['handler' => 'HomeController@index']);
 
-Route::get('/home', [
-    'handler' => 'HomeController@index'
-]);
+function getUri() {
+    $url = '/admin/resources/medias/search?q=image&page=1';
+
+    /* if (strpos($uri, '&page=') !== false) {
+        $uri = substr($uri, strpos($uri, '/'), strpos($uri, '&page='));
+    } */
+
+    if (strpos($url, '?') !== false) {
+        $uri = substr($url, strpos($url, '/'), strpos($url, '?'));
+    }
+
+    //looks for something like "?q="
+    if (strpos($url, '?') !== false) {
+        $_uri = substr($url, strpos($url, '?'), strlen($url));
+    }
+
+    if (strpos($_uri, '&page=') !== false) {
+        $q = substr($_uri, strpos($_uri, '?'), -1);
+    }
+ 
+    return [$uri, $_uri, $q];
+}
 
 Route::get('test', [
     'handler' => function() {
-        //$result = DB::connection('test')->statement('SELECT * FROM users WHERE active = :active', ['active' => 1]);
-        $allowed_extensions = array_merge(FilesModel::TYPE[0], FilesModel::TYPE[1], FilesModel::TYPE[2]);
-        $ext = 'jpg';
+        dd(getUri());
 
-        $b = in_array(strtolower($ext), $allowed_extensions);
-
-        dd($b)
-;        //Response::send();
-        //Response::send('Just to test things');
+        Response::send('Just to test things');
     }
 ]);

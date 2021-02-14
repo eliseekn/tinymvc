@@ -25,6 +25,7 @@ class EmailController extends Controller
 		if (UsersModel::findBy('email', $this->request->email)->exists()) {
             UsersModel::update(['active' => 1])->where('email', $this->request->email)->persist();
             EmailHelper::sendWelcome($this->request->email);
+            
             $this->redirect('login')->withAlert(__('user_activated', true))->success('');
         } else {
             $this->redirect('signup')->withAlert(__('user_not_registered', true))->error('');

@@ -1,4 +1,4 @@
-<?php $this->layout('docs/layout', [
+<?php $this->layout('layouts/docs', [
     'page_title' => 'HTTP Responses | Documentation'
 ]) ?>
 

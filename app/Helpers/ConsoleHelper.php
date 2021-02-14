@@ -11,9 +11,9 @@ class ConsoleHelper
      * execute cli arguments from browser
      *
      * @param  array $options
-     * @return mixed
+     * @return void
      */
-    public static function execute(array $options)
+    public static function execute(array $options): void
     {
         if (
             array_key_exists('database', $options) &&

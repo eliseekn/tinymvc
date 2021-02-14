@@ -310,6 +310,19 @@ if (!function_exists('in_url')) {
  * Miscellaneous utils functions
  */
 
+if (!function_exists('real_path')) {    
+    /**
+     * replace '.' by DIRECTORY_SEPARATOR
+     *
+     * @param  string $path
+     * @return string
+     */
+    function real_path(string $path): string
+    {
+        return str_replace('.', DIRECTORY_SEPARATOR, $path);
+    }
+}
+
 if (!function_exists('absolute_path')) {    
     /**
      * get absolute path
@@ -319,8 +332,7 @@ if (!function_exists('absolute_path')) {
      */
     function absolute_path(string $path): string
     {
-        $path = str_replace('.', DIRECTORY_SEPARATOR, $path);
-        return APP_ROOT . $path . DIRECTORY_SEPARATOR;
+        return APP_ROOT . real_path($path) . DIRECTORY_SEPARATOR;
     }
 }
 

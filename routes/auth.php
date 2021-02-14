@@ -16,13 +16,13 @@ use Framework\Routing\Route;
 Route::group([
     'login' => [
         'handler' => function() {
-            View::render('auth/login');
+            View::render('auth.login');
         }
     ],
 
     'signup' => [
         'handler' => function() {
-            View::render('auth/signup');
+            View::render('auth.signup');
         }
     ]
 ])->by([
@@ -40,7 +40,7 @@ Route::post('register', ['handler' => 'Auth\AuthController@register']);
 //password reset routes
 Route::get('password/forgot', [
     'handler' => function() {
-        View::render('auth/password/forgot');
+        View::render('auth.password.forgot');
     }
 ]);
 

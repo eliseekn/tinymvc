@@ -1,4 +1,4 @@
-<?php $this->layout('admin/layout', [
+<?php $this->layout('layouts/admin', [
     'page_title' => config('app.name') . ' | Dashboard'
 ]) ?>
 
@@ -19,7 +19,7 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <span><?= __('all_users') ?></span>
 
-                <a href="<?= absolute_url('admin/resources/users') ?>" class="btn btn-outline-dark">
+                <a href="<?= absolute_url('admin/users') ?>" class="btn btn-outline-dark">
                     <?= __('view_all') ?>
                 </a>
             </div>
@@ -77,7 +77,7 @@
                     <div class="d-flex flex-lg-row flex-column mt-lg-0 mt-2">
                         <send-message
                             type="button" 
-                            action="<?= absolute_url('admin/account/messages/create') ?>" 
+                            action="<?= absolute_url('admin/messages/create') ?>" 
                             title="<?= __('new') ?>" 
                             content='<?= __('new') ?>'
                             recipient="0"
@@ -85,7 +85,7 @@
                             csrf_token='<?= csrf_token_input() ?>'>
                         </send-message>
 
-                        <a href="<?= absolute_url('admin/account/messages') ?>" class="btn btn-outline-dark">
+                        <a href="<?= absolute_url('admin/messages') ?>" class="btn btn-outline-dark">
                             <?= __('view_all') ?>
                         </a>
                     </div>
@@ -108,9 +108,9 @@
                         <tr>
                             <td><?= $message->sender_email ?></td>
                             <td><?= $message->message ?></td>
-                            <td><?= time_elapsed(\App\Helpers\DateHelper::format($message->created_at)->timestamp(), 1) ?></td>
+                            <td><?= \App\Helpers\DateHelper::format($message->created_at)->time_elapsed() ?></td>
                             <td>
-                                <a class="btn text-dark p-1 <?php if ($message->recipient_status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('admin/account/messages/update/' . $message->id) ?>" <?php if ($message->recipient_status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
+                                <a class="btn text-dark p-1 <?php if ($message->recipient_status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('admin/messages/update/' . $message->id) ?>" <?php if ($message->recipient_status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
                                     <?php if ($message->recipient_status === 'unread') : ?>
                                     <i class="fa fa-eye-slash"></i>
                                     <?php else : ?>
@@ -134,11 +134,11 @@
                 <div class="d-flex flex-lg-row flex-column mt-lg-0 mt-2">
                     <create-notification 
                         title="<?= __('create') ?>"
-                        action="<?= absolute_url('admin/account/notifications/create') ?>" 
+                        action="<?= absolute_url('admin/notifications/create') ?>" 
                         csrf_token='<?= csrf_token_input() ?>'>
                     </create-notification>
 
-                    <a href="<?= absolute_url('admin/account/notifications') ?>" class="btn btn-outline-dark">
+                    <a href="<?= absolute_url('admin/notifications') ?>" class="btn btn-outline-dark">
                         <?= __('view_all') ?>
                     </a>
                 </div>
@@ -158,9 +158,9 @@
                         <?php foreach ($notifications as $notification) : ?>
                         <tr>
                             <td><?= $notification->message ?></td>
-                            <td><?= time_elapsed(\App\Helpers\DateHelper::format($notification->created_at)->timestamp(), 1) ?></td>
+                            <td><?= \App\Helpers\DateHelper::format($notification->created_at)->time_elapsed() ?></td>
                             <td>
-                                <a class="btn text-dark p-1 <?php if ($notification->status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('admin/account/notifications/update', $notification->id) ?>" <?php if ($notification->status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
+                                <a class="btn text-dark p-1 <?php if ($notification->status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('admin/notifications/update', $notification->id) ?>" <?php if ($notification->status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
                                     <?php if ($notification->status === 'unread') : ?>
                                     <i class="fa fa-eye-slash"></i>
                                     <?php else : ?>

@@ -47,3 +47,8 @@ if (document.querySelector('#messages-icon')) {
 
 //init hightlight js
 hjs.initHighlightingOnLoad()
+
+//init page loading progress bar
+window.addEventListener('beforeunload', () => {
+    document.body.className = 'page-loading'
+})

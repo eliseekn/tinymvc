@@ -28,12 +28,13 @@ Route::group([
     'resources/users/view/{num}' => ['handler' => 'Admin\UsersController@view'],
     'resources/users/delete/{num}' => ['handler' => 'Admin\UsersController@delete'],
 
-    //files routes
-    'resources/files' => ['handler' => 'Admin\FilesController@index'],
-    'resources/files/new' => ['handler' => 'Admin\FilesController@new'],
-    'resources/files/edit/{num}' => ['handler' => 'Admin\FilesController@edit'],
-    'resources/files/view/{num}' => ['handler' => 'Admin\FilesController@view'],
-    'resources/files/delete/{num}' => ['handler' => 'Admin\FilesController@delete'],
+    //medias routes
+    'resources/medias' => ['handler' => 'Admin\MediasController@index'],
+    'resources/medias/new' => ['handler' => 'Admin\MediasController@new'],
+    'resources/medias/edit/{num}' => ['handler' => 'Admin\MediasController@edit'],
+    'resources/medias/view/{num}' => ['handler' => 'Admin\MediasController@view'],
+    'resources/medias/delete/{num}' => ['handler' => 'Admin\MediasController@delete'],
+    'resources/medias/search' => ['handler' => 'Admin\MediasController@search'],
 
     //messages routes
     'account/messages' => ['handler' => 'Admin\MessagesController@index'],
@@ -50,7 +51,6 @@ Route::group([
 
     //activities
     'account/activities' => ['handler' => 'Admin\ActivitiesController@index'],
-    'account/activities/delete/{num}' => ['handler' => 'Admin\ActivitiesController@delete']
 ])->by([
     'method' => 'GET',
     'prefix' => 'admin',
@@ -68,12 +68,12 @@ Route::group([
     'resources/users/export' => ['handler' => 'Admin\UsersController@export'],
     'resources/users/delete' => ['handler' => 'Admin\UsersController@delete'],
 
-    //files routes
-    'resources/files/create' => ['handler' => 'Admin\FilesController@create'],
-    'resources/files/update/{num}' => ['handler' => 'Admin\FilesController@update'],
-    'resources/files/import' => ['handler' => 'Admin\FilesController@import'],
-    'resources/files/export' => ['handler' => 'Admin\FilesController@export'],
-    'resources/files/delete' => ['handler' => 'Admin\FilesController@delete'],
+    //medias routes
+    'resources/medias/create' => ['handler' => 'Admin\MediasController@create'],
+    'resources/medias/update/{num}' => ['handler' => 'Admin\MediasController@update'],
+    'resources/medias/import' => ['handler' => 'Admin\MediasController@import'],
+    'resources/medias/export' => ['handler' => 'Admin\MediasController@export'],
+    'resources/medias/delete' => ['handler' => 'Admin\MediasController@delete'],
 
     //notifications routes
     'account/notifications/create' => ['handler' => 'Admin\NotificationsController@create'],

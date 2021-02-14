@@ -2,6 +2,7 @@
 
 namespace App\Controllers\Admin;
 
+use Exception;
 use App\Helpers\Activity;
 use App\Requests\UpdateUser;
 use Framework\Support\Session;
@@ -20,14 +21,15 @@ class SettingsController extends Controller
 	 */
 	public function index(int $id): void
 	{
-        $user = UsersModel::findSingle($id);
-		
-		if ($user === false) {
-			$this->redirect()->withToast(__('user_not_found'))->success();
+        try {
+            $user = UsersModel::findOrFail('id', $id);
+        } catch (Exception $e) {
+            $this->redirect('admin/resources/users')->withToast(__('user_not_found'))->error();
         }
         
         $countries = CountriesModel::select()->orderAsc('name')->all();
-		$this->render('admin/settings', compact('user', 'countries'));
+        
+		$this->render('admin.account.settings', compact('user', 'countries'));
     }
     
     /**

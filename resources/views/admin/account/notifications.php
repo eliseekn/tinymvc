@@ -1,4 +1,4 @@
-<?php $this->layout('admin/layout', [
+<?php $this->layout('layouts/admin', [
     'page_title' => __('notifications') . ' | Administration'
 ]) ?>
 
@@ -86,7 +86,7 @@
 
                         <td><?= $notification->id ?></td>
                         <td><?= $notification->message ?></td>
-                        <td><?= time_elapsed(\App\Helpers\DateHelper::format($notification->created_at)->timestamp(), 1) ?></td>
+                        <td><?= \App\Helpers\DateHelper::format($notification->created_at)->timestamp() ?></td>
 
                         <td>
                             <a class="btn text-dark p-1 <?php if ($notification->status === 'read') : echo 'disabled'; endif ?>" href="<?= absolute_url('admin/account/notifications/update', $notification->id) ?>" <?php if ($notification->status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>

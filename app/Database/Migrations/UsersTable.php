@@ -27,7 +27,7 @@ class UsersTable
             ->addString('company')->default('')
             ->addString('phone')->unique()
             ->addString('password')
-            ->addString('role')->default('visitor')
+            ->addString('role')->default('user')
             ->addString('lang')->default('en')
             ->addSmallInt('country')->default(209)
             ->addString('currency')->default('USD')
