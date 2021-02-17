@@ -1,2 +1,5 @@
+- fix loading animation on customelement innerhtml
+- fix disable state on "mark as read" button for messages and notifications 
+
 - migrate to bootstrap 5
 - add sqlite3 option to db options

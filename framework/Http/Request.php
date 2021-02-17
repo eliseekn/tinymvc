@@ -391,6 +391,30 @@ class Request
     {
         return isset($this->{$item}) && !empty($this->{$item});
     }
+
+    /**
+     * retrieves value of POST/GET request or return default
+     *
+     * @param  string $item
+     * @param  mixed $default
+     * @return mixed
+     */
+    public function get(string $item, $default = null)
+    {
+        return $this->has($item) ? $this->{$item} : $default;
+    }
+
+    /**
+     * set value of POST/GET request
+     *
+     * @param  string $item
+     * @param  string $value
+     * @return void
+     */
+    public function set(string $item, string $value): void
+    {
+        $this->{$item} = $value;
+    }
     
     /**
      * retrieves certains items only

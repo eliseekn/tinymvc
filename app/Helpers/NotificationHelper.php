@@ -17,7 +17,9 @@ class NotificationHelper
     public static function create(string $message, ?int $recipient = null): void
     {
         if (is_null($recipient)) {
-            foreach (UsersModel::selectAll() as $user) {
+            $users = UsersModel::selectAll();
+
+            foreach ($users as $user) {
                 NotificationsModel::insert([
                     'message' => $message,
                     'user_id' => $user->id

@@ -72,15 +72,15 @@
             <?= __('edit') ?>
         </a>
 
-        <a href="<?= absolute_url('admin/resources/users/new') ?>" class="btn btn-outline-dark ml-2">
+        <a href="<?= absolute_url('admin/resources/users/new') ?>" class="btn btn-outline-dark mx-2">
             <?= __('new') ?>
         </a>
         
-        <confirm-delete 
-            type="text" 
-            content="<?= __('delete') ?>" 
-            action="<?= absolute_url('admin/resources/users/delete', $user->id) ?>">
-        </confirm-delete>
+        <delete-item action="<?= absolute_url('admin/resources/users/delete', $user->id) ?>">
+            <a class="btn btn-danger">
+                <?= __('delete') ?>
+            </a>
+        </delete-item>
 
         <a href="<?= absolute_url('admin/resources/users') ?>" class="btn btn-outline-dark ml-2">
             <?= __('back') ?>

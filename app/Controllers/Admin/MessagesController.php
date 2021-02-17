@@ -75,11 +75,6 @@ class MessagesController extends Controller
 	 */
 	public function update(?int $id = null): void
 	{
-        /* MessagesModel::updateIfExists($id, ['recipient_status' => 'read']);
-
-        Activity::log(__('message_updated'));
-        $this->redirect()->withToast(__('message_updated'))->success(); */
-
         if (!is_null($id)) {
             MessagesModel::updateIfExists($id, ['recipient_status' => 'read']);
 

@@ -78,18 +78,6 @@ class Model
     /**
      * generate select where query
      *
-	 * @param  mixed $operator
-	 * @param  mixed $value
-     * @return \Framework\Database\Model
-     */
-    public static function find($operator = null, $value = null): self
-	{
-        return self::select()->where('id', $operator, $value);
-	}
-    
-    /**
-     * generate select where query
-     *
 	 * @param  string $column
 	 * @param  mixed $operator
 	 * @param  mixed $value
@@ -105,11 +93,11 @@ class Model
      *
 	 * @param  mixed $operator
 	 * @param  mixed $value
-     * @return mixed
+     * @return \Framework\Database\Model
      */
-    public static function findSingle($operator = null, $value = null)
+    public static function find($operator = null, $value = null): self
 	{
-        return self::select()->where('id', $operator, $value)->single();
+        return self::findBy('id', $operator, $value);
 	}
     
     /**
@@ -130,11 +118,11 @@ class Model
      *
 	 * @param  mixed $operator
 	 * @param  mixed $value
-     * @return array
+     * @return mixed
      */
-    public static function findAll($operator = null, $value = null): array
+    public static function findSingle($operator = null, $value = null)
 	{
-        return self::select()->where('id', $operator, $value)->all();
+        return self::findSingleBy('id', $operator, $value);
 	}
     
     /**
@@ -151,6 +139,18 @@ class Model
 	}
     
     /**
+     * generate select where query
+     *
+	 * @param  mixed $operator
+	 * @param  mixed $value
+     * @return array
+     */
+    public static function findAll($operator = null, $value = null): array
+	{
+        return self::findAllBy('id', $operator, $value);
+	}
+    
+    /**
      * generate select where query with raw query
      *
 	 * @param  string $query
@@ -161,6 +161,29 @@ class Model
 	{
         return self::select()->whereRaw($query, $args);
 	}
+
+    /**
+     * find columns with glue option
+     *
+     * @param  array $items
+	 * @param  string $glue
+     * @return \Framework\Database\Model
+     */
+    public static function findMany(array $items, string $glue = 'or'): self
+    {
+        $result = self::select();
+        $first_item = reset($items);
+
+        foreach ($items as $column => $value) {
+            if ($items[$first_item] === $value) {
+                $result->where($column, $value);
+            } else {
+                $result->$glue($column, $value);
+            }
+        }
+
+        return $result;
+    }
     
     /**
      * retrieves data or throw exception if not exists
@@ -182,27 +205,44 @@ class Model
     }
     
     /**
-     * generate search query
+     * insert items if id not found
      *
-     * @param  string $column
-	 * @param  mixed $value
-     * @return \Framework\Database\Model
+     * @param  mixed $id
+     * @param  array $items
+     * @return mixed
      */
-    public static function search(string $column, $value): self
+    public static function findOrCreate($id, array $items)
     {
-        return self::select()->whereLike($column, $value);
+        try {
+            $result = self::findOrFail('id', $id);
+        } catch (Exception $e) {
+            $result = self::insert($items);
+        }
+
+        return $result;
     }
     
     /**
-     * generate or search query
+     * generate search query
      *
-     * @param  string $column
-	 * @param  mixed $value
+     * @param  array $items
+	 * @param  string $glue
      * @return \Framework\Database\Model
      */
-    public static function orSearch(string $column, $value): self
+    public static function search(array $items, string $glue = 'or'): self
     {
-        return self::select()->or($column, 'like', $value);
+        $result = self::select();
+        $first_item = reset($items);
+
+        foreach ($items as $column => $value) {
+            if ($items[$first_item] === $value) {
+                $result->whereLike($column, $value);
+            } else {
+                $result->$glue($column, 'like', $value);
+            }
+        }
+
+        return $result;
     }
     
     /**
@@ -296,14 +336,13 @@ class Model
         self::deleteBy('id', $id);
     }
     
-    
     /**
      * get column count value
      *
      * @param  string $column
      * @return \Framework\Database\Model
      */
-    public static function count(string $column = 'id')
+    public static function count(string $column = 'id'): self
     {
         return self::select(['COUNT(' . $column . ') AS value']);
     }
@@ -314,7 +353,7 @@ class Model
      * @param  string $column
      * @return \Framework\Database\Model
      */
-    public static function sum(string $column)
+    public static function sum(string $column): self
     {
         return self::select(['SUM(' . $column . ') AS value']);
     }
@@ -325,7 +364,7 @@ class Model
      * @param  string $column
      * @return \Framework\Database\Model
      */
-    public static function max(string $column)
+    public static function max(string $column): self
     {
         return self::select(['MAX(' . $column . ') AS value']);
     }
@@ -336,7 +375,7 @@ class Model
      * @param  string $column
      * @return \Framework\Database\Model
      */
-    public static function min(string $column)
+    public static function min(string $column): self
     {
         return self::select(['MIN(' . $column . ') AS value']);
     }
@@ -694,12 +733,12 @@ class Model
      * @param  string $first_column
      * @param  string $operator
      * @param  string $second_column
-     * @param  string $type
+     * @param  string $method
      * @return \Framework\Database\Model
      */
-    public function join(string $table, string $first_column, string $operator, string $second_column, string $type = 'inner'): self
+    public function join(string $table, string $first_column, string $operator, string $second_column, string $method = 'inner'): self
     {
-        $method = $type . 'Join';
+        $method = $method . 'Join';
         self::$builder->$method($table, $second_column, $operator, $first_column);
 
         return $this;

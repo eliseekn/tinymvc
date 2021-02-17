@@ -21,7 +21,9 @@ class CountrySeed
      */
     public static function insert(): void
     {
-        foreach (Countries::all() as $country) {
+        $countries = Countries::all();
+
+        foreach ($countries as $country) {
             $country_name = $country['name_' . config('app.lang')];
 
             if (!is_null($country_name) && !empty($country_name)) {

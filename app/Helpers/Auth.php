@@ -97,9 +97,10 @@ class Auth
     public static function create(Request $request): bool
     {
         if (
-            UsersModel::findBy('email', $request->email)
-                ->or('phone', $request->phone)
-                ->exists()
+            UsersModel::findMany([
+                'email' => $request->email, 
+                'phone' => $request->phone
+            ])->exists()
         ) {
             return false;
         }
@@ -108,8 +109,13 @@ class Auth
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'password' => Encryption::hash($request->password)
+            'company' => $request->company,
+            'password' => Encryption::hash($request->password),
+            'role' => empty(UsersModel::findAll()) ? RolesModel::ROLE[0] : 'user',
+            'active' => empty(UsersModel::findAll()) ? 1 : 0,
         ]);
+
+        return true;
     }
 
     /**

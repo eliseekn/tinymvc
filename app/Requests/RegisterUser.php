@@ -15,7 +15,8 @@ class RegisterUser extends Validator
         'name' => 'required|alpha_space|max_len,255',
         'email' => 'required|valid_email|max_len,255',
         'phone' => 'required|numeric|max_len,255',
-        'password' => 'required|max_len,255'
+        'password' => 'required|max_len,255',
+        'company' => 'max_len,255'
     ];
 
     /**

@@ -31,7 +31,7 @@ Route::get('api/notifications', [
         $notifications = NotificationsModel::messages()->take(5);
 
         foreach ($notifications as $notification) {
-            $notification->created_at = time_elapsed(DateHelper::format($notification->created_at)->timestamp(), 1);
+            $notification->created_at = DateHelper::format($notification->created_at)->time_elapsed();
         }
 
         Response::send(['notifications' => $notifications], true);
@@ -52,7 +52,7 @@ Route::get('api/messages', [
         $messages = MessagesModel::recipients()->take(5);
 
         foreach ($messages as $message) {
-            $message->created_at = time_elapsed(DateHelper::format($message->created_at)->timestamp(), 1);
+            $message->created_at = DateHelper::format($message->created_at)->time_elapsed();
         }
 
         Response::send(['messages' => $messages], true);

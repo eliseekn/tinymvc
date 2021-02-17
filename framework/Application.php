@@ -28,7 +28,9 @@ class Application
      */
     public function __construct()
     {
-        foreach (Storage::path(config('storage.routes'))->getFiles() as $route) {
+        $routes = Storage::path(config('storage.routes'))->getFiles();
+
+        foreach ($routes as $route) {
             require_once config('storage.routes') . $route;
         }
     }

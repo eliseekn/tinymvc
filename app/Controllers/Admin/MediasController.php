@@ -26,7 +26,9 @@ class MediasController extends Controller
 
         $images = 0; $videos = 0; $sounds = 0;
 
-        foreach (MediasModel::findAllBy('user_id', Auth::get()->id) as $media) {
+        $medias_types = MediasModel::findAllBy('user_id', Auth::get()->id);
+
+        foreach ($medias_types as $media) {
             if ($this->getMediaType($media->filename) === 'image') {
                 $images++;
             } elseif ($this->getMediaType($media->filename) === 'video') {

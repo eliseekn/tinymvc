@@ -27,6 +27,8 @@ class MessagesTable
             ->addText('message')
             ->addString('sender_status')->default('unread')
             ->addString('recipient_status')->default('unread')
+            ->addBoolean('sender_deleted_status')->default(0)
+            ->addBoolean('recipient_deleted_status')->default(0)
             ->create();
     }
     

@@ -139,13 +139,15 @@ class UsersController extends Controller
 
             if ($user->email !== $this->request->email || $user->phone !== $this->request->phone) {
                 if (
-                    UsersModel::findBy('email', $this->request->email)
-                        ->or('phone', $this->request->phone)
-                        ->exists()
+                    UsersModel::findMany([
+                        'email' => $this->request->email, 
+                        'phone' => $this->request->phone
+                    ])->exists()
                 ) {
                     $this->redirect()->withInputs($validator->inputs())
-                        ->withToast(__('user_already_exists'))->error();
+                    ->withToast(__('user_already_exists'))->error();
                 }
+                    
             }
         } catch (Exception $e) {
             $this->redirect()->withInputs($validator->inputs())
@@ -161,11 +163,11 @@ class UsersController extends Controller
             'active' => $this->request->account_state
 		];
 		
-		if (!empty($this->request->password)) {
+		if ($this->request->has('password')) {
 			$data['password'] = Encryption::hash($this->request->password);
 		}
 
-        UsersModel::update($data)->where('id', $id)->persist();
+        UsersModel::updateIfExists($id, $data);
         
         Activity::log(__('user_updated'));
         $this->redirect('admin/resources/users/view', $id)->withToast(__('user_updated'))->success();
