@@ -1,6 +1,8 @@
 class UpdateItem extends HTMLElement {
     constructor() {
         super()
+
+        this.isDisabled = this.isDisabled.bind(this)
     }
 
     connectedCallback() {
@@ -12,6 +14,15 @@ class UpdateItem extends HTMLElement {
                 ${this.innerHTML}
             </form>
         `
+
+        this.isDisabled()
+    }
+
+    isDisabled() {
+        if (this.getAttribute('disabled')) {
+            this.firstElementChild.querySelector('button[type=submit]').classList.add('disabled')
+            this.firstElementChild.querySelector('button[type=submit]').setAttribute('type', 'button')
+        }
     }
 }
 

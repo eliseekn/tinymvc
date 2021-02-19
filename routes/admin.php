@@ -36,7 +36,7 @@ Route::group([
     'account/settings/{num}' => ['handler' => 'Admin\SettingsController@index'],
     'account/activities' => ['handler' => 'Admin\ActivitiesController@index'],
 ])->by([
-    'method' => 'GET',
+    'method' => 'get',
     'prefix' => 'admin',
     'middlewares' => [
         'RememberUser',
@@ -52,7 +52,7 @@ Route::group([
     'account/notifications/delete/?{num}?' => ['handler' => 'Admin\NotificationsController@delete'],
     'account/activities/delete' => ['handler' => 'Admin\ActivitiesController@delete']
 ])->by([
-    'method' => 'DELETE',
+    'method' => 'delete',
     'prefix' => 'admin',
     'middlewares' => [
         'RememberUser',
@@ -69,7 +69,7 @@ Route::group([
     'resources/medias/update/{num}' => ['handler' => 'Admin\MediasController@update'],
     'account/settings/update/{num}' => ['handler' => 'Admin\SettingsController@update'],
 ])->by([
-    'method' => 'PATCH',
+    'method' => 'patch',
     'prefix' => 'admin',
     'middlewares' => [
         'RememberUser',
@@ -101,7 +101,7 @@ Route::group([
     //activities routes
     'account/activities/export' => ['handler' => 'Admin\ActivitiesController@export'],
 ])->by([
-    'method' => 'POST',
+    'method' => 'post',
     'prefix' => 'admin',
     'middlewares' => [
         'RememberUser',

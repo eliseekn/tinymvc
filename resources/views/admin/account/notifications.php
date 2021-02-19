@@ -87,8 +87,8 @@
                         <td><?= \App\Helpers\DateHelper::format($notification->created_at)->time_elapsed() ?></td>
 
                         <td>
-                            <update-item action="<?= absolute_url('admin/account/notifications/update', $notification->id) ?>">
-                                <button type="submit" class="btn text-dark p-1 <?php if ($notification->status === 'read') : echo 'disabled'; endif ?>" <?php if ($notification->status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
+                            <update-item action="<?= absolute_url('admin/account/notifications/update', $notification->id) ?>" <?php if ($notification->status === 'read') : echo 'disabled="disabled"'; endif ?>>
+                                <button type="submit" class="btn text-dark p-1" <?php if ($notification->status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
                                     <?php if ($notification->status === 'unread') : ?>
                                     <i class="fa fa-eye-slash"></i>
                                     <?php else : ?>

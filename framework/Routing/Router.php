@@ -50,10 +50,9 @@ class Router
     {
         if (!empty($routes)) {
             foreach ($routes as $route => $options) {
-                $options['method'] = strtoupper($options['method']);
                 $request->setMethod($request->get('request_method', $options['method']));
 
-                if (preg_match('/' . strtoupper($options['method']) . '/', $request->method())) {
+                if (preg_match('/' . strtoupper($options['method']) . '/', strtoupper($request->method()))) {
                     $pattern = preg_replace('/{str}/i', '([a-zA-Z-_]+)', $route);
                     $pattern = preg_replace('/{num}/i', '(\d+)', $pattern);
                     $pattern = preg_replace('/{any}/i', '([^/]+)', $pattern);

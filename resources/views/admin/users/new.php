@@ -81,7 +81,7 @@
         </div>
 
         <div class="card-footer">
-            <button type="submit" class="btn btn-outline-dark loading"><?= __('create') ?></button>
+            <button type="submit" class="btn btn-dark loading"><?= __('create') ?></button>
             <button type="reset" class="btn btn-outline-dark mx-2"><?= __('reset') ?></button>
             <a href="<?= absolute_url('admin/resources/users') ?>" class="btn btn-outline-dark"><?= __('cancel') ?></a>
         </div>
