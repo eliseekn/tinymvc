@@ -38,8 +38,8 @@ class DB
 	private function __construct()
 	{
 		try {
-            $this->connection = new PDO('mysql:host=' . config('db.host'), config('db.username'), config('db.password'));
-            $this->connection->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, 'SET NAMES ' . config('db.charset') . ' COLLATE ' . config('db.collation'));
+            $this->connection = new PDO('mysql:host=' . config('mysql.host'), config('mysql.username'), config('mysql.password'));
+            $this->connection->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, 'SET NAMES ' . config('mysql.charset') . ' COLLATE ' . config('mysql.collation'));
 			$this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 			$this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);

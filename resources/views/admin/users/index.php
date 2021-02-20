@@ -48,7 +48,7 @@
                     </export-modal>
 
                     <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('admin/resources/users/delete') ?>">
-                        <?= __('delete') ?>
+                        <?= __('bulk_delete') ?>
                     </button>
                 </span>
             </div>

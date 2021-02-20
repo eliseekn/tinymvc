@@ -44,7 +44,7 @@
                     </send-message>
 
                     <button class="btn btn-outline-dark" id="bulk-read" data-url="<?= absolute_url('admin/account/messages/update') ?>">
-                        <?= __('mark_as_read') ?>
+                        <?= __('mark_all_as_read') ?>
                     </button>
 
                     <export-modal action="<?= absolute_url('admin/account/messages/export') ?>">
@@ -52,7 +52,7 @@
                     </export-modal>
 
                     <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('admin/account/messages/delete') ?>">
-                        <?= __('delete') ?>
+                        <?= __('bulk_delete') ?>
                     </button>
                 </span>
             </div>
@@ -98,8 +98,8 @@
 
                         <td>
                             <?php if ($message->sender_email !== auth()->email) : ?>
-                            <update-item action="<?= absolute_url('admin/account/messages/update', $message->id) ?>">
-                                <button type="submit" class="btn text-dark p-1 <?php if ($message->recipient_status === 'read') : echo 'disabled'; endif ?>" <?php if ($message->recipient_status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
+                            <update-item action="<?= absolute_url('admin/account/messages/update', $message->id) ?>" <?php if ($message->recipient_status === 'read') : echo 'disabled="disabled"'; endif ?>>
+                                <button type="submit" class="btn text-dark p-1" <?php if ($message->recipient_status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
                                     <?php if ($message->recipient_status === 'unread') : ?>
                                     <i class="fa fa-eye-slash"></i>
                                     <?php else : ?>
@@ -108,7 +108,7 @@
                                 </button>
                             </update-item>
 
-                            <send-message action="<?= absolute_url('admin/account/messages/reply') ?>"  recipient="<?= $message->sender ?>" modal_title="<?= __('reply') ?>">
+                            <send-message action="<?= absolute_url('admin/account/messages/reply') ?>" recipient="<?= $message->sender ?>" modal_title="<?= __('reply') ?>">
                                 <a class="btn text-dark p-1" href="#" title="<?= __('reply') ?>">
                                     <i class="fa fa-reply-all"></i>
                                 </a>

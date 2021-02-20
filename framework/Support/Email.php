@@ -33,14 +33,21 @@ class Email
         self::$mail = new PHPMailer(true);
         self::$mail->Debugoutput = 'error_log';
         self::$mail->CharSet = PHPMailer::CHARSET_UTF8;
-        self::$mail->SMTPDebug = SMTP::DEBUG_SERVER;
-        self::$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        self::$mail->isSMTP();
-        self::$mail->SMTPAuth = true;
-        self::$mail->Host = config('mailer.host');
-        self::$mail->Port = config('mailer.port');
-        self::$mail->Username = config('mailer.username');
-        self::$mail->Password = config('mailer.password');
+
+        if (config('mailer.default') === 'smtp') {
+            self::$mail->SMTPDebug = SMTP::DEBUG_SERVER;
+            self::$mail->SMTPSecure = config('mailer.smtp.tls') ? PHPMailer::ENCRYPTION_STARTTLS : PHPMailer::ENCRYPTION_SMTPS;
+            self::$mail->isSMTP();
+            self::$mail->Host = config('mailer.smtp.host');
+            self::$mail->Port = config('mailer.smtp.port');
+            self::$mail->SMTPAuth = config('mailer.smtp.auth');
+
+            if (self::$mail->SMTPAuth) {
+                self::$mail->Username = config('mailer.smtp.username');
+                self::$mail->Password = config('mailer.smtp.password');
+            }
+        }
+
         self::$mail->addAddress($address, $name);
         return new self();
     }

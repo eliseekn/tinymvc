@@ -478,7 +478,7 @@ class Database
                 $database = $options['schema'];
                 
                 try {
-                    DB::connection()->query("CREATE DATABASE IF NOT EXISTS $database CHARACTER SET " . config('db.charset') . " COLLATE " . config('db.collation'));
+                    DB::connection()->query("CREATE DATABASE IF NOT EXISTS $database CHARACTER SET " . config('mysql.charset') . " COLLATE " . config('mysql.collation'));
                     echo '[+] ' . $database . ' created successfully' . PHP_EOL;
                 } catch(Exception $e) {
                     echo '[!] ' . $e->getMessage();
@@ -488,7 +488,7 @@ class Database
 
                 foreach ($db as $database) {
                     try {
-                        DB::connection()->query("CREATE DATABASE IF NOT EXISTS $database CHARACTER SET " . config('db.charset') . " COLLATE " . config('db.collation'));
+                        DB::connection()->query("CREATE DATABASE IF NOT EXISTS $database CHARACTER SET " . config('mysql.charset') . " COLLATE " . config('mysql.collation'));
                         echo '[+] ' . $database . ' created successfully' . PHP_EOL;
                     } catch(Exception $e) {
                         echo '[!] ' . $e->getMessage();

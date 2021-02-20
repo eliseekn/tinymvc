@@ -172,7 +172,7 @@ class Model
     public static function findMany(array $items, string $glue = 'or'): self
     {
         $result = self::select();
-        $first_item = reset($items);
+        $first_item = key($items);
 
         foreach ($items as $column => $value) {
             if ($items[$first_item] === $value) {
@@ -232,7 +232,7 @@ class Model
     public static function search(array $items, string $glue = 'or'): self
     {
         $result = self::select();
-        $first_item = reset($items);
+        $first_item = key($items);
 
         foreach ($items as $column => $value) {
             if ($items[$first_item] === $value) {
@@ -254,7 +254,7 @@ class Model
     public static function insert(array $items): int
     {
         Builder::insert(static::$table, $items)->execute();
-        return DB::connection(config('db.name'))->lastInsertedId();
+        return DB::connection(config('mysql.name'))->lastInsertedId();
     }
     
     /**

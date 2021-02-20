@@ -101,13 +101,25 @@ class MessagesController extends Controller
 	public function delete(?int $id = null): void
 	{
         if (!is_null($id)) {
-            MessagesModel::deleteIfExists($id);
+            if (MessagesModel::findSingle($id)->sender === Auth::get()->id) {
+                $data = 'sender_deleted';
+            } elseif (MessagesModel::findSingle($id)->recipient === Auth::get()->id) {
+                $data = 'recipient_deleted';
+            }
+
+            MessagesModel::updateIfExists($id, [$data => 1]);
             
             Activity::log(__('message_deleted'));
             $this->redirect()->withToast(__('message_deleted'))->success();
 		} else {
 			foreach (explode(',', $this->request->items) as $id) {
-				MessagesModel::deleteIfExists($id);
+				if (MessagesModel::findSingle($id)->sender === Auth::get()->id) {
+                    $data = 'sender_deleted';
+                } elseif (MessagesModel::findSingle($id)->recipient === Auth::get()->id) {
+                    $data = 'recipient_deleted';
+                }
+    
+                MessagesModel::updateIfExists($id, [$data => 1]);
 			}
             
             Activity::log(__('messages_deleted'));

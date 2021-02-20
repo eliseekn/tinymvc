@@ -9,6 +9,7 @@ use App\Requests\AuthRequest;
 use App\Requests\RegisterUser;
 use Framework\Routing\Controller;
 use App\Database\Models\TokensModel;
+use App\Database\Models\UsersModel;
 
 /**
  * Manage user authentication
@@ -51,9 +52,13 @@ class AuthController extends Controller
                 ->withAlert(__('user_already_exists', true))->error('');
         }
 
+        if (UsersModel::count()->single()->value === 1) {
+            $this->redirect('admin/dashboard');
+        }
+
         if (config('security.auth.email_confirmation') === false) {
             EmailHelper::sendWelcome($this->request->email);
-            $this->redirect('login')->withAlert(__('user_registered', true))->success('');
+            $this->redirect('admin/dashboard')->withAlert(__('user_registered', true))->success('');
         } else {
             $token = random_string(50, true);
 
@@ -64,9 +69,9 @@ class AuthController extends Controller
                     'expires' => Carbon::now()->addDay()->toDateTimeString()
                 ]);
 
-                $this->redirect('login')->withAlert(__('confirm_email_link_sent', true))->success('');
+                $this->redirect('admin/dashboard')->withAlert(__('confirm_email_link_sent', true))->success('');
             } else {
-                $this->redirect('login')->withAlert(__('confirm_email_link_not_sent', true))->error('');
+                $this->redirect('admin/dashboard')->withAlert(__('confirm_email_link_not_sent', true))->error('');
             }
         }
     }

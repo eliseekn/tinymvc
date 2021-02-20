@@ -42,11 +42,11 @@
                     </create-notification>
 
                     <button class="btn btn-outline-dark mr-2" id="bulk-read" data-url="<?= absolute_url('admin/account/notifications/update') ?>">
-                        <?= __('mark_as_read') ?>
+                        <?= __('mark_all_as_read') ?>
                     </button>
 
                     <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('admin/account/notifications/delete') ?>">
-                        <?= __('delete') ?>
+                        <?= __('bulk_delete') ?>
                     </button>
                 </span>
             </div>

@@ -18,8 +18,7 @@ $config = [
         'lang' => 'en'
     ],
 
-    //mysql
-    'db' => [
+    'mysql' => [
         'charset' => 'utf8',
         'collation' => 'utf8_unicode_ci',
         'host' => 'localhost',
@@ -29,17 +28,23 @@ $config = [
         'table_prefix' => '',
         'timestamps' => true,
         'storage_engine' => 'InnoDB'
-
     ],
 
-    //smtp
     'mailer' => [
-        'host' => 'localhost',
-        'port' => 25,
-        'username' => '',
-        'password' => '',
-        'from' => 'admin@mail.com',
-        'name' => 'Admin'
+        'default' => 'smtp',
+        'from' => 'tiny@mvc.framework',
+        'name' => 'TinyMVC',
+
+        'sendmail' => [],
+
+        'smtp' => [
+            'host' => 'localhost',
+            'port' => 1026,
+            'auth' => false,
+            'tls' => true,
+            'username' => '',
+            'password' => ''
+        ]
     ],
 
     'errors' => [

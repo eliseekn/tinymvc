@@ -37,7 +37,7 @@ class Builder
      */
     public static function table(string $name): self
     {
-        self::$query = "CREATE TABLE " . config('db.table_prefix') . "$name (";
+        self::$query = "CREATE TABLE " . config('mysql.table_prefix') . "$name (";
         return new self();
 	}
 
@@ -83,7 +83,7 @@ class Builder
 	 */
 	public static function insert(string $table, array $items): self
 	{
-		self::$query = "INSERT INTO " . config('db.table_prefix') . "$table (";
+		self::$query = "INSERT INTO " . config('mysql.table_prefix') . "$table (";
 
 		foreach ($items as $key => $value) {
 			self::$query .= "$key, ";
@@ -111,7 +111,7 @@ class Builder
 	 */
 	public static function update(string $table): self
 	{
-		self::$query = "UPDATE " . config('db.table_prefix') . "$table";
+		self::$query = "UPDATE " . config('mysql.table_prefix') . "$table";
 		return new self();
 	}
 
@@ -123,7 +123,7 @@ class Builder
 	 */
 	public static function delete(string $table): self
 	{
-		self::$query = "DELETE FROM " . config('db.table_prefix') . "$table";
+		self::$query = "DELETE FROM " . config('mysql.table_prefix') . "$table";
 		return new self();
 	}
 	
@@ -135,7 +135,7 @@ class Builder
 	 */
 	public static function drop(string $table): self
 	{
-		self::$query = "DROP TABLE IF EXISTS " . config('db.table_prefix') . "$table";
+		self::$query = "DROP TABLE IF EXISTS " . config('mysql.table_prefix') . "$table";
 		return new self();
 	}
 	
@@ -148,7 +148,7 @@ class Builder
 	 */
 	public static function dropForeign(string $table, string $key): self
 	{
-		self::$query = "ALTER TABLE " . config('db.table_prefix') . "$table DROP FOREIGN KEY $key";
+		self::$query = "ALTER TABLE " . config('mysql.table_prefix') . "$table DROP FOREIGN KEY $key";
 		return new self();
 	}
 		
@@ -235,7 +235,7 @@ class Builder
 	 */
 	public function references(string $table, string $column): self
 	{
-		self::$query .= " REFERENCES " . config('db.table_prefix') . "$table($column)";
+		self::$query .= " REFERENCES " . config('mysql.table_prefix') . "$table($column)";
         return $this;
 	}
 	
@@ -292,7 +292,7 @@ class Builder
      */
     public function create(): self
     {
-        if (config('db.timestamps') === true) {
+        if (config('mysql.timestamps') === true) {
             self::$query .= "created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
 			    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)";
         }
@@ -301,7 +301,7 @@ class Builder
             self::$query .= ')';
         }
 
-        self::$query .= " ENGINE='" . config('db.storage_engine') . "'";
+        self::$query .= " ENGINE='" . config('mysql.storage_engine') . "'";
 		return $this;
     }
 
@@ -313,7 +313,7 @@ class Builder
 	 */
 	public function from(string $table): self
 	{
-		self::$query .= " FROM " . config('db.table_prefix') . "$table ";
+		self::$query .= " FROM " . config('mysql.table_prefix') . "$table ";
 		return $this;
 	}
 
@@ -640,7 +640,7 @@ class Builder
 	 */
 	public function innerJoin(string $table, string $first_column, string $operator, string $second_column): self
 	{
-		self::$query .= " INNER JOIN " . config('db.table_prefix') . "$table ON $first_column $operator $second_column";
+		self::$query .= " INNER JOIN " . config('mysql.table_prefix') . "$table ON $first_column $operator $second_column";
 		return $this;
 	}
 
@@ -655,7 +655,7 @@ class Builder
 	 */
 	public function leftJoin(string $table, string $first_column, string $operator, string $second_column): self
 	{
-		self::$query .= " LEFT JOIN " . config('db.table_prefix') . "$table ON $first_column $operator $second_column";
+		self::$query .= " LEFT JOIN " . config('mysql.table_prefix') . "$table ON $first_column $operator $second_column";
 		return $this;
 	}
 
@@ -670,7 +670,7 @@ class Builder
 	 */
 	public function rightJoin(string $table, string $first_column, string $operator, string $second_column): self
 	{
-		self::$query .= " RIGHT JOIN " . config('db.table_prefix') . "$table ON $first_column $operator $second_column";
+		self::$query .= " RIGHT JOIN " . config('mysql.table_prefix') . "$table ON $first_column $operator $second_column";
 		return $this;
 	}
 
@@ -685,7 +685,7 @@ class Builder
 	 */
 	public function fullJoin(string $table, string $first_column, string $operator, string $second_column): self
 	{
-		self::$query .= " FULL JOIN " . config('db.table_prefix') . "$table ON $first_column $operator $second_column";
+		self::$query .= " FULL JOIN " . config('mysql.table_prefix') . "$table ON $first_column $operator $second_column";
 		return $this;
 	}
 
@@ -700,7 +700,7 @@ class Builder
 	 */
 	public function outerJoin(string $table, string $first_column, string $operator, string $second_column): self
 	{
-		self::$query .= " FULL OUTER JOIN " . config('db.table_prefix') . "$table ON $first_column $operator $second_column";
+		self::$query .= " FULL OUTER JOIN " . config('mysql.table_prefix') . "$table ON $first_column $operator $second_column";
 		return $this;
 	}
 
@@ -715,7 +715,7 @@ class Builder
 		self::$query .= " SET ";
 
 		//update last modifed timestamp
-		if (config('db.timestamps') === true) {
+		if (config('mysql.timestamps') === true) {
             $items = array_merge($items, [
                 'updated_at' => Carbon::now()->toDateTimeString()
             ]);
@@ -799,7 +799,7 @@ class Builder
 	 */
 	public function execute(): \PDOStatement
 	{
-        $stmt = DB::connection(config('db.name'))->statement(self::$query, self::$args);
+        $stmt = DB::connection(config('mysql.name'))->statement(self::$query, self::$args);
 		self::setQuery('');
 		return $stmt;
     }

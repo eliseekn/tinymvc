@@ -89,6 +89,7 @@
     'import' => 'Import',
     'export' => 'Export',
     'delete' => 'Delete',
+    'bulk_delete' => 'Bulk delete',
     'total_results' => 'Total result(s):',
     'title' => 'Title',
     'slug' => 'Slug',

@@ -27,14 +27,15 @@ class DeleteItem extends HTMLElement {
     }
 
     showDialog() {
-        let innerHTML = this.innerHTML
-        this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>'
+        let submitButton = this.firstElementChild.querySelector('a')
+        let innerHTML = submitButton.innerHTML
+        submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>'
 
         if (window.confirm(this.translations.delete_item)) {
             this.firstElementChild.submit()
         }
 
-        this.innerHTML = innerHTML
+        submitButton.innerHTML = innerHTML
     }
 }
 

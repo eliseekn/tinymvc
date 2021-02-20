@@ -60,7 +60,7 @@
                     </upload-modal>
                     
                     <button class="btn btn-danger ml-2" id="bulk-delete" data-url="<?= absolute_url('admin/resources/medias/delete') ?>">
-                        <?= __('delete') ?>
+                        <?= __('bulk_delete') ?>
                     </button>
                 </span>
             </div>
