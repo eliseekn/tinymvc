@@ -32,9 +32,11 @@ $options = getopt('', [
     'migration::', 
     'request::', 
     'middleware::', 
+    'm',
     'execute',
     'delete', 
     'reset',
+    'mail::'
 ]);
 
 //handle command line arguments
@@ -82,6 +84,7 @@ else {
     $help_message .= "      --query='query' --execute --db=tinymvc  Execute SQL query from the database 'tinmvc'" . PHP_EOL;
     $help_message .= PHP_EOL;
     $help_message .= '  --make (Manage resources build operations)' . PHP_EOL;
+    $help_message .= PHP_EOL;
     $help_message .= '      --controller=posts                      Create posts controller' . PHP_EOL;
     $help_message .= '      --controller=posts --namespace=blog     Create posts controller in app\Controllers\Blog folder' . PHP_EOL;
     $help_message .= '      --resource=posts                        Create posts resources (controller, migration, model, views and routes)' . PHP_EOL;
@@ -96,6 +99,8 @@ else {
     $help_message .= '      --request=AuthRequest                   Create AuthRequest in app\Requests folder' . PHP_EOL;
     $help_message .= PHP_EOL;
     $help_message .= '      --middleware=AuthPolicy                 Create AuthPolicy in app\Middlewares folder' . PHP_EOL;
+    $help_message .= PHP_EOL;
+    $help_message .= '      --mail=Welcome                          Create Welcome email notification' . PHP_EOL;
     
     exit($help_message);
 }

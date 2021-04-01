@@ -39,8 +39,9 @@ $config = [
 
         'smtp' => [
             'host' => 'localhost',
-            'port' => 1026,
+            'port' => 1025,
             'auth' => false,
+            'secure' => false,
             'tls' => true,
             'username' => '',
             'password' => ''
@@ -59,13 +60,13 @@ $config = [
     ],
 
     'security' => [
-        'enc_key' => base64_encode('write_something_here_to_generate_a_single_encryption_key'),
+        'enc_key' => base64_encode('write_something_here_to_set_your_single_encryption_key'),
         'encrypt_cookies' => true,
 
         'auth' => [
             'max_attempts' => 5, //set to 0 to disable
             'unlock_timeout' => 1, //in minute
-            'email_confirmation' => false
+            'email_confirmation' => true
         ]
     ],
 
@@ -81,7 +82,8 @@ $config = [
         'models' => absolute_path('app.Database.Models'),
         'middlewares' => absolute_path('app.Middlewares'),
         'requests' => absolute_path('app.Requests'),
-        'logs' => absolute_path('storage.logs')
+        'logs' => absolute_path('storage.logs'),
+        'mails' => absolute_path('app.Mails')
     ],
 
     'session' => [

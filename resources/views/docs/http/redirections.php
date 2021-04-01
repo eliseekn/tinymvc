@@ -82,7 +82,7 @@ class MyController extends Controller
         $this->redirect('home')->only();
 
         //redirect back
-        $this->redirect()->only();
+        $this->back()->only();
     }
 }</code></pre>
         </div>

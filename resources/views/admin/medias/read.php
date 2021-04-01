@@ -54,14 +54,14 @@
         <div class="form-group row">
             <p class="col-sm-2 col-form-label"><?= __('created_at') ?></p>
             <div class="col-form-label col-sm-10 font-weight-bold">
-                <?= \App\Helpers\DateHelper::format($media->created_at)->human() ?>
+                <?= date_helper($media->created_at)->human() ?>
             </div>
         </div>
 
         <div class="form-group row">
             <p class="col-sm-2 col-form-label"><?= __('updated_at') ?></p>
             <div class="col-form-label col-sm-10 font-weight-bold">
-                <?php $media->updated_at !== $media->created_at ? print(\App\Helpers\DateHelper::format($media->updated_at)->human()) : print('-') ?>
+                <?php $media->updated_at !== $media->created_at ? print(date_helper($media->updated_at)->human()) : print('-') ?>
             </div>
         </div>
     </div>

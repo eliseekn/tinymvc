@@ -3,8 +3,6 @@
 namespace App\Controllers\Admin;
 
 use App\Helpers\Auth;
-use App\Helpers\Activity;
-use Framework\Support\Alert;
 use App\Helpers\ReportHelper;
 use Framework\Routing\Controller;
 use App\Database\Models\MessagesModel;
@@ -12,15 +10,16 @@ use App\Database\Models\MessagesModel;
 class MessagesController extends Controller
 {
     /**
-     * display list
+     * index
      *
      * @return void
      */
     public function index(): void
 	{
-        $messages = MessagesModel::messages()->paginate(20);
+        $messages = MessagesModel::findMessages();
 
-        $messages_unread = MessagesModel::count()
+        $messages_unread = $this->model('messages')
+            ->count()
             ->where('recipient', Auth::get()->id)
             ->and('recipient_status', 'unread')
             ->single()
@@ -30,41 +29,39 @@ class MessagesController extends Controller
 	}
 
 	/**
-	 * send new message
+	 * create
 	 *
 	 * @return void
 	 */
     public function create(): void
 	{
-        $id = MessagesModel::insert([
+        $id = $this->model('messages')->insert([
             'sender' => Auth::get()->id,    
             'recipient' => $this->request->recipient,
             'message' => $this->request->message
         ]);
 
-        MessagesModel::updateIfExists($id, ['sender_status' => 'read']);
-
-        Activity::log(__('message_sent'));
-        $this->redirect()->withToast(__('message_sent'))->success();
+        $this->model('messages')->updateIfExists($id, ['sender_status' => 'read']);
+        $this->log(__('message_sent'));
+        $this->back()->withToast(__('message_sent'))->success();
 	}
 	
 	/**
-	 * reply to message
+	 * reply
 	 *
 	 * @return void
 	 */
     public function reply(): void
 	{
-        $id = MessagesModel::insert([
+        $id = $this->model('messages')->insert([
             'sender' => Auth::get()->id,
             'recipient' => $this->request->recipient,
             'message' => $this->request->message
         ]);
 
-        MessagesModel::updateIfExists($id, ['sender_status' => 'read']);
-
-        Activity::log(__('message_sent'));
-        $this->redirect()->withToast(__('message_sent'))->success();
+        $this->model('messages')->updateIfExists($id, ['sender_status' => 'read']);
+        $this->log(__('message_sent'));
+        $this->back()->withToast(__('message_sent'))->success();
 	}
 	
 	/**
@@ -76,19 +73,14 @@ class MessagesController extends Controller
 	public function update(?int $id = null): void
 	{
         if (!is_null($id)) {
-            MessagesModel::updateIfExists($id, ['recipient_status' => 'read']);
-
-            Activity::log(__('message_updated'));
-            $this->redirect()->withToast(__('message_updated'))->success();
+            $this->model('messages')->updateIfExists($id, ['recipient_status' => 'read']);
+            $this->log(__('message_updated'));
+            $this->back()->withToast(__('message_updated'))->success();
 		} else {
-			foreach (explode(',', $this->request->items) as $id) {
-				MessagesModel::updateIfExists($id, ['recipient_status' => 'read']);
-			}
-			
-            Activity::log(__('messages_updated'));
-			Alert::toast(__('messages_updated'))->success();
-
-            $this->response(['redirect' => absolute_url('admin/account/messages')], true);
+            $this->model('notifications')->updateBy(['id', 'in', $this->request->items], ['recipient_status' => 'read']);
+            $this->log(__('messages_updated'));
+			$this->alert('toast', __('messages_updated'))->success();
+            $this->response([absolute_url('admin/account/messages')], true);
 		}
 	}
 
@@ -101,53 +93,51 @@ class MessagesController extends Controller
 	public function delete(?int $id = null): void
 	{
         if (!is_null($id)) {
-            if (MessagesModel::findSingle($id)->sender === Auth::get()->id) {
+            if ($this->model('messages')->findSingle($id)->sender === Auth::get()->id) {
                 $data = 'sender_deleted';
-            } elseif (MessagesModel::findSingle($id)->recipient === Auth::get()->id) {
+            } elseif ($this->model('messages')->findSingle($id)->recipient === Auth::get()->id) {
                 $data = 'recipient_deleted';
             }
 
-            MessagesModel::updateIfExists($id, [$data => 1]);
-            
-            Activity::log(__('message_deleted'));
-            $this->redirect()->withToast(__('message_deleted'))->success();
+            $this->model('messages')->updateIfExists($id, [$data => 1]);
+            $this->log(__('message_deleted'));
+            $this->back()->withToast(__('message_deleted'))->success();
 		} else {
 			foreach (explode(',', $this->request->items) as $id) {
-				if (MessagesModel::findSingle($id)->sender === Auth::get()->id) {
+				if ($this->model('messages')->findSingle($id)->sender === Auth::get()->id) {
                     $data = 'sender_deleted';
-                } elseif (MessagesModel::findSingle($id)->recipient === Auth::get()->id) {
+                } elseif ($this->model('messages')->findSingle($id)->recipient === Auth::get()->id) {
                     $data = 'recipient_deleted';
                 }
     
-                MessagesModel::updateIfExists($id, [$data => 1]);
+                $this->model('messages')->updateIfExists($id, [$data => 1]);
 			}
             
-            Activity::log(__('messages_deleted'));
-			Alert::toast(__('messages_deleted'))->success();
-
-            $this->response(['redirect' => absolute_url('admin/account/messages')], true);
+            $this->log(__('messages_deleted'));
+			$this->alert('toast', __('messages_deleted'))->success();
+            $this->response([absolute_url('admin/account/messages')], true);
 		}
 	}
 
 	/**
-	 * export data
+	 * export
 	 *
 	 * @return void
 	 */
     public function export(): void
 	{
-        $messages = MessagesModel::select()
+        $messages = $this->model('messages')->select()
             ->subQuery(function ($query) {
                 if ($this->request->has('date_start') && $this->request->has('date_end')) {
                     $query->whereBetween('created_at', $this->request->date_start, $this->request->date_end);
                 }
             })
-            ->orderDesc('created_at')
+            ->oldest()
             ->all();
         
         $filename = 'messages_' . date('Y_m_d') . '.' . $this->request->file_type;
 
-        Activity::log(__('data_exported'));
+        $this->log(__('data_exported'));
 
 		ReportHelper::export($filename, $messages, [
 			'sender' => __('sender'), 

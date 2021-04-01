@@ -2,8 +2,8 @@ class TextEditor extends HTMLElement {
     constructor() {
         super()
 
-        document.querySelector(this.getAttribute('form')).addEventListener('submit', e => {
-            e.preventDefault()
+        document.querySelector(this.getAttribute('form')).addEventListener('submit', event => {
+            event.preventDefault()
             
             let formData = new FormData(document.querySelector(this.getAttribute('form')))
             formData.append('editor', this.editor.root.innerHTML)

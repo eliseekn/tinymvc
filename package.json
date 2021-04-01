@@ -1,10 +1,10 @@
 {
 	"private": true,
 	"scripts": {
-		"parcel-watch": "parcel watch resources/scripts/index.js resources/scripts/theme.js -d public/js",
+		"parcel-watch": "parcel watch resources/scripts/index.js resources/scripts/theme.js --dist-dir public/js",
 		"sass-watch": "sass --watch resources/styles:public/css --style=compressed",
-		"parcel-build": "parcel build resources/scripts/index.js resources/scripts/theme.js -d public/js",
-		"watch": "concurrently \"yarn parcel-watch\" \"yarn sass-watch\"",
+		"parcel-build": "parcel build resources/scripts/index.js resources/scripts/theme.js --dist-dir public/js",
+		"dev": "concurrently \"yarn parcel-watch\" \"yarn sass-watch\"",
 		"build": "yarn parcel-build"
 	},
     "dependencies": {
@@ -13,6 +13,6 @@
     },
 	"devDependencies": {
 		"concurrently": "^5.3.0",
-		"parcel-bundler": "^1.12.4"
+		"parcel": "next"
 	}
 }

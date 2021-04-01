@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Notifications;
+
+use Framework\Routing\View;
+use Framework\Support\Email;
+
+class CLASSNAME
+{
+    /**
+     * send email notification
+     *
+     * @param  string $email
+     * @return bool
+     */
+    public static function send(string $email): bool
+    {
+        return Email::to($email)
+            ->from(config('mailer.from'), config('mailer.name'))
+            ->reply(config('mailer.from'), config('mailer.name'))
+			->subject('Subject')
+            ->html(View::getContent('emails.RESOURCENAME'))
+			->send();
+    }
+}

@@ -21,12 +21,17 @@ class Model
     /**
      * @var string
      */
-    public static $table = '';
+    public $table;
 
     /**
      * @var \Framework\Database\Builder $builder
      */
-    protected static $builder;
+    private $builder;
+
+    public function __construct(string $table)
+    {
+        $this->table = $table;
+    }
 
     /**
      * select rows
@@ -34,10 +39,10 @@ class Model
      * @param  array $columns
      * @return \Framework\Database\Model
      */
-    public static function select(array $columns = ['*']): self
+    public function select(array $columns = ['*']): self
     {
-        self::$builder = Builder::select(implode(',', $columns))->from(static::$table);
-        return new self();
+        $this->builder = Builder::select(implode(',', $columns))->from($this->table);
+        return $this;
     }
     
     /**
@@ -46,9 +51,9 @@ class Model
      * @param  array $columns
      * @return mixed
      */
-    public static function selectSingle(array $columns = ['*'])
+    public function selectSingle(array $columns = ['*'])
     {
-        return self::select($columns)->single();
+        return $this->select($columns)->single();
     }
     
     /**
@@ -57,9 +62,9 @@ class Model
      * @param  array $columns
      * @return array
      */
-    public static function selectAll(array $columns = ['*']): array
+    public function selectAll(array $columns = ['*']): array
     {
-        return self::select($columns)->all();
+        return $this->select($columns)->all();
     }
 
     /**
@@ -69,10 +74,10 @@ class Model
      * @param  array $args
      * @return \Framework\Database\Model
      */
-    public static function selectRaw(string $query, array $args = []): self
+    public function selectRaw(string $query, array $args = []): self
     {
-        self::$builder = Builder::selectRaw($query, $args);
-        return new self();
+        $this->builder = Builder::selectRaw($query, $args);
+        return $this;
     }
     
     /**
@@ -83,9 +88,9 @@ class Model
 	 * @param  mixed $value
      * @return \Framework\Database\Model
      */
-    public static function findBy(string $column, $operator = null, $value = null): self
+    public function findBy(string $column, $operator = null, $value = null): self
 	{
-        return self::select()->where($column, $operator, $value);
+        return $this->select()->where($column, $operator, $value);
 	}
     
     /**
@@ -95,9 +100,9 @@ class Model
 	 * @param  mixed $value
      * @return \Framework\Database\Model
      */
-    public static function find($operator = null, $value = null): self
+    public function find($operator = null, $value = null): self
 	{
-        return self::findBy('id', $operator, $value);
+        return $this->findBy('id', $operator, $value);
 	}
     
     /**
@@ -108,9 +113,9 @@ class Model
 	 * @param  mixed $value
      * @return mixed
      */
-    public static function findSingleBy(string $column, $operator = null, $value = null)
+    public function findSingleBy(string $column, $operator = null, $value = null)
 	{
-        return self::select()->where($column, $operator, $value)->single();
+        return $this->select()->where($column, $operator, $value)->single();
 	}
     
     /**
@@ -120,9 +125,9 @@ class Model
 	 * @param  mixed $value
      * @return mixed
      */
-    public static function findSingle($operator = null, $value = null)
+    public function findSingle($operator = null, $value = null)
 	{
-        return self::findSingleBy('id', $operator, $value);
+        return $this->findSingleBy('id', $operator, $value);
 	}
     
     /**
@@ -133,9 +138,9 @@ class Model
 	 * @param  mixed $value
      * @return array
      */
-    public static function findAllBy(string $column, $operator = null, $value = null): array
+    public function findAllBy(string $column, $operator = null, $value = null): array
 	{
-        return self::select()->where($column, $operator, $value)->all();
+        return $this->select()->where($column, $operator, $value)->all();
 	}
     
     /**
@@ -145,9 +150,9 @@ class Model
 	 * @param  mixed $value
      * @return array
      */
-    public static function findAll($operator = null, $value = null): array
+    public function findAll($operator = null, $value = null): array
 	{
-        return self::findAllBy('id', $operator, $value);
+        return $this->findAllBy('id', $operator, $value);
 	}
     
     /**
@@ -157,9 +162,9 @@ class Model
 	 * @param  array $args
      * @return \Framework\Database\Model
      */
-    public static function findRaw(string $query, array $args = []): self
+    public function findRaw(string $query, array $args = []): self
 	{
-        return self::select()->whereRaw($query, $args);
+        return $this->select()->whereRaw($query, $args);
 	}
 
     /**
@@ -169,9 +174,9 @@ class Model
 	 * @param  string $glue
      * @return \Framework\Database\Model
      */
-    public static function findMany(array $items, string $glue = 'or'): self
+    public function findMany(array $items, string $glue = 'or'): self
     {
-        $result = self::select();
+        $result = $this->select();
         $first_item = key($items);
 
         foreach ($items as $column => $value) {
@@ -193,9 +198,9 @@ class Model
      * @param  mixed $value
      * @return mixed
      */
-    public static function findOrFail(string $column, $operator = null, $value = null)
+    public function findOrFail(string $column, $operator = null, $value = null)
     {
-        $result = self::findSingleBy($column, $operator, $value);
+        $result = $this->findSingleBy($column, $operator, $value);
 
         if ($result === false) {
             throw new Exception('Data not found.');
@@ -211,12 +216,12 @@ class Model
      * @param  array $items
      * @return mixed
      */
-    public static function findOrCreate($id, array $items)
+    public function findOrCreate($id, array $items)
     {
         try {
-            $result = self::findOrFail('id', $id);
+            $result = $this->findOrFail('id', $id);
         } catch (Exception $e) {
-            $result = self::insert($items);
+            $result = $this->insert($items);
         }
 
         return $result;
@@ -229,9 +234,9 @@ class Model
 	 * @param  string $glue
      * @return \Framework\Database\Model
      */
-    public static function search(array $items, string $glue = 'or'): self
+    public function search(array $items, string $glue = 'or'): self
     {
-        $result = self::select();
+        $result = $this->select();
         $first_item = key($items);
 
         foreach ($items as $column => $value) {
@@ -251,10 +256,10 @@ class Model
      * @param  array $items
      * @return int
      */
-    public static function insert(array $items): int
+    public function insert(array $items): int
     {
-        Builder::insert(static::$table, $items)->execute();
-        return DB::connection(config('mysql.name'))->lastInsertedId();
+        Builder::insert($this->table, $items)->execute();
+        return Builder::lastInsertedId();
     }
     
     /**
@@ -263,10 +268,10 @@ class Model
      * @param  array $items
      * @return \Framework\Database\Model
      */
-    public static function update(array $items): self
+    public function update(array $items): self
     {
-        self::$builder = Builder::update(static::$table)->set($items);
-        return new self();
+        $this->builder = Builder::update($this->table)->set($items);
+        return $this;
     }
 
     /**
@@ -274,17 +279,21 @@ class Model
      *
 	 * @param  array $data
      * @param  array $items
-     * @return void
+     * @return bool
      */
-    public static function updateBy(array $data, array $items): void
+    public function updateBy(array $data, array $items): bool
     {
         if (!isset($data[2])) {
             $data[2] = null;
         }
 
-        if (self::findBy($data[0], $data[1], $data[2])->exists()) {
-            self::update($items)->where($data[0], $data[1], $data[2])->persist();
+        if (!$this->findBy($data[0], $data[1], $data[2])->exists()) {
+            return false;
         }
+
+        $this->update($items)->where($data[0], $data[1], $data[2])->persist();
+        
+        return true;
     }
     
     /**
@@ -292,11 +301,30 @@ class Model
      *
 	 * @param  mixed $id
      * @param  array $items
-     * @return void
+     * @return bool
      */
-    public static function updateIfExists($id, array $items): void
+    public function updateIfExists($id, array $items): bool
     {
-        self::updateBy(['id', $id], $items);
+        return $this->updateBy(['id', $id], $items);
+    }
+    
+    /**
+     * create items if id not found to update data
+     *
+     * @param  mixed $id
+     * @param  array $items
+     * @return mixed
+     */
+    public function updateOrCreate($id, array $items)
+    {
+        try {
+            $this->findOrFail('id', $id);
+            $result = $this->updateIfExists($id, $items);
+        } catch (Exception $e) {
+            $result = $this->insert($items);
+        }
+
+        return $result;
     }
     
     /**
@@ -304,10 +332,10 @@ class Model
      *
      * @return \Framework\Database\Model
      */
-    public static function delete(): self
+    public function delete(): self
     {
-        self::$builder = Builder::delete(static::$table);
-        return new self();
+        $this->builder = Builder::delete($this->table);
+        return $this;
     }
     
     /**
@@ -316,24 +344,27 @@ class Model
 	 * @param  string $column
 	 * @param  mixed $operator
 	 * @param  mixed $value
-     * @return void
+     * @return bool
      */
-    public static function deleteBy(string $column, $operator = null, $value = null): void
+    public function deleteBy(string $column, $operator = null, $value = null): bool
     {
-        if (self::findBy($column, $operator, $value)->exists()) {
-            self::delete()->where($column, $operator, $value)->persist();
+        if (!$this->findBy($column, $operator, $value)->exists()) {
+            return false;
         }
+
+        $this->delete()->where($column, $operator, $value)->persist();
+        return true;
     }
     
     /**
      * add DELETE and WEHRE clauses
      *
 	 * @param  mixed $id
-     * @return void
+     * @return bool
      */
-    public static function deleteIfExists($id): void
+    public function deleteIfExists($id): bool
     {
-        self::deleteBy('id', $id);
+        return $this->deleteBy('id', $id);
     }
     
     /**
@@ -342,9 +373,9 @@ class Model
      * @param  string $column
      * @return \Framework\Database\Model
      */
-    public static function count(string $column = 'id'): self
+    public function count(string $column = 'id'): self
     {
-        return self::select(['COUNT(' . $column . ') AS value']);
+        return $this->select(['COUNT(' . $column . ') AS value']);
     }
     
     /**
@@ -353,9 +384,9 @@ class Model
      * @param  string $column
      * @return \Framework\Database\Model
      */
-    public static function sum(string $column): self
+    public function sum(string $column): self
     {
-        return self::select(['SUM(' . $column . ') AS value']);
+        return $this->select(['SUM(' . $column . ') AS value']);
     }
     
     /**
@@ -364,9 +395,9 @@ class Model
      * @param  string $column
      * @return \Framework\Database\Model
      */
-    public static function max(string $column): self
+    public function max(string $column): self
     {
-        return self::select(['MAX(' . $column . ') AS value']);
+        return $this->select(['MAX(' . $column . ') AS value']);
     }
     
     /**
@@ -375,9 +406,9 @@ class Model
      * @param  string $column
      * @return \Framework\Database\Model
      */
-    public static function min(string $column): self
+    public function min(string $column): self
     {
-        return self::select(['MIN(' . $column . ') AS value']);
+        return $this->select(['MIN(' . $column . ') AS value']);
     }
     
     /**
@@ -390,9 +421,9 @@ class Model
      * @param  array|null $query
      * @return array
      */
-    public static function metrics(string $column, string $type, string $trends, int $interval = 0, array $query = null): array
+    public function metrics(string $column, string $type, string $trends, int $interval = 0, ?array $query = null): array
     {
-        return (new Metrics(static::$table))->getTrends($type, $column, $trends, $interval, $query);
+        return (new Metrics($this->table))->getTrends($type, $column, $trends, $interval, $query);
     }
     
 	/**
@@ -408,15 +439,15 @@ class Model
         if (!is_null($operator) && is_null($value)) {
             switch(strtolower($operator)) {
                 case 'null':
-                    self::$builder->whereColumn($column)->isNull();
+                    $this->builder->whereColumn($column)->isNull();
                     break;
 
                 case 'not null':
-                    self::$builder->whereColumn($column)->notNull();
+                    $this->builder->whereColumn($column)->notNull();
                     break;
 
                 default:
-                    self::$builder->where($column, $operator);
+                    $this->builder->where($column, $operator);
                     break;
             }
         }
@@ -424,23 +455,23 @@ class Model
         else if (!is_null($operator) && !is_null($value)) {
             switch(strtolower($operator)) {
                 case 'in':
-                    self::$builder->whereColumn($column)->in($value);
+                    $this->builder->whereColumn($column)->in($value);
                     break;
 
                 case 'not in':
-                    self::$builder->whereColumn($column)->notIn($value);
+                    $this->builder->whereColumn($column)->notIn($value);
                     break;
 
                 case 'like':
-                    self::$builder->whereColumn($column)->like($value);
+                    $this->builder->whereColumn($column)->like($value);
                     break;
 
                 case 'not like':
-                    self::$builder->whereColumn($column)->notLike($value);
+                    $this->builder->whereColumn($column)->notLike($value);
                     break;
 
                 default:
-                    self::$builder->where($column, $operator, $value);
+                    $this->builder->where($column, $operator, $value);
                     break;
             }
         }
@@ -459,11 +490,11 @@ class Model
     public function whereNot(string $column, $operator = null, $value = null): self
 	{
         if (!is_null($operator) && is_null($value)) {
-            self::$builder->whereNot($column, $operator);
+            $this->builder->whereNot($column, $operator);
         }
 
         else if (!is_null($operator) && !is_null($value)) {
-            self::$builder->whereNot($column, $operator, $value);
+            $this->builder->whereNot($column, $operator, $value);
         }
 
 		return $this;
@@ -478,7 +509,7 @@ class Model
      */
     public function whereRaw(string $query, array $args = []): self
     {
-        self::$builder->whereRaw($query, $args);
+        $this->builder->whereRaw($query, $args);
         return $this;
     }
 
@@ -495,15 +526,15 @@ class Model
         if (!is_null($operator) && is_null($value)) {
             switch(strtolower($operator)) {
                 case 'null':
-                    self::$builder->andColumn($column)->isNull();
+                    $this->builder->andColumn($column)->isNull();
                     break;
 
                 case 'not null':
-                    self::$builder->andColumn($column)->notNull();
+                    $this->builder->andColumn($column)->notNull();
                     break;
 
                 default:
-                    self::$builder->and($column, $operator);
+                    $this->builder->and($column, $operator);
                     break;
             }
         }
@@ -511,23 +542,23 @@ class Model
         else if (!is_null($operator) && !is_null($value)) {
             switch(strtolower($operator)) {
                 case 'in':
-                    self::$builder->andColumn($column)->in($value);
+                    $this->builder->andColumn($column)->in($value);
                     break;
 
                 case 'not in':
-                    self::$builder->andColumn($column)->notIn($value);
+                    $this->builder->andColumn($column)->notIn($value);
                     break;
 
                 case 'like':
-                    self::$builder->andColumn($column)->like($value);
+                    $this->builder->andColumn($column)->like($value);
                     break;
 
                 case 'not like':
-                    self::$builder->andColumn($column)->notLike($value);
+                    $this->builder->andColumn($column)->notLike($value);
                     break;
 
                 default:
-                    self::$builder->and($column, $operator, $value);
+                    $this->builder->and($column, $operator, $value);
                     break;
             }
         }
@@ -548,15 +579,15 @@ class Model
         if (!is_null($operator) && is_null($value)) {
             switch(strtolower($operator)) {
                 case 'null':
-                    self::$builder->orColumn($column)->isNull();
+                    $this->builder->orColumn($column)->isNull();
                     break;
 
                 case 'not null':
-                    self::$builder->orColumn($column)->notNull();
+                    $this->builder->orColumn($column)->notNull();
                     break;
 
                 default:
-                    self::$builder->or($column, $operator);
+                    $this->builder->or($column, $operator);
                     break;
             }
         }
@@ -564,23 +595,23 @@ class Model
         else if (!is_null($operator) && !is_null($value)) {
             switch(strtolower($operator)) {
                 case 'in':
-                    self::$builder->orColumn($column)->in($value);
+                    $this->builder->orColumn($column)->in($value);
                     break;
 
                 case 'not in':
-                    self::$builder->orColumn($column)->notIn($value);
+                    $this->builder->orColumn($column)->notIn($value);
                     break;
 
                 case 'like':
-                    self::$builder->orColumn($column)->like($value);
+                    $this->builder->orColumn($column)->like($value);
                     break;
 
                 case 'not like':
-                    self::$builder->orColumn($column)->notLike($value);
+                    $this->builder->orColumn($column)->notLike($value);
                     break;
 
                 default:
-                    self::$builder->or($column, $operator, $value);
+                    $this->builder->or($column, $operator, $value);
                     break;
             }
         }
@@ -599,11 +630,11 @@ class Model
     public function having(string $column, $operator = null, $value = null): self
 	{
         if (!is_null($operator) && is_null($value)) {
-            self::$builder->having($column, $operator);
+            $this->builder->having($column, $operator);
         }
 
         else if (!is_null($operator) && !is_null($value)) {
-            self::$builder->having($column, $operator, $value);
+            $this->builder->having($column, $operator, $value);
         }
 
 		return $this;
@@ -618,7 +649,7 @@ class Model
      */
     public function havingRaw(string $query, array $args = []): self
     {
-        self::$builder->havingRaw($query, $args);
+        $this->builder->havingRaw($query, $args);
         return $this;
     }
     
@@ -632,7 +663,7 @@ class Model
      */
     public function whereBetween(string $column, $start, $end): self
     {
-        self::$builder->whereColumn($column)->between($start, $end);
+        $this->builder->whereColumn($column)->between($start, $end);
         return $this;
     }
     
@@ -646,7 +677,7 @@ class Model
      */
     public function whereNotBetween(string $column, $start, $end): self
     {
-        self::$builder->whereColumn($column)->notBetween($start, $end);
+        $this->builder->whereColumn($column)->notBetween($start, $end);
         return $this;
     }
 
@@ -658,7 +689,7 @@ class Model
 	 */
     public function whereNull(string $column): self
 	{
-        self::$builder->whereColumn($column)->isNull();
+        $this->builder->whereColumn($column)->isNull();
 		return $this;
 	}
 
@@ -670,7 +701,7 @@ class Model
 	 */
     public function whereNotNull(string $column): self
 	{
-        self::$builder->whereColumn($column)->notNull();
+        $this->builder->whereColumn($column)->notNull();
 		return $this;
 	}
 
@@ -683,7 +714,7 @@ class Model
 	 */
     public function whereLike(string $column, $value): self
 	{
-        self::$builder->whereColumn($column)->like($value);
+        $this->builder->whereColumn($column)->like($value);
 		return $this;
 	}
 
@@ -696,7 +727,7 @@ class Model
 	 */
     public function whereNotLike(string $column, $value): self
 	{
-        self::$builder->whereColumn($column)->notLike($value);
+        $this->builder->whereColumn($column)->notLike($value);
 		return $this;
 	}
 
@@ -709,7 +740,7 @@ class Model
 	 */
     public function whereIn(string $column, array $values): self
 	{
-        self::$builder->whereColumn($column)->in($values);
+        $this->builder->whereColumn($column)->in($values);
 		return $this;
 	}
 
@@ -722,7 +753,7 @@ class Model
 	 */
     public function whereNotIn(string $column, $value): self
 	{
-        self::$builder->whereColumn($column)->notIn($value);
+        $this->builder->whereColumn($column)->notIn($value);
 		return $this;
 	}
 
@@ -739,7 +770,7 @@ class Model
     public function join(string $table, string $first_column, string $operator, string $second_column, string $method = 'inner'): self
     {
         $method = $method . 'Join';
-        self::$builder->$method($table, $second_column, $operator, $first_column);
+        $this->builder->$method($table, $second_column, $operator, $first_column);
 
         return $this;
     }
@@ -753,7 +784,7 @@ class Model
      */
     public function orderBy(string $column, string $direction): self
     {
-        self::$builder->orderBy($column, $direction);
+        $this->builder->orderBy($column, $direction);
         return $this;
     }
     
@@ -780,6 +811,50 @@ class Model
     }
     
     /**
+     * add custom ORDER BY created_at column clause with ASC
+     *
+     * @param  string $column
+     * @return self
+     */
+    public function newest(string $column = 'created_at'): self
+    {
+        return $this->orderAsc($column);
+    }
+    
+    /**
+     * add custom ORDER BY created_at column clause with DESC
+     *
+     * @param  mixed $column
+     * @return self
+     */
+    public function oldest(string $column = 'created_at'): self
+    {
+        return $this->orderDesc($column);
+    }
+    
+    /**
+     * add custom ORDER BY id column clause with ASC
+     *
+     * @param  string $column
+     * @return self
+     */
+    public function earliest(string $column = 'id'): self
+    {
+        return $this->orderAsc($column);
+    }
+    
+    /**
+     * add custom ORDER BY id column clause with DESC
+     *
+     * @param  string $column
+     * @return self
+     */
+    public function latest(string $column = 'id'): self
+    {
+        return $this->orderDesc($column);
+    }
+    
+    /**
      * add GROUP clause
      *
      * @param  array $columns
@@ -787,7 +862,7 @@ class Model
      */
     public function group(array $columns): self
     {
-        self::$builder->groupBy(implode(',', $columns));
+        $this->builder->groupBy(implode(',', $columns));
         return $this;
     }
 
@@ -851,7 +926,7 @@ class Model
      */
     public function range(int $start, int $end): array
     {
-        self::$builder->limit($start, $end);
+        $this->builder->limit($start, $end);
         return $this->all();
     }
     
@@ -874,7 +949,7 @@ class Model
      */
     public function paginate(int $items_per_pages): Pager
     {
-        list($query, $args) = self::$builder->toSQL();
+        list($query, $args) = $this->builder->toSQL();
 
         $page = empty(Request::getQuery('page')) ? 1 : Request::getQuery('page');
         $total_items = count(Builder::setQuery($query, $args)->execute()->fetchAll());
@@ -894,7 +969,7 @@ class Model
      */
     public function persist(): \PDOStatement
     {
-        return self::$builder->execute();
+        return $this->builder->execute();
     }
     
     /**
@@ -904,7 +979,7 @@ class Model
      */
     public function toSQL(): array
     {
-        return self::$builder->toSQL();
+        return $this->builder->toSQL();
     }
 
     /**
@@ -916,7 +991,7 @@ class Model
      */
     public function raw(string $query, array $args = []): self
     {
-        self::$builder->rawQuery($query, $args);
+        $this->builder->rawQuery($query, $args);
         return $this;
     }
     
@@ -927,10 +1002,10 @@ class Model
      * @param  mixed $args
      * @return \Framework\Database\Model
      */
-    public static function query(string $query, array $args = []): self
+    public function query(string $query, array $args = []): self
     {
-        self::$builder = Builder::setQuery($query, $args);
-        return new self();
+        $this->builder = Builder::setQuery($query, $args);
+        return $this;
     }
     
     /**

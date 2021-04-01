@@ -8,11 +8,14 @@
 
 namespace Framework\Routing;
 
+use App\Helpers\Activity;
+use Framework\Database\Model;
 use Framework\Http\Client;
 use Framework\Http\Redirect;
 use Framework\Http\Request;
 use Framework\Http\Response;
 use Framework\Routing\Middleware;
+use Framework\Support\Alert;
 
 /**
  * Main controller class
@@ -74,15 +77,25 @@ class Controller
     }
     
     /**
-     * redirect to url or redirect back
+     * redirect to url
      *
-     * @param  string|null $url
+     * @param  string $url
      * @param  mixed $params
-     * @return Framework\Http\Redirect
+     * @return \Framework\Http\Redirect
      */
-    public function redirect(?string $url = null, $params = null): \Framework\Http\Redirect
+    public function redirect(string $url, $params = null): \Framework\Http\Redirect
     {
-        return is_null($url) ? Redirect::back() : Redirect::url($url, $params);
+        return Redirect::url($url, $params);
+    }
+
+    /**
+     * redirect back
+     *
+     * @return \Framework\Http\Redirect
+     */
+    public function back(): \Framework\Http\Redirect
+    {
+        return Redirect::back();
     }
 
     /**
@@ -122,5 +135,39 @@ class Controller
         foreach ($middlewares as $middleware) {
             Middleware::execute($middleware, new Request());
         }
+    }
+    
+    /**
+     * create new model instance
+     *
+     * @param  string $table
+     * @return \Framework\Database\Model
+     */
+    public function model(string $table): \Framework\Database\Model
+    {
+        return new Model($table);
+    }
+    
+    /**
+     * alert
+     *
+     * @param  string $type
+     * @param  string $message
+     * @return \Framework\Support\Alert
+     */
+    public function alert(string $type = 'default', string $message): \Framework\Support\Alert
+    {
+        return Alert::$type($message);
+    }
+    
+    /**
+     * log
+     *
+     * @param  string $action
+     * @return void
+     */
+    public function log(string $action): void
+    {
+        Activity::log($action);
     }
 }

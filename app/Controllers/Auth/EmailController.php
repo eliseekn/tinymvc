@@ -3,12 +3,10 @@
 namespace App\Controllers\Auth;
 
 use Carbon\Carbon;
-use App\Helpers\EmailHelper;
+use App\Mails\WelcomeMail;
 use Framework\Support\Session;
 use App\Middlewares\AuthPolicy;
 use Framework\Routing\Controller;
-use App\Database\Models\UsersModel;
-use App\Database\Models\TokensModel;
 
 /**
  * Manage email confirmation
@@ -22,9 +20,11 @@ class EmailController extends Controller
 	 */
 	public function confirm(): void
 	{
-		if (UsersModel::findBy('email', $this->request->email)->exists()) {
-            UsersModel::updateBy(['email', $this->request->email], ['active' => 1]);
-            EmailHelper::sendWelcome($this->request->email);
+        $user = $this->model('users')->findSingleBy('email', $this->request->email);
+
+		if ($user) {
+            $this->model('users')->updateBy(['email', $user->email], ['active' => 1]);
+            WelcomeMail::send($user->email, $user->name);
             
             $this->redirect('login')->withAlert(__('user_activated', true))->success('');
         } else {
@@ -39,7 +39,7 @@ class EmailController extends Controller
      */
     public function auth(): void
     {
-        $auth_token = TokensModel::findSingleBy('email', $this->request->email);
+        $auth_token = $this->model('tokens')->findSingleBy('email', $this->request->email);
 
         if ($auth_token === false || $auth_token->token !== $this->request->token) {
 			$this->response(__('invalid_two_steps_link', true));
@@ -49,9 +49,9 @@ class EmailController extends Controller
 			$this->response(__('expired_two_steps_link', true));
 		}
 
-        TokensModel::deleteBy('email', $auth_token->email);
+        $this->model('tokens')->deleteBy('email', $auth_token->email);
 
-        Session::create('user', UsersModel::findSingleBy('email', $auth_token->email));
+        Session::create('user', $this->model('users')->findSingleBy('email', $auth_token->email));
         AuthPolicy::handle($this->request);
     }
 }

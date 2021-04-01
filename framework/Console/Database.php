@@ -9,8 +9,8 @@
 namespace Framework\Console;
 
 use Exception;
-use Framework\Support\Storage;
 use Framework\Database\DB;
+use Framework\Support\Storage;
 
 /**
  * Manage migrations and seeds from command line interface
@@ -620,7 +620,5 @@ class Database
                 echo '[!] ' . $e->getMessage();
             }
         }
-        
-        exit('[+] All operations done' . PHP_EOL);
     }
 }

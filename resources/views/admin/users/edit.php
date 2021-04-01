@@ -95,8 +95,8 @@
                             <label class="custom-control-label" for="account_active"><?= __('active') ?></label>
                         </div>
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input class="custom-control-input" type="radio" name="account_state" id="account_incative" value="0" <?php if (!$user->active) : echo 'checked'; endif ?>>
-                            <label class="custom-control-label" for="account_incative"><?= __('inactive') ?></label>
+                            <input class="custom-control-input" type="radio" name="account_state" id="account_inactive" value="0" <?php if (!$user->active) : echo 'checked'; endif ?>>
+                            <label class="custom-control-label" for="account_inactive"><?= __('inactive') ?></label>
                         </div>
                     </div>
                 </div>

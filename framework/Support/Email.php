@@ -8,6 +8,7 @@
 
 namespace Framework\Support;
 
+use Exception;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\PHPMailer;
 
@@ -36,15 +37,21 @@ class Email
 
         if (config('mailer.default') === 'smtp') {
             self::$mail->SMTPDebug = SMTP::DEBUG_SERVER;
-            self::$mail->SMTPSecure = config('mailer.smtp.tls') ? PHPMailer::ENCRYPTION_STARTTLS : PHPMailer::ENCRYPTION_SMTPS;
             self::$mail->isSMTP();
             self::$mail->Host = config('mailer.smtp.host');
             self::$mail->Port = config('mailer.smtp.port');
             self::$mail->SMTPAuth = config('mailer.smtp.auth');
 
-            if (self::$mail->SMTPAuth) {
-                self::$mail->Username = config('mailer.smtp.username');
-                self::$mail->Password = config('mailer.smtp.password');
+            if (config('mailer.smtp.secure')) {
+                self::$mail->SMTPSecure = config('mailer.smtp.tls') ? PHPMailer::ENCRYPTION_STARTTLS : PHPMailer::ENCRYPTION_SMTPS;
+
+                if (self::$mail->SMTPAuth) {
+                    self::$mail->Username = config('mailer.smtp.username');
+                    self::$mail->Password = config('mailer.smtp.password');
+                }
+            } else {
+                self::$mail->SMTPAutoTLS = false;
+                self::$mail->SMTPSecure = false;
             }
         }
 
@@ -170,6 +177,10 @@ class Email
      */
     public function send(): bool
     {
-        return self::$mail->send();
+        try {
+            return self::$mail->send();
+        } catch (Exception $e) {
+            return false;
+        }
     }
 }

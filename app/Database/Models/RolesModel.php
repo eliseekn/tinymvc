@@ -4,7 +4,7 @@ namespace App\Database\Models;
 
 use Framework\Database\Model;
 
-class RolesModel extends Model
+class RolesModel
 {    
     /**
      * name of table
@@ -12,6 +12,16 @@ class RolesModel extends Model
      * @var string
      */
     public static $table = 'roles';
+
+    /**
+     * create new model instance 
+     *
+     * @return \Framework\Database\Model
+     */
+    private static function model(): \Framework\Database\Model
+    {
+        return new Model(self::$table);
+    }
 
     /**
      * roles constants

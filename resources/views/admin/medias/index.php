@@ -4,43 +4,35 @@
 
 <?php $this->start('page_content') ?>
 
-<div class="row mb-4">
-    <div class="col-md-3 mb-md-0 mb-4">
-        <div class="card card-metrics bg-light shadow-sm">
-            <div class="card-body d-flex align-items-center justify-content-between">
-                <p><i class="fa fa-folder-open fa-lg"></i> <?= __('total') ?></p>
-                <p class="font-weight-bold"><?= $medias->getTotalItems() ?></p>
-            </div>
-        </div>
-    </div>
+<metrics-cards>
+    <metric-card-item 
+        title="<?= __('total') ?>" 
+        icon="fa fa-folder-open fa-lg" 
+        data="<?= $medias->getTotalItems() ?>"
+        columns="3">
+    </metric-card-item>
 
-    <div class="col-md-3 mb-md-0 mb-4">
-        <div class="card card-metrics bg-light shadow-sm">
-            <div class="card-body d-flex align-items-center justify-content-between">
-                <p><i class="fa fa-image fa-lg"></i> <?= __('images') ?></p>
-                <p class="font-weight-bold"><?= $images ?></p>
-            </div>
-        </div>
-    </div>
+    <metric-card-item 
+        title="<?= __('images') ?>" 
+        icon="fa fa-image fa-lg" 
+        data="<?= $images ?>"
+        columns="3">
+    </metric-card-item>
 
-    <div class="col-md-3 mb-md-0 mb-4">
-        <div class="card card-metrics bg-light shadow-sm">
-            <div class="card-body d-flex align-items-center justify-content-between">
-                <p><i class="fa fa-film fa-lg"></i> <?= __('videos') ?></p>
-                <p class="font-weight-bold"><?= $videos ?></p>
-            </div>
-        </div>
-    </div>
+    <metric-card-item 
+        title="<?= __('videos') ?>" 
+        icon="fa fa-film fa-lg" 
+        data="<?= $videos ?>"
+        columns="3">
+    </metric-card-item>
 
-    <div class="col-md-3 mb-md-0 mb-4">
-        <div class="card card-metrics bg-light shadow-sm">
-            <div class="card-body d-flex align-items-center justify-content-between">
-                <p><i class="fa fa-music fa-lg"></i> <?= __('sounds') ?></p>
-                <p class="font-weight-bold"><?= $sounds ?></p>
-            </div>
-        </div>
-    </div>
-</div>
+    <metric-card-item 
+        title="<?= __('sounds') ?>" 
+        icon="fa fa-music fa-lg" 
+        data="<?= $sounds ?>"
+        columns="3">
+    </metric-card-item>
+</metrics-cards>
 
 <?php if (auth()->alerts && !empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
 
@@ -49,14 +41,14 @@
         <div class="d-flex flex-lg-row flex-column align-items-lg-center justify-content-lg-between">
             <span><?= __('medias') ?></span>
 
-            <div class="d-flex flex-lg-row flex-column mt-lg-0 mt-2">
-                <span class="mr-md-2">
+            <div class="d-flex flex-lg-row flex-column">
+                <span class="mr-md-3 mt-lg-0 mt-2">
                     <input type="search" class="form-control" id="media-search" placeholder="<?= __('search') ?>" data-url="<?= absolute_url('admin/resources/medias/search?q=') ?>" value="<?= $q ?? ''; ?>">
                 </span>
 
                 <span class="mt-lg-0 mt-2">
                     <upload-modal action="<?= absolute_url('admin/resources/medias/create') ?>" multiple="multiple">
-                        <button class="btn btn-outline-dark ml-2"><?= __('new') ?></button>
+                        <button class="btn btn-outline-dark"><?= __('new') ?></button>
                     </upload-modal>
                     
                     <button class="btn btn-danger ml-2" id="bulk-delete" data-url="<?= absolute_url('admin/resources/medias/delete') ?>">
@@ -102,9 +94,9 @@
 
                                     <div class="card-body text-center p-2" style="z-index: 111111">
                                         <p class="mb-0"><?= $media->filename ?></p>
-                                        <p class="mb-0 text-muted"><?= \App\Helpers\DateHelper::format($media->created_at)->date() ?></p>
+                                        <p class="mb-0 text-muted"><?= date_helper($media->created_at)->date() ?></p>
 
-                                        <a class="btn text-dark p-1" href="<?= absolute_url('admin/resources/medias/view/' . $media->id) ?>" title="<?= __('details') ?>">
+                                        <a class="btn text-dark p-1" href="<?= absolute_url('admin/resources/medias/read/' . $media->id) ?>" title="<?= __('details') ?>">
                                             <i class="fa fa-eye"></i>
                                         </a>
 

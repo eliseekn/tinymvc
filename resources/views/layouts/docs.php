@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="robots" content="noindex, nofollow">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.4.0/styles/dracula.min.css">
     <link rel="stylesheet" href="<?= assets('css/docs.css') ?>">
     <title><?= $page_title ?></title>
 </head>
@@ -16,7 +15,7 @@
     <div class="wrapper">
         <div class="wrapper__sidebar border-right shadow-sm bg-white">
             <div class="sidebar-title bg-light d-flex align-items-center">
-                <i class="fa fa-book mr-2"></i> Documentation <span class="ml-2">v2.1</span>
+                <i class="fa fa-book mr-2"></i> Documentation
                 
                 <button class="btn ml-auto d-none sidebar-close p-0">
                     <i class="fa fa-times text-dark"></i>

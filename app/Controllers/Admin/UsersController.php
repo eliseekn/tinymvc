@@ -4,30 +4,29 @@ namespace App\Controllers\Admin;
 
 use Exception;
 use App\Helpers\Auth;
-use App\Helpers\Activity;
 use App\Requests\UpdateUser;
-use Framework\Support\Alert;
 use App\Helpers\ReportHelper;
 use App\Requests\RegisterUser;
 use Framework\Routing\Controller;
 use Framework\Support\Encryption;
 use App\Database\Models\RolesModel;
-use App\Database\Models\UsersModel;
 
 class UsersController extends Controller
 {
     /**
-     * display list
+     * index
      *
      * @return void
      */
     public function index(): void
     {
-        $users = UsersModel::find('!=', Auth::get()->id)
+        $users = $this->model('users')
+            ->find('!=', Auth::get()->id)
             ->orderDesc('created_at')
             ->paginate(20);
 
-        $active_users = UsersModel::count()
+        $active_users = $this->model('users')
+            ->count()
             ->where('id', '!=', Auth::get()->id)
             ->and('active', 1)
             ->single()
@@ -37,17 +36,17 @@ class UsersController extends Controller
     }
 
 	/**
-	 * display new page
+	 * new
 	 * 
 	 * @return void
 	 */
 	public function new(): void
 	{
-		$this->render('admin.users.new', ['roles' => RolesModel::selectAll()]);
+		$this->render('admin.users.new', ['roles' => $this->model('roles')->selectAll()]);
 	}
 	
 	/**
-	 * display edit page
+	 * edit
 	 * 
 	 * @param  int $id
 	 * @return void
@@ -55,14 +54,28 @@ class UsersController extends Controller
 	public function edit(int $id): void
 	{
         try {
-            $user = UsersModel::findOrFail('id', $id);
+            $user = $this->model('users')->findOrFail('id', $id);
+            $roles = $this->model('roles')->selectAll();
+            $this->render('admin.users.edit', compact('user', 'roles'));
         } catch (Exception $e) {
             $this->redirect('admin/resources/users')->withToast(__('user_not_found'))->error();
         }
-
-		$roles = RolesModel::selectAll();
-
-		$this->render('admin.users.edit', compact('user', 'roles'));
+	}
+	
+	/**
+	 * read
+	 * 
+	 * @param  int $id
+	 * @return void
+	 */
+	public function read(int $id): void
+	{
+        try {
+            $user = $this->model('users')->findOrFail('id', $id);
+            $this->render('admin.users.read', compact('user'));
+        } catch (Exception $e) {
+            $this->redirect('admin/resources/users')->withToast(__('user_not_found'))->error();
+        }
 	}
 
 	/**
@@ -72,23 +85,13 @@ class UsersController extends Controller
 	 */
 	public function create(): void
 	{
-        $validator = RegisterUser::validate($this->request->inputs());
+        $validator = RegisterUser::validate($this->request->inputs())->redirectOnFail();
         
-        if ($validator->fails()) {
-            $this->redirect()->withErrors($validator->errors())->withInputs($validator->inputs())
-                ->withToast(__('user_not_created'))->error();
-        }
-
-		if (
-            UsersModel::findBy('email', $this->request->email)
-                ->or('phone', $this->request->phone)
-                ->exists()
-        ) {
-            $this->redirect()->withInputs($validator->inputs())
-                ->withToast(__('user_already_exists'))->error();
+		if ($this->model('users')->findMany($this->request->only('email', 'phone'))->exists()) {
+            $this->back()->withInputs($validator->inputs())->withToast(__('user_already_exists'))->error();
 		}
 
-	    $id = UsersModel::insert([
+	    $id = $this->model('users')->insert([
             'name' => $this->request->name,
             'email' => $this->request->email,
             'phone' => $this->request->phone,
@@ -98,26 +101,9 @@ class UsersController extends Controller
             'role' => RolesModel::ROLE[1]
 		]);
 
-        Activity::log(__('user_created'));
-        $this->redirect('admin/resources/users/view', $id)->withToast(__('user_created'))->success();
+        $this->log(__('user_created'));
+        $this->redirect('admin/resources/users/read', $id)->withToast(__('user_created'))->success();
     }
-	
-	/**
-	 * read
-	 * 
-	 * @param  int $id
-	 * @return void
-	 */
-	public function view(int $id): void
-	{
-        try {
-            $user = UsersModel::findOrFail('id', $id);
-        } catch (Exception $e) {
-            $this->redirect('admin/resources/users')->withToast(__('user_not_found'))->error();
-        }
-
-		$this->render('admin.users.view', compact('user'));
-	}
     
 	/**
 	 * update
@@ -127,31 +113,18 @@ class UsersController extends Controller
 	 */
 	public function update(int $id): void
 	{
-		$validator = UpdateUser::validate($this->request->inputs());
+		$validator = UpdateUser::validate($this->request->inputs())->redirectOnFail();
         
-        if ($validator->fails()) {
-            $this->redirect()->withErrors($validator->errors())->withInputs($validator->inputs())
-                ->withToast(__('user_not_updated', true))->error();
-        }
-
         try {
-            $user = UsersModel::findOrFail('id', $id);
+            $user = $this->model('users')->findOrFail('id', $id);
 
             if ($user->email !== $this->request->email || $user->phone !== $this->request->phone) {
-                if (
-                    UsersModel::findMany([
-                        'email' => $this->request->email, 
-                        'phone' => $this->request->phone
-                    ])->exists()
-                ) {
-                    $this->redirect()->withInputs($validator->inputs())
-                    ->withToast(__('user_already_exists'))->error();
+                if ($this->model('users')->findMany($this->request->only('email', 'phone'))->exists()) {
+                    $this->back()->withInputs($validator->inputs())->withToast(__('user_already_exists'))->error();
                 }
-                    
             }
         } catch (Exception $e) {
-            $this->redirect()->withInputs($validator->inputs())
-                ->withToast(__('user_not_found'))->error();
+            $this->back()->withInputs($validator->inputs())->withToast(__('user_not_found'))->error();
         }
 
 		$data = [
@@ -167,10 +140,9 @@ class UsersController extends Controller
 			$data['password'] = Encryption::hash($this->request->password);
 		}
 
-        UsersModel::updateIfExists($id, $data);
-        
-        Activity::log(__('user_updated'));
-        $this->redirect('admin/resources/users/view', $id)->withToast(__('user_updated'))->success();
+        $this->model('users')->updateIfExists($id, $data);
+        $this->log(__('user_updated'));
+        $this->redirect('admin/resources/users/read', $id)->withToast(__('user_updated'))->success();
     }
 
 	/**
@@ -182,25 +154,26 @@ class UsersController extends Controller
 	public function delete(?int $id = null): void
 	{
 		if (!is_null($id)) {
-			if (!UsersModel::find($id)->exists()) {
-				$this->redirect()->withToast(__('user_not_found'))->error();
+            if (!$this->model('users')->deleteIfExists($id)) {
+                $this->back()->withToast(__('user_not_found'))->error();
 			}
 	
-			UsersModel::deleteIfExists($id);
-            Activity::log(__('user_deleted'));
-            $this->redirect('admin/users')->withToast(__('user_deleted'))->success();
-		} else {
-			foreach (explode(',', $this->request->items) as $id) {
-				UsersModel::deleteIfExists($id);
-			}
-			
-            Activity::log(__('users_deleted'));
-            Alert::toast(__('users_deleted'))->success();
+            $this->log(__('user_deleted'));
+            $this->redirect('admin/resources/users')->withToast(__('user_deleted'))->success();
 		}
+        
+        if (!$this->model('users')->deleteBy('id', 'in', explode(',', $this->request->items))) {
+            $this->alert('toast', __('user_not_found'))->error();
+        } else {
+            $this->log(__('users_deleted'));
+            $this->alert('toast', __('users_deleted'))->success();
+        }
+
+        $this->response([absolute_url('admin/resources/users')], true);
 	}
 
 	/**
-	 * import data
+	 * import
 	 *
 	 * @return void
 	 */
@@ -209,14 +182,14 @@ class UsersController extends Controller
         $file = $this->request->files('file', ['csv']);
 
 		if (!$file->isAllowed()) {
-            $this->redirect('admin/users')->withToast(__('import_file_type_error') . 'csv')->success();
+            $this->redirect('admin/resources/users')->withToast(__('import_file_type_error') . 'csv')->success();
 		}
 
 		if (!$file->isUploaded()) {
-			$this->redirect('admin/users')->withToast(__('import_data_error'))->error();
+			$this->redirect('admin/resources/users')->withToast(__('import_data_error'))->error();
 		}
 
-		ReportHelper::import($file, UsersModel::class, [
+		ReportHelper::import($file, $this->model('users')->class, [
 			'name' => __('name'), 
             'email' => __('email'), 
             'phone' => __('phone'),
@@ -225,18 +198,18 @@ class UsersController extends Controller
 			'password' => __('password')
 		]);
 
-        Activity::log(__('data_imported'));
-		$this->redirect('admin/users')->withToast(__('data_imported'))->success();
+        $this->log(__('data_imported'));
+		$this->redirect('admin/resources/users')->withToast(__('data_imported'))->success();
 	}
 	
 	/**
-	 * export data
+	 * export
 	 *
 	 * @return void
 	 */
 	public function export(): void
 	{
-		$users = UsersModel::select()
+		$users = $this->model('users')->select()
             ->subQuery(function ($query) {
                 if ($this->request->has('date_start') && $this->request->has('date_end')) {
                     $query->whereBetween('created_at', $this->request->date_start, $this->request->date_end);
@@ -247,7 +220,7 @@ class UsersController extends Controller
         
         $filename = 'users_' . date('Y_m_d') . '.' . $this->request->file_type;
 
-        Activity::log(__('data_exported'));
+        $this->log(__('data_exported'));
         
 		ReportHelper::export($filename, $users, [
 			'name' => __('name'), 

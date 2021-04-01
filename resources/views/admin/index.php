@@ -4,7 +4,7 @@
 
 <?php $this->start('styles') ?>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+<link rel="stylesheet" href="<?= absolute_url('resources/vendor/morris/morris.css') ?>">
 
 <?php $this->stop() ?>
 
@@ -32,7 +32,6 @@
                         ['label' => 'Active', 'value' => $active_users],
                         ['label' => 'Inactive', 'value' => $inactive_users]
                     ]) ?>>
-                    <div id="users-donut" style="height: 200px"></div>
                 </donut-chart>
             </div>
         </div>
@@ -55,9 +54,10 @@
 
             <div class="card-body">
                 <bars-chart
+                    id='users-bars-chart'
                     el='users-bars'
                     data=<?= json_encode($users_metrics) ?> 
-                    xkey="month" 
+                    xkey='month' 
                     ykeys=<?= json_encode(['value']) ?> 
                     labels=<?= json_encode(['Count']) ?>>
                 </bars-chart>
@@ -104,7 +104,7 @@
                         <tr>
                             <td><?= $message->sender_email ?></td>
                             <td><?= $message->message ?></td>
-                            <td><?= \App\Helpers\DateHelper::format($message->created_at)->time_elapsed() ?></td>
+                            <td><?= date_helper($message->created_at)->time_elapsed() ?></td>
                             <td>
                                 <update-item action="<?= absolute_url('admin/account/messages/update', $message->id) ?>">
                                     <button type="submit" class="btn text-dark p-1 <?php if ($message->recipient_status === 'read') : echo 'disabled'; endif ?>" <?php if ($message->recipient_status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
@@ -154,7 +154,7 @@
                         <?php foreach ($notifications as $notification) : ?>
                         <tr>
                             <td><?= $notification->message ?></td>
-                            <td><?= \App\Helpers\DateHelper::format($notification->created_at)->time_elapsed() ?></td>
+                            <td><?= date_helper($notification->created_at)->time_elapsed() ?></td>
                             <td>
                                 <update-item action="<?= absolute_url('admin/account/notifications/update', $notification->id) ?>">
                                     <button type="submit" class="btn text-dark p-1 <?php if ($notification->status === 'read') : echo 'disabled'; endif ?>" <?php if ($notification->status === 'unread') : echo 'title="' . __("mark_as_read") . '"'; endif ?>>
@@ -179,7 +179,7 @@
 
 <?php $this->start('scripts') ?>
 
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script defer src="<?= absolute_url('resources/vendor/morris/morris.min.js') ?>"></script>
+<script defer src="<?= absolute_url('resources/vendor/morris/raphael-min.js') ?>"></script>
 
 <?php $this->stop() ?>

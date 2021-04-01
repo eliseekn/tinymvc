@@ -24,19 +24,19 @@ class UsersTable
             ->addBigInt('id')->primaryKey()
             ->addString('name')
             ->addString('email')->unique()
-            ->addString('company')->default('')
+            ->addString('company')->null()
             ->addString('phone')->unique()
             ->addString('password')
             ->addString('role')->default('user')
             ->addString('lang')->default('en')
-            ->addSmallInt('country')->default(209)
+            ->addString('country')->default('US')
             ->addString('currency')->default('USD')
             ->addString('timezone')->default('UTC')
             ->addBoolean('dark_theme')->default(1)
             ->addBoolean('active')->default(0)
             ->addBoolean('two_steps')->default(0)
             ->addBoolean('alerts')->default(1)
-            ->addBoolean('email_notifications')->default(0)
+            ->addBoolean('email_notifications')->default(1)
             ->create();
     }
     

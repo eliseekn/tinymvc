@@ -16,7 +16,7 @@ class DeleteItem extends HTMLElement {
 
     connectedCallback() {
         this.innerHTML = `
-            <form method="post" action="${this.getAttribute('action') + '?csrf_token=' + document.querySelector('#csrf_token').value}" class="d-inline-block">
+            <form method="post" action="${this.getAttribute('action') + '?csrf_token=' + document.querySelector('meta[name="csrf_token"]').content}" class="d-inline-block">
                 <input type="hidden" name="request_method" value="delete">
 
                 ${this.innerHTML}

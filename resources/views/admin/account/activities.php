@@ -55,7 +55,6 @@
                         <th scope="col"><i class="fa fa-sort"></i> ID</th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('user') ?></th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('url') ?></th>
-                        <th scope="col"><i class="fa fa-sort"></i> <?= __('method') ?></th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('ip_address') ?></th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('action') ?></th>
                         <th scope="col"><i class="fa fa-sort"></i> <?= __('created_at') ?></th>
@@ -75,10 +74,9 @@
                         <td><?= $activity->id ?></td>
                         <td><?= $activity->user ?></td>
                         <td><?= $activity->url ?></td>
-                        <td><?= $activity->method ?></td>
                         <td><?= $activity->ip_address ?></td>
                         <td><?= $activity->action ?></td>
-                        <td><?= \App\Helpers\DateHelper::format($activity->created_at)->time_elapsed() ?></td>
+                        <td><?= date_helper($activity->created_at)->time_elapsed() ?></td>
                     </tr>
                     <?php endforeach ?>
                 </tbody>

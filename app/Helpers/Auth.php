@@ -3,15 +3,15 @@
 namespace App\Helpers;
 
 use Carbon\Carbon;
+use App\Mails\AuthLinkMail;
 use Framework\Http\Request;
 use Framework\Http\Redirect;
+use Framework\Database\Model;
 use Framework\Support\Cookies;
 use Framework\Support\Session;
 use App\Middlewares\AuthPolicy;
 use Framework\Support\Encryption;
 use App\Database\Models\RolesModel;
-use App\Database\Models\UsersModel;
-use App\Database\Models\TokensModel;
 
 class Auth
 {    
@@ -35,7 +35,7 @@ class Auth
         //increment authentication attempts
         Session::create('auth_attempts', (self::getAttempts() + 1));
 
-        $user = UsersModel::findSingleBy('email', $request->email);
+        $user = (new Model('users'))->findSingleBy('email', $request->email);
 
         //check credentials
         if ($user !== false && Encryption::compare($request->password, $user->password)) {
@@ -44,15 +44,15 @@ class Auth
 
             //check user state
             if (!$user->active) {
-                Redirect::back()->withAlert(__('user_not_activated'))->error('');
+                Redirect::back()->withAlert(__('user_not_activated', true))->error('');
             }
 
             //check if two factor authentication is enabled
             if ($user->two_steps) {
                 $token = random_string(50, true);
 
-                if (EmailHelper::sendAuth($user->email, $token)) {
-                    TokensModel::insert([
+                if (AuthLinkMail::send($user->email, $token)) {
+                    (new Model('tokens'))->insert([
                         'email' => $request->email,
                         'token' => $token,
                         'expires' => Carbon::now()->addHour()->toDateTimeString()
@@ -96,23 +96,20 @@ class Auth
      */
     public static function create(Request $request): bool
     {
-        if (
-            UsersModel::findMany([
-                'email' => $request->email, 
-                'phone' => $request->phone
-            ])->exists()
-        ) {
+        if ((new Model('users'))->findMany($request->only('email', 'phone'))->exists()) {
             return false;
         }
-        
-        UsersModel::insert([
+
+        $users = (new Model('users'))->findAll();
+
+        (new Model('users'))->insert([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
             'company' => $request->company,
             'password' => Encryption::hash($request->password),
-            'role' => empty(UsersModel::findAll()) ? RolesModel::ROLE[0] : 'user',
-            'active' => empty(UsersModel::findAll()) ? 1 : 0,
+            'role' => empty($users) ? RolesModel::ROLE[0] : RolesModel::ROLE[2],
+            'active' => empty($users) ? 1 : 0,
         ]);
 
         return true;

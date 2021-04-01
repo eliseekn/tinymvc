@@ -4,25 +4,21 @@
 
 <?php $this->start('page_content') ?>
 
-<div class="row mb-4">
-    <div class="col-md-4 mb-md-0 mb-4">
-        <div class="card card-metrics bg-light shadow-sm">
-            <div class="card-body d-flex align-items-center justify-content-between">
-                <p><i class="fa fa-users fa-lg"></i> <?= __('total') ?></p>
-                <p class="font-weight-bold"><?= $users->getTotalItems() ?></p>
-            </div>
-        </div>
-    </div>
+<metrics-cards>
+    <metric-card-item 
+        title="<?= __('total') ?>" 
+        icon="fa fa-users fa-lg" 
+        data="<?= $users->getTotalItems() ?>"
+        columns="4">
+    </metric-card-item>
 
-    <div class="col-md-4 mb-md-0 mb-4">
-        <div class="card card-metrics bg-light shadow-sm">
-            <div class="card-body d-flex align-items-center justify-content-between">
-                <p><i class="fa fa-user-check fa-lg"></i> <?= __('active') ?></p>
-                <p class="font-weight-bold"><?= $active_users ?></p>
-            </div>
-        </div>
-    </div>
-</div>
+    <metric-card-item 
+        title="<?= __('active') ?>" 
+        icon="fa fa-user-check fa-lg" 
+        data="<?= $active_users ?>"
+        columns="4">
+    </metric-card-item>
+</metrics-cards>
 
 <?php if (auth()->alerts && !empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
 
@@ -31,13 +27,15 @@
         <div class="d-flex flex-lg-row flex-column align-items-lg-center justify-content-lg-between">
             <span><?= __('users') ?></span>
 
-            <div class="d-flex flex-lg-row flex-column mt-lg-0 mt-2">
-                <span class="mr-md-3">
+            <div class="d-flex flex-lg-row flex-column">
+                <span class="mr-md-3 mt-lg-0 mt-2">
                     <input type="search" class="form-control" id="filter" placeholder="<?= __('search') ?>">
                 </span>
 
                 <span class="mt-lg-0 mt-2">
-                    <a href="<?= absolute_url('admin/resources/users/new') ?>" class="btn btn-outline-dark"><?= __('new') ?></a>
+                    <a href="<?= absolute_url('admin/resources/users/new') ?>" class="btn btn-outline-dark">
+                        <?= __('new') ?>
+                    </a>
                     
                     <upload-modal action="<?= absolute_url('admin/resources/users/import') ?>" multiple="">
                         <button class="btn btn-outline-dark ml-2"><?= __('import') ?></button>
@@ -47,7 +45,7 @@
                         <button class="btn btn-outline-dark mx-2"><?= __('export') ?></button>
                     </export-modal>
 
-                    <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('admin/resources/users/delete') ?>">
+                    <button class="btn btn-danger mt-lg-0 mt-2" id="bulk-delete" data-url="<?= absolute_url('admin/resources/users/delete') ?>">
                         <?= __('bulk_delete') ?>
                     </button>
                 </span>
@@ -109,11 +107,11 @@
                             <?php endif ?>
                         </td>
 
-                        <td><?= \App\Helpers\DateHelper::format($user->created_at)->human() ?></td>
-                        <td><?php $user->updated_at !== $user->created_at ? print(\App\Helpers\DateHelper::format($user->updated_at)->human()) : print('-') ?></td>
+                        <td><?= date_helper($user->created_at)->human() ?></td>
+                        <td><?php $user->updated_at !== $user->created_at ? print(date_helper($user->updated_at)->human()) : print('-') ?></td>
 
                         <td>
-                            <a class="btn text-dark p-1" href="<?= absolute_url('admin/resources/users/view', $user->id) ?>" title="<?= __('details') ?>">
+                            <a class="btn text-dark p-1" href="<?= absolute_url('admin/resources/users/read', $user->id) ?>" title="<?= __('details') ?>">
                                 <i class="fa fa-eye"></i>
                             </a>
 

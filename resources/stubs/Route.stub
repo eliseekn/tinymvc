@@ -3,7 +3,7 @@ Route::group([
     'resources/RESOURCENAME' => ['handler' => 'Admin\CLASSNAME@index'],
     'resources/RESOURCENAME/new' => ['handler' => 'Admin\CLASSNAME@new'],
     'resources/RESOURCENAME/edit/{id:num}' => ['handler' => 'Admin\CLASSNAME@edit'],
-    'resources/RESOURCENAME/view/{id:num}' => ['handler' => 'Admin\CLASSNAME@view'],
+    'resources/RESOURCENAME/read/{id:num}' => ['handler' => 'Admin\CLASSNAME@read'],
     'resources/RESOURCENAME/delete/{id:num}' => ['handler' => 'Admin\CLASSNAME@delete']
 ])->by([
     'method' => 'GET',

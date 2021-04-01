@@ -4,7 +4,7 @@ namespace App\Database\Models;
 
 use Framework\Database\Model;
 
-class MediasModel extends Model
+class MediasModel
 {
     /**
      * name of table
@@ -12,6 +12,16 @@ class MediasModel extends Model
      * @var string
      */
     public static $table = 'medias';
+
+    /**
+     * create new model instance 
+     *
+     * @return \Framework\Database\Model
+     */
+    private static function model(): \Framework\Database\Model
+    {
+        return new Model(self::$table);
+    }
 
     /**
      * medias extensions constants

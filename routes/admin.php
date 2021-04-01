@@ -21,13 +21,13 @@ Route::group([
     'resources/users' => ['handler' => 'Admin\UsersController@index'],
     'resources/users/new' => ['handler' => 'Admin\UsersController@new'],
     'resources/users/edit/{num}' => ['handler' => 'Admin\UsersController@edit'],
-    'resources/users/view/{num}' => ['handler' => 'Admin\UsersController@view'],
+    'resources/users/read/{num}' => ['handler' => 'Admin\UsersController@read'],
 
     //medias routes
     'resources/medias' => ['handler' => 'Admin\MediasController@index'],
     'resources/medias/new' => ['handler' => 'Admin\MediasController@new'],
     'resources/medias/edit/{num}' => ['handler' => 'Admin\MediasController@edit'],
-    'resources/medias/view/{num}' => ['handler' => 'Admin\MediasController@view'],
+    'resources/medias/read/{num}' => ['handler' => 'Admin\MediasController@read'],
     'resources/medias/search' => ['handler' => 'Admin\MediasController@search'],
 
     //account management routes

@@ -84,7 +84,7 @@
 
                         <td><?= $notification->id ?></td>
                         <td><?= $notification->message ?></td>
-                        <td><?= \App\Helpers\DateHelper::format($notification->created_at)->time_elapsed() ?></td>
+                        <td><?= date_helper($notification->created_at)->time_elapsed() ?></td>
 
                         <td>
                             <update-item action="<?= absolute_url('admin/account/notifications/update', $notification->id) ?>" <?php if ($notification->status === 'read') : echo 'disabled="disabled"'; endif ?>>

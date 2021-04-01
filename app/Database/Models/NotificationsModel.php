@@ -2,10 +2,10 @@
 
 namespace App\Database\Models;
 
-use Framework\Database\Model;
 use App\Helpers\Auth;
+use Framework\Database\Model;
 
-class NotificationsModel extends Model
+class NotificationsModel
 {    
     /**
      * name of table
@@ -15,15 +15,27 @@ class NotificationsModel extends Model
     public static $table = 'notifications';
     
     /**
-     * get notifications
+     * create new model instance 
      *
      * @return \Framework\Database\Model
      */
-    public static function messages(): \Framework\Database\Model
+    private static function model(): \Framework\Database\Model
     {
-        return self::select()
-            ->where('status', 'unread')
+        return new Model(self::$table);
+    }
+
+    /**
+     * get notifications messages
+     *
+     * @param  int $limit
+     * @return array
+     */
+    public static function findMessages(int $limit = 5)
+    {
+        return self::model()
+            ->findBy('status', 'unread')
             ->and('user_id', Auth::get()->id)
-            ->orderDesc('created_at');
+            ->oldest()
+            ->take($limit);
     }
 }

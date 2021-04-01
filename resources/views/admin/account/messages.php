@@ -94,7 +94,7 @@
                         <td><?= $message->sender_email ?></td>
                         <td><?= $message->recipient_email ?></td>
                         <td><?= $message->message ?></td>
-                        <td><?= \App\Helpers\DateHelper::format($message->created_at)->time_elapsed() ?></td>
+                        <td><?= date_helper($message->created_at)->time_elapsed() ?></td>
 
                         <td>
                             <?php if ($message->sender_email !== auth()->email) : ?>

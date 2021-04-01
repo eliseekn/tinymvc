@@ -2,57 +2,48 @@
 
 namespace NAMESPACE;
 
+use Exception;
 use App\Helpers\ReportHelper;
 use Framework\Routing\Controller;
-use App\Database\Models\RESOURCEMODEL;
 
 class CLASSNAME extends Controller
 {
     /**
-     * display list
+     * index
      *
      * @return void
      */
-    public function index(): void
+    public function index()
 	{
 		$this->render('admin.RESOURCENAME.index', [
-            'RESOURCENAME' => RESOURCEMODEL::select()->orderDesc('created_at')->paginate(20)
+            'RESOURCENAME' => $this->model('RESOURCENAME')->select()->orderDesc('created_at')->paginate(20)
         ]);
 	}
 
     /**
-	 * display new page
+	 * new
 	 * 
 	 * @return void
 	 */
-    public function new(): void
+    public function new()
 	{
 		$this->render('admin.RESOURCENAME.new');
 	}
 	
 	/**
-	 * display edit page
+	 * edit
 	 * 
 	 * @param  int $id
 	 * @return void
 	 */
-    public function edit(int $id): void
+    public function edit(int $id)
 	{
-		$this->render('admin.RESOURCENAME.edit', ['RESOURCENAME' => RESOURCEMODEL::findSingle($id)]);
-	}
-
-	/**
-	 * create
-	 *
-	 * @return void
-	 */
-    public function create(): void
-	{
-        $id = RESOURCEMODEL::insert([
-            //
-        ]);
-
-		$this->redirect('admin/resources/RESOURCENAME/view', $id)->only();
+        try {
+            $RESOURCENAME = $this->model('RESOURCENAME')->findOrFail('id', $id);
+            $this->render('admin.RESOURCENAME.edit', compact('RESOURCENAME'));
+        } catch (Exception $e) {
+            $this->redirect('admin/resources/RESOURCENAME')->only();
+        }
 	}
 	
 	/**
@@ -61,9 +52,25 @@ class CLASSNAME extends Controller
 	 * @param  int $id
 	 * @return void
 	 */
-	public function view(int $id): void
+	public function read(int $id)
 	{
-		$this->render('admin.RESOURCENAME.view', ['RESOURCENAME' => RESOURCEMODEL::findSingle($id)]);
+        try {
+            $RESOURCENAME = $this->model('RESOURCENAME')->findOrFail('id', $id);
+            $this->render('admin.RESOURCENAME.read', compact('RESOURCENAME'));
+        } catch (Exception $e) {
+            $this->redirect('admin/resources/RESOURCENAME')->only();
+        }
+	}
+
+	/**
+	 * create
+	 *
+	 * @return void
+	 */
+    public function create()
+	{
+        $id = $this->model('RESOURCENAME')->insert($this->request->inputs());
+		$this->redirect('admin/resources/RESOURCENAME/read', $id)->only();
 	}
     
 	/**
@@ -72,13 +79,10 @@ class CLASSNAME extends Controller
      * @param  int $id
 	 * @return void
 	 */
-	public function update(int $id): void
+	public function update(int $id)
 	{
-        RESOURCEMODEL::update([
-            //
-        ])->where('id', $id)->persist();
-
-		$this->redirect('admin/resources/RESOURCENAME/view', $id)->only();
+        $this->model('RESOURCENAME')->updateIfExists($id, $this->$request->inputs());
+		$this->redirect('admin/resources/RESOURCENAME/read', $id)->only();
 	}
 
 	/**
@@ -87,28 +91,25 @@ class CLASSNAME extends Controller
      * @param  int|null $id
 	 * @return void
 	 */
-	public function delete(?int $id = null): void
+	public function delete(?int $id = null)
 	{
         if (!is_null($id)) {
-			if (!RESOURCEMODEL::find($id)->exists()) {
-				$this->redirect()->only();
+            if (!$this->model('RESOURCENAME')->deleteIfExists($id)) {
+                $this->back()->only();
 			}
-	
-			RESOURCEMODEL::deleteIfExists($id);
+
             $this->redirect('admin/resources/RESOURCENAME')->only();
 		} else {
-			foreach (explode(',', $this->request->items) as $id) {
-				RESOURCEMODEL::deleteIfExists($id);
-			}
+            $this->model('RESOURCENAME')->deleteBy('id', 'in', explode(',', $this->request->items));
 		}
 	}
 
 	/**
-	 * import data
+	 * import
 	 *
 	 * @return void
 	 */
-    public function import(): void
+    public function import()
 	{
 		$file = $this->request->files('file', ['csv']);
 
@@ -120,7 +121,7 @@ class CLASSNAME extends Controller
 			$this->redirect('admin/resources/RESOURCENAME')->only();
 		}
 
-		ReportHelper::import($file->getTempFilename(), RESOURCEMODEL::class, [
+		ReportHelper::import($file->getTempFilename(), $this->model('RESOURCENAME'), [
 			//
 		]);
 
@@ -128,13 +129,14 @@ class CLASSNAME extends Controller
 	}
 	
 	/**
-	 * export data
+	 * export
 	 *
 	 * @return void
 	 */
-    public function export(): void
+    public function export()
 	{
-        $RESOURCENAME = RESOURCEMODEL::select()
+        $RESOURCENAME = $this->model('RESOURCENAME')
+            ->select()
             ->subQuery(function ($query) {
                 if ($this->request->has('date_start') && $this->request->has('date_end')) {
                     $query->whereBetween('created_at', $this->request->date_start, $this->request->date_end);

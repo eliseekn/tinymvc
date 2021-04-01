@@ -6,6 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
+use App\Helpers\DateHelper;
 use Carbon\Carbon;
 use Configula\ConfigFactory;
 use Framework\Support\Cookies;
@@ -164,6 +165,19 @@ if (!function_exists('auth')) {
  * Miscellaneous security utils functions
  */
 
+if (!function_exists('date_helper')) {    
+    /**
+     * datehelper helper function
+     *
+     * @param  mixed $datetime
+     * @return \App\Helpers\DateHelper
+     */
+    function date_helper($datetime = null): \App\Helpers\DateHelper
+    {
+        return DateHelper::format($datetime);
+    }
+}
+
 if (!function_exists('escape')) {
 	/**
      * escape html and others scripting languages
@@ -208,6 +222,18 @@ if (!function_exists('csrf_token_input')) {
     function csrf_token_input(): string
     {
         return '<input type="hidden" name="csrf_token" id="csrf_token" value="' . generate_csrf_token() . '">';
+    }
+}
+
+if (!function_exists('csrf_token_meta')) {
+    /**
+     * generate crsf token html meta
+     *
+     * @return string
+     */
+    function csrf_token_meta(): string
+    {
+        return '<meta name="csrf_token" content="' . generate_csrf_token() . '">';
     }
 }
 

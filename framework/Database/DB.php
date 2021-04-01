@@ -28,7 +28,7 @@ class DB
 	 *
 	 * @var mixed
 	 */
-	protected $connection;
+	private $pdo;
 
 	/**
 	 * create instance of database connection
@@ -38,14 +38,14 @@ class DB
 	private function __construct()
 	{
 		try {
-            $this->connection = new PDO('mysql:host=' . config('mysql.host'), config('mysql.username'), config('mysql.password'));
-            $this->connection->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, 'SET NAMES ' . config('mysql.charset') . ' COLLATE ' . config('mysql.collation'));
-			$this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			$this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-			$this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
-			$this->connection->setAttribute(PDO::ATTR_ORACLE_NULLS, PDO::NULL_EMPTY_STRING);
+            $this->pdo = new PDO('mysql:host=' . config('mysql.host'), config('mysql.username'), config('mysql.password'));
+            $this->pdo->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, 'SET NAMES ' . config('mysql.charset') . ' COLLATE ' . config('mysql.collation'));
+			$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			$this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+			$this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
+			$this->pdo->setAttribute(PDO::ATTR_ORACLE_NULLS, PDO::NULL_EMPTY_STRING);
 		} catch (PDOException $e) {
-			if (config('errors.display') == true) {
+			if (config('errors.display')) {
 				die($e->getMessage());
 			}
 		}
@@ -60,7 +60,7 @@ class DB
     private function setDB(?string $db = null): self
     {
         if (!is_null($db)) {
-            $this->connection->exec('USE ' . $db);
+            $this->pdo->exec('USE ' . $db);
         }
 
         return $this;
@@ -91,9 +91,9 @@ class DB
         $stmt = null;
 
         try {
-            $stmt = $this->connection->query($query);
+            $stmt = $this->pdo->query($query);
 		} catch (PDOException $e) {
-			if (config('errors.display') == true) {
+			if (config('errors.display')) {
 				die($e->getMessage());
 			}
         }
@@ -111,24 +111,14 @@ class DB
 		$stmt = null;
 
 		try {
-			$stmt = $this->connection->prepare(trim($query));
+			$stmt = $this->pdo->prepare(trim($query));
 			$stmt->execute($args);
 		} catch (PDOException $e) {
-			if (config('errors.display') == true) {
+			if (config('errors.display')) {
 				die($e->getMessage());
 			}
 		}
 
 		return $stmt;
-	}
-
-	/**
-	 * retrieves last inserted id
-	 *
-	 * @return int
-	 */
-	public function lastInsertedId(): int
-	{
-		return $this->connection->lastInsertId();
 	}
 }

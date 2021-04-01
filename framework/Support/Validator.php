@@ -9,6 +9,7 @@
 namespace Framework\Support;
 
 use GUMP;
+use Framework\Http\Redirect;
 
 /**
  * Request fields validator
@@ -96,5 +97,15 @@ class Validator
     public function inputs(): array
     {
         return static::$inputs;
+    }
+    
+    /**
+     * redirect on fail or return validator instance
+     *
+     * @return self|void
+     */
+    public function redirectOnFail()
+    {
+        return !$this->fails() ? $this : Redirect::back()->withErrors($this->errors())->withInputs($this->inputs())->only();
     }
 }

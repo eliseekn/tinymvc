@@ -7,11 +7,10 @@
  */
 
 use App\Helpers\Auth;
-use App\Helpers\DateHelper;
 use Framework\Http\Response;
 use Framework\Routing\Route;
+use Framework\Database\Model;
 use Framework\Support\Metrics;
-use App\Database\Models\UsersModel;
 use App\Database\Models\MessagesModel;
 use App\Database\Models\NotificationsModel;
 
@@ -22,55 +21,63 @@ use App\Database\Models\NotificationsModel;
 //send basic headers
 Response::headers([
     'Access-Control-Allow-Origin' => '*',
-    'Access-Control-Allow-Headers' => 'X-Requested-With',
+    'Access-Control-Allow-Headers' => '*',
 ]);
 
-//retrieves notifications list
-Route::get('api/notifications', [
-    'handler' => function() {
-        $notifications = NotificationsModel::messages()->take(5);
+Route::group([
+    //retrieves notifications list
+    'notifications' => [
+        'method' => 'get',
+        'handler' => function() {
+            $notifications = NotificationsModel::findMessages();
 
-        foreach ($notifications as $notification) {
-            $notification->created_at = DateHelper::format($notification->created_at)->time_elapsed();
+            foreach ($notifications as $notification) {
+                $notification->created_at = date_helper($notification->created_at)->time_elapsed();
+            }
+
+            Response::send(['notifications' => $notifications], true);
         }
+    ],
 
-        Response::send(['notifications' => $notifications], true);
-    }
-]);
-
-//retrieves metrics trends
-Route::get('api/metrics/users/{str}/?{num}?', [
-    'handler' => function (string $trends, int $interval = 0) {
-        $metrics = UsersModel::metrics('id', Metrics::COUNT, $trends, $interval);
-        Response::send(['metrics' => json_encode($metrics)], true);
-    }
-]);
-
-//retrieves messages list
-Route::get('api/messages', [
-    'handler' => function () {
-        $messages = MessagesModel::recipients()->take(5);
-
-        foreach ($messages as $message) {
-            $message->created_at = DateHelper::format($message->created_at)->time_elapsed();
+    //retrieves metrics trends
+    'metrics/users/{str}/?{num}?' => [
+        'method' => 'get',
+        'handler' => function (string $trends, int $interval = 0) {
+            $metrics = (new Model('users'))->metrics('id', Metrics::COUNT, $trends, $interval);
+            Response::send(['metrics' => json_encode($metrics)], true);
         }
+    ],
 
-        Response::send(['messages' => $messages], true);
-    }
-]);
+    //retrieves messages list
+    'messages' => [
+        'method' => 'get',
+        'handler' => function () {
+            $messages = MessagesModel::findRecipients();
 
-//retrieves users list
-Route::get('api/users', [
-    'handler' => function () {
-        Response::send(['users' => UsersModel::find('!=', Auth::get()->id)->all()], true);
-    }
-]);
+            foreach ($messages as $message) {
+                $message->created_at = date_helper($message->created_at)->time_elapsed();
+            }
 
-//retrieves translations
-Route::get('api/translations', [
-    'handler' => function() {
-        require_once 'resources/lang/' . Auth::get()->lang . '.php';
+            Response::send(['messages' => $messages], true);
+        }
+    ],
 
-        Response::send(['translations' => $config], true);
-    }
+    //retrieves users list
+    'users' => [
+        'method' => 'get',
+        'handler' => function () {
+            Response::send(['users' => (new Model('users'))->find('!=', Auth::get()->id)->all()], true);
+        }
+    ],
+
+    //retrieves translations
+    'translations' => [
+        'method' => 'get',
+        'handler' => function() {
+            require_once 'resources/lang/' . Auth::get()->lang . '.php';
+            Response::send(['translations' => $config], true);
+        }
+    ]
+])->by([
+    'prefix' => 'api'
 ]);

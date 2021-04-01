@@ -35,7 +35,7 @@ class ExportModal extends HTMLElement {
                     </div>
 
                     <form method="post" action="${this.getAttribute('action')}">
-                        <input type="hidden" name="csrf_token" value="${document.querySelector('#csrf_token').value}">
+                        <input type="hidden" name="csrf_token" value="${document.querySelector('meta[name="csrf_token"]').content}">
 
                         <div class="modal-body">
                             <fieldset class="form-group">

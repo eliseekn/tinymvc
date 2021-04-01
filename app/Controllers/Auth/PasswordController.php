@@ -3,12 +3,10 @@
 namespace App\Controllers\Auth;
 
 use Carbon\Carbon;
-use App\Helpers\EmailHelper;
+use App\Mails\TokenMail;
 use App\Requests\AuthRequest;
 use Framework\Routing\Controller;
 use Framework\Support\Encryption;
-use App\Database\Models\UsersModel;
-use App\Database\Models\TokensModel;
 
 /**
  * Manage password reset
@@ -24,17 +22,17 @@ class PasswordController extends Controller
 	{
 		$token = random_string(50, true);
 
-		if (EmailHelper::sendToken($this->request->email, $token)) {
-			TokensModel::insert([
+		if (TokenMail::send($this->request->email, $token)) {
+			$this->model('tokens')->insert([
 				'email' => $this->request->email,
 				'token' => $token,
 				'expires' => Carbon::now()->addHour()->toDateTimeString()
             ]);
             
-			$this->redirect()->withAlert(__('password_reset_link_sent', true))->success('');
-		} else {
-			$this->redirect()->withAlert(__('password_reset_link_not_sent', true))->error('');
-		}
+			$this->back()->withAlert(__('password_reset_link_sent', true))->success('');
+		} 
+        
+		$this->back()->withAlert(__('password_reset_link_not_sent', true))->error('');
 	}
 	
 	/**
@@ -44,7 +42,7 @@ class PasswordController extends Controller
 	 */
 	public function reset(): void
 	{
-        $reset_token = TokensModel::findSingleBy('email', $this->request->email);
+        $reset_token = $this->model('tokens')->findSingleBy('email', $this->request->email);
 
         if ($reset_token === false || $reset_token->token !== $this->request->token) {
 			$this->response(__('invalid_password_reset_link', true));
@@ -54,8 +52,7 @@ class PasswordController extends Controller
 			$this->response(__('expired_password_reset_link', true));
 		}
 
-		TokensModel::deleteBy('email', $reset_token->email);
-		
+		$this->model('tokens')->deleteBy('email', $reset_token->email);
 		$this->render('auth.password.new', ['email' => $reset_token->email]);
 	}
 	
@@ -66,14 +63,9 @@ class PasswordController extends Controller
 	 */
 	public function update(): void
 	{
-		$validator = AuthRequest::validate($this->request->inputs());
-        
-        if ($validator->fails()) {
-            $this->redirect()->withAlert($validator->errors())->error('');
-        }
+		AuthRequest::validate($this->request->inputs())->redirectOnFail();
 
-        UsersModel::updateBy(['email', $this->request->email], ['password' => Encryption::hash($this->request->password)]);
-		
+        $this->model('users')->updateBy(['email', $this->request->email], ['password' => Encryption::hash($this->request->password)]);
         $this->redirect('login')->withAlert(__('password_resetted', true))->success('');
 	}
 }

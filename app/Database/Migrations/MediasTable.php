@@ -23,8 +23,8 @@ class MediasTable
         Migration::table(self::$table)
             ->addBigInt('id')->primaryKey()
             ->addString('filename')
-            ->addString('title')->default('')
-            ->addString('description')->default('')
+            ->addString('title')->null()
+            ->addString('description')->null()
             ->addString('url')
             ->addBigInt('user_id')
             ->create();

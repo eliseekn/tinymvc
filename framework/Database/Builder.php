@@ -56,6 +56,7 @@ class Builder
 		}
 
 		self::$query = rtrim(self::$query, ', ');
+
 		return new self();
 	}
         
@@ -292,7 +293,7 @@ class Builder
      */
     public function create(): self
     {
-        if (config('mysql.timestamps') === true) {
+        if (config('mysql.timestamps')) {
             self::$query .= "created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
 			    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)";
         }
@@ -715,7 +716,7 @@ class Builder
 		self::$query .= " SET ";
 
 		//update last modifed timestamp
-		if (config('mysql.timestamps') === true) {
+		if (config('mysql.timestamps')) {
             $items = array_merge($items, [
                 'updated_at' => Carbon::now()->toDateTimeString()
             ]);
@@ -822,5 +823,15 @@ class Builder
     public function fetchAll(): array
     {
         return $this->execute()->fetchAll();
+    }
+        
+    /**
+     * retrieves last inserted id
+     *
+     * @return int
+     */
+    public static function lastInsertedId(): int
+    {
+        return self::setQuery('SELECT LAST_INSERT_ID()')->execute()->fetchColumn();
     }
 }

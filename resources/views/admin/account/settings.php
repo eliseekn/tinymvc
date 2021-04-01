@@ -69,9 +69,13 @@
                         <div class="col-sm-9">
                             <select id="country" name="country" class="custom-select">
                                 <?php foreach($countries as $country) : ?>
-                                <option value="<?= $country->id ?>" <?php if ($user->country === $country->id) : echo 'selected'; endif ?>>
-                                    <?= $country->name ?> 
+                                <?php if (!is_null($country)) : ?>
+                                    <?php foreach($country as $key => $value) : ?>
+                                <option value="<?= $key ?>" <?php if ($user->country === $key) : echo 'selected'; endif ?>>
+                                    <?= $value ?> 
                                 </option>
+                                    <?php endforeach ?>
+                                <?php endif ?>
                                 <?php endforeach ?>
                             </select>
                         </div>

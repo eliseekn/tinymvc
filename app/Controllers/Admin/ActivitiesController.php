@@ -3,28 +3,27 @@
 namespace App\Controllers\Admin;
 
 use App\Helpers\Auth;
-use Framework\Support\Alert;
 use App\Helpers\ReportHelper;
 use Framework\Routing\Controller;
 use App\Database\Models\RolesModel;
-use App\Database\Models\ActivitiesModel;
 
 class ActivitiesController extends Controller
 {
     /**
-     * display list
+     * index
      *
      * @return void
      */
     public function index(): void
 	{
-        $activities = ActivitiesModel::select()
+        $activities = $this->model('activities')
+            ->select(['id', 'user', 'url', 'ip_address', 'action', 'created_at'])
             ->subQuery(function ($query) {
                 if (Auth::get()->role !== RolesModel::ROLE[0]) {
                     $query->where('user', Auth::get()->email);
                 }
             })
-            ->orderDesc('created_at')
+            ->oldest()
             ->paginate(20);
 
 		$this->render('admin.account.activities', compact('activities'));
@@ -37,28 +36,26 @@ class ActivitiesController extends Controller
 	 */
 	public function delete(): void
 	{
-        foreach (explode(',', $this->request->items) as $id) {
-            ActivitiesModel::deleteIfExists($id);
-        }
-        
-        Alert::toast(__('activities_deleted'))->success();
-        $this->response(['redirect' => 'admin/account/activities'], true);
+        $this->model('activities')->deleteBy('id', 'in', explode(',', $this->request->items));
+        $this->alert('toast', __('activities_deleted'))->success();
+        $this->response([absolute_url('admin/account/activities')], true);
 	}
 
 	/**
-	 * export data
+	 * export
 	 *
 	 * @return void
 	 */
     public function export(): void
 	{
-        $activities = ActivitiesModel::select()
+        $activities = $this->model('activities')
+            ->select()
             ->subQuery(function ($query) {
                 if ($this->request->has('date_start') && $this->request->has('date_end')) {
                     $query->whereBetween('created_at', $this->request->date_start, $this->request->date_end);
                 }
             })
-            ->orderDesc('created_at')
+            ->oldest()
             ->all();
         
         $filename = 'activities_' . date('Y_m_d') . '.' . $this->request->file_type;

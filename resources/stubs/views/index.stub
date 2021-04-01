@@ -79,10 +79,10 @@
                         </td>
 
                         <td><?= $RESOURCENAME->id ?></td>
-                        <td><?= \App\Helpers\DateHelper::format($RESOURCENAME->created_at)->human() ?></td>
+                        <td><?= date_helper($RESOURCENAME->created_at)->human() ?></td>
 
                         <td>
-                            <a class="btn text-dark p-1" href="<?= absolute_url('admin/resources/RESOURCENAMEs/view/' . $RESOURCENAME->id) ?>" title="<?= __('details') ?>">
+                            <a class="btn text-dark p-1" href="<?= absolute_url('admin/resources/RESOURCENAMEs/read/' . $RESOURCENAME->id) ?>" title="<?= __('details') ?>">
                                 <i class="fa fa-eye"></i>
                             </a>
 

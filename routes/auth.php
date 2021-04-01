@@ -50,8 +50,8 @@ Route::post('password/update', ['handler' => 'Auth\PasswordController@update']);
 
 //email routes
 Route::group([
-    'confirm' => ['handler' => 'EmailController@confirm'],
-    'auth' => ['handler' => 'EmailController@auth']
+    'confirm' => ['handler' => 'Auth\EmailController@confirm'],
+    'auth' => ['handler' => 'Auth\EmailController@auth']
 ])->by([
     'method' => 'GET',
     'prefix' => 'email'

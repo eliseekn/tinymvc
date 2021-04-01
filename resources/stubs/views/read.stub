@@ -18,14 +18,14 @@
         <div class="form-group row">
             <p class="col-sm-2 col-form-label"><?= __('created_at') ?></p>
             <div class="col-form-label col-sm-10 font-weight-bold">
-                <?= \App\Helpers\DateHelper::format($RESOURCENAME->created_at)->human() ?>
+                <?= date_helper($RESOURCENAME->created_at)->human() ?>
             </div>
         </div>
 
         <div class="form-group row">
             <p class="col-sm-2 col-form-label"><?= __('updated_at') ?></p>
             <div class="col-form-label col-sm-10 font-weight-bold">
-                <?php $RESOURCENAME->updated_at !== $RESOURCENAME->created_at ? print(\App\Helpers\DateHelper::format($RESOURCENAME->updated_at)->human()) : print('-') ?>
+                <?php $RESOURCENAME->updated_at !== $RESOURCENAME->created_at ? print(date_helper($RESOURCENAME->updated_at)->human()) : print('-') ?>
             </div>
         </div>
     </div>

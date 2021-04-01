@@ -3,7 +3,7 @@
 namespace App\Helpers;
 
 use Framework\Http\Request;
-use App\Database\Models\ActivitiesModel;
+use Framework\Database\Model;
 
 class Activity
 {    
@@ -16,7 +16,7 @@ class Activity
      */
     public static function log(string $action, ?string $user = null): void
     {
-        ActivitiesModel::insert([
+        (new Model('activities'))->insert([
             'user' => is_null($user) ? Auth::get()->email : $user,
             'url' => Request::getFullUri(),
             'method' => Request::getMethod(),

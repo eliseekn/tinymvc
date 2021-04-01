@@ -306,9 +306,9 @@ class Request
      * retrieves POST inputs
      *
      * @param  string|null $input
-     * @return array
+     * @return array|mixed
      */
-    public function inputs(?string $input = null): array
+    public function inputs(?string $input = null)
     {
         return is_null($input) ? self::getInputs() : self::getInput($input);
     }
@@ -329,9 +329,9 @@ class Request
      * retrieves GET queries
      *
      * @param  string|null $key
-     * @return array
+     * @return array|mixed
      */
-    public function queries(?string $key = null): array
+    public function queries(?string $key = null)
     {
         return  is_null($key) ? self::getQueries() : self::getQuery($key);
     }
@@ -382,14 +382,25 @@ class Request
     }
     
     /**
-     * check if request has POST or GET item
+     * check if request item exists
+     *
+     * @param  string $item
+     * @return bool
+     */
+    public function exists(string $item): bool
+    {
+        return isset($this->{$item});
+    }
+    
+    /**
+     * check if request item exists and not empty
      *
      * @param  string $item
      * @return bool
      */
     public function has(string $item): bool
     {
-        return isset($this->{$item}) && !empty($this->{$item});
+        return $this->exists($item) && !empty($this->{$item});
     }
 
     /**

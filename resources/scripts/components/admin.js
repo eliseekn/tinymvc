@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     
                     if (window.confirm(data.translations.delete_items)) {
-                        fetch(event.target.dataset.url + '?csrf_token=' + document.querySelector('#csrf_token').value + '&items=' + items, {
+                        fetch(event.target.dataset.url + '?csrf_token=' + document.querySelector('meta[name="csrf_token"]').content + '&items=' + items, {
                             method: 'DELETE'
                         })
                             .then(response => response.json())
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
 
                     if (window.confirm(data.translations.mark_items_as_read)) {
-                        fetch(event.target.dataset.url + '?csrf_token=' + document.querySelector('#csrf_token').value + '&items=' + items, {
+                        fetch(event.target.dataset.url + '?csrf_token=' + document.querySelector('meta[name="csrf_token"]').content + '&items=' + items, {
                             method: 'PATCH'
                         })
                             .then(response => response.json())
@@ -118,38 +118,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 .sort(comparer(Array.from(th.parentNode.children).indexOf(th), this.asc = !this.asc))
                 .forEach(tr => tbody.appendChild(tr))
         })))
-    }
-
-    //metrics trends
-    if (document.querySelector('#users-trends')) {
-        document.querySelector('#users-trends').addEventListener('change', event => {
-            if (event.target.value === 'last-years') {
-                fetch(event.target.dataset.url + '/years/5')
-                    .then(response => response.json())
-                    .then(data => {
-                        document.querySelector('bars-chart').setAttribute('data', data.metrics)
-                        document.querySelector('bars-chart').setAttribute('xkey', 'year')
-                    })
-            }
-            
-            else if (event.target.value === 'last-weeks') {
-                fetch(event.target.dataset.url + '/weeks/4')
-                    .then(response => response.json())
-                    .then(data => {
-                        document.querySelector('bars-chart').setAttribute('data', data.metrics)
-                        document.querySelector('bars-chart').setAttribute('xkey', 'day')
-                    })
-            }
-
-            else {
-                fetch(event.target.dataset.url + '/' + event.target.value)
-                    .then(response => response.json())
-                    .then(data => {
-                        document.querySelector('bars-chart').setAttribute('data', data.metrics)
-                        event.target.value === 'weeks' ? document.querySelector('bars-chart').setAttribute('xkey', 'day') : document.querySelector('bars-chart').setAttribute('xkey', 'month')
-                    })
-            }
-        })
     }
 
     //media search
