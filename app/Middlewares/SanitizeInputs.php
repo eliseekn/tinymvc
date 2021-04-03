@@ -17,7 +17,7 @@ class SanitizeInputs
     public static function handle(Request $request): void
     {
         foreach ($request->inputs() as $field => $value) {
-            $request->input($field, escape($value));
+            $request->set($field, escape($value));
         }
     }
 }

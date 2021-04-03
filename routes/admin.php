@@ -95,7 +95,7 @@ Route::group([
 
     //messages routes
     'account/messages/create' => ['handler' => 'Admin\MessagesController@create'],
-    'account/messages/reply' => ['handler' => 'Admin\MessagesController@reply'],
+    'account/messages/reply/{num}' => ['handler' => 'Admin\MessagesController@reply'],
     'account/messages/export' => ['handler' => 'Admin\MessagesController@export'],
 
     //activities routes
@@ -112,3 +112,142 @@ Route::group([
 ]);
 
 //custom routes
+
+Route::group([
+    'resources/--resources' => ['handler' => 'Admin\--resourcesController@index'],
+    'resources/--resources/new' => ['handler' => 'Admin\--resourcesController@new'],
+    'resources/--resources/edit/{num}' => ['handler' => 'Admin\--resourcesController@edit'],
+    'resources/--resources/read/{num}' => ['handler' => 'Admin\--resourcesController@read']
+])->by([
+    'method' => 'get',
+    'prefix' => 'admin',
+    'middlewares' => [
+        'RememberUser',
+        'DashboardPolicy'
+    ]
+]);
+
+Route::group([
+    'resources/--resources/create' => ['handler' => 'Admin\--resourcesController@create'],
+    'resources/--resources/import' => ['handler' => 'Admin\--resourcesController@import'],
+    'resources/--resources/export' => ['handler' => 'Admin\--resourcesController@export']
+])->by([
+    'method' => 'post',
+    'prefix' => 'admin',
+    'middlewares' => [
+        'RememberUser',
+        'CsrfProtection',
+        'SanitizeInputs',
+        'DashboardPolicy'
+    ]
+]);
+
+Route::patch('admin/resources/--resources/update/{num}' => [
+    'handler' => 'Admin\--resourcesController@update',
+    'middlewares' => [
+        'RememberUser',
+        'CsrfProtection',
+        'DashboardPolicy'
+    ]
+]);
+
+Route::delete('admin/resources/--resources/delete/?{num}?' => [
+    'handler' => 'Admin\--resourcesController@delete',
+    'middlewares' => [
+        'RememberUser',
+        'CsrfProtection',
+        'DashboardPolicy'
+    ]
+]);
+Route::group([
+    'resources/--resources' => ['handler' => 'Admin\--resourcesController@index'],
+    'resources/--resources/new' => ['handler' => 'Admin\--resourcesController@new'],
+    'resources/--resources/edit/{num}' => ['handler' => 'Admin\--resourcesController@edit'],
+    'resources/--resources/read/{num}' => ['handler' => 'Admin\--resourcesController@read']
+])->by([
+    'method' => 'get',
+    'prefix' => 'admin',
+    'middlewares' => [
+        'RememberUser',
+        'DashboardPolicy'
+    ]
+]);
+
+Route::group([
+    'resources/--resources/create' => ['handler' => 'Admin\--resourcesController@create'],
+    'resources/--resources/import' => ['handler' => 'Admin\--resourcesController@import'],
+    'resources/--resources/export' => ['handler' => 'Admin\--resourcesController@export']
+])->by([
+    'method' => 'post',
+    'prefix' => 'admin',
+    'middlewares' => [
+        'RememberUser',
+        'CsrfProtection',
+        'SanitizeInputs',
+        'DashboardPolicy'
+    ]
+]);
+
+Route::patch('admin/resources/--resources/update/{num}' => [
+    'handler' => 'Admin\--resourcesController@update',
+    'middlewares' => [
+        'RememberUser',
+        'CsrfProtection',
+        'DashboardPolicy'
+    ]
+]);
+
+Route::delete('admin/resources/--resources/delete/?{num}?' => [
+    'handler' => 'Admin\--resourcesController@delete',
+    'middlewares' => [
+        'RememberUser',
+        'CsrfProtection',
+        'DashboardPolicy'
+    ]
+]);
+Route::group([
+    'resources/products' => ['handler' => 'Admin\ProductsController@index'],
+    'resources/products/new' => ['handler' => 'Admin\ProductsController@new'],
+    'resources/products/edit/{num}' => ['handler' => 'Admin\ProductsController@edit'],
+    'resources/products/read/{num}' => ['handler' => 'Admin\ProductsController@read']
+])->by([
+    'method' => 'get',
+    'prefix' => 'admin',
+    'middlewares' => [
+        'RememberUser',
+        'DashboardPolicy'
+    ]
+]);
+
+Route::group([
+    'resources/products/create' => ['handler' => 'Admin\ProductsController@create'],
+    'resources/products/import' => ['handler' => 'Admin\ProductsController@import'],
+    'resources/products/export' => ['handler' => 'Admin\ProductsController@export']
+])->by([
+    'method' => 'post',
+    'prefix' => 'admin',
+    'middlewares' => [
+        'RememberUser',
+        'CsrfProtection',
+        'SanitizeInputs',
+        'DashboardPolicy'
+    ]
+]);
+
+Route::patch('admin/resources/products/update/{num}' => [
+    'handler' => 'Admin\ProductsController@update',
+    'middlewares' => [
+        'RememberUser',
+        'CsrfProtection',
+        'DashboardPolicy'
+    ]
+]);
+
+Route::delete('admin/resources/products/delete/?{num}?' => [
+    'handler' => 'Admin\ProductsController@delete',
+    'middlewares' => [
+        'RememberUser',
+        'CsrfProtection',
+        'DashboardPolicy'
+    ]
+]);

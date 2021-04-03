@@ -16,11 +16,13 @@ class Activity
      */
     public static function log(string $action, ?string $user = null): void
     {
+        $request = new Request();
+
         (new Model('activities'))->insert([
             'user' => is_null($user) ? Auth::get()->email : $user,
-            'url' => Request::getFullUri(),
-            'method' => Request::getMethod(),
-            'ip_address' => Request::getRemoteIP(),
+            'url' => $request->fullUri(),
+            'method' => $request->method(),
+            'ip_address' => $request->remoteIP(),
             'action' => $action
         ]);
     }

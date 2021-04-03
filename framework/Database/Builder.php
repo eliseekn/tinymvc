@@ -56,7 +56,6 @@ class Builder
 		}
 
 		self::$query = rtrim(self::$query, ', ');
-
 		return new self();
 	}
         
@@ -71,7 +70,6 @@ class Builder
     {
         self::$query = 'SELECT ' . $query;
         self::$args = array_merge(self::$args, $args);
-
         return new self();
     }
 
@@ -139,6 +137,18 @@ class Builder
 		self::$query = "DROP TABLE IF EXISTS " . config('mysql.table_prefix') . "$table";
 		return new self();
 	}
+    
+    /**
+     * generate ALTER TABLE query
+     *
+     * @param  string $table
+     * @return \Framework\Database\Builder
+     */
+    public static function alter(string $table): self
+    {
+        self::$query = "ALTER TABLE " . config('mysql.table_prefix') . $table;
+		return new self();
+    }
 	
 	/**
 	 * generate DROP FOREIGN KEY query
@@ -149,9 +159,89 @@ class Builder
 	 */
 	public static function dropForeign(string $table, string $key): self
 	{
-		self::$query = "ALTER TABLE " . config('mysql.table_prefix') . "$table DROP FOREIGN KEY $key";
+        self::alter($table);
+        self::$query .= " DROP FOREIGN KEY $key";
 		return new self();
 	}
+    
+    /**
+     * generate ADD COLUMN query
+     *
+     * @param  string $table
+     * @return \Framework\Database\Builder
+     */
+    public static function addColumn(string $table): self
+    {
+        self::alter($table);
+        self::$query .= " ADD COLUMN ";
+        return new self();
+    }
+    
+    /**
+     * generate RENAME COLUMN query
+     *
+     * @param  string $table
+     * @param  string $old
+     * @param  string $new
+     * @return \Framework\Database\Builder
+     */
+    public static function renameColumn(string $table, string $old, string $new): self
+    {
+        self::alter($table);
+        self::$query .= " RENAME COLUMN $old TO $new";
+        return new self();
+    }
+    
+    /**
+     * generate CHANGE query
+     *
+     * @param  string $table
+     * @param  string $column
+     * @return \Framework\Database\Builder
+     */
+    public static function updateColumn(string $table, string $column): self
+    {
+        self::alter($table);
+        self::$query .= " CHANGE $column ";
+        return new self();
+    }
+    
+    /**
+     * generate DELETE COLUMN query
+     *
+     * @param  string $table
+     * @param  string $column
+     * @return \Framework\Database\Builder
+     */
+    public static function deleteColumn(string $table, string $column): self
+    {
+        self::alter($table);
+        self::$query .= " DROP COLUMN $column";
+        return new self();
+    }
+    
+    /**
+     * add AFTER attribute
+     *
+     * @param  string $column
+     * @return \Framework\Database\Builder
+     */
+    public function after(string $column): self
+    {
+        self::$query .= " AFTER $column";
+        return $this;
+    }
+    
+    /**
+     * add FIRST attribute
+     *
+     * @return \Framework\Database\Builder
+     */
+    public function first(): self
+    {
+        self::$query .= " FIRST";
+        return $this;
+    }
 		
 	/**
 	 * column
@@ -347,9 +437,7 @@ class Builder
      */
     public function whereRaw(string $query, array $args = []): self
     {
-        self::$query .= ' WHERE ' . $query;
-        self::$args = array_merge(self::$args, $args);
-        return $this;
+        return $this->rawQuery(' WHERE ' . $query, $args);
     }
 
 	/**
@@ -576,9 +664,7 @@ class Builder
      */
     public function havingRaw(string $query, array $args = []): self
     {
-        self::$query .= ' HAVING ' . $query;
-        self::$args = array_merge(self::$args, $args);
-        return $this;
+        return $this->rawQuery(' HAVING ' . $query, $args);
     }
 
 	/**
@@ -730,6 +816,16 @@ class Builder
 		self::$query = rtrim(self::$query, ', ');
 		return $this;
     }
+    
+    /**
+     * remove end comma if exists
+     *
+     * @return void
+     */
+    public function flush()
+    {
+        self::$query = rtrim(self::$query, ', ');
+    }
 
     /**
      * check if row exists
@@ -762,7 +858,6 @@ class Builder
 	{
 		self::$query = $query;
 		self::$args = $args;
-
 		return new self();
     }
     
@@ -775,9 +870,8 @@ class Builder
      */
     public function rawQuery(string $query, array $args = []): self
     {
-        self::$query .= $query;
+        self::$query .= ' ' . $query;
         self::$args = array_merge(self::$args, $args);
-        
         return $this;
     }
     

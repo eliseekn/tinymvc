@@ -4,25 +4,21 @@
 
 <?php $this->start('page_content') ?>
 
-<div class="row mb-4">
-    <div class="col-md-4 mb-md-0 mb-4">
-        <div class="card card-metrics bg-light shadow-sm">
-            <div class="card-body d-flex align-items-center justify-content-between">
-                <p><i class="fa fa-bell fa-lg"></i> Total</p>
-                <p class="font-weight-bold"><?= $notifications->getTotalItems() ?></p>
-            </div>
-        </div>
-    </div>
+<metrics-cards>
+    <metric-card-item 
+        title="<?= __('total') ?>" 
+        icon="fa fa-bell fa-lg" 
+        data="<?= $notifications->getTotalItems() ?>"
+        columns="4">
+    </metric-card-item>
 
-    <div class="col-md-4">
-        <div class="card card-metrics bg-light shadow-sm">
-            <div class="card-body d-flex align-items-center justify-content-between">
-                <p><i class="fa fa-eye-slash fa-lg"></i> <?= __('unread') ?></p>
-                <p class="font-weight-bold"><?= $notifications_unread ?></p>
-            </div>
-        </div>
-    </div>
-</div>
+    <metric-card-item 
+        title="<?= __('unread') ?>" 
+        icon="fa fa-eye-slash fa-lg" 
+        data="<?= $notifications_unread ?>"
+        columns="4">
+    </metric-card-item>
+</metrics-cards>
 
 <?php if (auth()->alerts && !empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
 
@@ -37,9 +33,11 @@
                 </span>
 
                 <span class="mt-lg-0 mt-2">
+                    <?php if (auth()->role === \App\Database\Models\Roles::ROLE[0]) : ?>
                     <create-notification action="<?= absolute_url('admin/account/notifications/create') ?>">
                         <button class="btn btn-outline-dark mr-2"><?= __('create') ?></button>
                     </create-notification>
+                    <?php endif ?>
 
                     <button class="btn btn-outline-dark mr-2" id="bulk-read" data-url="<?= absolute_url('admin/account/notifications/update') ?>">
                         <?= __('mark_all_as_read') ?>

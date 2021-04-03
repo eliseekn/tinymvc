@@ -180,11 +180,11 @@
                     </div>
 
                     <div class="form-group row d-flex align-items-center">
-                        <label for="email-notifications" class="col-sm-5 col-form-label"><?= __('receive_email_notifications') ?></label>
+                        <label for="email_notifications" class="col-sm-5 col-form-label"><?= __('receive_email_notifications') ?></label>
                         <div class="col-sm-7">
                             <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" name="email-notifications" id="email-notifications" <?php if ($user->email_notifications) : echo 'checked'; endif ?>>
-                                <label class="custom-control-label" for="email-notifications"></label>
+                                <input type="checkbox" class="custom-control-input" name="email_notifications" id="email_notifications" <?php if ($user->email_notifications) : echo 'checked'; endif ?>>
+                                <label class="custom-control-label" for="email_notifications"></label>
                             </div>
                         </div>
                     </div>

@@ -4,25 +4,21 @@
 
 <?php $this->start('page_content') ?>
 
-<div class="row mb-4">
-    <div class="col-md-4 mb-md-0 mb-4">
-        <div class="card card-metrics bg-light shadow-sm">
-            <div class="card-body d-flex align-items-center justify-content-between">
-                <p><i class="fa fa-envelope fa-lg"></i> Total</p>
-                <p class="font-weight-bold"><?= $messages->getTotalItems() ?></p>
-            </div>
-        </div>
-    </div>
+<metrics-cards>
+    <metric-card-item 
+        title="<?= __('total') ?>" 
+        icon="fa fa-envelope fa-lg" 
+        data="<?= $messages->getTotalItems() ?>"
+        columns="4">
+    </metric-card-item>
 
-    <div class="col-md-4">
-        <div class="card card-metrics bg-light shadow-sm">
-            <div class="card-body d-flex align-items-center justify-content-between">
-                <p><i class="fa fa-eye-slash fa-lg"></i> <?= __('unread') ?></p>
-                <p class="font-weight-bold"><?= $messages_unread ?></p>
-            </div>
-        </div>
-    </div>
-</div>
+    <metric-card-item 
+        title="<?= __('unread') ?>" 
+        icon="fa fa-eye-slash fa-lg" 
+        data="<?= $messages_unread ?>"
+        columns="4">
+    </metric-card-item>
+</metrics-cards>
 
 <?php if (auth()->alerts && !empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
 
@@ -108,7 +104,7 @@
                                 </button>
                             </update-item>
 
-                            <send-message action="<?= absolute_url('admin/account/messages/reply') ?>" recipient="<?= $message->sender ?>" modal_title="<?= __('reply') ?>">
+                            <send-message action="<?= absolute_url('admin/account/messages/reply', $message->id) ?>" recipient="<?= $message->sender ?>" modal_title="<?= __('reply') ?>">
                                 <a class="btn text-dark p-1" href="#" title="<?= __('reply') ?>">
                                     <i class="fa fa-reply-all"></i>
                                 </a>

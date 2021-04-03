@@ -2,16 +2,16 @@
 
 namespace App\Database\Migrations;
 
-use Framework\Database\Migration;
+use Framework\Database\Schema;
 
-class TokensTable
+class RolesTable_20210403034738
 {         
     /**
      * name of table
      *
      * @var string
      */
-    public static $table = 'tokens';
+    public static $table = 'roles';
 
     /**
      * create table
@@ -20,11 +20,9 @@ class TokensTable
      */
     public static function migrate(): void
     {
-        Migration::table(self::$table)
-            ->addBigInt('id')->primaryKey()
-            ->addString('email')->unique()
-            ->addString('token')->unique()
-            ->addTimestamp('expires')->null()
+        Schema::createTable(self::$table)
+            ->addInt('id')->primaryKey()
+            ->addString('name')->unique()
             ->create();
     }
     
@@ -35,7 +33,7 @@ class TokensTable
      */
     public static function delete(): void
     {
-        Migration::drop(self::$table);
+        Schema::dropTable(self::$table);
     }
     
     /**

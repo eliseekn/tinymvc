@@ -4,8 +4,8 @@ namespace App\Controllers\Admin;
 
 use Framework\Support\Metrics;
 use Framework\Routing\Controller;
-use App\Database\Models\MessagesModel;
-use App\Database\Models\NotificationsModel;
+use App\Database\Models\Messages;
+use App\Database\Models\Notifications;
 
 class DashboardController extends Controller
 {
@@ -21,8 +21,8 @@ class DashboardController extends Controller
             'inactive_users' => $this->model('users')->count()->where('active', 0)->single()->value,
             'active_users' => $this->model('users')->count()->where('active', 1)->single()->value, 
             'users_metrics' => $this->model('users')->metrics('id', Metrics::COUNT, Metrics::MONTHS), 
-            'notifications' => NotificationsModel::findMessages(), 
-            'messages' => MessagesModel::findRecipients()
+            'notifications' => Notifications::findMessages(), 
+            'messages' => Messages::findReceivedMessages()
         ]);
     }
 }

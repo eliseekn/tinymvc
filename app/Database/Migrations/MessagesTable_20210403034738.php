@@ -2,16 +2,16 @@
 
 namespace App\Database\Migrations;
 
-use Framework\Database\Migration;
+use Framework\Database\Schema;
 
-class MediasTable
+class MessagesTable_20210403034738
 {         
     /**
      * name of table
      *
      * @var string
      */
-    public static $table = 'medias';
+    public static $table = 'messages';
 
     /**
      * create table
@@ -20,13 +20,15 @@ class MediasTable
      */
     public static function migrate(): void
     {
-        Migration::table(self::$table)
+        Schema::createTable(self::$table)
             ->addBigInt('id')->primaryKey()
-            ->addString('filename')
-            ->addString('title')->null()
-            ->addString('description')->null()
-            ->addString('url')
-            ->addBigInt('user_id')
+            ->addBigInt('sender')
+            ->addBigInt('recipient')
+            ->addText('message')
+            ->addString('sender_status')->default('unread')
+            ->addString('recipient_status')->default('unread')
+            ->addBoolean('sender_deleted')->default(0)
+            ->addBoolean('recipient_deleted')->default(0)
             ->create();
     }
     
@@ -37,7 +39,7 @@ class MediasTable
      */
     public static function delete(): void
     {
-        Migration::drop(self::$table);
+        Schema::dropTable(self::$table);
     }
     
     /**

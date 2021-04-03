@@ -16,7 +16,7 @@ class CLASSNAME extends Controller
     public function index()
 	{
 		$this->render('admin.RESOURCENAME.index', [
-            'RESOURCENAME' => $this->model('RESOURCENAME')->select()->orderDesc('created_at')->paginate(20)
+            'RESOURCENAME' => $this->model('RESOURCENAME')->select()->oldest()->paginate(20)
         ]);
 	}
 
@@ -69,7 +69,7 @@ class CLASSNAME extends Controller
 	 */
     public function create()
 	{
-        $id = $this->model('RESOURCENAME')->insert($this->request->inputs());
+        $id = $this->model('RESOURCENAME')->insert($this->request()->inputs());
 		$this->redirect('admin/resources/RESOURCENAME/read', $id)->only();
 	}
     
@@ -81,7 +81,7 @@ class CLASSNAME extends Controller
 	 */
 	public function update(int $id)
 	{
-        $this->model('RESOURCENAME')->updateIfExists($id, $this->$request->inputs());
+        $this->model('RESOURCENAME')->updateIfExists($id, $this->request()->inputs());
 		$this->redirect('admin/resources/RESOURCENAME/read', $id)->only();
 	}
 
@@ -100,34 +100,11 @@ class CLASSNAME extends Controller
 
             $this->redirect('admin/resources/RESOURCENAME')->only();
 		} else {
-            $this->model('RESOURCENAME')->deleteBy('id', 'in', explode(',', $this->request->items));
+            $this->model('RESOURCENAME')->deleteBy('id', 'in', explode(',', $this->request('items')));
+            $this->response(['redirect' => absolute_url('admin/resources/RESOURCENAME')], true);
 		}
 	}
 
-	/**
-	 * import
-	 *
-	 * @return void
-	 */
-    public function import()
-	{
-		$file = $this->request->files('file', ['csv']);
-
-		if (!$file->isAllowed()) {
-            $this->redirect('admin/resources/RESOURCENAME')->only();
-		}
-
-		if (!$file->isUploaded()) {
-			$this->redirect('admin/resources/RESOURCENAME')->only();
-		}
-
-		ReportHelper::import($file->getTempFilename(), $this->model('RESOURCENAME'), [
-			//
-		]);
-
-		$this->redirect('admin/resources/RESOURCENAME')->only();
-	}
-	
 	/**
 	 * export
 	 *
@@ -136,16 +113,11 @@ class CLASSNAME extends Controller
     public function export()
 	{
         $RESOURCENAME = $this->model('RESOURCENAME')
-            ->select()
-            ->subQuery(function ($query) {
-                if ($this->request->has('date_start') && $this->request->has('date_end')) {
-                    $query->whereBetween('created_at', $this->request->date_start, $this->request->date_end);
-                }
-            })
-            ->orderDesc('created_at')
+            ->between($this->request('date_start'), $this->request('date_end'))
+            ->oldest()
             ->all();
         
-        $filename = 'RESOURCENAME_' . date('Y_m_d') . '.' . $this->request->file_type;
+        $filename = 'RESOURCENAME_' . date('Y_m_d_His') . '.' . $this->request('file_type');
 
 		ReportHelper::export($filename, $RESOURCENAME, [
 			//

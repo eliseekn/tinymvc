@@ -9,33 +9,29 @@
 namespace Framework\Routing;
 
 use App\Helpers\Activity;
-use Framework\Database\Model;
 use Framework\Http\Client;
-use Framework\Http\Redirect;
 use Framework\Http\Request;
+use Framework\Http\Redirect;
 use Framework\Http\Response;
-use Framework\Routing\Middleware;
 use Framework\Support\Alert;
+use Framework\Database\Model;
+use Framework\Routing\Middleware;
 
 /**
  * Main controller class
  */
 class Controller
-{
+{    
     /**
-     * @var \Framework\Http\Request $request
-     */
-    public $request;
-
-    /**
-     * __construct
+     * request
      *
-     * @param  \Framework\Http\Request $request
-     * @return void
+     * @param  string|null $key
+     * @return \Framework\Http\Request|string
      */
-    public function __construct(Request $request)
+    public function request(?string $key = null)
     {
-        $this->request = $request;
+        $request = new Request();
+        return is_null($key) ? $request : $request->{$key}; 
     }
 
     /**
@@ -59,7 +55,7 @@ class Controller
      */
     public static function headers(array $headers, int $status_code = 200): void
     {
-        Response::headers($headers, $status_code);
+        (new Response())->headers($headers, $status_code);
     }
     
     /**
@@ -73,7 +69,7 @@ class Controller
      */
     public function response($body, bool $json = false, array $headers = [], int $status_code = 200): void
     {
-        Response::send($body, $json, $headers, $status_code);
+        (new Response())->send($body, $json, $headers, $status_code);
     }
     
     /**
@@ -133,7 +129,7 @@ class Controller
     public function middlewares(string ...$middlewares): void
     {
         foreach ($middlewares as $middleware) {
-            Middleware::execute($middleware, new Request());
+            Middleware::execute($middleware);
         }
     }
     

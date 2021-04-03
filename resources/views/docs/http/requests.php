@@ -168,7 +168,7 @@ class MyController
      */
     public function index(): void
     {
-        $items = $this->request->inputs(); //retrieves inputs from POST request
+        $items = $this->request()->inputs(); //retrieves inputs from POST request
         
         $this->render('index', compact('items'));
     }

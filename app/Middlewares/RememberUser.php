@@ -4,9 +4,9 @@ namespace App\Middlewares;
 
 use App\Helpers\Auth;
 use Framework\Http\Request;
+use Framework\Database\Model;
 use Framework\Support\Cookies;
 use Framework\Support\Session;
-use App\Database\Models\UsersModel;
 
 /**
  * Check for user cookie
@@ -21,7 +21,7 @@ class RememberUser
     public static function handle(Request $request): void
     {
         if (Auth::remember()) {
-            $user = UsersModel::findSingleBy('email', Cookies::get('user'));
+            $user = (new Model('users'))->findSingleBy('email', Cookies::get('user'));
 
             if ($user !== false) {
                 Session::create('user', $user);

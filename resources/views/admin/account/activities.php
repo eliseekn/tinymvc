@@ -4,16 +4,14 @@
 
 <?php $this->start('page_content') ?>
 
-<div class="row mb-4">
-    <div class="col-md-4 mb-md-0 mb-4">
-        <div class="card card-metrics bg-light shadow-sm">
-            <div class="card-body d-flex align-items-center justify-content-between">
-                <p><i class="fa fa-user-clock fa-lg"></i> Total</p>
-                <p class="font-weight-bold"><?= $activities->getTotalItems() ?></p>
-            </div>
-        </div>
-    </div>
-</div>
+<metrics-cards>
+    <metric-card-item 
+        title="<?= __('total') ?>" 
+        icon="fa fa-user-clock fa-lg" 
+        data="<?= $activities->getTotalItems() ?>"
+        columns="4">
+    </metric-card-item>
+</metrics-cards>
 
 <?php if (auth()->alerts && !empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
 

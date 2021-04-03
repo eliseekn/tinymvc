@@ -9,9 +9,9 @@
 namespace Framework\Database;
 
 /**
- * Manage database migrations
+ * Manage database schemas
  */
-class Migration
+class Schema
 {
     /**
 	 * @var \Framework\Database\Builder $builder
@@ -24,9 +24,61 @@ class Migration
      * @param  string $name
      * @return \Framework\Database\Migration
      */
-    public static function table(string $name): self
+    public static function createTable(string $name): self
     {
         self::$builder = Builder::table($name);
+        return new self();
+    }
+
+    /**
+     * generate ADD COLUMN query 
+     *
+     * @param  string $table
+     * @return \Framework\Database\Migration
+     */
+    public static function addColumn(string $table): self
+    {
+        self::$builder = Builder::addColumn($table);
+        return new self();
+    }
+
+    /**
+     * generate RENAME COLUMN query 
+     *
+     * @param  string $table
+     * @param  string $old
+     * @param  string $new
+     * @return \Framework\Database\Migration
+     */
+    public static function renameColumn(string $table, string $old, string $new): self
+    {
+        self::$builder = Builder::renameColumn($table, $old, $new);
+        return new self();
+    }
+
+    /**
+     * generate CHANGE query 
+     *
+     * @param  string $table
+     * @param  string $column
+     * @return \Framework\Database\Migration
+     */
+    public static function updateColumn(string $table, string $column): self
+    {
+        self::$builder = Builder::updateColumn($table, $column);
+        return new self();
+    }
+
+    /**
+     * generate CREATE COLUMN query 
+     *
+     * @param  string $table
+     * @param  string $column
+     * @return \Framework\Database\Migration
+     */
+    public static function deleteColumn(string $table, string $column): self
+    {
+        self::$builder = Builder::deleteColumn($table, $column);
         return new self();
     }
 
@@ -476,6 +528,17 @@ class Migration
     {
         self::$builder->create()->execute();
     }
+    
+    /**
+     * execute query
+     *
+     * @return void
+     */
+    public function execute()
+    {
+        self::$builder->flush();
+        self::$builder->execute();
+    }
 
     /**
      * drop table if exists
@@ -483,7 +546,7 @@ class Migration
      * @param  string $table
      * @return void
      */
-    public static function drop(string $table): void
+    public static function dropTable(string $table): void
     {
         Builder::drop($table)->execute();
     }

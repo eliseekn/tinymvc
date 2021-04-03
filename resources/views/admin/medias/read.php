@@ -15,13 +15,13 @@
             <div class="col-form-label col-sm-10 font-weight-bold">
                 <div class="card-columns">
                     <div class="card lightbox">
-                        <?php if (in_array(get_file_extension($media->filename), \App\Database\Models\MediasModel::TYPE[0])) : ?>
+                        <?php if (in_array(get_file_extension($media->filename), \App\Database\Models\Medias::TYPE[0])) : ?>
                         <img class="card-img-top" src="<?= $media->url ?>" width="200" height="200" title="<?= __('click_to_enlarge') ?>">
-                        <?php elseif (in_array(get_file_extension($media->filename), \App\Database\Models\MediasModel::TYPE[1])) : ?>
+                        <?php elseif (in_array(get_file_extension($media->filename), \App\Database\Models\Medias::TYPE[1])) : ?>
                         <video class="card-img-top" width="200" height="200" title="<?= __('click_to_enlarge') ?>">
                             <source src="<?= $media->url ?>"></source>
                         </video>
-                        <?php elseif (in_array(get_file_extension($media->filename), \App\Database\Models\MediasModel::TYPE[2])) : ?>
+                        <?php elseif (in_array(get_file_extension($media->filename), \App\Database\Models\Medias::TYPE[2])) : ?>
                         <audio controls class="card-img-top" width="200" height="200">
                             <source src="<?= $media->url ?>"></source>
                         </audio>
@@ -87,13 +87,13 @@
     <div class="container">
         <div class="d-flex align-items-center justify-content-center">
             <div class="card border-0">
-                <?php if (in_array(get_file_extension($media->filename), \App\Database\Models\MediasModel::TYPE[0])) : ?>
+                <?php if (in_array(get_file_extension($media->filename), \App\Database\Models\Medias::TYPE[0])) : ?>
                 <img class="card-img-top" src="<?= $media->url ?>">
-                <?php elseif (in_array(get_file_extension($media->filename), \App\Database\Models\MediasModel::TYPE[1])) : ?>
+                <?php elseif (in_array(get_file_extension($media->filename), \App\Database\Models\Medias::TYPE[1])) : ?>
                 <video class="card-img-top" id="lightbox-video" controls>
                     <source src="<?= $media->url ?>"></source>
                 </video>
-                <?php elseif (in_array(get_file_extension($media->filename), \App\Database\Models\MediasModel::TYPE[2])) : ?>
+                <?php elseif (in_array(get_file_extension($media->filename), \App\Database\Models\Medias::TYPE[2])) : ?>
                 <audio controls class="card-img-top">
                     <source src="<?= $media->url ?>"></source>
                 </audio>

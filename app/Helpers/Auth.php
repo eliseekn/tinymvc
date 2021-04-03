@@ -11,7 +11,8 @@ use Framework\Support\Cookies;
 use Framework\Support\Session;
 use App\Middlewares\AuthPolicy;
 use Framework\Support\Encryption;
-use App\Database\Models\RolesModel;
+use App\Database\Models\Roles;
+use App\Database\Models\Tokens;
 
 class Auth
 {    
@@ -38,7 +39,7 @@ class Auth
         $user = (new Model('users'))->findSingleBy('email', $request->email);
 
         //check credentials
-        if ($user !== false && Encryption::compare($request->password, $user->password)) {
+        if ($user !== false && Encryption::check($request->password, $user->password)) {
             //reset authentication attempts and disable lock
             Session::close('auth_attempts', 'auth_attempts_timeout');
 
@@ -52,12 +53,7 @@ class Auth
                 $token = random_string(50, true);
 
                 if (AuthLinkMail::send($user->email, $token)) {
-                    (new Model('tokens'))->insert([
-                        'email' => $request->email,
-                        'token' => $token,
-                        'expires' => Carbon::now()->addHour()->toDateTimeString()
-                    ]);
-
+                    Tokens::store($request->email, $token, Carbon::now()->addHour()->toDateTimeString());
                     Redirect::back()->withAlert(__('confirm_email_link_sent', true))->success('');
                 } else {
                     Redirect::back()->withAlert(__('confirm_email_link_not_sent', true))->error('');
@@ -96,11 +92,13 @@ class Auth
      */
     public static function create(Request $request): bool
     {
-        if ((new Model('users'))->findMany($request->only('email', 'phone'))->exists()) {
-            return false;
-        }
+        $users = (new Model('users'))->selectAll(['email', 'phone']);
 
-        $users = (new Model('users'))->findAll();
+        foreach ($users as $user) {
+            if ($user->email === $request->email || $user->phone === $request->phone) {
+                return false;
+            }
+        }
 
         (new Model('users'))->insert([
             'name' => $request->name,
@@ -108,7 +106,7 @@ class Auth
             'phone' => $request->phone,
             'company' => $request->company,
             'password' => Encryption::hash($request->password),
-            'role' => empty($users) ? RolesModel::ROLE[0] : RolesModel::ROLE[2],
+            'role' => empty($users) ? Roles::ROLE[0] : Roles::ROLE[2],
             'active' => empty($users) ? 1 : 0,
         ]);
 

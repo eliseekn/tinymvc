@@ -7,7 +7,7 @@ use Framework\Http\Request;
 use Framework\Routing\View;
 use Framework\Http\Redirect;
 use Framework\Http\Response;
-use App\Database\Models\RolesModel;
+use App\Database\Models\Roles;
 
 /**
  * Check user role
@@ -25,11 +25,11 @@ class DashboardPolicy
             Redirect::url('login')->withAlert(__('not_logged_error', true))->error('');
         }
 
-        if (Auth::get()->role === RolesModel::ROLE[2]) {
+        if (Auth::get()->role === Roles::ROLE[2]) {
             if (!empty(config('errors.views.403'))) {
                 View::render(config('errors.views.403'), [], 403);
             } else {
-                Response::send(__('no_access_permission', true), false, [], 403);
+                (new Response())->send(__('no_access_permission', true), false, [], 403);
             }
         }
     }

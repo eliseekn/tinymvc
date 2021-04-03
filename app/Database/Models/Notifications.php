@@ -5,7 +5,7 @@ namespace App\Database\Models;
 use App\Helpers\Auth;
 use Framework\Database\Model;
 
-class NotificationsModel
+class Notifications
 {    
     /**
      * name of table
@@ -37,5 +37,34 @@ class NotificationsModel
             ->and('user_id', Auth::get()->id)
             ->oldest()
             ->take($limit);
+    }
+
+    /**
+     * retrieves all notifications messages
+     *
+     * @param  int $items_per_pages
+     * @return \Framework\Support\Pager
+     */
+    public static function paginate(int $items_per_pages = 20): \Framework\Support\Pager
+    {
+        return self::model()
+            ->findBy('user_id', Auth::get()->id)
+            ->oldest()
+            ->paginate($items_per_pages);
+    }
+    
+    /**
+     * retrieves unread notifications messages count
+     *
+     * @return int
+     */
+    public static function unreadCount(): int
+    {
+        return self::model()
+            ->count()
+            ->where('status', 'unread')
+            ->and('user_id', Auth::get()->id)
+            ->single()
+            ->value;
     }
 }

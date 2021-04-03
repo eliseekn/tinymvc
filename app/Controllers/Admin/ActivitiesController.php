@@ -2,10 +2,9 @@
 
 namespace App\Controllers\Admin;
 
-use App\Helpers\Auth;
 use App\Helpers\ReportHelper;
 use Framework\Routing\Controller;
-use App\Database\Models\RolesModel;
+use App\Database\Models\Activities;
 
 class ActivitiesController extends Controller
 {
@@ -16,16 +15,7 @@ class ActivitiesController extends Controller
      */
     public function index(): void
 	{
-        $activities = $this->model('activities')
-            ->select(['id', 'user', 'url', 'ip_address', 'action', 'created_at'])
-            ->subQuery(function ($query) {
-                if (Auth::get()->role !== RolesModel::ROLE[0]) {
-                    $query->where('user', Auth::get()->email);
-                }
-            })
-            ->oldest()
-            ->paginate(20);
-
+        $activities = Activities::paginate();
 		$this->render('admin.account.activities', compact('activities'));
 	}
 
@@ -36,9 +26,12 @@ class ActivitiesController extends Controller
 	 */
 	public function delete(): void
 	{
-        $this->model('activities')->deleteBy('id', 'in', explode(',', $this->request->items));
+        if (Activities::deleteById($this->request())) {
+            $this->alert('toast', __('activity_not_deleted'))->error();
+        }
+
         $this->alert('toast', __('activities_deleted'))->success();
-        $this->response([absolute_url('admin/account/activities')], true);
+        $this->response(['redirect' => absolute_url('admin/account/activities')], true);
 	}
 
 	/**
@@ -49,16 +42,13 @@ class ActivitiesController extends Controller
     public function export(): void
 	{
         $activities = $this->model('activities')
-            ->select()
-            ->subQuery(function ($query) {
-                if ($this->request->has('date_start') && $this->request->has('date_end')) {
-                    $query->whereBetween('created_at', $this->request->date_start, $this->request->date_end);
-                }
-            })
+            ->between($this->request('date_start'), $this->request('date_end'))
             ->oldest()
             ->all();
-        
-        $filename = 'activities_' . date('Y_m_d') . '.' . $this->request->file_type;
+
+        $filename = 'activities_' . date('Y_m_d_His') . '.' . $this->request('file_type');
+
+        $this->log(__('data_exported'));
 
 		ReportHelper::export($filename, $activities, [
 			'user' => __('user'), 

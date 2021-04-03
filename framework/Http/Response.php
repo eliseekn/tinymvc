@@ -20,7 +20,7 @@ class Response
      * @param  int $status_code
      * @return void
      */
-    public static function headers(array $headers, int $status_code = 200): void
+    public function headers(array $headers, int $status_code = 200): void
     {
         //send response status code
         http_response_code($status_code);
@@ -40,7 +40,7 @@ class Response
      * @param  int $status_code
      * @return void
      */
-    public static function send($body, bool $json = false, array $headers = [], int $status_code = 200): void
+    public function send($body, bool $json = false, array $headers = [], int $status_code = 200): void
     {
         if (!isset($body) or empty($body)) {
             return;

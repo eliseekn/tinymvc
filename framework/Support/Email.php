@@ -42,13 +42,13 @@ class Email
             self::$mail->Port = config('mailer.smtp.port');
             self::$mail->SMTPAuth = config('mailer.smtp.auth');
 
+            if (self::$mail->SMTPAuth) {
+                self::$mail->Username = config('mailer.smtp.username');
+                self::$mail->Password = config('mailer.smtp.password');
+            }
+
             if (config('mailer.smtp.secure')) {
                 self::$mail->SMTPSecure = config('mailer.smtp.tls') ? PHPMailer::ENCRYPTION_STARTTLS : PHPMailer::ENCRYPTION_SMTPS;
-
-                if (self::$mail->SMTPAuth) {
-                    self::$mail->Username = config('mailer.smtp.username');
-                    self::$mail->Password = config('mailer.smtp.password');
-                }
             } else {
                 self::$mail->SMTPAutoTLS = false;
                 self::$mail->SMTPSecure = false;

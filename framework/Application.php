@@ -61,7 +61,7 @@ class Application
                 if (!empty(config('errors.views.500'))) {
                     View::render(config('errors.views.500'), [], 500);
                 } else {
-                    Response::send('Try to refresh the page or feel free to contact us if the problem persists', false, [], 500);
+                    (new Response())->send('Try to refresh the page or feel free to contact us if the problem persists', false, [], 500);
                 }
             }
         }

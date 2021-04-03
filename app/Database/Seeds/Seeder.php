@@ -6,7 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Framework\Database;
+namespace App\Database\Seeds;
 
 /**
  * Manage database seeds
@@ -14,14 +14,12 @@ namespace Framework\Database;
 class Seeder
 {
     /**
-     * insert items in table
+     * insert seeds
      *
-     * @param  string $table
-     * @param  array $items
      * @return void
      */
-    public static function insert(string $table, array $items): void
+    public static function run(): void
     {
-        Builder::insert($table, $items)->execute();
+        RoleSeed::insert();
     }
 }

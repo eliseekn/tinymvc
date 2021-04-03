@@ -64,7 +64,7 @@ class Encryption
      * @param  string $hash
      * @return bool
      */
-    public static function compare(string $str, string $hash): bool
+    public static function check(string $str, string $hash): bool
     {
         return password_verify($str, $hash);
     }

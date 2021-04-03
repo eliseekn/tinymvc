@@ -50,7 +50,7 @@ class Router
     {
         if (!empty($routes)) {
             foreach ($routes as $route => $options) {
-                $request->setMethod($request->get('request_method', $options['method']));
+                $request->method($request->get('request_method', $options['method']));
 
                 if (preg_match('/' . strtoupper($options['method']) . '/', strtoupper($request->method()))) {
                     $pattern = preg_replace('/{str}/i', '([a-zA-Z-_]+)', $route);
@@ -61,7 +61,7 @@ class Router
                         array_shift($params);
 
                         //check for middlewares to execute
-                        Middleware::check($route, $request);
+                        Middleware::check($route);
 
                         if (is_callable($options['handler'])) {
                             //execute function with parameters
@@ -73,7 +73,7 @@ class Router
                             //chekc if controller class and method exist
                             if (class_exists($controller) && method_exists($controller, $action)) {
                                 //execute controller with method and parameters
-                                call_user_func_array([new $controller($request), $action], array_values($params));
+                                call_user_func_array([new $controller(), $action], array_values($params));
                             } else {
                                 throw new Exception('Handler "' . $options['handler'] . '" not found.');
                             }
@@ -86,7 +86,7 @@ class Router
             if (!empty(config('errors.views.404'))) {
                 View::render(config('errors.views.404'), [], 404);
             } else {
-                Response::send('The page you have requested does not exists', false, [], 404);
+                (new Response())->send('The page you have requested does not exists', false, [], 404);
             }
         } else {
             throw new Exception('No route defines in configuration');

@@ -2,9 +2,9 @@
 
 namespace App\Database\Migrations;
 
-use Framework\Database\Migration;
+use Framework\Database\Schema;
 
-class NotificationsTable
+class NotificationsTable_20210403034738
 {         
     /**
      * name of table
@@ -20,7 +20,7 @@ class NotificationsTable
      */
     public static function migrate(): void
     {
-        Migration::table(self::$table)
+        Schema::createTable(self::$table)
             ->addBigInt('id')->primaryKey()
             ->addText('message')
             ->addString('status')->default('unread')
@@ -35,7 +35,7 @@ class NotificationsTable
      */
     public static function delete(): void
     {
-        Migration::drop(self::$table);
+        Schema::dropTable(self::$table);
     }
     
     /**

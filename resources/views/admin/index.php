@@ -12,7 +12,7 @@
 
 <?php if (auth()->alerts && !empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
 
-<?php if (auth()->role !== \App\Database\Models\RolesModel::ROLE[1]) :?>
+<?php if (auth()->role !== \App\Database\Models\Roles::ROLE[1]) :?>
 <div class="row mb-4">
     <div class="col-md-4">
         <div class="card shadow-sm mb-4 mb-md-0">

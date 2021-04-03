@@ -2,8 +2,8 @@
 
 namespace App\Database\Seeds;
 
-use Framework\Database\Seeder;
-use App\Database\Models\RolesModel;
+use App\Database\Models\Roles;
+use Framework\Database\Builder;
 
 class RoleSeed
 {     
@@ -21,8 +21,8 @@ class RoleSeed
      */
     public static function insert(): void
     {
-        for ($i = 0; $i < count(RolesModel::ROLE); $i++) {
-            Seeder::insert(self::$table, ['name' => RolesModel::ROLE[$i]]);
+        for ($i = 0; $i < count(Roles::ROLE); $i++) {
+            Builder::insert(self::$table, ['name' => Roles::ROLE[$i]])->execute();
         }
     }
 }

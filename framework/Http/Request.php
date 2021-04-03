@@ -14,16 +14,15 @@ use Framework\Support\Uploader;
  * Handle HTTP requests
  */
 class Request
-{
+{    
+    /**
+     * __construct
+     *
+     * @return void
+     */
     public function __construct()
     {
-        //add fields as properties
-        foreach (self::getInputs() as $key => $value) {
-            $this->{$key} = $value;
-        }
-
-        //add queries as properties
-        foreach (self::getQueries() as $key => $value) {
+        foreach ($this->all() as $key => $value) {
             $this->{$key} = $value;
         }
     }
@@ -31,122 +30,55 @@ class Request
     /**
      * retrieves headers
      *
-     * @return array returns headers
+     * @param  string|null $key
+     * @param  mixed $default
+     * @return mixed
      */
-    public static function getHeaders(): array
+    public function headers(?string $key = null, $default = null)
     {
-        return $_SERVER;
-    }
-    
-    /**
-     * retrieves single header value
-     *
-     * @param  string $key
-     * @return string returns header value
-     */
-    public static function getHeader(string $key): string
-    {
-        return self::getHeaders()[$key] ?? '';
-    }
-    
-    /**
-     * set header value
-     *
-     * @param  string $key
-     * @param  mixed $value
-     * @return void
-     */
-    public static function setHeader(string $ey, $value): void
-    {
-        $_SERVER[$ey] = $value;
-    }
+        $header = is_null($key) ? $_SERVER : ($_SERVER[$key] ?? '');
 
+        if (empty($header) && !is_null($default)) {
+            $header = $default;
+        }
+
+        return $header;
+    }
+    
     /**
      * retrieves queries
      *
-     * @return array returns queries
+     * @param  string|null $key
+     * @param  mixed $default
+     * @return mixed
      */
-    public static function getQueries(): array
+    public function queries(?string $key = null, $default = null)
     {
-        return $_GET;
+        $query = is_null($key) ? $_GET : ($_GET[$key] ?? '');
+
+        if (empty($query) && !is_null($default)) {
+            $query = $default;
+        }
+
+        return $query;
     }
 
     /**
-     * retrieves single query value
+     * retrieves inputs
      *
-     * @param  string $key
-     * @return string returns query value
+     * @param  string|null $key
+     * @param  mixed $default
+     * @return mixed
      */
-    public static function getQuery(string $key): string
+    public function inputs(?string $key = null, $default = null)
     {
-        return self::getQueries()[$key] ?? '';
-    }
+        $input =  is_null($key) ? $_POST : ($_POST[$key] ?? '');
 
-    /**
-     * check if get query exists
-     *
-     * @param  string $key
-     * @return bool
-     */
-    public static function hasQuery(string $key) : bool
-    {
-        return !empty(self::getQuery($key));
-    }
-    
-    /**
-     * set query value
-     *
-     * @param  string $key
-     * @param  mixed $value
-     * @return void
-     */
-    public static function setQuery(string $ey, $value): void
-    {
-        $_GET[$ey] = $value;
-    }
+        if (empty($input) && !is_null($default)) {
+            $input = $default;
+        }
 
-    /**
-     * retrieves post inputs
-     *
-     * @return array returns post inputs
-     */
-    public static function getInputs(): array
-    {
-        return $_POST;
-    }
-
-    /**
-     * retrieves single post input
-     *
-     * @param  string $input
-     * @return mixed returns input value
-     */
-    public static function getInput(string $input) 
-    {
-        return self::getInputs()[$input] ?? '';
-    }
-
-    /**
-     * check if post input exists
-     *
-     * @param  string $input
-     * @return bool
-     */
-    public static function hasInput(string $input) : bool
-    {
-        return !empty(self::getInput($input));
-    }
-    
-    /**
-     * set input value
-     *
-     * @param  string $input
-     * @param  mixed $value
-     * @return void
-     */
-    public static function setInput(string $input, $value): void
-    {
-        $_POST[$input] = $value;
+        return $input;
     }
 
     /**
@@ -154,7 +86,7 @@ class Request
      *
      * @return mixed
      */
-    public static function getRawData()
+    public function rawData()
     {
         return file_get_contents('php://input');
     }
@@ -166,7 +98,7 @@ class Request
      * @param  array $allowed_extensions
      * @return \Framework\Support\Uploader returns uploader instance
      */
-    public static function getFile(string $input, array $allowed_extensions = []): Uploader
+    private function getFile(string $input, array $allowed_extensions = []): Uploader
     {
         return new Uploader([
             'name' => $_FILES[$input]['name'],
@@ -184,7 +116,7 @@ class Request
      * @param  array $allowed_extensions
      * @return array returns array of uploader instance
      */
-    public static function getFiles(string $input, array $allowed_extensions = []): array
+    private function getFiles(string $input, array $allowed_extensions = []): array
     {
         $files = [];
 
@@ -204,26 +136,29 @@ class Request
         
         return $files;
     }
+    
+    /**
+     * retrieves files
+     *
+     * @param  string $input
+     * @param  array $allowed_extensions
+     * @param  bool $mutliple
+     * @return \Framework\Support\Uploader|array
+     */
+    public function files(string $input, array $allowed_extensions = [], bool $mutliple = false)
+    {
+        return $mutliple ? $this->getFiles($input, $allowed_extensions) : $this->getFile($input, $allowed_extensions);
+    }
 
     /**
      * retrieves request method
      *
-     * @return string
+     * @param  $value string
+     * @return string|void
      */
-    public static function getMethod(): string
+    public function method(?string $value = null)
     {
-        return self::getHeader('REQUEST_METHOD');
-    }
-
-    /**
-     * set request method
-     *
-     * @param  string $value
-     * @return void
-     */
-    public static function setMethod(string $value): void
-    {
-        self::setHeader('REQUEST_METHOD', $value);
+        return is_null($value) ? $this->headers('REQUEST_METHOD') : $_SERVER['REQUEST_METHOD'] = $value;
     }
 
     /**
@@ -231,9 +166,9 @@ class Request
      *
      * @return string
      */
-    public static function getFullUri(): string
+    public function fullUri(): string
     {
-        $uri = self::getHeader('REQUEST_URI');
+        $uri = $this->headers('REQUEST_URI');
         $uri = str_replace('/' . config('app.folder'), '', $uri); //remove app folder if exists
         return $uri;
     }
@@ -243,9 +178,9 @@ class Request
      *
      * @return string
      */
-    public static function getUri(): string
+    public function uri(): string
     {
-        $uri = self::getFullUri();
+        $uri = $this->fullUri();
 
         //removes queries from uri
         if (strpos($uri, '?') !== false) {
@@ -265,120 +200,9 @@ class Request
      *
      * @return string
      */
-    public static function getRemoteIP(): string
-    {
-        return self::getHeader('REMOTE_ADDR');
-    }
-    
-    /**
-     * retrieves headers
-     *
-     * @param  string|null $key
-     * @return array
-     */
-    public function headers(?string $key = null): array
-    {
-        return is_null($key) ? self::getHeaders() : self::getHeader($key);
-    }
-        
-    /**
-     * retrieves method
-     *
-     * @return string
-     */
-    public function method(): string
-    {
-        return self::getMethod();
-    }
-    
-    /**
-     * retrieves uri
-     *
-     * @param  bool $full
-     * @return string
-     */
-    public function uri(bool $full = false): string
-    {
-        return $full ? self::getFullUri() : self::getUri();
-    }
-
-    /**
-     * retrieves POST inputs
-     *
-     * @param  string|null $input
-     * @return array|mixed
-     */
-    public function inputs(?string $input = null)
-    {
-        return is_null($input) ? self::getInputs() : self::getInput($input);
-    }
-    
-    /**
-     * set POST input
-     *
-     * @param  string $input
-     * @param  mixed $value
-     * @return void
-     */
-    public function input(string $input, $value): void
-    {
-        self::setInput($input, $value);
-    }
-    
-    /**
-     * retrieves GET queries
-     *
-     * @param  string|null $key
-     * @return array|mixed
-     */
-    public function queries(?string $key = null)
-    {
-        return  is_null($key) ? self::getQueries() : self::getQuery($key);
-    }
-    
-    /**
-     * set GET query
-     *
-     * @param  string $key
-     * @param  mixed $value
-     * @return void
-     */
-    public function query(string $key, $value): void
-    {
-        self::setQuery($key, $value);
-    }
-    
-    /**
-     * retrieves raw data
-     *
-     * @return mixed
-     */
-    public function rawData()
-    {
-        return self::getRawData();
-    }
-    
-    /**
-     * retrieves files
-     *
-     * @param  string $input
-     * @param  array $allowed_extensions
-     * @param  bool $mutliple
-     * @return \Framework\Support\Uploader|array
-     */
-    public function files(string $input, array $allowed_extensions = [], bool $mutliple = false)
-    {
-        return $mutliple ? self::getFiles($input, $allowed_extensions) : self::getFile($input, $allowed_extensions);
-    }
-    
-    /**
-     * retrieves remote IP
-     *
-     * @return string
-     */
     public function remoteIP(): string
     {
-        return self::getRemoteIP();
+        return $this->headers('REMOTE_ADDR');
     }
     
     /**

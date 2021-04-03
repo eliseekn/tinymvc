@@ -2,11 +2,10 @@
 Route::group([
     'resources/RESOURCENAME' => ['handler' => 'Admin\CLASSNAME@index'],
     'resources/RESOURCENAME/new' => ['handler' => 'Admin\CLASSNAME@new'],
-    'resources/RESOURCENAME/edit/{id:num}' => ['handler' => 'Admin\CLASSNAME@edit'],
-    'resources/RESOURCENAME/read/{id:num}' => ['handler' => 'Admin\CLASSNAME@read'],
-    'resources/RESOURCENAME/delete/{id:num}' => ['handler' => 'Admin\CLASSNAME@delete']
+    'resources/RESOURCENAME/edit/{num}' => ['handler' => 'Admin\CLASSNAME@edit'],
+    'resources/RESOURCENAME/read/{num}' => ['handler' => 'Admin\CLASSNAME@read']
 ])->by([
-    'method' => 'GET',
+    'method' => 'get',
     'prefix' => 'admin',
     'middlewares' => [
         'RememberUser',
@@ -16,17 +15,33 @@ Route::group([
 
 Route::group([
     'resources/RESOURCENAME/create' => ['handler' => 'Admin\CLASSNAME@create'],
-    'resources/RESOURCENAME/update/{id:num}' => ['handler' => 'Admin\CLASSNAME@update'],
     'resources/RESOURCENAME/import' => ['handler' => 'Admin\CLASSNAME@import'],
-    'resources/RESOURCENAME/export' => ['handler' => 'Admin\CLASSNAME@export'],
-    'resources/RESOURCENAME/delete' => ['handler' => 'Admin\CLASSNAME@delete']
+    'resources/RESOURCENAME/export' => ['handler' => 'Admin\CLASSNAME@export']
 ])->by([
-    'method' => 'POST',
+    'method' => 'post',
     'prefix' => 'admin',
     'middlewares' => [
         'RememberUser',
         'CsrfProtection',
         'SanitizeInputs',
+        'DashboardPolicy'
+    ]
+]);
+
+Route::patch('admin/resources/RESOURCENAME/update/{num}' => [
+    'handler' => 'Admin\CLASSNAME@update',
+    'middlewares' => [
+        'RememberUser',
+        'CsrfProtection',
+        'DashboardPolicy'
+    ]
+]);
+
+Route::delete('admin/resources/RESOURCENAME/delete/?{num}?' => [
+    'handler' => 'Admin\CLASSNAME@delete',
+    'middlewares' => [
+        'RememberUser',
+        'CsrfProtection',
         'DashboardPolicy'
     ]
 ]);

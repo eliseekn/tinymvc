@@ -2,9 +2,9 @@
 
 namespace App\Controllers\Admin;
 
-use App\Helpers\Auth;
 use Framework\Routing\Controller;
 use App\Helpers\NotificationHelper;
+use App\Database\Models\Notifications;
 
 class NotificationsController extends Controller
 {
@@ -15,18 +15,8 @@ class NotificationsController extends Controller
      */
     public function index(): void
     {
-        $notifications = $this->model('notifications')
-            ->findBy('user_id', Auth::get()->id)
-            ->orderDesc('created_at')
-            ->paginate(20);
-
-        $notifications_unread = $this->model('notifications')
-            ->count()
-            ->where('status', 'unread')
-            ->and('user_id', Auth::get()->id)
-            ->single()
-            ->value;
-
+        $notifications = Notifications::paginate();
+        $notifications_unread = Notifications::unreadCount();
         $this->render('admin.account.notifications', compact('notifications', 'notifications_unread'));
     }
 
@@ -37,7 +27,7 @@ class NotificationsController extends Controller
 	 */
 	public function create(): void
 	{
-        NotificationHelper::create($this->request->message);
+        NotificationHelper::create($this->request('message'));
         $this->back()->withToast(__('notifications_created'))->success();
     }
     
@@ -54,10 +44,10 @@ class NotificationsController extends Controller
             $this->log(__('notification_updated'));
             $this->back()->withToast(__('notification_updated'))->success();
 		} else {
-            $this->model('notifications')->updateBy(['id', 'in', $this->request->items], ['status' => 'read']);
+            $this->model('notifications')->updateBy(['id', 'in', $this->request('items')], ['status' => 'read']);
             $this->log(__('notifications_updated'));
 			$this->alert('toast', __('notifications_updated'))->success();
-            $this->response([absolute_url('admin/account/notifications')], true);
+            $this->response(['redirect' => absolute_url('admin/account/notifications')], true);
 		}
     }
 	
@@ -74,10 +64,10 @@ class NotificationsController extends Controller
             $this->log(__('notification_deleted'));
             $this->back()->withToast(__('notification_deleted'))->success();
 		} else {
-            $this->model('notifications')->deleteBy('id', 'in', explode(',', $this->request->items));
+            $this->model('notifications')->deleteBy('id', 'in', explode(',', $this->request('items')));
             $this->log(__('notifications_deleted'));
 			$this->alert('toast', __('notifications_deleted'))->success();
-			$this->response([absolute_url('admin/account/notifications')], true);
+			$this->response(['redirect' => absolute_url('admin/account/notifications')], true);
 		}
 	}
 }

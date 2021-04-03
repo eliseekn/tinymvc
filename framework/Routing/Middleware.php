@@ -29,7 +29,7 @@ class Middleware
      * @param  string $middleware name of middleware
      * @return void
      */
-    public static function execute(string $middleware, Request $request): void
+    public static function execute(string $middleware): void
     {
         $middleware = 'App\Middlewares\\' . $middleware;
 
@@ -38,7 +38,7 @@ class Middleware
             throw new Exception('Middleware "' . $middleware . '" not found.');
         }
 
-        $middleware::handle($request);
+        $middleware::handle(new Request());
     }
     
     /**
@@ -47,11 +47,11 @@ class Middleware
      * @param  string $route name of route
      * @return void
      */
-    public static function check(string $route, Request $request): void
+    public static function check(string $route): void
     {
         if (array_key_exists($route, self::$middlewares)) {
             foreach (self::$middlewares[$route] as $middleware) {
-                self::execute($middleware, $request);
+                self::execute($middleware, new Request());
             }
         }
     }

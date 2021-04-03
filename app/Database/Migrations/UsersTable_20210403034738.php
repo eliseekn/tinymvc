@@ -2,9 +2,10 @@
 
 namespace App\Database\Migrations;
 
-use Framework\Database\Migration;
+use App\Database\Models\Roles;
+use Framework\Database\Schema;
 
-class UsersTable
+class UsersTable_20210403034738
 {         
     /**
      * name of table
@@ -20,14 +21,14 @@ class UsersTable
      */
     public static function migrate(): void
     {
-        Migration::table(self::$table)
+        Schema::createTable(self::$table)
             ->addBigInt('id')->primaryKey()
             ->addString('name')
             ->addString('email')->unique()
             ->addString('company')->null()
             ->addString('phone')->unique()
             ->addString('password')
-            ->addString('role')->default('user')
+            ->addString('role')->default(Roles::ROLE[2])
             ->addString('lang')->default('en')
             ->addString('country')->default('US')
             ->addString('currency')->default('USD')
@@ -47,7 +48,7 @@ class UsersTable
      */
     public static function delete(): void
     {
-        Migration::drop(self::$table);
+        Schema::dropTable(self::$table);
     }
     
     /**

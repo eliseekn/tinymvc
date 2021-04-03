@@ -26,10 +26,11 @@ class CLASSNAME
     /**
      * retrieves data by value
      *
+     * @param  string $value
      * @return mixed
      */
-    //public static function findSingleByValue($value)
+    //public static function findSingleByValue(string $value)
     //{
-    //    self::model()->findSingleBy($value);
+    //    return self::model()->findSingleBy('column', $value);
     //}
 }

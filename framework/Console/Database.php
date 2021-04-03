@@ -10,6 +10,7 @@ namespace Framework\Console;
 
 use Exception;
 use Framework\Database\DB;
+use App\Database\Seeds\Seeder;
 use Framework\Support\Storage;
 
 /**
@@ -17,18 +18,6 @@ use Framework\Support\Storage;
  */
 class Database
 {
-    /**
-     * get migration class
-     *
-     * @param  string $table
-     * @return string
-     */
-    private static function getMigration(string $table): string
-    {
-        $table = ucfirst($table) . 'Table';
-        return 'App\Database\Migrations\\' . $table;
-    }
-    
     /**
      * get seed class
      *
@@ -45,56 +34,65 @@ class Database
         return 'App\Database\Seeds\\' . $seed;
     }
     
-    /**
-     * handle command line arguments
-     *
-     * @param  array $options
-     * @return void
-     */
-    public static function handle(array $options): void
+    public static function createSchema(string ...$databases)
     {
-        if (
-            array_key_exists('migration', $options) &&
-            !array_key_exists('seed', $options) &&
-            !array_key_exists('delete', $options) &&
-            !array_key_exists('reset', $options) &&
-            !array_key_exists('schema', $options) &&
-            !array_key_exists('query', $options) &&
-            !array_key_exists('fetch', $options) &&
-            !array_key_exists('execute', $options) &&
-            !array_key_exists('db', $options)
-        ) {
-            echo '[...] Migrating tables' . PHP_EOL;
+        echo '[...] Creating databases' . PHP_EOL;
 
-            if ($options['migration'] !== 'all') {
-                $table = $options['migration'];
-        
-                if (strpos($table, ',') === false) {
-                    $table = self::getMigration($table);
-                    
-                    try {
-                        $table::migrate();
-                        echo '[+] ' . $table . ' migrated successfully' . PHP_EOL;
-                    } catch(Exception $e) {
-                        echo '[!] ' . $e->getMessage();
-                    }
-                } else {
-                    $tables = explode(',', $table);
-        
-                    foreach ($tables as $table) {
-                        $table = self::getMigration($table);
-                        
-                        try {
-                            $table::migrate();
-                            echo '[+] ' . $table . ' migrated successfully' . PHP_EOL;
-                        } catch(Exception $e) {
-                            echo '[!] ' . $e->getMessage();
-                        }
-                    }
+        foreach ($databases as $database) {
+            try {
+                DB::connection()->query("CREATE DATABASE IF NOT EXISTS $database CHARACTER SET " . config('mysql.charset') . " COLLATE " . config('mysql.collation'));
+                echo '[+] Database ' . $database . ' created successfully' . PHP_EOL;
+            } catch(Exception $e) {
+                echo '[!] ' . $e->getMessage();
+            }
+        }
+    }
+
+    public static function deleteSchema(string ...$databases)
+    {
+        echo '[...] Deleting databases' . PHP_EOL;
+
+        foreach ($databases as $database) {
+            try {
+                DB::connection()->query("DROP DATABASE IF EXISTS $database");
+                echo '[+] Database ' .$database . ' deleted successfully' . PHP_EOL;
+            } catch(Exception $e) {
+                echo '[!] ' . $e->getMessage();
+            }
+        }
+    }
+
+    public static function executeQuery(string $query, ?string $db = null)
+    {
+        echo '[...] Executing MySQL query' . PHP_EOL;
+
+        try {
+            DB::connection($db)->query($query);
+        } catch(Exception $e) {
+            echo '[!] ' . $e->getMessage();
+        }
+
+        echo '[+] Query executed successfully' . PHP_EOL;
+    }
+
+    public static function migrateTable(string $table = '')
+    {
+        echo '[...] Migrating tables' . PHP_EOL;
+
+        if (!empty($table)) {
+            if (strpos($table, ',') === false) {
+                $table = 'App\Database\Migrations\\' . $table;
+                
+                try {
+                    $table::migrate();
+                    echo '[+] ' . $table . ' migrated successfully' . PHP_EOL;
+                } catch(Exception $e) {
+                    echo '[!] ' . $e->getMessage();
                 }
             } else {
-                foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
-                    $table = get_file_name($file);
+                $tables = explode(',', $table);
+    
+                foreach ($tables as $table) {
                     $table = 'App\Database\Migrations\\' . $table;
                     
                     try {
@@ -103,148 +101,41 @@ class Database
                     } catch(Exception $e) {
                         echo '[!] ' . $e->getMessage();
                     }
+                }
+            }
+        } else {
+            foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
+                $table = get_file_name($file);
+                $table = 'App\Database\Migrations\\' . $table;
+                
+                try {
+                    $table::migrate();
+                    echo '[+] ' . $table . ' migrated successfully' . PHP_EOL;
+                } catch(Exception $e) {
+                    echo '[!] ' . $e->getMessage();
                 }
             }
         }
-        
-        else if (
-            array_key_exists('migration', $options) &&
-            array_key_exists('seed', $options) &&
-            !array_key_exists('delete', $options) &&
-            !array_key_exists('reset', $options) &&
-            !array_key_exists('schema', $options) &&
-            !array_key_exists('query', $options) &&
-            !array_key_exists('fetch', $options) &&
-            !array_key_exists('execute', $options) &&
-            !array_key_exists('db', $options)
-        ) {
-            echo '[...] Migrating tables' . PHP_EOL;
+    }
 
-            if ($options['migration'] !== 'all') {
-                $table = $options['migration'];
-        
-                if (strpos($table, ',') === false) {
-                    $table = self::getMigration($table);
-                    
-                    try {
-                        $table::migrate();
-                        echo '[+] ' . $table . ' migrated successfully' . PHP_EOL;
-                    } catch(Exception $e) {
-                        echo '[!] ' . $e->getMessage();
-                    }
-                } else {
-                    $tables = explode(',', $table);
-        
-                    foreach ($tables as $table) {
-                        $table = self::getMigration($table);
-                        
-                        try {
-                            $table::migrate();
-                            echo '[+] ' . $table . ' migrated successfully' . PHP_EOL;
-                        } catch(Exception $e) {
-                            echo '[!] ' . $e->getMessage();
-                        }
-                    }
+    public static function resetTable(string $table = '')
+    {
+        echo '[...] Reseting tables' . PHP_EOL;
+
+        if (!empty($table)) {
+            if (strpos($table, ',') === false) {
+                $table = 'App\Database\Migrations\\' . $table;
+                
+                try {
+                    $table::reset();
+                    echo '[+] ' . $table . ' resetted successfully' . PHP_EOL;
+                } catch(Exception $e) {
+                    echo '[!] ' . $e->getMessage();
                 }
             } else {
-                foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
-                    $table = get_file_name($file);
-                    $table = 'App\Database\Migrations\\' . $table;
-                    
-                    try {
-                        $table::migrate();
-                        echo '[+] ' . $table . ' migrated successfully' . PHP_EOL;
-                    } catch(Exception $e) {
-                        echo '[!] ' . $e->getMessage();
-                    }
-                }
-            }
-        
-            echo '[...] Inserting seeds' . PHP_EOL;
-
-            if ($options['seed'] !== 'all') {
-                $seed = $options['seed'];
-        
-                if (strpos($seed, ',') === false) {
-                    $seed = self::getSeed($seed);
-                    
-                    try {
-                        $seed::insert();
-                        echo '[+] ' . $seed . ' inserted successfully' . PHP_EOL;
-                    } catch(Exception $e) {
-                        echo '[!] ' . $e->getMessage();
-                    }
-                } else {
-                    $seeds = explode(',', $seed);
-        
-                    foreach ($seeds as $seed) {
-                        $seed = self::getSeed($seed);
-                        
-                        try {
-                            $seed::insert();
-                            echo '[+] ' . $seed . ' inserted successfully' . PHP_EOL;
-                        } catch(Exception $e) {
-                            echo '[!] ' . $e->getMessage();
-                        }
-                    }
-                }
-            } else {
-                foreach (Storage::path(config('storage.seeds'))->getFiles() as $file) {
-                    $seed = get_file_name($file);
-                    $seed = 'App\Database\Seeds\\' . $seed;
-                    
-                    try {
-                        $seed::insert();
-                        echo '[+] ' . $seed . ' inserted successfully' . PHP_EOL;
-                    } catch(Exception $e) {
-                        echo '[!] ' . $e->getMessage();
-                    }
-                }
-            }
-        } 
-        
-        else if (
-            array_key_exists('migration', $options) &&
-            array_key_exists('seed', $options) &&
-            array_key_exists('reset', $options) &&
-            !array_key_exists('delete', $options) &&
-            !array_key_exists('schema', $options) &&
-            !array_key_exists('query', $options) &&
-            !array_key_exists('fetch', $options) &&
-            !array_key_exists('execute', $options) &&
-            !array_key_exists('db', $options)
-        ) {
-            echo '[...] Reseting tables' . PHP_EOL;
-
-            if ($options['migration'] !== 'all') {
-                $table = $options['migration'];
-        
-                if (strpos($table, ',') === false) {
-                    $table = self::getMigration($table);
-
-                    try {
-                        $table::reset();
-                        echo '[+] ' . $table . ' resetted successfully' . PHP_EOL;
-                    } catch(Exception $e) {
-                        echo '[!] ' . $e->getMessage();
-                    }
-                } else {
-                    $tables = explode(',', $table);
-        
-                    foreach ($tables as $table) {
-                        $table = self::getMigration($table);
-                        
-                        try {
-                            $table::reset();
-                            echo '[+] ' . $table . ' resetted successfully' . PHP_EOL;
-                        } catch(Exception $e) {
-                            echo '[!] ' . $e->getMessage();
-                        }
-                    }
-                }
-            } else {
-                foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
-                    $table = get_file_name($file);
+                $tables = explode(',', $table);
+    
+                foreach ($tables as $table) {
                     $table = 'App\Database\Migrations\\' . $table;
                     
                     try {
@@ -255,175 +146,82 @@ class Database
                     }
                 }
             }
-        
-            echo '[...] Inserting seeds' . PHP_EOL;
-
-            if ($options['seed'] !== 'all') {
-                $seed = $options['seed'];
-        
-                if (strpos($seed, ',') === false) {
-                    $seed = self::getSeed($seed);
-
-                    try {
-                        $seed::insert();
-                        echo '[+] ' . $seed . ' inserted successfully' . PHP_EOL;
-                    } catch(Exception $e) {
-                        echo '[!] ' . $e->getMessage();
-                    }
-                } else {
-                    $seeds = explode(',', $seed);
-        
-                    foreach ($seeds as $seed) {
-                        $seed = self::getSeed($seed);
-                        
-                        try {
-                            $seed::insert();
-                            echo '[+] ' . $seed . ' inserted successfully' . PHP_EOL;
-                        } catch(Exception $e) {
-                            echo '[!] ' . $e->getMessage();
-                        }
-                    }
-                }
-            } else {
-                foreach (Storage::path(config('storage.seeds'))->getFiles() as $file) {
-                    $seed = get_file_name($file);
-                    $seed = 'App\Database\Seeds\\' . $seed;
-
-                    try {
-                        $seed::insert();
-                        echo '[+] ' . $seed . ' inserted successfully' . PHP_EOL;
-                    } catch(Exception $e) {
-                        echo '[!] ' . $e->getMessage();
-                    }
+        } else {
+            foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
+                $table = get_file_name($file);
+                $table = 'App\Database\Migrations\\' . $table;
+                
+                try {
+                    $table::reset();
+                    echo '[+] ' . $table . ' resetted successfully' . PHP_EOL;
+                } catch(Exception $e) {
+                    echo '[!] ' . $e->getMessage();
                 }
             }
-        } 
-        
-        else if (
-            array_key_exists('migration', $options) &&
-            array_key_exists('reset', $options) &&
-            !array_key_exists('seed', $options) &&
-            !array_key_exists('delete', $options) &&
-            !array_key_exists('schema', $options) &&
-            !array_key_exists('query', $options) &&
-            !array_key_exists('fetch', $options) &&
-            !array_key_exists('execute', $options) &&
-            !array_key_exists('db', $options)
-        ) {
-            echo '[...] Reseting tables' . PHP_EOL;
+        }
+    }
 
-            if ($options['migration'] !== 'all') {
-                $table = $options['migration'];
-        
-                if (strpos($table, ',') === false) {
-                    $table = self::getMigration($table);
-                    
-                    try {
-                        $table::reset();
-                        echo '[+] ' . $table . ' resetted successfully' . PHP_EOL;
-                    } catch(Exception $e) {
-                        echo '[!] ' . $e->getMessage();
-                    }
-                } else {
-                    $tables = explode(',', $table);
-        
-                    foreach ($tables as $table) {
-                        $table = self::getMigration($table);
-                        
-                        try {
-                            $table::reset();
-                            echo '[+] ' . $table . ' resetted successfully' . PHP_EOL;
-                        } catch(Exception $e) {
-                            echo '[!] ' . $e->getMessage();
-                        }
-                    }
+    public static function deleteTable(string $table = '')
+    {
+        echo '[...] Deleting tables' . PHP_EOL;
+
+        if (!empty($table)) {
+            if (strpos($table, ',') === false) {
+                $table = 'App\Database\Migrations\\' . $table;
+                
+                try {
+                    $table::delete();
+                    echo '[+] ' . $table . ' deleted successfully' . PHP_EOL;
+                } catch(Exception $e) {
+                    echo '[!] ' . $e->getMessage();
                 }
             } else {
-                foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
-                    $table = get_file_name($file);
+                $tables = explode(',', $table);
+    
+                foreach ($tables as $table) {
                     $table = 'App\Database\Migrations\\' . $table;
                     
                     try {
-                        $table::reset();
-                        echo '[+] ' . $table . ' resetted successfully' . PHP_EOL;
-                    } catch(Exception $e) {
-                        echo '[!] ' . $e->getMessage();
-                    }
-                }
-            }
-        } 
-        
-        else if (
-            array_key_exists('migration', $options) &&
-            array_key_exists('delete', $options) &&
-            !array_key_exists('reset', $options) &&
-            !array_key_exists('seed', $options) &&
-            !array_key_exists('schema', $options) &&
-            !array_key_exists('query', $options) &&
-            !array_key_exists('fetch', $options) &&
-            !array_key_exists('execute', $options) &&
-            !array_key_exists('db', $options)
-        ) {
-            echo '[...] Deleting tables' . PHP_EOL;
-
-            if ($options['migration'] !== 'all') {
-                $table = $options['migration'];
-        
-                if (strpos($table, ',') === false) {
-                    $table = self::getMigration($table);
-                    
-                    try {
-                        $table::reset();
-                        echo '[+] ' . $table . ' deleted successfully' . PHP_EOL;
-                    } catch(Exception $e) {
-                        echo '[!] ' . $e->getMessage();
-                    }
-                } else {
-                    $tables = explode(',', $table);
-        
-                    foreach ($tables as $table) {
-                        $table = self::getMigration($table);
-                        
-                        try {
-                            $table::reset();
-                            echo '[+] ' . $table . ' deleted successfully' . PHP_EOL;
-                        } catch(Exception $e) {
-                            echo '[!] ' . $e->getMessage();
-                        }
-                    }
-                }
-            } else {
-                foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
-                    $table = get_file_name($file);
-                    $table = 'App\Database\Migrations\\' . $table;
-                    
-                    try {
-                        $table::reset();
+                        $table::delete();
                         echo '[+] ' . $table . ' deleted successfully' . PHP_EOL;
                     } catch(Exception $e) {
                         echo '[!] ' . $e->getMessage();
                     }
                 }
             }
-        } 
-        
-        else if (
-            array_key_exists('seed', $options) &&
-            !array_key_exists('migration', $options) &&
-            !array_key_exists('delete', $options) &&
-            !array_key_exists('reset', $options) &&
-            !array_key_exists('schema', $options) &&
-            !array_key_exists('query', $options) &&
-            !array_key_exists('fetch', $options) &&
-            !array_key_exists('execute', $options) &&
-            !array_key_exists('db', $options)
-        ) {
-            echo '[...] Inserting seeds' . PHP_EOL;
+        } else {
+            foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
+                $table = get_file_name($file);
+                $table = 'App\Database\Migrations\\' . $table;
+                
+                try {
+                    $table::delete();
+                    echo '[+] ' . $table . ' deleted successfully' . PHP_EOL;
+                } catch(Exception $e) {
+                    echo '[!] ' . $e->getMessage();
+                }
+            }
+        }
+    }
 
-            if ($options['seed'] !== 'all') {
-                $seed = $options['seed'];
-        
-                if (strpos($seed, ',') === false) {
+    public static function runSeeder(string $seed = '')
+    {
+        echo '[...] Inserting seeds' . PHP_EOL;
+
+        if (!empty($seed)) {
+            if (strpos($seed, ',') === false) {
+                $seed = self::getSeed($seed);
+                
+                try {
+                    $seed::insert();
+                    echo '[+] ' . $seed . ' inserted successfully' . PHP_EOL;
+                } catch(Exception $e) {
+                    echo '[!] ' . $e->getMessage();
+                }
+            } else {
+                $seeds = explode(',', $seed);
+    
+                foreach ($seeds as $seed) {
                     $seed = self::getSeed($seed);
                     
                     try {
@@ -432,190 +230,12 @@ class Database
                     } catch(Exception $e) {
                         echo '[!] ' . $e->getMessage();
                     }
-                } else {
-                    $seeds = explode(',', $seed);
-        
-                    foreach ($seeds as $seed) {
-                        $seed = self::getSeed($seed);
-                        
-                        try {
-                            $seed::insert();
-                            echo '[+] ' . $seed . ' inserted successfully' . PHP_EOL;
-                        } catch(Exception $e) {
-                            echo '[!] ' . $e->getMessage();
-                        }
-                    }
-                }
-            } else {
-                foreach (Storage::path(config('storage.seeds'))->getFiles() as $file) {
-                    $seed = get_file_name($file);
-                    $seed = 'App\Database\Seeds\\' . $seed;
-                    
-                    try {
-                        $seed::insert();
-                        echo '[+] ' . $seed . ' inserted successfully' . PHP_EOL;
-                    } catch(Exception $e) {
-                        echo '[!] ' . $e->getMessage();
-                    }
                 }
             }
-        }
-        
-        else if (
-            array_key_exists('schema', $options) &&
-            !array_key_exists('seed', $options) &&
-            !array_key_exists('migration', $options) &&
-            !array_key_exists('delete', $options) &&
-            !array_key_exists('reset', $options) &&
-            !array_key_exists('query', $options) &&
-            !array_key_exists('fetch', $options) &&
-            !array_key_exists('execute', $options) &&
-            !array_key_exists('db', $options)
-        ) {
-            echo '[...] Creating databases' . PHP_EOL;
-
-            if (strpos($options['schema'], ',') === false) {
-                $database = $options['schema'];
-                
-                try {
-                    DB::connection()->query("CREATE DATABASE IF NOT EXISTS $database CHARACTER SET " . config('mysql.charset') . " COLLATE " . config('mysql.collation'));
-                    echo '[+] ' . $database . ' created successfully' . PHP_EOL;
-                } catch(Exception $e) {
-                    echo '[!] ' . $e->getMessage();
-                }
-            } else {
-                $db = explode(',', $options['schema']);
-
-                foreach ($db as $database) {
-                    try {
-                        DB::connection()->query("CREATE DATABASE IF NOT EXISTS $database CHARACTER SET " . config('mysql.charset') . " COLLATE " . config('mysql.collation'));
-                        echo '[+] ' . $database . ' created successfully' . PHP_EOL;
-                    } catch(Exception $e) {
-                        echo '[!] ' . $e->getMessage();
-                    }
-                }
-            }
-        }
-
-        else if (
-            array_key_exists('schema', $options) &&
-            array_key_exists('delete', $options) &&
-            !array_key_exists('seed', $options) &&
-            !array_key_exists('migration', $options) &&
-            !array_key_exists('reset', $options) &&
-            !array_key_exists('query', $options) &&
-            !array_key_exists('fetch', $options) &&
-            !array_key_exists('execute', $options) &&
-            !array_key_exists('db', $options)
-        ) {
-            echo '[...] Deleting databases' . PHP_EOL;
-
-            if (strpos($options['schema'], ',') === false) {
-                $database = $options['schema'];
-                
-                try {
-                    DB::connection()->query("DROP DATABASE IF EXISTS $database");
-                    echo '[+] ' .$database . ' deleted successfully' . PHP_EOL;
-                } catch(Exception $e) {
-                    echo '[!] ' . $e->getMessage();
-                }
-            } else {
-                $db = explode(',', $options['schema']);
-
-                foreach ($db as $database) {
-                    try {
-                        DB::connection()->query("DROP DATABASE IF EXISTS $database");
-                        echo '[+] ' .$database . ' deleted successfully' . PHP_EOL;
-                    } catch(Exception $e) {
-                        echo '[!] ' . $e->getMessage();
-                    }
-                }
-            }
-        }
-        
-        else if (
-            array_key_exists('query', $options) &&
-            array_key_exists('fetch', $options) &&
-            !array_key_exists('execute', $options) &&
-            !array_key_exists('schema', $options) &&
-            !array_key_exists('migration', $options) &&
-            !array_key_exists('seed', $options) &&
-            !array_key_exists('delete', $options) &&
-            !array_key_exists('reset', $options) &&
-            !array_key_exists('db', $options)
-        ) {
-            echo '[...] Executing MySQL query' . PHP_EOL;
-
+        } else {
             try {
-                $stmt = DB::connection()->query($options['query']);
-            } catch(Exception $e) {
-                echo '[!] ' . $e->getMessage();
-            }
-
-            echo '<pre>';
-            print_r($stmt->fetchAll());
-            echo '</pre>';
-        }
-
-        else if (
-            array_key_exists('query', $options) &&
-            array_key_exists('execute', $options) &&
-            !array_key_exists('fetch', $options) &&
-            !array_key_exists('schema', $options) &&
-            !array_key_exists('migration', $options) &&
-            !array_key_exists('seed', $options) &&
-            !array_key_exists('delete', $options) &&
-            !array_key_exists('reset', $options) &&
-            !array_key_exists('db', $options)
-        ) {
-            echo '[...] Executing MySQL query' . PHP_EOL;
-
-            try {
-                DB::connection()->query($options['query']);
-            } catch(Exception $e) {
-                echo '[!] ' . $e->getMessage();
-            }
-        }
-        
-        else if (
-            array_key_exists('query', $options) &&
-            array_key_exists('fetch', $options) &&
-            array_key_exists('db', $options) &&
-            !array_key_exists('execute', $options) &&
-            !array_key_exists('schema', $options) &&
-            !array_key_exists('migration', $options) &&
-            !array_key_exists('seed', $options) &&
-            !array_key_exists('delete', $options) &&
-            !array_key_exists('reset', $options)
-        ) {
-            echo '[...] Executing MySQL query' . PHP_EOL;
-
-            try {
-                $stmt = DB::connection($options['db'])->query($options['query']);
-            } catch(Exception $e) {
-                echo '[!] ' . $e->getMessage();
-            }
-
-            echo '<pre>';
-            print_r($stmt->fetchAll());
-            echo '</pre>';
-        }
-
-        else if (
-            array_key_exists('query', $options) &&
-            array_key_exists('execute', $options) &&
-            array_key_exists('db', $options) &&
-            !array_key_exists('fetch', $options) &&
-            !array_key_exists('schema', $options) &&
-            !array_key_exists('migration', $options) &&
-            !array_key_exists('seed', $options) &&
-            !array_key_exists('delete', $options) &&
-            !array_key_exists('reset', $options)
-        ) {
-            echo '[...] Executing MySQL query' . PHP_EOL;
-
-            try {
-                DB::connection($options['db'])->query($options['query']);
+                Seeder::run();
+                echo '[+] All seeds inserted successfully' . PHP_EOL;
             } catch(Exception $e) {
                 echo '[!] ' . $e->getMessage();
             }

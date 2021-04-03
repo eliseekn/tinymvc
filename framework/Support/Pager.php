@@ -214,7 +214,8 @@ class Pager
      */
     private function generateUri(int $page): string
     {
-        $uri = Request::getFullUri();
+        $request = new Request();
+        $uri = $request->fullUri();
 
         if (strpos($uri, '?') !== false) {
             $queries = substr($uri, strpos($uri, '?'), strlen($uri));
@@ -223,15 +224,15 @@ class Pager
         if (isset($queries)) {
             if (strpos($queries, '&page=') !== false) {
                 $queries = substr($queries, strpos($queries, '?'), -1);
-                $uri = Request::getUri() . $queries . $page;
+                $uri = $request->uri() . $queries . $page;
             } else if (strpos($queries, '?page=') !== false) {
                 $queries = substr($queries, strpos($queries, '?'), -1);
-                $uri = Request::getUri() . $queries . $page;
+                $uri = $request->uri() . $queries . $page;
             } else  {
-                $uri = Request::getUri() . $queries . '&page=' . $page;
+                $uri = $request->uri() . $queries . '&page=' . $page;
             }
         } else {
-            $uri = Request::getUri() . '?page=' . $page;
+            $uri = $request->uri() . '?page=' . $page;
         }
 
         return $uri;

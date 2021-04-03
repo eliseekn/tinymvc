@@ -19,9 +19,11 @@ use Framework\Support\Metrics;
 class Model
 {
     /**
-     * @var string
+     * name of table
+     * 
+     * @var string $table
      */
-    public $table;
+    private $table;
 
     /**
      * @var \Framework\Database\Builder $builder
@@ -292,7 +294,6 @@ class Model
         }
 
         $this->update($items)->where($data[0], $data[1], $data[2])->persist();
-        
         return true;
     }
     
@@ -680,6 +681,32 @@ class Model
         $this->builder->whereColumn($column)->notBetween($start, $end);
         return $this;
     }
+    
+    /**
+     * add SELECT BETWEEN query
+     *
+     * @param  mixed $start
+     * @param  mixed $end
+     * @param  array $columns 
+     * @return \Framework\Database\Model
+     */
+    public function between($start = null, $end = null, array $columns = ['*']): self
+    {
+        return $this->select($columns)->whereBetween('created_at', $start, $end);
+    }
+    
+    /**
+     * add SELECT NOT BETWEEN query
+     *
+     * @param  mixed $start
+     * @param  mixed $end
+     * @param  array $columns 
+     * @return \Framework\Database\Model
+     */
+    public function notBetween($start = null, $end = null, array $columns = ['*']): self
+    {
+        return $this->select($columns)->whereNotBetween('created_at', $start, $end);
+    }
 
     /**
 	 * add WHERE NULL clause
@@ -771,7 +798,6 @@ class Model
     {
         $method = $method . 'Join';
         $this->builder->$method($table, $second_column, $operator, $first_column);
-
         return $this;
     }
     
@@ -951,7 +977,7 @@ class Model
     {
         list($query, $args) = $this->builder->toSQL();
 
-        $page = empty(Request::getQuery('page')) ? 1 : Request::getQuery('page');
+        $page = (new Request())->queries('page', 1);
         $total_items = count(Builder::setQuery($query, $args)->execute()->fetchAll());
         $pagination = generate_pagination($page, $total_items, $items_per_pages);
         

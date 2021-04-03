@@ -11,31 +11,25 @@ use Framework\Http\Response;
 use Framework\Routing\Route;
 use Framework\Database\Model;
 use Framework\Support\Metrics;
-use App\Database\Models\MessagesModel;
-use App\Database\Models\NotificationsModel;
+use App\Database\Models\Messages;
+use App\Database\Models\Notifications;
 
 /**
  * API routes
  */
-
-//send basic headers
-Response::headers([
-    'Access-Control-Allow-Origin' => '*',
-    'Access-Control-Allow-Headers' => '*',
-]);
 
 Route::group([
     //retrieves notifications list
     'notifications' => [
         'method' => 'get',
         'handler' => function() {
-            $notifications = NotificationsModel::findMessages();
+            $notifications = Notifications::findMessages();
 
             foreach ($notifications as $notification) {
                 $notification->created_at = date_helper($notification->created_at)->time_elapsed();
             }
 
-            Response::send(['notifications' => $notifications], true);
+            (new Response())->send(['notifications' => $notifications], true);
         }
     ],
 
@@ -44,7 +38,7 @@ Route::group([
         'method' => 'get',
         'handler' => function (string $trends, int $interval = 0) {
             $metrics = (new Model('users'))->metrics('id', Metrics::COUNT, $trends, $interval);
-            Response::send(['metrics' => json_encode($metrics)], true);
+            (new Response())->send(['metrics' => json_encode($metrics)], true);
         }
     ],
 
@@ -52,13 +46,13 @@ Route::group([
     'messages' => [
         'method' => 'get',
         'handler' => function () {
-            $messages = MessagesModel::findRecipients();
+            $messages = Messages::findReceivedMessages();
 
             foreach ($messages as $message) {
                 $message->created_at = date_helper($message->created_at)->time_elapsed();
             }
 
-            Response::send(['messages' => $messages], true);
+            (new Response())->send(['messages' => $messages], true);
         }
     ],
 
@@ -66,7 +60,7 @@ Route::group([
     'users' => [
         'method' => 'get',
         'handler' => function () {
-            Response::send(['users' => (new Model('users'))->find('!=', Auth::get()->id)->all()], true);
+            (new Response())->send(['users' => (new Model('users'))->find('!=', Auth::get()->id)->all()], true);
         }
     ],
 
@@ -75,9 +69,10 @@ Route::group([
         'method' => 'get',
         'handler' => function() {
             require_once 'resources/lang/' . Auth::get()->lang . '.php';
-            Response::send(['translations' => $config], true);
+            (new Response())->send(['translations' => $config], true);
         }
     ]
 ])->by([
-    'prefix' => 'api'
+    'prefix' => 'api',
+    'middlewares' => ['HandleCors']
 ]);

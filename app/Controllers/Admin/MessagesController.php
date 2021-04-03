@@ -2,10 +2,9 @@
 
 namespace App\Controllers\Admin;
 
-use App\Helpers\Auth;
 use App\Helpers\ReportHelper;
 use Framework\Routing\Controller;
-use App\Database\Models\MessagesModel;
+use App\Database\Models\Messages;
 
 class MessagesController extends Controller
 {
@@ -16,15 +15,8 @@ class MessagesController extends Controller
      */
     public function index(): void
 	{
-        $messages = MessagesModel::findMessages();
-
-        $messages_unread = $this->model('messages')
-            ->count()
-            ->where('recipient', Auth::get()->id)
-            ->and('recipient_status', 'unread')
-            ->single()
-            ->value;
-
+        $messages = Messages::paginate();
+        $messages_unread = Messages::unreadCount();
 		$this->render('admin.account.messages', compact('messages', 'messages_unread'));
 	}
 
@@ -35,11 +27,7 @@ class MessagesController extends Controller
 	 */
     public function create(): void
 	{
-        $id = $this->model('messages')->insert([
-            'sender' => Auth::get()->id,    
-            'recipient' => $this->request->recipient,
-            'message' => $this->request->message
-        ]);
+        $id = Messages::store($this->request());
 
         $this->model('messages')->updateIfExists($id, ['sender_status' => 'read']);
         $this->log(__('message_sent'));
@@ -49,17 +37,15 @@ class MessagesController extends Controller
 	/**
 	 * reply
 	 *
+     * @param  int $id
 	 * @return void
 	 */
-    public function reply(): void
+    public function reply(int $id): void
 	{
-        $id = $this->model('messages')->insert([
-            'sender' => Auth::get()->id,
-            'recipient' => $this->request->recipient,
-            'message' => $this->request->message
-        ]);
+        $_id = Messages::store($this->request());
 
-        $this->model('messages')->updateIfExists($id, ['sender_status' => 'read']);
+        $this->model('messages')->updateIfExists($id, ['recipient_status' => 'read']);
+        $this->model('messages')->updateIfExists($_id, ['sender_status' => 'read']);
         $this->log(__('message_sent'));
         $this->back()->withToast(__('message_sent'))->success();
 	}
@@ -72,15 +58,15 @@ class MessagesController extends Controller
 	 */
 	public function update(?int $id = null): void
 	{
+        Messages::updateReadStatus($this->request(), $id);
+
         if (!is_null($id)) {
-            $this->model('messages')->updateIfExists($id, ['recipient_status' => 'read']);
             $this->log(__('message_updated'));
             $this->back()->withToast(__('message_updated'))->success();
 		} else {
-            $this->model('notifications')->updateBy(['id', 'in', $this->request->items], ['recipient_status' => 'read']);
             $this->log(__('messages_updated'));
 			$this->alert('toast', __('messages_updated'))->success();
-            $this->response([absolute_url('admin/account/messages')], true);
+            $this->response(['redirect' => absolute_url('admin/account/messages')], true);
 		}
 	}
 
@@ -92,30 +78,15 @@ class MessagesController extends Controller
 	 */
 	public function delete(?int $id = null): void
 	{
-        if (!is_null($id)) {
-            if ($this->model('messages')->findSingle($id)->sender === Auth::get()->id) {
-                $data = 'sender_deleted';
-            } elseif ($this->model('messages')->findSingle($id)->recipient === Auth::get()->id) {
-                $data = 'recipient_deleted';
-            }
+        Messages::updateDeletedStatus($this->request(), $id);
 
-            $this->model('messages')->updateIfExists($id, [$data => 1]);
+        if (!is_null($id)) {
             $this->log(__('message_deleted'));
             $this->back()->withToast(__('message_deleted'))->success();
 		} else {
-			foreach (explode(',', $this->request->items) as $id) {
-				if ($this->model('messages')->findSingle($id)->sender === Auth::get()->id) {
-                    $data = 'sender_deleted';
-                } elseif ($this->model('messages')->findSingle($id)->recipient === Auth::get()->id) {
-                    $data = 'recipient_deleted';
-                }
-    
-                $this->model('messages')->updateIfExists($id, [$data => 1]);
-			}
-            
             $this->log(__('messages_deleted'));
 			$this->alert('toast', __('messages_deleted'))->success();
-            $this->response([absolute_url('admin/account/messages')], true);
+            $this->response(['redirect' => absolute_url('admin/account/messages')], true);
 		}
 	}
 
@@ -126,16 +97,12 @@ class MessagesController extends Controller
 	 */
     public function export(): void
 	{
-        $messages = $this->model('messages')->select()
-            ->subQuery(function ($query) {
-                if ($this->request->has('date_start') && $this->request->has('date_end')) {
-                    $query->whereBetween('created_at', $this->request->date_start, $this->request->date_end);
-                }
-            })
+        $messages = $this->model('messages')
+            ->between($this->request('date_start'), $this->request('date_end'))
             ->oldest()
             ->all();
         
-        $filename = 'messages_' . date('Y_m_d') . '.' . $this->request->file_type;
+        $filename = 'messages_' . date('Y_m_d_His') . '.' . $this->request('file_type');
 
         $this->log(__('data_exported'));
 

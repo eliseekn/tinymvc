@@ -37,10 +37,6 @@
                         <?= __('new') ?>
                     </a>
                     
-                    <upload-modal action="<?= absolute_url('admin/resources/users/import') ?>" multiple="">
-                        <button class="btn btn-outline-dark ml-2"><?= __('import') ?></button>
-                    </upload-modal>
-                    
                     <export-modal action="<?= absolute_url('admin/resources/users/export') ?>">
                         <button class="btn btn-outline-dark mx-2"><?= __('export') ?></button>
                     </export-modal>

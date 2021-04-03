@@ -5,8 +5,10 @@ namespace App\Controllers\Auth;
 use Carbon\Carbon;
 use App\Mails\WelcomeMail;
 use Framework\Support\Session;
-use App\Middlewares\AuthPolicy;
+use App\Database\Models\Tokens;
+use App\Database\Models\Users;
 use Framework\Routing\Controller;
+use App\Middlewares\DashboardPolicy;
 
 /**
  * Manage email confirmation
@@ -20,16 +22,15 @@ class EmailController extends Controller
 	 */
 	public function confirm(): void
 	{
-        $user = $this->model('users')->findSingleBy('email', $this->request->email);
+        $user = Users::findSingleByEmail($this->request('email'));
 
-		if ($user) {
-            $this->model('users')->updateBy(['email', $user->email], ['active' => 1]);
-            WelcomeMail::send($user->email, $user->name);
-            
-            $this->redirect('login')->withAlert(__('user_activated', true))->success('');
-        } else {
+		if (!$user) {
             $this->redirect('signup')->withAlert(__('user_not_registered', true))->error('');
         }
+
+        $this->model('users')->updateBy(['email', $user->email], ['active' => 1]);
+        WelcomeMail::send($user->email, $user->name);
+        $this->redirect('login')->withAlert(__('user_activated', true))->success('');
     }
         
     /**
@@ -39,9 +40,9 @@ class EmailController extends Controller
      */
     public function auth(): void
     {
-        $auth_token = $this->model('tokens')->findSingleBy('email', $this->request->email);
+        $auth_token = Tokens::findSingleByEmail($this->request('email'));
 
-        if ($auth_token === false || $auth_token->token !== $this->request->token) {
+        if (!$auth_token || $auth_token->token !== $this->request('token')) {
 			$this->response(__('invalid_two_steps_link', true));
 		}
 
@@ -49,9 +50,8 @@ class EmailController extends Controller
 			$this->response(__('expired_two_steps_link', true));
 		}
 
-        $this->model('tokens')->deleteBy('email', $auth_token->email);
-
-        Session::create('user', $this->model('users')->findSingleBy('email', $auth_token->email));
-        AuthPolicy::handle($this->request);
+        Tokens::deleteByEmail($auth_token->email);
+        Session::create('user', Users::findSingleByEmail($auth_token->email));
+        DashboardPolicy::handle($this->request);
     }
 }
