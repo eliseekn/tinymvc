@@ -19,7 +19,8 @@ array_shift($argv);
 
 $commands = [
     'db',
-    'make'
+    'make',
+    'cache'
 ];
 
 $options = [
@@ -31,7 +32,8 @@ $options = [
     'query',
     'request',
     'middleware',
-    'mail'
+    'mail',
+    'clear'
 ];
 
 $arguments = [
@@ -89,6 +91,9 @@ function print_help()
     $help_message .= '   make:request AuthRequest                 Create AuthRequest in app\Requests folder' . PHP_EOL;
     $help_message .= '   make:middleware AuthPolicy               Create AuthPolicy in app\Middlewares folder' . PHP_EOL;
     $help_message .= '   make:mail welcome                        Create welcome email notification' . PHP_EOL;
+    $help_message .= PHP_EOL;
+    $help_message .= 'Miscellaneous' . PHP_EOL;
+    $help_message .= '   cache:clear                              Clear twig templates cache' . PHP_EOL;
     
     exit($help_message);
 }
@@ -99,179 +104,188 @@ if (!isset($argv[0]) || strpos(strtolower($argv[0]), ':') === false) {
 
 list($command, $option) = explode(':', $argv[0]);
 
-if (in_array($command, $commands)) {
-    if (!in_array($option, $options)) {
-        print_help();
-    }
+if (!in_array($command, $commands) || !in_array($option, $options)) {
+    print_help();
+}
 
-    switch ($command) {
-        case 'db':
-            list($argument, $data) = isset($argv[1]) && strpos(strtolower($argv[1]), '=') !== false 
-                ? explode('=', $argv[1]) 
-                : [$argv[1], ''];
+switch ($command) {
+    case 'db':
+        list($argument, $data) = isset($argv[1]) && strpos(strtolower($argv[1]), '=') !== false 
+            ? explode('=', $argv[1]) 
+            : [$argv[1], ''];
 
-            if (!in_array($argument, $arguments)) {
-                print_help();
-            }
-
-            switch ($option) {
-                case 'schema':
-                    switch ($argument) {
-                        case '--create':
-                            \Framework\Console\Database::createSchema($data);
-                            break;
-
-                        case '--delete':
-                            \Framework\Console\Database::deleteSchema($data);
-                            break;
-                    }
-                    
-                    break;
-
-                case 'query':
-                    if ($argument !== '--execute') {
-                        print_help();
-                    }
-
-                    list($arg, $db) = isset($argv[2]) && strpos(strtolower($argv[2]), '=') !== false 
-                        ? explode('=', $argv[2]) 
-                        : (isset($argv[2]) ? [$argv[2], null] : [null, null]);
-
-                    $db = $arg === '--db' ? $db : null;
-
-                    \Framework\Console\Database::executeQuery($data, $db);
-
-                    break;
-
-                case 'migration':
-                    list($arg, $seed) = isset($argv[2]) && strpos(strtolower($argv[2]), '=') !== false 
-                        ? explode('=', $argv[2]) 
-                        : (isset($argv[2]) ? [$argv[2], ''] : [null, '']);
-
-                    $seed = $arg === '--seed' ? $seed : null;
-
-                    switch ($argument) {
-                        case '--migrate':
-                            \Framework\Console\Database::migrateTable($data);
-
-                            if (!is_null($seed)) {
-                                \Framework\Console\Database::runSeeder($seed);
-                            }
-
-                            break;
-
-                        case '--reset':
-                            \Framework\Console\Database::resetTable($data);
-
-                            if (!is_null($seed)) {
-                                \Framework\Console\Database::runSeeder($seed);
-                            }
-
-                            break;
-
-                        case '--delete':
-                            \Framework\Console\Database::deleteTable($data);
-                            break;
-                    }
-
-                    break;
-
-                case 'seed':
-                    if ($argument !== '--run') {
-                        print_help();
-                    }
-
-                    \Framework\Console\Database::runSeeder($data);
-                    break;
-            }
-
-        case 'make':
-            list($argument, $data) = isset($argv[1]) && strpos(strtolower($argv[1]), '=') !== false 
-                ? explode('=', $argv[1]) 
-                : (isset($argv[1]) ? [$argv[1], null] : [null, null]);
-
-            if (is_null($argument)) {
-                print_help();
-            }
-
-            list($arg, $namespace) = isset($argv[2]) && strpos(strtolower($argv[2]), '=') !== false 
-                ? explode('=', $argv[2]) 
-                : (isset($argv[2]) ? [$argv[2], null] : [null, null]);
-            
-            switch ($option) {
-                case 'controller':
-                    $namespace = $arg === '--namespace' ? $namespace : null;
-                    $resources = $arg === '--resources';
-
-                    if (!$resources) {
-                        \Framework\Console\Make::makeController($argument, $namespace);
-                    } else {
-                        \Framework\Console\Make::makeController($argument, 'admin');
-                        \Framework\Console\Make::makeMigration($argument);
-                        \Framework\Console\Make::makeModel($argument);
-                        \Framework\Console\Make::makeSeed($argument);
-                        \Framework\Console\Make::makeViews($argument);
-                        \Framework\Console\Make::makeRoute($argument);
-                    }
-
-                    break;
-
-                case 'migration':
-                    \Framework\Console\Make::makeMigration($argument);
-
-                    list($_arg, $_namespace) = isset($argv[3]) && strpos(strtolower($argv[3]), '=') !== false 
-                        ? explode('=', $argv[3]) 
-                        : (isset($argv[3]) ? [$argv[3], null] : [null, null]);
-
-                    $_namespace = $_arg === '--namespace' ? $_namespace : null;
-
-                    if ($arg === '-m') {
-                        \Framework\Console\Make::makeModel($argument);
-                    } else if ($arg === '-c') {
-                        \Framework\Console\Make::makeController($argument, $namespace);
-                    } else if ($arg === '-s') {
-                        \Framework\Console\Make::makeSeed($argument);
-                    } else if ($arg === '-mc' || $arg === '-cm') {
-                        \Framework\Console\Make::makeController($argument, $namespace);
-                        \Framework\Console\Make::makeModel($argument);
-                    } else if ($arg === '-ms' || $arg === '-sm') {
-                        \Framework\Console\Make::makeModel($argument);
-                        \Framework\Console\Make::makeSeed($argument);
-                    } else if ($arg === '-cs' || $arg === '-sc') {
-                        \Framework\Console\Make::makeController($argument, $namespace);
-                        \Framework\Console\Make::makeSeed($argument);
-                    } else if (in_array($arg, ['-mcs', '-msc', '-csm', '-cms', '-smc', '-scm'])) {
-                        \Framework\Console\Make::makeController($argument, $namespace);
-                        \Framework\Console\Make::makeModel($argument);
-                        \Framework\Console\Make::makeSeed($argument);
-                    }
-                    
-                    break;
-
-                case 'model':
-                    \Framework\Console\Make::makeModel($argument);
-                    break;
-
-                case 'seed':
-                    \Framework\Console\Make::makeSeed($argument);
-                    break;
-
-                case 'mail':
-                    \Framework\Console\Make::makeMail($argument);
-                    break;
-
-                case 'middleware':
-                    \Framework\Console\Make::makeMiddleware($argument);
-                    break;
-
-                case 'request':
-                    \Framework\Console\Make::makeRequest($argument);
-                    break;
-            }
-
-            break;
-
-        default:
+        if (!in_array($argument, $arguments)) {
             print_help();
-    }
+        }
+
+        switch ($option) {
+            case 'schema':
+                switch ($argument) {
+                    case '--create':
+                        \Framework\Console\Database::createSchema($data);
+                        break;
+
+                    case '--delete':
+                        \Framework\Console\Database::deleteSchema($data);
+                        break;
+                }
+                
+                break;
+
+            case 'query':
+                if ($argument !== '--execute') {
+                    print_help();
+                }
+
+                list($arg, $db) = isset($argv[2]) && strpos(strtolower($argv[2]), '=') !== false 
+                    ? explode('=', $argv[2]) 
+                    : (isset($argv[2]) ? [$argv[2], null] : [null, null]);
+
+                $db = $arg === '--db' ? $db : null;
+
+                \Framework\Console\Database::executeQuery($data, $db);
+
+                break;
+
+            case 'migration':
+                list($arg, $seed) = isset($argv[2]) && strpos(strtolower($argv[2]), '=') !== false 
+                    ? explode('=', $argv[2]) 
+                    : (isset($argv[2]) ? [$argv[2], ''] : [null, '']);
+
+                $seed = $arg === '--seed' ? $seed : null;
+
+                switch ($argument) {
+                    case '--migrate':
+                        \Framework\Console\Database::migrateTable($data);
+
+                        if (!is_null($seed)) {
+                            \Framework\Console\Database::runSeeder($seed);
+                        }
+
+                        break;
+
+                    case '--reset':
+                        \Framework\Console\Database::resetTable($data);
+
+                        if (!is_null($seed)) {
+                            \Framework\Console\Database::runSeeder($seed);
+                        }
+
+                        break;
+
+                    case '--delete':
+                        \Framework\Console\Database::deleteTable($data);
+                        break;
+                }
+
+                break;
+
+            case 'seed':
+                if ($argument !== '--run') {
+                    print_help();
+                }
+
+                \Framework\Console\Database::runSeeder($data);
+                break;
+        }
+
+    case 'make':
+        list($argument, $data) = isset($argv[1]) && strpos(strtolower($argv[1]), '=') !== false 
+            ? explode('=', $argv[1]) 
+            : (isset($argv[1]) ? [$argv[1], null] : [null, null]);
+
+        if (is_null($argument)) {
+            print_help();
+        }
+
+        list($arg, $namespace) = isset($argv[2]) && strpos(strtolower($argv[2]), '=') !== false 
+            ? explode('=', $argv[2]) 
+            : (isset($argv[2]) ? [$argv[2], null] : [null, null]);
+        
+        switch ($option) {
+            case 'controller':
+                $namespace = $arg === '--namespace' ? $namespace : null;
+                $resources = $arg === '--resources';
+
+                if (!$resources) {
+                    \Framework\Console\Make::makeController($argument, $namespace);
+                } else {
+                    \Framework\Console\Make::makeController($argument, 'admin');
+                    \Framework\Console\Make::makeMigration($argument);
+                    \Framework\Console\Make::makeModel($argument);
+                    \Framework\Console\Make::makeSeed($argument);
+                    \Framework\Console\Make::makeViews($argument);
+                    \Framework\Console\Make::makeRoute($argument);
+                }
+
+                break;
+
+            case 'migration':
+                \Framework\Console\Make::makeMigration($argument);
+
+                list($_arg, $_namespace) = isset($argv[3]) && strpos(strtolower($argv[3]), '=') !== false 
+                    ? explode('=', $argv[3]) 
+                    : (isset($argv[3]) ? [$argv[3], null] : [null, null]);
+
+                $_namespace = $_arg === '--namespace' ? $_namespace : null;
+
+                if ($arg === '-m') {
+                    \Framework\Console\Make::makeModel($argument);
+                } else if ($arg === '-c') {
+                    \Framework\Console\Make::makeController($argument, $namespace);
+                } else if ($arg === '-s') {
+                    \Framework\Console\Make::makeSeed($argument);
+                } else if ($arg === '-mc' || $arg === '-cm') {
+                    \Framework\Console\Make::makeController($argument, $namespace);
+                    \Framework\Console\Make::makeModel($argument);
+                } else if ($arg === '-ms' || $arg === '-sm') {
+                    \Framework\Console\Make::makeModel($argument);
+                    \Framework\Console\Make::makeSeed($argument);
+                } else if ($arg === '-cs' || $arg === '-sc') {
+                    \Framework\Console\Make::makeController($argument, $namespace);
+                    \Framework\Console\Make::makeSeed($argument);
+                } else if (in_array($arg, ['-mcs', '-msc', '-csm', '-cms', '-smc', '-scm'])) {
+                    \Framework\Console\Make::makeController($argument, $namespace);
+                    \Framework\Console\Make::makeModel($argument);
+                    \Framework\Console\Make::makeSeed($argument);
+                }
+                
+                break;
+
+            case 'model':
+                \Framework\Console\Make::makeModel($argument);
+                break;
+
+            case 'seed':
+                \Framework\Console\Make::makeSeed($argument);
+                break;
+
+            case 'mail':
+                \Framework\Console\Make::makeMail($argument);
+                break;
+
+            case 'middleware':
+                \Framework\Console\Make::makeMiddleware($argument);
+                break;
+
+            case 'request':
+                \Framework\Console\Make::makeRequest($argument);
+                break;
+        }
+
+        break;
+
+    case 'cache':
+        if ($option !== 'clear') {
+            print_help();
+        }
+
+        echo '[...] Clearing twig templates cache' . PHP_EOL;
+        \Framework\Support\Storage::path(config('storage.cache'))->deleteDir('');
+        echo '[+] Cache cleared succesfully' . PHP_EOL;
+
+        break;
+
+    default:
+        print_help();
 }

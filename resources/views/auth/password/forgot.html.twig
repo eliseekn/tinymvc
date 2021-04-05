@@ -1,0 +1,28 @@
+{% extends "layouts/auth.html.twig" %}
+
+{% block page_title %}
+	{{ __('forgot_password', true) }}
+{% endblock %}
+
+{% block page_content %}
+
+	<div class="card mb-3">
+		<div class="card-body bg-light">
+			<p class="card-text">
+				{{ __('reset_password_instructions', true) }}
+			</p>
+		</div>
+	</div>
+
+	<div class="card shadow p-4">
+		<form method="post" action="{{ absolute_url('password/notify') }}">
+			<div class="form-group">
+				<label for="email">{{ __('email', true) }}</label>
+				<input type="email" id="email" name="email" class="form-control" required>
+			</div>
+
+			<button type="submit" class="btn btn-block btn-primary loading">{{ __('submit', true) }}</button>
+		</form>
+	</div>
+
+{% endblock %}

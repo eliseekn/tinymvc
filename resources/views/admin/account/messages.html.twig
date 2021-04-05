@@ -1,0 +1,135 @@
+{% extends "layouts/admin.html.twig" %}
+
+{% block page_title %}
+	{{ __('messages') ~ ' | Administration' }}
+{% endblock %}
+
+{% block page_content %}
+
+    <metrics-cards>
+        <metric-card-item 
+            title="{{ __('total') }}" 
+            icon="fa fa-envelope fa-lg" 
+            data="{{ messages.getTotalItems() }}"
+            columns="4">
+        </metric-card-item>
+
+        <metric-card-item 
+            title="{{ __('unread') }}" 
+            icon="fa fa-eye-slash fa-lg" 
+            data="{{ messages_unread }}"
+            columns="4">
+        </metric-card-item>
+    </metrics-cards>
+
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <div class="d-flex flex-lg-row flex-column align-items-lg-center justify-content-lg-between">
+                <span>{{ __('messages') }}</span>
+
+                <div class="d-flex flex-lg-row flex-column mt-lg-0 mt-2">
+                    <span class="mr-md-3">
+                        <input type="search" class="form-control" id="filter" placeholder="{{ __('search') }}">
+                    </span>
+
+                    <span class="mt-lg-0 mt-2">
+                        <send-message action="{{ absolute_url('admin/account/messages/create') }}"  recipient="0" modal_title="{{ __('new') }}">
+                            <button class="btn btn-outline-dark mr-2" title="{{ __('new') }}">
+                                {{ __('new') }}
+                            </button>
+                        </send-message>
+
+                        <button class="btn btn-outline-dark" id="bulk-read" data-url="{{ absolute_url('admin/account/messages/update') }}">
+                            {{ __('mark_all_as_read') }}
+                        </button>
+
+                        <export-modal action="{{ absolute_url('admin/account/messages/export') }}">
+                            <button class="btn btn-outline-dark mx-2">{{ __('export') }}</button>
+                        </export-modal>
+
+                        <button class="btn btn-danger" id="bulk-delete" data-url="{{ absolute_url('admin/account/messages/delete') }}">
+                            {{ __('bulk_delete') }}
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="select-all">
+                                    <label class="custom-control-label" for="select-all"></label>
+                                </div>
+                            </th>
+
+                            <th scope="col"><i class="fa fa-sort"></i> ID</th>
+                            <th scope="col"><i class="fa fa-sort"></i> {{ __('sender') }}</th>
+                            <th scope="col"><i class="fa fa-sort"></i> {{ __('recipient') }}</th>
+                            <th scope="col"><i class="fa fa-sort"></i> {{ __('message') }}</th>
+                            <th scope="col"><i class="fa fa-sort"></i> {{ __('created_at') }}</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for message in messages.getItems() %}
+                        <tr>
+                            <td>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="{{ message.id }}" data-id="{{ message.id }}">
+                                    <label class="custom-control-label" for="{{ message.id }}"></label>
+                                </div>
+                            </td>
+
+                            <td>{{ message.id }}</td>
+                            <td>{{ message.sender_email }}</td>
+                            <td>{{ message.recipient_email }}</td>
+                            <td>{{ message.message }}</td>
+                            <td>{{ time_elapsed(message.created_at) }}</td>
+
+                            <td>
+                                {% if message.sender_email != auth('email') %}
+                                <update-item action="{{ absolute_url('admin/account/messages/update', message.id) }}" {{ message.recipient_status == 'read' ? 'disabled' }}>
+                                    <button type="submit" class="btn text-dark p-1" {{ message.recipient_status == 'unread' ? 'title="' ~ __('mark_as_read') ~ '"' }}>
+                                        <i class="fa fa-eye{{ message.recipient_status == 'unread' ? '-slash' }}"></i>
+                                    </button>
+                                </update-item>
+
+                                <send-message action="{{ absolute_url('admin/account/messages/reply', message.id) }}" recipient="{{ message.sender }}" modal_title="{{ __('reply') }}">
+                                    <a class="btn text-dark p-1" href="#" title="{{ __('reply') }}">
+                                        <i class="fa fa-reply-all"></i>
+                                    </a>
+                                </send-message>
+                                {% endif %}
+
+                                <delete-item action="{{ absolute_url('admin/account/messages/delete', message.id) }}">
+                                    <a class="btn text-danger p-1" title="{{ __('delete') }}">
+                                        <i class="fa fa-trash-alt"></i>
+                                    </a>
+                                </delete-item>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card-footer d-flex align-items-center justify-content-between">
+            <span>{{ __('total_results') }} <span class="font-weight-bold">{{ messages.getTotalItems() }}</span></span>
+            <span>{{ __('showing') }}
+                <span class="font-weight-bold">{{ messages.getPageTotalItems() == 0 ? messages.getFirstItem() : messages.getFirstItem() + 1 }}</span>
+                {{ __('to') }}
+                <span class="font-weight-bold">{{ messages.getPageTotalItems() + messages.getFirstItem() }}</span>
+            </span>
+
+            {% include "partials/pagination.html.twig" with {pagination: messages} %}
+        </div>
+    </div>
+
+{% endblock %}

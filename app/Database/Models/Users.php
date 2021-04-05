@@ -138,7 +138,7 @@ class Users
             'name' => $request->name,
             'email' => $request->email,
             'country' => $request->country,
-            'company' => $request->company ?? '',
+            'company' => $request->inputs('company', ''),
             'phone' => $request->phone,
             'two_steps' => $request->exists('two_steps') ? 1 : 0,
             'lang' => $request->lang,

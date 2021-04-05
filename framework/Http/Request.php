@@ -72,7 +72,7 @@ class Request
      */
     public function inputs(?string $key = null, $default = null)
     {
-        $input =  is_null($key) ? $_POST : ($_POST[$key] ?? '');
+        $input = is_null($key) ? $_POST : ($_POST[$key] ?? '');
 
         if (empty($input) && !is_null($default)) {
             $input = $default;
@@ -169,7 +169,7 @@ class Request
     public function fullUri(): string
     {
         $uri = $this->headers('REQUEST_URI');
-        $uri = str_replace('/' . config('app.folder'), '', $uri); //remove app folder if exists
+        $uri = str_replace('/' . config('app.location'), '', $uri); //remove app folder if exists
         return $uri;
     }
 

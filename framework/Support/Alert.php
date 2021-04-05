@@ -81,7 +81,7 @@ class Alert
             'title' => $title,
         ]);
 
-        Session::create('alerts', self::$alert);
+        Session::create('alert', self::$alert);
     }
     
     /**
@@ -97,7 +97,7 @@ class Alert
             'title' => $title,
         ]);
         
-        Session::create('alerts', self::$alert);
+        Session::create('alert', self::$alert);
     }
     
     /**
@@ -113,7 +113,7 @@ class Alert
             'title' => $title,
         ]);
         
-        Session::create('alerts', self::$alert);
+        Session::create('alert', self::$alert);
     }
     
     /**
@@ -129,6 +129,6 @@ class Alert
             'title' => $title,
         ]);
         
-        Session::create('alerts', self::$alert);
+        Session::create('alert', self::$alert);
     }
 }

@@ -123,10 +123,10 @@ class Controller
     /**
      * call middlewares
      *
-     * @param  string[] $middlewares
+     * @param  mixed $middlewares
      * @return void
      */
-    public function middlewares(string ...$middlewares): void
+    public function middlewares(...$middlewares): void
     {
         foreach ($middlewares as $middleware) {
             Middleware::execute($middleware);

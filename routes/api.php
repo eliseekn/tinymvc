@@ -26,7 +26,7 @@ Route::group([
             $notifications = Notifications::findMessages();
 
             foreach ($notifications as $notification) {
-                $notification->created_at = date_helper($notification->created_at)->time_elapsed();
+                $notification->created_at = time_elapsed($notification->created_at);
             }
 
             (new Response())->send(['notifications' => $notifications], true);
@@ -49,7 +49,7 @@ Route::group([
             $messages = Messages::findReceivedMessages();
 
             foreach ($messages as $message) {
-                $message->created_at = date_helper($message->created_at)->time_elapsed();
+                $message->created_at = time_elapsed($message->created_at);
             }
 
             (new Response())->send(['messages' => $messages], true);

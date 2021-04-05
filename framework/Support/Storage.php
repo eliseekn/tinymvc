@@ -69,9 +69,9 @@ class Storage
      * @param  bool $recursive
      * @return bool
      */
-    public function createDir(?string $pathname = null, bool $recursive = false, int $mode = 0777): bool
+    public function createDir(string $pathname = '', bool $recursive = false, int $mode = 0777): bool
     {
-        return is_null($pathname) ? mkdir(self::$path, $mode, $recursive) : mkdir(self::$path . $pathname, $mode, $recursive);
+        return mkdir(self::$path . $pathname, $mode, $recursive);
     }
     
     /**
@@ -85,7 +85,7 @@ class Storage
     public function writeFile(string $filename, $content, bool $append = false): bool
     {
         if (!$this->isDir()) {
-            if (!$this->createDir(null, true)) {
+            if (!$this->createDir('', true)) {
                 return false;
             }
         }
@@ -157,12 +157,12 @@ class Storage
     /**
      * check if folder exists
      *
-     * @param  string|null $pathname
+     * @param  string $pathname
      * @return bool
      */
-    public function isDir(?string $pathname = null): bool
+    public function isDir(string $pathname = ''): bool
     {
-        return is_null($pathname) ? is_dir(self::$path) : is_dir(self::$path . $pathname);
+        return is_dir(self::$path . $pathname);
     }
     
     /**
@@ -183,20 +183,21 @@ class Storage
      * @return bool
      * @link https://stackoverflow.com/questions/3338123/how-do-i-recursively-delete-a-directory-and-its-entire-contents-files-sub-dir
      */
-    public function deleteDir(string $pathname): bool
+    public function deleteDir(string $pathname = ''): bool
     {
         if ($this->isDir($pathname)) {
             $objects = scandir(self::$path . $pathname);
-    
+            $pathname = empty($pathname) ? $pathname : $pathname . DIRECTORY_SEPARATOR;
+
             foreach ($objects as $object) {
                 if ($object != '.' && $object != '..') {
                     if (
-                        $this->isDir($pathname . DIRECTORY_SEPARATOR . $object) &&
-                        !is_link(self::$path . $pathname . DIRECTORY_SEPARATOR . $object)
+                        $this->isDir($pathname . $object) &&
+                        !is_link(self::$path . $pathname . $object)
                     ) {
-                        $this->deleteDir($pathname . DIRECTORY_SEPARATOR . $object);
+                        $this->deleteDir($pathname . $object);
                     } else {
-                        $this->deleteFile($pathname . DIRECTORY_SEPARATOR . $object);
+                        $this->deleteFile($pathname . $object);
                     }
                 }
             }

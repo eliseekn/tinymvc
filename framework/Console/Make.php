@@ -166,7 +166,7 @@ class Make
         foreach(self::stubs()->add('views' . DIRECTORY_SEPARATOR . 'admin')->getFiles() as $file) {
             $data = self::stubs()->add('views' . DIRECTORY_SEPARATOR . 'admin')->readFile($file);
             $data = str_replace('RESOURCENAME', $resource_name, $data);
-            $file = str_replace('stub', 'php', $file);
+            $file = str_replace('stub', 'html.twig', $file);
 
             if (!Storage::path(config('storage.views'))->add($resource_folder)->writeFile($file, $data)) {
                 exit('[-] Failed to generate views for ' . $resource . PHP_EOL);
@@ -267,8 +267,8 @@ class Make
 
         $data = self::stubs()->add('views')->readFile('email.stub');
 
-        if (!Storage::path(config('storage.views'))->add('emails')->writeFile($mail_name . '.php', $data)) {
-            exit('[!] Failed to generate mail ' . $mail_class . PHP_EOL);
+        if (!Storage::path(config('storage.views'))->add('emails')->writeFile($mail_name . '.html.twig', $data)) {
+            exit('[!] Failed to generate email template ' . $mail_name . PHP_EOL);
         }
         
         echo '[+] ' . $mail_class . ' generated successfully' . PHP_EOL;

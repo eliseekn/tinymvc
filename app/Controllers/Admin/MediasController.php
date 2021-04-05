@@ -3,10 +3,10 @@
 namespace App\Controllers\Admin;
 
 use Carbon\Carbon;
-use App\Helpers\Auth;
 use App\Requests\UpdateMedia;
 use Framework\Support\Storage;
 use App\Database\Models\Medias;
+use App\Helpers\DownloadHelper;
 use Framework\Routing\Controller;
 
 class MediasController extends Controller
@@ -19,8 +19,8 @@ class MediasController extends Controller
     public function index(): void
 	{
         $medias = Medias::paginate();
-        list($videos, $images, $sounds) = Medias::findByType();
-		$this->render('admin.medias.index', compact('medias', 'images', 'videos', 'sounds'));
+        list($images, $videos, $audios) = Medias::findByType();
+		$this->render('admin.medias.index', compact('medias', 'images', 'videos', 'audios'));
 	}
     
     /**
@@ -30,10 +30,22 @@ class MediasController extends Controller
      */
     public function search(): void
 	{
-        $medias = Medias::paginateQuery($this->request());
-        $q = $this->request('q') ?? '';
-        list($videos, $images, $sounds) = Medias::findByTypeQuery($q);
-		$this->render('admin.medias.index', compact('medias', 'images', 'videos', 'sounds', 'q'));
+        $q = $this->request()->queries('q', '');
+        $medias = Medias::paginateQuery($q);
+        list($images, $videos, $audios) = Medias::findByTypeQuery($q);
+		$this->render('admin.medias.index', compact('medias', 'images', 'videos', 'audios', 'q'));
+	}
+    
+    /**
+     * download
+     *
+	 * @param  int $id
+     * @return void
+     */
+    public function download(int $id): void
+	{
+        $media = $this->model('medias')->findSingle($id);
+        DownloadHelper::init($media->filename, true)->send();
 	}
 
 	/**

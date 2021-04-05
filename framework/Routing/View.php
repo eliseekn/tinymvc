@@ -9,10 +9,12 @@
 namespace Framework\Routing;
 
 use Exception;
-use League\Plates\Engine;
+use Twig\Environment;
+use Framework\Support\TwigExtensions;
 use Framework\Http\Response;
 use Framework\Support\Session;
 use Framework\Support\Storage;
+use Twig\Loader\FilesystemLoader;
 
 /**
  * Main view class
@@ -28,18 +30,26 @@ class View
      */
     public static function getContent(string $view, array $data = []): string
     {
-        $view = real_path($view);
+        $path = Storage::path(config('storage.views'));
+        $view = real_path($view) . '.html.twig';
 
-        if (!Storage::path(config('storage.views'))->isFile($view . '.php')) {
-            throw new Exception('File "' . Storage::path(config('storage.views'))->get() . $view . '.php" not found.');
+        if (!$path->isFile($view)) {
+            throw new Exception('File "' . $path->file($view) . ' not found.');
         }
 
-        $engine = new Engine(Storage::path(config('storage.views'))->get());
+        $loader = new FilesystemLoader($path->get());
+        $twig = new Environment($loader, [
+            'cache' => config('storage.cache'),
+            'auto_reload' => !config('twig.disable_cache'),
+            'debug' => config('errors.display')
+        ]);
 
-        return $engine->render($view, array_merge($data, [
+        $twig->addExtension(new TwigExtensions());
+
+        return $twig->render($view, array_merge($data, [
             'inputs' => (object) Session::pull('inputs'), 
             'errors' => (object) Session::pull('errors'), 
-            'alerts' => Session::pull('alerts')
+            'alert' => Session::pull('alert')
         ]));
     }
 

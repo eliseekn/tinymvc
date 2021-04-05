@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="<?= config('app.lang') ?>">
+<html lang="{{ config('app.lang') }}">
 
 <head>
     <meta charset="utf-8">
@@ -25,36 +25,29 @@
 
 <body>
     <table>
-        <?php if (!empty($headers)) : ?>
+        {% if headers is not empty %}
 
         <thead>
             <tr>
                 <th align="left">#</th>
 
-                <?php foreach ($headers as $header) : ?>
-
-                    <th align="left"><?= $header ?></th>
-
-                <?php endforeach ?>
+                {% for header in headers %}
+                <th align="left">{{ header }}</th>
+                {% endfor %}
             </tr>
         </thead>
 
-        <?php endif ?>
+        {% endif %}
 
         <tbody>
-            <?php foreach ($data as $key => $value) : ?>
-
+            {% for d in data %}
             <tr>
-                <td><?= $key + 1 ?></td>
+                <td>{{ loop.index }}</td>
 
-                <?php foreach ($value as $column) : ?>
-
-                <td><?= $column ?></td>
-
-                <?php endforeach ?>
-            </tr>
-
-            <?php endforeach ?>
+                {% for value in d %}
+                <td>{{ value }}</td>
+                {% endfor %}
+            {% endfor %}
         </tbody>
     </table>
 </body>

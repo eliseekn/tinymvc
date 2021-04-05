@@ -1,0 +1,21 @@
+{% if alert.display == 'popup' %}
+    <alert-popup type="{{ alert.type }}" message="{{ alert.message }}" title="{{ alert.title }}"></alert-popup>
+{% elseif alert.display == 'toast' %}
+    <alert-toast type="{{ alert.type }}" message="{{ alert.message }}" title="{{ alert.title }}"></alert-toast>
+{% else %}
+
+    <div class="alert alert-{{ alert.type }} alert-dismissible show" role="alert">
+        {% if alert.title is not empty %}
+        <h5 class="alert-heading">{{ alert.title }}</h5>
+        {% endif %}
+
+        {{ alert.message|raw }}
+
+        {% if alert.dismiss %}
+        <button class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {% endif %}
+    </div>
+
+{% endif %}

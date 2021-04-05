@@ -13,7 +13,7 @@
 $config = [
     'app' => [
         'name' => 'TinyMVC',
-        'folder' => 'tinymvc', //leave empty if you are using 'www' root
+        'location' => 'tinymvc', //leave empty if you are using 'www' root
         'url' => 'http://localhost/tinymvc', //remove folder if you are using 'www' root
         'lang' => 'en'
     ],
@@ -64,9 +64,9 @@ $config = [
         'encrypt_cookies' => true,
 
         'auth' => [
-            'max_attempts' => 5, //set to 0 to disable
+            'max_attempts' => 0, //set to 0 to disable
             'unlock_timeout' => 1, //in minute
-            'email_confirmation' => true
+            'email_confirmation' => false
         ]
     ],
 
@@ -83,10 +83,23 @@ $config = [
         'middlewares' => absolute_path('app.Middlewares'),
         'requests' => absolute_path('app.Requests'),
         'logs' => absolute_path('storage.logs'),
+        'cache' => absolute_path('storage.cache'),
         'mails' => absolute_path('app.Mails')
     ],
 
     'session' => [
         'lifetime' => 3600 * 5, //5 hours in seconds
+    ],
+
+    'twig' => [
+        'disable_cache' => false,
+        'extensions' => [
+            'functions' => [],
+            'filters' => [],
+            'globals' => [
+                'USER_ROLE' => \App\Database\Models\Roles::ROLE,
+                'MEDIA_TYPE' => \App\Database\Models\Medias::TYPE
+            ]
+        ]
     ]
 ];

@@ -8,6 +8,7 @@
 
 namespace Framework\Routing;
 
+use Closure;
 use Exception;
 use Framework\Http\Request;
 use Framework\Routing\View;
@@ -50,7 +51,7 @@ class Router
     {
         if (!empty($routes)) {
             foreach ($routes as $route => $options) {
-                $request->method($request->get('request_method', $options['method']));
+                $request->method($request->inputs('request_method', $options['method']));
 
                 if (preg_match('/' . strtoupper($options['method']) . '/', strtoupper($request->method()))) {
                     $pattern = preg_replace('/{str}/i', '([a-zA-Z-_]+)', $route);
@@ -63,12 +64,11 @@ class Router
                         //check for middlewares to execute
                         Middleware::check($route);
 
-                        if (is_callable($options['handler'])) {
+                        if ($options['handler'] instanceof Closure) {
                             //execute function with parameters
                             call_user_func_array($options['handler'], array_values($params));
                         } else {
-                            list($controller, $action) = explode('@', $options['handler']);
-                            $controller = 'App\Controllers\\' . $controller;
+                            list($controller, $action) = $options['handler'];
 
                             //chekc if controller class and method exist
                             if (class_exists($controller) && method_exists($controller, $action)) {

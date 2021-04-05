@@ -48,6 +48,16 @@ class Pager
     }
     
     /**
+     * get items array
+     *
+     * @return array
+     */
+    public function getItems(): array
+    {
+        return $this->items;
+    }
+    
+    /**
      * get page first item
      *
      * @return int

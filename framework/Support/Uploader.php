@@ -170,7 +170,7 @@ class Uploader
 
         //create destination directory
         if (!Storage::path($destination)->isDir()) {
-            if (!Storage::path($destination)->createDir(null, true)) {
+            if (!Storage::path($destination)->createDir('', true)) {
                 return false;
             }
         }

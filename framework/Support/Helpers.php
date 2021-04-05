@@ -153,11 +153,12 @@ if (!function_exists('auth')) {
 	/**
 	 * get authenticated user session data
 	 *
+     * @param  string $property
 	 * @return mixed
 	 */
-	function auth()
+	function auth(string $property)
 	{
-		return get_session('user');
+		return get_session('user')->$property;
 	}
 }
 
@@ -169,12 +170,21 @@ if (!function_exists('date_helper')) {
     /**
      * datehelper helper function
      *
-     * @param  mixed $datetime
-     * @return \App\Helpers\DateHelper
+     * @param  mixed $date
+     * @param  string $format
+     * @return string
      */
-    function date_helper($datetime = null): \App\Helpers\DateHelper
+    function date_helper($date = null, string $format = 'human'): string
     {
-        return DateHelper::format($datetime);
+        $dh = DateHelper::format($date);
+
+        if ($format === 'human') {
+            return $dh->human();
+        } else if ($format === 'timestamp') {
+            return $dh->timestamp();
+        } else {
+            return $dh->date($format);
+        }
     }
 }
 
@@ -498,7 +508,7 @@ if (!function_exists('time_elapsed')) {
 	 * @return string
 	 * @link   https://stackoverflow.com/a/18602474
 	 */
-	function time_elapsed($datetime, int $level = 7): string
+	function time_elapsed($datetime, int $level = 1): string
 	{
 		$now = new DateTime;
 		$ago = new DateTime($datetime);
@@ -540,7 +550,7 @@ if (!function_exists('__')) {
      */
     function __(string $expr, bool $app_config = false): string
     {
-        $lang = $app_config ? config('app.lang') : auth()->lang;
+        $lang = $app_config ? config('app.lang') : auth('lang');
         $config = ConfigFactory::loadPath(absolute_path('resources.lang') . $lang . '.php');
 		return $config($expr, '');
     }

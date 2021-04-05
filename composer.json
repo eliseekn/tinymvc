@@ -5,7 +5,7 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "N'Guessan Kouadio Elisée",
+            "name": "Kouadio Elisée N'GUESSAN",
             "email": "eliseekn@gmail.com"
         }
     ],
@@ -24,13 +24,13 @@
     },
     "require": {
         "php": "^7.2",
-        "league/plates": "^3.3",
         "wixel/gump": "^1.11",
         "phpmailer/phpmailer": "^6.1",
         "caseyamcl/configula": "^3.1",
         "dompdf/dompdf": "^0.8.6",
         "nesbot/carbon": "^2.41",
-        "pragmarx/countries": "^0.7.2"
+        "pragmarx/countries": "^0.7.2",
+        "twig/twig": "^3.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5",

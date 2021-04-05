@@ -30,16 +30,6 @@ class Redirect
     protected $alert;
     
     /**
-     * process redirection
-     *
-     * @return void
-     */
-    private function redirect(): void
-    {
-        redirect_to(self::$url);
-    } 
-
-    /**
      * redirect to url 
      *
      * @param  string $url
@@ -77,7 +67,7 @@ class Redirect
      */
     public function only(): void
     {
-        $this->redirect();
+        redirect_to(self::$url);
     }
     
     /**
@@ -179,7 +169,7 @@ class Redirect
     public function success(string $title = 'Success'): void
     {
         $this->alert->success($title);
-        $this->redirect();
+        redirect_to(self::$url);
     }
         
     /**
@@ -191,7 +181,7 @@ class Redirect
     public function error(string $title = 'Error'): void
     {
         $this->alert->error($title);
-        $this->redirect();
+        redirect_to(self::$url);
     }
         
     /**
@@ -203,7 +193,7 @@ class Redirect
     public function info(string $title = 'Info'): void
     {
         $this->alert->info($title);
-        $this->redirect();
+        redirect_to(self::$url);
     }
         
     /**
@@ -215,6 +205,6 @@ class Redirect
     public function warning(string $title = 'Warning'): void
     {
         $this->alert->warning($title);
-        $this->redirect();
+        redirect_to(self::$url);
     }
 }

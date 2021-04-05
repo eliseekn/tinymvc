@@ -26,6 +26,8 @@ class DownloadHelper
         'jpeg' => 'image/jpg',
         'gif' => 'image/gif',
         'png' => 'image/png',
+        'svg' => 'image/svg',
+        'json' => 'application/json'
     ];
 
     /**
@@ -52,7 +54,7 @@ class DownloadHelper
             $content_type = 'text/plain';
         }
 
-		Response::headers([
+		(new Response())->headers([
 			'Content-Description' => 'File Transfer',
             'Content-Type' => $content_type,
 			'Content-Disposition' => 'attachment; filename="' . $filename . '"',

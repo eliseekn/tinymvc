@@ -7,6 +7,17 @@
  */
 
 use Framework\Routing\Route;
+use App\Middlewares\RememberUser;
+use App\Middlewares\CsrfProtection;
+use App\Middlewares\SanitizeInputs;
+use App\Middlewares\DashboardPolicy;
+use App\Controllers\Admin\UsersController;
+use App\Controllers\Admin\MediasController;
+use App\Controllers\Admin\MessagesController;
+use App\Controllers\Admin\SettingsController;
+use App\Controllers\Admin\DashboardController;
+use App\Controllers\Admin\ActivitiesController;
+use App\Controllers\Admin\NotificationsController;
 
 /**
  * Admin panel routes
@@ -15,239 +26,101 @@ use Framework\Routing\Route;
 //get requests routes
 Route::group([
     //dashboard route
-    'dashboard' => ['handler' => 'Admin\DashboardController@index'],
+    'dashboard' => ['handler' => [DashboardController::class, 'index']],
 
     //users routes
-    'resources/users' => ['handler' => 'Admin\UsersController@index'],
-    'resources/users/new' => ['handler' => 'Admin\UsersController@new'],
-    'resources/users/edit/{num}' => ['handler' => 'Admin\UsersController@edit'],
-    'resources/users/read/{num}' => ['handler' => 'Admin\UsersController@read'],
+    'resources/users' => ['handler' => [UsersController::class, 'index']],
+    'resources/users/new' => ['handler' => [UsersController::class, 'new']],
+    'resources/users/edit/{num}' => ['handler' => [UsersController::class, 'edit']],
+    'resources/users/read/{num}' => ['handler' => [UsersController::class, 'read']],
 
     //medias routes
-    'resources/medias' => ['handler' => 'Admin\MediasController@index'],
-    'resources/medias/new' => ['handler' => 'Admin\MediasController@new'],
-    'resources/medias/edit/{num}' => ['handler' => 'Admin\MediasController@edit'],
-    'resources/medias/read/{num}' => ['handler' => 'Admin\MediasController@read'],
-    'resources/medias/search' => ['handler' => 'Admin\MediasController@search'],
+    'resources/medias' => ['handler' => [MediasController::class, 'index']],
+    'resources/medias/new' => ['handler' => [MediasController::class, 'new']],
+    'resources/medias/edit/{num}' => ['handler' => [MediasController::class, 'edit']],
+    'resources/medias/read/{num}' => ['handler' => [MediasController::class, 'read']],
+    'resources/medias/search' => ['handler' => [MediasController::class, 'search']],
+    'resources/medias/download/{num}' => ['handler' => [MediasController::class, 'download']],
 
     //account management routes
-    'account/messages' => ['handler' => 'Admin\MessagesController@index'],
-    'account/notifications' => ['handler' => 'Admin\NotificationsController@index'],
-    'account/settings/{num}' => ['handler' => 'Admin\SettingsController@index'],
-    'account/activities' => ['handler' => 'Admin\ActivitiesController@index'],
+    'account/messages' => ['handler' => [MessagesController::class, 'index']],
+    'account/notifications' => ['handler' => [NotificationsController::class, 'index']],
+    'account/settings/{num}' => ['handler' => [SettingsController::class, 'index']],
+    'account/activities' => ['handler' => [ActivitiesController::class, 'index']],
 ])->by([
     'method' => 'get',
     'prefix' => 'admin',
     'middlewares' => [
-        'RememberUser',
-        'DashboardPolicy'
+        RememberUser::class,
+        DashboardPolicy::class
     ]
 ]);
 
 //delete requests routes
 Route::group([
-    'resources/users/delete/?{num}?' => ['handler' => 'Admin\UsersController@delete'],
-    'resources/medias/delete/?{num}?' => ['handler' => 'Admin\MediasController@delete'],
-    'account/messages/delete/?{num}?' => ['handler' => 'Admin\MessagesController@delete'],
-    'account/notifications/delete/?{num}?' => ['handler' => 'Admin\NotificationsController@delete'],
-    'account/activities/delete' => ['handler' => 'Admin\ActivitiesController@delete']
+    'resources/users/delete/?{num}?' => ['handler' => [UsersController::class, 'delete']],
+    'resources/medias/delete/?{num}?' => ['handler' => [MediasController::class,'delete']],
+    'account/messages/delete/?{num}?' => ['handler' => [MessagesController::class, 'delete']],
+    'account/notifications/delete/?{num}?' => ['handler' => [NotificationsController::class, 'delete']],
+    'account/activities/delete' => ['handler' => [ActivitiesController::class, 'delete']]
 ])->by([
     'method' => 'delete',
     'prefix' => 'admin',
     'middlewares' => [
-        'RememberUser',
-        'CsrfProtection',
-        'DashboardPolicy'
+        RememberUser::class,
+        CsrfProtection::class,
+        DashboardPolicy::class
     ]
 ]);
 
 //patch requests routes
 Route::group([
-    'account/messages/update/?{num}?' => ['handler' => 'Admin\MessagesController@update'],
-    'account/notifications/update/?{num}?' => ['handler' => 'Admin\NotificationsController@update'],
-    'resources/users/update/{num}' => ['handler' => 'Admin\UsersController@update'],
-    'resources/medias/update/{num}' => ['handler' => 'Admin\MediasController@update'],
-    'account/settings/update/{num}' => ['handler' => 'Admin\SettingsController@update'],
+    'account/messages/update/?{num}?' => ['handler' => [MessagesController::class, 'update']],
+    'account/notifications/update/?{num}?' => ['handler' => [NotificationsController::class, 'update']],
+    'resources/users/update/{num}' => ['handler' => [UsersController::class, 'update']],
+    'resources/medias/update/{num}' => ['handler' => [MediasController::class,'update']],
+    'account/settings/update/{num}' => ['handler' => [SettingsController::class, 'update']],
 ])->by([
     'method' => 'patch',
     'prefix' => 'admin',
     'middlewares' => [
-        'RememberUser',
-        'CsrfProtection',
-        'DashboardPolicy'
+        RememberUser::class,
+        CsrfProtection::class,
+        DashboardPolicy::class
     ]
 ]);
 
 //post requests routes
 Route::group([
     //users routes
-    'resources/users/create' => ['handler' => 'Admin\UsersController@create'],
-    'resources/users/import' => ['handler' => 'Admin\UsersController@import'],
-    'resources/users/export' => ['handler' => 'Admin\UsersController@export'],
+    'resources/users/create' => ['handler' => [UsersController::class, 'create']],
+    'resources/users/import' => ['handler' => [UsersController::class, 'import']],
+    'resources/users/export' => ['handler' => [UsersController::class, 'export']],
 
     //medias routes
-    'resources/medias/create' => ['handler' => 'Admin\MediasController@create'],
-    'resources/medias/import' => ['handler' => 'Admin\MediasController@import'],
-    'resources/medias/export' => ['handler' => 'Admin\MediasController@export'],
+    'resources/medias/create' => ['handler' => [MediasController::class,'create']],
+    'resources/medias/import' => ['handler' => [MediasController::class,'import']],
+    'resources/medias/export' => ['handler' => [MediasController::class,'export']],
 
     //notifications routes
-    'account/notifications/create' => ['handler' => 'Admin\NotificationsController@create'],
+    'account/notifications/create' => ['handler' => [NotificationsController::class, 'create']],
 
     //messages routes
-    'account/messages/create' => ['handler' => 'Admin\MessagesController@create'],
-    'account/messages/reply/{num}' => ['handler' => 'Admin\MessagesController@reply'],
-    'account/messages/export' => ['handler' => 'Admin\MessagesController@export'],
+    'account/messages/create' => ['handler' => [MessagesController::class, 'create']],
+    'account/messages/reply/{num}' => ['handler' => [MessagesController::class, 'reply']],
+    'account/messages/export' => ['handler' => [MessagesController::class, 'export']],
 
     //activities routes
-    'account/activities/export' => ['handler' => 'Admin\ActivitiesController@export'],
+    'account/activities/export' => ['handler' => [ActivitiesController::class, 'export']],
 ])->by([
     'method' => 'post',
     'prefix' => 'admin',
     'middlewares' => [
-        'RememberUser',
-        'CsrfProtection',
-        'SanitizeInputs',
-        'DashboardPolicy'
+        RememberUser::class,
+        CsrfProtection::class,
+        SanitizeInputs::class,
+        DashboardPolicy::class
     ]
 ]);
 
 //custom routes
-
-Route::group([
-    'resources/--resources' => ['handler' => 'Admin\--resourcesController@index'],
-    'resources/--resources/new' => ['handler' => 'Admin\--resourcesController@new'],
-    'resources/--resources/edit/{num}' => ['handler' => 'Admin\--resourcesController@edit'],
-    'resources/--resources/read/{num}' => ['handler' => 'Admin\--resourcesController@read']
-])->by([
-    'method' => 'get',
-    'prefix' => 'admin',
-    'middlewares' => [
-        'RememberUser',
-        'DashboardPolicy'
-    ]
-]);
-
-Route::group([
-    'resources/--resources/create' => ['handler' => 'Admin\--resourcesController@create'],
-    'resources/--resources/import' => ['handler' => 'Admin\--resourcesController@import'],
-    'resources/--resources/export' => ['handler' => 'Admin\--resourcesController@export']
-])->by([
-    'method' => 'post',
-    'prefix' => 'admin',
-    'middlewares' => [
-        'RememberUser',
-        'CsrfProtection',
-        'SanitizeInputs',
-        'DashboardPolicy'
-    ]
-]);
-
-Route::patch('admin/resources/--resources/update/{num}' => [
-    'handler' => 'Admin\--resourcesController@update',
-    'middlewares' => [
-        'RememberUser',
-        'CsrfProtection',
-        'DashboardPolicy'
-    ]
-]);
-
-Route::delete('admin/resources/--resources/delete/?{num}?' => [
-    'handler' => 'Admin\--resourcesController@delete',
-    'middlewares' => [
-        'RememberUser',
-        'CsrfProtection',
-        'DashboardPolicy'
-    ]
-]);
-Route::group([
-    'resources/--resources' => ['handler' => 'Admin\--resourcesController@index'],
-    'resources/--resources/new' => ['handler' => 'Admin\--resourcesController@new'],
-    'resources/--resources/edit/{num}' => ['handler' => 'Admin\--resourcesController@edit'],
-    'resources/--resources/read/{num}' => ['handler' => 'Admin\--resourcesController@read']
-])->by([
-    'method' => 'get',
-    'prefix' => 'admin',
-    'middlewares' => [
-        'RememberUser',
-        'DashboardPolicy'
-    ]
-]);
-
-Route::group([
-    'resources/--resources/create' => ['handler' => 'Admin\--resourcesController@create'],
-    'resources/--resources/import' => ['handler' => 'Admin\--resourcesController@import'],
-    'resources/--resources/export' => ['handler' => 'Admin\--resourcesController@export']
-])->by([
-    'method' => 'post',
-    'prefix' => 'admin',
-    'middlewares' => [
-        'RememberUser',
-        'CsrfProtection',
-        'SanitizeInputs',
-        'DashboardPolicy'
-    ]
-]);
-
-Route::patch('admin/resources/--resources/update/{num}' => [
-    'handler' => 'Admin\--resourcesController@update',
-    'middlewares' => [
-        'RememberUser',
-        'CsrfProtection',
-        'DashboardPolicy'
-    ]
-]);
-
-Route::delete('admin/resources/--resources/delete/?{num}?' => [
-    'handler' => 'Admin\--resourcesController@delete',
-    'middlewares' => [
-        'RememberUser',
-        'CsrfProtection',
-        'DashboardPolicy'
-    ]
-]);
-Route::group([
-    'resources/products' => ['handler' => 'Admin\ProductsController@index'],
-    'resources/products/new' => ['handler' => 'Admin\ProductsController@new'],
-    'resources/products/edit/{num}' => ['handler' => 'Admin\ProductsController@edit'],
-    'resources/products/read/{num}' => ['handler' => 'Admin\ProductsController@read']
-])->by([
-    'method' => 'get',
-    'prefix' => 'admin',
-    'middlewares' => [
-        'RememberUser',
-        'DashboardPolicy'
-    ]
-]);
-
-Route::group([
-    'resources/products/create' => ['handler' => 'Admin\ProductsController@create'],
-    'resources/products/import' => ['handler' => 'Admin\ProductsController@import'],
-    'resources/products/export' => ['handler' => 'Admin\ProductsController@export']
-])->by([
-    'method' => 'post',
-    'prefix' => 'admin',
-    'middlewares' => [
-        'RememberUser',
-        'CsrfProtection',
-        'SanitizeInputs',
-        'DashboardPolicy'
-    ]
-]);
-
-Route::patch('admin/resources/products/update/{num}' => [
-    'handler' => 'Admin\ProductsController@update',
-    'middlewares' => [
-        'RememberUser',
-        'CsrfProtection',
-        'DashboardPolicy'
-    ]
-]);
-
-Route::delete('admin/resources/products/delete/?{num}?' => [
-    'handler' => 'Admin\ProductsController@delete',
-    'middlewares' => [
-        'RememberUser',
-        'CsrfProtection',
-        'DashboardPolicy'
-    ]
-]);

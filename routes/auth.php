@@ -8,6 +8,11 @@
 
 use Framework\Routing\View;
 use Framework\Routing\Route;
+use App\Middlewares\AuthPolicy;
+use App\Middlewares\RememberUser;
+use App\Controllers\Auth\AuthController;
+use App\Controllers\Auth\EmailController;
+use App\Controllers\Auth\PasswordController;
 
 /**
  * Authentication routes
@@ -28,14 +33,14 @@ Route::group([
 ])->by([
     'method' => 'GET',
     'middlewares' => [
-        'RememberUser', 
-        'AuthPolicy'
+        RememberUser::class, 
+        AuthPolicy::class
     ]
 ]);
 
-Route::get('logout', ['handler' => 'Auth\AuthController@logout']);
-Route::post('authenticate', ['handler' => 'Auth\AuthController@authenticate']);
-Route::post('register', ['handler' => 'Auth\AuthController@register']);
+Route::get('logout', ['handler' => [AuthController::class, 'logout']]);
+Route::post('authenticate', ['handler' => [AuthController::class, 'authenticate']]);
+Route::post('register', ['handler' => [AuthController::class, 'register']]);
 
 //password reset routes
 Route::get('password/forgot', [
@@ -44,14 +49,14 @@ Route::get('password/forgot', [
     }
 ]);
 
-Route::get('password/reset', ['handler' => 'Auth\PasswordController@reset']);
-Route::post('password/notify', ['handler' => 'Auth\PasswordController@notify']);
-Route::post('password/update', ['handler' => 'Auth\PasswordController@update']);
+Route::get('password/reset', ['handler' => [PasswordController::class, 'reset']]);
+Route::post('password/notify', ['handler' => [PasswordController::class, 'notify']]);
+Route::post('password/update', ['handler' => [PasswordController::class, 'update']]);
 
 //email routes
 Route::group([
-    'confirm' => ['handler' => 'Auth\EmailController@confirm'],
-    'auth' => ['handler' => 'Auth\EmailController@auth']
+    'confirm' => ['handler' => [EmailController::class, 'confirm']],
+    'auth' => ['handler' => [EmailController::class, 'auth']]
 ])->by([
     'method' => 'GET',
     'prefix' => 'email'

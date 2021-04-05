@@ -26,25 +26,22 @@ class Middleware
     /**
      * execute middleware
      *
-     * @param  string $middleware name of middleware
+     * @param  mixed $middleware
      * @return void
      */
-    public static function execute(string $middleware): void
+    public static function execute($middleware): void
     {
-        $middleware = 'App\Middlewares\\' . $middleware;
-
-        //check if middleware class exists
         if (!class_exists($middleware) || !method_exists($middleware, 'handle')) {
             throw new Exception('Middleware "' . $middleware . '" not found.');
         }
 
-        $middleware::handle(new Request());
+        call_user_func_array([$middleware, 'handle'], [new Request()]);
     }
     
     /**
      * execute middlewares associated to a given route
      *
-     * @param  string $route name of route
+     * @param  string
      * @return void
      */
     public static function check(string $route): void
@@ -59,7 +56,7 @@ class Middleware
     /**
      * add middlewares to route
      *
-     * @param  string $route name of route
+     * @param  string
      * @param  array $middlewares
      * @return void
      */

@@ -19,7 +19,7 @@ class DateHelper
      */
     public static function format($date = null): self
     {
-        self::$date = Carbon::parse($date, auth()->timezone)->locale(auth()->lang);
+        self::$date = Carbon::parse($date, Auth::get()->timezone)->locale(Auth::get()->lang);
         return new self();
     }
     
@@ -34,7 +34,7 @@ class DateHelper
     }
     
     /**
-     * get date and time in SQL like format
+     * get date and time in timestamp format
      *
      * @return string
      */

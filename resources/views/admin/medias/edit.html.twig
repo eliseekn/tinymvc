@@ -1,0 +1,65 @@
+{% extends "layouts/admin.html.twig" %}
+
+{% block page_title %}
+	{{ __('edit') ~ ' | Administration' }}
+{% endblock %}
+
+{% block page_content %}
+
+    <div class="card shadow-sm">
+        <div class="card-header">{{ __('edit') }}</div>
+
+        <form method="post" action="{{ absolute_url('admin/resources/medias/update', media.id) }}">
+            {{ csrf_token_input()|raw }}
+            {{ method_input('patch')|raw }}
+
+            <div class="card-body">
+                <div class="form-group row">
+                    <label for="filename" class="col-sm-2 col-form-label">{{ __('filename') }}</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control {{ errors.filename ? 'is-invalid' }}" name="filename" id="filename" value="{{ inputs.filename ?: media.filename }}" aria-describedby="filename-error">
+
+                        {% if errors.filename is not empty %}
+                        <div id="filename-error" class="invalid-feedback">
+                            {{ errors.filename }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="title" class="col-sm-2 col-form-label">{{ __('title') }}</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control {{ errors.title ? 'is-invalid' }}" name="title" id="title" value="{{ inputs.title ?: media.title }}" aria-describedby="title-error">
+                    
+                        {% if errors.title is not empty %}
+                        <div id="title-error" class="invalid-feedback">
+                            {{ errors.title }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="description" class="col-sm-2 col-form-label">{{ __('description') }}</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control {{ errors.description ? 'is-invalid' }}" name="description" id="description" value="{{ inputs.description ?: media.description }}" aria-describedby="description-error">
+
+                        {% if errors.description is not empty %}
+                        <div id="description-error" class="invalid-feedback">
+                            {{ errors.description }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <button type="submit" class="btn btn-outline-dark loading">{{ __('update') }}</button>
+                <button type="reset" class="btn btn-outline-dark mx-2">{{ __('reset') }}</button>
+                <a href="{{ absolute_url('admin/resources/medias') }}" class="btn btn-outline-dark">{{ __('cancel') }}</a>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

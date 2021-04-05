@@ -60,7 +60,7 @@ class Medias
     {
         $medias = self::model()->findAllBy('user_id', Auth::get()->id);
 
-        $images = 0; $videos = 0; $sounds = 0;
+        $images = 0; $videos = 0; $audios = 0;
 
         foreach ($medias as $media) {
             if (self::getMediaType($media->filename) === 'image') {
@@ -68,26 +68,26 @@ class Medias
             } elseif (self::getMediaType($media->filename) === 'video') {
                 $videos++;
             } elseif (self::getMediaType($media->filename) === 'audio') {
-                $sounds++;
+                $audios++;
             } 
         }
 
-        return [$images, $videos, $sounds];
+        return [$images, $videos, $audios];
     }
 
     /**
      * search for medias
      *
-     * @param  \Framework\Http\Request $request
+     * @param  string $q
      * @param  int $items_per_pages
      * @return \Framework\Support\Pager
      */
-    public static function paginateQuery(Request $request, int $items_per_pages = 10): \Framework\Support\Pager
+    public static function paginateQuery(string $q, int $items_per_pages = 10): \Framework\Support\Pager
     {
         return self::model()
             ->findBy('user_id', Auth::get()->id)
-            ->and('filename', 'like', $request->q)
-            ->or('created_at', 'like', $request->q)
+            ->and('filename', 'like', $q)
+            ->or('created_at', 'like', $q)
             ->oldest()
             ->paginate($items_per_pages);
     }
@@ -103,9 +103,10 @@ class Medias
         $medias = self::model()
             ->findBy('user_id', Auth::get()->id)
             ->and('filename', 'like', $q)
+            ->or('created_at', 'like', $q)
             ->all();
 
-        $images = 0; $videos = 0; $sounds = 0;
+        $images = 0; $videos = 0; $audios = 0;
 
         foreach ($medias as $media) {
             if (self::getMediaType($media->filename) === 'image') {
@@ -113,11 +114,11 @@ class Medias
             } elseif (self::getMediaType($media->filename) === 'video') {
                 $videos++;
             } elseif (self::getMediaType($media->filename) === 'audio') {
-                $sounds++;
+                $audios++;
             } 
         }
 
-        return [$images, $videos, $sounds];
+        return [$images, $videos, $audios];
     }
     
     /**
@@ -139,7 +140,10 @@ class Medias
     /**
      * update media
      *
-     * @param  mixed $media
+     * @param  \Framework\Http\Request $request
+     * @param  int $id
+     * @param  int $year
+     * @param  int $month
      * @return bool
      */
     public static function update(Request $request, $id, $year, $month): bool

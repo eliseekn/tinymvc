@@ -159,6 +159,23 @@ class Route
     }
     
     /**
+     * parameters to group by
+     *
+     * @param  array $options
+     * @return void
+     */
+    public function by(array $options): void
+    {
+        foreach (self::$tmp_routes as $route => $tmp_options) {
+            if (isset($options['prefix']) && !empty($options['prefix'])) {
+                $route = $this->prefix($options['prefix'], $route);
+            }
+
+            self::add($route, array_merge($tmp_options, $options));
+        }
+    }
+    
+    /**
      * add route prefix
      *
      * @param  string $prefix
@@ -179,21 +196,4 @@ class Route
 
         return $prefix . $route;
     } 
-    
-    /**
-     * parameters to group by
-     *
-     * @param  array $options
-     * @return void
-     */
-    public function by(array $options): void
-    {
-        foreach (self::$tmp_routes as $route => $tmp_options) {
-            if (isset($options['prefix']) && !empty($options['prefix'])) {
-                $route = $this->prefix($options['prefix'], $route);
-            }
-
-            self::add($route, array_merge($tmp_options, $options));
-        }
-    }
 }
