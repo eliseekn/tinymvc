@@ -43,15 +43,15 @@
 
                 <div class="d-flex flex-lg-row flex-column">
                     <span class="mr-md-3 mt-lg-0 mt-2">
-                        <input type="search" class="form-control" id="media-search" placeholder="{{ __('search') }}" data-url="{{ absolute_url('admin/resources/medias/search?q=') }}" value="{{ q ?: '' }}">
+                        <input type="search" class="form-control" id="media-search" placeholder="{{ __('search') }}" data-url="{{ url('admin/resources/medias/search?q=') }}" value="{{ q ?: '' }}">
                     </span>
 
                     <span class="mt-lg-0 mt-2">
-                        <upload-modal action="{{ absolute_url('admin/resources/medias/create') }}" multiple="multiple">
+                        <upload-modal action="{{ url('admin/resources/medias/create') }}" multiple="multiple">
                             <button class="btn btn-outline-dark">{{ __('new') }}</button>
                         </upload-modal>
                         
-                        <button class="btn btn-danger ml-2" id="bulk-delete" data-url="{{ absolute_url('admin/resources/medias/delete') }}">
+                        <button class="btn btn-danger ml-2" id="bulk-delete" data-url="{{ url('admin/resources/medias/delete') }}">
                             {{ __('bulk_delete') }}
                         </button>
                     </span>
@@ -95,19 +95,19 @@
                                             <p class="mb-0">{{ media.filename }}</p>
                                             <p class="mb-0 text-muted">{{ date_helper(media.created_at, 'Y-m-d') }}</p>
 
-                                            <a class="btn text-dark p-1" href="{{ absolute_url('admin/resources/medias/read', media.id) }}" title="{{ __('details') }}">
+                                            <a class="btn text-dark p-1" href="{{ url('admin/resources/medias/read', media.id) }}" title="{{ __('details') }}">
                                                 <i class="fa fa-eye"></i>
                                             </a>
 
-                                            <a class="btn text-dark p-1" href="{{ absolute_url('admin/resources/medias/edit', media.id) }}" title="{{ __('edit') }}">
+                                            <a class="btn text-dark p-1" href="{{ url('admin/resources/medias/edit', media.id) }}" title="{{ __('edit') }}">
                                                 <i class="fa fa-edit"></i>
                                             </a>
 
-                                            <a class="btn text-dark p-1" href="{{ absolute_url('admin/resources/medias/download', media.id) }}" title="{{ __('download') }}">
+                                            <a class="btn text-dark p-1" href="{{ url('admin/resources/medias/download', media.id) }}" title="{{ __('download') }}">
                                                 <i class="fa fa-download"></i>
                                             </a>
 
-                                            <delete-item action="{{ absolute_url('admin/resources/medias/delete', media.id) }}">
+                                            <delete-item action="{{ url('admin/resources/medias/delete', media.id) }}">
                                                 <a class="btn text-danger p-1" title="{{ __('delete') }}">
                                                     <i class="fa fa-trash-alt"></i>
                                                 </a>

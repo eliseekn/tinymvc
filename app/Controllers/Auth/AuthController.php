@@ -37,25 +37,25 @@ class AuthController extends Controller
         $validator = RegisterUser::validate($this->request()->inputs())->redirectOnFail();
         
         if (!Auth::create($this->request())) {
-            $this->back()->withInputs($validator->inputs())
+            $this->redirect()->back()->withInputs($validator->inputs())
                 ->withAlert(__('user_already_exists', true))->error('');
         }
 
         if ($this->model('users')->count()->single()->value === 1) {
-            $this->redirect('admin/dashboard');
+            $this->redirect()->route('dashboard.index')->only();
         }
 
         if (config('security.auth.email_confirmation') === false) {
             WelcomeMail::send($this->request('email'), $this->request('name'));
-            $this->redirect('admin/dashboard')->withAlert(__('user_registered', true))->success('');
+            $this->redirect()->route('dashboard.index')->withAlert(__('user_registered', true))->success('');
         } else {
             $token = random_string(50, true);
 
             if (EmailConfirmationMail::send($this->request('email'), $token)) {
                 Tokens::store($this->request('email'), $token, Carbon::now()->addDay()->toDateTimeString());
-                $this->redirect('admin/dashboard')->withAlert(__('confirm_email_link_sent', true))->success('');
+                $this->redirect()->route('dashboard.index')->withAlert(__('confirm_email_link_sent', true))->success('');
             } else {
-                $this->redirect('admin/dashboard')->withAlert(__('confirm_email_link_not_sent', true))->error('');
+                $this->redirect()->route('dashboard.index')->withAlert(__('confirm_email_link_not_sent', true))->error('');
             }
         }
     }

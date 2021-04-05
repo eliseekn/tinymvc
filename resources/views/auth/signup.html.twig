@@ -7,7 +7,7 @@
 {% block page_content %}
 
 	<div class="card shadow p-4">
-		<form method="post" action="{{ absolute_url('register') }}">
+		<form method="post" action="{{ url('register') }}">
 			<div class="form-group">
 				<label for="name">{{ __('name', true) }}</label>
 				<input type="text" class="form-control {{ errors.name ? 'is-invalid'  }}" value="{{ inputs.name ?: '' }}" aria-describedby="name-error" name="name" id="name">
@@ -71,7 +71,7 @@
 
 		<p class="mt-4 text-center">
 			{{ __('have_account', true) }}
-			<a href="{{ absolute_url('login') }}">{{ __('login_here', true) }}</a>
+			<a href="{{ url('login') }}">{{ __('login_here', true) }}</a>
 		</p>
 	</div>
 

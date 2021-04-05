@@ -42,6 +42,45 @@ class Router
     }
     
     /**
+     * check if request uri match with routes
+     *
+     * @param  string $route
+     * @param  array $options
+     * @param  string $uri
+     * @param  string[] &$matches
+     * @return bool
+     */
+    private static function match(string $route, array $options, string $uri, ?array &$matches = null): bool
+    {
+        if (!isset($options['parameters']) || empty($options['parameters'])) {
+            $pattern = $route;
+        } else {
+            $urls = explode('/', $route);
+
+            foreach ($urls as $url) {
+                foreach ($options['parameters'] as $parameter => $type) {
+                    if (strpos($url, '?') === false) {
+                        if (preg_match('#^' . $url . '$#', '{' . $parameter . '}', $matches)) {
+                            $pattern = preg_replace('/{([a-zA-Z-_\}]+)}/i', $type, $route);
+                        }
+                    } else {
+                        if (preg_match($url, '?{' . $parameter . '}?', $matches)) {
+                            $pattern = preg_replace('/{([a-zA-Z-_\}]+)}/i', $type, $route);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (preg_match('#^' . $pattern . '$#', $uri, $matches)) {
+            array_shift($matches);
+            return true;
+        }
+
+        return false;
+    }
+    
+    /**
      * match routes and execute handlers
      *
      * @param  array $routes routes
@@ -54,13 +93,7 @@ class Router
                 $request->method($request->inputs('request_method', $options['method']));
 
                 if (preg_match('/' . strtoupper($options['method']) . '/', strtoupper($request->method()))) {
-                    $pattern = preg_replace('/{str}/i', '([a-zA-Z-_]+)', $route);
-                    $pattern = preg_replace('/{num}/i', '(\d+)', $pattern);
-                    $pattern = preg_replace('/{any}/i', '([^/]+)', $pattern);
-
-                    if (preg_match('#^' . $pattern . '$#', $request->uri(), $params)) {
-                        array_shift($params);
-
+                    if (self::match($route, $options, $request->uri(), $params)) {
                         //check for middlewares to execute
                         Middleware::check($route);
 

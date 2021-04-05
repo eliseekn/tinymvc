@@ -9,6 +9,7 @@
 use Carbon\Carbon;
 use App\Helpers\DateHelper;
 use Configula\ConfigFactory;
+use Framework\Routing\Route;
 use Framework\Support\Cookies;
 use Framework\Support\Session;
 use Framework\Support\Storage;
@@ -277,14 +278,14 @@ if (!function_exists('valid_csrf_token')) {
  * Miscellaneous URL utils functions
  */
 
-if (!function_exists('absolute_url')) {
+if (!function_exists('url')) {
 	/**
 	 * generate abosulte url
 	 *
 	 * @param  string $url
 	 * @return string
 	 */
-	function absolute_url(string $url = '/', $params = null): string
+	function url(string $url = '/', $params = null): string
 	{
 		if (empty($url)) {
 			$url = '/';
@@ -296,10 +297,91 @@ if (!function_exists('absolute_url')) {
 			}
         }
 
+        if (!is_array($params)) {
+
+        }
+
         $params = is_array($params) ? (empty($params) ? '' : implode('/', $params)) : $params;
 
 		return is_null($params) ? config('app.url') . $url : config('app.url') . $url . '/' . $params;
 	}
+}
+
+if (!function_exists('route_uri')) {    
+    /**
+     * get route uri
+     *
+     * @param  string $name
+     * @param  mixed $params
+     * @return string
+     */
+    function route_uri(string $route, $params = null): string
+    {
+        if (!isset(Route::$names[$route])) {
+            throw new Exception('Route name "' . $route . '" is not defined.');
+        }
+
+        $route = Route::$names[$route];
+        $options = Route::$routes[$route];
+
+        if (!isset($options['parameters']) || empty($options['parameters'])) {
+            return $route;
+        }
+
+        $urls = explode('/', $route);
+
+        foreach ($urls as $url) {
+            foreach ($options['parameters'] as $parameter => $type) {
+                if (!is_array($params)) {
+                    if (strpos($url, '?') === false) {
+                        if (preg_match('#^' . $url . '$#', '{' . $parameter . '}', $matches)) {
+                            $route = preg_replace('/{([a-zA-Z-_\}]+)}/i', $params, $route);
+                        }
+                    } else {
+                        if (preg_match($url, '?{' . $parameter . '}?', $matches)) {
+                            $route = preg_replace('/?{([a-zA-Z-_\}]+)}?/i', $params, $route);
+                        }
+                    }
+                }
+
+                else {
+                    foreach ($params as $param => $value) {
+                        if ($parameter === $param) {
+                            if (strpos($url, '?') === false) {
+                                if (preg_match('#^' . $url . '$#', '{' . $parameter . '}', $matches)) {
+                                    $route = preg_replace('/{([a-zA-Z-_\}]+)}/i', $value, $route, 1);
+                                }
+                            } else {
+                                if (preg_match($url, '?{' . $parameter . '}?', $matches)) {
+                                    $route = preg_replace('/\?{([a-zA-Z-_\}]+)}\?/i', $value, $route, 1);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        if (preg_match('?{([a-zA-Z-_\}]+)}?', $route, $matches)) {
+            $route = preg_replace('/\/\?{([a-zA-Z-_\}]+)}\?/i', '', $route);
+        }
+
+        return $route;
+    }
+}
+
+if (!function_exists('route')) {    
+    /**
+     * get route absolute url
+     *
+     * @param  string $name
+     * @param  mixed $params
+     * @return string
+     */
+    function route(string $route, $params = null): string
+    {
+        return url(route_uri($route, $params));
+    }
 }
 
 if (!function_exists('assets')) {    
@@ -311,7 +393,7 @@ if (!function_exists('assets')) {
      */
     function assets(string $asset): string
     {
-        return absolute_url('public/' . $asset);
+        return url('public/' . $asset);
     }
 }
 
@@ -337,7 +419,7 @@ if (!function_exists('redirect_to')) {
 	 */
 	function redirect_to(string $location): void
 	{
-		header('Location: ' . absolute_url($location));
+		header('Location: ' . url($location));
 		exit();
 	}
 }

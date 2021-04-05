@@ -15,7 +15,7 @@
 	</div>
 
 	<div class="card shadow p-4">
-		<form method="post" action="{{ absolute_url('password/notify') }}">
+		<form method="post" action="{{ url('password/notify') }}">
 			<div class="form-group">
 				<label for="email">{{ __('email', true) }}</label>
 				<input type="email" id="email" name="email" class="form-control" required>

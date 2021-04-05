@@ -47,7 +47,7 @@ class UsersController extends Controller
             $roles = $this->model('roles')->selectAll();
             $this->render('admin.users.edit', compact('user', 'roles'));
         } catch (Exception $e) {
-            $this->redirect('admin/resources/users')->withToast(__('user_not_found'))->error();
+            $this->redirect()->route('users.index')->withToast(__('user_not_found'))->error();
         }
 	}
 	
@@ -63,7 +63,7 @@ class UsersController extends Controller
             $user = $this->model('users')->findOrFail('id', $id);
             $this->render('admin.users.read', compact('user'));
         } catch (Exception $e) {
-            $this->redirect('admin/resources/users')->withToast(__('user_not_found'))->error();
+            $this->redirect()->route('users.index')->withToast(__('user_not_found'))->error();
         }
 	}
 
@@ -77,17 +77,17 @@ class UsersController extends Controller
         $validator = RegisterUser::validate($this->request()->inputs())->redirectOnFail();
         
         if ($this->model('users')->findBy('email', $this->request('email'))->exists()) {
-            $this->back()->withInputs($validator->inputs())->withToast(__('user_already_exists'))->error();
+            $this->redirect()->back()->withInputs($validator->inputs())->withToast(__('user_already_exists'))->error();
         }
         
         if ($this->model('users')->findBy('phone', $this->request('phone'))->exists()) {
-            $this->back()->withInputs($validator->inputs())->withToast(__('user_already_exists'))->error();
+            $this->redirect()->back()->withInputs($validator->inputs())->withToast(__('user_already_exists'))->error();
         }
 
 	    $id = Users::store($this->request());
 
         $this->log(__('user_created'));
-        $this->redirect('admin/resources/users/read', $id)->withToast(__('user_created'))->success();
+        $this->redirect()->route('users.read', $id)->withToast(__('user_created'))->success();
     }
     
 	/**
@@ -105,23 +105,23 @@ class UsersController extends Controller
 
             if ($user->email !== $this->request('email')) {
                 if ($this->model('users')->findBy('email', $this->request('email'))->exists()) {
-                    $this->back()->withInputs($validator->inputs())->withToast(__('user_already_exists'))->error();
+                    $this->redirect()->back()->withInputs($validator->inputs())->withToast(__('user_already_exists'))->error();
                 }
             }
 
             if ($user->phone !== $this->request('phone')) {
                 if ($this->model('users')->findBy('phone', $this->request('phone'))->exists()) {
-                    $this->back()->withInputs($validator->inputs())->withToast(__('user_already_exists'))->error();
+                    $this->redirect()->back()->withInputs($validator->inputs())->withToast(__('user_already_exists'))->error();
                 }
             }
         } catch (Exception $e) {
-            $this->back()->withInputs($validator->inputs())->withToast(__('user_not_found'))->error();
+            $this->redirect()->back()->withInputs($validator->inputs())->withToast(__('user_not_found'))->error();
         }
 
         Users::update($this->request(), $id);
 		
         $this->log(__('user_updated'));
-        $this->redirect('admin/resources/users/read', $id)->withToast(__('user_updated'))->success();
+        $this->redirect()->route('users.read', $id)->withToast(__('user_created'))->success();
     }
 
 	/**
@@ -136,11 +136,11 @@ class UsersController extends Controller
 
 		if (!is_null($id)) {
             $this->log(__('user_deleted'));
-            $this->redirect('admin/resources/users')->withToast(__('user_deleted'))->success();
+            $this->redirect()->route('users.index')->withToast(__('user_deleted'))->success();
 		} else {
             $this->log(__('users_deleted'));
             $this->alert('toast', __('users_deleted'))->success();
-            $this->response(['redirect' => absolute_url('admin/resources/users')], true);
+            $this->response(['redirect' => route('users.index')], true);
         }
 	}
 

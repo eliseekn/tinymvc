@@ -147,7 +147,7 @@ $exists = (new Request)->has(string $item); //query or input</code></pre>
             <pre class="m-0"><code class="p-3">$files = (new Request)->files(string $input, array $allowed_extensions = [], bool $multiple = false);</code></pre>
         </div>
 
-        <p class="mb-4">To manage uploaded files, refer to <a href="<?= absolute_url('docs/guides/uploader') ?>" class="bg-light text-danger">Uploader</a> class.</p>
+        <p class="mb-4">To manage uploaded files, refer to <a href="<?= url('docs/guides/uploader') ?>" class="bg-light text-danger">Uploader</a> class.</p>
 
         <p class="font-weight-bold">Accessing HTTP requests inside a Controller</p>
         <p class="mb-4">You can access incoming HTTP requests in your controller class by using the <span class="bg-light text-danger">request</span> method.</p>
@@ -177,8 +177,8 @@ class MyController
     </div>
 
     <div class="card-footer d-flex justify-content-between">
-        <span>Next: <a href="<?= absolute_url('docs/guides/responses') ?>">HTTP Responses</a></span>
-        <span>Previous: <a href="<?= absolute_url('docs/guides/views') ?>">Views</a></span>
+        <span>Next: <a href="<?= url('docs/guides/responses') ?>">HTTP Responses</a></span>
+        <span>Previous: <a href="<?= url('docs/guides/views') ?>">Views</a></span>
     </div>
 </div>
 

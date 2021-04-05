@@ -33,7 +33,7 @@
 				</div>
 
 				<div class="list-group list-group-flush">
-					<a href="{{ absolute_url('admin/dashboard') }}" class="list-group-item list-group-item-action border-bottom">
+					<a href="{{ route('dashboard.index') }}" class="list-group-item list-group-item-action border-bottom">
 						<i class="fa fa-home {{ in_url('dashboard') ? 'text-primary' }}"></i> {{ __('dashboard') }}
 					</a>
 
@@ -47,12 +47,12 @@
 
 					<div class="{{ in_url('resources') ? '' : 'd-none' }} border-bottom" id="resources-dropdown-menu">
                         {% if auth('role') == USER_ROLE[0] %}
-                        <a href="{{ absolute_url('admin/resources/users') }}" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                        <a href="{{ route('users.index') }}" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                             <i class="fa fa-dot-circle {{ in_url('users') ? 'text-primary' }}"></i> {{ __('users') }}
                         </a>
                         {% endif %}
 
-                        <a href="{{ absolute_url('admin/resources/medias') }}" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                        <a href="{{ route('medias.index') }}" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                             <i class="fa fa-dot-circle {{ in_url('medias') ? 'text-primary' }}"></i> {{ __('medias') }}
                         </a>
                     </div>
@@ -66,16 +66,16 @@
                     </button>
     
                     <div class="{{ in_url('account') ? '' : 'd-none' }} border-bottom" id="account-dropdown-menu">
-                        <a href="{{ absolute_url('admin/account/notifications') }}" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                        <a href="{{ route('notifications.index') }}" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                             <i class="fa fa-dot-circle {{ in_url('notifications') ? 'text-primary' }}"></i> {{ __('notifications') }}
                         </a>
-                        <a href="{{ absolute_url('admin/account/messages') }}" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                        <a href="{{ route('messages.index') }}" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                             <i class="fa fa-dot-circle {{ in_url('messages') ? 'text-primary' }}"></i> {{ __('messages') }}
                         </a>
-                        <a href="{{ absolute_url('admin/account/activities') }}" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                        <a href="{{ route('activities.index') }}" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                             <i class="fa fa-dot-circle {{ in_url('activities') ? 'text-primary' }}"></i> {{ __('activities') }}
                         </a>
-                        <a href="{{ absolute_url('admin/account/settings', auth('id')) }}" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                        <a href="{{ route('settings.index', auth('id')) }}" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                             <i class="fa fa-dot-circle {{ in_url('settings') ? 'text-primary' }}"></i> {{ __('settings') }}
                         </a>
                     </div>
@@ -93,11 +93,11 @@
     
                         <div id="notifications-bell"></div>
     
-                        <a class="btn btn-sm" href="{{ absolute_url('admin/account/settings', auth('id')) }}" title="{{ __('settings') }}">
+                        <a class="btn btn-sm" href="{{ route('settings.index', auth('id')) }}" title="{{ __('settings') }}">
                             <i class="fa fa-cog fa-lg"></i>
                         </a>
     
-                        <a class="btn btn-sm" href="{{ absolute_url('logout') }}" title="{{ __('logout') }}">
+                        <a class="btn btn-sm" href="{{ url('logout') }}" title="{{ __('logout') }}">
                             <i class="fa fa-power-off fa-lg text-danger"></i>
                         </a>
                     </div>

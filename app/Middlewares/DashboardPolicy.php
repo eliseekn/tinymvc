@@ -22,7 +22,7 @@ class DashboardPolicy
     public static function handle(Request $request): void
     {
         if (!Auth::check()) {
-            Redirect::url('login')->withAlert(__('not_logged_error', true))->error('');
+            (new Redirect())->url('login')->withAlert(__('not_logged_error', true))->error('');
         }
 
         if (Auth::get()->role === Roles::ROLE[2]) {

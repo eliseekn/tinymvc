@@ -21,6 +21,13 @@ class Route
     public static $routes = [];
 
     /**
+     * routes names
+     * 
+     * @var array
+     */
+    public static $names = [];
+
+    /**
      * temporary routes paths
      * 
      * @var array
@@ -45,6 +52,24 @@ class Route
                 if ($route[0] !== '/') {
                     $route = '/' . $route;
                 }
+            }
+
+            if (isset($options['parameters'])) {
+                $parameters = [];
+
+                foreach ($options['parameters'] as $parameter => $type) {
+                    $type = preg_replace('/\bstr\b/', '([a-zA-Z-_]+)', $type);
+                    $type = preg_replace('/\bnum\b/', '(\d+)', $type);
+                    $type = preg_replace('/\bany\b/', '([^/]+)', $type);
+
+                    $parameters += [$parameter => $type];
+                }
+
+                $options['parameters'] = $parameters;
+            }
+
+            if (isset($options['name'])) {
+                self::$names[$options['name']] = $route;
             }
 
             self::$routes[$route] = $options;

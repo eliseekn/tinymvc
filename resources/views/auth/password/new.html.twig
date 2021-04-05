@@ -7,7 +7,7 @@
 {% block page_content %}
 
 	<div class="card shadow p-4">
-		<form method="post" action="{{ absolute_url('password/update') }}">
+		<form method="post" action="{{ url('password/update') }}">
 			<div class="form-group">
 				<label for="email">{{ __('email', true) }}</label>
 				<input type="email" id="email" name="email" class="form-control" value="{{ email }}">

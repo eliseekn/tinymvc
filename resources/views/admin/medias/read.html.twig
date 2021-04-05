@@ -67,17 +67,17 @@
         </div>
 
         <div class="card-footer">
-            <a href="{{ absolute_url('admin/resources/medias/edit', media.id) }}" class="btn btn-outline-dark">
+            <a href="{{ url('admin/resources/medias/edit', media.id) }}" class="btn btn-outline-dark">
                 {{ __('edit') }}
             </a>
 
             <confirm-delete 
                 type="text" 
                 content="{{ __('delete') }}" 
-                action="{{ absolute_url('admin/resources/medias/delete', media.id) }}">
+                action="{{ url('admin/resources/medias/delete', media.id) }}">
             </confirm-delete>
             
-            <a href="{{ absolute_url('admin/resources/medias') }}" class="btn btn-outline-dark ml-2">
+            <a href="{{ url('admin/resources/medias') }}" class="btn btn-outline-dark ml-2">
                 {{ __('cancel') }}
             </a>
         </div>

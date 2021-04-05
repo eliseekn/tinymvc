@@ -172,7 +172,7 @@ class Pager
      */
     public function firstPageUrl(): string
     {
-        return absolute_url($this->generateUri(1));
+        return url($this->generateUri(1));
     }
 
     /**
@@ -182,7 +182,7 @@ class Pager
      */
     public function previousPageUrl(): string
     {
-        return absolute_url($this->generateUri($this->previousPage()));
+        return url($this->generateUri($this->previousPage()));
     }
     
     /**
@@ -192,7 +192,7 @@ class Pager
      */
     public function nextPageUrl(): string
     {
-        return absolute_url($this->generateUri($this->nextPage()));
+        return url($this->generateUri($this->nextPage()));
     }
 
     /**
@@ -202,7 +202,7 @@ class Pager
      */
     public function lastPageUrl(): string
     {
-        return absolute_url($this->generateUri($this->totalPages()));
+        return url($this->generateUri($this->totalPages()));
     }
     
     /**
@@ -213,7 +213,7 @@ class Pager
      */
     public function pageUrl(int $page): string
     {
-        return absolute_url($this->generateUri($page));
+        return url($this->generateUri($page));
     }
     
     /**

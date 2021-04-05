@@ -17,7 +17,19 @@ use Framework\Support\Storage;
  * Manage migrations and seeds from command line interface
  */
 class Database
-{
+{    
+    /**
+     * print console message
+     *
+     * @param  mixed $message
+     * @param  mixed $exit
+     * @return mixed
+     */
+    private static function log(string $message, bool $exit = true, $nl = PHP_EOL)
+    {
+        return $exit ? exit($message . $nl) : print($message . $nl);
+    }
+
     /**
      * get seed class
      *
@@ -36,58 +48,50 @@ class Database
     
     public static function createSchema(string ...$databases)
     {
-        echo '[...] Creating databases' . PHP_EOL;
-
         foreach ($databases as $database) {
             try {
                 DB::connection()->query("CREATE DATABASE IF NOT EXISTS $database CHARACTER SET " . config('mysql.charset') . " COLLATE " . config('mysql.collation'));
-                echo '[+] Database ' . $database . ' created successfully' . PHP_EOL;
+                self::log('[+] Database "' . $database . '" created successfully' . PHP_EOL, false, '');
             } catch(Exception $e) {
-                echo '[!] ' . $e->getMessage();
+                self::log('[!] ' . $e->getMessage() . PHP_EOL, false, '');
             }
         }
     }
 
     public static function deleteSchema(string ...$databases)
     {
-        echo '[...] Deleting databases' . PHP_EOL;
-
         foreach ($databases as $database) {
             try {
                 DB::connection()->query("DROP DATABASE IF EXISTS $database");
-                echo '[+] Database ' .$database . ' deleted successfully' . PHP_EOL;
+                self::log('[+] Database "' .$database . '" deleted successfully' . PHP_EOL, false, '');
             } catch(Exception $e) {
-                echo '[!] ' . $e->getMessage();
+                self::log('[!] ' . $e->getMessage() . PHP_EOL, false, '');
             }
         }
     }
 
     public static function executeQuery(string $query, ?string $db = null)
     {
-        echo '[...] Executing MySQL query' . PHP_EOL;
-
         try {
             DB::connection($db)->query($query);
         } catch(Exception $e) {
-            echo '[!] ' . $e->getMessage();
+            self::log('[!] ' . $e->getMessage() . PHP_EOL, false);
         }
 
-        echo '[+] Query executed successfully' . PHP_EOL;
+        self::log('[+] Query executed successfully' . PHP_EOL, false);
     }
 
     public static function migrateTable(string $table = '')
     {
-        echo '[...] Migrating tables' . PHP_EOL;
-
         if (!empty($table)) {
             if (strpos($table, ',') === false) {
                 $table = 'App\Database\Migrations\\' . $table;
                 
                 try {
                     $table::migrate();
-                    echo '[+] ' . $table . ' migrated successfully' . PHP_EOL;
+                    self::log('[+] Table "' . $table . '" migrated successfully' . PHP_EOL, false);
                 } catch(Exception $e) {
-                    echo '[!] ' . $e->getMessage();
+                    self::log('[!] ' . $e->getMessage() . PHP_EOL, false);
                 }
             } else {
                 $tables = explode(',', $table);
@@ -97,9 +101,9 @@ class Database
                     
                     try {
                         $table::migrate();
-                        echo '[+] ' . $table . ' migrated successfully' . PHP_EOL;
+                        self::log('[+] Table "' . $table . '" migrated successfully' . PHP_EOL, false, '');
                     } catch(Exception $e) {
-                        echo '[!] ' . $e->getMessage();
+                        self::log('[!] ' . $e->getMessage() . PHP_EOL, false, '');
                     }
                 }
             }
@@ -110,9 +114,9 @@ class Database
                 
                 try {
                     $table::migrate();
-                    echo '[+] ' . $table . ' migrated successfully' . PHP_EOL;
+                    self::log('[+] Table "' . $table . '" migrated successfully' . PHP_EOL, false, '');
                 } catch(Exception $e) {
-                    echo '[!] ' . $e->getMessage();
+                    self::log('[!] ' . $e->getMessage() . PHP_EOL, false, '');
                 }
             }
         }
@@ -120,17 +124,15 @@ class Database
 
     public static function resetTable(string $table = '')
     {
-        echo '[...] Reseting tables' . PHP_EOL;
-
         if (!empty($table)) {
             if (strpos($table, ',') === false) {
                 $table = 'App\Database\Migrations\\' . $table;
                 
                 try {
                     $table::reset();
-                    echo '[+] ' . $table . ' resetted successfully' . PHP_EOL;
+                    self::log('[+] Table "' . $table . '" resetted successfully' . PHP_EOL, false);
                 } catch(Exception $e) {
-                    echo '[!] ' . $e->getMessage();
+                    self::log('[!] ' . $e->getMessage() . PHP_EOL, false);
                 }
             } else {
                 $tables = explode(',', $table);
@@ -140,9 +142,9 @@ class Database
                     
                     try {
                         $table::reset();
-                        echo '[+] ' . $table . ' resetted successfully' . PHP_EOL;
+                        self::log('[+] Table "' . $table . '" resetted successfully' . PHP_EOL, false, '');
                     } catch(Exception $e) {
-                        echo '[!] ' . $e->getMessage();
+                        self::log('[!] ' . $e->getMessage() . PHP_EOL, false, '');
                     }
                 }
             }
@@ -153,9 +155,9 @@ class Database
                 
                 try {
                     $table::reset();
-                    echo '[+] ' . $table . ' resetted successfully' . PHP_EOL;
+                    self::log('[+] Table "' . $table . '" resetted successfully' . PHP_EOL, false, '');
                 } catch(Exception $e) {
-                    echo '[!] ' . $e->getMessage();
+                    self::log('[!] ' . $e->getMessage() . PHP_EOL, false, '');
                 }
             }
         }
@@ -163,17 +165,15 @@ class Database
 
     public static function deleteTable(string $table = '')
     {
-        echo '[...] Deleting tables' . PHP_EOL;
-
         if (!empty($table)) {
             if (strpos($table, ',') === false) {
                 $table = 'App\Database\Migrations\\' . $table;
                 
                 try {
                     $table::delete();
-                    echo '[+] ' . $table . ' deleted successfully' . PHP_EOL;
+                    self::log('[+] Table "' . $table . '" deleted successfully' . PHP_EOL, false);
                 } catch(Exception $e) {
-                    echo '[!] ' . $e->getMessage();
+                    self::log('[!] ' . $e->getMessage() . PHP_EOL, false);
                 }
             } else {
                 $tables = explode(',', $table);
@@ -183,9 +183,9 @@ class Database
                     
                     try {
                         $table::delete();
-                        echo '[+] ' . $table . ' deleted successfully' . PHP_EOL;
+                        self::log('[+] Table "' . $table . '" deleted successfully' . PHP_EOL, false, '');
                     } catch(Exception $e) {
-                        echo '[!] ' . $e->getMessage();
+                        self::log('[!] ' . $e->getMessage() . PHP_EOL, false, '');
                     }
                 }
             }
@@ -196,9 +196,9 @@ class Database
                 
                 try {
                     $table::delete();
-                    echo '[+] ' . $table . ' deleted successfully' . PHP_EOL;
+                    self::log('[+] Table "' . $table . '" deleted successfully' . PHP_EOL, false, '');
                 } catch(Exception $e) {
-                    echo '[!] ' . $e->getMessage();
+                    self::log('[!] ' . $e->getMessage() . PHP_EOL, false, '');
                 }
             }
         }
@@ -206,17 +206,15 @@ class Database
 
     public static function runSeeder(string $seed = '')
     {
-        echo '[...] Inserting seeds' . PHP_EOL;
-
         if (!empty($seed)) {
             if (strpos($seed, ',') === false) {
                 $seed = self::getSeed($seed);
                 
                 try {
                     $seed::insert();
-                    echo '[+] ' . $seed . ' inserted successfully' . PHP_EOL;
+                    self::log('[+] Seed "' . $seed . '" inserted successfully' . PHP_EOL, false);
                 } catch(Exception $e) {
-                    echo '[!] ' . $e->getMessage();
+                    self::log('[!] ' . $e->getMessage() . PHP_EOL, false);
                 }
             } else {
                 $seeds = explode(',', $seed);
@@ -226,19 +224,30 @@ class Database
                     
                     try {
                         $seed::insert();
-                        echo '[+] ' . $seed . ' inserted successfully' . PHP_EOL;
+                        self::log('[+] Seed "' . $seed . '" inserted successfully' . PHP_EOL, false, '');
                     } catch(Exception $e) {
-                        echo '[!] ' . $e->getMessage();
+                        self::log('[!] ' . $e->getMessage() . PHP_EOL, false, '');
                     }
                 }
             }
         } else {
             try {
                 Seeder::run();
-                echo '[+] All seeds inserted successfully' . PHP_EOL;
+                self::log('[+] All seeds inserted successfully' . PHP_EOL, false, '');
             } catch(Exception $e) {
-                echo '[!] ' . $e->getMessage();
+                self::log('[!] ' . $e->getMessage() . PHP_EOL, false, '');
             }
         }
+    }
+
+    public static function getMigrationsTables(): array
+    {
+        $tables = [];
+
+        foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
+            $tables[] = get_file_name($file);
+        }
+
+        return $tables;
     }
 }

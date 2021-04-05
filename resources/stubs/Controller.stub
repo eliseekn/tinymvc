@@ -101,7 +101,7 @@ class CLASSNAME extends Controller
             $this->redirect('admin/resources/RESOURCENAME')->only();
 		} else {
             $this->model('RESOURCENAME')->deleteBy('id', 'in', explode(',', $this->request('items')));
-            $this->response(['redirect' => absolute_url('admin/resources/RESOURCENAME')], true);
+            $this->response(['redirect' => url('admin/resources/RESOURCENAME')], true);
 		}
 	}
 

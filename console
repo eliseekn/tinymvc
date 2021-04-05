@@ -40,86 +40,112 @@ $arguments = [
     '--create',
     '--delete',
     '--reset',
-    '--execute',
     '--namespace',
-    '--migrate',
     '--resources',
-    '--run'
+    '--run',
+    '--tables'
 ];
 
 function print_help()
 {
     $help_message = 'Manage database operations' . PHP_EOL;
-    $help_message .= '   db:schema --create=posts                 Create posts database with utf8 encoding character' . PHP_EOL;
-    $help_message .= '   db:schema --create=posts,comments        Create posts and comments databases' . PHP_EOL;
-    $help_message .= '   db:schema --delete=posts                 Delete posts database' . PHP_EOL;
-    $help_message .= '   db:schema --delete=posts,comments        Delete posts and comments databases' . PHP_EOL;
+    $help_message .= '   db:schema --create database                Create single database with utf8 encoding character' . PHP_EOL;
+    $help_message .= '   db:schema --create database1,database2     Create list of databases' . PHP_EOL;
+    $help_message .= '   db:schema --delete database                Delete single database' . PHP_EOL;
+    $help_message .= '   db:schema --delete database1,database2     Delete list of databases' . PHP_EOL;
     $help_message .= PHP_EOL;
-    $help_message .= '   db:migration --migrate                   Migrate all tables' . PHP_EOL;
-    $help_message .= '   db:migration --migrate=posts             Migrate posts table only' . PHP_EOL;
-    $help_message .= '   db:migration --migrate=posts,comments    Migrate posts and comments tables only' . PHP_EOL;
-    $help_message .= '   db:migration --migrate --seed            Migrate all tables and insert all seeds' . PHP_EOL;
-    $help_message .= '   db:migration --migrate=posts --seed      Migrate posts table only and insert all seeds' . PHP_EOL;
-    $help_message .= '   db:migration --reset                     Reset all migrations' . PHP_EOL;
-    $help_message .= '   db:migration --reset=posts               Reset posts table only' . PHP_EOL;
-    $help_message .= '   db:migration --reset --seed              Reset all migrations and insert all seeds' . PHP_EOL;
-    $help_message .= '   db:migration --delete                    Drop all tables' . PHP_EOL;
-    $help_message .= '   db:migration --delete=comments           Drop comments table only' . PHP_EOL;
+    $help_message .= '   db:migration --run                         Migrate all tables' . PHP_EOL;
+    $help_message .= '   db:migration --run table                   Migrate single table' . PHP_EOL;
+    $help_message .= '   db:migration --run table1,table2           Migrate list of tables' . PHP_EOL;
+    $help_message .= '   db:migration --run --seed                  Migrate all tables and insert all seeds' . PHP_EOL;
+    $help_message .= '   db:migration --reset                       Reset all migrations' . PHP_EOL;
+    $help_message .= '   db:migration --reset table                 Reset single table' . PHP_EOL;
+    $help_message .= '   db:migration --reset --seed                Reset all migrations and insert all seeds' . PHP_EOL;
+    $help_message .= '   db:migration --delete                      Drop all tables' . PHP_EOL;
+    $help_message .= '   db:migration --delete table                Drop single table' . PHP_EOL;
+    $help_message .= '   db:migration --delete table1,table2        Drop list of tables tables' . PHP_EOL;
+    $help_message .= '   db:migration --tables                      Display list of migrations tables' . PHP_EOL;
     $help_message .= PHP_EOL;
-    $help_message .= '   db:seed --run                            Insert all seeds' . PHP_EOL;
-    $help_message .= '   db:seed --run=users                      Insert user seed only' . PHP_EOL;
-    $help_message .= '   db:seed --run=users,comments             Insert user and comment seeds only' . PHP_EOL;
+    $help_message .= '   db:seed --run                              Insert all seeds' . PHP_EOL;
+    $help_message .= '   db:seed --run seed                         Insert single seed' . PHP_EOL;
+    $help_message .= '   db:seed --run seed1,seed1                  Insert list of seeds' . PHP_EOL;
     $help_message .= PHP_EOL;
-    $help_message .= "   db:query --execute='query'               Execute MySQL query" . PHP_EOL;
-    $help_message .= "   db:query --execute='query' --db=tinymvc  Execute MySQL query from the database 'tinymvc'" . PHP_EOL;
+    $help_message .= "   db:query --execute 'query'                 Execute MySQL query" . PHP_EOL;
+    $help_message .= "   db:query --execute 'query' --db=database   Execute MySQL query on the database 'database'" . PHP_EOL;
     $help_message .= PHP_EOL;
     $help_message .= 'Manage resources build operations' . PHP_EOL;
-    $help_message .= '   make:controller posts                    Create posts controller' . PHP_EOL;
-    $help_message .= '   make:controller posts --namespace=blog   Create posts controller in app\Controllers\Blog folder' . PHP_EOL;
-    $help_message .= '   make:controller posts --resources        Create posts resources (controller, migration, model, views and routes)' . PHP_EOL;
+    $help_message .= '   make:controller table                      Create table controller' . PHP_EOL;
+    $help_message .= '   make:controller table --namespace=blog     Create table controller in app\Controllers\Blog folder' . PHP_EOL;
+    $help_message .= '   make:controller table --resources          Create resources for table (controller, migration, model, views and routes)' . PHP_EOL;
     $help_message .= PHP_EOL;
-    $help_message .= '   make:migration posts                     Create posts migration table' . PHP_EOL;
-    $help_message .= '   make:migration posts -cms                Create posts migration table with controller = c, model = m, seed = s' . PHP_EOL;
-    $help_message .= '   make:migration posts -c --namespace=blog Create posts migration table with controller in app\Controllers\Blog folder' . PHP_EOL;
+    $help_message .= '   make:migration table                       Create migration table' . PHP_EOL;
+    $help_message .= '   make:migration table --cms                 Create migration table with controller = c, model = m, seed = s' . PHP_EOL;
+    $help_message .= '   make:migration table --c --namespace=blog  Create migration table with controller in app\Controllers\Blog folder' . PHP_EOL;
     $help_message .= PHP_EOL;
-    $help_message .= '   make:model posts                         Create posts model only' . PHP_EOL;
-    $help_message .= '   make:model posts,comments                Create posts and comments model' . PHP_EOL;
+    $help_message .= '   make:model table                           Create single table model' . PHP_EOL;
+    $help_message .= '   make:model table1,table2                   Create list of model' . PHP_EOL;
     $help_message .= PHP_EOL;
-    $help_message .= '   make:seed posts                          Create posts seed only' . PHP_EOL;
-    $help_message .= '   make:seed posts,comments                 Create posts and comments seed only' . PHP_EOL;
+    $help_message .= '   make:seed table                            Create single table seed' . PHP_EOL;
+    $help_message .= '   make:seed table1,table2                    Create list of seeds' . PHP_EOL;
     $help_message .= PHP_EOL;
-    $help_message .= '   make:request AuthRequest                 Create AuthRequest in app\Requests folder' . PHP_EOL;
-    $help_message .= '   make:middleware AuthPolicy               Create AuthPolicy in app\Middlewares folder' . PHP_EOL;
-    $help_message .= '   make:mail welcome                        Create welcome email notification' . PHP_EOL;
+    $help_message .= '   make:request AuthRequest                   Create AuthRequest in app\Requests folder' . PHP_EOL;
+    $help_message .= '   make:middleware AuthPolicy                 Create AuthPolicy in app\Middlewares folder' . PHP_EOL;
+    $help_message .= '   make:mail welcome                          Create welcome email resources' . PHP_EOL;
     $help_message .= PHP_EOL;
-    $help_message .= 'Miscellaneous' . PHP_EOL;
-    $help_message .= '   cache:clear                              Clear twig templates cache' . PHP_EOL;
+    $help_message .= 'Miscellaneous commands' . PHP_EOL;
+    $help_message .= '   cache:clear                                Clear twig cache templates' . PHP_EOL;
+    $help_message .=  PHP_EOL;
     
     exit($help_message);
 }
 
-if (!isset($argv[0]) || strpos(strtolower($argv[0]), ':') === false) {
+function print_error(string $message, int $type = 0)
+{
+    if ($type === 0) {
+        exit('[-] Invalid command line argument "' . $message . '". Type "php console" for commands list.' . PHP_EOL . PHP_EOL);
+    } else {
+        exit('[-] Missing command line argument. Type "php console" for commands list.' . PHP_EOL . PHP_EOL);
+    }
+}
+
+if (!isset($argv[0])) {
     print_help();
+}
+
+if (strpos(strtolower($argv[0]), ':') === false) {
+    print_error($argv[0]);
 }
 
 list($command, $option) = explode(':', $argv[0]);
 
 if (!in_array($command, $commands) || !in_array($option, $options)) {
-    print_help();
+    print_error($argv[0]);
 }
 
 switch ($command) {
     case 'db':
-        list($argument, $data) = isset($argv[1]) && strpos(strtolower($argv[1]), '=') !== false 
-            ? explode('=', $argv[1]) 
-            : [$argv[1], ''];
+        $argument = $argv[1] ?? null;
+
+        if (is_null($argument)) {
+            print_error('', 1);
+        }
+
+        if (strpos(strtolower($argument), '--') === false) {
+            print_error($argument);
+        }
 
         if (!in_array($argument, $arguments)) {
-            print_help();
+            print_error($argument);
         }
+
+        $data = $argv[2] ?? null; 
 
         switch ($option) {
             case 'schema':
+                if (is_null($data)) {
+                    print_error('', 1);
+                }
+
                 switch ($argument) {
                     case '--create':
                         \Framework\Console\Database::createSchema($data);
@@ -134,32 +160,38 @@ switch ($command) {
 
             case 'query':
                 if ($argument !== '--execute') {
-                    print_help();
+                    print_error($argument);
                 }
 
-                list($arg, $db) = isset($argv[2]) && strpos(strtolower($argv[2]), '=') !== false 
-                    ? explode('=', $argv[2]) 
-                    : (isset($argv[2]) ? [$argv[2], null] : [null, null]);
+                list($arg, $db) = isset($argv[3]) && strpos(strtolower($argv[3]), '=') !== false 
+                    ? explode('=', $argv[3]) 
+                    : (isset($argv[3]) ? [$argv[3], null] : [null, null]);
 
                 $db = $arg === '--db' ? $db : null;
 
-                \Framework\Console\Database::executeQuery($data, $db);
+                if (!is_null($arg) && $arg !== '--db') {
+                    print_error($arg);
+                }
 
+                \Framework\Console\Database::executeQuery($data, $db);
                 break;
 
             case 'migration':
-                list($arg, $seed) = isset($argv[2]) && strpos(strtolower($argv[2]), '=') !== false 
-                    ? explode('=', $argv[2]) 
-                    : (isset($argv[2]) ? [$argv[2], ''] : [null, '']);
+                $data = !is_null($data) ? $data : '';
+                $seed = !empty($data) && strpos(strtolower($data), '--') !== false ? $data : null;
 
-                $seed = $arg === '--seed' ? $seed : null;
+                if (!is_null($seed) && $seed !== '--seed') {
+                    print_error($seed);
+                }
+
+                $data = $data === '--seed' ? '' : $data;
 
                 switch ($argument) {
-                    case '--migrate':
+                    case '--run':
                         \Framework\Console\Database::migrateTable($data);
 
                         if (!is_null($seed)) {
-                            \Framework\Console\Database::runSeeder($seed);
+                            \Framework\Console\Database::runSeeder();
                         }
 
                         break;
@@ -168,7 +200,7 @@ switch ($command) {
                         \Framework\Console\Database::resetTable($data);
 
                         if (!is_null($seed)) {
-                            \Framework\Console\Database::runSeeder($seed);
+                            \Framework\Console\Database::runSeeder();
                         }
 
                         break;
@@ -176,100 +208,108 @@ switch ($command) {
                     case '--delete':
                         \Framework\Console\Database::deleteTable($data);
                         break;
+
+                    case '--tables':
+                        print_r(\Framework\Console\Database::getMigrationsTables());
+                        echo PHP_EOL;
+                        break;
                 }
 
                 break;
 
             case 'seed':
                 if ($argument !== '--run') {
-                    print_help();
+                    print_error($argument);
                 }
+
+                $data = $data ?? '';
 
                 \Framework\Console\Database::runSeeder($data);
                 break;
         }
 
+        break;
+
     case 'make':
-        list($argument, $data) = isset($argv[1]) && strpos(strtolower($argv[1]), '=') !== false 
-            ? explode('=', $argv[1]) 
-            : (isset($argv[1]) ? [$argv[1], null] : [null, null]);
+        $argument = $argv[2] ?? null;
+        $data = $argv[1] ?? null; 
 
-        if (is_null($argument)) {
-            print_help();
-        }
-
-        list($arg, $namespace) = isset($argv[2]) && strpos(strtolower($argv[2]), '=') !== false 
-            ? explode('=', $argv[2]) 
-            : (isset($argv[2]) ? [$argv[2], null] : [null, null]);
-        
         switch ($option) {
             case 'controller':
-                $namespace = $arg === '--namespace' ? $namespace : null;
-                $resources = $arg === '--resources';
+                $namespace = $argument === '--namespace' ? $namespace : null;
+                $resources = $argument === '--resources';
 
                 if (!$resources) {
-                    \Framework\Console\Make::makeController($argument, $namespace);
+                    \Framework\Console\Make::makeController($data, $namespace);
                 } else {
-                    \Framework\Console\Make::makeController($argument, 'admin');
-                    \Framework\Console\Make::makeMigration($argument);
-                    \Framework\Console\Make::makeModel($argument);
-                    \Framework\Console\Make::makeSeed($argument);
-                    \Framework\Console\Make::makeViews($argument);
-                    \Framework\Console\Make::makeRoute($argument);
+                    \Framework\Console\Make::makeController($data, 'admin');
+                    \Framework\Console\Make::makeMigration($data);
+                    \Framework\Console\Make::makeModel($data);
+                    \Framework\Console\Make::makeSeed($data);
+                    \Framework\Console\Make::makeViews($data);
+                    \Framework\Console\Make::makeRoute($data);
                 }
 
                 break;
 
             case 'migration':
-                \Framework\Console\Make::makeMigration($argument);
+                \Framework\Console\Make::makeMigration($data);
 
-                list($_arg, $_namespace) = isset($argv[3]) && strpos(strtolower($argv[3]), '=') !== false 
-                    ? explode('=', $argv[3]) 
-                    : (isset($argv[3]) ? [$argv[3], null] : [null, null]);
+                if (!is_null($argument)) {
+                    list($arg, $namespace) = isset($argv[3]) && strpos(strtolower($argv[3]), '=') !== false 
+                        ? explode('=', $argv[3]) 
+                        : (isset($argv[3]) ? [$argv[3], null] : [null, null]);
 
-                $_namespace = $_arg === '--namespace' ? $_namespace : null;
+                    $namespace = $arg === '--namespace' ? $namespace : null;
 
-                if ($arg === '-m') {
-                    \Framework\Console\Make::makeModel($argument);
-                } else if ($arg === '-c') {
-                    \Framework\Console\Make::makeController($argument, $namespace);
-                } else if ($arg === '-s') {
-                    \Framework\Console\Make::makeSeed($argument);
-                } else if ($arg === '-mc' || $arg === '-cm') {
-                    \Framework\Console\Make::makeController($argument, $namespace);
-                    \Framework\Console\Make::makeModel($argument);
-                } else if ($arg === '-ms' || $arg === '-sm') {
-                    \Framework\Console\Make::makeModel($argument);
-                    \Framework\Console\Make::makeSeed($argument);
-                } else if ($arg === '-cs' || $arg === '-sc') {
-                    \Framework\Console\Make::makeController($argument, $namespace);
-                    \Framework\Console\Make::makeSeed($argument);
-                } else if (in_array($arg, ['-mcs', '-msc', '-csm', '-cms', '-smc', '-scm'])) {
-                    \Framework\Console\Make::makeController($argument, $namespace);
-                    \Framework\Console\Make::makeModel($argument);
-                    \Framework\Console\Make::makeSeed($argument);
+                    if (!is_null($arg) && $arg !== '--namespace') {
+                        print_error($arg);
+                    }
+
+                    if ($argument === '--m') {
+                        \Framework\Console\Make::makeModel($data);
+                    } else if ($argument === '--c') {
+                        \Framework\Console\Make::makeController($data, $namespace);
+                    } else if ($argument === '--s') {
+                        \Framework\Console\Make::makeSeed($data);
+                    } else if ($argument === '--mc' || $argument === '--cm') {
+                        \Framework\Console\Make::makeController($data, $namespace);
+                        \Framework\Console\Make::makeModel($data);
+                    } else if ($argument === '--ms' || $argument === '--sm') {
+                        \Framework\Console\Make::makeModel($data);
+                        \Framework\Console\Make::makeSeed($data);
+                    } else if ($argument === '--cs' || $argument === '--sc') {
+                        \Framework\Console\Make::makeController($data, $namespace);
+                        \Framework\Console\Make::makeSeed($data);
+                    } else if (in_array($argument, ['--mcs', '--msc', '--csm', '--cms', '--smc', '--scm'])) {
+                        \Framework\Console\Make::makeController($data, $namespace);
+                        \Framework\Console\Make::makeModel($data);
+                        \Framework\Console\Make::makeSeed($data);
+                    } else {
+                        print_error($argument);
+                    }
                 }
                 
                 break;
 
             case 'model':
-                \Framework\Console\Make::makeModel($argument);
+                \Framework\Console\Make::makeModel($data);
                 break;
 
             case 'seed':
-                \Framework\Console\Make::makeSeed($argument);
+                \Framework\Console\Make::makeSeed($data);
                 break;
 
             case 'mail':
-                \Framework\Console\Make::makeMail($argument);
+                \Framework\Console\Make::makeMail($data);
                 break;
 
             case 'middleware':
-                \Framework\Console\Make::makeMiddleware($argument);
+                \Framework\Console\Make::makeMiddleware($data);
                 break;
 
             case 'request':
-                \Framework\Console\Make::makeRequest($argument);
+                \Framework\Console\Make::makeRequest($data);
                 break;
         }
 
@@ -277,11 +317,10 @@ switch ($command) {
 
     case 'cache':
         if ($option !== 'clear') {
-            print_help();
+            print_error($option);
         }
 
-        echo '[...] Clearing twig templates cache' . PHP_EOL;
-        \Framework\Support\Storage::path(config('storage.cache'))->deleteDir('');
+        \Framework\Support\Storage::path(config('storage.cache'))->deleteDir();
         echo '[+] Cache cleared succesfully' . PHP_EOL;
 
         break;

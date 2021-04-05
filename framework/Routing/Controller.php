@@ -73,25 +73,16 @@ class Controller
     }
     
     /**
-     * redirect to url
+     * perform redirect operation
      *
-     * @param  string $url
+     * @param  string|null $url
      * @param  mixed $params
      * @return \Framework\Http\Redirect
      */
-    public function redirect(string $url, $params = null): \Framework\Http\Redirect
+    public function redirect(?string $url = null, $params = null): \Framework\Http\Redirect
     {
-        return Redirect::url($url, $params);
-    }
-
-    /**
-     * redirect back
-     *
-     * @return \Framework\Http\Redirect
-     */
-    public function back(): \Framework\Http\Redirect
-    {
-        return Redirect::back();
+        $redirect = new Redirect();
+        return is_null($url) ? $redirect : $redirect->url($url, $params);
     }
 
     /**

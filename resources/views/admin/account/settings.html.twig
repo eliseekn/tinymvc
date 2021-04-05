@@ -6,7 +6,7 @@
 
 {% block page_content %}
 
-    <form method="post" action="{{ absolute_url('admin/account/settings/update', auth('id')) }}">
+    <form method="post" action="{{ url('admin/account/settings/update', auth('id')) }}">
         {{ csrf_token_input()|raw }}
         {{ method_input('patch')|raw }}
 

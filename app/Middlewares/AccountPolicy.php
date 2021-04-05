@@ -20,7 +20,7 @@ class AccountPolicy
     {
         if (config('security.auth.email_confirmation') === true) {
             if (!Auth::get()->active) {
-                Redirect::url('login')->withAlert(__('account_not_activated', true))->error('');
+                (new Redirect())->url('login')->withAlert(__('account_not_activated', true))->error('');
             }
         }
     }

@@ -16,7 +16,7 @@
 	{% endif %}
 
 	<div class="card shadow p-4">
-		<form method="post" action="{{ absolute_url('authenticate') }}">
+		<form method="post" action="{{ url('authenticate') }}">
 			{{ csrf_token_input()|raw }}
 
 			<div class="form-group">
@@ -54,7 +54,7 @@
 					<label class="custom-control-label" for="remember">{{ __('remember', true) }}</label>
 				</div>
 
-				<a href="{{ absolute_url('password/forgot') }}">
+				<a href="{{ url('password/forgot') }}">
 					{{ __('forgot_password', true) }}
 				</a>
 			</div>
@@ -66,7 +66,7 @@
 
 		<p class="mt-4 text-center">
 			{{ __('no_account', true) }}
-			<a href="{{ absolute_url('signup') }}">{{ __('signup_here', true) }}</a>
+			<a href="{{ url('signup') }}">{{ __('signup_here', true) }}</a>
 		</p>
 	</div>
 

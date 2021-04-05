@@ -26,27 +26,88 @@ use App\Controllers\Admin\NotificationsController;
 //get requests routes
 Route::group([
     //dashboard route
-    'dashboard' => ['handler' => [DashboardController::class, 'index']],
+    'dashboard' => [
+        'handler' => [DashboardController::class, 'index'],
+        'name' => 'dashboard.index'
+    ],
 
     //users routes
-    'resources/users' => ['handler' => [UsersController::class, 'index']],
-    'resources/users/new' => ['handler' => [UsersController::class, 'new']],
-    'resources/users/edit/{num}' => ['handler' => [UsersController::class, 'edit']],
-    'resources/users/read/{num}' => ['handler' => [UsersController::class, 'read']],
+    'resources/users' => [
+        'handler' => [UsersController::class, 'index'],
+        'name' => 'users.index'
+    ],
+
+    'resources/users/new' => [
+        'handler' => [UsersController::class, 'new'],
+        'name' => 'users.new'
+    ],
+
+    'resources/users/{id}/edit' => [
+        'handler' => [UsersController::class, 'edit'],
+        'parameters' => ['id' => 'num'],
+        'name' => 'users.edit'
+    ],
+
+    'resources/users/{id}/read' => [
+        'handler' => [UsersController::class, 'read'],
+        'parameters' => ['id' => 'num'],
+        'name' => 'users.read'
+    ],
 
     //medias routes
-    'resources/medias' => ['handler' => [MediasController::class, 'index']],
-    'resources/medias/new' => ['handler' => [MediasController::class, 'new']],
-    'resources/medias/edit/{num}' => ['handler' => [MediasController::class, 'edit']],
-    'resources/medias/read/{num}' => ['handler' => [MediasController::class, 'read']],
-    'resources/medias/search' => ['handler' => [MediasController::class, 'search']],
-    'resources/medias/download/{num}' => ['handler' => [MediasController::class, 'download']],
+    'resources/medias' => [
+        'handler' => [MediasController::class, 'index'],
+        'name' => 'medias.index'
+    ],
+
+    'resources/medias/new' => [
+        'handler' => [MediasController::class, 'new'],
+        'name' => 'medias.new'
+    ],
+
+    'resources/medias/{id}/edit' => [
+        'handler' => [MediasController::class, 'edit'],
+        'parameters' => ['id' => 'num'],
+        'name' => 'medias.edit'
+    ],
+
+    'resources/medias/{id}/read' => [
+        'handler' => [MediasController::class, 'read'],
+        'name' => 'medias.read'
+    ],
+
+    'resources/medias/search' => [
+        'handler' => [MediasController::class, 'search'],
+        'name' => 'medias.search'
+    ],
+
+    'resources/medias/{id}/download' => [
+        'handler' => [MediasController::class, 'download'],
+        'parameters' => ['id' => 'num'],
+        'name' => 'medias.download'
+    ],
 
     //account management routes
-    'account/messages' => ['handler' => [MessagesController::class, 'index']],
-    'account/notifications' => ['handler' => [NotificationsController::class, 'index']],
-    'account/settings/{num}' => ['handler' => [SettingsController::class, 'index']],
-    'account/activities' => ['handler' => [ActivitiesController::class, 'index']],
+    'account/messages' => [
+        'handler' => [MessagesController::class, 'index'],
+        'name' => 'messages.index'
+    ],
+
+    'account/notifications' => [
+        'handler' => [NotificationsController::class, 'index'],
+        'name' => 'notifications.index'
+    ],
+
+    'account/{id}/settings' => [
+        'handler' => [SettingsController::class, 'index'],
+        'parameters' => ['id' => 'num'],
+        'name' => 'settings.index'
+    ],
+
+    'account/activities' => [
+        'handler' => [ActivitiesController::class, 'index'],
+        'name' => 'activities.index'
+    ],
 ])->by([
     'method' => 'get',
     'prefix' => 'admin',
@@ -58,11 +119,34 @@ Route::group([
 
 //delete requests routes
 Route::group([
-    'resources/users/delete/?{num}?' => ['handler' => [UsersController::class, 'delete']],
-    'resources/medias/delete/?{num}?' => ['handler' => [MediasController::class,'delete']],
-    'account/messages/delete/?{num}?' => ['handler' => [MessagesController::class, 'delete']],
-    'account/notifications/delete/?{num}?' => ['handler' => [NotificationsController::class, 'delete']],
-    'account/activities/delete' => ['handler' => [ActivitiesController::class, 'delete']]
+    'resources/users/?{id}?/delete' => [
+        'handler' => [UsersController::class, 'delete'],
+        'parameters' => ['id' => 'num'],
+        'name' => 'users.delete'
+    ],
+
+    'resources/medias/?{id}?/delete' => [
+        'handler' => [MediasController::class,'delete'],
+        'parameters' => ['id' => 'num'],
+        'name' => 'medias.delete'
+    ],
+
+    'account/messages/?{id}?/delete' => [
+        'handler' => [MessagesController::class, 'delete'],
+        'parameters' => ['id' => 'num'],
+        'name' => 'messages.delete'
+    ],
+
+    'account/notifications/?{id}?/delete' => [
+        'handler' => [NotificationsController::class, 'delete'],
+        'parameters' => ['id' => 'num'],
+        'name' => 'notifications.delete'
+    ],
+
+    'account/activities/delete' => [
+        'handler' => [ActivitiesController::class, 'delete'],
+        'name' => 'activities.delete'
+        ]
 ])->by([
     'method' => 'delete',
     'prefix' => 'admin',
@@ -75,11 +159,35 @@ Route::group([
 
 //patch requests routes
 Route::group([
-    'account/messages/update/?{num}?' => ['handler' => [MessagesController::class, 'update']],
-    'account/notifications/update/?{num}?' => ['handler' => [NotificationsController::class, 'update']],
-    'resources/users/update/{num}' => ['handler' => [UsersController::class, 'update']],
-    'resources/medias/update/{num}' => ['handler' => [MediasController::class,'update']],
-    'account/settings/update/{num}' => ['handler' => [SettingsController::class, 'update']],
+    'account/messages/?{id}?/update' => [
+        'handler' => [MessagesController::class, 'update'],
+        'parameters' => ['id' => 'num'],
+        'name' => 'messages.update'
+    ],
+
+    'account/notifications/?{id}?/update' => [
+        'handler' => [NotificationsController::class, 'update'],
+        'parameters' => ['id' => 'num'],
+        'name' => 'notifications.update'
+    ],
+
+    'resources/users/{id}/update' => [
+        'handler' => [UsersController::class, 'update'],
+        'parameters' => ['id' => 'num'],
+        'name' => 'users.update'
+    ],
+
+    'resources/medias/{id}/update' => [
+        'handler' => [MediasController::class,'update'],
+        'parameters' => ['id' => 'num'],
+        'name' => 'medias.update'
+    ],
+
+    'account/settings/{id}/update' => [
+        'handler' => [SettingsController::class, 'update'],
+        'parameters' => ['id' => 'num'],
+        'name' => 'settings.update'
+    ],
 ])->by([
     'method' => 'patch',
     'prefix' => 'admin',
@@ -93,25 +201,44 @@ Route::group([
 //post requests routes
 Route::group([
     //users routes
-    'resources/users/create' => ['handler' => [UsersController::class, 'create']],
-    'resources/users/import' => ['handler' => [UsersController::class, 'import']],
-    'resources/users/export' => ['handler' => [UsersController::class, 'export']],
+    'resources/users/create' => [
+        'handler' => [UsersController::class, 'create'],
+        'name' => 'users.create'
+    ],
+
+    'resources/users/export' => [
+        'handler' => [UsersController::class, 'export'],
+        'name' => 'users.export'
+    ],
 
     //medias routes
-    'resources/medias/create' => ['handler' => [MediasController::class,'create']],
-    'resources/medias/import' => ['handler' => [MediasController::class,'import']],
-    'resources/medias/export' => ['handler' => [MediasController::class,'export']],
+    'resources/medias/create' => [
+        'handler' => [MediasController::class,'create'],
+        'name' => 'medias.create'
+    ],
 
     //notifications routes
-    'account/notifications/create' => ['handler' => [NotificationsController::class, 'create']],
+    'account/notifications/create' => [
+        'handler' => [NotificationsController::class, 'create'],
+        'name' => 'notifications.create'
+    ],
 
     //messages routes
-    'account/messages/create' => ['handler' => [MessagesController::class, 'create']],
-    'account/messages/reply/{num}' => ['handler' => [MessagesController::class, 'reply']],
-    'account/messages/export' => ['handler' => [MessagesController::class, 'export']],
+    'account/messages/create' => [
+        'handler' => [MessagesController::class, 'create'],
+        'name' => 'messages.create'
+    ],
 
-    //activities routes
-    'account/activities/export' => ['handler' => [ActivitiesController::class, 'export']],
+    'account/messages/{id}/reply' => [
+        'handler' => [MessagesController::class, 'reply'],
+        'parameters' => ['id' => 'num'],
+        'name' => 'messages.reply'
+    ],
+
+    'account/activites/export' => [
+        'handler' => [ActivitiesController::class, 'export'],
+        'name' => 'messages.export'
+    ]
 ])->by([
     'method' => 'post',
     'prefix' => 'admin',

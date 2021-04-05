@@ -20,7 +20,7 @@ class AuthPolicy
     public static function handle(Request $request): void
     {
         if (Auth::check()) {
-            Redirect::url('admin/dashboard')->withToast(__('welcome') . ' ' . Auth::get()->name)->success();
+            (new Redirect())->url('admin/dashboard')->withToast(__('welcome') . ' ' . Auth::get()->name)->success();
         }
     }
 }

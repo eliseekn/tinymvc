@@ -31,7 +31,7 @@ class ActivitiesController extends Controller
         }
 
         $this->alert('toast', __('activities_deleted'))->success();
-        $this->response(['redirect' => absolute_url('admin/account/activities')], true);
+        $this->response(['redirect' => route('activities.index')], true);
 	}
 
 	/**

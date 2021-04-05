@@ -31,7 +31,7 @@ class MessagesController extends Controller
 
         $this->model('messages')->updateIfExists($id, ['sender_status' => 'read']);
         $this->log(__('message_sent'));
-        $this->back()->withToast(__('message_sent'))->success();
+        $this->redirect()->back()->withToast(__('message_sent'))->success();
 	}
 	
 	/**
@@ -47,7 +47,7 @@ class MessagesController extends Controller
         $this->model('messages')->updateIfExists($id, ['recipient_status' => 'read']);
         $this->model('messages')->updateIfExists($_id, ['sender_status' => 'read']);
         $this->log(__('message_sent'));
-        $this->back()->withToast(__('message_sent'))->success();
+        $this->redirect()->back()->withToast(__('message_sent'))->success();
 	}
 	
 	/**
@@ -62,11 +62,11 @@ class MessagesController extends Controller
 
         if (!is_null($id)) {
             $this->log(__('message_updated'));
-            $this->back()->withToast(__('message_updated'))->success();
+            $this->redirect()->back()->withToast(__('message_updated'))->success();
 		} else {
             $this->log(__('messages_updated'));
 			$this->alert('toast', __('messages_updated'))->success();
-            $this->response(['redirect' => absolute_url('admin/account/messages')], true);
+            $this->response(['redirect' => route('messages.index')], true);
 		}
 	}
 
@@ -82,11 +82,11 @@ class MessagesController extends Controller
 
         if (!is_null($id)) {
             $this->log(__('message_deleted'));
-            $this->back()->withToast(__('message_deleted'))->success();
+            $this->redirect()->back()->withToast(__('message_deleted'))->success();
 		} else {
             $this->log(__('messages_deleted'));
 			$this->alert('toast', __('messages_deleted'))->success();
-            $this->response(['redirect' => absolute_url('admin/account/messages')], true);
+            $this->response(['redirect' => route('messages.index')], true);
 		}
 	}
 

@@ -22,13 +22,13 @@ class Redirect
      *
      * @var string $url
      */
-    protected static $url = '';
+    public $url = '';
 
     /**
      * @var \Framework\Support\Alert $alert
      */
     protected $alert;
-    
+
     /**
      * redirect to url 
      *
@@ -36,11 +36,24 @@ class Redirect
      * @param  array|string $params
      * @return \Framework\Http\Redirect
      */
-    public static function url(string $url = '/', $params = null): self
+    public function url(string $url = '/', $params = null): self
     {
         $params = is_array($params) ? (empty($params) ? '' : implode('/', $params)) : $params;
-        self::$url = is_null($params) ? $url : $url . '/' . $params;
-        return new self();
+        $this->url = is_null($params) ? $url : $url . '/' . $params;
+        return $this;
+    }
+    
+    /**
+     * redirect to route
+     *
+     * @param  string $route
+     * @param  mixed $params
+     * @return \Framework\Http\Redirect
+     */
+    public function route(string $route, $params = null): self
+    {
+        $this->url = route_uri($route, $params);
+        return $this;
     }
 
     /**
@@ -48,16 +61,16 @@ class Redirect
      *
      * @return \Framework\Http\Redirect
      */
-    public static function back(): self
+    public function back(): self
     {
         $history = Session::get('history');
 
         if (!empty($history)) {
             end($history);
-            self::$url = prev($history);
+            $this->url = prev($history);
         }
 
-        return new self();
+        return $this;
     }
 
     /**
@@ -67,7 +80,7 @@ class Redirect
      */
     public function only(): void
     {
-        redirect_to(self::$url);
+        redirect_to($this->url);
     }
     
     /**
@@ -169,7 +182,7 @@ class Redirect
     public function success(string $title = 'Success'): void
     {
         $this->alert->success($title);
-        redirect_to(self::$url);
+        redirect_to($this->url);
     }
         
     /**
@@ -181,7 +194,7 @@ class Redirect
     public function error(string $title = 'Error'): void
     {
         $this->alert->error($title);
-        redirect_to(self::$url);
+        redirect_to($this->url);
     }
         
     /**
@@ -193,7 +206,7 @@ class Redirect
     public function info(string $title = 'Info'): void
     {
         $this->alert->info($title);
-        redirect_to(self::$url);
+        redirect_to($this->url);
     }
         
     /**
@@ -205,6 +218,6 @@ class Redirect
     public function warning(string $title = 'Warning'): void
     {
         $this->alert->warning($title);
-        redirect_to(self::$url);
+        redirect_to($this->url);
     }
 }

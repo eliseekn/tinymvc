@@ -25,10 +25,10 @@ class PasswordController extends Controller
 
 		if (TokenMail::send($this->request('email'), $token)) {
             Tokens::store($this->request('email'), $token, Carbon::now()->addHour()->toDateTimeString());
-			$this->back()->withAlert(__('password_reset_link_sent', true))->success('');
+			$this->redirect()->back()->withAlert(__('password_reset_link_sent', true))->success('');
 		} 
         
-		$this->back()->withAlert(__('password_reset_link_not_sent', true))->error('');
+		$this->redirect()->back()->withAlert(__('password_reset_link_not_sent', true))->error('');
 	}
 	
 	/**

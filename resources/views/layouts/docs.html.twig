@@ -23,7 +23,7 @@
             </div>
 
             <div class="list-group list-group-flush">
-                <a href="<?= absolute_url('docs/getting-started') ?>" class="list-group-item list-group-item-action border-bottom">
+                <a href="<?= url('docs/getting-started') ?>" class="list-group-item list-group-item-action border-bottom">
                     <i class="fa fa-home <?php if (in_url('getting-started')) : echo 'text-primary'; endif ?>"></i> Getting started
                 </a>
 
@@ -40,16 +40,16 @@
                 </button>
 
                 <div class="<?php if (!in_url('guides')) : echo 'd-none'; endif ?> border-bottom" id="guides-dropdown-menu">
-                    <a href="<?= absolute_url('docs/guides/routing') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                    <a href="<?= url('docs/guides/routing') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (in_url('routing')) : echo 'text-primary'; endif ?>"></i> Routing
                     </a>
-                    <a href="<?= absolute_url('docs/guides/middlewares') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                    <a href="<?= url('docs/guides/middlewares') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (in_url('middlewares')) : echo 'text-primary'; endif ?>"></i> Middlewares
                     </a>
-                    <a href="<?= absolute_url('docs/guides/controllers') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                    <a href="<?= url('docs/guides/controllers') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (in_url('controllers')) : echo 'text-primary'; endif ?>"></i> Controllers
                     </a>
-                    <a href="<?= absolute_url('docs/guides/views') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                    <a href="<?= url('docs/guides/views') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (in_url('views')) : echo 'text-primary'; endif ?>"></i> Views
                     </a>
                 </div>
@@ -67,16 +67,16 @@
                 </button>
 
                 <div class="<?php if (!in_url('http')) : echo 'd-none'; endif ?> border-bottom" id="http-dropdown-menu">
-                    <a href="<?= absolute_url('docs/http/requests') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                    <a href="<?= url('docs/http/requests') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (in_url('requests')) : echo 'text-primary'; endif ?>"></i> Requests
                     </a>
-                    <a href="<?= absolute_url('docs/http/responses') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                    <a href="<?= url('docs/http/responses') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (in_url('responses')) : echo 'text-primary'; endif ?>"></i> Responses
                     </a>
-                    <a href="<?= absolute_url('docs/http/client') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                    <a href="<?= url('docs/http/client') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (in_url('client')) : echo 'text-primary'; endif ?>"></i> Client
                     </a>
-                    <a href="<?= absolute_url('docs/http/redirections') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                    <a href="<?= url('docs/http/redirections') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (in_url('redirections')) : echo 'text-primary'; endif ?>"></i> Redirections
                     </a>
                 </div>
@@ -94,19 +94,19 @@
                 </button>
 
                 <div class="<?php if (!in_url('database')) : echo 'd-none'; endif ?> border-bottom" id="database-dropdown-menu">
-                    <a href="<?= absolute_url('docs/database/introduction') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                    <a href="<?= url('docs/database/introduction') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (in_url('introduction')) : echo 'text-primary'; endif ?>"></i> Introduction
                     </a>
-                    <a href="<?= absolute_url('docs/database/query-builder') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                    <a href="<?= url('docs/database/query-builder') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (in_url('query-builder')) : echo 'text-primary'; endif ?>"></i> Query Builder
                     </a>
-                    <a href="<?= absolute_url('docs/database/model') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                    <a href="<?= url('docs/database/model') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (in_url('model')) : echo 'text-primary'; endif ?>"></i> Model
                     </a>
-                    <a href="<?= absolute_url('docs/database/migrations') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                    <a href="<?= url('docs/database/migrations') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (in_url('migrations')) : echo 'text-primary'; endif ?>"></i> Migrations
                     </a>
-                    <a href="<?= absolute_url('docs/database/seed') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                    <a href="<?= url('docs/database/seed') ?>" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                         <i class="fa fa-dot-circle <?php if (in_url('seed')) : echo 'text-primary'; endif ?>"></i> Seeds
                     </a>
                 </div>

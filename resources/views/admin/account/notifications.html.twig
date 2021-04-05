@@ -34,16 +34,16 @@
 
                     <span class="mt-lg-0 mt-2">
                         {% if auth('role') == USER_ROLE[0] %}
-                        <create-notification action="{{ absolute_url('admin/account/notifications/create') }}">
+                        <create-notification action="{{ url('admin/account/notifications/create') }}">
                             <button class="btn btn-outline-dark mr-2">{{ __('create') }}</button>
                         </create-notification>
                         {% endif %}
 
-                        <button class="btn btn-outline-dark mr-2" id="bulk-read" data-url="{{ absolute_url('admin/account/notifications/update') }}">
+                        <button class="btn btn-outline-dark mr-2" id="bulk-read" data-url="{{ url('admin/account/notifications/update') }}">
                             {{ __('mark_all_as_read') }}
                         </button>
 
-                        <button class="btn btn-danger" id="bulk-delete" data-url="{{ absolute_url('admin/account/notifications/delete') }}">
+                        <button class="btn btn-danger" id="bulk-delete" data-url="{{ url('admin/account/notifications/delete') }}">
                             {{ __('bulk_delete') }}
                         </button>
                     </span>
@@ -85,13 +85,13 @@
                             <td>{{ time_elapsed(notification.created_at) }}</td>
 
                             <td>
-                                <update-item action="{{ absolute_url('admin/account/notifications/update', notification.id) }}" {{ notification.status == 'read' ? 'disabled' }}>
+                                <update-item action="{{ url('admin/account/notifications/update', notification.id) }}" {{ notification.status == 'read' ? 'disabled' }}>
                                     <button type="submit" class="btn text-dark p-1" {{ notification.status == 'unread' ? 'title="' ~ __('mark_as_read') ~ '"' }}>
                                         <i class="fa fa-eye{{ notification.status == 'unread' ? '-slash' }}"></i>
                                     </button>
                                 </update-item>
 
-                                <delete-item action="{{ absolute_url('admin/account/notifications/delete', notification.id) }}">
+                                <delete-item action="{{ url('admin/account/notifications/delete', notification.id) }}">
                                     <a class="btn text-danger p-1" title="{{ __('delete') }}">
                                         <i class="fa fa-trash-alt"></i>
                                     </a>

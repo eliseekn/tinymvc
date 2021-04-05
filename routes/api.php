@@ -34,12 +34,17 @@ Route::group([
     ],
 
     //retrieves metrics trends
-    'metrics/users/{str}/?{num}?' => [
+    'metrics/users/{trends}/?{interval}?' => [
         'method' => 'get',
         'handler' => function (string $trends, int $interval = 0) {
             $metrics = (new Model('users'))->metrics('id', Metrics::COUNT, $trends, $interval);
             (new Response())->send(['metrics' => json_encode($metrics)], true);
-        }
+        },
+        'parameters' => [
+            'trends' => 'str',
+            'interval' => 'num'
+        ],
+        'name' => 'users.metrics'
     ],
 
     //retrieves messages list

@@ -9,7 +9,7 @@
 <div class="card shadow-sm">
     <div class="card-header"><?= __('edit') ?></div>
 
-    <form method="post" action="<?= absolute_url('admin/resources/RESOURCENAMEs/update/' . $RESOURCENAME->id) ?>">
+    <form method="post" action="<?= url('admin/resources/RESOURCENAMEs/update/' . $RESOURCENAME->id) ?>">
         <?= csrf_token_input() ?>
 
         <div class="card-body"></div>
@@ -17,7 +17,7 @@
         <div class="card-footer">
             <button type="submit" class="btn btn-outline-dark loading"><?= __('update') ?></button>
             <button type="reset" class="btn btn-outline-dark mx-2"><?= __('reset') ?></button>
-            <a href="<?= absolute_url('admin/resources/RESOURCENAMEs') ?>" class="btn btn-outline-dark"><?= __('cancel') ?></a>
+            <a href="<?= url('admin/resources/RESOURCENAMEs') ?>" class="btn btn-outline-dark"><?= __('cancel') ?></a>
         </div>
     </form>
 </div>

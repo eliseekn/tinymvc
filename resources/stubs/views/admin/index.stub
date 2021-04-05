@@ -26,15 +26,15 @@
                 </span>
 
                 <span class="mt-lg-0 mt-2">
-                    <a href="<?= absolute_url('admin/resources/RESOURCENAMEs/new') ?>" class="btn btn-outline-dark">
+                    <a href="<?= url('admin/resources/RESOURCENAMEs/new') ?>" class="btn btn-outline-dark">
                         <?= __('new') ?>
                     </a>
                     
-                    <export-modal action="<?= absolute_url('admin/resources/RESOURCENAMEs/export') ?>">
+                    <export-modal action="<?= url('admin/resources/RESOURCENAMEs/export') ?>">
                         <button class="btn btn-outline-dark mx-2"><?= __('export') ?></button>
                     </export-modal>
 
-                    <button class="btn btn-danger" id="bulk-delete" data-url="<?= absolute_url('admin/resources/RESOURCENAMEs/delete') ?>">
+                    <button class="btn btn-danger" id="bulk-delete" data-url="<?= url('admin/resources/RESOURCENAMEs/delete') ?>">
                         <?= __('delete') ?>
                     </button>
                 </span>
@@ -74,11 +74,11 @@
                         <td><?= date_helper($RESOURCENAME->created_at)->human() ?></td>
 
                         <td>
-                            <a class="btn text-dark p-1" href="<?= absolute_url('admin/resources/RESOURCENAMEs/read/' . $RESOURCENAME->id) ?>" title="<?= __('details') ?>">
+                            <a class="btn text-dark p-1" href="<?= url('admin/resources/RESOURCENAMEs/read/' . $RESOURCENAME->id) ?>" title="<?= __('details') ?>">
                                 <i class="fa fa-eye"></i>
                             </a>
 
-                            <a class="btn text-dark p-1" href="<?= absolute_url('admin/resources/RESOURCENAMEs/edit/' . $RESOURCENAME->id) ?>" title="<?= __('edit') ?>">
+                            <a class="btn text-dark p-1" href="<?= url('admin/resources/RESOURCENAMEs/edit/' . $RESOURCENAME->id) ?>" title="<?= __('edit') ?>">
                                 <i class="fa fa-edit"></i>
                             </a>
 
@@ -86,7 +86,7 @@
                                 type="icon" 
                                 title="<?= __('delete') ?>"
                                 content='<i class="fa fa-trash-alt"></i>' 
-                                action="<?= absolute_url('admin/resources/RESOURCENAMEs/delete/' . $RESOURCENAME->id) ?>">
+                                action="<?= url('admin/resources/RESOURCENAMEs/delete/' . $RESOURCENAME->id) ?>">
                             </confirm-delete>
                         </td>
                     </tr>

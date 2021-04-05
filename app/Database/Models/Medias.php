@@ -133,7 +133,7 @@ class Medias
             ->insert([
                 'user_id' => Auth::get()->id,
                 'filename' => $media->filename,
-                'url' => absolute_url('storage/uploads/' . Carbon::now()->year. '/' . Carbon::now()->month . '/' . $media->filename)
+                'url' => url('storage/uploads', [Carbon::now()->year, Carbon::now()->month , $media->filename])
             ]);
     }
     
@@ -153,7 +153,7 @@ class Medias
                 'filename' => $request->filename,
                 'title' => $request->title,
                 'description' => $request->description,
-                'url' => absolute_url('storage/uploads/' . $year. '/' . $month . '/' . $request->filename)
+                'url' => url('storage/uploads', [$year, $month , $request->filename])
             ]);
     }
     

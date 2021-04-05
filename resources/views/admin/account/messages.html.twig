@@ -33,21 +33,21 @@
                     </span>
 
                     <span class="mt-lg-0 mt-2">
-                        <send-message action="{{ absolute_url('admin/account/messages/create') }}"  recipient="0" modal_title="{{ __('new') }}">
+                        <send-message action="{{ url('admin/account/messages/create') }}"  recipient="0" modal_title="{{ __('new') }}">
                             <button class="btn btn-outline-dark mr-2" title="{{ __('new') }}">
                                 {{ __('new') }}
                             </button>
                         </send-message>
 
-                        <button class="btn btn-outline-dark" id="bulk-read" data-url="{{ absolute_url('admin/account/messages/update') }}">
+                        <button class="btn btn-outline-dark" id="bulk-read" data-url="{{ url('admin/account/messages/update') }}">
                             {{ __('mark_all_as_read') }}
                         </button>
 
-                        <export-modal action="{{ absolute_url('admin/account/messages/export') }}">
+                        <export-modal action="{{ url('admin/account/messages/export') }}">
                             <button class="btn btn-outline-dark mx-2">{{ __('export') }}</button>
                         </export-modal>
 
-                        <button class="btn btn-danger" id="bulk-delete" data-url="{{ absolute_url('admin/account/messages/delete') }}">
+                        <button class="btn btn-danger" id="bulk-delete" data-url="{{ url('admin/account/messages/delete') }}">
                             {{ __('bulk_delete') }}
                         </button>
                     </span>
@@ -94,20 +94,20 @@
 
                             <td>
                                 {% if message.sender_email != auth('email') %}
-                                <update-item action="{{ absolute_url('admin/account/messages/update', message.id) }}" {{ message.recipient_status == 'read' ? 'disabled' }}>
+                                <update-item action="{{ url('admin/account/messages/update', message.id) }}" {{ message.recipient_status == 'read' ? 'disabled' }}>
                                     <button type="submit" class="btn text-dark p-1" {{ message.recipient_status == 'unread' ? 'title="' ~ __('mark_as_read') ~ '"' }}>
                                         <i class="fa fa-eye{{ message.recipient_status == 'unread' ? '-slash' }}"></i>
                                     </button>
                                 </update-item>
 
-                                <send-message action="{{ absolute_url('admin/account/messages/reply', message.id) }}" recipient="{{ message.sender }}" modal_title="{{ __('reply') }}">
+                                <send-message action="{{ url('admin/account/messages/reply', message.id) }}" recipient="{{ message.sender }}" modal_title="{{ __('reply') }}">
                                     <a class="btn text-dark p-1" href="#" title="{{ __('reply') }}">
                                         <i class="fa fa-reply-all"></i>
                                     </a>
                                 </send-message>
                                 {% endif %}
 
-                                <delete-item action="{{ absolute_url('admin/account/messages/delete', message.id) }}">
+                                <delete-item action="{{ url('admin/account/messages/delete', message.id) }}">
                                     <a class="btn text-danger p-1" title="{{ __('delete') }}">
                                         <i class="fa fa-trash-alt"></i>
                                     </a>

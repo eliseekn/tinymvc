@@ -25,7 +25,7 @@ class SettingsController extends Controller
             $countries = CountriesHelper::all();
             $this->render('admin.account.settings', compact('user', 'countries'));
         } catch (Exception $e) {
-            $this->back()->withToast(__('user_not_found'))->error();
+            $this->redirect()->back()->withToast(__('user_not_found'))->error();
         }
     }
     
@@ -45,6 +45,6 @@ class SettingsController extends Controller
         }
 
         $this->log(__('changes_saved'));
-        $this->back()->withToast(__('changes_saved'))->success();
+        $this->redirect()->back()->withToast(__('changes_saved'))->success();
     }
 }

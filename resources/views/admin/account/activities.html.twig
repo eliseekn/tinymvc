@@ -26,11 +26,11 @@
 					</span>
 
 					<span class="mt-lg-0 mt-2">
-						<export-modal action="{{ absolute_url('admin/account/activities/export') }}">
+						<export-modal action="{{ url('admin/account/activities/export') }}">
 							<button class="btn btn-outline-dark mx-2">{{ __('export') }}</button>
 						</export-modal>
 
-						<button class="btn btn-danger" id="bulk-delete" data-url="{{ absolute_url('admin/account/activities/delete') }}">
+						<button class="btn btn-danger" id="bulk-delete" data-url="{{ url('admin/account/activities/delete') }}">
 							{{ __('bulk_delete') }}
 						</button>
 					</span>
