@@ -9,7 +9,7 @@
     <div class="card shadow-sm">
         <div class="card-header">{{ __('new') }}</div>
 
-        <form method="post" action="{{ url('admin/resources/users/create') }}">
+        <form method="post" action="{{ route('users.create') }}">
             {{ csrf_token_input()|raw }}
 
             <div class="card-body">
@@ -83,7 +83,7 @@
             <div class="card-footer">
                 <button type="submit" class="btn btn-dark loading">{{ __('create') }}</button>
                 <button type="reset" class="btn btn-outline-dark mx-2">{{ __('reset') }}</button>
-                <a href="{{ url('admin/resources/users') }}" class="btn btn-outline-dark">{{ __('cancel') }}</a>
+                <a href="{{ route('users.index') }}" class="btn btn-outline-dark">{{ __('cancel') }}</a>
             </div>
         </form>
     </div>

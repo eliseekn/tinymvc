@@ -13,7 +13,7 @@ use Framework\Routing\Route;
  * Documentation routes
  */
 
-Route::get('docs', [
+/* Route::get('docs', [
     'handler' => function() {
         View::render('docs.index');
     }
@@ -78,4 +78,4 @@ Route::group([
 ])->by([
     'method' => 'GET',
     'prefix' => 'docs'
-]);
+]); */

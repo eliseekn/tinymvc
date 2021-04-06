@@ -6,7 +6,7 @@
 
 {% block page_content %}
 
-    <form method="post" action="{{ url('admin/account/settings/update', auth('id')) }}">
+    <form method="post" action="{{ route('settings.update', auth('id')) }}">
         {{ csrf_token_input()|raw }}
         {{ method_input('patch')|raw }}
 
@@ -194,7 +194,9 @@
         </div>
 
         <div class="">
-            <button type="submit" class="btn btn-dark loading">{{ __('save') }}</button>
+            <button type="submit" class="btn btn-dark loading">
+                {{ __('save') }}
+            </button>
         </div>
     </form>
 

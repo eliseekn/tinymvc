@@ -11,6 +11,7 @@ use Framework\Http\Response;
 use Framework\Routing\Route;
 use Framework\Database\Model;
 use Framework\Support\Metrics;
+use App\Middlewares\HandleCors;
 use App\Database\Models\Messages;
 use App\Database\Models\Notifications;
 
@@ -18,66 +19,40 @@ use App\Database\Models\Notifications;
  * API routes
  */
 
-Route::group([
-    //retrieves notifications list
-    'notifications' => [
-        'method' => 'get',
-        'handler' => function() {
+ Route::groupPrefix('api', function () {
+    Route::groupMiddlewares([HandleCors::class], function () {
+        Route::get('notifications', function() {
             $notifications = Notifications::findMessages();
-
+    
             foreach ($notifications as $notification) {
                 $notification->created_at = time_elapsed($notification->created_at);
             }
-
+    
             (new Response())->send(['notifications' => $notifications], true);
-        }
-    ],
-
-    //retrieves metrics trends
-    'metrics/users/{trends}/?{interval}?' => [
-        'method' => 'get',
-        'handler' => function (string $trends, int $interval = 0) {
+        });
+    
+        Route::get('metrics/users/{trends}/?{interval}?', function (string $trends, int $interval = 0) {
             $metrics = (new Model('users'))->metrics('id', Metrics::COUNT, $trends, $interval);
             (new Response())->send(['metrics' => json_encode($metrics)], true);
-        },
-        'parameters' => [
-            'trends' => 'str',
-            'interval' => 'num'
-        ],
-        'name' => 'users.metrics'
-    ],
-
-    //retrieves messages list
-    'messages' => [
-        'method' => 'get',
-        'handler' => function () {
+        })->where(['trends' => 'str','interval' => 'num']);
+    
+        Route::get('messages', function () {
             $messages = Messages::findReceivedMessages();
-
+    
             foreach ($messages as $message) {
                 $message->created_at = time_elapsed($message->created_at);
             }
-
+    
             (new Response())->send(['messages' => $messages], true);
-        }
-    ],
-
-    //retrieves users list
-    'users' => [
-        'method' => 'get',
-        'handler' => function () {
+        });
+    
+        Route::get('users', function () {
             (new Response())->send(['users' => (new Model('users'))->find('!=', Auth::get()->id)->all()], true);
-        }
-    ],
-
-    //retrieves translations
-    'translations' => [
-        'method' => 'get',
-        'handler' => function() {
+        });
+    
+        Route::get('translations', function() {
             require_once 'resources/lang/' . Auth::get()->lang . '.php';
             (new Response())->send(['translations' => $config], true);
-        }
-    ]
-])->by([
-    'prefix' => 'api',
-    'middlewares' => ['HandleCors']
-]);
+        });
+    });
+ })->register();

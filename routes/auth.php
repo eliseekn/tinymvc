@@ -18,46 +18,29 @@ use App\Controllers\Auth\PasswordController;
  * Authentication routes
  */
 
-Route::group([
-    'login' => [
-        'handler' => function() {
-            View::render('auth.login');
-        }
-    ],
+Route::groupMiddlewares([RememberUser::class,  AuthPolicy::class], function () {
+    Route::get('login', function () {
+        View::render('auth.login');
+    });
 
-    'signup' => [
-        'handler' => function() {
-            View::render('auth.signup');
-        }
-    ]
-])->by([
-    'method' => 'GET',
-    'middlewares' => [
-        RememberUser::class, 
-        AuthPolicy::class
-    ]
-]);
+    Route::get('signup', function () {
+        View::render('auth.signup');
+    });
+})->register();
 
-Route::get('logout', ['handler' => [AuthController::class, 'logout']]);
-Route::post('authenticate', ['handler' => [AuthController::class, 'authenticate']]);
-Route::post('register', ['handler' => [AuthController::class, 'register']]);
+Route::get('logout', [AuthController::class, 'logout'])->register();
+Route::post('authenticate', [AuthController::class, 'authenticate'])->register();
+Route::post('register', [AuthController::class, 'register'])->register();
 
-//password reset routes
-Route::get('password/forgot', [
-    'handler' => function() {
-        View::render('auth.password.forgot');
-    }
-]);
+Route::get('password/forgot', function() {
+    View::render('auth.password.forgot');
+})->register();
 
-Route::get('password/reset', ['handler' => [PasswordController::class, 'reset']]);
-Route::post('password/notify', ['handler' => [PasswordController::class, 'notify']]);
-Route::post('password/update', ['handler' => [PasswordController::class, 'update']]);
+Route::get('password/reset', [PasswordController::class, 'reset'])->register();
+Route::post('password/notify', [PasswordController::class, 'notify'])->register();
+Route::post('password/update', [PasswordController::class, 'update'])->register();
 
-//email routes
-Route::group([
-    'confirm' => ['handler' => [EmailController::class, 'confirm']],
-    'auth' => ['handler' => [EmailController::class, 'auth']]
-])->by([
-    'method' => 'GET',
-    'prefix' => 'email'
-]);
+Route::groupPrefix('email', function () {
+    Route::get('confirm', [EmailController::class, 'confirm']);
+    Route::get('auth', [EmailController::class, 'auth']);
+})->register();

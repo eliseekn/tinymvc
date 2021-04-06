@@ -8,11 +8,10 @@
 
 use Framework\Routing\Route;
 use App\Controllers\HomeController;
+use Framework\Http\Response;
 
 /**
  * Web routes
  */
 
-Route::get('/', [
-    'handler' => [HomeController::class, 'index']
-]);
+Route::get('/', [HomeController::class, 'index'])->register();

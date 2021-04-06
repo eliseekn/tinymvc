@@ -33,15 +33,15 @@
                     </span>
 
                     <span class="mt-lg-0 mt-2">
-                        <a href="{{ url('admin/resources/users/new') }}" class="btn btn-outline-dark">
+                        <a href="{{ route('users.new') }}" class="btn btn-outline-dark">
                             {{ __('new') }}
                         </a>
                         
-                        <export-modal action="{{ url('admin/resources/users/export') }}">
+                        <export-modal action="{{ route('users.export') }}">
                             <button class="btn btn-outline-dark mx-2">{{ __('export') }}</button>
                         </export-modal>
 
-                        <button class="btn btn-danger mt-lg-0 mt-2" id="bulk-delete" data-url="{{ url('admin/resources/users/delete') }}">
+                        <button class="btn btn-danger mt-lg-0 mt-2" id="bulk-delete" data-url="{{ route('users.delete') }}">
                             {{ __('bulk_delete') }}
                         </button>
                     </span>
@@ -107,15 +107,15 @@
                             <td>{{ user.updated_at != user.created_at ? date_helper(user.updated_at) : '-' }}</td>
 
                             <td>
-                                <a class="btn text-dark p-1" href="{{ url('admin/resources/users/read', user.id) }}" title="{{ __('details') }}">
+                                <a class="btn text-dark p-1" href="{{ route('users.read', user.id) }}" title="{{ __('details') }}">
                                     <i class="fa fa-eye"></i>
                                 </a>
 
-                                <a class="btn text-dark p-1" href="{{ url('admin/resources/users/edit', user.id) }}" title="{{ __('edit') }}">
+                                <a class="btn text-dark p-1" href="{{ route('users.edit', user.id) }}" title="{{ __('edit') }}">
                                     <i class="fa fa-edit"></i>
                                 </a>
 
-                                <delete-item action="{{ url('admin/resources/users/delete', user.id) }}">
+                                <delete-item action="{{ route('users.delete', user.id) }}">
                                     <a class="btn text-danger p-1" title="{{ __('delete') }}">
                                         <i class="fa fa-trash-alt"></i>
                                     </a>

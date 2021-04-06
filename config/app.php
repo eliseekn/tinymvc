@@ -42,7 +42,7 @@ $config = [
             'port' => 1025,
             'auth' => false,
             'secure' => false,
-            'tls' => true,
+            'tls' => false,
             'username' => '',
             'password' => ''
         ]

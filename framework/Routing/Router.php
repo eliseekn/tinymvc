@@ -52,27 +52,25 @@ class Router
      */
     private static function match(string $route, array $options, string $uri, ?array &$matches = null): bool
     {
-        if (!isset($options['parameters']) || empty($options['parameters'])) {
-            $pattern = $route;
-        } else {
+        if (isset($options['parameters']) && !empty($options['parameters'])) {
             $urls = explode('/', $route);
 
             foreach ($urls as $url) {
                 foreach ($options['parameters'] as $parameter => $type) {
                     if (strpos($url, '?') === false) {
-                        if (preg_match('#^' . $url . '$#', '{' . $parameter . '}', $matches)) {
-                            $pattern = preg_replace('/{([a-zA-Z-_\}]+)}/i', $type, $route);
+                        if ($url === '{' . $parameter . '}') {
+                            $route = str_replace($url, $type, $route);
                         }
                     } else {
-                        if (preg_match($url, '?{' . $parameter . '}?', $matches)) {
-                            $pattern = preg_replace('/{([a-zA-Z-_\}]+)}/i', $type, $route);
+                        if ($url === '?{' . $parameter . '}?') {
+                            $route = str_replace($url, $type, $route);
                         }
                     }
                 }
             }
         }
 
-        if (preg_match('#^' . $pattern . '$#', $uri, $matches)) {
+        if (preg_match('#^' . $route . '$#', $uri, $matches)) {
             array_shift($matches);
             return true;
         }
