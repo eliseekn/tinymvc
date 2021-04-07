@@ -140,13 +140,13 @@ if (!function_exists('auth_attempts_exceeded')) {
     function auth_attempts_exceeded(): bool
     {
         //authentification attempts is disable
-        if (config('security.auth.max_attempts') === 0) {
+        if (config('auth.max_attempts') === 0) {
             return false;
         }
 
         $unlock_timeout = Carbon::parse(get_session('auth_attempts_timeout'));
         $auth_attempts = get_session('auth_attempts');
-        return !empty($auth_attempts) && ($auth_attempts >= config('security.auth.max_attempts')) && Carbon::now()->lt($unlock_timeout);
+        return !empty($auth_attempts) && ($auth_attempts >= config('auth.max_attempts')) && Carbon::now()->lt($unlock_timeout);
     }
 }
 
@@ -536,13 +536,17 @@ if (!function_exists('config')) {
 	 * read configuration
 	 *
 	 * @param  string $data
-	 * @param  string $cfg
 	 * @return mixed
 	 */
-	function config(string $data, string $cfg = 'app')
+	function config(string $data)
 	{
-		$config = ConfigFactory::loadPath(absolute_path('config') . $cfg . '.php');
-		return $config($data, '');
+		$config = ConfigFactory::loadPath(absolute_path('config'));
+        
+        try {
+            return $config->$data;
+        } catch (Exception $e) {
+            return '';
+        }
 	}
 }
 

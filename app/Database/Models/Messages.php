@@ -34,7 +34,7 @@ class Messages
     public static function paginate(int $items_per_pages = 20): \Framework\Support\Pager
     {
         return self::model()
-            ->select(['m.*', 'u1.email AS sender_email', 'u2.email AS recipient_email'])
+            ->select(['m.*', 'u1.email AS sender_mail', 'u2.email AS recipient_email'])
             ->join('users AS u1', 'm.sender', '=', 'u1.id')
             ->join('users AS u2', 'm.recipient', '=', 'u2.id')
             ->whereRaw('recipient = ' . Auth::get()->id . ' OR sender = ' . Auth::get()->id)
@@ -52,7 +52,7 @@ class Messages
     public static function findReceivedMessages(int $limit = 5): array
     {
         return self::model()
-            ->select(['m.*', 'u.email AS sender_email', 'u.name AS sender_name'])
+            ->select(['m.*', 'u.email AS sender_mail', 'u.name AS sender_name'])
             ->join('users As u', 'm.sender', '=', 'u.id')
             ->where('recipient', Auth::get()->id)
             ->and('recipient_deleted', 0)

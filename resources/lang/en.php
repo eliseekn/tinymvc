@@ -188,7 +188,7 @@
     'login_attempts_failed' => 'Log in attempts failed',
     'login_attempts_succeeded' => 'Log in attempts succeeded',
     'logged_out' => 'Logged out',
-    'auth_attempts_exceeded' => 'Max authentication attempts exceeded. Please retry in ' . config('security.auth.unlock_timeout') . ' minute(s)',
+    'auth_attempts_exceeded' => 'Max authentication attempts exceeded. Please retry in ' . config('auth.unlock_timeout') . ' minute(s)',
     'activity_not_found' => 'Activity not found',
     'activity_deleted' => 'Activity deleted successfully',
     'activities_deleted' => 'Activities deleted successfully',

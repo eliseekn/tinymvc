@@ -27,7 +27,7 @@ class Cookies
      */
     public static function create(string $name, string $value, int $expires = 3600, bool $secure = false, string $domain = ''): bool 
     {
-        $value = config('security.encrypt_cookies') ? Encryption::encrypt($value) : $value;
+        $value = config('encryption.cookies') ? Encryption::encrypt($value) : $value;
 		return setcookie(config('app.name') . '_' . $name, $value, time() + $expires, '/', $domain, $secure, true);
     }
     
@@ -40,7 +40,7 @@ class Cookies
     public static function get(string $name): string
     {
         $value = $_COOKIE[config('app.name') . '_' . $name] ?? '';
-		return config('security.encrypt_cookies') ? Encryption::decrypt($value) : $value;
+		return config('encryption.cookies') ? Encryption::decrypt($value) : $value;
     }
     
     /**

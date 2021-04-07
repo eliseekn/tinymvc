@@ -13,7 +13,7 @@
  */
 
 require 'vendor/autoload.php';
-require 'env.php';
+require_once 'env.php';
 
 array_shift($argv);
 

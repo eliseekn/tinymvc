@@ -42,7 +42,7 @@ class CLASSNAME extends Controller
             $RESOURCENAME = $this->model('RESOURCENAME')->findOrFail('id', $id);
             $this->render('admin.RESOURCENAME.edit', compact('RESOURCENAME'));
         } catch (Exception $e) {
-            $this->redirect('admin/resources/RESOURCENAME')->only();
+            $this->redirect()->route('RESOURCENAME.index')->only();
         }
 	}
 	
@@ -58,7 +58,7 @@ class CLASSNAME extends Controller
             $RESOURCENAME = $this->model('RESOURCENAME')->findOrFail('id', $id);
             $this->render('admin.RESOURCENAME.read', compact('RESOURCENAME'));
         } catch (Exception $e) {
-            $this->redirect('admin/resources/RESOURCENAME')->only();
+            $this->redirect()->route('RESOURCENAME.index')->only();
         }
 	}
 
@@ -70,7 +70,7 @@ class CLASSNAME extends Controller
     public function create()
 	{
         $id = $this->model('RESOURCENAME')->insert($this->request()->inputs());
-		$this->redirect('admin/resources/RESOURCENAME/read', $id)->only();
+		$this->redirect()->route('RESOURCENAME.read', $id)->only();
 	}
     
 	/**
@@ -82,7 +82,7 @@ class CLASSNAME extends Controller
 	public function update(int $id)
 	{
         $this->model('RESOURCENAME')->updateIfExists($id, $this->request()->inputs());
-		$this->redirect('admin/resources/RESOURCENAME/read', $id)->only();
+		$this->redirect()->route('RESOURCENAME.read', $id)->only();
 	}
 
 	/**
@@ -95,13 +95,13 @@ class CLASSNAME extends Controller
 	{
         if (!is_null($id)) {
             if (!$this->model('RESOURCENAME')->deleteIfExists($id)) {
-                $this->back()->only();
+                $this->redirect()->back()->only();
 			}
 
-            $this->redirect('admin/resources/RESOURCENAME')->only();
+            $this->redirect()->route('RESOURCENAME.index')->only();
 		} else {
             $this->model('RESOURCENAME')->deleteBy('id', 'in', explode(',', $this->request('items')));
-            $this->response(['redirect' => url('admin/resources/RESOURCENAME')], true);
+            $this->response(['redirect' => route('RESOURCENAME.index')], true);
 		}
 	}
 

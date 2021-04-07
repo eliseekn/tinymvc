@@ -94,7 +94,7 @@
 						<tbody>
 							{% for message in messages %}
 								<tr>
-									<td>{{ message.sender_email }}</td>
+									<td>{{ message.sender_mail }}</td>
 									<td>{{ message.message }}</td>
 									<td>{{ time_elapsed(notification.created_at) }}</td>
 									<td>

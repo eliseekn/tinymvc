@@ -1,25 +1,25 @@
-<?php $this->layout('layouts/admin', [
-    'page_title' => __('new') . ' | Administration'
-]) ?>
+{% extends "layouts/admin.html.twig" %}
 
-<?php $this->start('page_content') ?>
+{% block page_title %}
+	{{ __('RESOURCENAMEs') ~ ' | Administration' }}
+{% endblock %}
 
-<?php if (auth()->alerts && !empty($alerts)) : $this->insert('partials/alert', $alerts); endif ?>
+{% block page_content %}
 
-<div class="card shadow-sm">
-    <div class="card-header"><?= __('new') ?></div>
+    <div class="card shadow-sm">
+        <div class="card-header">{{ __('new') }}</div>
 
-    <form method="post" action="<?= url('admin/resources/RESOURCENAMEs/create') ?>">
-        <?= csrf_token_input() ?>
+        <form method="post" action="{{ route('RESOURCENAMEs.create') }}">
+            {{ csrf_token_input()|raw }}
 
-        <div class="card-body"></div>
+            <div class="card-body"></div>
 
-        <div class="card-footer">
-            <button type="submit" class="btn btn-outline-dark loading"><?= __('create') ?></button>
-            <button type="reset" class="btn btn-outline-dark mx-2"><?= __('reset') ?></button>
-            <a href="<?= url('admin/resources/RESOURCENAMEs') ?>" class="btn btn-outline-dark"><?= __('cancel') ?></a>
-        </div>
-    </form>
-</div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-outline-dark loading">{{ __('create') }}</button>
+                <button type="reset" class="btn btn-outline-dark mx-2">{{ __('reset') }}</button>
+                <a href="{{ route('RESOURCENAMEs.index') }}" class="btn btn-outline-dark">{{ __('cancel') }}</a>
+            </div>
+        </form>
+    </div>
 
-<?php $this->stop() ?>
+{% endblock %}

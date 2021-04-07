@@ -31,7 +31,7 @@ class Middleware
      */
     public static function execute($middleware): void
     {
-        $middleware = config($middleware, 'middlewares');
+        $middleware = config('middlewares.' . $middleware);
 
         if (!class_exists($middleware) || !method_exists($middleware, 'handle')) {
             throw new Exception('Middleware "' . $middleware . '" not found.');

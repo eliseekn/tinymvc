@@ -17,8 +17,8 @@ class EmailConfirmationMail
     public static function send(string $email, string $token): bool
     {
         return Email::to($email)
-            ->from(config('mailer.from'), config('mailer.name'))
-            ->reply(config('mailer.from'), config('mailer.name'))
+            ->from(config('mailer.sender_mail'), config('mailer.sender_name'))
+            ->reply(config('mailer.sender_mail'), config('mailer.sender_name'))
 			->subject('Email confirmation')
             ->html(View::getContent('emails.emailconfirmation', compact('email', 'token')))
 			->send();

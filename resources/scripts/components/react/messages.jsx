@@ -11,7 +11,7 @@ const Message = (props) => {
     return (
         <div className="dropdown-item py-2" style={{ width: '350px' }}>
             <p className="text-wrap">
-                <avatar-icon name={props.sender_name + '(' + props.sender_email + ')'}></avatar-icon>
+                <avatar-icon name={props.sender_name + '(' + props.sender_mail + ')'}></avatar-icon>
                 <span>{props.message}</span>
             </p>
             <span className="small text-muted">{props.createdAt}</span>
@@ -81,7 +81,7 @@ class Messages extends React.Component {
                                 <Message
                                     key={message.id}
                                     id={message.id}
-                                    sender_email={message.sender_email}
+                                    sender_mail={message.sender_mail}
                                     sender_name={message.sender_name}
                                     message={message.message}
                                     createdAt={message.created_at} />

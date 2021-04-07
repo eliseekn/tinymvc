@@ -188,7 +188,7 @@
     'login_attempts_failed' => 'Tentative de connexion échouée',
     'login_attempts_succeeded' => 'Tentative de connexion réussie',
     'logged_out' => 'Déconnecté',
-    'auth_attempts_exceeded' => "Nombre maximum de tentatives de connexions dépassé. Veuillez réessayez dans " . config('security.auth.unlock_timeout') . " minute(s)",
+    'auth_attempts_exceeded' => "Nombre maximum de tentatives de connexions dépassé. Veuillez réessayez dans " . config('auth.unlock_timeout') . " minute(s)",
     'activity_not_found' => 'Activité non trouvée',
     'activity_deleted' => 'Activité supprimée avec succès',
     'activities_deleted' => 'Activitées supprimées avec succès',

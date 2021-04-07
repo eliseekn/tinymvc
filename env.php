@@ -1,4 +1,4 @@
-<?php
+<?PHP
 
 /**
  * @copyright 2021 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
@@ -13,7 +13,8 @@ use Framework\Support\Storage;
  */
 
 //application root path
-define('APP_ROOT', __DIR__  . DIRECTORY_SEPARATOR . '../');
+define('APP_ROOT', __DIR__  . DIRECTORY_SEPARATOR);
+
 //errors display
 if (config('errors.display') === true) {
     ini_set('display_errors', 1);

@@ -45,7 +45,7 @@ class AuthController extends Controller
             $this->redirect()->route('dashboard.index')->only();
         }
 
-        if (config('security.auth.email_confirmation') === false) {
+        if (config('auth.email_confirmation') === false) {
             WelcomeMail::send($this->request('email'), $this->request('name'));
             $this->redirect()->route('dashboard.index')->withAlert(__('user_registered', true))->success('');
         } else {

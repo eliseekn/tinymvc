@@ -1,0 +1,11 @@
+{% extends "layouts/admin.html.twig" %}
+
+{% block page_title %}
+	{{ __('RESOURCENAMEs') ~ ' | Administration' }}
+{% endblock %}
+
+{% block page_content %}
+
+{{ __('RESOURCENAMEs') }}
+
+{% endblock %}

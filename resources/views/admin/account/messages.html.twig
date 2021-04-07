@@ -87,13 +87,13 @@
                             </td>
 
                             <td>{{ message.id }}</td>
-                            <td>{{ message.sender_email }}</td>
+                            <td>{{ message.sender_mail }}</td>
                             <td>{{ message.recipient_email }}</td>
                             <td>{{ message.message }}</td>
                             <td>{{ time_elapsed(message.created_at) }}</td>
 
                             <td>
-                                {% if message.sender_email != auth('email') %}
+                                {% if message.sender_mail != auth('email') %}
                                 <update-item action="{{ route('messages.update', message.id) }}" {{ message.recipient_status == 'read' ? 'disabled' }}>
                                     <button type="submit" class="btn text-dark p-1" {{ message.recipient_status == 'unread' ? 'title="' ~ __('mark_as_read') ~ '"' }}>
                                         <i class="fa fa-eye{{ message.recipient_status == 'unread' ? '-slash' }}"></i>
