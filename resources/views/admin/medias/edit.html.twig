@@ -21,7 +21,7 @@
 
                         {% if errors.filename is not empty %}
                         <div id="filename-error" class="invalid-feedback">
-                            {{ errors.filename }}
+                            {{ errors.filename|raw }}
                         </div>
                         {% endif %}
                     </div>
@@ -34,7 +34,7 @@
                     
                         {% if errors.title is not empty %}
                         <div id="title-error" class="invalid-feedback">
-                            {{ errors.title }}
+                            {{ errors.title|raw }}
                         </div>
                         {% endif %}
                     </div>
@@ -47,7 +47,7 @@
 
                         {% if errors.description is not empty %}
                         <div id="description-error" class="invalid-feedback">
-                            {{ errors.description }}
+                            {{ errors.description|raw }}
                         </div>
                         {% endif %}
                     </div>

@@ -106,6 +106,8 @@ class Validator
      */
     public function redirectOnFail()
     {
-        return !$this->fails() ? $this : Redirect::back()->withErrors($this->errors())->withInputs($this->inputs())->only();
+        return !$this->fails() 
+            ? $this 
+            : (new Redirect())->back()->withErrors($this->errors())->withInputs($this->inputs())->only();
     }
 }

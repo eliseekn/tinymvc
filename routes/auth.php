@@ -8,8 +8,6 @@
 
 use Framework\Routing\View;
 use Framework\Routing\Route;
-use App\Middlewares\AuthPolicy;
-use App\Middlewares\RememberUser;
 use App\Controllers\Auth\AuthController;
 use App\Controllers\Auth\EmailController;
 use App\Controllers\Auth\PasswordController;
@@ -18,7 +16,7 @@ use App\Controllers\Auth\PasswordController;
  * Authentication routes
  */
 
-Route::groupMiddlewares([RememberUser::class,  AuthPolicy::class], function () {
+Route::groupMiddlewares(['remember',  'auth'], function () {
     Route::get('login', function () {
         View::render('auth.login');
     });

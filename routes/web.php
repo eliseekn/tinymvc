@@ -8,7 +8,6 @@
 
 use Framework\Routing\Route;
 use App\Controllers\HomeController;
-use Framework\Http\Response;
 
 /**
  * Web routes

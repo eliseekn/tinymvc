@@ -31,6 +31,8 @@ class Middleware
      */
     public static function execute($middleware): void
     {
+        $middleware = config($middleware, 'middlewares');
+
         if (!class_exists($middleware) || !method_exists($middleware, 'handle')) {
             throw new Exception('Middleware "' . $middleware . '" not found.');
         }
@@ -56,12 +58,16 @@ class Middleware
     /**
      * add middlewares to route
      *
-     * @param  string
-     * @param  array $middlewares
+     * @param  mixed $route
+     * @param  mixed $middlewares
      * @return void
      */
-    public static function add(string $route, array $middlewares): void
+    public static function add($route = null, $middlewares = null): void
     {
-        self::$middlewares[$route] = $middlewares;
+        if (!is_null($route)) {
+            self::$middlewares = $route;
+        } else if (!is_null($route) && !is_null($middlewares)) {
+            self::$middlewares[$route] = $middlewares;
+        }
     }
 }

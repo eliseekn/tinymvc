@@ -86,6 +86,9 @@ class Router
      */
     public static function dispatch(Request $request, array $routes): void
     {
+        //dd(Route::$routes, Route::$names, Middleware::$middlewares);
+        //dd(route('settings.index', 1));
+
         if (!empty($routes)) {
             foreach ($routes as $route => $options) {
                 $request->method($request->inputs('request_method', $options['method']));
@@ -99,6 +102,7 @@ class Router
                             //execute function with parameters
                             call_user_func_array($options['handler'], array_values($params));
                         } else {
+                            //dd($options['handler']);
                             list($controller, $action) = $options['handler'];
 
                             //chekc if controller class and method exist
@@ -106,7 +110,7 @@ class Router
                                 //execute controller with method and parameters
                                 call_user_func_array([new $controller(), $action], array_values($params));
                             } else {
-                                throw new Exception('Handler "' . $options['handler'] . '" not found.');
+                                throw new Exception('Handler "' . $controller . '" not found.');
                             }
                         }
                     }

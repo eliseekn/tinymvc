@@ -158,29 +158,6 @@ class Make
         
         self::log('[+] Controller "' . $controller_class . '" generated successfully' . PHP_EOL, false);
     }
-    
-    /**
-     * generate views file
-     *
-     * @param  string $resource
-     * @return void
-     */
-    public static function makeViews(string $resource): void
-    {
-        list($resource_name, $resource_folder) = self::generateResource($resource);
-
-        foreach(self::stubs()->add('views' . DIRECTORY_SEPARATOR . 'admin')->getFiles() as $file) {
-            $data = self::stubs()->add('views' . DIRECTORY_SEPARATOR . 'admin')->readFile($file);
-            $data = str_replace('RESOURCENAME', $resource_name, $data);
-            $file = str_replace('stub', 'html.twig', $file);
-
-            if (!Storage::path(config('storage.views'))->add($resource_folder)->writeFile($file, $data)) {
-                self::log('[-] Failed to generate views for "' . $resource . '"' . PHP_EOL);
-            }
-        }
-
-        self::log('[+] Views for "' . $resource . '" generated successfully' . PHP_EOL, false);
-    }
 
     /**
      * generate model file
@@ -246,12 +223,71 @@ class Make
     }
     
     /**
+     * generate request validator file
+     *
+     * @param  string $request
+     * @return void
+     */
+    public static function makeRequest(string $request): void
+    {
+        $data = self::stubs()->readFile('Request.stub');
+        $data = str_replace('CLASSNAME', $request, $data);
+
+        if (!Storage::path(config('storage.requests'))->writeFile($request . '.php', $data)) {
+            self::log('[!] Failed to generate request ' . $request . '"' . PHP_EOL);
+        }
+
+        self::log('[+] Request validator "' . $request . '" generated successfully' . PHP_EOL, false);
+    }
+    
+    /**
+     * generate middleware file
+     *
+     * @param  string $middleware
+     * @return void
+     */
+    public static function makeMiddleware(string $middleware): void
+    {
+        $data = self::stubs()->readFile('Middleware.stub');
+        $data = str_replace('CLASSNAME', $middleware, $data);
+
+        if (!Storage::path(config('storage.middlewares'))->writeFile($middleware . '.php', $data)) {
+            self::log('[!] Failed to generate middleware ' . $middleware . '"' . PHP_EOL);
+        }
+
+        self::log('[+] Middleware "' . $middleware . '" generated successfully' . PHP_EOL, false);
+    }
+    
+    /**
+     * generate views file
+     *
+     * @param  string $resource
+     * @return void
+     */
+    public static function makeViews(string $resource): void
+    {
+        list($resource_name, $resource_folder) = self::generateResource($resource);
+
+        foreach(self::stubs()->add('views' . DIRECTORY_SEPARATOR . 'admin')->getFiles() as $file) {
+            $data = self::stubs()->add('views' . DIRECTORY_SEPARATOR . 'admin')->readFile($file);
+            $data = str_replace('RESOURCENAME', $resource_name, $data);
+            $file = str_replace('stub', 'html.twig', $file);
+
+            if (!Storage::path(config('storage.views'))->add($resource_folder)->writeFile($file, $data)) {
+                self::log('[-] Failed to generate views for "' . $resource . '"' . PHP_EOL);
+            }
+        }
+
+        self::log('[+] Views for "' . $resource . '" generated successfully' . PHP_EOL, false);
+    }
+    
+    /**
      * generate mail resources
      *
      * @param  string $mail
      * @return void
      */
-    public static function makeMail(string $mail)
+    public static function makeMail(string $mail): void
     {
         list($mail_name, $mail_class) = self::generateClass($mail, 'mail');
 
@@ -273,38 +309,26 @@ class Make
     }
     
     /**
-     * generate request validator file
+     * generate admin account resource
      *
-     * @param  string $request
+     * @param  string $account
      * @return void
      */
-    public static function makeRequest(string $request)
+    public static function makeAccount(string $account): void
     {
-        $data = self::stubs()->readFile('Request.stub');
-        $data = str_replace('CLASSNAME', $request, $data);
+        self::makeController($account, 'admin');
 
-        if (!Storage::path(config('storage.requests'))->writeFile($request . '.php', $data)) {
-            self::log('[!] Failed to generate request ' . $request . '"' . PHP_EOL);
+        list($account_name, $account_class) = self::generateClass($account, '');
+
+        $data = self::stubs()->add('views')->readFile('account.stub');
+
+        if (
+            !Storage::path(config('storage.views'))->add('admin' . DIRECTORY_SEPARATOR . 'account')
+                ->writeFile($account_name . '.html.twig', $data)
+        ) {
+            self::log('[!] Failed to generate account resource ' . $account_name . '"' . PHP_EOL);
         }
-
-        self::log('[+] Request validator "' . $request . '" generated successfully' . PHP_EOL, false);
-    }
-    
-    /**
-     * generate middleware file
-     *
-     * @param  string $middleware
-     * @return void
-     */
-    public static function makeMiddleware(string $middleware)
-    {
-        $data = self::stubs()->readFile('Middleware.stub');
-        $data = str_replace('CLASSNAME', $middleware, $data);
-
-        if (!Storage::path(config('storage.middlewares'))->writeFile($middleware . '.php', $data)) {
-            self::log('[!] Failed to generate middleware ' . $middleware . '"' . PHP_EOL);
-        }
-
-        self::log('[+] Middleware "' . $middleware . '" generated successfully' . PHP_EOL, false);
+        
+        self::log('[+] Account resource "' . $account_class . '" generated successfully' . PHP_EOL, false);
     }
 }

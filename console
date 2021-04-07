@@ -42,6 +42,7 @@ $arguments = [
     '--reset',
     '--namespace',
     '--resources',
+    '--account',
     '--run',
     '--tables'
 ];
@@ -76,7 +77,8 @@ function print_help()
     $help_message .= 'Manage resources build operations' . PHP_EOL;
     $help_message .= '   make:controller table                      Create table controller' . PHP_EOL;
     $help_message .= '   make:controller table --namespace=blog     Create table controller in app\Controllers\Blog folder' . PHP_EOL;
-    $help_message .= '   make:controller table --resources          Create resources for table (controller, migration, model, views and routes)' . PHP_EOL;
+    $help_message .= '   make:controller table --resources          Create admin resources for table (controller, migration, model, views and routes)' . PHP_EOL;
+    $help_message .= '   make:controller table --account            Create account resource for table (controller, migration, model, views and routes)' . PHP_EOL;
     $help_message .= PHP_EOL;
     $help_message .= '   make:migration table                       Create migration table' . PHP_EOL;
     $help_message .= '   make:migration table --cms                 Create migration table with controller = c, model = m, seed = s' . PHP_EOL;
@@ -236,11 +238,23 @@ switch ($command) {
 
         switch ($option) {
             case 'controller':
-                $namespace = $argument === '--namespace' ? $namespace : null;
+                list($arg, $namespace) = isset($argument) && strpos(strtolower($argument), '=') !== false 
+                    ? explode('=', $argument) 
+                    : (isset($argument) ? [$argument, null] : [null, null]);
+
+                if (is_null($arg)) {
+                    if ($argument !== '--resources' || $argument !== '--account') {
+                        print_error($argument);
+                    }
+                }
+
                 $resources = $argument === '--resources';
+                $account = $argument === '--account';
 
                 if (!$resources) {
                     \Framework\Console\Make::makeController($data, $namespace);
+                } else if (!$account) {
+                    \Framework\Console\Make::makeAccount($data);
                 } else {
                     \Framework\Console\Make::makeController($data, 'admin');
                     \Framework\Console\Make::makeMigration($data);

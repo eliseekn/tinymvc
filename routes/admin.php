@@ -7,10 +7,6 @@
  */
 
 use Framework\Routing\Route;
-use App\Middlewares\RememberUser;
-use App\Middlewares\CsrfProtection;
-use App\Middlewares\SanitizeInputs;
-use App\Middlewares\DashboardPolicy;
 use App\Controllers\Admin\UsersController;
 use App\Controllers\Admin\MediasController;
 use App\Controllers\Admin\MessagesController;
@@ -24,7 +20,7 @@ use App\Controllers\Admin\NotificationsController;
  */
 
 Route::groupPrefix('admin', function () {
-    Route::groupMiddlewares([RememberUser::class, DashboardPolicy::class], function () {
+    Route::groupMiddlewares(['remember', 'dashboard'], function () {
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
         Route::get('resources/users', [UsersController::class, 'index'])->name('users.index');
@@ -46,7 +42,7 @@ Route::groupPrefix('admin', function () {
         Route::get('account/activities', [ActivitiesController::class, 'index'])->name('activities.index');
     });
 
-    Route::groupMiddlewares([RememberUser::class, DashboardPolicy::class, CsrfProtection::class], function () {
+    Route::groupMiddlewares(['remember', 'dashboard', 'csrf'], function () {
         Route::delete('resources/users/?{id}?/delete', [UsersController::class, 'delete'])->name('users.delete')->where(['id' => 'num']);
         Route::patch('resources/users/?{id}?/update', [UsersController::class, 'update'])->name('users.update')->where(['id' => 'num']);
     
@@ -62,9 +58,10 @@ Route::groupPrefix('admin', function () {
             ->where(['id' => 'num']);
     
         Route::patch('account/settings/{id}/update', [SettingsController::class, 'update'])->name('activities.update')->where(['id' => 'num']);
+        Route::delete('account/settings/activities/?{id}?/delete', [ActivitiesController::class, 'delete'])->name('activities.delete')->where(['id' => 'num']);
     });
 
-    Route::groupMiddlewares([RememberUser::class, CsrfProtection::class, SanitizeInputs::class, DashboardPolicy::class ], function () {
+    Route::groupMiddlewares(['remember', 'csrf', 'sanitize', 'dashboard' ], function () {
         Route::post('resources/users/create', [UsersController::class, 'create'])->name('users.create');
         Route::post('resources/users/export', [UsersController::class, 'export'])->name('users.export');
     

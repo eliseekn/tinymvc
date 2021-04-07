@@ -11,7 +11,6 @@ use Framework\Http\Response;
 use Framework\Routing\Route;
 use Framework\Database\Model;
 use Framework\Support\Metrics;
-use App\Middlewares\HandleCors;
 use App\Database\Models\Messages;
 use App\Database\Models\Notifications;
 
@@ -20,7 +19,7 @@ use App\Database\Models\Notifications;
  */
 
  Route::groupPrefix('api', function () {
-    Route::groupMiddlewares([HandleCors::class], function () {
+    Route::groupMiddlewares(['cors'], function () {
         Route::get('notifications', function() {
             $notifications = Notifications::findMessages();
     

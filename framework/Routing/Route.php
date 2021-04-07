@@ -8,6 +8,9 @@
 
 namespace Framework\Routing;
 
+use App\Middlewares\CsrfProtection;
+use App\Middlewares\SanitizeInputs;
+
 /**
  * Manage routes
  */
@@ -28,11 +31,25 @@ class Route
     public static $routes = [];
 
     /**
+     * middlewares paths
+     * 
+     * @var array
+     */
+    private static $middlewares = [];
+
+    /**
      * temporary routes paths
      * 
      * @var array
      */
     private static $tmp_routes = [];
+
+    /**
+     * temporary middlewares paths
+     * 
+     * @var array
+     */
+    private static $tmp_middlewares = [];
 
     /**
      * routes names
@@ -46,7 +63,6 @@ class Route
      * add route with GET method
      *
      * @param  string $uri
-     * @param  \Closure $callback
      * @return \Framework\Routing\Route
      */
     public static function get(string $uri, $callback): self
@@ -242,6 +258,7 @@ class Route
     public function middlewares(array $middlewares): self
     {
         static::$tmp_routes[static::$uri] += ['middlewares' => $middlewares];
+        static::$tmp_middlewares[static::$uri] = $middlewares;
         return $this;
     }
 
@@ -258,7 +275,7 @@ class Route
 
         foreach (static::$tmp_routes as $uri => $options) {
             static::$tmp_routes[$uri] += ['middlewares' => $middlewares];
-            Middleware::add($uri, $middlewares);
+            static::$tmp_middlewares[$uri] = $middlewares;
         }
 
         return new self();
@@ -274,16 +291,27 @@ class Route
     public static function groupPrefix(string $prefix, $callback): self
     {
         call_user_func($callback);
+        
+        foreach (static::$tmp_routes as $uri => $options) {
+            foreach (static::$tmp_middlewares as $_uri => $middlewares) {
+                if ($uri === $_uri) {
+                    $__uri = self::parse(self::addPrefix($prefix, $uri));
+                    static::$tmp_middlewares = self::replace_array_key($uri, $__uri, static::$tmp_middlewares);
+                    static::$tmp_middlewares[$__uri] += $middlewares;
+                }
+            }
+        }
 
         foreach (static::$tmp_routes as $uri => $options) {
             $_uri = self::parse(self::addPrefix($prefix, $uri));
+
             static::$tmp_routes = self::replace_array_key($uri, $_uri, static::$tmp_routes);
             static::$tmp_routes[$_uri] += $options;
         }
 
         return new self();
     }
-    
+
     /**
      * register routes
      *
@@ -292,6 +320,8 @@ class Route
     public function register(): void
     {
         self::$routes += static::$tmp_routes;
+        self::$middlewares += static::$tmp_middlewares;
+        static::$tmp_middlewares = [];
         static::$tmp_routes = [];
 
         foreach (static::$routes as $uri => $options) {
@@ -303,6 +333,8 @@ class Route
                 }
             }
         }
+
+        Middleware::add(self::$middlewares);
     }
 
     /**

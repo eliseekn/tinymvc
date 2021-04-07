@@ -18,7 +18,7 @@ class CsrfProtection
      */
     public static function handle(Request $request): void
     {
-        if (!valid_csrf_token($request->csrf_token)) {
+        if ($request->exists('csrf_token') && !valid_csrf_token($request->csrf_token)) {
             if (!empty(config('errors.views.403'))) {
                 View::render(config('errors.views.403'), [], 403);
             } else {

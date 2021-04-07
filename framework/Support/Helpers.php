@@ -334,12 +334,12 @@ if (!function_exists('route_uri')) {
             foreach ($options['parameters'] as $parameter => $type) {
                 if (!is_array($params)) {
                     if (strpos($url, '?') === false) {
-                        if (preg_match('#^' . $url . '$#', '{' . $parameter . '}', $matches)) {
-                            $route = preg_replace('/{([a-zA-Z-_\}]+)}/i', $params, $route);
+                        if ($url === '{' . $parameter . '}') {
+                            $route = str_replace($url, $params, $route);
                         }
                     } else {
-                        if (preg_match($url, '?{' . $parameter . '}?', $matches)) {
-                            $route = preg_replace('/?{([a-zA-Z-_\}]+)}?/i', $params, $route);
+                        if ($url === '?{' . $parameter . '}?') {
+                            $route = str_replace($url, $params, $route);
                         }
                     }
                 }
@@ -348,12 +348,12 @@ if (!function_exists('route_uri')) {
                     foreach ($params as $param => $value) {
                         if ($parameter === $param) {
                             if (strpos($url, '?') === false) {
-                                if (preg_match('#^' . $url . '$#', '{' . $parameter . '}', $matches)) {
-                                    $route = preg_replace('/{([a-zA-Z-_\}]+)}/i', $value, $route, 1);
+                                if ($url === '{' . $parameter . '}') {
+                                    $route = str_replace($url, $value, $route);
                                 }
                             } else {
-                                if (preg_match($url, '?{' . $parameter . '}?', $matches)) {
-                                    $route = preg_replace('/\?{([a-zA-Z-_\}]+)}\?/i', $value, $route, 1);
+                                if ($url === '?{' . $parameter . '}?') {
+                                    $route = str_replace($url, $value, $route);
                                 }
                             }
                         }
@@ -535,13 +535,14 @@ if (!function_exists('config')) {
 	/**
 	 * read configuration
 	 *
-	 * @param  string $path
+	 * @param  string $data
+	 * @param  string $cfg
 	 * @return mixed
 	 */
-	function config(string $path)
+	function config(string $data, string $cfg = 'app')
 	{
-		$config = ConfigFactory::loadPath(absolute_path('config') . 'app.php');
-		return $config($path, '');
+		$config = ConfigFactory::loadPath(absolute_path('config') . $cfg . '.php');
+		return $config($data, '');
 	}
 }
 

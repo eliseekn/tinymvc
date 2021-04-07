@@ -20,7 +20,7 @@
                         
                         {% if errors.name is not empty %}
                         <div id="name-error" class="invalid-feedback">
-                            {{ errors.name }}
+                            {{ errors.name|raw }}
                         </div>
                         {% endif %}
                     </div>
@@ -33,7 +33,7 @@
 
                         {% if errors.email is not empty %}
                         <div id="email-error" class="invalid-feedback">
-                            {{ errors.email }}
+                            {{ errors.email|raw }}
                         </div>
                         {% endif %}
                     </div>
@@ -46,7 +46,7 @@
 
                         {% if errors.phone is not empty %}
                         <div id="phone-error" class="invalid-feedback">
-                            {{ errors.phone }}
+                            {{ errors.phone|raw }}
                         </div>
                         {% endif %}
                     </div>
@@ -73,7 +73,7 @@
                         
                         {% if errors.password is not empty %}
                         <div id="password-error" class="invalid-feedback d-block">
-                            {{ errors.password }}
+                            {{ errors.password|raw }}
                         </div>
                         {% endif %}
                     </div>
