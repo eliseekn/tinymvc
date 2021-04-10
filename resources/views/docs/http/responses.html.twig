@@ -12,13 +12,13 @@
         <p>Send basic HTTP response</p>
         
         <div class="card mb-4">
-            <pre class="m-0"><code class="p-3">Response::send($body, bool $json = false, array $headers = [], int $status_code = 200);</code></pre>
+            <pre class="m-0"><code class="p-3">Response::send($body, bool $json = false, array $headers = [], int $code = 200);</code></pre>
         </div>
 
         <p>Send HTTP headers only</p>
         
         <div class="card mb-4">
-            <pre class="m-0"><code class="p-3">Response::headers(array $headers, int $status_code = 200);</code></pre>
+            <pre class="m-0"><code class="p-3">Response::headers(array $headers, int $code = 200);</code></pre>
         </div>
 
         <p class="font-weight-bold">Send HTTP responses inside Controller</p>

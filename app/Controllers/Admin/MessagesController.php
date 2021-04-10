@@ -2,8 +2,8 @@
 
 namespace App\Controllers\Admin;
 
+use App\Helpers\Report;
 use Framework\Http\Request;
-use App\Helpers\ReportHelper;
 use App\Database\Models\Messages;
 use Framework\Routing\Controller;
 
@@ -104,12 +104,11 @@ class MessagesController extends Controller
     public function export(Request $request): void
 	{
         $messages = Messages::fromDateRange($request->date_start, $request->date_end);
-        
         $filename = 'messages_' . date('Y_m_d_His') . '.' . $request->file_type;
 
         $this->log(__('data_exported'));
 
-		ReportHelper::export($filename, $messages, [
+		Report::generate($filename, $messages, [
 			'sender' => __('sender'), 
 			'recipient' => __('recipient'), 
 			'message' => __('message'), 

@@ -6,7 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Framework\Support;
+namespace Framework\System;
 
 use Exception;
 use PHPMailer\PHPMailer\SMTP;
@@ -27,7 +27,7 @@ class Email
      *
      * @param  string $address
      * @param  string $name
-     * @return \Framework\Support\Email
+     * @return \Framework\System\Email
      */
     public static function to(string $address, string $name = ''): self
     {
@@ -64,7 +64,7 @@ class Email
      *
      * @param  string $address
      * @param  string $name
-     * @return \Framework\Support\Email
+     * @return \Framework\System\Email
      */
     public function from(string $address, string $name = ''): self
     {
@@ -77,7 +77,7 @@ class Email
      *
      * @param  string $address
      * @param  string $name
-     * @return \Framework\Support\Email
+     * @return \Framework\System\Email
      */
     public function reply(string $address, string $name = ''): self
     {
@@ -115,7 +115,7 @@ class Email
      * subject
      *
      * @param  string $subject
-     * @return \Framework\Support\Email
+     * @return \Framework\System\Email
      */
     public function subject(string $subject): self
     {
@@ -127,7 +127,7 @@ class Email
      * message
      *
      * @param  string $message
-     * @return \Framework\Support\Email
+     * @return \Framework\System\Email
      */
     public function message(string $message): self
     {
@@ -139,7 +139,7 @@ class Email
      * set message as html
      *
      * @param  string $message
-     * @return \Framework\Support\Email
+     * @return \Framework\System\Email
      */
     public function html(string $message): self
     {
@@ -149,7 +149,7 @@ class Email
     /**
      * set email format to HTML
      *
-     * @return \Framework\Support\Email
+     * @return \Framework\System\Email
      */
     public function asHTML(): self
     {
@@ -162,7 +162,7 @@ class Email
      *
      * @param  string $attachment
      * @param  string $filename
-     * @return \Framework\Support\Email
+     * @return \Framework\System\Email
      */
     public function addAttachment(string $attachment, string $filename = ''): self
     {

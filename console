@@ -54,7 +54,7 @@ $arguments = [
 function print_help()
 {
     $help_message = 'Manage database operations' . PHP_EOL;
-    $help_message .= '   db:schema --create database1,database2      Create list of databases' . PHP_EOL;
+    $help_message .= '   db:schema --create database                 Create single databases' . PHP_EOL;
     $help_message .= '   db:schema --delete database                 Delete single database' . PHP_EOL;
     $help_message .= PHP_EOL;
     $help_message .= '   db:migration --run                          Migrate all tables' . PHP_EOL;
@@ -75,28 +75,28 @@ function print_help()
     $help_message .= PHP_EOL;
     $help_message .= 'Manage resources build operations' . PHP_EOL;
     $help_message .= '   make:controller table                       Create table controller' . PHP_EOL;
-    $help_message .= '   make:controller table --namespace=blog      Create table controller in app\Controllers\Blog folder' . PHP_EOL;
+    $help_message .= '   make:controller table --namespace=name      Create table controller in namespace folder' . PHP_EOL;
     $help_message .= '   make:controller table --resources           Create table resources (controller, migration, model, views and routes)' . PHP_EOL;
     $help_message .= '   make:controller table --view                Create table controller and view template' . PHP_EOL;
-    $help_message .= '   make:controller table --view --layout=blog  Create table controller in app\Controllers\Blog folder and view template based on "blog" layout' . PHP_EOL;
+    $help_message .= '   make:controller table --view --layout=name  Create table controller in namespace folder and view template based on layout' . PHP_EOL;
     $help_message .= PHP_EOL;
     $help_message .= '   make:migration table                        Create migration table' . PHP_EOL;
     $help_message .= '   make:migration table --cms                  Create migration table with controller = c, model = m, seed = s' . PHP_EOL;
-    $help_message .= '   make:migration table --c --namespace=blog   Create migration table with controller in app\Controllers\Blog folder' . PHP_EOL;
+    $help_message .= '   make:migration table --c --namespace=name   Create migration table with controller in namespace folder' . PHP_EOL;
     $help_message .= PHP_EOL;
     $help_message .= '   make:model table                            Create single table model' . PHP_EOL;
     $help_message .= PHP_EOL;
     $help_message .= '   make:seed table                             Create single table seed' . PHP_EOL;
     $help_message .= PHP_EOL;
     $help_message .= '   make:view name                              Create blank view template' . PHP_EOL; 
-    $help_message .= '   make:view name --layout=admin               Create view template based on "admin" layout' . PHP_EOL;
+    $help_message .= '   make:view name --layout=name               Create view template based layout' . PHP_EOL;
     $help_message .= '   make:view name --layout                     Create layout template' . PHP_EOL;
     $help_message .= PHP_EOL;
     $help_message .= '   make:request AuthRequest                    Create AuthRequest in app\Requests folder' . PHP_EOL;
     $help_message .= '   make:middleware AuthPolicy                  Create AuthPolicy in app\Middlewares folder' . PHP_EOL;
     $help_message .= '   make:mail welcome                           Create welcome email resources' . PHP_EOL;
     $help_message .= PHP_EOL;
-    $help_message .= 'Miscellaneous commands' . PHP_EOL;
+    $help_message .= 'Miscellaneous operations' . PHP_EOL;
     $help_message .= '   cache:clear                                 Clear twig cache templates' . PHP_EOL;
     $help_message .= '   app:setup                                   Set up application configuration' . PHP_EOL;
     $help_message .=  PHP_EOL;
@@ -377,7 +377,7 @@ switch ($command) {
             print_error($option);
         }
 
-        \Framework\Support\Storage::path(config('storage.cache'))->deleteDir();
+        \Framework\System\Storage::path(config('storage.cache'))->deleteDir();
         echo '[+] Cache cleared succesfully' . PHP_EOL;
 
         exit(PHP_EOL);

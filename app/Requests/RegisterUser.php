@@ -2,7 +2,7 @@
 
 namespace App\Requests;
 
-use Framework\Support\Validator;
+use Framework\Http\Validator;
 
 class RegisterUser extends Validator
 {

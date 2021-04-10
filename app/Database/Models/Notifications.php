@@ -34,7 +34,7 @@ class Notifications
     {
         return self::model()
             ->findBy('status', 'unread')
-            ->and('user_id', Auth::get()->id)
+            ->and('user_id', Auth::get('id'))
             ->oldest()
             ->take($limit);
     }
@@ -48,7 +48,7 @@ class Notifications
     public static function paginate(int $items_per_pages = 20): \Framework\Support\Pager
     {
         return self::model()
-            ->findBy('user_id', Auth::get()->id)
+            ->findBy('user_id', Auth::get('id'))
             ->oldest()
             ->paginate($items_per_pages);
     }
@@ -63,7 +63,7 @@ class Notifications
         return self::model()
             ->count()
             ->where('status', 'unread')
-            ->and('user_id', Auth::get()->id)
+            ->and('user_id', Auth::get('id'))
             ->single()
             ->value;
     }

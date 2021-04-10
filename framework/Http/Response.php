@@ -17,13 +17,13 @@ class Response
      * send HTTP headers only
      *
      * @param  array $headers
-     * @param  int $status_code
+     * @param  int $code
      * @return void
      */
-    public function headers(array $headers, int $status_code = 200): void
+    public function headers(array $headers, int $code = 200): void
     {
         //send response status code
-        http_response_code($status_code);
+        http_response_code($code);
 
         //send response headers
         foreach ($headers as $name => $value) {
@@ -36,17 +36,17 @@ class Response
      *
      * @param  mixed $body
      * @param  array $headers
-     * @param  int $status_code
+     * @param  int $code
      * @return void
      */
-    public function send($body, array $headers = [], int $status_code = 200): void
+    public function send($body, array $headers = [], int $code = 200): void
     {
         if (!isset($body) or empty($body)) {
             return;
         }
         
         //send response status code
-        http_response_code($status_code);
+        http_response_code($code);
 
         //send response headers
         if (!empty($headers)) {
@@ -67,17 +67,17 @@ class Response
      *
      * @param  mixed $body
      * @param  array $headers
-     * @param  int $status_code
+     * @param  int $code
      * @return void
      */
-    public function json($body, array $headers = [], int $status_code = 200): void
+    public function json($body, array $headers = [], int $code = 200): void
     {
         if (!isset($body) or empty($body)) {
             return;
         }
         
         //send response status code
-        http_response_code($status_code);
+        http_response_code($code);
 
         //send response headers
         if (!empty($headers)) {

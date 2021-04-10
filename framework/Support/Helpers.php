@@ -12,10 +12,9 @@ use Configula\ConfigFactory;
 use Framework\Http\Redirect;
 use Framework\Http\Response;
 use Framework\Routing\Route;
-use Framework\Support\Cookies;
-use Framework\Support\Session;
-use Framework\Support\Storage;
-use SebastianBergmann\CodeCoverage\Report\PHP;
+use Framework\System\Cookies;
+use Framework\System\Session;
+use Framework\System\Storage;
 
 /**
  * Cookies management functions
@@ -157,40 +156,18 @@ if (!function_exists('auth')) {
 	/**
 	 * get authenticated user session data
 	 *
-     * @param  string $property
+     * @param  string $key
 	 * @return mixed
 	 */
-	function auth(string $property)
+	function auth(string $key)
 	{
-		return get_session('user')->$property;
+		return get_session('user')->$key;
 	}
 }
 
 /**
- * Miscellaneous security utils functions
+ * Security utils functions
  */
-
-if (!function_exists('date_helper')) {    
-    /**
-     * datehelper helper function
-     *
-     * @param  mixed $date
-     * @param  string $format
-     * @return string
-     */
-    function date_helper($date = null, string $format = 'human'): string
-    {
-        $dh = DateHelper::format($date);
-
-        if ($format === 'human') {
-            return $dh->human();
-        } else if ($format === 'timestamp') {
-            return $dh->timestamp();
-        } else {
-            return $dh->date($format);
-        }
-    }
-}
 
 if (!function_exists('escape')) {
 	/**
@@ -467,6 +444,28 @@ if (!function_exists('redirect')) {
 /**
  * Miscellaneous utils functions
  */
+
+if (!function_exists('date_helper')) {    
+    /**
+     * datehelper helper function
+     *
+     * @param  mixed $date
+     * @param  string $format
+     * @return string
+     */
+    function date_helper($date = null, string $format = 'human'): string
+    {
+        $dh = DateHelper::format($date);
+
+        if ($format === 'human') {
+            return $dh->human();
+        } else if ($format === 'timestamp') {
+            return $dh->timestamp();
+        } else {
+            return $dh->date($format);
+        }
+    }
+}
 
 if (!function_exists('real_path')) {    
     /**
@@ -807,6 +806,10 @@ if (!function_exists('curl')) {
         ];
     }
 }
+
+/**
+ * .env file management functions
+ */
 
 if (!function_exists('env')) {    
     /**

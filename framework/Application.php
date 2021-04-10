@@ -13,7 +13,7 @@ use Framework\Http\Request;
 use Framework\Routing\View;
 use Framework\Routing\Route;
 use Framework\Routing\Router;
-use Framework\Support\Storage;
+use Framework\System\Storage;
 
 /**
  * Main application

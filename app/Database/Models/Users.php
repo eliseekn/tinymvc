@@ -5,7 +5,7 @@ namespace App\Database\Models;
 use App\Helpers\Auth;
 use Framework\Http\Request;
 use Framework\Database\Model;
-use Framework\Support\Encryption;
+use Framework\System\Encryption;
 
 class Users
 {
@@ -46,7 +46,7 @@ class Users
     public static function paginate(int $items_per_pages = 20): \Framework\Support\Pager
     {
         return self::model()
-            ->find('!=', Auth::get()->id)
+            ->find('!=', Auth::get('id'))
             ->oldest()
             ->paginate($items_per_pages);
     }
@@ -60,7 +60,7 @@ class Users
     {
         return self::model()
             ->count()
-            ->where('id', '!=', Auth::get()->id)
+            ->where('id', '!=', Auth::get('id'))
             ->and('active', 1)
             ->single()
             ->value;

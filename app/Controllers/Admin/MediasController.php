@@ -5,7 +5,7 @@ namespace App\Controllers\Admin;
 use Carbon\Carbon;
 use Framework\Http\Request;
 use App\Requests\UpdateMedia;
-use Framework\Support\Storage;
+use Framework\System\Storage;
 use App\Database\Models\Medias;
 use App\Helpers\DownloadHelper;
 use Framework\Routing\Controller;

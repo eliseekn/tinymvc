@@ -12,8 +12,7 @@ use Closure;
 use Exception;
 use Framework\Http\Request;
 use Framework\Routing\View;
-use Framework\Http\Response;
-use Framework\Support\Session;
+use Framework\System\Session;
 
 /**
  * Routing system

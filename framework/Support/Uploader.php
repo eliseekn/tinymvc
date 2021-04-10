@@ -8,6 +8,8 @@
 
 namespace Framework\Support;
 
+use Framework\System\Storage;
+
 /**
  * Manage uploaded file
  */

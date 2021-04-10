@@ -36,8 +36,8 @@ class Activities
         return self::model()
             ->select(['id', 'user', 'url', 'ip_address', 'action', 'created_at'])
             ->subQuery(function ($query) {
-                if (Auth::get()->role !== Roles::ROLE[0]) {
-                    $query->where('user', Auth::get()->email);
+                if (Auth::get('role') !== Roles::ROLE[0]) {
+                    $query->where('user', Auth::get('email'));
                 }
             })
             ->oldest()

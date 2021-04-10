@@ -22,15 +22,24 @@ class CLASSNAME
     {
         return new Model(self::$table);
     }
-
+    
     /**
-     * retrieves data by value
+     * retrieves data from date range
      *
-     * @param  string $value
-     * @return mixed
+     * @param  mixed $start
+     * @param  mixed $end
+     * @return array
      */
-    //public static function findSingleByValue(string $value)
-    //{
-    //    return self::model()->findSingleBy('column', $value);
-    //}
+    public static function fromDateRange($date_start, $date_end): array
+    {
+        return self::model()
+            ->select()
+            ->subQuery(function($query) use ($date_start, $date_end) {
+                if (!empty($date_start) && !empty($date_end)) {
+                    $query->whereBetween($date_start, $date_end);
+                }
+            })
+            ->oldest()
+            ->all();
+    }
 }

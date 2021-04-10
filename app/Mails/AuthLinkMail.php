@@ -3,7 +3,7 @@
 namespace App\Mails;
 
 use Framework\Routing\View;
-use Framework\Support\Email;
+use Framework\System\Email;
 
 class AuthLinkMail
 {

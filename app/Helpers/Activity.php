@@ -19,7 +19,7 @@ class Activity
         $request = new Request();
 
         (new Model('activities'))->insert([
-            'user' => is_null($user) ? Auth::get()->email : $user,
+            'user' => is_null($user) ? Auth::get('email') : $user,
             'url' => $request->fullUri(),
             'method' => $request->method(),
             'ip_address' => $request->remoteIP(),

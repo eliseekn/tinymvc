@@ -6,7 +6,7 @@ use App\Helpers\Auth;
 use Framework\Http\Request;
 use App\Requests\UpdateUser;
 use App\Database\Models\Users;
-use Framework\Support\Session;
+use Framework\System\Session;
 use App\Helpers\CountriesHelper;
 use Framework\Routing\Controller;
 
@@ -37,7 +37,7 @@ class SettingsController extends Controller
         UpdateUser::validate($request->inputs())->redirectOnFail();
         Users::updateSettings($request, $id);
 
-        if (Auth::get()->id === $id) {
+        if (Auth::get('id') === $id) {
             Session::create('user', $this->model('users')->findSingle($id));
         }
 

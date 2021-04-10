@@ -13,7 +13,7 @@ use Framework\Database\DB;
 use App\Database\Seeds\Seeder;
 use Framework\Database\Builder;
 use Framework\Database\Schema;
-use Framework\Support\Storage;
+use Framework\System\Storage;
 
 /**
  * Manage migrations and seeds from command line interface

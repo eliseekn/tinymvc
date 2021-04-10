@@ -6,9 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Framework\Support;
-
-use Framework\Support\Encryption;
+namespace Framework\System;
 
 /**
  * Manage cookies

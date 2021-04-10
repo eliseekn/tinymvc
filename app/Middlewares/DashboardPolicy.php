@@ -23,7 +23,7 @@ class DashboardPolicy
             redirect()->url('login')->withAlert(__('not_logged_error', true))->error('');
         }
 
-        if (Auth::get()->role === Roles::ROLE[2]) {
+        if (Auth::get('role') === Roles::ROLE[2]) {
             if (!empty(config('errors.views.403'))) {
                 View::render(config('errors.views.403'), [], 403);
             } else {

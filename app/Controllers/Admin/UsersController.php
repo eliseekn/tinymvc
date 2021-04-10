@@ -2,9 +2,9 @@
 
 namespace App\Controllers\Admin;
 
+use App\Helpers\Report;
 use Framework\Http\Request;
 use App\Requests\UpdateUser;
-use App\Helpers\ReportHelper;
 use App\Database\Models\Users;
 use App\Requests\RegisterUser;
 use Framework\Routing\Controller;
@@ -148,7 +148,7 @@ class UsersController extends Controller
 
         $this->log(__('data_exported'));
         
-		ReportHelper::export($filename, $users, [
+		Report::generate($filename, $users, [
 			'name' => __('name'), 
             'email' => __('email'),
             'phone' => __('phone'),

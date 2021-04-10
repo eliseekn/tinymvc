@@ -46,7 +46,7 @@ class Medias
     public static function paginate(int $items_per_pages = 10): \Framework\Support\Pager
     {
         return self::model()
-            ->findBy('user_id', Auth::get()->id)
+            ->findBy('user_id', Auth::get('id'))
             ->oldest()
             ->paginate($items_per_pages);
     }
@@ -58,7 +58,7 @@ class Medias
      */
     public static function findByType(): array
     {
-        $medias = self::model()->findAllBy('user_id', Auth::get()->id);
+        $medias = self::model()->findAllBy('user_id', Auth::get('id'));
 
         $images = 0; $videos = 0; $audios = 0;
 
@@ -85,7 +85,7 @@ class Medias
     public static function paginateQuery(string $q, int $items_per_pages = 10): \Framework\Support\Pager
     {
         return self::model()
-            ->findBy('user_id', Auth::get()->id)
+            ->findBy('user_id', Auth::get('id'))
             ->and('filename', 'like', $q)
             ->or('created_at', 'like', $q)
             ->oldest()
@@ -101,7 +101,7 @@ class Medias
     public static function findByTypeQuery(string $q): array
     {
         $medias = self::model()
-            ->findBy('user_id', Auth::get()->id)
+            ->findBy('user_id', Auth::get('id'))
             ->and('filename', 'like', $q)
             ->or('created_at', 'like', $q)
             ->all();
@@ -131,7 +131,7 @@ class Medias
     {
         return self::model()
             ->insert([
-                'user_id' => Auth::get()->id,
+                'user_id' => Auth::get('id'),
                 'filename' => $media->filename,
                 'url' => url('storage/uploads', [Carbon::now()->year, Carbon::now()->month , $media->filename])
             ]);

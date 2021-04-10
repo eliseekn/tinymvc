@@ -2,8 +2,8 @@
 
 namespace App\Controllers\Admin;
 
+use App\Helpers\Report;
 use Framework\Http\Request;
-use App\Helpers\ReportHelper;
 use Framework\Routing\Controller;
 use App\Database\Models\Activities;
 
@@ -49,7 +49,7 @@ class ActivitiesController extends Controller
 
         $this->log(__('data_exported'));
 
-		ReportHelper::export($filename, $activities, [
+		Report::generate($filename, $activities, [
 			'user' => __('user'), 
 			'url' => __('url'), 
 			'method' => __('method'), 

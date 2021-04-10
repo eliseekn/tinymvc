@@ -10,10 +10,9 @@ namespace Framework\Routing;
 
 use Exception;
 use Twig\Environment;
-use Framework\Support\TwigExtensions;
-use Framework\Http\Response;
-use Framework\Support\Session;
-use Framework\Support\Storage;
+use Framework\System\TwigExtensions;
+use Framework\System\Session;
+use Framework\System\Storage;
 use Twig\Loader\FilesystemLoader;
 
 /**
@@ -60,8 +59,8 @@ class View
      * @param  array $data
      * @return void
      */
-    public static function render(string $view, array $data = [], int $status_code = 200): void
+    public static function render(string $view, array $data = [], int $code = 200): void
     {
-        response()->send(self::getContent($view, $data), [], $status_code);
+        response()->send(self::getContent($view, $data), [], $code);
     }
 }

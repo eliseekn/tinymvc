@@ -5,14 +5,13 @@ namespace App\Helpers;
 use Carbon\Carbon;
 use App\Mails\AuthLinkMail;
 use Framework\Http\Request;
-use Framework\Http\Redirect;
 use Framework\Database\Model;
-use Framework\Support\Cookies;
-use Framework\Support\Session;
-use App\Middlewares\AuthPolicy;
-use Framework\Support\Encryption;
+use Framework\System\Cookies;
+use Framework\System\Session;
 use App\Database\Models\Roles;
 use App\Database\Models\Tokens;
+use App\Middlewares\AuthPolicy;
+use Framework\System\Encryption;
 
 class Auth
 {    
@@ -136,11 +135,12 @@ class Auth
     /**
      * get user session data
      *
+     * @param  string $key
      * @return mixed
      */
-    public static function get()
+    public static function get(string $key)
     {
-        return Session::get('user');
+        return Session::get('user')->$key;
     }
     
     /**
@@ -151,7 +151,7 @@ class Auth
     public static function forget(): void
     {
         if (self::check()) {
-            Activity::log(__('logged_out', true), self::get()->email);
+            Activity::log(__('logged_out', true), self::get('email'));
         }
 
         if (self::check()) {

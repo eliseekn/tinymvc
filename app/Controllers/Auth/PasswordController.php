@@ -8,7 +8,7 @@ use App\Requests\AuthRequest;
 use App\Database\Models\Tokens;
 use Framework\Http\Request;
 use Framework\Routing\Controller;
-use Framework\Support\Encryption;
+use Framework\System\Encryption;
 
 /**
  * Manage password reset

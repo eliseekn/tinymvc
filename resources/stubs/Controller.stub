@@ -3,8 +3,9 @@
 namespace NAMESPACE;
 
 use Exception;
-use App\Helpers\ReportHelper;
+use App\Helpers\Report;
 use Framework\Routing\Controller;
+use Framework\Http\Request;
 
 class CLASSNAME extends Controller
 {
@@ -38,7 +39,7 @@ class CLASSNAME extends Controller
 	 */
     public function edit(int $id)
 	{
-        $RESOURCENAME = $this->model('RESOURCENAME')->findOrFail('id', $id);
+        $RESOURCENAME = $this->model('RESOURCENAME')->findSingleBy($id);
         $this->render('admin.RESOURCENAME.edit', compact('RESOURCENAME'));
 	}
 	
@@ -50,68 +51,68 @@ class CLASSNAME extends Controller
 	 */
 	public function read(int $id)
 	{
-        $RESOURCENAME = $this->model('RESOURCENAME')->findOrFail('id', $id);
+        $RESOURCENAME = $this->model('RESOURCENAME')->findSingleBy($id);
         $this->render('admin.RESOURCENAME.read', compact('RESOURCENAME'));
 	}
 
 	/**
 	 * create
 	 *
+     * @param  \Framework\Http\Request $request
 	 * @return void
 	 */
-    public function create()
+    public function create(Request $request)
 	{
-        $id = $this->model('RESOURCENAME')->insert($this->request()->inputs());
-		$this->redirect()->route('RESOURCENAME.read', $id)->only();
+        $id = $this->model('RESOURCENAME')->insert($request->inputs());
+		redirect()->route('RESOURCENAME.read', $id)->only();
 	}
     
 	/**
 	 * update
 	 *
+     * @param  \Framework\Http\Request $request
      * @param  int $id
 	 * @return void
 	 */
-	public function update(int $id)
+	public function update(Request $request, int $id)
 	{
-        $this->model('RESOURCENAME')->updateIfExists($id, $this->request()->inputs());
-		$this->redirect()->route('RESOURCENAME.read', $id)->only();
+        $this->model('RESOURCENAME')->updateIfExists($id, $request->inputs());
+		redirect()->route('RESOURCENAME.read', $id)->only();
 	}
 
 	/**
 	 * delete
 	 *
+     * @param  \Framework\Http\Request $request
      * @param  int|null $id
 	 * @return void
 	 */
-	public function delete(?int $id = null)
+	public function delete(Request $request, ?int $id = null)
 	{
         if (!is_null($id)) {
             if (!$this->model('RESOURCENAME')->deleteIfExists($id)) {
-                $this->redirect()->back()->only();
+                redirect()->back()->only();
 			}
 
-            $this->redirect()->route('RESOURCENAME.index')->only();
+            redirect()->route('RESOURCENAME.index')->only();
 		} else {
-            $this->model('RESOURCENAME')->deleteBy('id', 'in', explode(',', $this->request('items')));
-            $this->response(['redirect' => route('RESOURCENAME.index')], true);
+            $this->model('RESOURCENAME')->deleteBy('id', 'in', explode(',', $request->items));
+            response()->json(['redirect' => route('RESOURCENAME.index')]);
 		}
 	}
 
 	/**
 	 * export
 	 *
+     * @param  \Framework\Http\Request $request
 	 * @return void
 	 */
-    public function export()
+    public function export(Request $request)
 	{
-        $RESOURCENAME = $this->model('RESOURCENAME')
-            ->between($this->request('date_start'), $this->request('date_end'))
-            ->oldest()
-            ->all();
-        
-        $filename = 'RESOURCENAME_' . date('Y_m_d_His') . '.' . $this->request('file_type');
+        $RESOURCENAME = RESOURCENAME::fromDateRange($request->date_start, $request->date_end);
+        $filename = 'RESOURCENAME_' . date('Y_m_d_His') . '.' . $request->file_type;
 
-		ReportHelper::export($filename, $RESOURCENAME, [
+		Report::generate($filename, $RESOURCENAME, [
 			//
 		]);
 	}

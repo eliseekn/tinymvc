@@ -6,7 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Framework\Support;
+namespace Framework\System;
 
 /**
  * String encryption/decryption cipher

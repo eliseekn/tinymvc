@@ -9,8 +9,8 @@
 namespace Framework\Http;
 
 use Framework\Support\Alert;
-use Framework\Support\Cookies;
-use Framework\Support\Session;
+use Framework\System\Cookies;
+use Framework\System\Session;
 
 /**
  * Handle HTTP redirection

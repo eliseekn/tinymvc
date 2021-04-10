@@ -18,7 +18,7 @@ class AuthPolicy
     public static function handle(Request $request): void
     {
         if (Auth::check()) {
-            redirect()->url('admin/dashboard')->withToast(__('welcome') . ' ' . Auth::get()->name)->success();
+            redirect()->url('admin/dashboard')->withToast(__('welcome') . ' ' . Auth::get('name'))->success();
         }
     }
 }

@@ -4,7 +4,7 @@ namespace App\Controllers\Auth;
 
 use Carbon\Carbon;
 use App\Mails\WelcomeMail;
-use Framework\Support\Session;
+use Framework\System\Session;
 use App\Database\Models\Tokens;
 use App\Database\Models\Users;
 use Framework\Routing\Controller;

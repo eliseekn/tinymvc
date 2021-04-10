@@ -1,7 +1,16 @@
 <?php
 
-namespace Framework\Support;
+/**
+ * @copyright 2021 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @license MIT (https://opensource.org/licenses/MIT)
+ * @link https://github.com/eliseekn/tinymvc
+ */
 
+namespace Framework\System;
+
+/**
+ * Manage twig extensions and filters
+ */
 class TwigExtensions extends \Twig\Extension\AbstractExtension implements \Twig\Extension\GlobalsInterface
 {    
     /**

@@ -10,11 +10,8 @@ namespace Framework\Routing;
 
 use App\Helpers\Activity;
 use Framework\Http\Client;
-use Framework\Http\Redirect;
-use Framework\Http\Response;
 use Framework\Support\Alert;
 use Framework\Database\Model;
-use Framework\Routing\Middleware;
 
 /**
  * Main controller class
@@ -22,15 +19,16 @@ use Framework\Routing\Middleware;
 class Controller
 {
     /**
-     * render view
+     * render view template
      *
      * @param  string $view
      * @param  array $data
+     * @param  int $code
      * @return void
      */
-    public function render(string $view, array $data = [], int $status_code = 200): void
+    public function render(string $view, array $data = [], int $code = 200): void
     {
-        View::render($view, $data, $status_code);
+        View::render($view, $data, $code);
     }
 
     /**
@@ -60,19 +58,6 @@ class Controller
     }
     
     /**
-     * call middlewares
-     *
-     * @param  mixed $middlewares
-     * @return void
-     */
-    public function middlewares(...$middlewares): void
-    {
-        foreach ($middlewares as $middleware) {
-            Middleware::execute($middleware);
-        }
-    }
-    
-    /**
      * create new model instance
      *
      * @param  string $table
@@ -84,7 +69,7 @@ class Controller
     }
     
     /**
-     * alert
+     * generate alert
      *
      * @param  string $type
      * @param  string $message
@@ -96,7 +81,7 @@ class Controller
     }
     
     /**
-     * log
+     * log user activity
      *
      * @param  string $action
      * @return void

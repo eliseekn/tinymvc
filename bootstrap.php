@@ -7,7 +7,7 @@
  */
 
 use Framework\Http\Request;
-use Framework\Support\Storage;
+use Framework\System\Storage;
 
 /**
  * Define application environnement

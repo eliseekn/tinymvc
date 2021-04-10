@@ -16,7 +16,7 @@ use App\Controllers\Admin\ActivitiesController;
 use App\Controllers\Admin\NotificationsController;
 
 /**
- * Admin panel routes
+ * Admin routes
  */
 
 Route::groupPrefix('admin', function () {

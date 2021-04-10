@@ -6,10 +6,9 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Framework\Support;
+namespace Framework\Http;
 
 use GUMP;
-use Framework\Http\Redirect;
 
 /**
  * Request fields validator

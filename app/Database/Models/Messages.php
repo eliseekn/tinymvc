@@ -13,7 +13,7 @@ class Messages
      *
      * @var string
      */
-    public static $table = 'messages AS m';
+    public static $table = 'messages';
 
     /**
      * create new model instance 
@@ -34,12 +34,12 @@ class Messages
     public static function paginate(int $items_per_pages = 20): \Framework\Support\Pager
     {
         return self::model()
-            ->select(['m.*', 'u1.email AS sender_mail', 'u2.email AS recipient_email'])
-            ->join('users AS u1', 'm.sender', '=', 'u1.id')
-            ->join('users AS u2', 'm.recipient', '=', 'u2.id')
-            ->whereRaw('recipient = ' . Auth::get()->id . ' OR sender = ' . Auth::get()->id)
-            ->raw('AND (sender_deleted = (CASE WHEN u1.id = ' . Auth::get()->id . ' THEN 0 ELSE 1 END) OR recipient_deleted = (CASE WHEN u2.id = ' . Auth::get()->id . ' THEN 0 ELSE 1 END))')
-            ->oldest('m.created_at')
+            ->select(['messages.*', 'u1.email AS sender_mail', 'u2.email AS recipient_email'])
+            ->join('users AS u1', 'messages.sender', '=', 'u1.id')
+            ->join('users AS u2', 'messages.recipient', '=', 'u2.id')
+            ->whereRaw('recipient = ' . Auth::get('id') . ' OR sender = ' . Auth::get('id'))
+            ->raw('AND (sender_deleted = (CASE WHEN u1.id = ' . Auth::get('id') . ' THEN 0 ELSE 1 END) OR recipient_deleted = (CASE WHEN u2.id = ' . Auth::get('id') . ' THEN 0 ELSE 1 END))')
+            ->oldest('messages.created_at')
             ->paginate($items_per_pages);
     }
     
@@ -54,7 +54,7 @@ class Messages
         return self::model()
             ->select(['m.*', 'u.email AS sender_mail', 'u.name AS sender_name'])
             ->join('users As u', 'm.sender', '=', 'u.id')
-            ->where('recipient', Auth::get()->id)
+            ->where('recipient', Auth::get('id'))
             ->and('recipient_deleted', 0)
             ->and('recipient_status', 'unread')
             ->oldest('m.created_at')
@@ -70,7 +70,7 @@ class Messages
     {
         return self::model()
             ->count()
-            ->where('recipient', Auth::get()->id)
+            ->where('recipient', Auth::get('id'))
             ->and('recipient_status', 'unread')
             ->single()
             ->value;
@@ -86,7 +86,7 @@ class Messages
     {
         return self::model()
             ->insert([
-                'sender' => Auth::get()->id,    
+                'sender' => Auth::get('id'),    
                 'recipient' => $request->recipient,
                 'message' => $request->message
             ]);
@@ -102,18 +102,18 @@ class Messages
     public static function updateReadStatus(Request $request, ?int $id = null): void
     {
         if (!is_null($id)) {
-            if (self::model()->findSingle($id)->sender === Auth::get()->id) {
+            if (self::model()->findSingle($id)->sender === Auth::get('id')) {
                 $data = 'sender_status';
-            } else if (self::model()->findSingle($id)->recipient === Auth::get()->id) {
+            } else if (self::model()->findSingle($id)->recipient === Auth::get('id')) {
                 $data = 'recipient_status';
             }
 
             self::model()->updateIfExists($id, [$data => 'read']);
         } else {
 			foreach (explode(',', $request->items) as $id) {
-				if (self::model()->findSingle($id)->sender === Auth::get()->id) {
+				if (self::model()->findSingle($id)->sender === Auth::get('id')) {
                     $data = 'sender_status';
-                } else if (self::model()->findSingle($id)->recipient === Auth::get()->id) {
+                } else if (self::model()->findSingle($id)->recipient === Auth::get('id')) {
                     $data = 'recipient_status';
                 }
     
@@ -132,18 +132,18 @@ class Messages
     public static function updateDeletedStatus(Request $request, ?int $id = null): void
     {
         if (!is_null($id)) {
-            if (self::model()->findSingle($id)->sender === Auth::get()->id) {
+            if (self::model()->findSingle($id)->sender === Auth::get('id')) {
                 $data = 'sender_status';
-            } else if (self::model()->findSingle($id)->recipient === Auth::get()->id) {
+            } else if (self::model()->findSingle($id)->recipient === Auth::get('id')) {
                 $data = 'recipient_status';
             }
 
             self::model()->updateIfExists($id, [$data => 1]);
         } else {
 			foreach (explode(',', $request->items) as $id) {
-				if (self::model()->findSingle($id)->sender === Auth::get()->id) {
+				if (self::model()->findSingle($id)->sender === Auth::get('id')) {
                     $data = 'sender_status';
-                } else if (self::model()->findSingle($id)->recipient === Auth::get()->id) {
+                } else if (self::model()->findSingle($id)->recipient === Auth::get('id')) {
                     $data = 'recipient_status';
                 }
     

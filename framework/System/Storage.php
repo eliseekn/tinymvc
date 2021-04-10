@@ -6,7 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Framework\Support;
+namespace Framework\System;
 
 /**
  * Manage files and folders
@@ -22,7 +22,7 @@ class Storage
      * set storage path
      *
      * @param  string $path
-     * @return \Framework\Support\Storage
+     * @return \Framework\System\Storage
      */
     public static function path(string $path = APP_ROOT): self
     {
@@ -43,7 +43,7 @@ class Storage
     /**
      * add path to current path
      *
-     * @return \Framework\Support\Storage
+     * @return \Framework\System\Storage
      */
     public function add(string $path): self
     {

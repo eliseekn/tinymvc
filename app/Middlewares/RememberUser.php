@@ -5,8 +5,8 @@ namespace App\Middlewares;
 use App\Helpers\Auth;
 use Framework\Http\Request;
 use Framework\Database\Model;
-use Framework\Support\Cookies;
-use Framework\Support\Session;
+use Framework\System\Cookies;
+use Framework\System\Session;
 
 /**
  * Check for user cookie

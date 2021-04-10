@@ -19,7 +19,7 @@ class DateHelper
      */
     public static function format($date = null): self
     {
-        self::$date = Carbon::parse($date, Auth::get()->timezone)->locale(Auth::get()->lang);
+        self::$date = Carbon::parse($date, Auth::get('timezone'))->locale(Auth::get('lang'));
         return new self();
     }
     

@@ -21,7 +21,7 @@
                 <span>{{ __('RESOURCENAME') }}</span>
 
                 <div class="d-flex flex-lg-row flex-column mt-lg-0 mt-2">
-                    <span class="mr-md-3">
+                    <span class="mr-md-2">
                         <input type="search" class="form-control" id="filter" placeholder="{{ __('search') }}">
                     </span>
 
@@ -90,7 +90,7 @@
                                 </confirm-delete>
                             </td>
                         </tr>
-                        {% endforeach% }
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>

@@ -1,47 +1,19 @@
 
-Route::group([
-    'resources/RESOURCENAME' => ['handler' => 'Admin\CLASSNAME@index'],
-    'resources/RESOURCENAME/new' => ['handler' => 'Admin\CLASSNAME@new'],
-    'resources/RESOURCENAME/edit/{num}' => ['handler' => 'Admin\CLASSNAME@edit'],
-    'resources/RESOURCENAME/read/{num}' => ['handler' => 'Admin\CLASSNAME@read']
-])->by([
-    'method' => 'get',
-    'prefix' => 'admin',
-    'middlewares' => [
-        'RememberUser',
-        'DashboardPolicy'
-    ]
-]);
+Route::groupPrefix('admin', function () {
+    Route::groupMiddlewares(['remember', 'dashboard'], function () {
+        Route::get('resources/RESOURCENAME', [CLASSNAME::class, 'index'])->name('RESOURCENAME.index');
+        Route::get('resources/RESOURCENAME/new', [CLASSNAME::class, 'new'])->name('RESOURCENAME.new');
+        Route::get('resources/RESOURCENAME/{id}/edit', [CLASSNAME::class, 'edit'])->name('RESOURCENAME.edit')->where(['id' => 'num']);
+        Route::get('resources/RESOURCENAME/{id}/read', [CLASSNAME::class, 'read'])->name('RESOURCENAME.read')->where(['id' => 'num']);
+    });
 
-Route::group([
-    'resources/RESOURCENAME/create' => ['handler' => 'Admin\CLASSNAME@create'],
-    'resources/RESOURCENAME/import' => ['handler' => 'Admin\CLASSNAME@import'],
-    'resources/RESOURCENAME/export' => ['handler' => 'Admin\CLASSNAME@export']
-])->by([
-    'method' => 'post',
-    'prefix' => 'admin',
-    'middlewares' => [
-        'RememberUser',
-        'CsrfProtection',
-        'SanitizeInputs',
-        'DashboardPolicy'
-    ]
-]);
+    Route::groupMiddlewares(['remember', 'dashboard', 'csrf'], function () {
+        Route::delete('resources/RESOURCENAME/?{id}?/delete', [CLASSNAME::class, 'delete'])->name('RESOURCENAME.delete')->where(['id' => 'num']);
+        Route::patch('resources/RESOURCENAME/?{id}?/update', [CLASSNAME::class, 'update'])->name('RESOURCENAME.update')->where(['id' => 'num']);
+    });
 
-Route::patch('admin/resources/RESOURCENAME/update/{num}' => [
-    'handler' => 'Admin\CLASSNAME@update',
-    'middlewares' => [
-        'RememberUser',
-        'CsrfProtection',
-        'DashboardPolicy'
-    ]
-]);
-
-Route::delete('admin/resources/RESOURCENAME/delete/?{num}?' => [
-    'handler' => 'Admin\CLASSNAME@delete',
-    'middlewares' => [
-        'RememberUser',
-        'CsrfProtection',
-        'DashboardPolicy'
-    ]
-]);
+    Route::groupMiddlewares(['remember', 'csrf', 'sanitize', 'dashboard' ], function () {
+        Route::post('resources/RESOURCENAME/create', [CLASSNAME::class, 'create'])->name('RESOURCENAME.create');
+        Route::post('resources/RESOURCENAME/export', [CLASSNAME::class, 'export'])->name('RESOURCENAME.export');
+    });
+})->register();

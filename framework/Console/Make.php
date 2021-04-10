@@ -8,7 +8,7 @@
 
 namespace Framework\Console;
 
-use Framework\Support\Storage;
+use Framework\System\Storage;
 
 /**
  * Manage application stubs

@@ -2,7 +2,7 @@
 
 namespace App\Requests;
 
-use Framework\Support\Validator;
+use Framework\Http\Validator;
 
 class CLASSNAME extends Validator
 {
@@ -20,7 +20,7 @@ class CLASSNAME extends Validator
      * 
      * @var array
      */
-    protected static $error_messages = [
+    protected static $messages = [
         //
     ];
 }

@@ -44,11 +44,11 @@ Route::group(['prefix' => 'api', 'middlewares' => ['cors']], function () {
     });
 
     Route::get('users', function () {
-        response()->json(['users' => (new Model('users'))->find('!=', Auth::get()->id)->all()]);
+        response()->json(['users' => (new Model('users'))->find('!=', Auth::get('id'))->all()]);
     });
 
     Route::get('translations', function() {
-        require_once 'resources/lang/' . Auth::get()->lang . '.php';
+        require_once 'resources/lang/' . Auth::get('lang') . '.php';
         response()->json(['translations' => $config]);
     });
 })->register();
