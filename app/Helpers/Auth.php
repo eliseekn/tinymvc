@@ -45,7 +45,7 @@ class Auth
 
             //check user state
             if (!$user->active) {
-                (new Redirect())->back()->withAlert(__('user_not_activated', true))->error('');
+                redirect()->back()->withAlert(__('user_not_activated', true))->error('');
             }
 
             //check if two factor authentication is enabled
@@ -54,9 +54,9 @@ class Auth
 
                 if (AuthLinkMail::send($user->email, $token)) {
                     Tokens::store($request->email, $token, Carbon::now()->addHour()->toDateTimeString());
-                    (new Redirect())->back()->withAlert(__('confirm_email_link_sent', true))->success('');
+                    redirect()->back()->withAlert(__('confirm_email_link_sent', true))->success('');
                 } else {
-                    (new Redirect())->back()->withAlert(__('confirm_email_link_not_sent', true))->error('');
+                    redirect()->back()->withAlert(__('confirm_email_link_not_sent', true))->error('');
                 }
             }
 
@@ -78,9 +78,9 @@ class Auth
         Activity::log(__('login_attempts_failed', true), $request->email);
 
         if (config('auth.max_attempts') > 0 && self::getAttempts() >= config('auth.max_attempts')) {
-            (new Redirect())->back()->with('auth_attempts_timeout', Carbon::now()->addMinutes(config('auth.unlock_timeout'))->toDateTimeString())->only();
+            redirect()->back()->with('auth_attempts_timeout', Carbon::now()->addMinutes(config('auth.unlock_timeout'))->toDateTimeString())->only();
         } else {
-            (new Redirect())->back()->withInputs($request->only('email', 'password'))
+            redirect()->back()->withInputs($request->only('email', 'password'))
                 ->withAlert(__('login_failed', true))->error('');
         }
     }

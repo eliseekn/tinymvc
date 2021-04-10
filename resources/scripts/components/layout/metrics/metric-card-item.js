@@ -5,10 +5,16 @@ class MetricCardItem extends HTMLElement {
 
     connectedCallback() {
         this.innerHTML = `
-            <div class="card card-metrics bg-light shadow-sm">
-                <div class="card-body d-flex align-items-center justify-content-between">
-                    <p><i class="${this.getAttribute('icon')}"></i> ${this.getAttribute('title')}</p>
-                    <p class="font-weight-bold">${this.getAttribute('data')}</p>
+            <div class="card card-metrics bg-light shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <i class="${this.getAttribute('icon')}"></i>
+
+                        <div class="text-right">
+                            <p class="font-weight-bold" style="font-size: 1.2rem">${this.getAttribute('data')}</p>
+                            <p class="font-weight-bold"> ${this.getAttribute('title')}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         `

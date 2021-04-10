@@ -151,4 +151,24 @@ class Messages
 			}
         }
     }
+    
+    /**
+     * retrieves data from date range
+     *
+     * @param  mixed $start
+     * @param  mixed $end
+     * @return array
+     */
+    public static function fromDateRange($date_start, $date_end): array
+    {
+        return self::model()
+            ->select()
+            ->subQuery(function($query) use ($date_start, $date_end) {
+                if (!empty($date_start) && !empty($date_end)) {
+                    $query->whereBetween($date_start, $date_end);
+                }
+            })
+            ->oldest()
+            ->all();
+    }
 }

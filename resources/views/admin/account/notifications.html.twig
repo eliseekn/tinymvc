@@ -9,14 +9,14 @@
     <metrics-cards>
         <metric-card-item 
             title="{{ __('total') }}" 
-            icon="fa fa-bell fa-lg" 
+            icon="fa fa-bell fa-2x" 
             data="{{ notifications.getTotalItems() }}"
             columns="4">
         </metric-card-item>
 
         <metric-card-item 
             title="{{ __('unread') }}" 
-            icon="fa fa-eye-slash fa-lg" 
+            icon="fa fa-eye-slash fa-2x" 
             data="{{ notifications_unread }}"
             columns="4">
         </metric-card-item>
@@ -28,7 +28,7 @@
                 <span>{{ __('notifications') }}</span>
 
                 <div class="d-flex flex-lg-row flex-column mt-lg-0 mt-2">
-                    <span class="mr-md-3">
+                    <span class="mr-md-2">
                         <input type="search" class="form-control" id="filter" placeholder="{{ __('search') }}">
                     </span>
 

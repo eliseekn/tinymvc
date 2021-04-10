@@ -3,6 +3,7 @@
 namespace App\Controllers\Admin;
 
 use Carbon\Carbon;
+use Framework\Http\Request;
 use App\Requests\UpdateMedia;
 use Framework\Support\Storage;
 use App\Database\Models\Medias;
@@ -26,11 +27,12 @@ class MediasController extends Controller
     /**
      * search
      *
+     * @param  \Framework\Http\Request $request
      * @return void
      */
-    public function search(): void
+    public function search(Request $request): void
 	{
-        $q = $this->request()->queries('q', '');
+        $q = $request->queries('q', '');
         $medias = Medias::paginateQuery($q);
         list($images, $videos, $audios) = Medias::findByTypeQuery($q);
 		$this->render('admin.medias.index', compact('medias', 'images', 'videos', 'audios', 'q'));
@@ -63,26 +65,27 @@ class MediasController extends Controller
 	/**
 	 * create
 	 *
+     * @param  \Framework\Http\Request $request
 	 * @return void
 	 */
-    public function create(): void
+    public function create(Request $request): void
 	{
-        $medias = $this->request()->files('files', [], true);
+        $medias = $request->files('files', [], true);
 
         foreach($medias as $media) {
             if (!$media->isUploaded()) {
-                $this->redirect()->route('medias.index')->withToast(__('import_data_error'))->error();
+                redirect()->route('medias.index')->withToast(__('import_data_error'))->error();
             }
     
             if (!$media->save(absolute_path('storage.uploads.' . Carbon::now()->year. '.' . Carbon::now()->month))) {
-                $this->redirect()->route('medias.index')->withToast(__('upload_error'))->error();
+                redirect()->route('medias.index')->withToast(__('upload_error'))->error();
             }
 
             Medias::store($media);
         }
 
         $this->log(__('medias_uploaded'));
-        $this->redirect()->route('medias.index')->withToast(__('medias_uploaded'))->success();
+        redirect()->route('medias.index')->withToast(__('medias_uploaded'))->success();
 	}
 	
 	/**
@@ -100,12 +103,13 @@ class MediasController extends Controller
 	/**
 	 * update
 	 *
+     * @param  \Framework\Http\Request $request
      * @param  int $id
 	 * @return void
 	 */
-	public function update(int $id): void
+	public function update(Request $request, int $id): void
 	{
-        UpdateMedia::validate($this->request()->inputs())->redirectOnFail();
+        UpdateMedia::validate($request->inputs())->redirectOnFail();
 
         $media = $this->model('medias')->findSingle($id);
 
@@ -113,29 +117,30 @@ class MediasController extends Controller
 
         if (
             !Storage::path(config('storage.uploads'))->add($year. '/' . $month)
-                ->renameFile($media->filename, $this->request('filename'))
+                ->renameFile($media->filename, $request->filename)
         ) {
-            $this->redirect()->back()->withToast(__('media_not_updated'))->error();
+            redirect()->back()->withToast(__('media_not_updated'))->error();
         }
 
-        Medias::update($this->request(), $id, $year, $month);
+        Medias::update($request, $id, $year, $month);
         $this->log(__('media_updated'));
-		$this->redirect()->back()->withToast(__('media_updated'))->success();
+		redirect()->back()->withToast(__('media_updated'))->success();
 	}
 
 	/**
 	 * delete
 	 *
+     * @param  \Framework\Http\Request $request
      * @param  int|null $id
 	 * @return void
 	 */
-	public function delete(?int $id = null): void
+	public function delete(Request $request, ?int $id = null): void
 	{
         if (!is_null($id)) {
             $media = $this->model('medias')->findSingle($id);
 
             if ($media === false) {
-				$this->redirect()->back()->withToast(__('media_not_found'))->error();
+				redirect()->back()->withToast(__('media_not_found'))->error();
 			}
 
             list($month, $year) = $this->getMediasFolders($media);
@@ -143,9 +148,9 @@ class MediasController extends Controller
 
 			$this->model('medias')->deleteIfExists($id);
             $this->log(__('media_deleted'));
-            $this->redirect()->back()->withToast(__('media_deleted'))->success();
+            redirect()->back()->withToast(__('media_deleted'))->success();
 		} else {
-			foreach (explode(',', $this->request('items')) as $id) {
+			foreach (explode(',', $request->items) as $id) {
                 $media = $this->model('medias')->findSingle($id);
                 
                 if ($media !== false) {
@@ -158,7 +163,7 @@ class MediasController extends Controller
 			
             $this->log(__('medias_deleted'));
             $this->alert('toast', __('medias_deleted'))->success();
-            $this->response(['redirect' => route('medias.index')], true);
+            response()->json(['redirect' => route('medias.index')]);
 		}
 	}
     

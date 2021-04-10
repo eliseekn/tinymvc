@@ -5,6 +5,7 @@ namespace App\Controllers\Auth;
 use Carbon\Carbon;
 use App\Helpers\Auth;
 use App\Mails\WelcomeMail;
+use Framework\Http\Request;
 use App\Requests\AuthRequest;
 use App\Requests\RegisterUser;
 use App\Database\Models\Tokens;
@@ -19,43 +20,45 @@ class AuthController extends Controller
 	/**
 	 * authenticate user
 	 * 
+     * @param  \Framework\Http\Request $request
 	 * @return void
 	 */
-	public function authenticate(): void
+	public function authenticate(Request $request): void
 	{
-        AuthRequest::validate($this->request()->inputs())->redirectOnFail();
-        Auth::attempt($this->request());
+        AuthRequest::validate($request->inputs())->redirectOnFail();
+        Auth::attempt($request);
     }
         
     /**
      * register new user
      *
+     * @param  \Framework\Http\Request $request
      * @return void
      */
-    public function register(): void
+    public function register(Request $request): void
     {
-        $validator = RegisterUser::validate($this->request()->inputs())->redirectOnFail();
+        $validator = RegisterUser::validate($request->inputs())->redirectOnFail();
         
-        if (!Auth::create($this->request())) {
-            $this->redirect()->back()->withInputs($validator->inputs())
+        if (!Auth::create($request)) {
+            redirect()->back()->withInputs($validator->inputs())
                 ->withAlert(__('user_already_exists', true))->error('');
         }
 
         if ($this->model('users')->count()->single()->value === 1) {
-            $this->redirect()->route('dashboard.index')->only();
+            redirect()->route('dashboard.index')->only();
         }
 
         if (config('auth.email_confirmation') === false) {
-            WelcomeMail::send($this->request('email'), $this->request('name'));
-            $this->redirect()->route('dashboard.index')->withAlert(__('user_registered', true))->success('');
+            WelcomeMail::send($request->email, $request->name);
+            redirect()->route('dashboard.index')->withAlert(__('user_registered', true))->success('');
         } else {
             $token = random_string(50, true);
 
-            if (EmailConfirmationMail::send($this->request('email'), $token)) {
-                Tokens::store($this->request('email'), $token, Carbon::now()->addDay()->toDateTimeString());
-                $this->redirect()->route('dashboard.index')->withAlert(__('confirm_email_link_sent', true))->success('');
+            if (EmailConfirmationMail::send($request->email, $token)) {
+                Tokens::store($request->email, $token, Carbon::now()->addDay()->toDateTimeString());
+                redirect()->route('dashboard.index')->withAlert(__('confirm_email_link_sent', true))->success('');
             } else {
-                $this->redirect()->route('dashboard.index')->withAlert(__('confirm_email_link_not_sent', true))->error('');
+                redirect()->route('dashboard.index')->withAlert(__('confirm_email_link_not_sent', true))->error('');
             }
         }
     }
@@ -71,6 +74,6 @@ class AuthController extends Controller
 		Auth::forget();
 
         $redirect = is_null($redirect) ? 'login' : $redirect;
-		$this->redirect($redirect)->only();
+		redirect()->url($redirect)->only();
 	}
 }

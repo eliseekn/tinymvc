@@ -20,10 +20,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('#dropdown-btn').forEach(element => {
             element.addEventListener('click', event => {
                 if (document.getElementById(event.target.dataset.target).classList.contains('d-none')) {
-                    element.childNodes[4].innerHTML = '<i class="fa fa-caret-up"></i>'
+                    element.childNodes[3].childNodes[0].innerHTML = '<i class="fa fa-caret-up"></i>'
                     document.getElementById(event.target.dataset.target).classList.remove('d-none')
                 } else {
-                    element.childNodes[4].innerHTML = '<i class="fa fa-caret-down"></i>'
+                    element.childNodes[3].childNodes[0].innerHTML = '<i class="fa fa-caret-down"></i>'
                     document.getElementById(event.target.dataset.target).classList.add('d-none')
                 }
             })

@@ -11,6 +11,8 @@ namespace Framework\Console;
 use Exception;
 use Framework\Database\DB;
 use App\Database\Seeds\Seeder;
+use Framework\Database\Builder;
+use Framework\Database\Schema;
 use Framework\Support\Storage;
 
 /**
@@ -22,12 +24,11 @@ class Database
      * print console message
      *
      * @param  mixed $message
-     * @param  mixed $exit
      * @return mixed
      */
-    private static function log(string $message, bool $exit = true, $nl = PHP_EOL)
+    private static function log(string $message)
     {
-        return $exit ? exit($message . $nl) : print($message . $nl);
+        return print($message . PHP_EOL);
     }
 
     /**
@@ -38,91 +39,138 @@ class Database
      */
     private static function getSeed(string $seed): string
     {
-        if ($seed[-1] === 's') {
-            $seed = rtrim($seed, 's');
-        }
-
         $seed = ucfirst($seed) . 'Seed';
         return 'App\Database\Seeds\\' . $seed;
     }
-    
-    public static function createSchema(string ...$databases)
+        
+    /**
+     * create database
+     *
+     * @param  string[] $databases
+     * @return void
+     */
+    public static function createSchema(string ...$databases): void
     {
         foreach ($databases as $database) {
             try {
                 DB::connection()->query("CREATE DATABASE IF NOT EXISTS $database CHARACTER SET " . config('mysql.charset') . " COLLATE " . config('mysql.collation'));
-                self::log('[+] Database "' . $database . '" created successfully' . PHP_EOL, false, '');
+                self::log('[+] Database "' . $database . '" created successfully');
             } catch(Exception $e) {
-                self::log('[!] ' . $e->getMessage() . PHP_EOL, false, '');
+                self::log('[!] ' . $e->getMessage());
             }
         }
     }
-
-    public static function deleteSchema(string ...$databases)
+    
+    /**
+     * delete database
+     *
+     * @param  string[] $databases
+     * @return void
+     */
+    public static function deleteSchema(string ...$databases): void
     {
         foreach ($databases as $database) {
             try {
                 DB::connection()->query("DROP DATABASE IF EXISTS $database");
-                self::log('[+] Database "' .$database . '" deleted successfully' . PHP_EOL, false, '');
+                self::log('[+] Database "' .$database . '" deleted successfully');
             } catch(Exception $e) {
-                self::log('[!] ' . $e->getMessage() . PHP_EOL, false, '');
+                self::log('[!] ' . $e->getMessage());
             }
         }
     }
-
-    public static function executeQuery(string $query, ?string $db = null)
+    
+    /**
+     * execute SQL query
+     *
+     * @param  string $query
+     * @param  string|null $db
+     * @return void
+     */
+    public static function executeQuery(string $query, ?string $db = null): void
     {
         try {
             DB::connection($db)->query($query);
         } catch(Exception $e) {
-            self::log('[!] ' . $e->getMessage() . PHP_EOL, false);
+            self::log('[!] ' . $e->getMessage());
         }
 
-        self::log('[+] Query executed successfully' . PHP_EOL, false);
+        self::log('[+] Query executed successfully');
     }
-
-    public static function migrateTable(string $table = '')
+    
+    /**
+     * migrate table
+     *
+     * @param  string $table
+     * @return void
+     */
+    public static function migrateTable(string $table = ''): void
     {
         if (!empty($table)) {
             if (strpos($table, ',') === false) {
-                $table = 'App\Database\Migrations\\' . $table;
+                if (self::alreadyMigrated($table)) {
+                    self::log('[!] Table "' . $table . '" already migrated');
+                } else {
+                    self::saveMigrationTable($table);
+
+                    $table = 'App\Database\Migrations\\' . $table;
                 
-                try {
-                    $table::migrate();
-                    self::log('[+] Table "' . $table . '" migrated successfully' . PHP_EOL, false);
-                } catch(Exception $e) {
-                    self::log('[!] ' . $e->getMessage() . PHP_EOL, false);
+                    try {
+                        $table::migrate();
+                        self::log('[+] Table "' . $table . '" migrated successfully');
+                    } catch(Exception $e) {
+                        self::log('[!] ' . $e->getMessage());
+                    }
                 }
             } else {
                 $tables = explode(',', $table);
     
                 foreach ($tables as $table) {
-                    $table = 'App\Database\Migrations\\' . $table;
-                    
-                    try {
-                        $table::migrate();
-                        self::log('[+] Table "' . $table . '" migrated successfully' . PHP_EOL, false, '');
-                    } catch(Exception $e) {
-                        self::log('[!] ' . $e->getMessage() . PHP_EOL, false, '');
+                    if (self::alreadyMigrated($table)) {
+                        self::log('[!] Table "' . $table . '" already migrated');
+                    } else {
+                        self::saveMigrationTable($table);
+    
+                        $table = 'App\Database\Migrations\\' . $table;
+                        
+                        try {
+                            $table::migrate();
+                            self::saveMigrationTable($table);
+                            self::log('[+] Table "' . $table . '" migrated successfully');
+                        } catch(Exception $e) {
+                            self::log('[!] ' . $e->getMessage());
+                        }
                     }
                 }
             }
         } else {
             foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
                 $table = get_file_name($file);
-                $table = 'App\Database\Migrations\\' . $table;
                 
-                try {
-                    $table::migrate();
-                    self::log('[+] Table "' . $table . '" migrated successfully' . PHP_EOL, false, '');
-                } catch(Exception $e) {
-                    self::log('[!] ' . $e->getMessage() . PHP_EOL, false, '');
+                if (self::alreadyMigrated($table)) {
+                    self::log('[!] Table "' . $table . '" already migrated');
+                } else {
+                    self::saveMigrationTable($table);
+
+                    $table = 'App\Database\Migrations\\' . $table;
+
+                    try {
+                        $table::migrate();
+                        self::log('[+] Table "' . $table . '" migrated successfully');
+                    } catch(Exception $e) {
+                        self::log('[!] ' . $e->getMessage());
+                    }
                 }
             }
         }
     }
 
-    public static function resetTable(string $table = '')
+    /**
+     * reset table migration
+     *
+     * @param  string $table
+     * @return void
+     */
+    public static function resetTable(string $table = ''): void
     {
         if (!empty($table)) {
             if (strpos($table, ',') === false) {
@@ -130,9 +178,9 @@ class Database
                 
                 try {
                     $table::reset();
-                    self::log('[+] Table "' . $table . '" resetted successfully' . PHP_EOL, false);
+                    self::log('[+] Table "' . $table . '" resetted successfully');
                 } catch(Exception $e) {
-                    self::log('[!] ' . $e->getMessage() . PHP_EOL, false);
+                    self::log('[!] ' . $e->getMessage());
                 }
             } else {
                 $tables = explode(',', $table);
@@ -142,9 +190,9 @@ class Database
                     
                     try {
                         $table::reset();
-                        self::log('[+] Table "' . $table . '" resetted successfully' . PHP_EOL, false, '');
+                        self::log('[+] Table "' . $table . '" resetted successfully');
                     } catch(Exception $e) {
-                        self::log('[!] ' . $e->getMessage() . PHP_EOL, false, '');
+                        self::log('[!] ' . $e->getMessage());
                     }
                 }
             }
@@ -155,56 +203,72 @@ class Database
                 
                 try {
                     $table::reset();
-                    self::log('[+] Table "' . $table . '" resetted successfully' . PHP_EOL, false, '');
+                    self::log('[+] Table "' . $table . '" resetted successfully');
                 } catch(Exception $e) {
-                    self::log('[!] ' . $e->getMessage() . PHP_EOL, false, '');
+                    self::log('[!] ' . $e->getMessage());
                 }
             }
         }
     }
 
-    public static function deleteTable(string $table = '')
+    /**
+     * delete table migration
+     *
+     * @param  string $table
+     * @return void
+     */
+    public static function deleteTable(string $table = ''): void
     {
         if (!empty($table)) {
             if (strpos($table, ',') === false) {
+                self::removeMigrationTable($table);
                 $table = 'App\Database\Migrations\\' . $table;
                 
                 try {
                     $table::delete();
-                    self::log('[+] Table "' . $table . '" deleted successfully' . PHP_EOL, false);
+                    self::log('[+] Table "' . $table . '" deleted successfully');
                 } catch(Exception $e) {
-                    self::log('[!] ' . $e->getMessage() . PHP_EOL, false);
+                    self::log('[!] ' . $e->getMessage());
                 }
             } else {
                 $tables = explode(',', $table);
     
                 foreach ($tables as $table) {
+                    self::removeMigrationTable($table);
                     $table = 'App\Database\Migrations\\' . $table;
                     
                     try {
                         $table::delete();
-                        self::log('[+] Table "' . $table . '" deleted successfully' . PHP_EOL, false, '');
+                        self::log('[+] Table "' . $table . '" deleted successfully');
                     } catch(Exception $e) {
-                        self::log('[!] ' . $e->getMessage() . PHP_EOL, false, '');
+                        self::log('[!] ' . $e->getMessage());
                     }
                 }
             }
         } else {
             foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
                 $table = get_file_name($file);
+                self::removeMigrationTable($table);
+
                 $table = 'App\Database\Migrations\\' . $table;
                 
                 try {
                     $table::delete();
-                    self::log('[+] Table "' . $table . '" deleted successfully' . PHP_EOL, false, '');
+                    self::log('[+] Table "' . $table . '" deleted successfully');
                 } catch(Exception $e) {
-                    self::log('[!] ' . $e->getMessage() . PHP_EOL, false, '');
+                    self::log('[!] ' . $e->getMessage());
                 }
             }
         }
     }
 
-    public static function runSeeder(string $seed = '')
+    /**
+     * run seed
+     *
+     * @param  string $seed
+     * @return void
+     */
+    public static function runSeeder(string $seed = ''): void
     {
         if (!empty($seed)) {
             if (strpos($seed, ',') === false) {
@@ -212,9 +276,9 @@ class Database
                 
                 try {
                     $seed::insert();
-                    self::log('[+] Seed "' . $seed . '" inserted successfully' . PHP_EOL, false);
+                    self::log('[+] Seed "' . $seed . '" inserted successfully');
                 } catch(Exception $e) {
-                    self::log('[!] ' . $e->getMessage() . PHP_EOL, false);
+                    self::log('[!] ' . $e->getMessage());
                 }
             } else {
                 $seeds = explode(',', $seed);
@@ -224,22 +288,27 @@ class Database
                     
                     try {
                         $seed::insert();
-                        self::log('[+] Seed "' . $seed . '" inserted successfully' . PHP_EOL, false, '');
+                        self::log('[+] Seed "' . $seed . '" inserted successfully');
                     } catch(Exception $e) {
-                        self::log('[!] ' . $e->getMessage() . PHP_EOL, false, '');
+                        self::log('[!] ' . $e->getMessage());
                     }
                 }
             }
         } else {
             try {
                 Seeder::run();
-                self::log('[+] All seeds inserted successfully' . PHP_EOL, false, '');
+                self::log('[+] All seeds inserted successfully');
             } catch(Exception $e) {
-                self::log('[!] ' . $e->getMessage() . PHP_EOL, false, '');
+                self::log('[!] ' . $e->getMessage());
             }
         }
     }
-
+    
+    /**
+     * retrieves migrations tables list
+     *
+     * @return array
+     */
     public static function getMigrationsTables(): array
     {
         $tables = [];
@@ -249,5 +318,56 @@ class Database
         }
 
         return $tables;
+    }
+    
+    /**
+     * store migration table to database
+     *
+     * @param  string $table
+     * @return void
+     */
+    private static function saveMigrationTable(string $table): void
+    {
+        if (!Builder::tableExists('migrations')) {
+            Schema::createTable('migrations')
+                ->addInt('id')->primaryKey()
+                ->addString('migration')
+                ->create();
+        }
+
+        if (!self::alreadyMigrated($table)) {
+            Builder::insert('migrations', ['migration' => $table])->execute();
+        }
+    }
+    
+    /**
+     * remove migration table to database
+     *
+     * @param  string $table
+     * @return void
+     */
+    private static function removeMigrationTable(string $table): void
+    {
+        Builder::delete('migrations')
+            ->where('migration', $table)
+            ->execute();
+    }
+    
+    /**
+     * check if table has alredy been migrated
+     *
+     * @param  mixed $table
+     * @return bool
+     */
+    public static function alreadyMigrated(string $table): bool
+    {
+        if (!Builder::tableExists('migrations')) {
+            return false;
+        }
+
+        return Builder::select('*')
+            ->from('migrations')
+            ->where('migration', $table)
+            ->exists();
     }
 }

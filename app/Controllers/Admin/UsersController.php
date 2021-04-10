@@ -2,7 +2,7 @@
 
 namespace App\Controllers\Admin;
 
-use Exception;
+use Framework\Http\Request;
 use App\Requests\UpdateUser;
 use App\Helpers\ReportHelper;
 use App\Database\Models\Users;
@@ -42,13 +42,9 @@ class UsersController extends Controller
 	 */
 	public function edit(int $id): void
 	{
-        try {
-            $user = $this->model('users')->findOrFail('id', $id);
-            $roles = $this->model('roles')->selectAll();
-            $this->render('admin.users.edit', compact('user', 'roles'));
-        } catch (Exception $e) {
-            $this->redirect()->route('users.index')->withToast(__('user_not_found'))->error();
-        }
+        $user = $this->model('users')->findSingle($id);
+        $roles = $this->model('roles')->selectAll();
+        $this->render('admin.users.edit', compact('user', 'roles'));
 	}
 	
 	/**
@@ -59,104 +55,96 @@ class UsersController extends Controller
 	 */
 	public function read(int $id): void
 	{
-        try {
-            $user = $this->model('users')->findOrFail('id', $id);
-            $this->render('admin.users.read', compact('user'));
-        } catch (Exception $e) {
-            $this->redirect()->route('users.index')->withToast(__('user_not_found'))->error();
-        }
+        $user = $this->model('users')->findSingle($id);
+        $this->render('admin.users.read', compact('user'));
 	}
 
 	/**
 	 * create
 	 *
+     * @param  \Framework\Http\Request $request
 	 * @return void
 	 */
-	public function create(): void
+	public function create(Request $request): void
 	{
-        $validator = RegisterUser::validate($this->request()->inputs())->redirectOnFail();
+        $validator = RegisterUser::validate($request->inputs())->redirectOnFail();
         
-        if ($this->model('users')->findBy('email', $this->request('email'))->exists()) {
-            $this->redirect()->back()->withInputs($validator->inputs())->withToast(__('user_already_exists'))->error();
+        if ($this->model('users')->findBy('email', $request->email)->exists()) {
+            redirect()->back()->withInputs($validator->inputs())->withToast(__('user_already_exists'))->error();
         }
         
-        if ($this->model('users')->findBy('phone', $this->request('phone'))->exists()) {
-            $this->redirect()->back()->withInputs($validator->inputs())->withToast(__('user_already_exists'))->error();
+        if ($this->model('users')->findBy('phone', $request->phone)->exists()) {
+            redirect()->back()->withInputs($validator->inputs())->withToast(__('user_already_exists'))->error();
         }
 
-	    $id = Users::store($this->request());
+	    $id = Users::store($request);
 
         $this->log(__('user_created'));
-        $this->redirect()->route('users.read', $id)->withToast(__('user_created'))->success();
+        redirect()->route('users.read', $id)->withToast(__('user_created'))->success();
     }
     
 	/**
 	 * update
 	 *
+     * @param  \Framework\Http\Request $request
      * @param  int $id
 	 * @return void
 	 */
-	public function update(int $id): void
+	public function update(Request $request, int $id): void
 	{
-		$validator = UpdateUser::validate($this->request()->inputs())->redirectOnFail();
+		$validator = UpdateUser::validate($request->inputs())->redirectOnFail();
         
-        try {
-            $user = $this->model('users')->findOrFail('id', $id);
+        $user = $this->model('users')->findSingle($id);
 
-            if ($user->email !== $this->request('email')) {
-                if ($this->model('users')->findBy('email', $this->request('email'))->exists()) {
-                    $this->redirect()->back()->withInputs($validator->inputs())->withToast(__('user_already_exists'))->error();
-                }
+        if ($user->email !== $request->email) {
+            if ($this->model('users')->findBy('email', $request->email)->exists()) {
+                redirect()->back()->withInputs($validator->inputs())->withToast(__('user_already_exists'))->error();
             }
-
-            if ($user->phone !== $this->request('phone')) {
-                if ($this->model('users')->findBy('phone', $this->request('phone'))->exists()) {
-                    $this->redirect()->back()->withInputs($validator->inputs())->withToast(__('user_already_exists'))->error();
-                }
-            }
-        } catch (Exception $e) {
-            $this->redirect()->back()->withInputs($validator->inputs())->withToast(__('user_not_found'))->error();
         }
 
-        Users::update($this->request(), $id);
+        if ($user->phone !== $request->phone) {
+            if ($this->model('users')->findBy('phone', $request->phone)->exists()) {
+                redirect()->back()->withInputs($validator->inputs())->withToast(__('user_already_exists'))->error();
+            }
+        }
+
+        Users::update($request, $id);
 		
         $this->log(__('user_updated'));
-        $this->redirect()->route('users.read', $id)->withToast(__('user_created'))->success();
+        redirect()->route('users.read', $id)->withToast(__('user_updated'))->success();
     }
 
 	/**
 	 * delete
 	 *
+     * @param  \Framework\Http\Request $request
      * @param  int|null $id
 	 * @return void
 	 */
-	public function delete(?int $id = null): void
+	public function delete(Request $request, ?int $id = null): void
 	{
-        Users::delete($this->request(), $id);
+        Users::delete($request, $id);
 
 		if (!is_null($id)) {
             $this->log(__('user_deleted'));
-            $this->redirect()->route('users.index')->withToast(__('user_deleted'))->success();
+            redirect()->route('users.index')->withToast(__('user_deleted'))->success();
 		} else {
             $this->log(__('users_deleted'));
             $this->alert('toast', __('users_deleted'))->success();
-            $this->response(['redirect' => route('users.index')], true);
+            response()->json(['redirect' => route('users.index')]);
         }
 	}
 
 	/**
 	 * export
 	 *
+     * @param  \Framework\Http\Request $request
 	 * @return void
 	 */
-	public function export(): void
+	public function export(Request $request): void
 	{
-		$users = $this->model('users')
-            ->between($this->request('date_start'), $this->request('date_end'))
-            ->oldest()
-            ->all();
-        
-        $filename = 'users_' . date('Y_m_d_His') . '.' . $this->request('file_type');
+		$users = Users::fromDateRange($request->date_start, $request->date_end);
+        $filename = 'users_' . date('Y_m_d_His') . '.' . $request->file_type;
 
         $this->log(__('data_exported'));
         

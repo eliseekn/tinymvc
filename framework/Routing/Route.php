@@ -311,6 +311,26 @@ class Route
 
         return new self();
     }
+    
+    /**
+     * apply multiple groups to routes
+     *
+     * @param  array $groups
+     * @param  \Closure $callback
+     * @return \Framework\Routing\Route
+     */
+    public static function group(array $groups, $callback): self
+    {
+        foreach ($groups as $key => $value) {
+            if ($key === 'prefix') {
+                return self::groupPrefix($value, $callback);
+            }
+
+            else if ($key === 'middlewares') {
+                return self::groupMiddlewares($value, $value);
+            }
+        }
+    }
 
     /**
      * register routes

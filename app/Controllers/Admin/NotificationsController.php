@@ -2,6 +2,7 @@
 
 namespace App\Controllers\Admin;
 
+use Framework\Http\Request;
 use Framework\Routing\Controller;
 use App\Helpers\NotificationHelper;
 use App\Database\Models\Notifications;
@@ -23,51 +24,54 @@ class NotificationsController extends Controller
 	/**
 	 * create
 	 *
+     * @param  \Framework\Http\Request $request
 	 * @return void
 	 */
-	public function create(): void
+	public function create(Request $request): void
 	{
-        NotificationHelper::create($this->request('message'));
-        $this->redirect()->back()->withToast(__('notifications_created'))->success();
+        NotificationHelper::create($request->message);
+        redirect()->back()->withToast(__('notifications_created'))->success();
     }
     
 	/**
 	 * update
 	 *
+     * @param  \Framework\Http\Request $request
      * @param  int|null $id
 	 * @return void
 	 */
-	public function update(?int $id = null): void
+	public function update(Request $request, ?int $id = null): void
 	{
         if (!is_null($id)) {
             $this->model('notifications')->updateIfExists($id, ['status' => 'read']);
             $this->log(__('notification_updated'));
-            $this->redirect()->back()->withToast(__('notification_updated'))->success();
+            redirect()->back()->withToast(__('notification_updated'))->success();
 		} else {
-            $this->model('notifications')->updateBy(['id', 'in', $this->request('items')], ['status' => 'read']);
+            $this->model('notifications')->updateBy(['id', 'in', $request->items], ['status' => 'read']);
             $this->log(__('notifications_updated'));
 			$this->alert('toast', __('notifications_updated'))->success();
-            $this->response(['redirect' => route('notifications.index')], true);
+            response()->json(['redirect' => route('notifications.index')]);
 		}
     }
 	
 	/**
 	 * delete
 	 *
+     * @param  \Framework\Http\Request $request
      * @param  int|null $id
 	 * @return void
 	 */
-	public function delete(?int $id = null): void
+	public function delete(Request $request, ?int $id = null): void
 	{
 		if (!is_null($id)) {
 			$this->model('notifications')->deleteIfExists($id);
             $this->log(__('notification_deleted'));
-            $this->redirect()->back()->withToast(__('notification_deleted'))->success();
+            redirect()->back()->withToast(__('notification_deleted'))->success();
 		} else {
-            $this->model('notifications')->deleteBy('id', 'in', explode(',', $this->request('items')));
+            $this->model('notifications')->deleteBy('id', 'in', explode(',', $request->items));
             $this->log(__('notifications_deleted'));
 			$this->alert('toast', __('notifications_deleted'))->success();
-			$this->response(['redirect' => route('notifications.index')], true);
+			response()->json(['redirect' => route('notifications.index')]);
 		}
 	}
 }

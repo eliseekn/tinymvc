@@ -9,14 +9,14 @@
     <metrics-cards>
         <metric-card-item 
             title="{{ __('total') }}" 
-            icon="fa fa-users fa-lg" 
+            icon="fa fa-users fa-2x" 
             data="{{ users.getTotalItems() }}"
             columns="4">
         </metric-card-item>
 
         <metric-card-item 
             title="{{ __('active') }}" 
-            icon="fa fa-user-check fa-lg" 
+            icon="fa fa-user-check fa-2x" 
             data="{{ active_users }}"
             columns="4">
         </metric-card-item>
@@ -28,7 +28,7 @@
                 <span>{{ __('users') }}</span>
 
                 <div class="d-flex flex-lg-row flex-column">
-                    <span class="mr-md-3 mt-lg-0 mt-2">
+                    <span class="mr-md-2">
                         <input type="search" class="form-control" id="filter" placeholder="{{ __('search') }}">
                     </span>
 
@@ -41,7 +41,7 @@
                             <button class="btn btn-outline-dark mx-2">{{ __('export') }}</button>
                         </export-modal>
 
-                        <button class="btn btn-danger mt-lg-0 mt-2" id="bulk-delete" data-url="{{ route('users.delete') }}">
+                        <button class="btn btn-danger" id="bulk-delete" data-url="{{ route('users.delete') }}">
                             {{ __('bulk_delete') }}
                         </button>
                     </span>

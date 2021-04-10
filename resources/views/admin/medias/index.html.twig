@@ -9,28 +9,28 @@
     <metrics-cards>
         <metric-card-item 
             title="{{ __('total') }}" 
-            icon="fa fa-folder-open fa-lg" 
+            icon="fa fa-folder-open fa-2x" 
             data="{{ medias.getTotalItems() }}"
             columns="3">
         </metric-card-item>
 
         <metric-card-item 
             title="{{ __('images') }}" 
-            icon="fa fa-image fa-lg" 
+            icon="fa fa-image fa-2x" 
             data="{{ images }}"
             columns="3">
         </metric-card-item>
 
         <metric-card-item 
             title="{{ __('videos') }}" 
-            icon="fa fa-film fa-lg" 
+            icon="fa fa-film fa-2x" 
             data="{{ videos }}"
             columns="3">
         </metric-card-item>
 
         <metric-card-item 
             title="{{ __('audios') }}" 
-            icon="fa fa-music fa-lg" 
+            icon="fa fa-music fa-2x" 
             data="{{ audios }}"
             columns="3">
         </metric-card-item>
@@ -42,7 +42,7 @@
                 <span>{{ __('medias') }}</span>
 
                 <div class="d-flex flex-lg-row flex-column">
-                    <span class="mr-md-3 mt-lg-0 mt-2">
+                    <span class="mr-md-2 mt-lg-0 mt-2">
                         <input type="search" class="form-control" id="media-search" placeholder="{{ __('search') }}" data-url="{{ route('medias.search.q') }}" value="{{ q ?: '' }}">
                     </span>
 
@@ -50,7 +50,7 @@
                         <upload-modal action="{{ route('medias.create') }}" multiple="multiple">
                             <button class="btn btn-outline-dark">{{ __('new') }}</button>
                         </upload-modal>
-                        
+
                         <button class="btn btn-danger ml-2" id="bulk-delete" data-url="{{ route('medias.delete') }}">
                             {{ __('bulk_delete') }}
                         </button>

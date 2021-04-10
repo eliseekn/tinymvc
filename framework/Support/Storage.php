@@ -24,7 +24,7 @@ class Storage
      * @param  string $path
      * @return \Framework\Support\Storage
      */
-    public static function path(string $path): self
+    public static function path(string $path = APP_ROOT): self
     {
         self::$path = $path;
         return new self();

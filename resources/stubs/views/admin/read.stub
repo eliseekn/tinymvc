@@ -1,7 +1,7 @@
 {% extends "layouts/admin.html.twig" %}
 
 {% block page_title %}
-	{{ __('RESOURCENAMEs') ~ ' | Administration' }}
+	{{ __('RESOURCENAME') ~ ' | Administration' }}
 {% endblock %}
 
 {% block page_content %}
@@ -31,21 +31,21 @@
         </div>
 
         <div class="card-footer">
-            <a href="{{ route('RESOURCENAMEs.edit', RESOURCENAME.id) }}" class="btn btn-outline-dark">
+            <a href="{{ route('RESOURCENAME.edit', RESOURCENAME.id) }}" class="btn btn-outline-dark">
                 {{ __('edit') }}
             </a>
 
-            <a href="{{ route('RESOURCENAMEs.new') }}" class="btn btn-outline-dark ml-2">
+            <a href="{{ route('RESOURCENAME.new') }}" class="btn btn-outline-dark ml-2">
                 {{ __('new') }}
             </a>
 
             <confirm-delete 
                 type="text" 
                 content="{{ __('delete') }}" 
-                action="{{ route('RESOURCENAMEs.delete', RESOURCENAME.id) }}">
+                action="{{ route('RESOURCENAME.delete', RESOURCENAME.id) }}">
             </confirm-delete>
             
-            <a href="{{ route('RESOURCENAMEs.index') }}" class="btn btn-outline-dark ml-2">
+            <a href="{{ route('RESOURCENAME.index') }}" class="btn btn-outline-dark ml-2">
                 {{ __('cancel') }}
             </a>
         </div>

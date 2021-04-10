@@ -6,6 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
+use Framework\Http\Request;
 use Framework\Support\Storage;
 
 /**
@@ -42,3 +43,12 @@ set_exception_handler('handleExceptions');
 
 //remove PHP maximum execution time 
 set_time_limit(0);
+
+//load .env file
+if (!Storage::path()->isFile('.env') && !empty((new Request())->uri())) {
+    throw new Exception('Missing configuration file. Run "php console app:setup" on your terminal to setup application.');
+}
+
+if (Storage::path()->isFile('.env')) {
+    load_env();
+}

@@ -5,8 +5,6 @@ namespace App\Middlewares;
 use App\Helpers\Auth;
 use Framework\Http\Request;
 use Framework\Routing\View;
-use Framework\Http\Redirect;
-use Framework\Http\Response;
 use App\Database\Models\Roles;
 
 /**
@@ -22,14 +20,14 @@ class DashboardPolicy
     public static function handle(Request $request): void
     {
         if (!Auth::check()) {
-            (new Redirect())->url('login')->withAlert(__('not_logged_error', true))->error('');
+            redirect()->url('login')->withAlert(__('not_logged_error', true))->error('');
         }
 
         if (Auth::get()->role === Roles::ROLE[2]) {
             if (!empty(config('errors.views.403'))) {
                 View::render(config('errors.views.403'), [], 403);
             } else {
-                (new Response())->send(__('no_access_permission', true), false, [], 403);
+                response()->send(__('no_access_permission', true), [], 403);
             }
         }
     }

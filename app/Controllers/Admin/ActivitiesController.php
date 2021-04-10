@@ -2,6 +2,7 @@
 
 namespace App\Controllers\Admin;
 
+use Framework\Http\Request;
 use App\Helpers\ReportHelper;
 use Framework\Routing\Controller;
 use App\Database\Models\Activities;
@@ -22,31 +23,29 @@ class ActivitiesController extends Controller
 	/**
 	 * delete
 	 *
+     * @param  \Framework\Http\Request $request
 	 * @return void
 	 */
-	public function delete(): void
+	public function delete(Request $request): void
 	{
-        if (Activities::deleteById($this->request())) {
+        if (Activities::deleteById($request)) {
             $this->alert('toast', __('activity_not_deleted'))->error();
         }
 
         $this->alert('toast', __('activities_deleted'))->success();
-        $this->response(['redirect' => route('activities.index')], true);
+        response()->json(['redirect' => route('activities.index')]);
 	}
 
 	/**
 	 * export
 	 *
+     * @param  \Framework\Http\Request $request
 	 * @return void
 	 */
-    public function export(): void
+    public function export(Request $request): void
 	{
-        $activities = $this->model('activities')
-            ->between($this->request('date_start'), $this->request('date_end'))
-            ->oldest()
-            ->all();
-
-        $filename = 'activities_' . date('Y_m_d_His') . '.' . $this->request('file_type');
+        $activities = Activities::fromDateRange($request->date_start, $request->date_end);
+        $filename = 'activities_' . date('Y_m_d_His') . '.' . $request->file_type;
 
         $this->log(__('data_exported'));
 

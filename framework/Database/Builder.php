@@ -37,7 +37,7 @@ class Builder
      */
     public static function table(string $name): self
     {
-        self::$query = "CREATE TABLE " . config('mysql.table_prefix') . "$name (";
+        self::$query = "CREATE TABLE IF NOT EXISTS " . config('mysql.table_prefix') . "$name (";
         return new self();
 	}
 
@@ -894,7 +894,7 @@ class Builder
 	 */
 	public function execute(): \PDOStatement
 	{
-        $stmt = DB::connection(config('mysql.name'))->statement(self::$query, self::$args);
+        $stmt = DB::connection(config('mysql.database'))->statement(self::$query, self::$args);
 		self::setQuery('');
 		return $stmt;
     }
@@ -905,7 +905,7 @@ class Builder
      * @return mixed
      */
     public function fetch()
-    {
+    {   
         return $this->execute()->fetch();
     }
     
@@ -927,5 +927,17 @@ class Builder
     public static function lastInsertedId(): int
     {
         return self::setQuery('SELECT LAST_INSERT_ID()')->execute()->fetchColumn();
+    }
+    
+    /**
+     * check if table exists
+     *
+     * @param  mixed $table
+     * @return bool
+     */
+    public static function tableExists(string $table): bool
+    {
+        return Builder::setQuery('SELECT * FROM information_schema.tables WHERE table_schema = "' . config('mysql.database') .'" 
+            AND table_name = "' . $table . '" LIMIT 1')->exists();
     }
 }

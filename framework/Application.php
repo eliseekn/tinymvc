@@ -11,7 +11,6 @@ namespace Framework;
 use Exception;
 use Framework\Http\Request;
 use Framework\Routing\View;
-use Framework\Http\Response;
 use Framework\Routing\Route;
 use Framework\Routing\Router;
 use Framework\Support\Storage;
@@ -28,9 +27,7 @@ class Application
      */
     public function __construct()
     {
-        $routes = Storage::path(config('storage.routes'))->getFiles();
-
-        foreach ($routes as $route) {
+        foreach (Storage::path(config('storage.routes'))->getFiles() as $route) {
             require_once config('storage.routes') . $route;
         }
     }
@@ -61,7 +58,7 @@ class Application
                 if (!empty(config('errors.views.500'))) {
                     View::render(config('errors.views.500'), [], 500);
                 } else {
-                    (new Response())->send('Try to refresh the page or feel free to contact us if the problem persists', false, [], 500);
+                    response()->send('Try to refresh the page or feel free to contact us if the problem persists', [], 500);
                 }
             }
         }

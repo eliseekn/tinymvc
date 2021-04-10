@@ -12,7 +12,7 @@
 
 $config = [
     'encryption' => [
-        'key' => base64_encode('write_something_here_to_set_your_single_encryption_key'),
+        'key' => env('ENCRYPTION_KEY', base64_encode('write_something_here_to_set_your_single_encryption_key')),
         'cookies' => true,
     ],
 

@@ -2,9 +2,10 @@
 
 namespace App\Controllers\Admin;
 
+use Framework\Http\Request;
 use App\Helpers\ReportHelper;
-use Framework\Routing\Controller;
 use App\Database\Models\Messages;
+use Framework\Routing\Controller;
 
 class MessagesController extends Controller
 {
@@ -23,86 +24,88 @@ class MessagesController extends Controller
 	/**
 	 * create
 	 *
+     * @param  \Framework\Http\Request $request
 	 * @return void
 	 */
-    public function create(): void
+    public function create(Request $request): void
 	{
-        $id = Messages::store($this->request());
+        $id = Messages::store($request);
 
         $this->model('messages')->updateIfExists($id, ['sender_status' => 'read']);
         $this->log(__('message_sent'));
-        $this->redirect()->back()->withToast(__('message_sent'))->success();
+        redirect()->back()->withToast(__('message_sent'))->success();
 	}
 	
 	/**
 	 * reply
 	 *
+     * @param  \Framework\Http\Request $request
      * @param  int $id
 	 * @return void
 	 */
-    public function reply(int $id): void
+    public function reply(Request $request, int $id): void
 	{
-        $_id = Messages::store($this->request());
+        $_id = Messages::store($request);
 
         $this->model('messages')->updateIfExists($id, ['recipient_status' => 'read']);
         $this->model('messages')->updateIfExists($_id, ['sender_status' => 'read']);
         $this->log(__('message_sent'));
-        $this->redirect()->back()->withToast(__('message_sent'))->success();
+        redirect()->back()->withToast(__('message_sent'))->success();
 	}
 	
 	/**
 	 * update
 	 *
+     * @param  \Framework\Http\Request $request
      * @param  int|null $id
 	 * @return void
 	 */
-	public function update(?int $id = null): void
+	public function update(Request $request, ?int $id = null): void
 	{
-        Messages::updateReadStatus($this->request(), $id);
+        Messages::updateReadStatus($request, $id);
 
         if (!is_null($id)) {
             $this->log(__('message_updated'));
-            $this->redirect()->back()->withToast(__('message_updated'))->success();
+            redirect()->back()->withToast(__('message_updated'))->success();
 		} else {
             $this->log(__('messages_updated'));
 			$this->alert('toast', __('messages_updated'))->success();
-            $this->response(['redirect' => route('messages.index')], true);
+            response()->json(['redirect' => route('messages.index')]);
 		}
 	}
 
 	/**
 	 * delete
 	 *
+     * @param  \Framework\Http\Request $request
      * @param  int|null $id
 	 * @return void
 	 */
-	public function delete(?int $id = null): void
+	public function delete(Request $request, ?int $id = null): void
 	{
-        Messages::updateDeletedStatus($this->request(), $id);
+        Messages::updateDeletedStatus($request, $id);
 
         if (!is_null($id)) {
             $this->log(__('message_deleted'));
-            $this->redirect()->back()->withToast(__('message_deleted'))->success();
+            redirect()->back()->withToast(__('message_deleted'))->success();
 		} else {
             $this->log(__('messages_deleted'));
 			$this->alert('toast', __('messages_deleted'))->success();
-            $this->response(['redirect' => route('messages.index')], true);
+            response()->json(['redirect' => route('messages.index')]);
 		}
 	}
 
 	/**
 	 * export
 	 *
+     * @param  \Framework\Http\Request $request
 	 * @return void
 	 */
-    public function export(): void
+    public function export(Request $request): void
 	{
-        $messages = $this->model('messages')
-            ->between($this->request('date_start'), $this->request('date_end'))
-            ->oldest()
-            ->all();
+        $messages = Messages::fromDateRange($request->date_start, $request->date_end);
         
-        $filename = 'messages_' . date('Y_m_d_His') . '.' . $this->request('file_type');
+        $filename = 'messages_' . date('Y_m_d_His') . '.' . $request->file_type;
 
         $this->log(__('data_exported'));
 

@@ -1,0 +1,9 @@
+LAYOUTNAME
+
+{% block page_title %}
+	{{ __('RESOURCENAME') }}
+{% endblock %}
+
+{% block page_content %}
+
+{% endblock %}

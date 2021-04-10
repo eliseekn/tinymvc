@@ -9,10 +9,13 @@
 use Carbon\Carbon;
 use App\Helpers\DateHelper;
 use Configula\ConfigFactory;
+use Framework\Http\Redirect;
+use Framework\Http\Response;
 use Framework\Routing\Route;
 use Framework\Support\Cookies;
 use Framework\Support\Session;
 use Framework\Support\Storage;
+use SebastianBergmann\CodeCoverage\Report\PHP;
 
 /**
  * Cookies management functions
@@ -362,8 +365,8 @@ if (!function_exists('route_uri')) {
             }
         }
         
-        if (preg_match('?{([a-zA-Z-_\}]+)}?', $route, $matches)) {
-            $route = preg_replace('/\/\?{([a-zA-Z-_\}]+)}\?/i', '', $route);
+        if (strpos($route, '//') !== false) {
+            $route = str_replace('//', '/', $route);
         }
 
         return $route;
@@ -435,6 +438,30 @@ if (!function_exists('in_url')) {
 	{
         return preg_match('/' . $str . '/', explode('//', current_url())[1]);
 	}
+}
+
+if (!function_exists('response')) {
+    /**
+     * Response helper function
+     *
+     * @return \Framework\Http\Response
+     */
+    function response(): \Framework\Http\Response
+    {
+        return new Response();
+    }
+}
+
+if (!function_exists('redirect')) {
+    /**
+     * Redirect helper function
+     *
+     * @return \Framework\Http\Redirect
+     */
+    function redirect(): \Framework\Http\Redirect
+    {
+        return new Redirect();
+    }
 }
 
 /**
@@ -778,5 +805,97 @@ if (!function_exists('curl')) {
             'headers' => $response_headers,
             'body' => $response
         ];
+    }
+}
+
+if (!function_exists('env')) {    
+    /**
+     * retrieves environnement key variable
+     *
+     * @param  string $key
+     * @param  mixed $default
+     * @return mixed
+     */
+    function env(string $key, $default = null)
+    {
+        $data = getenv($key, true);
+
+        if ($data === false || empty($data)) {
+            $data = $default;
+        }
+
+        return $data;
+    }
+}
+
+if (!function_exists('set_env')) {    
+    /**
+     * set environnement variables
+     *
+     * @param  array $config
+     * @return void
+     */
+    function set_env(array $config): void
+    {
+        if (!is_array($config)) {
+            return;
+        }
+
+        foreach ($config as $key => $value) {
+            putenv("$key=$value");
+        } 
+    }
+}
+
+if (!function_exists('save_env')) {    
+    /**
+     * save environnement variables to file
+     *
+     * @param  array $config
+     * @return void
+     */
+    function save_env(array $config): void
+    {
+        set_env($config);
+
+        $data = '';
+
+        foreach ($config as $key => $value) {
+            $data .= "$key=$value";
+
+            if ($key === 'APP_FOLDER') {
+                $data .= PHP_EOL;
+            }
+
+            if ($key === 'MYSQL_PASSWORD') {
+                $data .= PHP_EOL;
+            }
+        }
+
+        Storage::path()->writeFile('.env', $data);
+    }
+}
+
+if (!function_exists('load_env')) {    
+    /**
+     * load environnement variables
+     *
+     * @return void
+     */
+    function load_env(): void
+    {
+        $lines = file(Storage::path()->file('.env'), FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
+        foreach ($lines as $line) {
+            if (strpos(trim($line), '#') === 0) {
+                continue;
+            }
+
+            list($name, $value) = explode('=', $line, 2);
+
+            if (!array_key_exists($name, getenv())) {
+                set_env([trim($name) => trim($value)]);
+            }
+        }
     }
 }

@@ -10,6 +10,22 @@
 
 {% block page_content %}
 
+    <metrics-cards>
+        <metric-card-item 
+            title="{{ __('users') }}" 
+            icon="fa fa-users fa-2x" 
+            data="{{ total_users }}"
+            columns="4">
+        </metric-card-item>
+
+        <metric-card-item 
+            title="{{ __('medias') }}" 
+            icon="fa fa-photo-video fa-2x" 
+            data="{{ total_medias }}"
+            columns="4">
+        </metric-card-item>
+    </metrics-cards>
+
 	{% if auth('role') != USER_ROLE[1] %}
 		<div class="row mb-4">
 			<div class="col-md-4">
@@ -24,7 +40,6 @@
 
 					<div class="card-body">
                         {% set data = [ 
-                            {'label': 'Total', 'value': total_users}, 
                             {'label': 'Active', 'value': active_users}, 
                             {'label': 'Inactive', 'value': inactive_users}
                         ] %}
@@ -52,7 +67,14 @@
 					<div class="card-body">
                         {% set keys, labels = ['value'], ['Count'] %}
 
-						<bars-chart id='users-bars-chart' el='users-bars' data={{ users_metrics|json_encode() }} xkey='month' ykeys={{ keys|json_encode() }} labels={{ labels|json_encode() }}></bars-chart>
+						<bars-chart 
+                            id='users-bars-chart' 
+                            el='users-bars' 
+                            data={{ users_metrics|json_encode() }} 
+                            xkey='month' 
+                            ykeys={{ keys|json_encode() }} 
+                            labels={{ labels|json_encode() }}>
+                        </bars-chart>
 					</div>
 				</div>
 			</div>

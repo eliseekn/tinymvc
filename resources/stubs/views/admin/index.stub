@@ -1,7 +1,7 @@
 {% extends "layouts/admin.html.twig" %}
 
 {% block page_title %}
-	{{ __('RESOURCENAMEs') ~ ' | Administration' }}
+	{{ __('RESOURCENAME') ~ ' | Administration' }}
 {% endblock %}
 
 {% block page_content %}
@@ -10,7 +10,7 @@
         <metric-card-item 
             title="{{ __('total') }}" 
             icon="fa fa-cog fa-lg" 
-            data="{{ RESOURCENAMEs.getTotalItems() }}"
+            data="{{ RESOURCENAME.getTotalItems() }}"
             columns="4">
         </metric-card-item>
     </metrics-cards>
@@ -18,7 +18,7 @@
     <div class="card shadow-sm">
         <div class="card-header">
             <div class="d-flex flex-lg-row flex-column align-items-lg-center justify-content-lg-between">
-                <span>{{ __('RESOURCENAMEs') }}</span>
+                <span>{{ __('RESOURCENAME') }}</span>
 
                 <div class="d-flex flex-lg-row flex-column mt-lg-0 mt-2">
                     <span class="mr-md-3">
@@ -26,15 +26,15 @@
                     </span>
 
                     <span class="mt-lg-0 mt-2">
-                        <a href="{{ route('RESOURCENAMEs.new') }}" class="btn btn-outline-dark">
+                        <a href="{{ route('RESOURCENAME.new') }}" class="btn btn-outline-dark">
                             {{ __('new') }}
                         </a>
                         
-                        <export-modal action="{{ route('RESOURCENAMEs.export') }}">
+                        <export-modal action="{{ route('RESOURCENAME.export') }}">
                             <button class="btn btn-outline-dark mx-2">{{ __('export') }}</button>
                         </export-modal>
 
-                        <button class="btn btn-danger" id="bulk-delete" data-url="{{ route('RESOURCENAMEs.delete') }}">
+                        <button class="btn btn-danger" id="bulk-delete" data-url="{{ route('RESOURCENAME.delete') }}">
                             {{ __('delete') }}
                         </button>
                     </span>
@@ -61,7 +61,7 @@
                     </thead>
 
                     <tbody>
-                        {% for RESOURCENAME in RESOURCENAMEs.getItems() %}
+                        {% for RESOURCENAME in RESOURCENAME.getItems() %}
                         <tr>
                             <td>
                                 <div class="custom-control custom-checkbox">
@@ -74,11 +74,11 @@
                             <td>{{ date_helper(RESOURCENAME.created_at) }}</td>
 
                             <td>
-                                <a class="btn text-dark p-1" href="{{ route('RESOURCENAMEs.read', RESOURCENAME.id) }}" title="{{ __('details') }}">
+                                <a class="btn text-dark p-1" href="{{ route('RESOURCENAME.read', RESOURCENAME.id) }}" title="{{ __('details') }}">
                                     <i class="fa fa-eye"></i>
                                 </a>
 
-                                <a class="btn text-dark p-1" href="{{ route('RESOURCENAMEs.edit', RESOURCENAME.id) }}" title="{{ __('edit') }}">
+                                <a class="btn text-dark p-1" href="{{ route('RESOURCENAME.edit', RESOURCENAME.id) }}" title="{{ __('edit') }}">
                                     <i class="fa fa-edit"></i>
                                 </a>
 
@@ -86,7 +86,7 @@
                                     type="icon" 
                                     title="{{ __('delete') }}"
                                     content='<i class="fa fa-trash-alt"></i>' 
-                                    action="{{ route('RESOURCENAMEs.delete', RESOURCENAME.id) }}">
+                                    action="{{ route('RESOURCENAME.delete', RESOURCENAME.id) }}">
                                 </confirm-delete>
                             </td>
                         </tr>
@@ -97,14 +97,14 @@
         </div>
 
         <div class="card-footer d-flex align-items-center justify-content-between">
-            <span>{{ __('total_results') }} <span class="font-weight-bold">{{ RESOURCENAMEs.getTotalItems() }}</span></span>
+            <span>{{ __('total_results') }} <span class="font-weight-bold">{{ RESOURCENAME.getTotalItems() }}</span></span>
             <span>{{ __('showing') }}
-                <span class="font-weight-bold">{{ RESOURCENAMEs.getPageTotalItems() == 0 ? RESOURCENAMEs.getFirstItem() : RESOURCENAMEs.getFirstItem() + 1 }}</span>
+                <span class="font-weight-bold">{{ RESOURCENAME.getPageTotalItems() == 0 ? RESOURCENAME.getFirstItem() : RESOURCENAME.getFirstItem() + 1 }}</span>
                 {{ __('to') }}
-                <span class="font-weight-bold">{{ RESOURCENAMEs.getPageTotalItems() + RESOURCENAMEs.getFirstItem() }}</span>
+                <span class="font-weight-bold">{{ RESOURCENAME.getPageTotalItems() + RESOURCENAME.getFirstItem() }}</span>
             </span>
 
-            {% include "partials/pagination.html.twig" with {pagination: RESOURCENAMEs} %}
+            {% include "partials/pagination.html.twig" with {pagination: RESOURCENAME} %}
         </div>
     </div>
 

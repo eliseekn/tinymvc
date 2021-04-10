@@ -52,6 +52,7 @@ class Router
      */
     private static function match(string $route, array $options, string $uri, ?array &$matches = null): bool
     {
+
         if (isset($options['parameters']) && !empty($options['parameters'])) {
             $urls = explode('/', $route);
 
@@ -63,7 +64,7 @@ class Router
                         }
                     } else {
                         if ($url === '?{' . $parameter . '}?') {
-                            $route = str_replace($url, $type, $route);
+                            $route = str_replace($url, '?' . $type . '?', $route);
                         }
                     }
                 }
@@ -86,9 +87,6 @@ class Router
      */
     public static function dispatch(Request $request, array $routes): void
     {
-        //dd(Route::$routes, Route::$names, Middleware::$middlewares);
-        //dd(route('settings.index', 1));
-
         if (!empty($routes)) {
             foreach ($routes as $route => $options) {
                 $request->method($request->inputs('request_method', $options['method']));
@@ -102,13 +100,11 @@ class Router
                             //execute function with parameters
                             call_user_func_array($options['handler'], array_values($params));
                         } else {
-                            //dd($options['handler']);
                             list($controller, $action) = $options['handler'];
 
                             //chekc if controller class and method exist
                             if (class_exists($controller) && method_exists($controller, $action)) {
-                                //execute controller with method and parameters
-                                call_user_func_array([new $controller(), $action], array_values($params));
+                                (new ReflectionResolver())->resolve($controller, $action, $params);
                             } else {
                                 throw new Exception('Handler "' . $controller . '" not found.');
                             }
@@ -121,7 +117,7 @@ class Router
             if (!empty(config('errors.views.404'))) {
                 View::render(config('errors.views.404'), [], 404);
             } else {
-                (new Response())->send('The page you have requested does not exists', false, [], 404);
+                response()->send('The page you have requested does not exists', [], 404);
             }
         } else {
             throw new Exception('No route defines in configuration');

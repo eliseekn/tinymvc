@@ -3,7 +3,6 @@
 namespace App\Middlewares;
 
 use Framework\Http\Request;
-use Framework\Http\Response;
 
 class HandleCors
 {    
@@ -14,7 +13,7 @@ class HandleCors
      */
     public static function handle(Request $request): void
     {
-        (new Response())->headers([
+        response()->headers([
             'Access-Control-Allow-Origin' => '*',
             'Access-Control-Allow-Headers' => '*',
             'Access-Control-Allow-Methods' => '*',

@@ -35,12 +35,11 @@ class Response
      * send HTTP response
      *
      * @param  mixed $body
-     * @param  bool $json
      * @param  array $headers
      * @param  int $status_code
      * @return void
      */
-    public function send($body, bool $json = false, array $headers = [], int $status_code = 200): void
+    public function send($body, array $headers = [], int $status_code = 200): void
     {
         if (!isset($body) or empty($body)) {
             return;
@@ -56,13 +55,42 @@ class Response
             }
         }
 
-        if ($json) {
-            //encode body to json format
-            $body = json_encode($body);
+        //set content length header
+        header('Content-Length: ' . strlen($body));
 
-            //send json header
-            header('Content-Type: application/json');
+        //send response body
+        exit($body);
+    }
+    
+    /**
+     * send HTTP response with json body
+     *
+     * @param  mixed $body
+     * @param  array $headers
+     * @param  int $status_code
+     * @return void
+     */
+    public function json($body, array $headers = [], int $status_code = 200): void
+    {
+        if (!isset($body) or empty($body)) {
+            return;
         }
+        
+        //send response status code
+        http_response_code($status_code);
+
+        //send response headers
+        if (!empty($headers)) {
+            foreach ($headers as $name => $value) {
+                header($name . ': ' . $value);
+            }
+        }
+
+        //encode body to json format
+        $body = json_encode($body);
+
+        //send json header
+        header('Content-Type: application/json');
 
         //set content length header
         header('Content-Length: ' . strlen($body));

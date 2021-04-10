@@ -62,6 +62,6 @@ class View
      */
     public static function render(string $view, array $data = [], int $status_code = 200): void
     {
-        (new Response())->send(self::getContent($view, $data), false, [], $status_code);
+        response()->send(self::getContent($view, $data), [], $status_code);
     }
 }

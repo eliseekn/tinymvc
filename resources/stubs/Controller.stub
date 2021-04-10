@@ -38,12 +38,8 @@ class CLASSNAME extends Controller
 	 */
     public function edit(int $id)
 	{
-        try {
-            $RESOURCENAME = $this->model('RESOURCENAME')->findOrFail('id', $id);
-            $this->render('admin.RESOURCENAME.edit', compact('RESOURCENAME'));
-        } catch (Exception $e) {
-            $this->redirect()->route('RESOURCENAME.index')->only();
-        }
+        $RESOURCENAME = $this->model('RESOURCENAME')->findOrFail('id', $id);
+        $this->render('admin.RESOURCENAME.edit', compact('RESOURCENAME'));
 	}
 	
 	/**
@@ -54,12 +50,8 @@ class CLASSNAME extends Controller
 	 */
 	public function read(int $id)
 	{
-        try {
-            $RESOURCENAME = $this->model('RESOURCENAME')->findOrFail('id', $id);
-            $this->render('admin.RESOURCENAME.read', compact('RESOURCENAME'));
-        } catch (Exception $e) {
-            $this->redirect()->route('RESOURCENAME.index')->only();
-        }
+        $RESOURCENAME = $this->model('RESOURCENAME')->findOrFail('id', $id);
+        $this->render('admin.RESOURCENAME.read', compact('RESOURCENAME'));
 	}
 
 	/**

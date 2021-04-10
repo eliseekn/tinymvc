@@ -12,9 +12,9 @@
 
 $config = [
     'app' => [
-        'name' => 'TinyMVC',
-        'location' => 'tinymvc', //leave empty if you are using 'www' root
-        'url' => 'http://localhost/tinymvc', //remove folder if you are using 'www' root
-        'lang' => 'en'
+        'name' => env('APP_NAME', 'TinyMVC'),
+        'folder' => env('APP_FOLDER', 'tinymvc'),
+        'url' => env('APP_URL', 'http://localhost/tinymvc'),
+        'lang' => env('APP_LANG', 'en')
     ]
 ];

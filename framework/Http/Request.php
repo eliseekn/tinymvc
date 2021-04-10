@@ -169,7 +169,7 @@ class Request
     public function fullUri(): string
     {
         $uri = $this->headers('REQUEST_URI');
-        $uri = str_replace('/' . config('app.location'), '', $uri); //remove app folder if exists
+        $uri = str_replace('/' . config('app.folder'), '', $uri); //remove app folder if exists
         return $uri;
     }
 

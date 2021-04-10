@@ -40,11 +40,6 @@ class Pager
     {
         $this->pagination = $pagination;
         $this->items = $items;
-
-        //add items as properties
-        foreach ($items as $key => $value) {
-            $this->{$key} = $value;
-        }
     }
     
     /**

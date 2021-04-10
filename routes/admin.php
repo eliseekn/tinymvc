@@ -38,7 +38,7 @@ Route::groupPrefix('admin', function () {
 
         Route::get('account/messages', [MessagesController::class, 'index'])->name('messages.index');
         Route::get('account/notifications', [NotificationsController::class, 'index'])->name('notifications.index');
-        Route::get('account/settings', [SettingsController::class, 'index'])->name('settings.index');
+        Route::get('account/{id}/settings', [SettingsController::class, 'index'])->name('settings.index')->where(['id' => 'num']);
         Route::get('account/activities', [ActivitiesController::class, 'index'])->name('activities.index');
     });
 
@@ -57,8 +57,8 @@ Route::groupPrefix('admin', function () {
         Route::patch('account/notifications/?{id}?/update', [NotificationsController::class, 'update'])->name('notifications.update')
             ->where(['id' => 'num']);
     
-        Route::patch('account/settings/{id}/update', [SettingsController::class, 'update'])->name('activities.update')->where(['id' => 'num']);
-        Route::delete('account/settings/activities/?{id}?/delete', [ActivitiesController::class, 'delete'])->name('activities.delete')->where(['id' => 'num']);
+        Route::patch('account/settings/{id}/update', [SettingsController::class, 'update'])->name('settings.update')->where(['id' => 'num']);
+        Route::delete('account/activities/?{id}?/delete', [ActivitiesController::class, 'delete'])->name('activities.delete')->where(['id' => 'num']);
     });
 
     Route::groupMiddlewares(['remember', 'csrf', 'sanitize', 'dashboard' ], function () {
@@ -70,6 +70,7 @@ Route::groupPrefix('admin', function () {
         Route::post('account/notifications/create', [NotificationsController::class, 'create'])->name('notifications.create');
     
         Route::post('account/messages/create', [MessagesController::class, 'create'])->name('messages.create');
+        Route::post('account/messages/export', [MessagesController::class, 'export'])->name('messages.export');
         Route::post('account/messages{id}/reply', [MessagesController::class, 'reply'])->name('messages.reply')->where(['id' => 'num']);
     
         Route::post('account/activities/export', [ActivitiesController::class, 'create'])->name('activities.export');

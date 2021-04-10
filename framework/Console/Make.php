@@ -24,7 +24,7 @@ class Make
      */
     private static function log(string $message, bool $exit = true)
     {
-        return $exit ? print($message . PHP_EOL) : exit($message . PHP_EOL);
+        return $exit ? exit($message . PHP_EOL) : print($message . PHP_EOL);
     }
 
     /**
@@ -45,10 +45,6 @@ class Make
      */
     private static function resourceFolder(string $resource): string
     {
-        if ($resource[-1] !== 's') {
-            $resource = $resource . 's';
-        }
-
         return 'admin' . DIRECTORY_SEPARATOR . $resource;
     }
     
@@ -60,10 +56,6 @@ class Make
      */
     private static function resourceName(string $resource): string
     {
-        if ($resource[-1] === 's') {
-            $resource = rtrim($resource, 's');
-        }
-
         return strtolower($resource);
     }
     
@@ -80,10 +72,6 @@ class Make
         
         if ($class === 'migration') {
             $class = 'table';
-        }
-
-        if ($class === 'seed') {
-            $name = rtrim($name, 's');
         }
 
         $class = ucfirst($name) . ucfirst($class);
@@ -116,17 +104,17 @@ class Make
      */
     public static function makeRoute(string $controller): void
     {
-        list($controller_name, $controller_class) = self::generateClass($controller, 'controller');
+        list($name, $class) = self::generateClass($controller, 'controller');
 
         $data = self::stubs()->readFile('Route.stub');
-        $data = str_replace('CLASSNAME', $controller_class, $data);
-        $data = str_replace('RESOURCENAME', $controller_name, $data);
+        $data = str_replace('CLASSNAME', $class, $data);
+        $data = str_replace('RESOURCENAME', $name, $data);
 
         if (!Storage::path(config('storage.routes'))->writeFile('admin.php', $data, true)) {
-            self::log('[!] Failed to generate routes for "' . $controller_class . '"' . PHP_EOL);
+            self::log('[!] Failed to generate routes for "' . $class . '"');
         }
         
-        self::log('[+] Routes for "' . $controller_class . '" generated successfully' . PHP_EOL, false);
+        self::log('[+] Routes for "' . $class . '" generated successfully', false);
     }
     
     /**
@@ -138,13 +126,17 @@ class Make
      */
     public static function makeController(string $controller, ?string $namespace = null): void
     {
-        list($controller_name, $controller_class) = self::generateClass($controller, 'controller');
+        list($name, $class) = self::generateClass($controller, 'controller');
 
         $data = self::stubs()->readFile('Controller.stub');
-        $data = is_null($namespace) ? str_replace('NAMESPACE', 'App\Controllers', $data) : str_replace('NAMESPACE', 'App\Controllers\\' . ucfirst($namespace), $data);
-        $data = str_replace('CLASSNAME', $controller_class, $data);
-        $data = str_replace('RESOURCENAME', $controller_name, $data);
-        $data = str_replace('RESOURCEMODEL', ucfirst($controller_name) . 'Model', $data);
+        
+        $data = is_null($namespace) 
+            ? str_replace('NAMESPACE', 'App\Controllers', $data) 
+            : str_replace('NAMESPACE', 'App\Controllers\\' . ucfirst($namespace), $data);
+        
+        $data = str_replace('CLASSNAME', $class, $data);
+        $data = str_replace('RESOURCENAME', $name, $data);
+        $data = str_replace('RESOURCEMODEL', ucfirst($name) . 'Model', $data);
 
         $path = Storage::path(config('storage.controllers'));
 
@@ -152,11 +144,11 @@ class Make
             $path->add(ucfirst($namespace));
         }
 
-        if (!$path->writeFile($controller_class . '.php', $data)) {
-            self::log('[!] Failed to generate controller "' . $controller_class . '"' . PHP_EOL);
+        if (!$path->writeFile($class . '.php', $data)) {
+            self::log('[!] Failed to generate controller "' . $class . '"');
         }
         
-        self::log('[+] Controller "' . $controller_class . '" generated successfully' . PHP_EOL, false);
+        self::log('[+] Controller "' . $class . '" generated successfully', false);
     }
 
     /**
@@ -167,17 +159,17 @@ class Make
      */
     public static function makeModel(string $model): void
     {
-        list($model_name, $model_class) = self::generateClass($model, '');
+        list($name, $class) = self::generateClass($model, '');
 
         $data = self::stubs()->readFile('Model.stub');
-        $data = str_replace('CLASSNAME', $model_class, $data);
-        $data = str_replace('TABLENAME', $model_name, $data);
+        $data = str_replace('CLASSNAME', $class, $data);
+        $data = str_replace('TABLENAME', $name, $data);
 
-        if (!Storage::path(config('storage.models'))->writeFile($model_class . '.php', $data)) {
-            self::log('[!] Failed to generate model "' . $model_class . '"' . PHP_EOL);
+        if (!Storage::path(config('storage.models'))->writeFile($class . '.php', $data)) {
+            self::log('[!] Failed to generate model "' . $class . '"');
         }
         
-        self::log('[+] Model "' . $model_class . '" generated successfully' . PHP_EOL, false);
+        self::log('[+] Model "' . $class . '" generated successfully', false);
     }
  
     /**
@@ -188,17 +180,17 @@ class Make
      */
     public static function makeMigration(string $migration): void
     {
-        list($migration_name, $migration_class) = self::generateClass($migration, 'migration');
+        list($name, $class) = self::generateClass($migration, 'migration');
 
         $data = self::stubs()->readFile('Migration.stub');
-        $data = str_replace('CLASSNAME', $migration_class, $data);
-        $data = str_replace('TABLENAME', $migration_name, $data);
+        $data = str_replace('CLASSNAME', $class, $data);
+        $data = str_replace('TABLENAME', $name, $data);
 
-        if (!Storage::path(config('storage.migrations'))->writeFile($migration_class . '.php', $data)) {
-            self::log('[!] Failed to generate migration "' . $migration_class . '"' . PHP_EOL);
+        if (!Storage::path(config('storage.migrations'))->writeFile($class . '.php', $data)) {
+            self::log('[!] Failed to generate migration "' . $class . '"');
         }
         
-        self::log('[+] Migration "' . $migration_class . '" generated successfully' . PHP_EOL, false);
+        self::log('[+] Migration "' . $class . '" generated successfully', false);
     }
 
     /**
@@ -209,17 +201,17 @@ class Make
      */
     public static function makeSeed(string $seed): void
     {
-        list($seed_name, $seed_class) = self::generateClass($seed, 'seed');
+        list($name, $class) = self::generateClass($seed, 'seed');
 
         $data = self::stubs()->readFile('Seed.stub');
-        $data = str_replace('CLASSNAME', $seed_class, $data);
-        $data = str_replace('TABLENAME', $seed_name . 's', $data);
+        $data = str_replace('CLASSNAME', $class, $data);
+        $data = str_replace('TABLENAME', $name, $data);
 
-        if (!Storage::path(config('storage.seeds'))->writeFile($seed_class . '.php', $data)) {
-            self::log('[!] Failed to generate seed "' . $seed_class . '"' . PHP_EOL);
+        if (!Storage::path(config('storage.seeds'))->writeFile($class . '.php', $data)) {
+            self::log('[!] Failed to generate seed "' . $class . '"');
         }
         
-        self::log('[+] Seed ""' . $seed_class . '"" generated successfully' . PHP_EOL, false);
+        self::log('[+] Seed ""' . $class . '"" generated successfully', false);
     }
     
     /**
@@ -234,10 +226,10 @@ class Make
         $data = str_replace('CLASSNAME', $request, $data);
 
         if (!Storage::path(config('storage.requests'))->writeFile($request . '.php', $data)) {
-            self::log('[!] Failed to generate request ' . $request . '"' . PHP_EOL);
+            self::log('[!] Failed to generate request "' . $request . '"');
         }
 
-        self::log('[+] Request validator "' . $request . '" generated successfully' . PHP_EOL, false);
+        self::log('[+] Request validator "' . $request . '" generated successfully', false);
     }
     
     /**
@@ -252,10 +244,10 @@ class Make
         $data = str_replace('CLASSNAME', $middleware, $data);
 
         if (!Storage::path(config('storage.middlewares'))->writeFile($middleware . '.php', $data)) {
-            self::log('[!] Failed to generate middleware ' . $middleware . '"' . PHP_EOL);
+            self::log('[!] Failed to generate middleware "' . $middleware . '"');
         }
 
-        self::log('[+] Middleware "' . $middleware . '" generated successfully' . PHP_EOL, false);
+        self::log('[+] Middleware "' . $middleware . '" generated successfully', false);
     }
     
     /**
@@ -266,19 +258,19 @@ class Make
      */
     public static function makeViews(string $resource): void
     {
-        list($resource_name, $resource_folder) = self::generateResource($resource);
+        list($name, $resource_folder) = self::generateResource($resource);
 
         foreach(self::stubs()->add('views' . DIRECTORY_SEPARATOR . 'admin')->getFiles() as $file) {
             $data = self::stubs()->add('views' . DIRECTORY_SEPARATOR . 'admin')->readFile($file);
-            $data = str_replace('RESOURCENAME', $resource_name, $data);
+            $data = str_replace('RESOURCENAME', $name, $data);
             $file = str_replace('stub', 'html.twig', $file);
 
             if (!Storage::path(config('storage.views'))->add($resource_folder)->writeFile($file, $data)) {
-                self::log('[-] Failed to generate views for "' . $resource . '"' . PHP_EOL);
+                self::log('[-] Failed to generate views for "' . $resource . '"');
             }
         }
 
-        self::log('[+] Views for "' . $resource . '" generated successfully' . PHP_EOL, false);
+        self::log('[+] Views for "' . $resource . '" generated successfully', false);
     }
     
     /**
@@ -289,46 +281,58 @@ class Make
      */
     public static function makeMail(string $mail): void
     {
-        list($mail_name, $mail_class) = self::generateClass($mail, 'mail');
+        list($name, $class) = self::generateClass($mail, 'mail');
 
         $data = self::stubs()->readFile('Mail.stub');
-        $data = str_replace('CLASSNAME', $mail_class, $data);
-        $data = str_replace('RESOURCENAME', $mail_name, $data);
+        $data = str_replace('CLASSNAME', $class, $data);
+        $data = str_replace('RESOURCENAME', $name, $data);
 
-        if (!Storage::path(config('storage.mails'))->writeFile($mail_class . '.php', $data)) {
-            self::log('[!] Failed to generate mail "' . $mail_class . '"' . PHP_EOL);
+        if (!Storage::path(config('storage.mails'))->writeFile($class . '.php', $data)) {
+            self::log('[!] Failed to generate mail "' . $class . '"');
         }
 
         $data = self::stubs()->add('views')->readFile('email.stub');
 
-        if (!Storage::path(config('storage.views'))->add('emails')->writeFile($mail_name . '.html.twig', $data)) {
-            self::log('[!] Failed to generate email template ' . $mail_name . '"' . PHP_EOL);
+        if (!Storage::path(config('storage.views'))->add('emails')->writeFile($name . '.html.twig', $data)) {
+            self::log('[!] Failed to generate view template "' . $name . '"');
         }
         
-        self::log('[+] Mail "' . $mail_class . '" generated successfully' . PHP_EOL, false);
+        self::log('[+] Mail "' . $class . '" generated successfully', false);
     }
     
     /**
-     * generate admin account resource
+     * generate view template
      *
-     * @param  string $account
+     * @param  string|null $view
+     * @param  string|null $layout
      * @return void
      */
-    public static function makeAccount(string $account): void
+    public static function makeView(?string $view = null, ?string $layout = null): void
     {
-        self::makeController($account, 'admin');
+        $data = is_null($view) && !is_null($layout)
+            ? self::stubs()->add('views')->readFile('layout.stub')
+            : self::stubs()->add('views')->readFile('blank.stub');
 
-        list($account_name, $account_class) = self::generateClass($account, '');
+        $data = is_null($layout) 
+            ? str_replace('LAYOUTNAME', '', $data)
+            : str_replace('LAYOUTNAME', '{% extends "layouts/' . $layout . '.html.twig" %}', $data);
 
-        $data = self::stubs()->add('views')->readFile('account.stub');
+        $data = is_null($view) ? $data : str_replace('RESOURCENAME', $view, $data);
+        
+        $path = Storage::path(config('storage.views'));
 
-        if (
-            !Storage::path(config('storage.views'))->add('admin' . DIRECTORY_SEPARATOR . 'account')
-                ->writeFile($account_name . '.html.twig', $data)
-        ) {
-            self::log('[!] Failed to generate account resource ' . $account_name . '"' . PHP_EOL);
+        if (is_null($view) && !is_null($layout)) {
+            $path->add('layouts');
+        } else {
+            $path->add('admin');
         }
         
-        self::log('[+] Account resource "' . $account_class . '" generated successfully' . PHP_EOL, false);
+        $view = is_null($view) && !is_null($layout) ? $layout : $view;
+
+        if (!$path->writeFile($view . '.html.twig', $data)) {
+            self::log('[!] Failed to generate view template "' . $view . '"');
+        }
+        
+        self::log('[+] View template "' . $view . '" generated successfully', false);
     }
 }

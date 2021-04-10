@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Mails\TokenMail;
 use App\Requests\AuthRequest;
 use App\Database\Models\Tokens;
+use Framework\Http\Request;
 use Framework\Routing\Controller;
 use Framework\Support\Encryption;
 
@@ -17,35 +18,37 @@ class PasswordController extends Controller
 	/**
 	 * send reset password link notification
 	 *
+     * @param  \Framework\Http\Request $request
 	 * @return void
 	 */
-	public function notify(): void
+	public function notify(Request $request): void
 	{
 		$token = random_string(50, true);
 
-		if (TokenMail::send($this->request('email'), $token)) {
-            Tokens::store($this->request('email'), $token, Carbon::now()->addHour()->toDateTimeString());
-			$this->redirect()->back()->withAlert(__('password_reset_link_sent', true))->success('');
+		if (TokenMail::send($request->email, $token)) {
+            Tokens::store($request->email, $token, Carbon::now()->addHour()->toDateTimeString());
+			redirect()->back()->withAlert(__('password_reset_link_sent', true))->success('');
 		} 
         
-		$this->redirect()->back()->withAlert(__('password_reset_link_not_sent', true))->error('');
+		redirect()->back()->withAlert(__('password_reset_link_not_sent', true))->error('');
 	}
 	
 	/**
 	 * reset password
 	 *
+     * @param  \Framework\Http\Request $request
 	 * @return void
 	 */
-	public function reset(): void
+	public function reset(Request $request): void
 	{
-        $reset_token = Tokens::findSingleByEmail($this->request('email'));
+        $reset_token = Tokens::findSingleByEmail($request->email);
 
-        if (!$reset_token || $reset_token->token !== $this->request('token')) {
-			$this->response(__('invalid_password_reset_link', true));
+        if (!$reset_token || $reset_token->token !== $request->token) {
+			response()->json(__('invalid_password_reset_link', true));
 		}
 
 		if ($reset_token->expires < Carbon::now()->toDateTimeString()) {
-			$this->response(__('expired_password_reset_link', true));
+			response()->json(__('expired_password_reset_link', true));
 		}
 
 		Tokens::deleteByEmail($reset_token->email);
@@ -55,17 +58,18 @@ class PasswordController extends Controller
 	/**
 	 * update user password
 	 *
+     * @param  \Framework\Http\Request $request
 	 * @return void
 	 */
-	public function update(): void
+	public function update(Request $request): void
 	{
-		AuthRequest::validate($this->request()->inputs())->redirectOnFail();
+		AuthRequest::validate($request->inputs())->redirectOnFail();
 
         $this->model('users')->updateBy(
-            ['email', $this->request('email')], 
-            ['password' => Encryption::hash($this->request('password'))]
+            ['email', $request->email], 
+            ['password' => Encryption::hash($request->password)]
         );
 
-        $this->redirect('login')->withAlert(__('password_resetted', true))->success('');
+        redirect()->url('login')->withAlert(__('password_resetted', true))->success('');
 	}
 }

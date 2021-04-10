@@ -10,7 +10,6 @@ namespace Framework\Routing;
 
 use App\Helpers\Activity;
 use Framework\Http\Client;
-use Framework\Http\Request;
 use Framework\Http\Redirect;
 use Framework\Http\Response;
 use Framework\Support\Alert;
@@ -21,19 +20,7 @@ use Framework\Routing\Middleware;
  * Main controller class
  */
 class Controller
-{    
-    /**
-     * request
-     *
-     * @param  string|null $key
-     * @return \Framework\Http\Request|string
-     */
-    public function request(?string $key = null)
-    {
-        $request = new Request();
-        return is_null($key) ? $request : $request->{$key}; 
-    }
-
+{
     /**
      * render view
      *
@@ -44,45 +31,6 @@ class Controller
     public function render(string $view, array $data = [], int $status_code = 200): void
     {
         View::render($view, $data, $status_code);
-    }
-
-    /**
-     * send HTTP headers only
-     *
-     * @param  array $headers
-     * @param  int $status_code
-     * @return void
-     */
-    public static function headers(array $headers, int $status_code = 200): void
-    {
-        (new Response())->headers($headers, $status_code);
-    }
-    
-    /**
-     * send HTTP response
-     *
-     * @param  mixed $body
-     * @param  bool $json
-     * @param  array $headers
-     * @param  int $status_code
-     * @return void
-     */
-    public function response($body, bool $json = false, array $headers = [], int $status_code = 200): void
-    {
-        (new Response())->send($body, $json, $headers, $status_code);
-    }
-    
-    /**
-     * perform redirect operation
-     *
-     * @param  string|null $url
-     * @param  mixed $params
-     * @return \Framework\Http\Redirect
-     */
-    public function redirect(?string $url = null, $params = null): \Framework\Http\Redirect
-    {
-        $redirect = new Redirect();
-        return is_null($url) ? $redirect : $redirect->url($url, $params);
     }
 
     /**
