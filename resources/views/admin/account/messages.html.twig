@@ -10,7 +10,7 @@
         <metric-card-item 
             title="{{ __('total') }}" 
             icon="fa fa-envelope fa-2x" 
-            data="{{ messages.getTotalItems() }}"
+            data="{{ data.getTotalItems() }}"
             columns="4">
         </metric-card-item>
 
@@ -77,37 +77,37 @@
                     </thead>
 
                     <tbody>
-                        {% for message in messages.getItems() %}
+                        {% for data in data.getItems() %}
                         <tr>
                             <td>
                                 <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="{{ message.id }}" data-id="{{ message.id }}">
-                                    <label class="custom-control-label" for="{{ message.id }}"></label>
+                                    <input type="checkbox" class="custom-control-input" id="{{ data.id }}" data-id="{{ data.id }}">
+                                    <label class="custom-control-label" for="{{ data.id }}"></label>
                                 </div>
                             </td>
 
-                            <td>{{ message.id }}</td>
-                            <td>{{ message.sender_mail }}</td>
-                            <td>{{ message.recipient_email }}</td>
-                            <td>{{ message.message }}</td>
-                            <td>{{ time_elapsed(message.created_at) }}</td>
+                            <td>{{ data.id }}</td>
+                            <td>{{ data.sender_mail }}</td>
+                            <td>{{ data.recipient_email }}</td>
+                            <td>{{ data.message }}</td>
+                            <td>{{ time_elapsed(data.created_at) }}</td>
 
                             <td>
-                                {% if message.sender_mail != auth('email') %}
-                                <update-item action="{{ route('messages.update', message.id) }}" {{ message.recipient_status == 'read' ? 'disabled' }}>
-                                    <button type="submit" class="btn text-dark p-1" {{ message.recipient_status == 'unread' ? 'title="' ~ __('mark_as_read') ~ '"' }}>
-                                        <i class="fa fa-eye{{ message.recipient_status == 'unread' ? '-slash' }}"></i>
+                                {% if data.sender_mail != auth('email') %}
+                                <update-item action="{{ route('messages.update', data.id) }}" {{ data.recipient_status == 'read' ? 'disabled' }}>
+                                    <button type="submit" class="btn text-dark p-1" {{ data.recipient_status == 'unread' ? 'title="' ~ __('mark_as_read') ~ '"' }}>
+                                        <i class="fa fa-eye{{ data.recipient_status == 'unread' ? '-slash' }}"></i>
                                     </button>
                                 </update-item>
 
-                                <send-message action="{{ route('messages.reply', message.id) }}" recipient="{{ message.sender }}" modal_title="{{ __('reply') }}">
+                                <send-message action="{{ route('messages.reply', data.id) }}" recipient="{{ data.sender }}" modal_title="{{ __('reply') }}">
                                     <a class="btn text-dark p-1" href="#" title="{{ __('reply') }}">
                                         <i class="fa fa-reply-all"></i>
                                     </a>
                                 </send-message>
                                 {% endif %}
 
-                                <delete-item action="{{ route('messages.delete', message.id) }}">
+                                <delete-item action="{{ route('messages.delete', data.id) }}">
                                     <a class="btn text-danger p-1" title="{{ __('delete') }}">
                                         <i class="fa fa-trash-alt"></i>
                                     </a>
@@ -121,14 +121,14 @@
         </div>
 
         <div class="card-footer d-flex align-items-center justify-content-between">
-            <span>{{ __('total_results') }} <span class="font-weight-bold">{{ messages.getTotalItems() }}</span></span>
+            <span>{{ __('total_results') }} <span class="font-weight-bold">{{ data.getTotalItems() }}</span></span>
             <span>{{ __('showing') }}
-                <span class="font-weight-bold">{{ messages.getPageTotalItems() == 0 ? messages.getFirstItem() : messages.getFirstItem() + 1 }}</span>
+                <span class="font-weight-bold">{{ data.getPageTotalItems() == 0 ? data.getFirstItem() : data.getFirstItem() + 1 }}</span>
                 {{ __('to') }}
-                <span class="font-weight-bold">{{ messages.getPageTotalItems() + messages.getFirstItem() }}</span>
+                <span class="font-weight-bold">{{ data.getPageTotalItems() + data.getFirstItem() }}</span>
             </span>
 
-            {% include "partials/pagination.html.twig" with {pagination: messages} %}
+            {% include "partials/pagination.html.twig" with {pagination: data} %}
         </div>
     </div>
 

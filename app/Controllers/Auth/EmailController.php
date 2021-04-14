@@ -5,8 +5,8 @@ namespace App\Controllers\Auth;
 use Carbon\Carbon;
 use App\Mails\WelcomeMail;
 use Framework\System\Session;
-use App\Database\Models\Tokens;
-use App\Database\Models\Users;
+use App\Database\Repositories\Tokens;
+use App\Database\Repositories\Users;
 use Framework\Routing\Controller;
 use App\Middlewares\DashboardPolicy;
 use Framework\Http\Request;
@@ -27,12 +27,12 @@ class EmailController extends Controller
         $user = Users::findSingleByEmail($request->email);
 
 		if (!$user) {
-            redirect()->url('signup')->withAlert(__('user_not_registered', true))->error('');
+            redirect()->url('signup')->withAlert('error', __('user_not_registered', true))->go();
         }
 
         $this->model('users')->updateBy(['email', $user->email], ['active' => 1]);
         WelcomeMail::send($user->email, $user->name);
-        redirect()->url('login')->withAlert(__('user_activated', true))->success('');
+        redirect()->url('login')->withAlert('success', __('user_activated', true))->go();
     }
         
     /**

@@ -1,28 +1,28 @@
 <?php
 
-namespace App\Database\Models;
+namespace App\Database\Repositories;
 
 use App\Helpers\Auth;
-use Framework\Database\Model;
 use Framework\Http\Request;
+use Framework\Database\Repository;
 
-class Messages
+class Messages extends Repository
 {
     /**
      * name of table
      *
      * @var string
      */
-    public static $table = 'messages';
+    public $table = 'messages';
 
     /**
-     * create new model instance 
+     * __construct
      *
-     * @return \Framework\Database\Model
+     * @return void
      */
-    private static function model(): \Framework\Database\Model
+    public function __construct()
     {
-        return new Model(self::$table);
+        parent::__construct($this->table);
     }
 
     /**
@@ -31,10 +31,9 @@ class Messages
      * @param  int $items_per_pages
      * @return \Framework\Support\Pager
      */
-    public static function paginate(int $items_per_pages = 20): \Framework\Support\Pager
+    public function findAllPaginate(int $items_per_pages = 20): \Framework\Support\Pager
     {
-        return self::model()
-            ->select(['messages.*', 'u1.email AS sender_mail', 'u2.email AS recipient_email'])
+        return $this->select(['messages.*', 'u1.email AS sender_mail', 'u2.email AS recipient_email'])
             ->join('users AS u1', 'messages.sender', '=', 'u1.id')
             ->join('users AS u2', 'messages.recipient', '=', 'u2.id')
             ->whereRaw('recipient = ' . Auth::get('id') . ' OR sender = ' . Auth::get('id'))
@@ -49,15 +48,14 @@ class Messages
      * @param  int $limit
      * @return array
      */
-    public static function findReceivedMessages(int $limit = 5): array
+    public function findReceivedMessages(int $limit = 5): array
     {
-        return self::model()
-            ->select(['m.*', 'u.email AS sender_mail', 'u.name AS sender_name'])
-            ->join('users As u', 'm.sender', '=', 'u.id')
+        return $this->select(['messages.*', 'u.email AS sender_mail', 'u.name AS sender_name'])
+            ->join('users As u', 'messages.sender', '=', 'u.id')
             ->where('recipient', Auth::get('id'))
             ->and('recipient_deleted', 0)
             ->and('recipient_status', 'unread')
-            ->oldest('m.created_at')
+            ->oldest('messages.created_at')
             ->take($limit);
     }
     
@@ -66,10 +64,9 @@ class Messages
      *
      * @return int
      */
-    public static function unreadCount(): int
+    public function unreadCount(): int
     {
-        return self::model()
-            ->count()
+        return $this->count()
             ->where('recipient', Auth::get('id'))
             ->and('recipient_status', 'unread')
             ->single()
@@ -82,14 +79,13 @@ class Messages
      * @param  \Framework\Http\Request $request
      * @return int
      */
-    public static function store(Request $request): int
+    public function store(Request $request): int
     {
-        return self::model()
-            ->insert([
-                'sender' => Auth::get('id'),    
-                'recipient' => $request->recipient,
-                'message' => $request->message
-            ]);
+        return $this->insert([
+            'sender' => Auth::get('id'),    
+            'recipient' => $request->recipient,
+            'message' => $request->message
+        ]);
     }
     
     /**
@@ -99,25 +95,25 @@ class Messages
      * @param  int|null $id
      * @return void
      */
-    public static function updateReadStatus(Request $request, ?int $id = null): void
+    public function updateReadStatus(Request $request, ?int $id = null): void
     {
         if (!is_null($id)) {
-            if (self::model()->findSingle($id)->sender === Auth::get('id')) {
+            if ($this->findSingle($id)->sender === Auth::get('id')) {
                 $data = 'sender_status';
-            } else if (self::model()->findSingle($id)->recipient === Auth::get('id')) {
+            } else if ($this->findSingle($id)->recipient === Auth::get('id')) {
                 $data = 'recipient_status';
             }
 
-            self::model()->updateIfExists($id, [$data => 'read']);
+            $this->updateIfExists($id, [$data => 'read']);
         } else {
 			foreach (explode(',', $request->items) as $id) {
-				if (self::model()->findSingle($id)->sender === Auth::get('id')) {
+				if ($this->findSingle($id)->sender === Auth::get('id')) {
                     $data = 'sender_status';
-                } else if (self::model()->findSingle($id)->recipient === Auth::get('id')) {
+                } else if ($this->findSingle($id)->recipient === Auth::get('id')) {
                     $data = 'recipient_status';
                 }
     
-                self::model()->updateIfExists($id, [$data => 'read']);
+                $this->updateIfExists($id, [$data => 'read']);
 			}
         }
     }
@@ -129,25 +125,25 @@ class Messages
      * @param  int $id
      * @return void
      */
-    public static function updateDeletedStatus(Request $request, ?int $id = null): void
+    public function updateDeletedStatus(Request $request, ?int $id = null): void
     {
         if (!is_null($id)) {
-            if (self::model()->findSingle($id)->sender === Auth::get('id')) {
+            if ($this->findSingle($id)->sender === Auth::get('id')) {
                 $data = 'sender_status';
-            } else if (self::model()->findSingle($id)->recipient === Auth::get('id')) {
+            } else if ($this->findSingle($id)->recipient === Auth::get('id')) {
                 $data = 'recipient_status';
             }
 
-            self::model()->updateIfExists($id, [$data => 1]);
+            $this->updateIfExists($id, [$data => 1]);
         } else {
 			foreach (explode(',', $request->items) as $id) {
-				if (self::model()->findSingle($id)->sender === Auth::get('id')) {
+				if ($this->findSingle($id)->sender === Auth::get('id')) {
                     $data = 'sender_status';
-                } else if (self::model()->findSingle($id)->recipient === Auth::get('id')) {
+                } else if ($this->findSingle($id)->recipient === Auth::get('id')) {
                     $data = 'recipient_status';
                 }
     
-                self::model()->updateIfExists($id, [$data => 1]);
+                $this->updateIfExists($id, [$data => 1]);
 			}
         }
     }
@@ -159,10 +155,9 @@ class Messages
      * @param  mixed $end
      * @return array
      */
-    public static function fromDateRange($date_start, $date_end): array
+    public function findAllDateRange($date_start, $date_end): array
     {
-        return self::model()
-            ->select()
+        return $this->select()
             ->subQuery(function($query) use ($date_start, $date_end) {
                 if (!empty($date_start) && !empty($date_end)) {
                     $query->whereBetween($date_start, $date_end);

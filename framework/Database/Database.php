@@ -14,7 +14,7 @@ use PDOException;
 /**
  * Connection to database
  */
-class DB
+class Database
 {
 	/**
 	 * database class instance
@@ -38,7 +38,7 @@ class DB
 	private function __construct()
 	{
 		try {
-            $this->pdo = new PDO('mysql:host=' . config('mysql.host'), config('mysql.username'), config('mysql.password'));
+            $this->pdo = new PDO('mysql:host=' . config('mysql.host') . ';dbname=' . config('mysql.database'), config('mysql.username'), config('mysql.password'));
             $this->pdo->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, 'SET NAMES ' . config('mysql.charset') . ' COLLATE ' . config('mysql.collation'));
 			$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
@@ -50,35 +50,19 @@ class DB
 			}
 		}
     }
-        
-    /**
-     * set database to use
-     *
-     * @param  string|null $db
-     * @return \Framework\Database\DB
-     */
-    private function setDB(?string $db = null): self
-    {
-        if (!is_null($db)) {
-            $this->pdo->exec('USE ' . $db);
-        }
-
-        return $this;
-    }
 
 	/**
 	 * get connection to database instance
 	 *
-     * @param  string|null $db 
 	 * @return \Framework\Database\DB
 	 */
-	public static function connection(?string $db = null): self
+	public static function connection(): self
 	{
 		if (is_null(self::$instance)) {
 			self::$instance = new self();
         }
         
-        return self::$instance->setDB($db);
+        return self::$instance;
     }
 
 	/**

@@ -5,12 +5,31 @@ namespace App\Controllers\Admin;
 use App\Helpers\Report;
 use Framework\Http\Request;
 use App\Requests\UpdateUser;
-use App\Database\Models\Users;
+use Framework\System\Session;
 use App\Requests\RegisterUser;
 use Framework\Routing\Controller;
+use App\Database\Repositories\Roles;
+use App\Database\Repositories\Users;
+use Exception;
 
 class UsersController extends Controller
 {
+    /**
+     * @var \App\Database\Repositories\Users $users
+     */
+    private $users;
+    
+    /**
+     * __construct
+     *
+     * @param  \App\Database\Repositories\Users $users
+     * @return void
+     */
+    public function __construct(Users $users)
+    {
+        $this->users = $users;
+    }
+
     /**
      * index
      *
@@ -18,9 +37,9 @@ class UsersController extends Controller
      */
     public function index(): void
     {
-        $users = Users::paginate();
-        $active_users = Users::activeCount();
-        $this->render('admin.users.index', compact('users', 'active_users'));
+        $data = $this->users->findAllPaginate();
+        $active_users = $this->users->activeCount();
+        $this->render('admin.users.index', compact('data', 'active_users'));
     }
 
 	/**
@@ -30,21 +49,21 @@ class UsersController extends Controller
 	 */
 	public function new(): void
 	{
-        $roles = $this->model('roles')->selectAll();
-		$this->render('admin.users.new', compact('roles'));
+		$this->render('admin.users.new');
 	}
 	
 	/**
 	 * edit
 	 * 
+     * @param  \App\Database\Repositories\Roles $roles
 	 * @param  int $id
 	 * @return void
 	 */
-	public function edit(int $id): void
+	public function edit(Roles $roles, int $id): void
 	{
-        $user = $this->model('users')->findSingle($id);
-        $roles = $this->model('roles')->selectAll();
-        $this->render('admin.users.edit', compact('user', 'roles'));
+        $data = $this->users->findSingle($id);
+        $roles = $roles->selectAll();
+        $this->render('admin.users.edit', compact('data', 'roles'));
 	}
 	
 	/**
@@ -55,8 +74,8 @@ class UsersController extends Controller
 	 */
 	public function read(int $id): void
 	{
-        $user = $this->model('users')->findSingle($id);
-        $this->render('admin.users.read', compact('user'));
+        $data = $this->users->findSingle($id);
+        $this->render('admin.users.read', compact('data'));
 	}
 
 	/**
@@ -69,18 +88,18 @@ class UsersController extends Controller
 	{
         $validator = RegisterUser::validate($request->inputs())->redirectOnFail();
         
-        if ($this->model('users')->findBy('email', $request->email)->exists()) {
-            redirect()->back()->withInputs($validator->inputs())->withToast(__('user_already_exists'))->error();
+        if ($this->users->findBy('email', $request->email)->exists()) {
+            redirect()->back()->withInputs($validator->inputs())->withToast('error', __('user_already_exists'))->go();
         }
         
-        if ($this->model('users')->findBy('phone', $request->phone)->exists()) {
-            redirect()->back()->withInputs($validator->inputs())->withToast(__('user_already_exists'))->error();
+        if ($this->users->findBy('phone', $request->phone)->exists()) {
+            redirect()->back()->withInputs($validator->inputs())->withToast('error', __('user_already_exists'))->go();
         }
 
-	    $id = Users::store($request);
+	    $id = $this->users->store($request);
 
         $this->log(__('user_created'));
-        redirect()->route('users.read', $id)->withToast(__('user_created'))->success();
+        redirect()->route('users.read', $id)->withToast('success', __('user_created'))->go();
     }
     
 	/**
@@ -94,24 +113,24 @@ class UsersController extends Controller
 	{
 		$validator = UpdateUser::validate($request->inputs())->redirectOnFail();
         
-        $user = $this->model('users')->findSingle($id);
+        $user = $this->users->findSingle($id);
 
         if ($user->email !== $request->email) {
-            if ($this->model('users')->findBy('email', $request->email)->exists()) {
-                redirect()->back()->withInputs($validator->inputs())->withToast(__('user_already_exists'))->error();
+            if ($this->users->findBy('email', $request->email)->exists()) {
+                redirect()->back()->withInputs($validator->inputs())->withToast('error', __('user_already_exists'))->go();
             }
         }
 
         if ($user->phone !== $request->phone) {
-            if ($this->model('users')->findBy('phone', $request->phone)->exists()) {
-                redirect()->back()->withInputs($validator->inputs())->withToast(__('user_already_exists'))->error();
+            if ($this->users->findBy('phone', $request->phone)->exists()) {
+                redirect()->back()->withInputs($validator->inputs())->withToast('error', __('user_already_exists'))->go();
             }
         }
 
-        Users::update($request, $id);
+        $this->users->refresh($request, $id);
 		
         $this->log(__('user_updated'));
-        redirect()->route('users.read', $id)->withToast(__('user_updated'))->success();
+        redirect()->route('users.read', $id)->withToast('success', __('user_updated'))->go();
     }
 
 	/**
@@ -123,14 +142,14 @@ class UsersController extends Controller
 	 */
 	public function delete(Request $request, ?int $id = null): void
 	{
-        Users::delete($request, $id);
+        $this->users->flush($request, $id);
 
 		if (!is_null($id)) {
             $this->log(__('user_deleted'));
-            redirect()->route('users.index')->withToast(__('user_deleted'))->success();
+            redirect()->route('users.index')->withToast('success', __('user_deleted'))->go();
 		} else {
             $this->log(__('users_deleted'));
-            $this->alert('toast', __('users_deleted'))->success();
+            $this->toast('success', __('users_deleted'));
             response()->json(['redirect' => route('users.index')]);
         }
 	}
@@ -143,12 +162,12 @@ class UsersController extends Controller
 	 */
 	public function export(Request $request): void
 	{
-		$users = Users::fromDateRange($request->date_start, $request->date_end);
+		$data = $this->users->findAllDateRange($request->date_start, $request->date_end);
         $filename = 'users_' . date('Y_m_d_His') . '.' . $request->file_type;
 
         $this->log(__('data_exported'));
         
-		Report::generate($filename, $users, [
+		Report::generate($filename, $data, [
 			'name' => __('name'), 
             'email' => __('email'),
             'phone' => __('phone'),

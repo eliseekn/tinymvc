@@ -15,7 +15,8 @@ class CountriesHelper
     {
         $countries = new Countries();
 
-        return $countries->all()->map(function ($country) use ($countries) {
+        return $countries->all()
+            ->map(function ($country) use ($countries) {
                 $country_name = $countries->where('cca2', $country->cca2)->first()['name_' . config('app.lang')];
 
                 if (!is_null($country_name) && !empty($country_name)) {
@@ -27,7 +28,7 @@ class CountriesHelper
     }
     
     /**
-     * retrieves country name from country code
+     * retrieves country name from code
      *
      * @param  string $country_code
      * @return string

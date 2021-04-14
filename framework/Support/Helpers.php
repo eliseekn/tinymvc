@@ -161,7 +161,8 @@ if (!function_exists('auth')) {
 	 */
 	function auth(string $key)
 	{
-		return get_session('user')->$key;
+        $data = get_session('user');
+		return $data->$key;
 	}
 }
 

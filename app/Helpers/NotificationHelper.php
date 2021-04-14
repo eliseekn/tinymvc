@@ -2,7 +2,8 @@
 
 namespace App\Helpers;
 
-use Framework\Database\Model;
+use App\Database\Repositories\Users;
+use App\Database\Repositories\Notifications;
 
 class NotificationHelper
 {    
@@ -16,10 +17,10 @@ class NotificationHelper
     public static function create(string $message, ?int $recipient = null): void
     {
         if (is_null($recipient)) {
-            $users = (new Model('users'))->selectAll();
+            $users = (new Users())->selectAll(['id']);
 
             foreach ($users as $user) {
-                (new Model('notifications'))->insert([
+                (new Notifications())->insert([
                     'message' => $message,
                     'user_id' => $user->id
                 ]);
@@ -27,7 +28,7 @@ class NotificationHelper
         } 
         
         else {
-            (new Model('notifications'))->insert([
+            (new Notifications())->insert([
                 'message' => $message,
                 'user_id' => $recipient
             ]);

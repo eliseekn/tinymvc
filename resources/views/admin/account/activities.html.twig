@@ -10,7 +10,7 @@
 		<metric-card-item 
             title="{{ __('total') }}" 
             icon="fa fa-user-clock fa-2x" 
-            data="{{ activities.getTotalItems() }}" 
+            data="{{ data.getTotalItems() }}" 
             columns="4">
         </metric-card-item>
 	</metrics-cards>
@@ -60,21 +60,21 @@
 					</thead>
 
 					<tbody>
-						{% for activity in activities.getItems() %}
+						{% for data in data.getItems() %}
                         <tr>
 							<td>
 								<div class="custom-control custom-checkbox">
-									<input type="checkbox" class="custom-control-input" id="{{ activity.id }}" data-id="{{ activity.id }}">
-									<label class="custom-control-label" for="{{ activity.id }}"></label>
+									<input type="checkbox" class="custom-control-input" id="{{ data.id }}" data-id="{{ data.id }}">
+									<label class="custom-control-label" for="{{ data.id }}"></label>
 								</div>
 							</td>
 
-							<td>{{ activity.id }}</td>
-							<td>{{ activity.user }}</td>
-							<td>{{ activity.url }}</td>
-							<td>{{ activity.ip_address }}</td>
-							<td>{{ activity.action }}</td>
-							<td>{{ time_elapsed(activity.created_at) }}</td>
+							<td>{{ data.id }}</td>
+							<td>{{ data.user }}</td>
+							<td>{{ data.url }}</td>
+							<td>{{ data.ip_address }}</td>
+							<td>{{ data.action }}</td>
+							<td>{{ time_elapsed(data.created_at) }}</td>
 						</tr>
                         {% endfor %}
 					</tbody>
@@ -83,14 +83,14 @@
 		</div>
 
 		<div class="card-footer d-flex align-items-center justify-content-between">
-			<span>{{ __('total_results') }} <span class="font-weight-bold">{{ activities.getTotalItems() }}</span></span>
+			<span>{{ __('total_results') }} <span class="font-weight-bold">{{ data.getTotalItems() }}</span></span>
 			<span>{{ __('showing') }}
-				<span class="font-weight-bold">{{ activities.getPageTotalItems() == 0 ? activities.getFirstItem() : activities.getFirstItem() + 1 }}</span>
+				<span class="font-weight-bold">{{ data.getPageTotalItems() == 0 ? data.getFirstItem() : data.getFirstItem() + 1 }}</span>
 				{{ __('to') }}
-				<span class="font-weight-bold">{{ activities.getPageTotalItems() + activities.getFirstItem() }}</span>
+				<span class="font-weight-bold">{{ data.getPageTotalItems() + data.getFirstItem() }}</span>
 			</span>
 
-            {% include "partials/pagination.html.twig" with {pagination: activities} %}
+            {% include "partials/pagination.html.twig" with {pagination: data} %}
 		</div>
 	</div>
 

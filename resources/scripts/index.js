@@ -8,6 +8,7 @@ import UploadModal from './components/modal/upload-modal'
 import ExportModal from './components/modal/export-modal'
 import AlertPopup from './components/alert/alert-popup'
 import AlertToast from './components/alert/alert-toast'
+import ConfirmPopup from './components/alert/confirm-popup'
 import TextEditor from './components/mixed/text-editor'
 import TimezonePicker from './components/mixed/timezone-picker'
 import CurrencyPicker from './components/mixed/currency-picker'
@@ -34,6 +35,7 @@ window.customElements.define('upload-modal', UploadModal)
 window.customElements.define('export-modal', ExportModal)
 window.customElements.define('alert-popup', AlertPopup)
 window.customElements.define('alert-toast', AlertToast)
+window.customElements.define('confirm-popup', ConfirmPopup)
 window.customElements.define('text-editor', TextEditor)
 window.customElements.define('donut-chart', DonutChart)
 window.customElements.define('bars-chart', BarsChart)

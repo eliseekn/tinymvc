@@ -15,10 +15,12 @@ class AuthPolicy
      *
      * @return void
      */
-    public static function handle(Request $request): void
+    public function handle(Request $request): void
     {
-        if (Auth::check()) {
-            redirect()->url('admin/dashboard')->withToast(__('welcome') . ' ' . Auth::get('name'))->success();
+        if (!Auth::check()) {
+            redirect()->url('login')->intended($request->fullUri())
+                ->withAlert('error', __('not_logged_error', true))->go();
         }
+
     }
 }

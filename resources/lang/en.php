@@ -21,6 +21,7 @@
     'reset_password_instructions' => 'Enter the email address associated with your account. We will send you a link to this email address to reset your password.',
     'signup_failed' => 'Sign up failed',
     'welcome' => 'Welcome',
+    'welcome_back' => 'Welcome back',
 
     //sidebar
     'dashboard' => 'Dashboard',

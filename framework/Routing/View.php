@@ -38,9 +38,7 @@ class View
 
         $loader = new FilesystemLoader($path->get());
         $twig = new Environment($loader, [
-            'cache' => config('storage.cache'),
-            'auto_reload' => !config('twig.disable_cache'),
-            'debug' => config('errors.display')
+            'cache' => config('twig.disable_cache') ? false : config('storage.cache'),
         ]);
 
         $twig->addExtension(new TwigExtensions());

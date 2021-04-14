@@ -19,13 +19,13 @@ class AvatarIcon extends HTMLElement {
     }
 
     getName() {
-        const name = this.getAttribute('name')
-        const firstLetter = name.split(' ')
+        const fullName = this.getAttribute('name')
+        const firstName = fullName.split(' ')
 
-        if (firstLetter.length === 0) {
-            return name
+        if (firstName.length === 0) {
+            return fullName
         } else {
-            return firstLetter[0]
+            return firstName[0]
         }
     }
 

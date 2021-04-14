@@ -107,6 +107,6 @@ class Validator
     {
         return !$this->fails() 
             ? $this 
-            : redirect()->back()->withErrors($this->errors())->withInputs($this->inputs())->only();
+            : redirect()->back()->withErrors($this->errors())->withInputs($this->inputs())->go();
     }
 }

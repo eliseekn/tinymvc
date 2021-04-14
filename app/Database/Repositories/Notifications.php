@@ -1,27 +1,27 @@
 <?php
 
-namespace App\Database\Models;
+namespace App\Database\Repositories;
 
 use App\Helpers\Auth;
-use Framework\Database\Model;
+use Framework\Database\Repository;
 
-class Notifications
+class Notifications extends Repository
 {    
     /**
      * name of table
      *
      * @var string
      */
-    public static $table = 'notifications';
+    public $table = 'notifications';
     
     /**
-     * create new model instance 
+     * __construct
      *
-     * @return \Framework\Database\Model
+     * @return void
      */
-    private static function model(): \Framework\Database\Model
+    public function __construct()
     {
-        return new Model(self::$table);
+        parent::__construct($this->table);
     }
 
     /**
@@ -30,10 +30,9 @@ class Notifications
      * @param  int $limit
      * @return array
      */
-    public static function findMessages(int $limit = 5)
+    public function findMessages(int $limit = 5)
     {
-        return self::model()
-            ->findBy('status', 'unread')
+        return $this->findBy('status', 'unread')
             ->and('user_id', Auth::get('id'))
             ->oldest()
             ->take($limit);
@@ -45,10 +44,9 @@ class Notifications
      * @param  int $items_per_pages
      * @return \Framework\Support\Pager
      */
-    public static function paginate(int $items_per_pages = 20): \Framework\Support\Pager
+    public function findAllPaginate(int $items_per_pages = 20): \Framework\Support\Pager
     {
-        return self::model()
-            ->findBy('user_id', Auth::get('id'))
+        return $this->findBy('user_id', Auth::get('id'))
             ->oldest()
             ->paginate($items_per_pages);
     }
@@ -58,10 +56,9 @@ class Notifications
      *
      * @return int
      */
-    public static function unreadCount(): int
+    public function unreadCount(): int
     {
-        return self::model()
-            ->count()
+        return $this->count()
             ->where('status', 'unread')
             ->and('user_id', Auth::get('id'))
             ->single()

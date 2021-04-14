@@ -1,14 +1,10 @@
 {% if alert.display == 'popup' %}
-    <alert-popup type="{{ alert.type }}" message="{{ alert.message }}" title="{{ alert.title }}"></alert-popup>
+    <alert-popup type="{{ alert.type }}" message="{{ alert.message }}"></alert-popup>
 {% elseif alert.display == 'toast' %}
-    <alert-toast type="{{ alert.type }}" message="{{ alert.message }}" title="{{ alert.title }}"></alert-toast>
+    <alert-toast type="{{ alert.type }}" message="{{ alert.message }}"></alert-toast>
 {% else %}
 
     <div class="alert alert-{{ alert.type }} alert-dismissible show" role="alert">
-        {% if alert.title is not empty %}
-        <h5 class="alert-heading">{{ alert.title }}</h5>
-        {% endif %}
-
         {{ alert.message|raw }}
 
         {% if alert.dismiss %}

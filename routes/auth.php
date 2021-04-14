@@ -16,7 +16,7 @@ use App\Controllers\Auth\PasswordController;
  * Authentication routes
  */
 
-Route::groupMiddlewares(['remember',  'auth'], function () {
+Route::groupMiddlewares(['remember'], function () {
     Route::get('login', function () {
         View::render('auth.login');
     });

@@ -96,9 +96,9 @@ class Request
      *
      * @param  string $input
      * @param  array $allowed_extensions
-     * @return \Framework\Support\Uploader returns uploader instance
+     * @return \Framework\Support\Uploader
      */
-    private function getFile(string $input, array $allowed_extensions = []): Uploader
+    private function getFile(string $input, array $allowed_extensions = []): \Framework\Support\Uploader
     {
         return new Uploader([
             'name' => $_FILES[$input]['name'],
@@ -114,7 +114,7 @@ class Request
      *
      * @param  string $input
      * @param  array $allowed_extensions
-     * @return array returns array of uploader instance
+     * @return array
      */
     private function getFiles(string $input, array $allowed_extensions = []): array
     {
@@ -211,7 +211,7 @@ class Request
      * @param  string $item
      * @return bool
      */
-    public function exists(string $item): bool
+    public function has(string $item): bool
     {
         return isset($this->{$item});
     }
@@ -222,9 +222,9 @@ class Request
      * @param  string $item
      * @return bool
      */
-    public function has(string $item): bool
+    public function filled(string $item): bool
     {
-        return $this->exists($item) && !empty($this->{$item});
+        return $this->has($item) && !empty($this->{$item});
     }
 
     /**
@@ -236,7 +236,7 @@ class Request
      */
     public function get(string $item, $default = null)
     {
-        return $this->has($item) ? $this->{$item} : $default;
+        return $this->filled($item) ? $this->{$item} : $default;
     }
 
     /**

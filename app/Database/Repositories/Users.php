@@ -1,29 +1,29 @@
 <?php
 
-namespace App\Database\Models;
+namespace App\Database\Repositories;
 
 use App\Helpers\Auth;
 use Framework\Http\Request;
-use Framework\Database\Model;
 use Framework\System\Encryption;
+use Framework\Database\Repository;
 
-class Users
+class Users extends Repository
 {
     /**
      * name of table
      *
      * @var string
      */
-    public static $table = 'users';
+    public $table = 'users';
 
     /**
-     * create new model instance 
+     * __construct
      *
-     * @return \Framework\Database\Model
+     * @return void
      */
-    private static function model(): \Framework\Database\Model
+    public function __construct()
     {
-        return new Model(self::$table);
+        parent::__construct($this->table);
     }
     
     /**
@@ -32,9 +32,9 @@ class Users
      * @param  string $email
      * @return mixed
      */
-    public static function findSingleByEmail(string $email)
+    public function findSingleByEmail(string $email)
     {
-        return self::model()->findSingleBy('email', $email);
+        return $this->findSingleBy('email', $email);
     }
     
     /**
@@ -43,10 +43,9 @@ class Users
      * @param  int $items_per_pages
      * @return \Framework\Support\Pager
      */
-    public static function paginate(int $items_per_pages = 20): \Framework\Support\Pager
+    public function findAllPaginate(int $items_per_pages = 20): \Framework\Support\Pager
     {
-        return self::model()
-            ->find('!=', Auth::get('id'))
+        return $this->find('!=', Auth::get('id'))
             ->oldest()
             ->paginate($items_per_pages);
     }
@@ -56,10 +55,9 @@ class Users
      *
      * @return int
      */
-    public static function activeCount(): int
+    public function activeCount(): int
     {
-        return self::model()
-            ->count()
+        return $this->count()
             ->where('id', '!=', Auth::get('id'))
             ->and('active', 1)
             ->single()
@@ -70,20 +68,21 @@ class Users
      * store user
      *
      * @param  \Framework\Http\Request $request
+     * @param  int $active
+     * @param  string $role
      * @return int
      */
-    public static function store(Request $request): int
+    public function store(Request $request, int $active = 1, string $role = Roles::ROLE[1]): int
     {
-        return self::model()
-            ->insert([
-                'name' => $request->name,
-                'email' => $request->email,
-                'phone' => $request->phone,
-                'company' => $request->company,
-                'password' => Encryption::hash($request->password),
-                'active' => 1,
-                'role' => Roles::ROLE[1]
-            ]);
+        return $this->insert([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'company' => $request->company,
+            'password' => Encryption::hash($request->password),
+            'active' => $active,
+            'role' => $role
+        ]);
     }
     
     /**
@@ -93,7 +92,7 @@ class Users
      * @param  int $id
      * @return bool
      */
-    public static function update(Request $request, int $id): bool
+    public function refresh(Request $request, int $id): bool
     {
         $data = [
             'name' => $request->name,
@@ -104,11 +103,11 @@ class Users
             'active' => $request->account_state
 		];
 		
-		if ($request->has('password')) {
+		if ($request->filled('password')) {
 			$data['password'] = Encryption::hash($request->password);
 		}
 
-        return self::model()->updateIfExists($id, $data);
+        return $this->updateIfExists($id, $data);
     }
     
     /**
@@ -118,11 +117,11 @@ class Users
      * @param  int $id
      * @return bool
      */
-    public static function delete(Request $request, ?int $id = null): bool
+    public function flush(Request $request, ?int $id = null): bool
     {
         return is_null($id) 
-            ? self::model()->deleteBy('id', 'in', explode(',', $request->items))
-            : self::model()->deleteIfExists($id);
+            ? $this->deleteBy('id', 'in', explode(',', $request->items))
+            : $this->deleteIfExists($id);
     }
 
     /**
@@ -132,7 +131,7 @@ class Users
      * @param  int $id
      * @return bool
      */
-    public static function updateSettings(Request $request, int $id): bool
+    public function updateSettings(Request $request, int $id): bool
     {
         $data = [
             'name' => $request->name,
@@ -140,20 +139,20 @@ class Users
             'country' => $request->country,
             'company' => $request->inputs('company', ''),
             'phone' => $request->phone,
-            'two_steps' => $request->exists('two_steps') ? 1 : 0,
+            'two_steps' => $request->has('two_steps') ? 1 : 0,
             'lang' => $request->lang,
             'timezone' => $request->timezone,
             'currency' => $request->currency,
-            'dark_theme' => $request->exists('dark_theme') ? 1 : 0,
-            'alerts' => $request->exists('alerts') ? 1 : 0,
-            'email_notifications' => $request->exists('email_notifications') ? 1 : 0
+            'dark_theme' => $request->has('dark_theme') ? 1 : 0,
+            'alerts' => $request->has('alerts') ? 1 : 0,
+            'email_notifications' => $request->has('email_notifications') ? 1 : 0
 		];
 		
 		if ($request->has('password')) {
 			$data['password'] = Encryption::hash($request->password);
 		}
 
-        return self::model()->updateIfExists($id, $data);
+        return $this->updateIfExists($id, $data);
     }
     
     /**
@@ -163,10 +162,9 @@ class Users
      * @param  mixed $end
      * @return array
      */
-    public static function fromDateRange($date_start, $date_end): array
+    public function findAllDateRange($date_start, $date_end): array
     {
-        return self::model()
-            ->select()
+        return $this->select()
             ->subQuery(function($query) use ($date_start, $date_end) {
                 if (!empty($date_start) && !empty($date_end)) {
                     $query->whereBetween($date_start, $date_end);

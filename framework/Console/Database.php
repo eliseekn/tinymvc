@@ -9,11 +9,11 @@
 namespace Framework\Console;
 
 use Exception;
-use Framework\Database\DB;
-use App\Database\Seeds\Seeder;
-use Framework\Database\Builder;
-use Framework\Database\Schema;
 use Framework\System\Storage;
+use App\Database\Seeds\Seeder;
+use Framework\Database\Schema;
+use Framework\Database\QueryBuilder;
+use Framework\Database\Database as DB;
 
 /**
  * Manage migrations and seeds from command line interface
@@ -23,12 +23,19 @@ class Database
     /**
      * print console message
      *
-     * @param  mixed $message
+     * @param  string $message
+     * @param  string $type
      * @return mixed
      */
-    private static function log(string $message)
+    private static function log(string $message, string $type = 'success')
     {
-        return print($message . PHP_EOL);
+        if ($type === 'warning') {
+            echo "\e[0;33;40m{$message}\e[0m\n";
+        } else if ($type === 'error') {
+            echo "\e[1;37;41m{$message}\e[0m\n";
+        } else {
+            echo "\e[0;32;40m{$message}\e[0m\n";
+        }
     }
 
     /**
@@ -52,11 +59,15 @@ class Database
     public static function createSchema(string ...$databases): void
     {
         foreach ($databases as $database) {
-            try {
-                DB::connection()->query("CREATE DATABASE IF NOT EXISTS $database CHARACTER SET " . config('mysql.charset') . " COLLATE " . config('mysql.collation'));
-                self::log('[+] Database "' . $database . '" created successfully');
-            } catch(Exception $e) {
-                self::log('[!] ' . $e->getMessage());
+            if (QueryBuilder::schemaExists($database)) {
+                self::log('[!] Database "' . $database . '" exists already', 'warning');
+            } else {
+                try {
+                    DB::connection()->query("CREATE DATABASE $database CHARACTER SET " . config('mysql.charset') . " COLLATE " . config('mysql.collation'));
+                    self::log('[+] Database "' . $database . '" created successfully');
+                } catch(Exception $e) {
+                    self::log('[!] ' . $e->getMessage(), 'error');
+                }
             }
         }
     }
@@ -67,15 +78,33 @@ class Database
      * @param  string[] $databases
      * @return void
      */
-    public static function deleteSchema(string ...$databases): void
+    public static function dropSchema(string ...$databases): void
     {
         foreach ($databases as $database) {
-            try {
-                DB::connection()->query("DROP DATABASE IF EXISTS $database");
-                self::log('[+] Database "' .$database . '" deleted successfully');
-            } catch(Exception $e) {
-                self::log('[!] ' . $e->getMessage());
+            if (QueryBuilder::schemaExists($database)) {
+                self::log('[!] Database "' . $database . '" does not exists', 'warning');
+            } else {
+                try {
+                    DB::connection()->query("DROP DATABASE IF EXISTS $database");
+                    self::log('[+] Database "' .$database . '" deleted successfully');
+                } catch(Exception $e) {
+                    self::log('[!] ' . $e->getMessage(), 'error');
+                }
             }
+        }
+    }
+    
+    /**
+     * listSchemas
+     *
+     * @return void
+     */
+    public static function listSchemas(): void
+    {
+        $databases = DB::connection()->query("SHOW DATABASES")->fetchAll();
+
+        foreach ($databases as $db) {
+            echo "[+] " . $db->Database . "\n";
         }
     }
     
@@ -91,7 +120,7 @@ class Database
         try {
             DB::connection($db)->query($query);
         } catch(Exception $e) {
-            self::log('[!] ' . $e->getMessage());
+            self::log('[!] ' . $e->getMessage(), 'error');
         }
 
         self::log('[+] Query executed successfully');
@@ -108,7 +137,7 @@ class Database
         if (!empty($table)) {
             if (strpos($table, ',') === false) {
                 if (self::alreadyMigrated($table)) {
-                    self::log('[!] Table "' . $table . '" already migrated');
+                    self::log('[!] Table "' . $table . '" already migrated', 'warning');
                 } else {
                     self::saveMigrationTable($table);
 
@@ -118,7 +147,7 @@ class Database
                         $table::migrate();
                         self::log('[+] Table "' . $table . '" migrated successfully');
                     } catch(Exception $e) {
-                        self::log('[!] ' . $e->getMessage());
+                        self::log('[!] ' . $e->getMessage(), 'error');
                     }
                 }
             } else {
@@ -126,7 +155,7 @@ class Database
     
                 foreach ($tables as $table) {
                     if (self::alreadyMigrated($table)) {
-                        self::log('[!] Table "' . $table . '" already migrated');
+                        self::log('[!] Table "' . $table . '" already migrated', 'warning');
                     } else {
                         self::saveMigrationTable($table);
     
@@ -137,7 +166,7 @@ class Database
                             self::saveMigrationTable($table);
                             self::log('[+] Table "' . $table . '" migrated successfully');
                         } catch(Exception $e) {
-                            self::log('[!] ' . $e->getMessage());
+                            self::log('[!] ' . $e->getMessage(), 'error');
                         }
                     }
                 }
@@ -147,7 +176,7 @@ class Database
                 $table = get_file_name($file);
                 
                 if (self::alreadyMigrated($table)) {
-                    self::log('[!] Table "' . $table . '" already migrated');
+                    self::log('[!] Table "' . $table . '" already migrated', 'warning');
                 } else {
                     self::saveMigrationTable($table);
 
@@ -157,7 +186,7 @@ class Database
                         $table::migrate();
                         self::log('[+] Table "' . $table . '" migrated successfully');
                     } catch(Exception $e) {
-                        self::log('[!] ' . $e->getMessage());
+                        self::log('[!] ' . $e->getMessage(), 'error');
                     }
                 }
             }
@@ -165,22 +194,22 @@ class Database
     }
 
     /**
-     * reset table migration
+     * refresh table migration
      *
      * @param  string $table
      * @return void
      */
-    public static function resetTable(string $table = ''): void
+    public static function refreshTable(string $table = ''): void
     {
         if (!empty($table)) {
             if (strpos($table, ',') === false) {
                 $table = 'App\Database\Migrations\\' . $table;
                 
                 try {
-                    $table::reset();
-                    self::log('[+] Table "' . $table . '" resetted successfully');
+                    $table::refresh();
+                    self::log('[+] Table "' . $table . '" refreshed successfully');
                 } catch(Exception $e) {
-                    self::log('[!] ' . $e->getMessage());
+                    self::log('[!] ' . $e->getMessage(), 'error');
                 }
             } else {
                 $tables = explode(',', $table);
@@ -189,10 +218,10 @@ class Database
                     $table = 'App\Database\Migrations\\' . $table;
                     
                     try {
-                        $table::reset();
-                        self::log('[+] Table "' . $table . '" resetted successfully');
+                        $table::refresh();
+                        self::log('[+] Table "' . $table . '" refreshed successfully');
                     } catch(Exception $e) {
-                        self::log('[!] ' . $e->getMessage());
+                        self::log('[!] ' . $e->getMessage(), 'error');
                     }
                 }
             }
@@ -202,10 +231,10 @@ class Database
                 $table = 'App\Database\Migrations\\' . $table;
                 
                 try {
-                    $table::reset();
-                    self::log('[+] Table "' . $table . '" resetted successfully');
+                    $table::refresh();
+                    self::log('[+] Table "' . $table . '" refreshed successfully');
                 } catch(Exception $e) {
-                    self::log('[!] ' . $e->getMessage());
+                    self::log('[!] ' . $e->getMessage(), 'error');
                 }
             }
         }
@@ -228,7 +257,7 @@ class Database
                     $table::delete();
                     self::log('[+] Table "' . $table . '" deleted successfully');
                 } catch(Exception $e) {
-                    self::log('[!] ' . $e->getMessage());
+                    self::log('[!] ' . $e->getMessage(), 'error');
                 }
             } else {
                 $tables = explode(',', $table);
@@ -241,7 +270,7 @@ class Database
                         $table::delete();
                         self::log('[+] Table "' . $table . '" deleted successfully');
                     } catch(Exception $e) {
-                        self::log('[!] ' . $e->getMessage());
+                        self::log('[!] ' . $e->getMessage(), 'error');
                     }
                 }
             }
@@ -256,7 +285,7 @@ class Database
                     $table::delete();
                     self::log('[+] Table "' . $table . '" deleted successfully');
                 } catch(Exception $e) {
-                    self::log('[!] ' . $e->getMessage());
+                    self::log('[!] ' . $e->getMessage(), 'error');
                 }
             }
         }
@@ -278,7 +307,7 @@ class Database
                     $seed::insert();
                     self::log('[+] Seed "' . $seed . '" inserted successfully');
                 } catch(Exception $e) {
-                    self::log('[!] ' . $e->getMessage());
+                    self::log('[!] ' . $e->getMessage(), 'error');
                 }
             } else {
                 $seeds = explode(',', $seed);
@@ -290,7 +319,7 @@ class Database
                         $seed::insert();
                         self::log('[+] Seed "' . $seed . '" inserted successfully');
                     } catch(Exception $e) {
-                        self::log('[!] ' . $e->getMessage());
+                        self::log('[!] ' . $e->getMessage(), 'error');
                     }
                 }
             }
@@ -299,7 +328,7 @@ class Database
                 Seeder::run();
                 self::log('[+] All seeds inserted successfully');
             } catch(Exception $e) {
-                self::log('[!] ' . $e->getMessage());
+                self::log('[!] ' . $e->getMessage(), 'error');
             }
         }
     }
@@ -307,17 +336,15 @@ class Database
     /**
      * retrieves migrations tables list
      *
-     * @return array
+     * @return void
      */
-    public static function getMigrationsTables(): array
+    public static function getMigrationsTables(): void
     {
-        $tables = [];
+        $tables = Storage::path(config('storage.migrations'))->getFiles();
 
-        foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
-            $tables[] = get_file_name($file);
+        foreach ($tables as $key => $table) {
+            echo "[+] " . get_file_name($table) . "\n";
         }
-
-        return $tables;
     }
     
     /**
@@ -328,7 +355,7 @@ class Database
      */
     private static function saveMigrationTable(string $table): void
     {
-        if (!Builder::tableExists('migrations')) {
+        if (!QueryBuilder::tableExists('migrations')) {
             Schema::createTable('migrations')
                 ->addInt('id')->primaryKey()
                 ->addString('migration')
@@ -336,7 +363,7 @@ class Database
         }
 
         if (!self::alreadyMigrated($table)) {
-            Builder::insert('migrations', ['migration' => $table])->execute();
+            QueryBuilder::table('migrations')->insert(['migration' => $table])->execute();
         }
     }
     
@@ -348,7 +375,7 @@ class Database
      */
     private static function removeMigrationTable(string $table): void
     {
-        Builder::delete('migrations')
+        QueryBuilder::table('migrations')->delete()
             ->where('migration', $table)
             ->execute();
     }
@@ -361,12 +388,12 @@ class Database
      */
     public static function alreadyMigrated(string $table): bool
     {
-        if (!Builder::tableExists('migrations')) {
+        if (!QueryBuilder::tableExists('migrations')) {
             return false;
         }
 
-        return Builder::select('*')
-            ->from('migrations')
+        return QueryBuilder::table('migrations')
+            ->select('*')
             ->where('migration', $table)
             ->exists();
     }

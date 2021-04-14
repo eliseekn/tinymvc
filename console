@@ -17,104 +17,101 @@ require 'bootstrap.php';
 
 array_shift($argv);
 
-$commands = [
-    'db',
-    'make',
-    'cache',
-    'app'
-];
-
-$options = [
-    'controller',
-    'model',
-    'migration',
-    'seed',
-    'schema',
-    'query',
-    'request',
-    'middleware',
-    'mail',
-    'clear',
-    'view',
-    'setup'
-];
-
-$arguments = [
-    '--create',
-    '--delete',
-    '--reset',
-    '--namespace',
-    '--resources',
-    '--layout',
-    '--run',
-    '--tables',
-    '--view'
-];
-
-function print_help()
+function color(string $text, string $fg = 'white', string $bg = 'black')
 {
-    $help_message = 'Manage database operations' . PHP_EOL;
-    $help_message .= '   db:schema --create database                 Create single databases' . PHP_EOL;
-    $help_message .= '   db:schema --delete database                 Delete single database' . PHP_EOL;
+    switch ($fg) {
+        case 'brown':
+            $fg = '0;33';
+            break;
+
+        case 'green':
+            $fg = '0;32';
+            break;
+
+        case 'blue':
+            $fg = '0;34';
+            break;
+            break;
+
+        case 'red':
+            $fg = '0;31';
+            break;
+
+        default:
+            $fg = '1;37';
+            break;
+    }
+
+    switch ($bg) {
+        case 'red':
+            $bg = '41';
+            break;
+
+        case 'black':
+            $bg = '40';
+    }
+
+    return "\e[{$fg};{$bg}m{$text}\e[0m";
+}
+
+function commands_list()
+{
+    $help_message = color('db', 'brown') . PHP_EOL;
+    $help_message .= "  " . color('db:schema', 'green') . " " . color('--create', 'blue') . " database               Create new databases" . PHP_EOL;
+    $help_message .= "  " . color('db:schema', 'green') . " " . color('--delete', 'blue') . " database               Delete databases" . PHP_EOL;
+    $help_message .= "  " . color('db:migration', 'green') . " " . color('--run', 'blue') . "                        Migrate all tables" . PHP_EOL;
+    $help_message .= "  " . color('db:migration', 'green') . " " . color('--run', 'blue') . " table                  Migrate single table" . PHP_EOL;
+    $help_message .= "  " . color('db:migration', 'green') . " " . color('--run', 'blue') . " " . color('--seed', 'blue') . "                 Migrate all tables and insert all seeds" . PHP_EOL;
+    $help_message .= "  " . color('db:migration', 'green') . " " . color('--refresh', 'blue') . "                    Refresh all migrations" . PHP_EOL;
+    $help_message .= "  " . color('db:migration', 'green') . " " . color('--refresh', 'blue') . " table              Refresh single table" . PHP_EOL;
+    $help_message .= "  " . color('db:migration', 'green') . " " . color('--refresh', 'blue') . " " . color('--seed', 'blue') . "             Refresh all migrations and insert all seeds" . PHP_EOL;
+    $help_message .= "  " . color('db:migration', 'green') . " " . color('--delete', 'blue') . "                     Drop all tables" . PHP_EOL;
+    $help_message .= "  " . color('db:migration', 'green') . " " . color('--delete', 'blue') . " table               Drop single table" . PHP_EOL;
+    $help_message .= "  " . color('db:migration', 'green') . " " . color('--list', 'blue') . "                       Display list of migrations tables" . PHP_EOL;
+    $help_message .= "  " . color('db:seed', 'green') . " " . color('--run', 'blue') . "                             Insert all seeds" . PHP_EOL;
+    $help_message .= "  " . color('db:seed', 'green') . " " . color('--run', 'blue') . " seed                        Insert single seed" . PHP_EOL;
+    $help_message .= "  " . color('db:query', 'green') . " " . color('--execute', 'blue') . " 'query'                Execute MySQL query" . PHP_EOL;
+    $help_message .= "  " . color('db:query', 'green') . " " . color('--execute', 'blue') . " 'query' " . color('--db', 'blue') . "=database  Execute MySQL query on the database 'database'" . PHP_EOL;
     $help_message .= PHP_EOL;
-    $help_message .= '   db:migration --run                          Migrate all tables' . PHP_EOL;
-    $help_message .= '   db:migration --run table                    Migrate single table' . PHP_EOL;
-    $help_message .= '   db:migration --run --seed                   Migrate all tables and insert all seeds' . PHP_EOL;
-    $help_message .= '   db:migration --reset                        Reset all migrations' . PHP_EOL;
-    $help_message .= '   db:migration --reset table                  Reset single table' . PHP_EOL;
-    $help_message .= '   db:migration --reset --seed                 Reset all migrations and insert all seeds' . PHP_EOL;
-    $help_message .= '   db:migration --delete                       Drop all tables' . PHP_EOL;
-    $help_message .= '   db:migration --delete table                 Drop single table' . PHP_EOL;
-    $help_message .= '   db:migration --tables                       Display list of migrations tables' . PHP_EOL;
+    $help_message .= color('make', 'brown') . PHP_EOL;
+    $help_message .= "  " . color('make:controller', 'green') . " table                     Create new controller class" . PHP_EOL;
+    $help_message .= "  " . color('make:controller', 'green') . " table " . color('--namespace', 'blue') . "=name    Create new controller class in namespace folder" . PHP_EOL;
+    $help_message .= "  " . color('make:resources', 'green') . " table                      Create resources (controller, migration, repository, views and routes)" . PHP_EOL;
+    $help_message .= "  " . color('make:migration', 'green') . " table                      Create new migration file" . PHP_EOL;
+    $help_message .= "  " . color('make:migration', 'green') . " table " . color('--ms', 'blue') . "                 Create migration table with repository = m, seed = s" . PHP_EOL;
+    $help_message .= "  " . color('make:repository', 'green') . " table                     Create new repository file" . PHP_EOL;
+    $help_message .= "  " . color('make:seed', 'green') . " table                           Create new seed file" . PHP_EOL;
+    $help_message .= "  " . color('make:view', 'green') . " name                            Create blank view template" . PHP_EOL; 
+    $help_message .= "  " . color('make:view', 'green') . " name " . color('--layout', 'blue') . "=name              Create new view template file based layout" . PHP_EOL;
+    $help_message .= "  " . color('make:view', 'green') . " name " . color('--layout', 'blue') . "                   Create new layout template file" . PHP_EOL;
+    $help_message .= "  " . color('make:request', 'green') . " name                         Create request validator file" . PHP_EOL;
+    $help_message .= "  " . color('make:middleware', 'green') . " name                      Create middleware file" . PHP_EOL;
+    $help_message .= "  " . color('make:mail', 'green') . " name                            Create new email resource" . PHP_EOL;
     $help_message .= PHP_EOL;
-    $help_message .= '   db:seed --run                               Insert all seeds' . PHP_EOL;
-    $help_message .= '   db:seed --run seed                          Insert single seed' . PHP_EOL;
-    $help_message .= PHP_EOL;
-    $help_message .= "   db:query --execute 'query'                  Execute MySQL query" . PHP_EOL;
-    $help_message .= "   db:query --execute 'query' --db=database    Execute MySQL query on the database 'database'" . PHP_EOL;
-    $help_message .= PHP_EOL;
-    $help_message .= 'Manage resources build operations' . PHP_EOL;
-    $help_message .= '   make:controller table                       Create table controller' . PHP_EOL;
-    $help_message .= '   make:controller table --namespace=name      Create table controller in namespace folder' . PHP_EOL;
-    $help_message .= '   make:controller table --resources           Create table resources (controller, migration, model, views and routes)' . PHP_EOL;
-    $help_message .= '   make:controller table --view                Create table controller and view template' . PHP_EOL;
-    $help_message .= '   make:controller table --view --layout=name  Create table controller in namespace folder and view template based on layout' . PHP_EOL;
-    $help_message .= PHP_EOL;
-    $help_message .= '   make:migration table                        Create migration table' . PHP_EOL;
-    $help_message .= '   make:migration table --cms                  Create migration table with controller = c, model = m, seed = s' . PHP_EOL;
-    $help_message .= '   make:migration table --c --namespace=name   Create migration table with controller in namespace folder' . PHP_EOL;
-    $help_message .= PHP_EOL;
-    $help_message .= '   make:model table                            Create single table model' . PHP_EOL;
-    $help_message .= PHP_EOL;
-    $help_message .= '   make:seed table                             Create single table seed' . PHP_EOL;
-    $help_message .= PHP_EOL;
-    $help_message .= '   make:view name                              Create blank view template' . PHP_EOL; 
-    $help_message .= '   make:view name --layout=name               Create view template based layout' . PHP_EOL;
-    $help_message .= '   make:view name --layout                     Create layout template' . PHP_EOL;
-    $help_message .= PHP_EOL;
-    $help_message .= '   make:request AuthRequest                    Create AuthRequest in app\Requests folder' . PHP_EOL;
-    $help_message .= '   make:middleware AuthPolicy                  Create AuthPolicy in app\Middlewares folder' . PHP_EOL;
-    $help_message .= '   make:mail welcome                           Create welcome email resources' . PHP_EOL;
-    $help_message .= PHP_EOL;
-    $help_message .= 'Miscellaneous operations' . PHP_EOL;
-    $help_message .= '   cache:clear                                 Clear twig cache templates' . PHP_EOL;
-    $help_message .= '   app:setup                                   Set up application configuration' . PHP_EOL;
+    $help_message .= color('cache', 'brown') . PHP_EOL;
+    $help_message .= "  " . color('cache:clear', 'green') . "                               Clear twig templates cache" . PHP_EOL;
+    $help_message .=  PHP_EOL;
+    $help_message .= color('app', 'brown') . PHP_EOL;
+    $help_message .= "  " . color('app:setup', 'green') . "                                 Set up application" . PHP_EOL;
     $help_message .=  PHP_EOL;
     
-    exit($help_message);
+    echo $help_message;
+    exit();
 }
 
 function print_error(string $message, int $type = 0)
 {
     if ($type === 0) {
-        exit('[-] Invalid command line argument "' . $message . '". Type "php console" for commands list.' . PHP_EOL . PHP_EOL);
+        echo color("[-] Invalid command line argument " . $message . ". Type \"php console\" for commands list.", 'white', 'red');
+        exit(PHP_EOL . PHP_EOL);
     } else {
-        exit('[-] Missing command line argument. Type "php console" for commands list.' . PHP_EOL . PHP_EOL);
+        echo color("[-] Missing command line argument. Type \"php console\" for commands list.", 'white', 'red');
+        exit(PHP_EOL . PHP_EOL);
     }
 }
 
 if (!isset($argv[0])) {
-    print_help();
+    commands_list();
 }
 
 if (strpos(strtolower($argv[0]), ':') === false) {
@@ -122,10 +119,6 @@ if (strpos(strtolower($argv[0]), ':') === false) {
 }
 
 list($command, $option) = explode(':', $argv[0]);
-
-if (!in_array($command, $commands) || !in_array($option, $options)) {
-    print_error($argv[0]);
-}
 
 switch ($command) {
     case 'db':
@@ -139,26 +132,33 @@ switch ($command) {
             print_error($argument);
         }
 
-        if (!in_array($argument, $arguments)) {
-            print_error($argument);
-        }
-
         $data = $argv[2] ?? null; 
 
         switch ($option) {
             case 'schema':
-                if (is_null($data)) {
-                    print_error('', 1);
-                }
-
                 switch ($argument) {
                     case '--create':
+                        if (is_null($data)) {
+                            print_error('', 1);
+                        }
+
                         \Framework\Console\Database::createSchema($data);
                         exit(PHP_EOL);
 
                     case '--delete':
-                        \Framework\Console\Database::deleteSchema($data);
+                        if (is_null($data)) {
+                            print_error('', 1);
+                        }
+
+                        \Framework\Console\Database::dropSchema($data);
                         exit(PHP_EOL);
+
+                    case '--list':
+                        print_r(\Framework\Console\Database::listSchemas());
+                        exit(PHP_EOL);
+
+                    default:
+                        print_error($argument);
                 }
 
             case 'query':
@@ -199,8 +199,8 @@ switch ($command) {
 
                         exit(PHP_EOL);
 
-                    case '--reset':
-                        \Framework\Console\Database::resetTable($data);
+                    case '--refresh':
+                        \Framework\Console\Database::refreshTable($data);
 
                         if (!is_null($seed)) {
                             \Framework\Console\Database::runSeeder();
@@ -212,9 +212,12 @@ switch ($command) {
                         \Framework\Console\Database::deleteTable($data);
                         exit(PHP_EOL);
 
-                    case '--tables':
+                    case '--list':
                         print_r(\Framework\Console\Database::getMigrationsTables());
                         exit(PHP_EOL);
+
+                    default:
+                        print_error($argument);
                 }
 
             case 'seed':
@@ -228,7 +231,7 @@ switch ($command) {
                 exit(PHP_EOL);
 
             default:
-                print_error('', 1);
+                print_error($option);
         }
 
     case 'make':
@@ -241,82 +244,25 @@ switch ($command) {
                     ? explode('=', $argument) 
                     : (isset($argument) ? [$argument, null] : [null, null]);
 
-                if (is_null($arg)) {
-                    if ($argument !== '--resources' || $argument !== '--view') {
-                        print_error($argument);
-                    }
+                if ($arg !== '--namespace') {
+                    print_error($arg);
                 }
 
-                $resources = $argument === '--resources';
-                $view = $argument === '--view';
-
-                if (!$resources && !$view) {
-                    \Framework\Console\Make::makeController($data, $namespace);
-                } 
-                
-                else {
-                    if ($view) {
-                        list($arg, $layout) = isset($argv[3]) && strpos(strtolower($argv[3]), '=') !== false 
-                            ? explode('=', $argv[3]) 
-                            : (isset($argv[3]) ? [$argv[3], null] : [null, null]);
-
-                        if (is_null($arg)) {
-                            \Framework\Console\Make::makeView($data, $layout);
-                        } else {
-                            if ($arg !== '--layout' || $arg !== '--namespace') {
-                                print_error($arg);
-                            }
-
-                            \Framework\Console\Make::makeController($data, $layout);
-                            \Framework\Console\Make::makeView($data, $layout);
-                        }
-                    }
-                    
-                    else if ($resources) {
-                        \Framework\Console\Make::makeController($data, 'admin');
-                        \Framework\Console\Make::makeMigration($data);
-                        \Framework\Console\Make::makeModel($data);
-                        \Framework\Console\Make::makeSeed($data);
-                        \Framework\Console\Make::makeViews($data);
-                        \Framework\Console\Make::makeRoute($data);
-                    }
-                }
+                \Framework\Console\Make::createController($data, $namespace);
 
                 exit(PHP_EOL);
 
             case 'migration':
-                \Framework\Console\Make::makeMigration($data);
+                \Framework\Console\Make::createMigration($data);
 
                 if (!is_null($argument)) {
-                    list($arg, $namespace) = isset($argv[3]) && strpos(strtolower($argv[3]), '=') !== false 
-                        ? explode('=', $argv[3]) 
-                        : (isset($argv[3]) ? [$argv[3], null] : [null, null]);
-
-                    $namespace = $arg === '--namespace' ? $namespace : null;
-
-                    if (!is_null($arg) && $arg !== '--namespace') {
-                        print_error($arg);
-                    }
-
-                    if ($argument === '--m') {
-                        \Framework\Console\Make::makeModel($data);
-                    } else if ($argument === '--c') {
-                        \Framework\Console\Make::makeController($data, $namespace);
+                    if ($argument === '--r') {
+                        \Framework\Console\Make::createRepository($data);
                     } else if ($argument === '--s') {
-                        \Framework\Console\Make::makeSeed($data);
-                    } else if ($argument === '--mc' || $argument === '--cm') {
-                        \Framework\Console\Make::makeController($data, $namespace);
-                        \Framework\Console\Make::makeModel($data);
-                    } else if ($argument === '--ms' || $argument === '--sm') {
-                        \Framework\Console\Make::makeModel($data);
-                        \Framework\Console\Make::makeSeed($data);
-                    } else if ($argument === '--cs' || $argument === '--sc') {
-                        \Framework\Console\Make::makeController($data, $namespace);
-                        \Framework\Console\Make::makeSeed($data);
-                    } else if (in_array($argument, ['--mcs', '--msc', '--csm', '--cms', '--smc', '--scm'])) {
-                        \Framework\Console\Make::makeController($data, $namespace);
-                        \Framework\Console\Make::makeModel($data);
-                        \Framework\Console\Make::makeSeed($data);
+                        \Framework\Console\Make::createSeed($data);
+                    } else if ($argument === '--rs' || $argument === '--sr') {
+                        \Framework\Console\Make::createRepository($data);
+                        \Framework\Console\Make::createSeed($data);
                     } else {
                         print_error($argument);
                     }
@@ -326,14 +272,14 @@ switch ($command) {
 
             case 'view':
                 if (is_null($argument)) {
-                    \Framework\Console\Make::makeView($data);
+                    \Framework\Console\Make::createView($data);
                     exit();
                 }
 
                 $layout = $argument === '--layout';
 
                 if ($layout) {
-                    \Framework\Console\Make::makeView(null, $data);
+                    \Framework\Console\Make::createView(null, $data);
                 } else {
                     list($arg, $layout) = isset($argument) && strpos(strtolower($argument), '=') !== false 
                         ? explode('=', $argument) 
@@ -343,33 +289,42 @@ switch ($command) {
                         print_error($arg);
                     }
 
-                    \Framework\Console\Make::makeView($data, $layout);
+                    \Framework\Console\Make::createView($data, $layout);
                 }
 
                 exit(PHP_EOL);
 
-            case 'model':
-                \Framework\Console\Make::makeModel($data);
+            case 'repository':
+                \Framework\Console\Make::createRepository($data);
                 exit(PHP_EOL);
 
             case 'seed':
-                \Framework\Console\Make::makeSeed($data);
+                \Framework\Console\Make::createSeed($data);
                 exit(PHP_EOL);
 
             case 'mail':
-                \Framework\Console\Make::makeMail($data);
+                \Framework\Console\Make::createMail($data);
                 exit(PHP_EOL);
 
             case 'middleware':
-                \Framework\Console\Make::makeMiddleware($data);
+                \Framework\Console\Make::createMiddleware($data);
                 exit(PHP_EOL);
 
             case 'request':
-                \Framework\Console\Make::makeRequest($data);
+                \Framework\Console\Make::createRequest($data);
+                exit(PHP_EOL);
+
+            case 'resources':
+                \Framework\Console\Make::createController($data, 'admin');
+                \Framework\Console\Make::createMigration($data);
+                \Framework\Console\Make::createRepository($data);
+                \Framework\Console\Make::createSeed($data);
+                \Framework\Console\Make::createViews($data);
+                \Framework\Console\Make::createRoute($data);
                 exit(PHP_EOL);
 
             default:
-                print_error('', 1);
+                print_error($option);
         }
 
     case 'cache':
@@ -378,9 +333,9 @@ switch ($command) {
         }
 
         \Framework\System\Storage::path(config('storage.cache'))->deleteDir();
-        echo '[+] Cache cleared succesfully' . PHP_EOL;
+        echo "\e[0;32;40m[+] Cache cleared succesfully\e[0m";
 
-        exit(PHP_EOL);
+        exit(PHP_EOL . PHP_EOL);
 
     case 'app':
         if ($option !== 'setup') {
@@ -427,10 +382,10 @@ switch ($command) {
 
         save_env($config);
 
-        echo PHP_EOL . '[+] Application has been setted up successfully' . PHP_EOL;
-        exit(PHP_EOL);
-
+        echo PHP_EOL; 
+        echo "\e[0;32;40m[+] Application has been setted up successfully\e[0m";
+        exit(PHP_EOL . PHP_EOL);
 
     default:
-        print_help();
+        commands_list();
 }

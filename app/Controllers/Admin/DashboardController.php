@@ -2,29 +2,33 @@
 
 namespace App\Controllers\Admin;
 
-use App\Database\Models\Medias;
 use Framework\Support\Metrics;
 use Framework\Routing\Controller;
-use App\Database\Models\Messages;
-use App\Database\Models\Notifications;
+use App\Database\Repositories\Users;
+use App\Database\Repositories\Medias;
+use App\Database\Repositories\Messages;
+use App\Database\Repositories\Notifications;
 
 class DashboardController extends Controller
 {
 	/**
 	 * index
 	 *
+     * @param  \App\Database\Repositories\Users $users
+     * @param  \App\Database\Repositories\Medias $medias
+     * @param  \App\Database\Repositories\Notifications $notifications
+     * @param  \App\Database\Repositories\Messages $messages
 	 * @return void
 	 */
-	public function index(): void
+	public function index(Users $users, Medias $medias, Notifications $notifications, Messages $messages): void
 	{
 		$this->render('admin.index', [
-            'total_users' => $this->model('users')->count()->single()->value, 
-            'inactive_users' => $this->model('users')->count()->where('active', 0)->single()->value,
-            'active_users' => $this->model('users')->count()->where('active', 1)->single()->value, 
-            'users_metrics' => $this->model('users')->metrics('id', Metrics::COUNT, Metrics::MONTHS), 
-            'notifications' => Notifications::findMessages(), 
-            'messages' => Messages::findReceivedMessages(),
-            'total_medias' => Medias::paginate()->getTotalItems()
+            'total_users' => count($users->findAll()), 
+            'active_users' => count($users->findAllBy('active', 1)), 
+            'users_metrics' => $users->metrics('id', Metrics::COUNT, Metrics::MONTHS), 
+            'total_medias' => count($medias->findAllByUser()),
+            'notifications' => $notifications->findMessages(), 
+            'messages' => $messages->findReceivedMessages()
         ]);
     }
 }

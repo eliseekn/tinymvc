@@ -5,13 +5,29 @@ namespace App\Controllers\Admin;
 use App\Helpers\Auth;
 use Framework\Http\Request;
 use App\Requests\UpdateUser;
-use App\Database\Models\Users;
 use Framework\System\Session;
 use App\Helpers\CountriesHelper;
 use Framework\Routing\Controller;
+use App\Database\Repositories\Users;
 
 class SettingsController extends Controller
 {
+    /**
+     * @var \App\Database\Repositories\Users $users
+     */
+    private $users;
+    
+    /**
+     * __construct
+     *
+     * @param  \App\Database\Repositories\Users $users
+     * @return void
+     */
+    public function __construct(Users $users)
+    {
+        $this->users = $users;
+    }
+
 	/**
 	 * index
 	 *
@@ -20,9 +36,9 @@ class SettingsController extends Controller
 	 */
 	public function index(int $id): void
 	{
-        $user = $this->model('users')->findSingle($id);
+        $data = $this->users->findSingle($id);
         $countries = CountriesHelper::all();
-        $this->render('admin.account.settings', compact('user', 'countries'));
+        $this->render('admin.account.settings', compact('data', 'countries'));
     }
     
     /**
@@ -35,13 +51,13 @@ class SettingsController extends Controller
     public function update(Request $request, int $id): void
     {
         UpdateUser::validate($request->inputs())->redirectOnFail();
-        Users::updateSettings($request, $id);
+        $this->users->updateSettings($request, $id);
 
         if (Auth::get('id') === $id) {
-            Session::create('user', $this->model('users')->findSingle($id));
+            Session::create('user', $this->users->findSingle($id));
         }
 
         $this->log(__('changes_saved'));
-        redirect()->back()->withToast(__('changes_saved'))->success();
+        redirect()->back()->withToast('success', __('changes_saved'))->go();
     }
 }

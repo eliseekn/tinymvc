@@ -32,19 +32,30 @@ document.addEventListener('DOMContentLoaded', () => {
                     event.target.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>'
                     
                     if (items.length === 0) {
-                        alert(data.translations.items_not_checked)
+                        let popup = document.createElement('alert-popup')
+                        popup.setAttribute('type', 'danger')
+                        popup.setAttribute('message', data.translations.items_not_checked)
+                        document.body.appendChild(popup)
+
                         event.target.innerHTML = innerHTML
+                        document.body.removeChild(popup)
                         return
                     }
-                    
-                    if (window.confirm(data.translations.delete_items)) {
+
+                    let confirm = document.createElement('confirm-popup')
+                    confirm.setAttribute('message', data.translations.delete_items)
+                    confirm.setAttribute('title', 'Confirm')
+                    document.body.appendChild(confirm)
+
+                    document.querySelector('#yes-button').addEventListener('click', () => {
                         fetch(event.target.dataset.url + '?csrf_token=' + document.querySelector('meta[name="csrf_token"]').content + '&items=' + items, {
                             method: 'DELETE'
                         })
                             .then(response => response.json())
                             .then(data => window.location.href = data.redirect)
-                    } 
-
+                    })
+                    
+                    document.body.removeChild(confirm)
                     event.target.innerHTML = innerHTML
                 })
         })
@@ -68,19 +79,30 @@ document.addEventListener('DOMContentLoaded', () => {
                     event.target.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>'
                     
                     if (items.length === 0) {
-                        alert(data.translations.items_not_checked)
+                        let popup = document.createElement('alert-popup')
+                        popup.setAttribute('type', 'danger')
+                        popup.setAttribute('message', data.translations.items_not_checked)
+                        document.body.appendChild(popup)
+
                         event.target.innerHTML = innerHTML
+                        document.body.removeChild(popup)
                         return
                     }
 
-                    if (window.confirm(data.translations.mark_items_as_read)) {
+                    let confirm = document.createElement('confirm-popup')
+                    confirm.setAttribute('message', data.translations.mark_items_as_read)
+                    confirm.setAttribute('title', 'Confirm')
+                    document.body.appendChild(confirm)
+
+                    document.querySelector('#yes-button').addEventListener('click', () => {
                         fetch(event.target.dataset.url + '?csrf_token=' + document.querySelector('meta[name="csrf_token"]').content + '&items=' + items, {
                             method: 'PATCH'
                         })
                             .then(response => response.json())
                             .then(data => window.location.href = data.redirect)
-                    } 
+                    })
                     
+                    document.body.removeChild(confirm)
                     event.target.innerHTML = innerHTML
                 })
         })

@@ -14,22 +14,26 @@ use Framework\Support\Pager;
 use Framework\Support\Metrics;
 
 /**
- * Simplify use of builder
+ * Main repository class
  */
-class Model
+class Repository
 {
     /**
-     * name of table
-     * 
      * @var string $table
      */
-    private $table;
+    protected $table;
 
     /**
-     * @var \Framework\Database\Builder $builder
+     * @var \Framework\Database\QueryBuilder $qb
      */
-    private $builder;
-
+    protected $qb;
+    
+    /**
+     * __construct
+     *
+     * @param  mixed $table
+     * @return void
+     */
     public function __construct(string $table)
     {
         $this->table = $table;
@@ -43,7 +47,7 @@ class Model
      */
     public function select(array $columns = ['*']): self
     {
-        $this->builder = Builder::select(implode(',', $columns))->from($this->table);
+        $this->qb = QueryBuilder::table($this->table)->select(implode(',', $columns));
         return $this;
     }
     
@@ -78,7 +82,7 @@ class Model
      */
     public function selectRaw(string $query, array $args = []): self
     {
-        $this->builder = Builder::selectRaw($query, $args);
+        $this->qb = QueryBuilder::table($this->table)->selectRaw($query, $args);
         return $this;
     }
     
@@ -260,8 +264,8 @@ class Model
      */
     public function insert(array $items): int
     {
-        Builder::insert($this->table, $items)->execute();
-        return Builder::lastInsertedId();
+        QueryBuilder::table($this->table)->insert($items)->execute();
+        return QueryBuilder::lastInsertedId();
     }
     
     /**
@@ -272,7 +276,7 @@ class Model
      */
     public function update(array $items): self
     {
-        $this->builder = Builder::update($this->table)->set($items);
+        $this->qb = QueryBuilder::table($this->table)->update($items);
         return $this;
     }
 
@@ -335,7 +339,7 @@ class Model
      */
     public function delete(): self
     {
-        $this->builder = Builder::delete($this->table);
+        $this->qb = QueryBuilder::delete($this->table);
         return $this;
     }
     
@@ -440,15 +444,15 @@ class Model
         if (!is_null($operator) && is_null($value)) {
             switch(strtolower($operator)) {
                 case 'null':
-                    $this->builder->whereColumn($column)->isNull();
+                    $this->qb->whereColumn($column)->isNull();
                     break;
 
                 case 'not null':
-                    $this->builder->whereColumn($column)->notNull();
+                    $this->qb->whereColumn($column)->notNull();
                     break;
 
                 default:
-                    $this->builder->where($column, $operator);
+                    $this->qb->where($column, $operator);
                     break;
             }
         }
@@ -456,23 +460,23 @@ class Model
         else if (!is_null($operator) && !is_null($value)) {
             switch(strtolower($operator)) {
                 case 'in':
-                    $this->builder->whereColumn($column)->in($value);
+                    $this->qb->whereColumn($column)->in($value);
                     break;
 
                 case 'not in':
-                    $this->builder->whereColumn($column)->notIn($value);
+                    $this->qb->whereColumn($column)->notIn($value);
                     break;
 
                 case 'like':
-                    $this->builder->whereColumn($column)->like($value);
+                    $this->qb->whereColumn($column)->like($value);
                     break;
 
                 case 'not like':
-                    $this->builder->whereColumn($column)->notLike($value);
+                    $this->qb->whereColumn($column)->notLike($value);
                     break;
 
                 default:
-                    $this->builder->where($column, $operator, $value);
+                    $this->qb->where($column, $operator, $value);
                     break;
             }
         }
@@ -491,11 +495,11 @@ class Model
     public function whereNot(string $column, $operator = null, $value = null): self
 	{
         if (!is_null($operator) && is_null($value)) {
-            $this->builder->whereNot($column, $operator);
+            $this->qb->whereNot($column, $operator);
         }
 
         else if (!is_null($operator) && !is_null($value)) {
-            $this->builder->whereNot($column, $operator, $value);
+            $this->qb->whereNot($column, $operator, $value);
         }
 
 		return $this;
@@ -510,7 +514,7 @@ class Model
      */
     public function whereRaw(string $query, array $args = []): self
     {
-        $this->builder->whereRaw($query, $args);
+        $this->qb->whereRaw($query, $args);
         return $this;
     }
 
@@ -527,15 +531,15 @@ class Model
         if (!is_null($operator) && is_null($value)) {
             switch(strtolower($operator)) {
                 case 'null':
-                    $this->builder->andColumn($column)->isNull();
+                    $this->qb->andColumn($column)->isNull();
                     break;
 
                 case 'not null':
-                    $this->builder->andColumn($column)->notNull();
+                    $this->qb->andColumn($column)->notNull();
                     break;
 
                 default:
-                    $this->builder->and($column, $operator);
+                    $this->qb->and($column, $operator);
                     break;
             }
         }
@@ -543,23 +547,23 @@ class Model
         else if (!is_null($operator) && !is_null($value)) {
             switch(strtolower($operator)) {
                 case 'in':
-                    $this->builder->andColumn($column)->in($value);
+                    $this->qb->andColumn($column)->in($value);
                     break;
 
                 case 'not in':
-                    $this->builder->andColumn($column)->notIn($value);
+                    $this->qb->andColumn($column)->notIn($value);
                     break;
 
                 case 'like':
-                    $this->builder->andColumn($column)->like($value);
+                    $this->qb->andColumn($column)->like($value);
                     break;
 
                 case 'not like':
-                    $this->builder->andColumn($column)->notLike($value);
+                    $this->qb->andColumn($column)->notLike($value);
                     break;
 
                 default:
-                    $this->builder->and($column, $operator, $value);
+                    $this->qb->and($column, $operator, $value);
                     break;
             }
         }
@@ -580,15 +584,15 @@ class Model
         if (!is_null($operator) && is_null($value)) {
             switch(strtolower($operator)) {
                 case 'null':
-                    $this->builder->orColumn($column)->isNull();
+                    $this->qb->orColumn($column)->isNull();
                     break;
 
                 case 'not null':
-                    $this->builder->orColumn($column)->notNull();
+                    $this->qb->orColumn($column)->notNull();
                     break;
 
                 default:
-                    $this->builder->or($column, $operator);
+                    $this->qb->or($column, $operator);
                     break;
             }
         }
@@ -596,23 +600,23 @@ class Model
         else if (!is_null($operator) && !is_null($value)) {
             switch(strtolower($operator)) {
                 case 'in':
-                    $this->builder->orColumn($column)->in($value);
+                    $this->qb->orColumn($column)->in($value);
                     break;
 
                 case 'not in':
-                    $this->builder->orColumn($column)->notIn($value);
+                    $this->qb->orColumn($column)->notIn($value);
                     break;
 
                 case 'like':
-                    $this->builder->orColumn($column)->like($value);
+                    $this->qb->orColumn($column)->like($value);
                     break;
 
                 case 'not like':
-                    $this->builder->orColumn($column)->notLike($value);
+                    $this->qb->orColumn($column)->notLike($value);
                     break;
 
                 default:
-                    $this->builder->or($column, $operator, $value);
+                    $this->qb->or($column, $operator, $value);
                     break;
             }
         }
@@ -631,11 +635,11 @@ class Model
     public function having(string $column, $operator = null, $value = null): self
 	{
         if (!is_null($operator) && is_null($value)) {
-            $this->builder->having($column, $operator);
+            $this->qb->having($column, $operator);
         }
 
         else if (!is_null($operator) && !is_null($value)) {
-            $this->builder->having($column, $operator, $value);
+            $this->qb->having($column, $operator, $value);
         }
 
 		return $this;
@@ -650,7 +654,7 @@ class Model
      */
     public function havingRaw(string $query, array $args = []): self
     {
-        $this->builder->havingRaw($query, $args);
+        $this->qb->havingRaw($query, $args);
         return $this;
     }
     
@@ -664,7 +668,7 @@ class Model
      */
     public function whereBetween(string $column, $start, $end): self
     {
-        $this->builder->whereColumn($column)->between($start, $end);
+        $this->qb->whereColumn($column)->between($start, $end);
         return $this;
     }
     
@@ -678,7 +682,7 @@ class Model
      */
     public function whereNotBetween(string $column, $start, $end): self
     {
-        $this->builder->whereColumn($column)->notBetween($start, $end);
+        $this->qb->whereColumn($column)->notBetween($start, $end);
         return $this;
     }
     
@@ -716,7 +720,7 @@ class Model
 	 */
     public function whereNull(string $column): self
 	{
-        $this->builder->whereColumn($column)->isNull();
+        $this->qb->whereColumn($column)->isNull();
 		return $this;
 	}
 
@@ -728,7 +732,7 @@ class Model
 	 */
     public function whereNotNull(string $column): self
 	{
-        $this->builder->whereColumn($column)->notNull();
+        $this->qb->whereColumn($column)->notNull();
 		return $this;
 	}
 
@@ -741,7 +745,7 @@ class Model
 	 */
     public function whereLike(string $column, $value): self
 	{
-        $this->builder->whereColumn($column)->like($value);
+        $this->qb->whereColumn($column)->like($value);
 		return $this;
 	}
 
@@ -754,7 +758,7 @@ class Model
 	 */
     public function whereNotLike(string $column, $value): self
 	{
-        $this->builder->whereColumn($column)->notLike($value);
+        $this->qb->whereColumn($column)->notLike($value);
 		return $this;
 	}
 
@@ -767,7 +771,7 @@ class Model
 	 */
     public function whereIn(string $column, array $values): self
 	{
-        $this->builder->whereColumn($column)->in($values);
+        $this->qb->whereColumn($column)->in($values);
 		return $this;
 	}
 
@@ -780,7 +784,7 @@ class Model
 	 */
     public function whereNotIn(string $column, $value): self
 	{
-        $this->builder->whereColumn($column)->notIn($value);
+        $this->qb->whereColumn($column)->notIn($value);
 		return $this;
 	}
 
@@ -797,7 +801,7 @@ class Model
     public function join(string $table, string $first_column, string $operator, string $second_column, string $method = 'inner'): self
     {
         $method = $method . 'Join';
-        $this->builder->$method($table, $second_column, $operator, $first_column);
+        $this->qb->$method($table, $second_column, $operator, $first_column);
         return $this;
     }
     
@@ -810,7 +814,7 @@ class Model
      */
     public function orderBy(string $column, string $direction): self
     {
-        $this->builder->orderBy($column, $direction);
+        $this->qb->orderBy($column, $direction);
         return $this;
     }
     
@@ -888,7 +892,7 @@ class Model
      */
     public function group(array $columns): self
     {
-        $this->builder->groupBy(implode(',', $columns));
+        $this->qb->groupBy(implode(',', $columns));
         return $this;
     }
 
@@ -952,7 +956,7 @@ class Model
      */
     public function range(int $start, int $end): array
     {
-        $this->builder->limit($start, $end);
+        $this->qb->limit($start, $end);
         return $this->all();
     }
     
@@ -975,15 +979,15 @@ class Model
      */
     public function paginate(int $items_per_pages): Pager
     {
-        list($query, $args) = $this->builder->toSQL();
+        list($query, $args) = $this->qb->toSQL();
 
         $page = (new Request())->queries('page', 1);
-        $total_items = count(Builder::setQuery($query, $args)->execute()->fetchAll());
+        $total_items = count(QueryBuilder::setQuery($query, $args)->execute()->fetchAll());
         $pagination = generate_pagination($page, $total_items, $items_per_pages);
         
         $items = $items_per_pages > 0 ? 
-            Builder::setQuery($query, $args)->limit($pagination['first_item'], $items_per_pages)->execute()->fetchAll() : 
-            Builder::setQuery($query, $args)->execute()->fetchAll();
+            QueryBuilder::setQuery($query, $args)->limit($pagination['first_item'], $items_per_pages)->execute()->fetchAll() : 
+            QueryBuilder::setQuery($query, $args)->execute()->fetchAll();
         
         return new Pager($items, $pagination);
     }
@@ -995,7 +999,7 @@ class Model
      */
     public function persist(): \PDOStatement
     {
-        return $this->builder->execute();
+        return $this->qb->execute();
     }
     
     /**
@@ -1005,7 +1009,7 @@ class Model
      */
     public function toSQL(): array
     {
-        return $this->builder->toSQL();
+        return $this->qb->toSQL();
     }
 
     /**
@@ -1017,7 +1021,7 @@ class Model
      */
     public function raw(string $query, array $args = []): self
     {
-        $this->builder->rawQuery($query, $args);
+        $this->qb->rawQuery($query, $args);
         return $this;
     }
     
@@ -1030,7 +1034,7 @@ class Model
      */
     public function query(string $query, array $args = []): self
     {
-        $this->builder = Builder::setQuery($query, $args);
+        $this->qb = QueryBuilder::setQuery($query, $args);
         return $this;
     }
     

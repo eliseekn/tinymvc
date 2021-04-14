@@ -10,8 +10,9 @@ use App\Helpers\Auth;
 use Framework\Routing\Route;
 use Framework\Database\Model;
 use Framework\Support\Metrics;
-use App\Database\Models\Messages;
-use App\Database\Models\Notifications;
+use App\Database\Repositories\Users;
+use App\Database\Repositories\Messages;
+use App\Database\Repositories\Notifications;
 
 /**
  * API routes
@@ -19,7 +20,7 @@ use App\Database\Models\Notifications;
 
 Route::group(['prefix' => 'api', 'middlewares' => ['cors']], function () {
     Route::get('notifications', function() {
-        $notifications = Notifications::findMessages();
+        $notifications = (new Notifications())->findMessages();
 
         foreach ($notifications as $notification) {
             $notification->created_at = time_elapsed($notification->created_at);
@@ -29,12 +30,12 @@ Route::group(['prefix' => 'api', 'middlewares' => ['cors']], function () {
     });
 
     Route::get('metrics/users/{trends}/?{interval}?', function (string $trends, int $interval = 0) {
-        $metrics = (new Model('users'))->metrics('id', Metrics::COUNT, $trends, $interval);
+        $metrics = (new Users())->metrics('id', Metrics::COUNT, $trends, $interval);
         response()->json(['metrics' => json_encode($metrics)]);
     })->where(['trends' => 'str','interval' => 'num']);
 
     Route::get('messages', function () {
-        $messages = Messages::findReceivedMessages();
+        $messages = (new Messages())->findReceivedMessages();
 
         foreach ($messages as $message) {
             $message->created_at = time_elapsed($message->created_at);
@@ -44,7 +45,7 @@ Route::group(['prefix' => 'api', 'middlewares' => ['cors']], function () {
     });
 
     Route::get('users', function () {
-        response()->json(['users' => (new Model('users'))->find('!=', Auth::get('id'))->all()]);
+        response()->json(['users' => (new Users())->find('!=', Auth::get('id'))->all()]);
     });
 
     Route::get('translations', function() {

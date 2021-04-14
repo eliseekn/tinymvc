@@ -5,10 +5,26 @@ namespace App\Controllers\Admin;
 use Framework\Http\Request;
 use Framework\Routing\Controller;
 use App\Helpers\NotificationHelper;
-use App\Database\Models\Notifications;
+use App\Database\Repositories\Notifications;
 
 class NotificationsController extends Controller
 {
+    /**
+     * @var \App\Database\Repositories\Notifications $notifications
+     */
+    private $notifications;
+    
+    /**
+     * __construct
+     *
+     * @param  \App\Database\Repositories\Notifications $notifications
+     * @return void
+     */
+    public function __construct(Notifications $notifications)
+    {
+        $this->notifications = $notifications;
+    }
+
     /**
      * index
      *
@@ -16,9 +32,9 @@ class NotificationsController extends Controller
      */
     public function index(): void
     {
-        $notifications = Notifications::paginate();
-        $notifications_unread = Notifications::unreadCount();
-        $this->render('admin.account.notifications', compact('notifications', 'notifications_unread'));
+        $data = $this->notifications->findAllPaginate();
+        $notifications_unread = $this->notifications->unreadCount();
+        $this->render('admin.account.notifications', compact('data', 'notifications_unread'));
     }
 
 	/**
@@ -30,7 +46,7 @@ class NotificationsController extends Controller
 	public function create(Request $request): void
 	{
         NotificationHelper::create($request->message);
-        redirect()->back()->withToast(__('notifications_created'))->success();
+        redirect()->back()->withToast('success', __('notifications_created'))->go();
     }
     
 	/**
@@ -43,13 +59,13 @@ class NotificationsController extends Controller
 	public function update(Request $request, ?int $id = null): void
 	{
         if (!is_null($id)) {
-            $this->model('notifications')->updateIfExists($id, ['status' => 'read']);
+            $this->notifications->updateIfExists($id, ['status' => 'read']);
             $this->log(__('notification_updated'));
-            redirect()->back()->withToast(__('notification_updated'))->success();
+            redirect()->back()->withToast('success', __('notification_updated'))->go();
 		} else {
-            $this->model('notifications')->updateBy(['id', 'in', $request->items], ['status' => 'read']);
+            $this->notifications->updateBy(['id', 'in', $request->items], ['status' => 'read']);
             $this->log(__('notifications_updated'));
-			$this->alert('toast', __('notifications_updated'))->success();
+			$this->toast('success', __('notifications_updated'));
             response()->json(['redirect' => route('notifications.index')]);
 		}
     }
@@ -64,13 +80,13 @@ class NotificationsController extends Controller
 	public function delete(Request $request, ?int $id = null): void
 	{
 		if (!is_null($id)) {
-			$this->model('notifications')->deleteIfExists($id);
+			$this->notifications->deleteIfExists($id);
             $this->log(__('notification_deleted'));
-            redirect()->back()->withToast(__('notification_deleted'))->success();
+            redirect()->back()->withToast('success', __('notification_deleted'))->go();
 		} else {
-            $this->model('notifications')->deleteBy('id', 'in', explode(',', $request->items));
+            $this->notifications->deleteBy('id', 'in', explode(',', $request->items));
             $this->log(__('notifications_deleted'));
-			$this->alert('toast', __('notifications_deleted'))->success();
+			$this->toast('success', __('notifications_deleted'));
 			response()->json(['redirect' => route('notifications.index')]);
 		}
 	}

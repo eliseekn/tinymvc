@@ -10,7 +10,7 @@
         <metric-card-item 
             title="{{ __('total') }}" 
             icon="fa fa-users fa-2x" 
-            data="{{ users.getTotalItems() }}"
+            data="{{ data.getTotalItems() }}"
             columns="4">
         </metric-card-item>
 
@@ -75,47 +75,47 @@
                     </thead>
 
                     <tbody>
-                        {% for user in users.getItems() %}
+                        {% for data in data.getItems() %}
                         <tr>
                             <td>
                                 <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="{{ user.id }}" data-id="{{ user.id }}">
-                                    <label class="custom-control-label" for="{{ user.id }}"></label>
+                                    <input type="checkbox" class="custom-control-input" id="{{ data.id }}" data-id="{{ data.id }}">
+                                    <label class="custom-control-label" for="{{ data.id }}"></label>
                                 </div>
                             </td>
 
-                            <td>{{ user.id }}</td>
+                            <td>{{ data.id }}</td>
 
                             <td>
-                                <avatar-icon name="{{ user.name }}"></avatar-icon>
+                                <avatar-icon name="{{ data.name }}"></avatar-icon>
                             </td>
 
-                            <td>{{ user.email }}</td>
-                            <td>{{ user.phone }}</td>
-                            <td>{{ user.company }}</td>
-                            <td>{{ user.role }}</td>
+                            <td>{{ data.email }}</td>
+                            <td>{{ data.phone }}</td>
+                            <td>{{ data.company }}</td>
+                            <td>{{ data.role }}</td>
 
                             <td>
-                                {% if user.active %}
+                                {% if data.active %}
                                 <span class="badge badge-success">{{ __('active') }}</span>
                                 {% else %}
                                 <span class="badge badge-danger">{{ __('inactive') }}</span>
                                 {% endif %}
                             </td>
 
-                            <td>{{ date_helper(user.created_at) }}</td>
-                            <td>{{ user.updated_at != user.created_at ? date_helper(user.updated_at) : '-' }}</td>
+                            <td>{{ date_helper(data.created_at) }}</td>
+                            <td>{{ data.updated_at != data.created_at ? date_helper(data.updated_at) : '-' }}</td>
 
                             <td>
-                                <a class="btn text-dark p-1" href="{{ route('users.read', user.id) }}" title="{{ __('details') }}">
+                                <a class="btn text-dark p-1" href="{{ route('users.read', data.id) }}" title="{{ __('details') }}">
                                     <i class="fa fa-eye"></i>
                                 </a>
 
-                                <a class="btn text-dark p-1" href="{{ route('users.edit', user.id) }}" title="{{ __('edit') }}">
+                                <a class="btn text-dark p-1" href="{{ route('users.edit', data.id) }}" title="{{ __('edit') }}">
                                     <i class="fa fa-edit"></i>
                                 </a>
 
-                                <delete-item action="{{ route('users.delete', user.id) }}">
+                                <delete-item action="{{ route('users.delete', data.id) }}">
                                     <a class="btn text-danger p-1" title="{{ __('delete') }}">
                                         <i class="fa fa-trash-alt"></i>
                                     </a>
@@ -129,14 +129,14 @@
         </div>
 
         <div class="card-footer d-flex align-items-center justify-content-between">
-            <span>{{ __('total_results') }} <span class="font-weight-bold">{{ users.getTotalItems() }}</span></span>
+            <span>{{ __('total_results') }} <span class="font-weight-bold">{{ data.getTotalItems() }}</span></span>
             <span>{{ __('showing') }}
-                <span class="font-weight-bold">{{ users.getPageTotalItems() == 0 ? users.getFirstItem() : users.getFirstItem() + 1 }}</span>
+                <span class="font-weight-bold">{{ data.getPageTotalItems() == 0 ? data.getFirstItem() : data.getFirstItem() + 1 }}</span>
                 {{ __('to') }}
-                <span class="font-weight-bold">{{ users.getPageTotalItems() + users.getFirstItem() }}</span>
+                <span class="font-weight-bold">{{ data.getPageTotalItems() + data.getFirstItem() }}</span>
             </span>
 
-            {% include "partials/pagination.html.twig" with {pagination: users} %}
+            {% include "partials/pagination.html.twig" with {pagination: data} %}
         </div>
     </div>
 

@@ -9,7 +9,7 @@
     <div class="card shadow-sm">
         <div class="card-header">{{ __('edit') }}</div>
 
-        <form method="post" action="{{ route('medias.update', media.id) }}">
+        <form method="post" action="{{ route('medias.update', data.id) }}">
             {{ csrf_token_input()|raw }}
             {{ method_input('patch')|raw }}
 
@@ -17,7 +17,7 @@
                 <div class="form-group row">
                     <label for="filename" class="col-sm-2 col-form-label">{{ __('filename') }}</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control {{ errors.filename ? 'is-invalid' }}" name="filename" id="filename" value="{{ inputs.filename ?: media.filename }}" aria-describedby="filename-error">
+                        <input type="text" class="form-control {{ errors.filename ? 'is-invalid' }}" name="filename" id="filename" value="{{ inputs.filename ?: data.filename }}" aria-describedby="filename-error">
 
                         {% if errors.filename is not empty %}
                         <div id="filename-error" class="invalid-feedback">
@@ -30,7 +30,7 @@
                 <div class="form-group row">
                     <label for="title" class="col-sm-2 col-form-label">{{ __('title') }}</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control {{ errors.title ? 'is-invalid' }}" name="title" id="title" value="{{ inputs.title ?: media.title }}" aria-describedby="title-error">
+                        <input type="text" class="form-control {{ errors.title ? 'is-invalid' }}" name="title" id="title" value="{{ inputs.title ?: data.title }}" aria-describedby="title-error">
                     
                         {% if errors.title is not empty %}
                         <div id="title-error" class="invalid-feedback">
@@ -43,7 +43,7 @@
                 <div class="form-group row">
                     <label for="description" class="col-sm-2 col-form-label">{{ __('description') }}</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control {{ errors.description ? 'is-invalid' }}" name="description" id="description" value="{{ inputs.description ?: media.description }}" aria-describedby="description-error">
+                        <input type="text" class="form-control {{ errors.description ? 'is-invalid' }}" name="description" id="description" value="{{ inputs.description ?: data.description }}" aria-describedby="description-error">
 
                         {% if errors.description is not empty %}
                         <div id="description-error" class="invalid-feedback">

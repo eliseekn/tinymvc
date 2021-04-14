@@ -5,13 +5,13 @@ namespace App\Helpers;
 use Carbon\Carbon;
 use App\Mails\AuthLinkMail;
 use Framework\Http\Request;
-use Framework\Database\Model;
 use Framework\System\Cookies;
 use Framework\System\Session;
-use App\Database\Models\Roles;
-use App\Database\Models\Tokens;
-use App\Middlewares\AuthPolicy;
 use Framework\System\Encryption;
+use App\Database\Repositories\Roles;
+use App\Database\Repositories\Users;
+use App\Middlewares\DashboardPolicy;
+use App\Database\Repositories\Tokens;
 
 class Auth
 {    
@@ -30,12 +30,12 @@ class Auth
      *
      * @return mixed
      */
-    public static function attempt(Request $request)
+    public static function attempt(Request $request, Users $users, Tokens $tokens)
     {
         //increment authentication attempts
         Session::create('auth_attempts', (self::getAttempts() + 1));
 
-        $user = (new Model('users'))->findSingleBy('email', $request->email);
+        $user = $users->findSingleByEmail($request->email);
 
         //check credentials
         if ($user !== false && Encryption::check($request->password, $user->password)) {
@@ -44,7 +44,7 @@ class Auth
 
             //check user state
             if (!$user->active) {
-                redirect()->back()->withAlert(__('user_not_activated', true))->error('');
+                redirect()->back()->withAlert('error', __('user_not_activated', true))->go();
             }
 
             //check if two factor authentication is enabled
@@ -52,10 +52,10 @@ class Auth
                 $token = random_string(50, true);
 
                 if (AuthLinkMail::send($user->email, $token)) {
-                    Tokens::store($request->email, $token, Carbon::now()->addHour()->toDateTimeString());
-                    redirect()->back()->withAlert(__('confirm_email_link_sent', true))->success('');
+                    $tokens->store($request->email, $token, Carbon::now()->addHour()->toDateTimeString());
+                    redirect()->back()->withAlert('success', __('confirm_email_link_sent', true))->go();
                 } else {
-                    redirect()->back()->withAlert(__('confirm_email_link_not_sent', true))->error('');
+                    redirect()->back()->withAlert('error', __('confirm_email_link_not_sent', true))->go();
                 }
             }
 
@@ -70,28 +70,40 @@ class Auth
             Activity::log(__('login_attempts_succeeded', true));
 
             //process to logged user redirection
-            AuthPolicy::handle($request);
+            (new DashboardPolicy())->handle($request);
+
+            if (Session::has('intended')) {
+                $intended = Session::pull('intended');
+                redirect()->url($intended)->withToast('success', __('welcome_back') . ' ' . Auth::get('name'))->go();
+            }
+
+            if ($user->role === Roles::ROLE[0]) {
+                redirect()->route('dashboard.index')->withToast('success', __('welcome') . ' ' . Auth::get('name'))->go();
+            }
+
+            redirect()->url()->withToast('success', __('welcome') . ' ' . Auth::get('name'))->go();
         }
 
         //authentication failed
         Activity::log(__('login_attempts_failed', true), $request->email);
 
         if (config('auth.max_attempts') > 0 && self::getAttempts() >= config('auth.max_attempts')) {
-            redirect()->back()->with('auth_attempts_timeout', Carbon::now()->addMinutes(config('auth.unlock_timeout'))->toDateTimeString())->only();
+            redirect()->back()->with('auth_attempts_timeout', Carbon::now()->addMinutes(config('auth.unlock_timeout'))->toDateTimeString())->go();
         } else {
             redirect()->back()->withInputs($request->only('email', 'password'))
-                ->withAlert(__('login_failed', true))->error('');
+                ->withAlert('error', __('login_failed', true))->go();
         }
     }
     
     /**
      * create new user
      *
+     * @param  \App\Database\Repositories\Users $u
      * @return bool
      */
-    public static function create(Request $request): bool
+    public static function create(Request $request, Users $u): bool
     {
-        $users = (new Model('users'))->selectAll(['email', 'phone']);
+        $users = $u->selectAll(['email', 'phone']);
 
         foreach ($users as $user) {
             if ($user->email === $request->email || $user->phone === $request->phone) {
@@ -99,21 +111,15 @@ class Auth
             }
         }
 
-        (new Model('users'))->insert([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'company' => $request->company,
-            'password' => Encryption::hash($request->password),
-            'role' => empty($users) ? Roles::ROLE[0] : Roles::ROLE[2],
-            'active' => empty($users) ? 1 : 0,
-        ]);
+        $active = empty($users) ? 1 : 0;
+        $role = empty($users) ? Roles::ROLE[0] : Roles::ROLE[2];
 
+        $u->store($request, $active, $role);
         return true;
     }
 
     /**
-     * check is user session
+     * check user session
      *
      * @return bool
      */
@@ -123,7 +129,7 @@ class Auth
     }
 
     /**
-     * check is user cookie
+     * check user cookie
      *
      * @return bool
      */
@@ -140,7 +146,8 @@ class Auth
      */
     public static function get(string $key)
     {
-        return Session::get('user')->$key;
+        $data = Session::get('user');
+        return $data->$key;
     }
     
     /**
@@ -150,13 +157,12 @@ class Auth
      */
     public static function forget(): void
     {
-        if (self::check()) {
-            Activity::log(__('logged_out', true), self::get('email'));
+        if (!self::check()) {
+           return; 
         }
 
-        if (self::check()) {
-            Session::close('user', 'history', 'csrf_token');
-        }
+        Activity::log(__('logged_out', true), self::get('email'));
+        Session::close('user', 'history', 'csrf_token');
 
         if (self::remember()) {
             Cookies::delete('user');

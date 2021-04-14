@@ -2,7 +2,7 @@
 
 namespace App\Database\Migrations;
 
-use App\Database\Models\Roles;
+use App\Database\Repositories\Roles;
 use Framework\Database\Schema;
 
 class UsersTable_20210403034738
@@ -52,11 +52,11 @@ class UsersTable_20210403034738
     }
     
     /**
-     * reset table
+     * refresh table
      *
      * @return void
      */
-    public static function reset(): void
+    public static function refresh(): void
     {
         self::delete();
         self::migrate();

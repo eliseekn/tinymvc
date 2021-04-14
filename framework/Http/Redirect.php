@@ -25,21 +25,14 @@ class Redirect
     public $url = '';
 
     /**
-     * @var \Framework\Support\Alert $alert
-     */
-    protected $alert;
-
-    /**
      * redirect to url 
      *
      * @param  string $url
-     * @param  array|string $params
      * @return \Framework\Http\Redirect
      */
-    public function url(string $url = '/', $params = null): self
+    public function url(string $url = '/'): self
     {
-        $params = is_array($params) ? (empty($params) ? '' : implode('/', $params)) : $params;
-        $this->url = is_null($params) ? $url : $url . '/' . $params;
+        $this->url = $url;
         return $this;
     }
     
@@ -72,13 +65,24 @@ class Redirect
 
         return $this;
     }
+    
+    /**
+     * redirect to intended uri
+     *
+     * @param  string $uri
+     * @return \Framework\Http\Redirect
+     */
+    public function intended(string $uri = '/'): self
+    {
+        return $this->with('intended', $uri);
+    }
 
     /**
-     * redirects only
+     * perform redirection
      *
      * @return void
      */
-    public function only(): void
+    public function go(): void
     {
         redirect_to($this->url);
     }
@@ -139,85 +143,27 @@ class Redirect
     /**
      * redirects with default alert message
      *
+     * @param  string $type
      * @param  mixed $message
      * @param  bool $dismiss
      * @return \Framework\Http\Redirect
      */
-    public function withAlert($message, bool $dismiss = true): self
+    public function withAlert(string $type, $message, bool $dismiss = true): self
     {
-        $this->alert = Alert::default($message, $dismiss);
+        Alert::default($message, $dismiss)->$type();
         return $this;
     }
 
     /**
      * redirects with toast message
      *
+     * @param  string $type
      * @param  mixed $message
      * @return \Framework\Http\Redirect
      */
-    public function withToast($message): self
+    public function withToast(string $type, $message): self
     {
-        $this->alert = Alert::toast($message);
+        Alert::toast($message)->$type();
         return $this;
-    }
-    
-    /**
-     * redirects with popup message
-     *
-     * @param  mixed $message
-     * @return \Framework\Http\Redirect
-     */
-    public function withPopup($message): self
-    {
-        $this->alert = Alert::popup($message);
-        return $this;
-    }
-        
-    /**
-     * success
-     *
-     * @param  string $title
-     * @return void
-     */
-    public function success(string $title = 'Success'): void
-    {
-        $this->alert->success($title);
-        redirect_to($this->url);
-    }
-        
-    /**
-     * error
-     *
-     * @param  string $title
-     * @return void
-     */
-    public function error(string $title = 'Error'): void
-    {
-        $this->alert->error($title);
-        redirect_to($this->url);
-    }
-        
-    /**
-     * info
-     *
-     * @param  string $title
-     * @return void
-     */
-    public function info(string $title = 'Info'): void
-    {
-        $this->alert->info($title);
-        redirect_to($this->url);
-    }
-        
-    /**
-     * warning
-     *
-     * @param  string $title
-     * @return void
-     */
-    public function warning(string $title = 'Warning'): void
-    {
-        $this->alert->warning($title);
-        redirect_to($this->url);
     }
 }

@@ -35,11 +35,13 @@ class Uploader
      * @var array
      */
     public $allowed_extensions = [];
-    
+
     /**
      * __construct
      *
      * @param  array $file
+     * @param  array $allowed_extensions
+     * @param  int $max_size
      * @return void
      */
     public function __construct(array $file, array $allowed_extensions)
@@ -107,6 +109,17 @@ class Uploader
     {
         return is_uploaded_file($this->getTempFilename());
     }
+
+    /**
+     * check if file is oversize
+     * 
+     * @param  int $max_size
+     * @return bool
+     */
+    public function isOverSized(int $max_size): bool
+    {
+        return $this->getFileSize() > $max_size;
+    }
         
     /**
      * get file size
@@ -168,7 +181,7 @@ class Uploader
      */
     public function save(string $destination, ?string $filename = null): bool
     {
-        $this->filename = is_null($filename) ? $this->getOriginalFilename() : $filename;
+        $this->filename = $filename ?? $this->getOriginalFilename();
 
         //create destination directory
         if (!Storage::path($destination)->isDir()) {

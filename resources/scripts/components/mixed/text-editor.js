@@ -1,20 +1,24 @@
 class TextEditor extends HTMLElement {
     constructor() {
         super()
+        this.submit = this.submit.bind(this)
 
-        document.querySelector(this.getAttribute('form')).addEventListener('submit', event => {
-            event.preventDefault()
-            
-            let formData = new FormData(document.querySelector(this.getAttribute('form')))
-            formData.append('editor', this.editor.root.innerHTML)
+        let form = document.querySelector(this.getAttribute('form'))
+        form.addEventListener('submit', event => this.submit(event))
+    }
 
-            fetch(document.querySelector(this.getAttribute('form')).dataset.url, {
-                method: 'post',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => window.location.href = data.redirect)
+    submit(event) {
+        event.preventDefault()
+        
+        let formData = new FormData(form)
+        formData.append('editor', this.editor.root.innerHTML)
+
+        fetch(form.dataset.url, {
+            method: 'POST',
+            body: formData
         })
+        .then(response => response.json())
+        .then(data => window.location.href = data.redirect)
     }
 
     connectedCallback() {

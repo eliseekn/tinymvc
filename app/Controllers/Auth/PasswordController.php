@@ -5,7 +5,7 @@ namespace App\Controllers\Auth;
 use Carbon\Carbon;
 use App\Mails\TokenMail;
 use App\Requests\AuthRequest;
-use App\Database\Models\Tokens;
+use App\Database\Repositories\Tokens;
 use Framework\Http\Request;
 use Framework\Routing\Controller;
 use Framework\System\Encryption;
@@ -27,10 +27,10 @@ class PasswordController extends Controller
 
 		if (TokenMail::send($request->email, $token)) {
             Tokens::store($request->email, $token, Carbon::now()->addHour()->toDateTimeString());
-			redirect()->back()->withAlert(__('password_reset_link_sent', true))->success('');
+			redirect()->back()->withAlert('success', __('password_reset_link_sent', true))->go();
 		} 
         
-		redirect()->back()->withAlert(__('password_reset_link_not_sent', true))->error('');
+		redirect()->back()->withAlert('error', __('password_reset_link_not_sent', true))->go();
 	}
 	
 	/**
@@ -70,6 +70,6 @@ class PasswordController extends Controller
             ['password' => Encryption::hash($request->password)]
         );
 
-        redirect()->url('login')->withAlert(__('password_resetted', true))->success('');
+        redirect()->url('login')->withAlert('success', __('password_resetted', true))->go();
 	}
 }

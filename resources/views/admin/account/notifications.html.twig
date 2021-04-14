@@ -10,7 +10,7 @@
         <metric-card-item 
             title="{{ __('total') }}" 
             icon="fa fa-bell fa-2x" 
-            data="{{ notifications.getTotalItems() }}"
+            data="{{ data.getTotalItems() }}"
             columns="4">
         </metric-card-item>
 
@@ -71,27 +71,27 @@
                     </thead>
 
                     <tbody>
-                        {% for notification in notifications.getItems() %}
+                        {% for data in data.getItems() %}
                         <tr>
                             <td>
                                 <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="{{ notification.id }}" data-id="{{ notification.id }}">
-                                    <label class="custom-control-label" for="{{ notification.id }}"></label>
+                                    <input type="checkbox" class="custom-control-input" id="{{ data.id }}" data-id="{{ data.id }}">
+                                    <label class="custom-control-label" for="{{ data.id }}"></label>
                                 </div>
                             </td>
 
-                            <td>{{ notification.id }}</td>
-                            <td>{{ notification.message }}</td>
-                            <td>{{ time_elapsed(notification.created_at) }}</td>
+                            <td>{{ data.id }}</td>
+                            <td>{{ data.message }}</td>
+                            <td>{{ time_elapsed(data.created_at) }}</td>
 
                             <td>
-                                <update-item action="{{ route('notifications.update', notification.id) }}" {{ notification.status == 'read' ? 'disabled' }}>
-                                    <button type="submit" class="btn text-dark p-1" {{ notification.status == 'unread' ? 'title="' ~ __('mark_as_read') ~ '"' }}>
-                                        <i class="fa fa-eye{{ notification.status == 'unread' ? '-slash' }}"></i>
+                                <update-item action="{{ route('notifications.update', data.id) }}" {{ data.status == 'read' ? 'disabled' }}>
+                                    <button type="submit" class="btn text-dark p-1" {{ data.status == 'unread' ? 'title="' ~ __('mark_as_read') ~ '"' }}>
+                                        <i class="fa fa-eye{{ data.status == 'unread' ? '-slash' }}"></i>
                                     </button>
                                 </update-item>
 
-                                <delete-item action="{{ route('notifications.delete', notification.id) }}">
+                                <delete-item action="{{ route('notifications.delete', data.id) }}">
                                     <a class="btn text-danger p-1" title="{{ __('delete') }}">
                                         <i class="fa fa-trash-alt"></i>
                                     </a>
@@ -105,14 +105,14 @@
         </div>
 
         <div class="card-footer d-flex align-items-center justify-content-between">
-            <span>{{ __('total_results') }} <span class="font-weight-bold">{{ notifications.getTotalItems() }}</span></span>
+            <span>{{ __('total_results') }} <span class="font-weight-bold">{{ data.getTotalItems() }}</span></span>
             <span>{{ __('showing') }}
-                <span class="font-weight-bold">{{ notifications.getPageTotalItems() == 0 ? notifications.getFirstItem() : notifications.getFirstItem() + 1 }}</span>
+                <span class="font-weight-bold">{{ data.getPageTotalItems() == 0 ? data.getFirstItem() : data.getFirstItem() + 1 }}</span>
                 {{ __('to') }}
-                <span class="font-weight-bold">{{ notifications.getPageTotalItems() + notifications.getFirstItem() }}</span>
+                <span class="font-weight-bold">{{ data.getPageTotalItems() + data.getFirstItem() }}</span>
             </span>
 
-            {% include "partials/pagination.html.twig" with {pagination: notifications} %}
+            {% include "partials/pagination.html.twig" with {pagination: data} %}
         </div>
     </div>
 

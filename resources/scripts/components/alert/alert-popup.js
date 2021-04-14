@@ -4,7 +4,7 @@
  * @class AlertPopup
  * @constructor
  */
-class AlertPopup extends HTMLElement {
+ class AlertPopup extends HTMLElement {
     constructor() {
         super()
 
@@ -21,7 +21,7 @@ class AlertPopup extends HTMLElement {
             case 'primary':
                 return '<i class="fa fa-info-circle text-primary fa-4x"></i>'
             case 'danger':
-                return '<i class="fa fa-exclamation-circle text-danger fa-4x"></i>'
+                return '<i class="fa fa-times-circle text-danger fa-4x"></i>'
             case 'warning':
                 return '<i class="fa fa-exclamation-triangle text-warning fa-4x"></i>'
             default:
@@ -38,11 +38,8 @@ class AlertPopup extends HTMLElement {
         element.innerHTML = `
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                    <div class="position-relative bg-${this.getAttribute('type')} rounded-top" style="padding: .13em 0"></div>
-
                     <div class="modal-body text-center">
                         ${this.popupIcon()}
-                        <h5 class="modal-title mt-2 text-${this.getAttribute('type')}">${this.getAttribute('title')}</h5>
                         <p class="modal-title my-2">${this.getAttribute('message')}</p>
                         <button type="button" class="btn btn-${this.getAttribute('type')}" data-dismiss="modal">OK</button>
                     </div>
@@ -53,9 +50,11 @@ class AlertPopup extends HTMLElement {
         document.body.appendChild(element)
 
         $('#alert-popup').modal({
-            backdrop: 'static',
-            keyboard: false, 
             show: true
+        })
+
+        $('#alert-popup').on('hidden.bs.modal', function (e) {
+            document.body.removeChild(element)
         })
     }
 }

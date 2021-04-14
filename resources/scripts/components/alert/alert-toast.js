@@ -21,7 +21,7 @@
             case 'primary':
                 return '<i class="fa fa-info-circle text-primary fa-lg"></i>'
             case 'danger':
-                return '<i class="fa fa-exclamation-circle text-danger fa-lg"></i>'
+                return '<i class="fa fa-times-circle text-danger fa-lg"></i>'
             case 'warning':
                 return '<i class="fa fa-exclamation-triangle text-warning fa-lg"></i>'
             default:
@@ -36,14 +36,11 @@
         element.innerHTML = `
             <div class="modal-dialog position-absolute shadow-sm rounded" style="top: -0.3em; right: .8em; z-index: 11111">
                 <div class="modal-content">
-                    <div class="position-relative bg-${this.getAttribute('type')} rounded-top" style="padding: .13em 0"></div>
-
-                    <div class="modal-body d-flex justify-content-around align-items-start">
+                    <div class="modal-body d-flex justify-content-around align-items-center">
                         <div style="font-size: 1.5rem">${this.toastIcon()}</div>
 
                         <div class="d-flex flex-column px-3">
-                            <div class="toast-header border-0 pl-0 text-${this.getAttribute('type')}">${this.getAttribute('title')}</div>
-                            <p class="modal-title">${this.getAttribute('message')}</p>
+                            <p class="modal-title mb-0">${this.getAttribute('message')}</p>
                         </div>
 
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -65,7 +62,11 @@
         $('#alert-toast').on('shown.bs.modal', function (e) {
             window.setTimeout(function () {
                 $('#alert-toast').modal('hide');
-            }, 3000)
+            }, 4000)
+        })
+
+        $('#alert-toast').on('hidden.bs.modal', function (e) {
+            document.body.removeChild(element)
         })
     }
 }

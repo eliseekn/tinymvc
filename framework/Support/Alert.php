@@ -73,64 +73,44 @@ class Alert
     /**
      * display success alert
      *
-     * @param  string $title
      * @return void
      */
-    public function success(string $title = 'Success'): void
+    public function success(): void
     {
-        self::$alert = array_merge(self::$alert, [
-            'type' => 'success',
-            'title' => $title,
-        ]);
-
+        self::$alert += ['type' => 'success'];
         Session::create('alert', self::$alert);
     }
     
     /**
      * display error alert
      *
-     * @param  string $title
      * @return void
      */
-    public function error(string $title = 'Error'): void
+    public function error(): void
     {
-        self::$alert = array_merge(self::$alert, [
-            'type' => 'danger',
-            'title' => $title,
-        ]);
-        
+        self::$alert += ['type' => 'danger'];
         Session::create('alert', self::$alert);
     }
     
     /**
      * display info alert
      *
-     * @param  string $title
      * @return void
      */
-    public function info(string $title = 'Info'): void 
+    public function info(): void 
     {
-        self::$alert = array_merge(self::$alert, [
-            'type' => 'primary',
-            'title' => $title,
-        ]);
-        
+        self::$alert += ['type' => 'primary',];
         Session::create('alert', self::$alert);
     }
     
     /**
      * display warning alert
      *
-     * @param  string $title
      * @return void
      */
-    public function warning(string $title = 'Warning'): void 
+    public function warning(): void 
     {
-        self::$alert = array_merge(self::$alert, [
-            'type' => 'warning',
-            'title' => $title,
-        ]);
-        
+        self::$alert += ['type' => 'warning',];
         Session::create('alert', self::$alert);
     }
 }

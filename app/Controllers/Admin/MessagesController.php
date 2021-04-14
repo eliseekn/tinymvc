@@ -4,11 +4,27 @@ namespace App\Controllers\Admin;
 
 use App\Helpers\Report;
 use Framework\Http\Request;
-use App\Database\Models\Messages;
 use Framework\Routing\Controller;
+use App\Database\Repositories\Messages;
 
 class MessagesController extends Controller
 {
+    /**
+     * @var \App\Database\Repositories\Messages $messages
+     */
+    private $messages;
+    
+    /**
+     * __construct
+     *
+     * @param  \App\Database\Repositories\Messages $messages
+     * @return void
+     */
+    public function __construct(Messages $messages)
+    {
+        $this->messages = $messages;
+    }
+
     /**
      * index
      *
@@ -16,9 +32,9 @@ class MessagesController extends Controller
      */
     public function index(): void
 	{
-        $messages = Messages::paginate();
-        $messages_unread = Messages::unreadCount();
-		$this->render('admin.account.messages', compact('messages', 'messages_unread'));
+        $data = $this->messages->findAllPaginate();
+        $messages_unread = $this->messages->unreadCount();
+		$this->render('admin.account.messages', compact('data', 'messages_unread'));
 	}
 
 	/**
@@ -29,28 +45,28 @@ class MessagesController extends Controller
 	 */
     public function create(Request $request): void
 	{
-        $id = Messages::store($request);
+        $id = $this->messages->store($request);
 
-        $this->model('messages')->updateIfExists($id, ['sender_status' => 'read']);
+        $this->messages->updateIfExists($id, ['sender_status' => 'read']);
         $this->log(__('message_sent'));
-        redirect()->back()->withToast(__('message_sent'))->success();
+        redirect()->back()->withToast('success', __('message_sent'))->go();
 	}
 	
 	/**
 	 * reply
 	 *
      * @param  \Framework\Http\Request $request
-     * @param  int $id
+     * @param  int $message_id
 	 * @return void
 	 */
-    public function reply(Request $request, int $id): void
+    public function reply(Request $request, int $message_id): void
 	{
-        $_id = Messages::store($request);
+        $id = $this->messages->store($request);
 
-        $this->model('messages')->updateIfExists($id, ['recipient_status' => 'read']);
-        $this->model('messages')->updateIfExists($_id, ['sender_status' => 'read']);
+        $this->messages->updateIfExists($message_id, ['recipient_status' => 'read']);
+        $this->messages->updateIfExists($id, ['sender_status' => 'read']);
         $this->log(__('message_sent'));
-        redirect()->back()->withToast(__('message_sent'))->success();
+        redirect()->back()->withToast('success', __('message_sent'))->go();
 	}
 	
 	/**
@@ -62,14 +78,14 @@ class MessagesController extends Controller
 	 */
 	public function update(Request $request, ?int $id = null): void
 	{
-        Messages::updateReadStatus($request, $id);
+        $this->messages->updateReadStatus($request, $id);
 
         if (!is_null($id)) {
             $this->log(__('message_updated'));
-            redirect()->back()->withToast(__('message_updated'))->success();
+            redirect()->back()->withToast('success', __('message_updated'))->go();
 		} else {
             $this->log(__('messages_updated'));
-			$this->alert('toast', __('messages_updated'))->success();
+			$this->toast('success', __('messages_updated'));
             response()->json(['redirect' => route('messages.index')]);
 		}
 	}
@@ -83,14 +99,14 @@ class MessagesController extends Controller
 	 */
 	public function delete(Request $request, ?int $id = null): void
 	{
-        Messages::updateDeletedStatus($request, $id);
+        $this->messages->updateDeletedStatus($request, $id);
 
         if (!is_null($id)) {
             $this->log(__('message_deleted'));
-            redirect()->back()->withToast(__('message_deleted'))->success();
+            redirect()->back()->withToast('success', __('message_deleted'))->go();
 		} else {
             $this->log(__('messages_deleted'));
-			$this->alert('toast', __('messages_deleted'))->success();
+			$this->toast('success', __('messages_deleted'));
             response()->json(['redirect' => route('messages.index')]);
 		}
 	}
@@ -103,12 +119,12 @@ class MessagesController extends Controller
 	 */
     public function export(Request $request): void
 	{
-        $messages = Messages::fromDateRange($request->date_start, $request->date_end);
+        $data = $this->messages->findAllDateRange($request->date_start, $request->date_end);
         $filename = 'messages_' . date('Y_m_d_His') . '.' . $request->file_type;
 
         $this->log(__('data_exported'));
 
-		Report::generate($filename, $messages, [
+		Report::generate($filename, $data, [
 			'sender' => __('sender'), 
 			'recipient' => __('recipient'), 
 			'message' => __('message'), 

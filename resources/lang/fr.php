@@ -21,6 +21,7 @@
     'reset_password_instructions' => "Veuillez entrer l'adresse email associée à ce compte. Nous vous y enverrons un lien afin de réinitialiser votre de mote de passe.",
     'signup_failed' => "Echec de l'inscription",
     'welcome' => 'Bienvenue',
+    'welcome_back' => 'Bon retour',
 
     //sidebar
     'dashboard' => 'Tableau de bord',

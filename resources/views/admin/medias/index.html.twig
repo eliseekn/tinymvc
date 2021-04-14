@@ -10,29 +10,36 @@
         <metric-card-item 
             title="{{ __('total') }}" 
             icon="fa fa-folder-open fa-2x" 
-            data="{{ medias.getTotalItems() }}"
-            columns="3">
+            data="{{ data.getTotalItems() }}"
+            columns="4">
         </metric-card-item>
 
         <metric-card-item 
             title="{{ __('images') }}" 
             icon="fa fa-image fa-2x" 
             data="{{ images }}"
-            columns="3">
+            columns="2">
         </metric-card-item>
 
         <metric-card-item 
             title="{{ __('videos') }}" 
             icon="fa fa-film fa-2x" 
             data="{{ videos }}"
-            columns="3">
+            columns="2">
         </metric-card-item>
 
         <metric-card-item 
             title="{{ __('audios') }}" 
             icon="fa fa-music fa-2x" 
             data="{{ audios }}"
-            columns="3">
+            columns="2">
+        </metric-card-item>
+
+        <metric-card-item 
+            title="{{ __('others') }}" 
+            icon="fa fa-copy fa-2x" 
+            data="{{ others }}"
+            columns="2">
         </metric-card-item>
     </metrics-cards>
 
@@ -76,46 +83,52 @@
                     <tr>
                         <td>
                             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
-                                {% for media in medias.getItems() %}
+                                {% for data in data.getItems() %}
                                 <div class="col mb-3">
-                                    <div class="card h-100 lightbox" data-media="{{ media.filename }}" data-media-url="{{ media.url }}">
-                                        {% if get_file_extension(media.filename) in MEDIA_TYPE[0] %}
-                                        <img class="card-img-top" src="{{ media.url }}" width="200" height="200" title="{{ __('click_to_enlarge') }}">
-                                        {% elseif get_file_extension(media.filename) in MEDIA_TYPE[1] %}
+                                    <div class="card h-100 lightbox" data-media="{{ data.filename }}" data-media-url="{{ data.url }}">
+                                        {% if get_file_extension(data.filename) in MEDIA_TYPE[0] %}
+                                        <img class="card-img-top" src="{{ data.url }}" width="200" height="200" title="{{ __('click_to_enlarge') }}">
+                                        {% elseif get_file_extension(data.filename) in MEDIA_TYPE[1] %}
                                         <video class="card-img-top" width="200" height="200" title="{{ __('click_to_enlarge') }}">
-                                            <source src="{{ media.url }}"></source>
+                                            <source src="{{ data.url }}"></source>
                                         </video>
-                                        {% elseif get_file_extension(media.filename) in MEDIA_TYPE[2] %}
-                                        <audio controls class="card-img-top" width="200" height="200">
-                                            <source src="{{ media.url }}"></source>
-                                        </audio>
-                                        {% endif  %}
+                                        {% elseif get_file_extension(data.filename) in MEDIA_TYPE[2] %}
+                                        <div class="d-flex align-items-center justify-content-center p-5">
+                                            <audio controls>
+                                                <source src="{{ data.url }}"></source>
+                                            </audio>
+                                        </div>
+                                        {% else %}
+                                        <div class="d-flex align-items-center justify-content-center p-5">
+                                            <i class="fa fa-file fa-6x text-dark"></i>
+                                        </div>
+                                        {% endif %}
 
                                         <div class="card-body text-center p-2" style="z-index: 111111">
-                                            <p class="mb-0">{{ media.filename }}</p>
-                                            <p class="mb-0 text-muted">{{ date_helper(media.created_at, 'Y-m-d') }}</p>
+                                            <p class="mb-0">{{ data.filename }}</p>
+                                            <p class="mb-0 text-muted">{{ date_helper(data.created_at, 'Y-m-d') }}</p>
 
-                                            <a class="btn text-dark p-1" href="{{ route('medias.read', media.id) }}" title="{{ __('details') }}">
+                                            <a class="btn text-dark p-1" href="{{ route('medias.read', data.id) }}" title="{{ __('details') }}">
                                                 <i class="fa fa-eye"></i>
                                             </a>
 
-                                            <a class="btn text-dark p-1" href="{{ route('medias.edit', media.id) }}" title="{{ __('edit') }}">
+                                            <a class="btn text-dark p-1" href="{{ route('medias.edit', data.id) }}" title="{{ __('edit') }}">
                                                 <i class="fa fa-edit"></i>
                                             </a>
 
-                                            <a class="btn text-dark p-1" href="{{ route('medias.download', media.id) }}" title="{{ __('download') }}">
+                                            <a class="btn text-dark p-1" href="{{ route('medias.download', data.id) }}" title="{{ __('download') }}">
                                                 <i class="fa fa-download"></i>
                                             </a>
 
-                                            <delete-item action="{{ route('medias.delete', media.id) }}">
+                                            <delete-item action="{{ route('medias.delete', data.id) }}">
                                                 <a class="btn text-danger p-1" title="{{ __('delete') }}">
                                                     <i class="fa fa-trash-alt"></i>
                                                 </a>
                                             </delete-item>
 
                                             <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="{{ media.id }}" data-id="{{ media.id }}">
-                                                <label class="custom-control-label" for="{{ media.id }}"></label>
+                                                <input type="checkbox" class="custom-control-input" id="{{ data.id }}" data-id="{{ data.id }}">
+                                                <label class="custom-control-label" for="{{ data.id }}"></label>
                                             </div>
                                         </div>
                                     </div>
@@ -129,14 +142,14 @@
         </div>
 
         <div class="card-footer d-flex align-items-center justify-content-between">
-            <span>{{ __('total_results') }} <span class="font-weight-bold">{{ medias.getTotalItems() }}</span></span>
+            <span>{{ __('total_results') }} <span class="font-weight-bold">{{ data.getTotalItems() }}</span></span>
             <span>{{ __('showing') }}
-                <span class="font-weight-bold">{{ medias.getPageTotalItems() == 0 ? medias.getFirstItem() : medias.getFirstItem() + 1 }}</span>
+                <span class="font-weight-bold">{{ data.getPageTotalItems() == 0 ? data.getFirstItem() : data.getFirstItem() + 1 }}</span>
                 {{ __('to') }}
-                <span class="font-weight-bold">{{ medias.getPageTotalItems() + medias.getFirstItem() }}</span>
+                <span class="font-weight-bold">{{ data.getPageTotalItems() + data.getFirstItem() }}</span>
             </span>
 
-            {% include "partials/pagination.html.twig" with {pagination: medias} %}
+            {% include "partials/pagination.html.twig" with {pagination: data} %}
         </div>
     </div>
 

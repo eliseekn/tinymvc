@@ -39,11 +39,11 @@ class TokensTable_20210403034738
     }
     
     /**
-     * reset table
+     * refresh table
      *
      * @return void
      */
-    public static function reset(): void
+    public static function refresh(): void
     {
         self::delete();
         self::migrate();

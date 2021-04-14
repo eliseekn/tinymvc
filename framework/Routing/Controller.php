@@ -11,7 +11,6 @@ namespace Framework\Routing;
 use App\Helpers\Activity;
 use Framework\Http\Client;
 use Framework\Support\Alert;
-use Framework\Database\Model;
 
 /**
  * Main controller class
@@ -58,26 +57,15 @@ class Controller
     }
     
     /**
-     * create new model instance
-     *
-     * @param  string $table
-     * @return \Framework\Database\Model
-     */
-    public function model(string $table): \Framework\Database\Model
-    {
-        return new Model($table);
-    }
-    
-    /**
      * generate alert
      *
      * @param  string $type
      * @param  string $message
-     * @return \Framework\Support\Alert
+     * @return void
      */
-    public function alert(string $type = 'default', string $message): \Framework\Support\Alert
+    public function toast(string $type, string $message): void
     {
-        return Alert::$type($message);
+        Alert::toast($message)->$type();
     }
     
     /**

@@ -6,7 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Framework\Routing;
+namespace Framework\System;
 
 use Exception;
 use ReflectionClass;
@@ -15,8 +15,9 @@ use ReflectionClass;
  * Auto dependancy injection class
  * 
  * @link https://indigotree.co.uk/automatic-dependency-injection-with-phps-reflection-api/
+ *       https://dev.to/fadymr/php-auto-dependency-injection-with-reflection-api-27ci
  */
-class ReflectionResolver
+class DependcyInjection
 {
     /**
  	* Build an instance of the given class
@@ -30,48 +31,33 @@ class ReflectionResolver
  	*/
 	public function resolve(string $class, ?string $method = null, array $params = []): void
 	{
+
         $reflector = new ReflectionClass($class);
+        $constructor = $reflector->getConstructor();
+
+        $dependencies = [];
+
+        if (is_null($constructor)) {
+            $class = $reflector->newInstance();
+        } else {
+            $parameters = $constructor->getParameters();
+            $dependencies = $this->getDependencies($parameters);
+            $class = $reflector->newInstanceArgs($dependencies);
+ 		}
+
         $parameters = [];
 
-        foreach ($reflector->getMethods() as $m) {
-            if ($m->name === $method) {
-                $parameters += $m->getParameters();
+        foreach ($reflector->getMethods() as $methods) {
+            if ($methods->name === $method) {
+                $parameters += $methods->getParameters();
             }
         }
 
-        $dependencies = $this->getDependencies($parameters);
+        $methods_dependencies = $this->getDependencies($parameters);
 
-        call_user_func_array([$this->resolveClass($class), $method], array_merge($dependencies, $params));
+        call_user_func_array([$class, $method], array_merge($methods_dependencies, $params));
 	}
 
-    /**
- 	* Build an instance of the given class
-	* 
- 	* @param string $class
- 	* @return mixed
- 	*
- 	* @throws Exception
- 	*/
-	public function resolveClass(string $class)
-	{
-		$reflector = new ReflectionClass($class);
-
-		if (!$reflector->isInstantiable()) {
- 			return;
- 		}
-		
- 		$constructor = $reflector->getConstructor();
-		
- 		if (is_null($constructor)) {
- 			return new $class;
- 		}
-		
- 		$parameters = $constructor->getParameters();
- 		$dependencies = $this->getDependencies($parameters);
-		
- 		return $reflector->newInstanceArgs($dependencies);
-	}
-	
 	/**
 	 * Build up a list of dependencies for a given methods parameters
 	 *
@@ -84,9 +70,10 @@ class ReflectionResolver
 
 		foreach($parameters as $parameter) {
 			$dependency = $parameter->getClass();
-			
-			if (!is_null($dependency)) {
-				$dependencies[] = $this->resolveClass($dependency->name);
+
+            if (!is_null($dependency)) {
+                $class = $dependency->getName();
+				$dependencies[] = new $class();
 			}
 		}
 		

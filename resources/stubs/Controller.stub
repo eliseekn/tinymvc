@@ -2,10 +2,9 @@
 
 namespace NAMESPACE;
 
-use Exception;
 use App\Helpers\Report;
-use Framework\Routing\Controller;
 use Framework\Http\Request;
+use Framework\Routing\Controller;
 
 class CLASSNAME extends Controller
 {
@@ -109,7 +108,16 @@ class CLASSNAME extends Controller
 	 */
     public function export(Request $request)
 	{
-        $RESOURCENAME = RESOURCENAME::fromDateRange($request->date_start, $request->date_end);
+        $RESOURCENAME = $this->model('RESOURCENAME')
+            ->select()
+            ->subQuery(function($query) use ($request) {
+                if (!$request->filled('date_start') && !$request->filled('date_end')) {
+                    $query->whereBetween($request->date_start, $request->date_end);
+                }
+            })
+            ->oldest()
+            ->all();
+
         $filename = 'RESOURCENAME_' . date('Y_m_d_His') . '.' . $request->file_type;
 
 		Report::generate($filename, $RESOURCENAME, [

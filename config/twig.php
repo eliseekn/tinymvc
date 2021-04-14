@@ -17,8 +17,8 @@ $config = [
             'functions' => [],
             'filters' => [],
             'globals' => [
-                'USER_ROLE' => \App\Database\Models\Roles::ROLE,
-                'MEDIA_TYPE' => \App\Database\Models\Medias::TYPE
+                'USER_ROLE' => \App\Database\Repositories\Roles::ROLE,
+                'MEDIA_TYPE' => \App\Database\Repositories\Medias::TYPE
             ]
         ]
     ]

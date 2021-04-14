@@ -9,7 +9,7 @@
 namespace Framework\Routing;
 
 use Exception;
-use Framework\Http\Request;
+use Framework\System\DependcyInjection;
 
 /**
  * Events handlers
@@ -37,7 +37,7 @@ class Middleware
             throw new Exception('Middleware "' . $middleware . '" not found.');
         }
 
-        call_user_func_array([$middleware, 'handle'], [new Request()]);
+        (new DependcyInjection())->resolve($middleware, 'handle');
     }
     
     /**
@@ -50,7 +50,7 @@ class Middleware
     {
         if (array_key_exists($route, self::$middlewares)) {
             foreach (self::$middlewares[$route] as $middleware) {
-                self::execute($middleware, new Request());
+                self::execute($middleware);
             }
         }
     }

@@ -41,7 +41,7 @@
 					<div class="card-body">
                         {% set data = [ 
                             {'label': 'Active', 'value': active_users}, 
-                            {'label': 'Inactive', 'value': inactive_users}
+                            {'label': 'Inactive', 'value': total_users - active_users}
                         ] %}
 
 						<donut-chart el="users-donut" data={{ data|json_encode() }}></donut-chart>

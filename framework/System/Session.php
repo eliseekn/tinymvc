@@ -39,7 +39,7 @@ class Session
     public static function create(string $name, $data): void
     {
         self::start();
-		$_SESSION[config('app.name') . '_' . $name] = $data;
+		$_SESSION[strtolower(config('app.name')) . '_' . $name] = $data;
     }
     
     /**
@@ -51,7 +51,7 @@ class Session
     public static function get(string $name)
     {
         self::start();
-		return $_SESSION[config('app.name') . '_' . $name] ?? '';
+		return $_SESSION[strtolower(config('app.name')) . '_' . $name] ?? '';
     }
     
     /**
@@ -63,7 +63,7 @@ class Session
     public static function has(string $name): bool
     {
         self::start();
-		return isset($_SESSION[config('app.name') . '_' . $name]);
+		return isset($_SESSION[strtolower(config('app.name')) . '_' . $name]);
     }
     
     /**
@@ -77,7 +77,7 @@ class Session
         self::start();
         
         foreach ($names as $name) {
-            unset($_SESSION[config('app.name') . '_' . $name]);
+            unset($_SESSION[strtolower(config('app.name')) . '_' . $name]);
         }
     }
     
@@ -92,5 +92,31 @@ class Session
         $data = self::get($name);
         self::close($name);
         return $data;
+    }
+    
+    /**
+     * create or add data to session
+     *
+     * @param  mixed $name
+     * @param  mixed $data
+     * @return void
+     */
+    public static function put(string $name, $data): void
+    {
+        $stored_data = self::get($name);
+
+        if (empty($stored_data)) {
+            $stored_data = $data;
+        } else {
+            if (is_array($stored_data)) {
+                $stored_data = array_merge($stored_data, $data);
+            } else if (is_string($stored_data)) {
+                $stored_data .= $data;
+            } else if (is_numeric($stored_data)) {
+                $stored_data += $data;
+            }
+        }
+
+        $_SESSION[strtolower(config('app.name')) . '_' . $name] = $stored_data;
     }
 }

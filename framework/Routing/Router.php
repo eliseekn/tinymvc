@@ -12,6 +12,7 @@ use Closure;
 use Exception;
 use Framework\Http\Request;
 use Framework\Routing\View;
+use Framework\System\DependcyInjection;
 use Framework\System\Session;
 
 /**
@@ -19,27 +20,6 @@ use Framework\System\Session;
  */
 class Router
 {
-    /**
-     * set sesssion history 
-     *
-     * @return void
-     */
-    public static function  history(Request $request): void
-    {
-        $url = Session::get('history');
-
-        //excludes api uri from browsing history
-        if (!in_url('api')) {
-            if (empty($url)) {
-                $url = [$request->uri(true)];
-            } else {
-                $url[] = $request->uri(true);
-            }
-        }
-
-        Session::create('history', $url);
-    }
-    
     /**
      * check if request uri match with routes
      *
@@ -51,7 +31,6 @@ class Router
      */
     private static function match(string $route, array $options, string $uri, ?array &$matches = null): bool
     {
-
         if (isset($options['parameters']) && !empty($options['parameters'])) {
             $urls = explode('/', $route);
 
@@ -92,6 +71,11 @@ class Router
 
                 if (preg_match('/' . strtoupper($options['method']) . '/', strtoupper($request->method()))) {
                     if (self::match($route, $options, $request->uri(), $params)) {
+                        //add route to browsing history and exclude API
+                        if (!in_url('api')) {
+                            Session::put('history', [$request->fullUri()]);
+                        }
+
                         //check for middlewares to execute
                         Middleware::check($route);
 
@@ -99,11 +83,11 @@ class Router
                             //execute function with parameters
                             call_user_func_array($options['handler'], array_values($params));
                         } else {
-                            list($controller, $action) = $options['handler'];
+                            list($controller, $method) = $options['handler'];
 
                             //chekc if controller class and method exist
-                            if (class_exists($controller) && method_exists($controller, $action)) {
-                                (new ReflectionResolver())->resolve($controller, $action, $params);
+                            if (class_exists($controller) && method_exists($controller, $method)) {
+                                (new DependcyInjection())->resolve($controller, $method, $params);
                             } else {
                                 throw new Exception('Handler "' . $controller . '" not found.');
                             }

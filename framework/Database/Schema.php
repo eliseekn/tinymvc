@@ -14,9 +14,9 @@ namespace Framework\Database;
 class Schema
 {
     /**
-	 * @var \Framework\Database\Builder $builder
+	 * @var \Framework\Database\QueryBuilder $qb
 	 */
-    protected static $builder;
+    protected static $qb;
     
     /**
      * generate CREATE TABLE query 
@@ -26,7 +26,7 @@ class Schema
      */
     public static function createTable(string $name): self
     {
-        self::$builder = Builder::table($name);
+        self::$qb = QueryBuilder::createTable($name);
         return new self();
     }
 
@@ -38,7 +38,7 @@ class Schema
      */
     public static function addColumn(string $table): self
     {
-        self::$builder = Builder::addColumn($table);
+        self::$qb = QueryBuilder::addColumn($table);
         return new self();
     }
 
@@ -52,7 +52,7 @@ class Schema
      */
     public static function renameColumn(string $table, string $old, string $new): self
     {
-        self::$builder = Builder::renameColumn($table, $old, $new);
+        self::$qb = QueryBuilder::renameColumn($table, $old, $new);
         return new self();
     }
 
@@ -65,7 +65,7 @@ class Schema
      */
     public static function updateColumn(string $table, string $column): self
     {
-        self::$builder = Builder::updateColumn($table, $column);
+        self::$qb = QueryBuilder::updateColumn($table, $column);
         return new self();
     }
 
@@ -78,8 +78,19 @@ class Schema
      */
     public static function deleteColumn(string $table, string $column): self
     {
-        self::$builder = Builder::deleteColumn($table, $column);
+        self::$qb = QueryBuilder::deleteColumn($table, $column);
         return new self();
+    }
+
+    /**
+     * drop table if exists
+     *
+     * @param  string $table
+     * @return void
+     */
+    public static function dropTable(string $table): void
+    {
+        QueryBuilder::drop($table)->execute();
     }
 
     /**
@@ -92,7 +103,7 @@ class Schema
      */
     public function addInt(string $name, int $size = 11, bool $unsigned = false): self 
     {
-        self::$builder->column($name, "INT($size)" . ($unsigned ? ' UNSIGNED' : ''));
+        self::$qb->column($name, "INT($size)" . ($unsigned ? ' UNSIGNED' : ''));
         return $this;
     }
 
@@ -106,7 +117,7 @@ class Schema
      */
     public function addTinyInt(string $name, int $size = 4, bool $unsigned = false): self 
     {
-        self::$builder->column($name, "TINYINT($size)" . ($unsigned ? ' UNSIGNED' : ''));
+        self::$qb->column($name, "TINYINT($size)" . ($unsigned ? ' UNSIGNED' : ''));
         return $this;
     }
 
@@ -120,7 +131,7 @@ class Schema
      */
     public function addSmallInt(string $name, int $size = 6, bool $unsigned = false): self 
     {
-        self::$builder->column($name, "SMALLINT($size)" . ($unsigned ? ' UNSIGNED' : ''));
+        self::$qb->column($name, "SMALLINT($size)" . ($unsigned ? ' UNSIGNED' : ''));
         return $this;
     }
 
@@ -134,7 +145,7 @@ class Schema
      */
     public function addMediumInt(string $name, int $size = 8, bool $unsigned = false): self 
     {
-        self::$builder->column($name, "MEDIUMINT($size)" . ($unsigned ? ' UNSIGNED' : ''));
+        self::$qb->column($name, "MEDIUMINT($size)" . ($unsigned ? ' UNSIGNED' : ''));
         return $this;
     }
 
@@ -148,7 +159,7 @@ class Schema
      */
     public function addBigInt(string $name, int $size = 20, bool $unsigned = false): self 
     {
-        self::$builder->column($name, "BIGINT($size)" . ($unsigned ? ' UNSIGNED' : ''));
+        self::$qb->column($name, "BIGINT($size)" . ($unsigned ? ' UNSIGNED' : ''));
         return $this;
     }
 
@@ -162,7 +173,7 @@ class Schema
      */
     public function addFloat(string $name, int $size = 10, int $precision = 2): self 
     {
-        self::$builder->column($name, "FLOAT($size, $precision)");
+        self::$qb->column($name, "FLOAT($size, $precision)");
         return $this;
     }
 
@@ -176,7 +187,7 @@ class Schema
      */
     public function addDouble(string $name, int $size = 10, int $precision = 2): self 
     {
-        self::$builder->column($name, "DOUBLE($size, $precision)");
+        self::$qb->column($name, "DOUBLE($size, $precision)");
         return $this;
     }
 
@@ -190,7 +201,7 @@ class Schema
      */
     public function addDecimal(string $name, int $size = 10, int $precision = 2): self 
     {
-        self::$builder->column($name, "DECIMAL($size, $precision)");
+        self::$qb->column($name, "DECIMAL($size, $precision)");
         return $this;
     }
 
@@ -202,7 +213,7 @@ class Schema
      */
     public function addChar(string $name): self 
     {
-        self::$builder->column($name, 'CHAR(1)');
+        self::$qb->column($name, 'CHAR(1)');
         return $this;
     }
 
@@ -215,7 +226,7 @@ class Schema
      */
     public function addString(string $name, int $size = 255): self 
     {
-        self::$builder->column($name, "VARCHAR($size)");
+        self::$qb->column($name, "VARCHAR($size)");
         return $this;
     }
 
@@ -227,7 +238,7 @@ class Schema
      */
     public function addText(string $name): self 
     {
-        self::$builder->column($name, 'TEXT');
+        self::$qb->column($name, 'TEXT');
         return $this;
     }
 
@@ -239,7 +250,7 @@ class Schema
      */
     public function addTinyText(string $name): self 
     {
-        self::$builder->column($name, 'TINYTEXT');
+        self::$qb->column($name, 'TINYTEXT');
         return $this;
     }
 
@@ -251,7 +262,7 @@ class Schema
      */
     public function addMediumText(string $name): self 
     {
-        self::$builder->column($name, 'MEDIUMTEXT');
+        self::$qb->column($name, 'MEDIUMTEXT');
         return $this;
     }
 
@@ -263,7 +274,7 @@ class Schema
      */
     public function addLongText(string $name): self 
     {
-        self::$builder->column($name, 'LONGTEXT');
+        self::$qb->column($name, 'LONGTEXT');
         return $this;
     }
 
@@ -275,7 +286,7 @@ class Schema
      */
     public function addBlob(string $name): self 
     {
-        self::$builder->column($name, 'BLOB');
+        self::$qb->column($name, 'BLOB');
         return $this;
     }
 
@@ -287,7 +298,7 @@ class Schema
      */
     public function addTinyBlob(string $name): self 
     {
-        self::$builder->column($name, 'TINYBLOB');
+        self::$qb->column($name, 'TINYBLOB');
         return $this;
     }
 
@@ -299,7 +310,7 @@ class Schema
      */
     public function addMediumBlob(string $name): self 
     {
-        self::$builder->column($name, 'MEDIUMBLOB');
+        self::$qb->column($name, 'MEDIUMBLOB');
         return $this;
     }
 
@@ -311,7 +322,7 @@ class Schema
      */
     public function addLongBlob(string $name): self 
     {
-        self::$builder->column($name, 'LONGBLOB');
+        self::$qb->column($name, 'LONGBLOB');
         return $this;
     }
 
@@ -324,7 +335,7 @@ class Schema
      */
     public function addEnum(string $name, array $values): self 
     {
-        self::$builder->column($name, 'ENUM(' . implode(',', $values) . ')');
+        self::$qb->column($name, 'ENUM(' . implode(',', $values) . ')');
         return $this;
     }
 
@@ -336,7 +347,7 @@ class Schema
      */
     public function addDate(string $name): self 
     {
-        self::$builder->column($name, 'DATE');
+        self::$qb->column($name, 'DATE');
         return $this;
     }
 
@@ -348,7 +359,7 @@ class Schema
      */
     public function addTime(string $name): self 
     {
-        self::$builder->column($name, 'TIME');
+        self::$qb->column($name, 'TIME');
         return $this;
     }
     
@@ -360,7 +371,7 @@ class Schema
      */
     public function addDateTime(string $name): self 
     {
-        self::$builder->column($name, 'DATETIME');
+        self::$qb->column($name, 'DATETIME');
         return $this;
     }
 
@@ -372,7 +383,7 @@ class Schema
      */
     public function addTimestamp(string $name): self 
     {
-        self::$builder->column($name, 'TIMESTAMP');
+        self::$qb->column($name, 'TIMESTAMP');
         return $this;
     }
 
@@ -384,7 +395,7 @@ class Schema
      */
     public function addYear(string $name): self 
     {
-        self::$builder->column($name, 'YEAR');
+        self::$qb->column($name, 'YEAR');
         return $this;
     }
 
@@ -413,7 +424,7 @@ class Schema
             $name = 'fk_' . $column;
         }
 
-		self::$builder->foreignKey($name, $column);
+		self::$qb->foreignKey($name, $column);
         return $this;
 	}
 	
@@ -426,7 +437,7 @@ class Schema
 	 */
 	public function references(string $table, string $column): self
 	{
-		self::$builder->references($table, $column);
+		self::$qb->references($table, $column);
         return $this;
 	}
 	
@@ -437,7 +448,7 @@ class Schema
 	 */
 	public function onUpdate(): self
 	{
-		self::$builder->onUpdate();
+		self::$qb->onUpdate();
         return $this;
 	}
 	
@@ -448,7 +459,7 @@ class Schema
 	 */
 	public function onDelete(): self
 	{
-		self::$builder->onDelete();
+		self::$qb->onDelete();
         return $this;
 	}
 	
@@ -459,7 +470,7 @@ class Schema
 	 */
 	public function cascade(): self
 	{
-		self::$builder->cascade();
+		self::$qb->cascade();
         return $this;
 	}
 	
@@ -470,7 +481,7 @@ class Schema
 	 */
 	public function setNull(): self
 	{
-		self::$builder->setNull();
+		self::$qb->setNull();
         return $this;
 	}
     
@@ -481,7 +492,7 @@ class Schema
      */
     public function primaryKey(): self
     {
-        self::$builder->primaryKey();
+        self::$qb->primaryKey();
         return $this;
     }
     
@@ -492,7 +503,7 @@ class Schema
      */
     public function null(): self
     {
-        self::$builder->null();
+        self::$qb->null();
         return $this;
     }
 
@@ -503,7 +514,7 @@ class Schema
      */
     public function unique(): self
     {
-        self::$builder->unique();
+        self::$qb->unique();
         return $this;
     }
 
@@ -515,7 +526,7 @@ class Schema
      */
     public function default($default) : self
     {
-        self::$builder->default($default);
+        self::$qb->default($default);
         return $this;
     }
     
@@ -526,7 +537,7 @@ class Schema
      */
     public function create()
     {
-        self::$builder->create()->execute();
+        self::$qb->create()->execute();
     }
     
     /**
@@ -536,18 +547,7 @@ class Schema
      */
     public function execute()
     {
-        self::$builder->flush();
-        self::$builder->execute();
-    }
-
-    /**
-     * drop table if exists
-     *
-     * @param  string $table
-     * @return void
-     */
-    public static function dropTable(string $table): void
-    {
-        Builder::drop($table)->execute();
+        self::$qb->flush();
+        self::$qb->execute();
     }
 }

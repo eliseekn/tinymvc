@@ -20,7 +20,7 @@ use App\Controllers\Admin\NotificationsController;
  */
 
 Route::groupPrefix('admin', function () {
-    Route::groupMiddlewares(['remember', 'dashboard'], function () {
+    Route::groupMiddlewares(['remember', 'auth', 'dashboard'], function () {
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
         Route::get('resources/users', [UsersController::class, 'index'])->name('users.index');
@@ -42,37 +42,29 @@ Route::groupPrefix('admin', function () {
         Route::get('account/activities', [ActivitiesController::class, 'index'])->name('activities.index');
     });
 
-    Route::groupMiddlewares(['remember', 'dashboard', 'csrf'], function () {
+    Route::groupMiddlewares(['remember', 'auth', 'dashboard', 'csrf', 'sanitize'], function () {
         Route::delete('resources/users/?{id}?/delete', [UsersController::class, 'delete'])->name('users.delete')->where(['id' => 'num']);
         Route::patch('resources/users/?{id}?/update', [UsersController::class, 'update'])->name('users.update')->where(['id' => 'num']);
-    
-        Route::delete('resources/medias/?{id}?/delete', [MediasController::class, 'delete'])->name('medias.delete')->where(['id' => 'num']);
-        Route::patch('resources/medias/?{id}?/update', [MediasController::class, 'update'])->name('medias.update')->where(['id' => 'num']);
-    
-        Route::delete('account/messages/?{id}?/delete', [MessagesController::class, 'delete'])->name('messages.delete')->where(['id' => 'num']);
-        Route::patch('account/messages/?{id}?/update', [MessagesController::class, 'update'])->name('messages.update')->where(['id' => 'num']);
-    
-        Route::delete('account/notifications/?{id}?/delete', [NotificationsController::class, 'delete'])->name('notifications.delete')
-            ->where(['id' => 'num']);
-        Route::patch('account/notifications/?{id}?/update', [NotificationsController::class, 'update'])->name('notifications.update')
-            ->where(['id' => 'num']);
-    
-        Route::patch('account/settings/{id}/update', [SettingsController::class, 'update'])->name('settings.update')->where(['id' => 'num']);
-        Route::delete('account/activities/?{id}?/delete', [ActivitiesController::class, 'delete'])->name('activities.delete')->where(['id' => 'num']);
-    });
-
-    Route::groupMiddlewares(['remember', 'csrf', 'sanitize', 'dashboard' ], function () {
         Route::post('resources/users/create', [UsersController::class, 'create'])->name('users.create');
         Route::post('resources/users/export', [UsersController::class, 'export'])->name('users.export');
     
+        Route::delete('resources/medias/?{id}?/delete', [MediasController::class, 'delete'])->name('medias.delete')->where(['id' => 'num']);
+        Route::patch('resources/medias/?{id}?/update', [MediasController::class, 'update'])->name('medias.update')->where(['id' => 'num']);
         Route::post('resources/medias/create', [MediasController::class, 'create'])->name('medias.create');
     
-        Route::post('account/notifications/create', [NotificationsController::class, 'create'])->name('notifications.create');
-    
+        Route::delete('account/messages/?{id}?/delete', [MessagesController::class, 'delete'])->name('messages.delete')->where(['id' => 'num']);
+        Route::patch('account/messages/?{id}?/update', [MessagesController::class, 'update'])->name('messages.update')->where(['id' => 'num']);
         Route::post('account/messages/create', [MessagesController::class, 'create'])->name('messages.create');
         Route::post('account/messages/export', [MessagesController::class, 'export'])->name('messages.export');
         Route::post('account/messages{id}/reply', [MessagesController::class, 'reply'])->name('messages.reply')->where(['id' => 'num']);
     
+        Route::delete('account/notifications/?{id}?/delete', [NotificationsController::class, 'delete'])->name('notifications.delete')->where(['id' => 'num']);
+        Route::patch('account/notifications/?{id}?/update', [NotificationsController::class, 'update'])->name('notifications.update')->where(['id' => 'num']);
+        Route::post('account/notifications/create', [NotificationsController::class, 'create'])->name('notifications.create');
+    
+        Route::patch('account/settings/{id}/update', [SettingsController::class, 'update'])->name('settings.update')->where(['id' => 'num']);
+        
+        Route::delete('account/activities/?{id}?/delete', [ActivitiesController::class, 'delete'])->name('activities.delete')->where(['id' => 'num']);
         Route::post('account/activities/export', [ActivitiesController::class, 'create'])->name('activities.export');
     });
 })->register();

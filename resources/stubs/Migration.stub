@@ -36,11 +36,11 @@ class CLASSNAME
     }
     
     /**
-     * reset table
+     * refresh table
      *
      * @return void
      */
-    public static function reset(): void
+    public static function refresh(): void
     {
         self::delete();
         self::migrate();
