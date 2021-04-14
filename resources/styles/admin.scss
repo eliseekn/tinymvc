@@ -80,3 +80,15 @@ p {
 .modal-dialog {
     @include fadeIn(.3s);
 }
+
+.list-group-item-submenu {
+    @include fadeIn(.3s);
+
+    .list-group-item-submenu-item {
+        margin-bottom: 1em;
+    }
+
+    .list-group-item-submenu-item:last-child {
+        margin-bottom: 0;
+    }
+}

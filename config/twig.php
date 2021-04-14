@@ -12,7 +12,7 @@
 
 $config = [
     'twig' => [
-        'disable_cache' => false,
+        'disable_cache' => true,
         'extensions' => [
             'functions' => [],
             'filters' => [],
