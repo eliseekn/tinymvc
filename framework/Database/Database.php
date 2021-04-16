@@ -45,9 +45,7 @@ class Database
 			$this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
 			$this->pdo->setAttribute(PDO::ATTR_ORACLE_NULLS, PDO::NULL_EMPTY_STRING);
 		} catch (PDOException $e) {
-			if (config('errors.display')) {
-				die($e->getMessage());
-			}
+            throw new PDOException($e->getMessage());
 		}
     }
 
@@ -59,7 +57,7 @@ class Database
 	public static function connection(): self
 	{
 		if (is_null(self::$instance)) {
-			self::$instance = new self();
+			self::$instance = new static();
         }
         
         return self::$instance;
@@ -78,7 +76,7 @@ class Database
             $stmt = $this->pdo->query($query);
 		} catch (PDOException $e) {
 			if (config('errors.display')) {
-				die($e->getMessage());
+				throw new PDOException($e->getMessage());
 			}
         }
         
@@ -99,7 +97,7 @@ class Database
 			$stmt->execute($args);
 		} catch (PDOException $e) {
 			if (config('errors.display')) {
-				die($e->getMessage());
+				throw new PDOException($e->getMessage());
 			}
 		}
 

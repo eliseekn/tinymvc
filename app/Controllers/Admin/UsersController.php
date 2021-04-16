@@ -4,13 +4,11 @@ namespace App\Controllers\Admin;
 
 use App\Helpers\Report;
 use Framework\Http\Request;
-use App\Requests\UpdateUser;
-use Framework\System\Session;
-use App\Requests\RegisterUser;
+use App\Validators\UpdateUser;
+use App\Validators\RegisterUser;
 use Framework\Routing\Controller;
 use App\Database\Repositories\Roles;
 use App\Database\Repositories\Users;
-use Exception;
 
 class UsersController extends Controller
 {
@@ -86,16 +84,7 @@ class UsersController extends Controller
 	 */
 	public function create(Request $request): void
 	{
-        $validator = RegisterUser::validate($request->inputs())->redirectOnFail();
-        
-        if ($this->users->findBy('email', $request->email)->exists()) {
-            redirect()->back()->withInputs($validator->inputs())->withToast('error', __('user_already_exists'))->go();
-        }
-        
-        if ($this->users->findBy('phone', $request->phone)->exists()) {
-            redirect()->back()->withInputs($validator->inputs())->withToast('error', __('user_already_exists'))->go();
-        }
-
+        RegisterUser::register()->validate($request->inputs())->redirectOnFail();
 	    $id = $this->users->store($request);
 
         $this->log(__('user_created'));
@@ -111,22 +100,7 @@ class UsersController extends Controller
 	 */
 	public function update(Request $request, int $id): void
 	{
-		$validator = UpdateUser::validate($request->inputs())->redirectOnFail();
-        
-        $user = $this->users->findSingle($id);
-
-        if ($user->email !== $request->email) {
-            if ($this->users->findBy('email', $request->email)->exists()) {
-                redirect()->back()->withInputs($validator->inputs())->withToast('error', __('user_already_exists'))->go();
-            }
-        }
-
-        if ($user->phone !== $request->phone) {
-            if ($this->users->findBy('phone', $request->phone)->exists()) {
-                redirect()->back()->withInputs($validator->inputs())->withToast('error', __('user_already_exists'))->go();
-            }
-        }
-
+		UpdateUser::register($id)->validate($request->inputs())->redirectOnFail();
         $this->users->refresh($request, $id);
 		
         $this->log(__('user_updated'));

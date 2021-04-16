@@ -9,6 +9,7 @@
 use Carbon\Carbon;
 use App\Helpers\DateHelper;
 use Configula\ConfigFactory;
+use Framework\Http\Request;
 use Framework\Http\Redirect;
 use Framework\Http\Response;
 use Framework\Routing\Route;
@@ -94,16 +95,43 @@ if (!function_exists('create_session')) {
 	}
 }
 
-if (!function_exists('get_session')) {
+if (!function_exists('session_get')) {
 	/**
 	 * get session data
 	 *
 	 * @param  string $name
-	 * @return mixed returns session stored data
+	 * @return mixed returns
 	 */
-	function get_session(string $name)
+	function session_get(string $name)
 	{
 		return Session::get($name);
+	}
+}
+
+if (!function_exists('session_pull')) {
+	/**
+	 * get session data and close it
+	 *
+	 * @param  string $name
+	 * @return mixed returns
+	 */
+	function session_pull(string $name)
+	{
+		return Session::pull($name);
+	}
+}
+
+if (!function_exists('session_put')) {
+	/**
+	 * add data to session or create if empty
+	 *
+	 * @param  string $name
+	 * @param  mixed $data
+	 * @return mixed returns
+	 */
+	function session_put(string $name, $data): void
+	{
+		Session::put($name, $data);
 	}
 }
 
@@ -142,12 +170,12 @@ if (!function_exists('auth_attempts_exceeded')) {
     function auth_attempts_exceeded(): bool
     {
         //authentification attempts is disable
-        if (config('auth.max_attempts') === 0) {
+        if (!config('auth.max_attempts')) {
             return false;
         }
 
-        $unlock_timeout = Carbon::parse(get_session('auth_attempts_timeout'));
-        $auth_attempts = get_session('auth_attempts');
+        $unlock_timeout = Carbon::parse(session_get('auth_attempts_timeout'));
+        $auth_attempts = session_get('auth_attempts');
         return !empty($auth_attempts) && ($auth_attempts >= config('auth.max_attempts')) && Carbon::now()->lt($unlock_timeout);
     }
 }
@@ -161,7 +189,7 @@ if (!function_exists('auth')) {
 	 */
 	function auth(string $key)
 	{
-        $data = get_session('user');
+        $data = session_get('user');
 		return $data->$key;
 	}
 }
@@ -195,7 +223,7 @@ if (!function_exists('generate_csrf_token')) {
     function generate_csrf_token(): string
     {
         if (session_has('csrf_token')) {
-            $csrf_token = get_session('csrf_token');
+            $csrf_token = session_get('csrf_token');
         } else {
             $csrf_token = bin2hex(random_bytes(32));
             create_session('csrf_token', $csrf_token);
@@ -251,7 +279,7 @@ if (!function_exists('valid_csrf_token')) {
      */
     function valid_csrf_token(string $csrf_token): bool
     {
-        return hash_equals(get_session('csrf_token'), $csrf_token);
+        return hash_equals(session_get('csrf_token'), $csrf_token);
     }
 }
 
@@ -309,18 +337,18 @@ if (!function_exists('route_uri')) {
             return $route;
         }
 
-        $urls = explode('/', $route);
+        $pieces = explode('/', $route);
 
-        foreach ($urls as $url) {
+        foreach ($pieces as $piece) {
             foreach ($options['parameters'] as $parameter => $type) {
                 if (!is_array($params)) {
-                    if (strpos($url, '?') === false) {
-                        if ($url === '{' . $parameter . '}') {
-                            $route = str_replace($url, $params, $route);
+                    if (strpos($piece, '?') === false) {
+                        if ($piece === '{' . $parameter . '}') {
+                            $route = str_replace($piece, $params, $route);
                         }
                     } else {
-                        if ($url === '?{' . $parameter . '}?') {
-                            $route = str_replace($url, $params, $route);
+                        if ($piece === '?{' . $parameter . '}?') {
+                            $route = str_replace($piece, $params, $route);
                         }
                     }
                 }
@@ -328,13 +356,13 @@ if (!function_exists('route_uri')) {
                 else {
                     foreach ($params as $param => $value) {
                         if ($parameter === $param) {
-                            if (strpos($url, '?') === false) {
-                                if ($url === '{' . $parameter . '}') {
-                                    $route = str_replace($url, $value, $route);
+                            if (strpos($piece, '?') === false) {
+                                if ($piece === '{' . $parameter . '}') {
+                                    $route = str_replace($piece, $value, $route);
                                 }
                             } else {
-                                if ($url === '?{' . $parameter . '}?') {
-                                    $route = str_replace($url, $value, $route);
+                                if ($piece === '?{' . $parameter . '}?') {
+                                    $route = str_replace($piece, $value, $route);
                                 }
                             }
                         }
@@ -370,11 +398,40 @@ if (!function_exists('assets')) {
      * generate assets url from public folder
      *
      * @param  string $asset
+     * @param  mixed $params
      * @return string
      */
-    function assets(string $asset): string
+    function assets(string $asset, $params = null): string
     {
-        return url('public/' . $asset);
+        return url('public/' . $asset, $params);
+    }
+}
+
+if (!function_exists('storage')) {    
+    /**
+     * generate storage url
+     *
+     * @param  string $path
+     * @param  mixed $params
+     * @return string
+     */
+    function storage(string $path, $params = null): string
+    {
+        return storage('' . $path, $params);
+    }
+}
+
+if (!function_exists('resources')) {    
+    /**
+     * generate resources url
+     *
+     * @param  string $path
+     * @param  mixed $params
+     * @return string
+     */
+    function resources(string $path, $params = null): string
+    {
+        return url('resources/' . $path, $params);
     }
 }
 

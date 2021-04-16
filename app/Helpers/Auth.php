@@ -28,6 +28,9 @@ class Auth
     /**
      * make authentication attempt
      *
+     * @param  \Framework\Http\Request $request
+     * @param  \App\Database\Repositories\Users $users
+     * @param  \App\Database\Repositories\Tokens $tokens
      * @return mixed
      */
     public static function attempt(Request $request, Users $users, Tokens $tokens)
@@ -69,19 +72,8 @@ class Auth
             
             Activity::log(__('login_attempts_succeeded', true));
 
-            //process to logged user redirection
-            (new DashboardPolicy())->handle($request);
-
-            if (Session::has('intended')) {
-                $intended = Session::pull('intended');
-                redirect()->url($intended)->withToast('success', __('welcome_back') . ' ' . Auth::get('name'))->go();
-            }
-
-            if ($user->role === Roles::ROLE[0]) {
-                redirect()->route('dashboard.index')->withToast('success', __('welcome') . ' ' . Auth::get('name'))->go();
-            }
-
-            redirect()->url()->withToast('success', __('welcome') . ' ' . Auth::get('name'))->go();
+            //redirect authenticated user
+            self::redirect($user);   
         }
 
         //authentication failed
@@ -98,24 +90,17 @@ class Auth
     /**
      * create new user
      *
-     * @param  \App\Database\Repositories\Users $u
-     * @return bool
+     * @param  \Framework\Http\Request $request
+     * @param  \App\Database\Repositories\Users $users
+     * @return void
      */
-    public static function create(Request $request, Users $u): bool
+    public static function create(Request $request, Users $users): void
     {
-        $users = $u->selectAll(['email', 'phone']);
+        $data = $users->selectAll(['email', 'phone']);
+        $active = empty($data) ? 1 : 0;
+        $role = empty($data) ? Roles::ROLE[0] : Roles::ROLE[2];
 
-        foreach ($users as $user) {
-            if ($user->email === $request->email || $user->phone === $request->phone) {
-                return false;
-            }
-        }
-
-        $active = empty($users) ? 1 : 0;
-        $role = empty($users) ? Roles::ROLE[0] : Roles::ROLE[2];
-
-        $u->store($request, $active, $role);
-        return true;
+        $users->store($request, $active, $role);
     }
 
     /**
@@ -167,5 +152,32 @@ class Auth
         if (self::remember()) {
             Cookies::delete('user');
         }
+    }
+
+    /**
+     * perform redirection of authenticated user
+     * 
+     * @param  \App\Database\Repositories\Users $user
+     * @return void
+     */
+    public static function redirect(Users $user)
+    {
+        if (!self::check()) {
+           return; 
+        }
+
+        if ($user->role === Roles::ROLE[2]) {
+            if (Session::has('intended')) {
+                redirect()->url(Session::pull('intended'))->withToast('success', __('welcome_back') . ' ' . Auth::get('name'))->go();
+            }
+            
+            redirect()->url()->withToast('success', __('welcome') . ' ' . Auth::get('name'))->go();
+        }
+
+        if (Session::has('intended')) {
+            redirect()->url(Session::pull('intended'))->withToast('success', __('welcome_back') . ' ' . Auth::get('name'))->go();
+        }
+
+        redirect()->route('dashboard.index')->withToast('success', __('welcome') . ' ' . Auth::get('name'))->go();
     }
 }

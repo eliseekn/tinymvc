@@ -8,6 +8,7 @@
 
 namespace Framework\Routing;
 
+use App\Helpers\Auth;
 use Closure;
 use Exception;
 use Framework\Http\Request;
@@ -32,17 +33,17 @@ class Router
     private static function match(string $route, array $options, string $uri, ?array &$matches = null): bool
     {
         if (isset($options['parameters']) && !empty($options['parameters'])) {
-            $urls = explode('/', $route);
+            $pieces = explode('/', $route);
 
-            foreach ($urls as $url) {
+            foreach ($pieces as $piece) {
                 foreach ($options['parameters'] as $parameter => $type) {
-                    if (strpos($url, '?') === false) {
-                        if ($url === '{' . $parameter . '}') {
-                            $route = str_replace($url, $type, $route);
+                    if (strpos($piece, '?') === false) {
+                        if ($piece === '{' . $parameter . '}') {
+                            $route = str_replace($piece, $type, $route);
                         }
                     } else {
-                        if ($url === '?{' . $parameter . '}?') {
-                            $route = str_replace($url, '?' . $type . '?', $route);
+                        if ($piece === '?{' . $parameter . '}?') {
+                            $route = str_replace($piece, '?' . $type . '?', $route);
                         }
                     }
                 }
@@ -60,7 +61,7 @@ class Router
     /**
      * match routes and execute handlers
      *
-     * @param  array $routes routes
+     * @param  array $routes
      * @return void
      */
     public static function dispatch(Request $request, array $routes): void
@@ -76,16 +77,23 @@ class Router
                             Session::put('history', [$request->fullUri()]);
                         }
 
-                        //check for middlewares to execute
+                        //execute routes middlewares if set
                         Middleware::check($route);
 
+                        //handler is closure
                         if ($options['handler'] instanceof Closure) {
-                            //execute function with parameters
                             call_user_func_array($options['handler'], array_values($params));
-                        } else {
+                        } 
+                        
+                        //handler is view template
+                        else if (is_string($options['handler'])) {
+                            View::render($options['handler']);
+                        }
+                        
+                        //handler is controller and method
+                        else if (is_array($options['handler'])) {
                             list($controller, $method) = $options['handler'];
 
-                            //chekc if controller class and method exist
                             if (class_exists($controller) && method_exists($controller, $method)) {
                                 (new DependcyInjection())->resolve($controller, $method, $params);
                             } else {

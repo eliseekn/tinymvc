@@ -94,8 +94,6 @@ class ExportModal extends HTMLElement {
         document.body.appendChild(element)
 
         $('#export-modal').modal({
-            backdrop: 'static',
-            keyboard: false, 
             show: true
         })
 

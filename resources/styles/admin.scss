@@ -77,7 +77,9 @@ p {
 
 #lightbox,
 .alert,
-.modal-dialog {
+.modal-dialog,
+.list-group .list-dropdown-menu,
+.dropdown .dropdown-menu {
     @include fadeIn(.3s);
 }
 

@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block styles %}
-	<link rel="stylesheet" href="{{ url('resources/vendor/morris/morris.css') }}">
+	<link rel="stylesheet" href="{{ resources('vendor/morris/morris.css') }}">
 {% endblock %}
 
 {% block page_content %}
@@ -185,7 +185,7 @@
 
 {% block scripts %}
 
-	<script defer src="{{ url('resources/vendor/morris/morris.min.js') }}"></script>
-	<script defer src="{{ url('resources/vendor/morris/raphael-min.js') }}"></script>
+	<script defer src="{{ resources('vendor/morris/morris.min.js') }}"></script>
+	<script defer src="{{ resources('vendor/morris/raphael-min.js') }}"></script>
 
 {% endblock %}

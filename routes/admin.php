@@ -68,3 +68,5 @@ Route::groupPrefix('admin', function () {
         Route::post('account/activities/export', [ActivitiesController::class, 'create'])->name('activities.export');
     });
 })->register();
+
+//Custom routes

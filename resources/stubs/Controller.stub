@@ -5,19 +5,34 @@ namespace NAMESPACE;
 use App\Helpers\Report;
 use Framework\Http\Request;
 use Framework\Routing\Controller;
+use Framework\Database\Repository;
 
 class CLASSNAME extends Controller
 {
+    /**
+     * @var \Framework\Database\Repository $repository
+     */
+    private $repository;
+
+    /**
+     * __construct
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->repository = new Repository('RESOURCENAME');
+    }
+
     /**
      * index
      *
      * @return void
      */
-    public function index()
+    public function index(): void
 	{
-		$this->render('admin.RESOURCENAME.index', [
-            'RESOURCENAME' => $this->model('RESOURCENAME')->select()->oldest()->paginate(20)
-        ]);
+        $data = $this->repository->select()->oldest()->paginate(20);
+		$this->render('admin.RESOURCENAME.index', compact('data'));
 	}
 
     /**
@@ -25,7 +40,7 @@ class CLASSNAME extends Controller
 	 * 
 	 * @return void
 	 */
-    public function new()
+    public function new(): void
 	{
 		$this->render('admin.RESOURCENAME.new');
 	}
@@ -36,10 +51,10 @@ class CLASSNAME extends Controller
 	 * @param  int $id
 	 * @return void
 	 */
-    public function edit(int $id)
+    public function edit(int $id): void
 	{
-        $RESOURCENAME = $this->model('RESOURCENAME')->findSingleBy($id);
-        $this->render('admin.RESOURCENAME.edit', compact('RESOURCENAME'));
+        $data = $this->repository->findSingleBy($id);
+        $this->render('admin.RESOURCENAME.edit', compact('data'));
 	}
 	
 	/**
@@ -48,10 +63,10 @@ class CLASSNAME extends Controller
 	 * @param  int $id
 	 * @return void
 	 */
-	public function read(int $id)
+	public function read(int $id): void
 	{
-        $RESOURCENAME = $this->model('RESOURCENAME')->findSingleBy($id);
-        $this->render('admin.RESOURCENAME.read', compact('RESOURCENAME'));
+        $data = $this->repository->findSingleBy($id);
+        $this->render('admin.RESOURCENAME.read', compact('data'));
 	}
 
 	/**
@@ -60,10 +75,10 @@ class CLASSNAME extends Controller
      * @param  \Framework\Http\Request $request
 	 * @return void
 	 */
-    public function create(Request $request)
+    public function create(Request $request): void
 	{
-        $id = $this->model('RESOURCENAME')->insert($request->inputs());
-		redirect()->route('RESOURCENAME.read', $id)->only();
+        $id = $this->repository->insert($request->inputs());
+		redirect()->route('RESOURCENAME.read', $id)->go();
 	}
     
 	/**
@@ -73,10 +88,10 @@ class CLASSNAME extends Controller
      * @param  int $id
 	 * @return void
 	 */
-	public function update(Request $request, int $id)
+	public function update(Request $request, int $id): void
 	{
-        $this->model('RESOURCENAME')->updateIfExists($id, $request->inputs());
-		redirect()->route('RESOURCENAME.read', $id)->only();
+        $this->repository->updateIfExists($id, $request->inputs());
+		redirect()->route('RESOURCENAME.read', $id)->go();
 	}
 
 	/**
@@ -86,16 +101,16 @@ class CLASSNAME extends Controller
      * @param  int|null $id
 	 * @return void
 	 */
-	public function delete(Request $request, ?int $id = null)
+	public function delete(Request $request, ?int $id = null): void
 	{
         if (!is_null($id)) {
-            if (!$this->model('RESOURCENAME')->deleteIfExists($id)) {
-                redirect()->back()->only();
+            if (!$this->repository->deleteIfExists($id)) {
+                redirect()->back()->go();
 			}
 
-            redirect()->route('RESOURCENAME.index')->only();
+            redirect()->route('RESOURCENAME.index')->go();
 		} else {
-            $this->model('RESOURCENAME')->deleteBy('id', 'in', explode(',', $request->items));
+            $this->repository->deleteBy('id', 'in', explode(',', $request->items));
             response()->json(['redirect' => route('RESOURCENAME.index')]);
 		}
 	}
@@ -106,13 +121,13 @@ class CLASSNAME extends Controller
      * @param  \Framework\Http\Request $request
 	 * @return void
 	 */
-    public function export(Request $request)
+    public function export(Request $request): void
 	{
-        $RESOURCENAME = $this->model('RESOURCENAME')
+        $RESOURCENAME = $this->repository
             ->select()
             ->subQuery(function($query) use ($request) {
                 if (!$request->filled('date_start') && !$request->filled('date_end')) {
-                    $query->whereBetween($request->date_start, $request->date_end);
+                    $query->whereBetween('created_at', $request->date_start, $request->date_end);
                 }
             })
             ->oldest()

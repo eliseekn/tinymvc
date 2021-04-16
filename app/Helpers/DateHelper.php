@@ -46,23 +46,12 @@ class DateHelper
     /**
      * get date in custom format
      *
-     * @param  string $f date format
+     * @param  string $format
      * @return string
      */
-    public function date(string $f = 'Y-m-d'): string
+    public function date(string $format): string
     {
-        return self::$date->format($f);
-    }
-    
-    /**
-     * get time
-     *
-     * @param  string $f time format
-     * @return string
-     */
-    public function time(string $f = 'h:i:s a'): string
-    {
-        return self::$date->format($f);
+        return self::$date->format($format);
     }
     
     /**

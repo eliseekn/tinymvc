@@ -1,0 +1,26 @@
+{% extends "layouts/admin.html.twig" %}
+
+{% block page_title %}
+	{{ __('products') ~ ' | Administration' }}
+{% endblock %}
+
+{% block page_content %}
+
+    <div class="card shadow-sm">
+        <div class="card-header">{{ __('edit') }}</div>
+
+        <form method="post" action="{{ route('products.update', data.id) }}">
+            {{ csrf_token_input()|raw }}
+            {{ method_input('patch')|raw }}
+
+            <div class="card-body"></div>
+
+            <div class="card-footer">
+                <button type="submit" class="btn btn-outline-dark loading">{{ __('update') }}</button>
+                <button type="reset" class="btn btn-outline-dark mx-2">{{ __('reset') }}</button>
+                <a href="{{ route('products.index') }}" class="btn btn-outline-dark">{{ __('cancel') }}</a>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

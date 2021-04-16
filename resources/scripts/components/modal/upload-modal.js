@@ -60,8 +60,6 @@ class UploadModal extends HTMLElement {
         document.body.appendChild(element)
 
         $('#upload-modal').modal({
-            backdrop: 'static',
-            keyboard: false, 
             show: true
         })
 

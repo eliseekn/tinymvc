@@ -160,7 +160,7 @@ class Messages extends Repository
         return $this->select()
             ->subQuery(function($query) use ($date_start, $date_end) {
                 if (!empty($date_start) && !empty($date_end)) {
-                    $query->whereBetween($date_start, $date_end);
+                    $query->whereBetween('created_at', $date_start, $date_end);
                 }
             })
             ->oldest()

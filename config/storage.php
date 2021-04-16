@@ -22,9 +22,10 @@ $config = [
         'controllers' => absolute_path('app.Controllers'),
         'repositories' => absolute_path('app.Database.Repositories'),
         'middlewares' => absolute_path('app.Middlewares'),
-        'requests' => absolute_path('app.Requests'),
+        'validators' => absolute_path('app.Validators'),
         'logs' => absolute_path('storage.logs'),
         'cache' => absolute_path('storage.cache'),
-        'mails' => absolute_path('app.Mails')
+        'mails' => absolute_path('app.Mails'),
+        'commands' => absolute_path('app.Commands')
     ]
 ];

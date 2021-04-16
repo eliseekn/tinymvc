@@ -4,11 +4,12 @@ namespace App\Controllers\Auth;
 
 use Carbon\Carbon;
 use App\Mails\TokenMail;
-use App\Requests\AuthRequest;
-use App\Database\Repositories\Tokens;
 use Framework\Http\Request;
-use Framework\Routing\Controller;
+use App\Validators\AuthRequest;
 use Framework\System\Encryption;
+use Framework\Routing\Controller;
+use App\Database\Repositories\Users;
+use App\Database\Repositories\Tokens;
 
 /**
  * Manage password reset
@@ -19,14 +20,15 @@ class PasswordController extends Controller
 	 * send reset password link notification
 	 *
      * @param  \Framework\Http\Request $request
+     * @param  \App\Database\Repositories\Tokens $tokens
 	 * @return void
 	 */
-	public function notify(Request $request): void
+	public function notify(Request $request, Tokens $tokens): void
 	{
 		$token = random_string(50, true);
 
 		if (TokenMail::send($request->email, $token)) {
-            Tokens::store($request->email, $token, Carbon::now()->addHour()->toDateTimeString());
+            $tokens->store($request->email, $token, Carbon::now()->addHour()->toDateTimeString());
 			redirect()->back()->withAlert('success', __('password_reset_link_sent', true))->go();
 		} 
         
@@ -37,11 +39,12 @@ class PasswordController extends Controller
 	 * reset password
 	 *
      * @param  \Framework\Http\Request $request
+     * @param  \App\Database\Repositories\Tokens $tokens
 	 * @return void
 	 */
-	public function reset(Request $request): void
+	public function reset(Request $request, Tokens $tokens): void
 	{
-        $reset_token = Tokens::findSingleByEmail($request->email);
+        $reset_token = $tokens->findSingleByEmail($request->email);
 
         if (!$reset_token || $reset_token->token !== $request->token) {
 			response()->json(__('invalid_password_reset_link', true));
@@ -51,7 +54,7 @@ class PasswordController extends Controller
 			response()->json(__('expired_password_reset_link', true));
 		}
 
-		Tokens::deleteByEmail($reset_token->email);
+		$tokens->deleteByEmail($reset_token->email);
 		$this->render('auth.password.new', ['email' => $reset_token->email]);
 	}
 	
@@ -59,13 +62,14 @@ class PasswordController extends Controller
 	 * update user password
 	 *
      * @param  \Framework\Http\Request $request
+     * @param  \App\Database\Repositories\Users $users
 	 * @return void
 	 */
-	public function update(Request $request): void
+	public function update(Request $request, Users $users): void
 	{
 		AuthRequest::validate($request->inputs())->redirectOnFail();
 
-        $this->model('users')->updateBy(
+        $users->updateBy(
             ['email', $request->email], 
             ['password' => Encryption::hash($request->password)]
         );

@@ -160,6 +160,26 @@ class Request
     {
         return is_null($value) ? $this->headers('REQUEST_METHOD') : $_SERVER['REQUEST_METHOD'] = $value;
     }
+    
+    /**
+     * check if request method is GET
+     *
+     * @return bool
+     */
+    public function isGet(): bool
+    {
+        return $this->method() === 'GET';
+    }
+    
+    /**
+     * check if request method is POST
+     *
+     * @return bool
+     */
+    public function isPost(): bool
+    {
+        return $this->method() === 'POST';
+    }
 
     /**
      * retrieves full uri

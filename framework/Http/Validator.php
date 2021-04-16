@@ -8,6 +8,7 @@
 
 namespace Framework\Http;
 
+use App\Helpers\Auth;
 use GUMP;
 
 /**
@@ -41,7 +42,7 @@ class Validator
      * 
      * @var array $inputs
      */
-    protected static $inputs;
+    protected static $inputs = [];
 
     /**
      * validate inputs 
@@ -105,8 +106,7 @@ class Validator
      */
     public function redirectOnFail()
     {
-        return !$this->fails() 
-            ? $this 
+        return !$this->fails() ? $this 
             : redirect()->back()->withErrors($this->errors())->withInputs($this->inputs())->go();
     }
 }

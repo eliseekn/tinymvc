@@ -8,7 +8,6 @@
 
 use App\Helpers\Auth;
 use Framework\Routing\Route;
-use Framework\Database\Model;
 use Framework\Support\Metrics;
 use App\Database\Repositories\Users;
 use App\Database\Repositories\Messages;

@@ -11,33 +11,10 @@ namespace Framework\Console;
 use Framework\System\Storage;
 
 /**
- * Manage application stubs
+ * Create files from templates
  */
 class Make
 {
-    /**
-     * print console message
-     *
-     * @param  string $message
-     * @param  bool $exit
-     * @param  string $type
-     * @return mixed
-     */
-    private static function log(string $message, bool $exit, string $type = 'success')
-    {
-        if ($type === 'error') {
-            echo "\e[1;37;41m{$message}\e[0m";
-        } else {
-            echo "\e[0;32;40m{$message}\e[0m";
-        }
-
-        echo PHP_EOL;
-
-        if ($exit) {
-            exit();
-        }
-    }
-
     /**
      * get stubs path
      *
@@ -46,28 +23,6 @@ class Make
     private static function stubs(): Storage
     {
         return Storage::path(config('storage.stubs'));
-    }
-    
-    /**
-     * generate resource folder
-     *
-     * @param  string $resource
-     * @return string
-     */
-    private static function resourceFolder(string $resource): string
-    {
-        return 'admin' . DIRECTORY_SEPARATOR . $resource;
-    }
-    
-    /**
-     * generate resource name
-     *
-     * @param  string $resource
-     * @return string
-     */
-    private static function resourceName(string $resource): string
-    {
-        return strtolower($resource);
     }
     
     /**
@@ -81,12 +36,23 @@ class Make
     {
         $name = strtolower($name);
 
-        if ($name[-1] !== 's') {
-            $name .= 's';
+        if ($class !== 'validator') {
+            if ($name[-1] !== 's') {
+                $name .= 's';
+            }
+        }
+
+        if (strpos($name, '_')) {
+            list($f, $s) = explode('_', $name);
+            $name = ucfirst($f) . ucfirst($s);
         }
 
         if ($class === 'migration') {
             $class = 'table';
+        }
+
+        if ($class === 'validator') {
+            $class = '';
         }
 
         $class = ucfirst($name) . ucfirst($class);
@@ -95,7 +61,7 @@ class Make
             $class .= date('_YmdHis');
         }
 
-        return [$name, $class];
+        return [strtolower($name), $class];
     }
     
     /**
@@ -106,18 +72,18 @@ class Make
      */
     public static function generateResource(string $name): array
     {
-        $resource_name = self::resourceName($name);
-        $resource_folder = self::resourceFolder($resource_name);
+        $resource_name = strtolower($name);
+        $resource_folder = 'admin' . DIRECTORY_SEPARATOR . $resource_name;
         return [$resource_name, $resource_folder];
     }
     
     /**
-     * generate routes for controller
+     * create routes for resources
      *
      * @param  string $controller
-     * @return void
+     * @return bool
      */
-    public static function createRoute(string $controller): void
+    public static function createRoute(string $controller): bool
     {
         list($name, $class) = self::generateClass($controller, 'controller');
 
@@ -126,20 +92,20 @@ class Make
         $data = str_replace('RESOURCENAME', $name, $data);
 
         if (!Storage::path(config('storage.routes'))->writeFile('admin.php', $data, true)) {
-            self::log('[!] Failed to generate routes for "' . $class . '"', true, 'error');
+            return false;
         }
         
-        self::log('[+] Routes for "' . $class . '" generated successfully', false);
+        return true;
     }
     
     /**
-     * generate controller file
+     * create controller file
      *
      * @param  string $controller
      * @param  string|null $namespace
-     * @return void
+     * @return bool
      */
-    public static function createController(string $controller, ?string $namespace = null): void
+    public static function createController(string $controller, ?string $namespace = null): bool
     {
         list($name, $class) = self::generateClass($controller, 'controller');
 
@@ -160,19 +126,19 @@ class Make
         }
 
         if (!$path->writeFile($class . '.php', $data)) {
-            self::log('[!] Failed to generate controller "' . $class . '"', true, 'error');
+            return false;
         }
         
-        self::log('[+] Controller "' . $class . '" generated successfully', false);
+        return true;
     }
 
     /**
-     * generate repository file
+     * create repository file
      *
      * @param  string $repository
-     * @return void
+     * @return bool
      */
-    public static function createRepository(string $repository): void
+    public static function createRepository(string $repository): bool
     {
         list($name, $class) = self::generateClass($repository, '');
 
@@ -181,19 +147,19 @@ class Make
         $data = str_replace('TABLENAME', $name, $data);
 
         if (!Storage::path(config('storage.repositories'))->writeFile($class . '.php', $data)) {
-            self::log('[!] Failed to generate repository "' . $class . '"', true, 'error');
+            return false;
         }
         
-        self::log('[+] Repository "' . $class . '" generated successfully', false);
+        return true;
     }
  
     /**
-     * generate migration file
+     * create migration file
      *
      * @param  string $migration
-     * @return void
+     * @return bool
      */
-    public static function createMigration(string $migration): void
+    public static function createMigration(string $migration): bool
     {
         list($name, $class) = self::generateClass($migration, 'migration');
 
@@ -202,19 +168,19 @@ class Make
         $data = str_replace('TABLENAME', $name, $data);
 
         if (!Storage::path(config('storage.migrations'))->writeFile($class . '.php', $data)) {
-            self::log('[!] Failed to generate migration "' . $class . '"', true, 'error');
+            return false;
         }
         
-        self::log('[+] Migration table "' . $class . '" generated successfully', false);
+        return true;
     }
 
     /**
-     * generate seed file
+     * create seed file
      *
      * @param  string $seed
-     * @return void
+     * @return bool
      */
-    public static function createSeed(string $seed): void
+    public static function createSeed(string $seed): bool
     {
         list($name, $class) = self::generateClass($seed, 'seed');
 
@@ -223,39 +189,39 @@ class Make
         $data = str_replace('TABLENAME', $name, $data);
 
         if (!Storage::path(config('storage.seeds'))->writeFile($class . '.php', $data)) {
-            self::log('[!] Failed to generate seed "' . $class . '"', true, 'error');
+            return false;
         }
         
-        self::log('[+] Seed ""' . $class . '"" generated successfully', false);
+        return true;
     }
     
     /**
-     * generate request validator file
+     * create request validator file
      *
-     * @param  string $request
-     * @return void
+     * @param  string $validator
+     * @return bool
      */
-    public static function createRequest(string $request): void
+    public static function createValidator(string $validator): bool
     {
-        list($name, $class) = self::generateClass($request, 'request');
+        list($name, $class) = self::generateClass($validator, 'validator');
 
-        $data = self::stubs()->readFile('Request.stub');
+        $data = self::stubs()->readFile('Validator.stub');
         $data = str_replace('CLASSNAME', $class, $data);
 
-        if (!Storage::path(config('storage.requests'))->writeFile($class . '.php', $data)) {
-            self::log('[!] Failed to generate request "' . $class . '"', true, 'error');
+        if (!Storage::path(config('storage.validators'))->writeFile($class . '.php', $data)) {
+            return false;
         }
 
-        self::log('[+] Request validator "' . $class . '" generated successfully', false);
+        return true;
     }
     
     /**
-     * generate middleware file
+     * create middleware file
      *
      * @param  string $middleware
-     * @return void
+     * @return bool
      */
-    public static function createMiddleware(string $middleware): void
+    public static function createMiddleware(string $middleware): bool
     {
         list($name, $class) = self::generateClass($middleware, 'middleware');
         
@@ -263,19 +229,19 @@ class Make
         $data = str_replace('CLASSNAME', $class, $data);
 
         if (!Storage::path(config('storage.middlewares'))->writeFile($class . '.php', $data)) {
-            self::log('[!] Failed to generate middleware "' . $class . '"', true, 'error');
+            return false;
         }
 
-        self::log('[+] Middleware "' . $class . '" generated successfully', false);
+        return true;
     }
     
     /**
-     * generate views file
+     * create resources views file
      *
      * @param  string $resource
-     * @return void
+     * @return bool
      */
-    public static function createViews(string $resource): void
+    public static function createViews(string $resource): bool
     {
         list($name, $resource_folder) = self::generateResource($resource);
 
@@ -285,20 +251,20 @@ class Make
             $file = str_replace('stub', 'html.twig', $file);
 
             if (!Storage::path(config('storage.views'))->add($resource_folder)->writeFile($file, $data)) {
-                self::log('[-] Failed to generate views for "' . $resource . '"', true, 'error');
+                return false;
             }
         }
 
-        self::log('[+] Views for "' . $resource . '" generated successfully', false);
+        return true;
     }
     
     /**
-     * generate mail resources
+     * create mail resources
      *
      * @param  string $mail
-     * @return void
+     * @return bool
      */
-    public static function createMail(string $mail): void
+    public static function createMail(string $mail): bool
     {
         list($name, $class) = self::generateClass($mail, 'mail');
 
@@ -307,26 +273,26 @@ class Make
         $data = str_replace('RESOURCENAME', $name, $data);
 
         if (!Storage::path(config('storage.mails'))->writeFile($class . '.php', $data)) {
-            self::log('[!] Failed to generate mail "' . $class . '"', true, 'error');
+            return false;
         }
 
         $data = self::stubs()->add('views')->readFile('email.stub');
 
         if (!Storage::path(config('storage.views'))->add('emails')->writeFile($name . '.html.twig', $data)) {
-            self::log('[!] Failed to generate view template "' . $name . '"', true, 'error');
+            return false;
         }
         
-        self::log('[+] Mail "' . $class . '" generated successfully', false);
+        return true;
     }
     
     /**
-     * generate view template
+     * create view and or layout
      *
      * @param  string|null $view
      * @param  string|null $layout
-     * @return void
+     * @return bool
      */
-    public static function createView(?string $view = null, ?string $layout = null): void
+    public static function createView(?string $view = null, ?string $layout = null): bool
     {
         $data = is_null($view) && !is_null($layout)
             ? self::stubs()->add('views')->readFile('layout.stub')
@@ -349,9 +315,34 @@ class Make
         $view = is_null($view) && !is_null($layout) ? $layout : $view;
 
         if (!$path->writeFile($view . '.html.twig', $data)) {
-            self::log('[!] Failed to generate view template "' . $view . '"', true, 'error');
+            return false;
         }
         
-        self::log('[+] View template "' . $view . '" generated successfully', false);
+        return true;
+    }
+    
+    /**
+     * create console command
+     *
+     * @param  string $command
+     * @param  string $description
+     * @param  string $help
+     * @return bool
+     */
+    public static function createCommand(string $command, string $description, string $help = ''): bool
+    {
+        list($name, $class) = self::generateClass($command, 'command');
+        
+        $data = self::stubs()->readFile('Command.stub');
+        $data = str_replace('CLASSNAME', $class, $data);
+        $data = str_replace('COMMANDNAME', $command, $data);
+        $data = str_replace('COMMANDDESCPTION', $description, $data);
+        $data = str_replace('COMMANDHELP', $help, $data);
+
+        if (!Storage::path(config('storage.commands'))->writeFile($class . '.php', $data)) {
+            return false;
+        }
+
+        return true;
     }
 }

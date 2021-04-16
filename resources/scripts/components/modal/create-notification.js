@@ -72,8 +72,6 @@ class CreateNotification extends HTMLElement {
         document.body.appendChild(element)
 
         $('#create-notification').modal({
-            backdrop: 'static',
-            keyboard: false, 
             show: true
         })
 

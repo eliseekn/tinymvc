@@ -23,7 +23,7 @@ class Pager
     protected $pagination = [];
 
     /**
-     * database items
+     * pages items
      * 
      * @var array $items
      */
@@ -226,7 +226,9 @@ class Pager
             $queries = substr($uri, strpos($uri, '?'), strlen($uri));
         }
 
-        if (isset($queries)) {
+        if (!isset($queries)) {
+            $uri = $request->uri() . '?page=' . $page;
+        } else {
             if (strpos($queries, '&page=') !== false) {
                 $queries = substr($queries, strpos($queries, '?'), -1);
                 $uri = $request->uri() . $queries . $page;
@@ -236,8 +238,6 @@ class Pager
             } else  {
                 $uri = $request->uri() . $queries . '&page=' . $page;
             }
-        } else {
-            $uri = $request->uri() . '?page=' . $page;
         }
 
         return $uri;

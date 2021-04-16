@@ -9,8 +9,8 @@
     <metrics-cards>
         <metric-card-item 
             title="{{ __('total') }}" 
-            icon="fa fa-cog fa-lg" 
-            data="{{ RESOURCENAME.getTotalItems() }}"
+            icon="fa fa-cog fa-2x" 
+            data="{{ data.getTotalItems() }}"
             columns="4">
         </metric-card-item>
     </metrics-cards>
@@ -61,24 +61,24 @@
                     </thead>
 
                     <tbody>
-                        {% for RESOURCENAME in RESOURCENAME.getItems() %}
+                        {% for data in data.getItems() %}
                         <tr>
                             <td>
                                 <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="{{ RESOURCENAME.id }}" data-id="{{ RESOURCENAME.id }}">
-                                    <label class="custom-control-label" for="{{ RESOURCENAME.id }}"></label>
+                                    <input type="checkbox" class="custom-control-input" id="{{ data.id }}" data-id="{{ data.id }}">
+                                    <label class="custom-control-label" for="{{ data.id }}"></label>
                                 </div>
                             </td>
 
-                            <td>{{ RESOURCENAME.id }}</td>
-                            <td>{{ date_helper(RESOURCENAME.created_at) }}</td>
+                            <td>{{ data.id }}</td>
+                            <td>{{ date_helper(data.created_at) }}</td>
 
                             <td>
-                                <a class="btn text-dark p-1" href="{{ route('RESOURCENAME.read', RESOURCENAME.id) }}" title="{{ __('details') }}">
+                                <a class="btn text-dark p-1" href="{{ route('data.read', data.id) }}" title="{{ __('details') }}">
                                     <i class="fa fa-eye"></i>
                                 </a>
 
-                                <a class="btn text-dark p-1" href="{{ route('RESOURCENAME.edit', RESOURCENAME.id) }}" title="{{ __('edit') }}">
+                                <a class="btn text-dark p-1" href="{{ route('data.edit', data.id) }}" title="{{ __('edit') }}">
                                     <i class="fa fa-edit"></i>
                                 </a>
 
@@ -86,7 +86,7 @@
                                     type="icon" 
                                     title="{{ __('delete') }}"
                                     content='<i class="fa fa-trash-alt"></i>' 
-                                    action="{{ route('RESOURCENAME.delete', RESOURCENAME.id) }}">
+                                    action="{{ route('data.delete', data.id) }}">
                                 </confirm-delete>
                             </td>
                         </tr>
@@ -97,14 +97,14 @@
         </div>
 
         <div class="card-footer d-flex align-items-center justify-content-between">
-            <span>{{ __('total_results') }} <span class="font-weight-bold">{{ RESOURCENAME.getTotalItems() }}</span></span>
+            <span>{{ __('total_results') }} <span class="font-weight-bold">{{ data.getTotalItems() }}</span></span>
             <span>{{ __('showing') }}
-                <span class="font-weight-bold">{{ RESOURCENAME.getPageTotalItems() == 0 ? RESOURCENAME.getFirstItem() : RESOURCENAME.getFirstItem() + 1 }}</span>
+                <span class="font-weight-bold">{{ data.getPageTotalItems() == 0 ? data.getFirstItem() : data.getFirstItem() + 1 }}</span>
                 {{ __('to') }}
-                <span class="font-weight-bold">{{ RESOURCENAME.getPageTotalItems() + RESOURCENAME.getFirstItem() }}</span>
+                <span class="font-weight-bold">{{ data.getPageTotalItems() + data.getFirstItem() }}</span>
             </span>
 
-            {% include "partials/pagination.html.twig" with {pagination: RESOURCENAME} %}
+            {% include "partials/pagination.html.twig" with {pagination: data} %}
         </div>
     </div>
 

@@ -1,0 +1,23 @@
+<?php
+
+namespace Framework\Console\Commands;
+
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+
+class CLASSNAME extends Command
+{
+    protected static $defaultName = 'COMMANDNAME';
+
+    protected function configure()
+    {
+        $this->setDescription('COMMANDDESCPTION');
+        $this->setHelp('COMMANDHELP');
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        return Command::SUCCESS;
+    }
+}

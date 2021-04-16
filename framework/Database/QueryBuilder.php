@@ -174,7 +174,7 @@ class QueryBuilder
      */
     public static function schemaExists(string $db): bool
     {
-        return self::setQuery('SELECT * FROM information_schema.tables WHERE table_schema = "' . $db .'"')->exists();
+        return self::setQuery('SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = "' . $db .'"')->exists();
     }
 
 	/**

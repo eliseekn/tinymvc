@@ -144,7 +144,7 @@ class Medias extends Repository
         return $this->insert([
             'user_id' => Auth::get('id'),
             'filename' => $media->filename,
-            'url' => url('storage/uploads', [Carbon::now()->year, Carbon::now()->month , $media->filename])
+            'url' => storage('uploads', [Carbon::now()->year, Carbon::now()->month , $media->filename])
         ]);
     }
     
@@ -163,7 +163,7 @@ class Medias extends Repository
             'filename' => $request->filename,
             'title' => $request->title,
             'description' => $request->description,
-            'url' => url('storage/uploads', [$year, $month , $request->filename])
+            'url' => storage('uploads', [$year, $month , $request->filename])
         ]);
     }
     

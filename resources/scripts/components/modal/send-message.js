@@ -78,8 +78,6 @@ class SendMessage extends HTMLElement {
         document.body.appendChild(element)
 
         $('#send-message').modal({
-            backdrop: 'static',
-            keyboard: false, 
             show: true
         })
 

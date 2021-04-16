@@ -4,7 +4,7 @@ namespace App\Controllers\Admin;
 
 use Carbon\Carbon;
 use Framework\Http\Request;
-use App\Requests\UpdateMedia;
+use App\Validators\UpdateMedia;
 use Framework\System\Storage;
 use App\Helpers\DownloadHelper;
 use Framework\Routing\Controller;

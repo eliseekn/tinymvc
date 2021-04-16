@@ -5,7 +5,7 @@ namespace App\Database\Seeds;
 use App\Database\Repositories\Roles;
 use Framework\Database\QueryBuilder;
 
-class RoleSeed
+class RolesSeed
 {     
     /**
      * name of table

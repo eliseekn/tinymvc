@@ -2,7 +2,7 @@
 
 namespace App\Database\Seeds;
 
-use Framework\Database\Builder;
+use Framework\Database\QueryBuilder;
 
 class CLASSNAME
 {     
@@ -20,7 +20,7 @@ class CLASSNAME
      */
     public static function insert(): void
     {
-        Builder::insert(self::$table, [
+        QueryBuilder::table(self::$table)->insert([
             //
         ]);
     }

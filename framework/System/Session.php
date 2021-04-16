@@ -95,7 +95,7 @@ class Session
     }
     
     /**
-     * create or add data to session
+     * add data to session or create if empty
      *
      * @param  mixed $name
      * @param  mixed $data

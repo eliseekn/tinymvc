@@ -9,7 +9,7 @@
     <div class="card shadow-sm">
         <div class="card-header">{{ __('edit') }}</div>
 
-        <form method="post" action="{{ route('RESOURCENAME.update', RESOURCENAME.id) }}">
+        <form method="post" action="{{ route('RESOURCENAME.update', data.id) }}">
             {{ csrf_token_input()|raw }}
             {{ method_input('patch')|raw }}
 
