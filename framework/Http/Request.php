@@ -46,6 +46,17 @@ class Request
     }
     
     /**
+     * retrieves http authentication credentials
+     *
+     * @return array
+     */
+    public function http_auth(): array
+    {
+        $header = $this->headers('HTTP_AUTHORIZATION');
+        return explode(' ', $header);
+    }
+    
+    /**
      * retrieves queries
      *
      * @param  string|null $key

@@ -30,7 +30,7 @@ class Redirect
      * @param  string $url
      * @return \Framework\Http\Redirect
      */
-    public function url(string $url = '/'): self
+    public function url(string $url): self
     {
         $this->url = $url;
         return $this;

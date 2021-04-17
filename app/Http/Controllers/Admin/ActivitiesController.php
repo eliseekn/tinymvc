@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\Admin;
+namespace App\Http\Controllers\Admin;
 
 use App\Helpers\Report;
 use Framework\Http\Request;

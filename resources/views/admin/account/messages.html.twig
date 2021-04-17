@@ -94,9 +94,9 @@
 
                             <td>
                                 {% if data.sender_mail != auth('email') %}
-                                <update-item action="{{ route('messages.update', data.id) }}" {{ data.recipient_status == 'read' ? 'disabled' }}>
-                                    <button type="submit" class="btn text-dark p-1" {{ data.recipient_status == 'unread' ? 'title="' ~ __('mark_as_read') ~ '"' }}>
-                                        <i class="fa fa-eye{{ data.recipient_status == 'unread' ? '-slash' }}"></i>
+                                <update-item action="{{ route('messages.update', data.id) }}" {{ data.recipient_read == 'read' ? 'disabled' }}>
+                                    <button type="submit" class="btn text-dark p-1" {{ not data.recipient_read ? 'title="' ~ __('mark_as_read') ~ '"' }}>
+                                        <i class="fa fa-eye{{ not data.recipient_read ? '-slash' }}"></i>
                                     </button>
                                 </update-item>
 

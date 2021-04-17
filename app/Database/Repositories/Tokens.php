@@ -35,6 +35,17 @@ class Tokens extends Repository
     }
 
     /**
+     * retrieves token by token
+     *
+     * @param  string $token
+     * @return mixed
+     */
+    public function findSingleByToken(string $token)
+    {
+        return $this->findSingleBy('token', $token);
+    }
+
+    /**
      * store token
      *
      * @param  string $email
@@ -42,7 +53,7 @@ class Tokens extends Repository
      * @param  mixed $expires
      * @return int
      */
-    public function store(string $email, string $token, $expires): int
+    public function store(string $email, string $token, $expires = null): int
     {
         return $this->insert([
             'email' => $email,

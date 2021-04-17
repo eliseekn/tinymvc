@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Http\Controllers;
 
 use Framework\Routing\Controller;
 
 class HomeController extends Controller
 {
 	/**
-	 * display home page
+	 * index
 	 *
 	 * @return void
 	 */

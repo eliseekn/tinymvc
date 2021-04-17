@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\Admin;
+namespace App\Http\Controllers\Admin;
 
 use App\Helpers\Report;
 use Framework\Http\Request;
@@ -47,7 +47,7 @@ class MessagesController extends Controller
 	{
         $id = $this->messages->store($request);
 
-        $this->messages->updateIfExists($id, ['sender_status' => 'read']);
+        $this->messages->updateIfExists($id, ['sender_read' => 1]);
         $this->log(__('message_sent'));
         redirect()->back()->withToast('success', __('message_sent'))->go();
 	}
@@ -63,8 +63,8 @@ class MessagesController extends Controller
 	{
         $id = $this->messages->store($request);
 
-        $this->messages->updateIfExists($message_id, ['recipient_status' => 'read']);
-        $this->messages->updateIfExists($id, ['sender_status' => 'read']);
+        $this->messages->updateIfExists($message_id, ['recipient_read' => 1]);
+        $this->messages->updateIfExists($id, ['sender_read' => 1]);
         $this->log(__('message_sent'));
         redirect()->back()->withToast('success', __('message_sent'))->go();
 	}

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Controllers\Auth;
+namespace App\Http\Controllers\Auth;
 
 use Carbon\Carbon;
 use App\Mails\TokenMail;
 use Framework\Http\Request;
-use App\Validators\AuthRequest;
+use App\Http\Validators\AuthRequest;
 use Framework\System\Encryption;
 use Framework\Routing\Controller;
 use App\Database\Repositories\Users;

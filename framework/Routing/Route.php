@@ -8,8 +8,8 @@
 
 namespace Framework\Routing;
 
-use App\Middlewares\CsrfProtection;
-use App\Middlewares\SanitizeInputs;
+use App\Http\Middlewares\CsrfProtection;
+use App\Http\Middlewares\SanitizeInputs;
 
 /**
  * Manage routes
@@ -321,15 +321,17 @@ class Route
      */
     public static function group(array $groups, $callback): self
     {
-        foreach ($groups as $key => $value) {
-            if ($key === 'prefix') {
-                return self::groupPrefix($value, $callback);
-            }
+        $route = new self();
 
-            else if ($key === 'middlewares') {
-                return self::groupMiddlewares($value, $value);
-            }
+        if (isset($groups['middlewares'])) {
+            $route->groupMiddlewares($groups['middlewares'], $callback);
         }
+
+        if (isset($groups['prefix'])) {
+            $route->groupPrefix($groups['prefix'], $callback);
+        }
+
+        return $route;
     }
 
     /**

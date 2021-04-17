@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\Auth;
+namespace App\Http\Controllers\Auth;
 
 use Carbon\Carbon;
 use App\Helpers\Auth;
@@ -10,7 +10,7 @@ use Framework\System\Session;
 use Framework\Routing\Controller;
 use App\Database\Repositories\Roles;
 use App\Database\Repositories\Users;
-use App\Middlewares\DashboardPolicy;
+use App\Http\Middlewares\DashboardPolicy;
 use App\Database\Repositories\Tokens;
 
 /**
@@ -62,6 +62,6 @@ class EmailController extends Controller
         $user = $users->findSingleByEmail($request->email);
 
         Session::create('user', $user);
-        Auth::redirect($user);
+        Auth::redirect();
     }
 }

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Middlewares;
+namespace App\Http\Middlewares;
 
 use App\Helpers\Auth;
 use Framework\Http\Request;
 
 /**
- * Check if user has admin role
+ * Check if email is verified
  */
 class AccountPolicy
 {    

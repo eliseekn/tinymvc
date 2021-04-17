@@ -54,7 +54,7 @@ class Messages extends Repository
             ->join('users As u', 'messages.sender', '=', 'u.id')
             ->where('recipient', Auth::get('id'))
             ->and('recipient_deleted', 0)
-            ->and('recipient_status', 'unread')
+            ->and('recipient_read', 0)
             ->oldest('messages.created_at')
             ->take($limit);
     }
@@ -68,7 +68,7 @@ class Messages extends Repository
     {
         return $this->count()
             ->where('recipient', Auth::get('id'))
-            ->and('recipient_status', 'unread')
+            ->and('recipient_read', 0)
             ->single()
             ->value;
     }
@@ -99,21 +99,21 @@ class Messages extends Repository
     {
         if (!is_null($id)) {
             if ($this->findSingle($id)->sender === Auth::get('id')) {
-                $data = 'sender_status';
+                $data = 'sender_read';
             } else if ($this->findSingle($id)->recipient === Auth::get('id')) {
-                $data = 'recipient_status';
+                $data = 'recipient_read';
             }
 
-            $this->updateIfExists($id, [$data => 'read']);
+            $this->updateIfExists($id, [$data => 1]);
         } else {
 			foreach (explode(',', $request->items) as $id) {
 				if ($this->findSingle($id)->sender === Auth::get('id')) {
-                    $data = 'sender_status';
+                    $data = 'sender_read';
                 } else if ($this->findSingle($id)->recipient === Auth::get('id')) {
-                    $data = 'recipient_status';
+                    $data = 'recipient_read';
                 }
     
-                $this->updateIfExists($id, [$data => 'read']);
+                $this->updateIfExists($id, [$data => 1]);
 			}
         }
     }
@@ -129,18 +129,18 @@ class Messages extends Repository
     {
         if (!is_null($id)) {
             if ($this->findSingle($id)->sender === Auth::get('id')) {
-                $data = 'sender_status';
+                $data = 'sender_deleted';
             } else if ($this->findSingle($id)->recipient === Auth::get('id')) {
-                $data = 'recipient_status';
+                $data = 'recipient_deleted';
             }
 
             $this->updateIfExists($id, [$data => 1]);
         } else {
 			foreach (explode(',', $request->items) as $id) {
 				if ($this->findSingle($id)->sender === Auth::get('id')) {
-                    $data = 'sender_status';
+                    $data = 'sender_deleted';
                 } else if ($this->findSingle($id)->recipient === Auth::get('id')) {
-                    $data = 'recipient_status';
+                    $data = 'recipient_deleted';
                 }
     
                 $this->updateIfExists($id, [$data => 1]);

@@ -23,7 +23,7 @@ class NotificationsTable_20210403034738
         Schema::createTable(self::$table)
             ->addBigInt('id')->primaryKey()
             ->addText('message')
-            ->addString('status')->default('unread')
+            ->addBoolean('status')->default(0)
             ->addBigInt('user_id')
             ->create();
     }

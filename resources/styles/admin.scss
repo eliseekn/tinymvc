@@ -80,11 +80,11 @@ p {
 .modal-dialog,
 .list-group .list-dropdown-menu,
 .dropdown .dropdown-menu {
-    @include fadeIn(.3s);
+    @include fadeIn(.1s);
 }
 
 .list-group-item-submenu {
-    @include fadeIn(.3s);
+    @include fadeIn(.1s);
 
     .list-group-item-submenu-item {
         margin-bottom: 1em;

@@ -59,7 +59,7 @@ class Notifications extends Repository
     public function unreadCount(): int
     {
         return $this->count()
-            ->where('status', 'unread')
+            ->where('status', 0)
             ->and('user_id', Auth::get('id'))
             ->single()
             ->value;

@@ -24,7 +24,7 @@ class Encryption
      * encrypt
      *
      * @param  string $str
-     * @return bool|string
+     * @return false|string
      */
     public static function encrypt(string $str)
     {
@@ -37,7 +37,7 @@ class Encryption
      * decrypt
      *
      * @param  string $enc_str
-     * @return bool|string
+     * @return false|string
      */
     public static function decrypt(string $enc_str)
     {

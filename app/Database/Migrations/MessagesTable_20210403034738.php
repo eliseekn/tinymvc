@@ -25,8 +25,8 @@ class MessagesTable_20210403034738
             ->addBigInt('sender')
             ->addBigInt('recipient')
             ->addText('message')
-            ->addString('sender_status')->default('unread')
-            ->addString('recipient_status')->default('unread')
+            ->addBoolean('sender_read')->default(0)
+            ->addBoolean('recipient_read')->default(0)
             ->addBoolean('sender_deleted')->default(0)
             ->addBoolean('recipient_deleted')->default(0)
             ->create();

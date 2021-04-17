@@ -10,7 +10,6 @@ use Framework\System\Session;
 use Framework\System\Encryption;
 use App\Database\Repositories\Roles;
 use App\Database\Repositories\Users;
-use App\Middlewares\DashboardPolicy;
 use App\Database\Repositories\Tokens;
 
 class Auth
@@ -31,17 +30,15 @@ class Auth
      * @param  \Framework\Http\Request $request
      * @param  \App\Database\Repositories\Users $users
      * @param  \App\Database\Repositories\Tokens $tokens
-     * @return mixed
+     * @return void
      */
-    public static function attempt(Request $request, Users $users, Tokens $tokens)
+    public static function attempt(Request $request, Users $users, Tokens $tokens): void
     {
         //increment authentication attempts
         Session::create('auth_attempts', (self::getAttempts() + 1));
 
-        $user = $users->findSingleByEmail($request->email);
-
         //check credentials
-        if ($user !== false && Encryption::check($request->password, $user->password)) {
+        if (self::checkByCredentials($users, $request->email, $request->password, $user)) {
             //reset authentication attempts and disable lock
             Session::close('auth_attempts', 'auth_attempts_timeout');
 
@@ -55,7 +52,7 @@ class Auth
                 $token = random_string(50, true);
 
                 if (AuthLinkMail::send($user->email, $token)) {
-                    $tokens->store($request->email, $token, Carbon::now()->addHour()->toDateTimeString());
+                    $tokens->store($user->email, $token, Carbon::now()->addHour()->toDateTimeString());
                     redirect()->back()->withAlert('success', __('confirm_email_link_sent', true))->go();
                 } else {
                     redirect()->back()->withAlert('error', __('confirm_email_link_not_sent', true))->go();
@@ -67,13 +64,13 @@ class Auth
                 
             //set user cookie
             if ($request->has('remember')) {
-                Cookies::create('user', $request->email, 3600 * 24 * 365);
+                Cookies::create('user', $user->email, 3600 * 24 * 365);
             }
             
             Activity::log(__('login_attempts_succeeded', true));
 
             //redirect authenticated user
-            self::redirect($user);   
+            self::redirect();   
         }
 
         //authentication failed
@@ -88,6 +85,35 @@ class Auth
     }
     
     /**
+     * check users credentials
+     *
+     * @param  \App\Database\Repositories\Users $users
+     * @param  string $email
+     * @param  string $password
+     * @param  mixed $user
+     * @return bool
+     */
+    public static function checkByCredentials(Users $users, string $email, string $password, &$user): bool
+    {
+        $user = $users->findSingleByEmail($email);
+        return $user !== false && Encryption::check($password, $user->password);
+    }
+    
+    /**
+     * check users tokens
+     *
+     * @param  \App\Database\Repositories\Tokens $tokens
+     * @param  string $token
+     * @param  mixed $user
+     * @return bool
+     */
+    public static function checkByToken(Tokens $tokens, string $token, &$user): bool
+    {
+        $user = $tokens->findSingleByToken($token);
+        return $user !== false;
+    }
+    
+    /**
      * create new user
      *
      * @param  \Framework\Http\Request $request
@@ -99,8 +125,21 @@ class Auth
         $data = $users->selectAll(['email', 'phone']);
         $active = empty($data) ? 1 : 0;
         $role = empty($data) ? Roles::ROLE[0] : Roles::ROLE[2];
-
         $users->store($request, $active, $role);
+    }
+    
+    /**
+     * create user token
+     *
+     * @param  \App\Database\Repositories\Tokens $tokens
+     * @param  string $email
+     * @return string
+     */
+    public static function createToken(Tokens $tokens, string $email): string
+    {
+        $token = bin2hex(random_bytes(32));
+        $tokens->store($email, $token);
+        return Encryption::encrypt($token);
     }
 
     /**
@@ -126,12 +165,17 @@ class Auth
     /**
      * get user session data
      *
-     * @param  string $key
+     * @param  string|null $key
      * @return mixed
      */
-    public static function get(string $key)
+    public static function get(?string $key = null)
     {
         $data = Session::get('user');
+
+        if (is_null($key)) {
+            return $data;
+        }
+
         return $data->$key;
     }
     
@@ -157,21 +201,20 @@ class Auth
     /**
      * perform redirection of authenticated user
      * 
-     * @param  \App\Database\Repositories\Users $user
      * @return void
      */
-    public static function redirect(Users $user)
+    public static function redirect()
     {
         if (!self::check()) {
            return; 
         }
 
-        if ($user->role === Roles::ROLE[2]) {
+        if (self::get('role') === Roles::ROLE[2]) {
             if (Session::has('intended')) {
                 redirect()->url(Session::pull('intended'))->withToast('success', __('welcome_back') . ' ' . Auth::get('name'))->go();
             }
             
-            redirect()->url()->withToast('success', __('welcome') . ' ' . Auth::get('name'))->go();
+            redirect()->url('/')->withToast('success', __('welcome') . ' ' . Auth::get('name'))->go();
         }
 
         if (Session::has('intended')) {

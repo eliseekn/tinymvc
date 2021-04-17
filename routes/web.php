@@ -7,7 +7,7 @@
  */
 
 use Framework\Routing\Route;
-use App\Controllers\HomeController;
+use App\Http\Controllers\HomeController;
 
 /**
  * Web routes

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Controllers\Admin;
+namespace App\Http\Controllers\Admin;
 
 use App\Helpers\Auth;
 use Framework\Http\Request;
-use App\Requests\UpdateUser;
+use App\Http\Validators\UpdateUser;
 use Framework\System\Session;
 use App\Helpers\CountriesHelper;
 use Framework\Routing\Controller;
@@ -50,7 +50,7 @@ class SettingsController extends Controller
      */
     public function update(Request $request, int $id): void
     {
-        UpdateUser::validate($request->inputs())->redirectOnFail();
+        UpdateUser::register($id)->validate($request->inputs())->redirectOnFail();
         $this->users->updateSettings($request, $id);
 
         if (Auth::get('id') === $id) {

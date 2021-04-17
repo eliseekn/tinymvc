@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Controllers\Admin;
+namespace App\Http\Controllers\Admin;
 
 use App\Helpers\Report;
 use Framework\Http\Request;
-use App\Validators\UpdateUser;
-use App\Validators\RegisterUser;
+use App\Http\Validators\UpdateUser;
+use App\Http\Validators\RegisterUser;
 use Framework\Routing\Controller;
 use App\Database\Repositories\Roles;
 use App\Database\Repositories\Users;

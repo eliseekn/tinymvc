@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Middlewares;
+namespace App\Http\Middlewares;
 
 use App\Helpers\Auth;
 use Framework\Routing\View;

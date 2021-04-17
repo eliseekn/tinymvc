@@ -7,13 +7,13 @@
  */
 
 use Framework\Routing\Route;
-use App\Controllers\Admin\UsersController;
-use App\Controllers\Admin\MediasController;
-use App\Controllers\Admin\MessagesController;
-use App\Controllers\Admin\SettingsController;
-use App\Controllers\Admin\DashboardController;
-use App\Controllers\Admin\ActivitiesController;
-use App\Controllers\Admin\NotificationsController;
+use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\Admin\MediasController;
+use App\Http\Controllers\Admin\MessagesController;
+use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ActivitiesController;
+use App\Http\Controllers\Admin\NotificationsController;
 
 /**
  * Admin routes
@@ -68,5 +68,3 @@ Route::groupPrefix('admin', function () {
         Route::post('account/activities/export', [ActivitiesController::class, 'create'])->name('activities.export');
     });
 })->register();
-
-//Custom routes

@@ -85,9 +85,9 @@
                             <td>{{ time_elapsed(data.created_at) }}</td>
 
                             <td>
-                                <update-item action="{{ route('notifications.update', data.id) }}" {{ data.status == 'read' ? 'disabled' }}>
-                                    <button type="submit" class="btn text-dark p-1" {{ data.status == 'unread' ? 'title="' ~ __('mark_as_read') ~ '"' }}>
-                                        <i class="fa fa-eye{{ data.status == 'unread' ? '-slash' }}"></i>
+                                <update-item action="{{ route('notifications.update', data.id) }}" {{ data.status ? 'disabled' }}>
+                                    <button type="submit" class="btn text-dark p-1" {{ not data.status ? 'title="' ~ __('mark_as_read') ~ '"' }}>
+                                        <i class="fa fa-eye{{ not data.status ? '-slash' }}"></i>
                                     </button>
                                 </update-item>
 

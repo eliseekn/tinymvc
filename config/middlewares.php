@@ -6,13 +6,15 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-use App\Middlewares\HandleCors;
-use App\Middlewares\RememberUser;
-use App\Middlewares\AccountPolicy;
-use App\Middlewares\AuthPolicy;
-use App\Middlewares\CsrfProtection;
-use App\Middlewares\SanitizeInputs;
-use App\Middlewares\DashboardPolicy;
+use App\Http\Middlewares\ApiAuth;
+use App\Http\Middlewares\HttpCors;
+use App\Http\Middlewares\BasicAuth;
+use App\Http\Middlewares\AuthPolicy;
+use App\Http\Middlewares\RememberUser;
+use App\Http\Middlewares\AccountPolicy;
+use App\Http\Middlewares\CsrfProtection;
+use App\Http\Middlewares\SanitizeInputs;
+use App\Http\Middlewares\DashboardPolicy;
 
 /**
  * Middlewares configuration
@@ -21,11 +23,13 @@ use App\Middlewares\DashboardPolicy;
 $config = [
     'middlewares' => [
         'csrf' => CsrfProtection::class,
-        'cors' => HandleCors::class,
+        'cors' => HttpCors::class,
         'account' => AccountPolicy::class,
         'dashboard' => DashboardPolicy::class,
         'remember' => RememberUser::class,
         'sanitize' => SanitizeInputs::class,
-        'auth' => AuthPolicy::class
+        'auth' => AuthPolicy::class,
+        'api_auth' => ApiAuth::class,
+        'basic_auth' => BasicAuth::class
     ]
 ];

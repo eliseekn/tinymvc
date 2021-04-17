@@ -87,13 +87,13 @@ class Migrations extends Command
                 foreach ($migrations as $table) {
                     $this->delete($output, $table);
                 }
-
-                return Command::SUCCESS;
             }
 
-            foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
-                $table = get_file_name($file);
-                $this->delete($output, $table);
+            else {
+                foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
+                    $table = get_file_name($file);
+                    $this->delete($output, $table);
+                }
             }
         }
 
@@ -108,7 +108,7 @@ class Migrations extends Command
     {
         if ($this->IsAlreadyMigrated($table)) {
             $output->writeln('<fg=yellow>Table "' . $table . '" already migrated</>');
-            return Command::FAILURE;
+            return;
         }
 
         $this->saveMigrationTable($output, $table);
@@ -122,7 +122,7 @@ class Migrations extends Command
     {
         if (!$this->IsAlreadyMigrated($table)) {
             $output->writeln('<fg=yellow>Migration table "' . $table . '" has not been migrated</>');
-            return Command::FAILURE;
+            return;
         }
 
         $this->removeMigrationTable($table);
@@ -165,7 +165,9 @@ class Migrations extends Command
             $output->writeln('<info>Migrations tables created successfully</info>');
         }
 
-        QueryBuilder::table('migrations')->insert(['migration' => $table])->execute();
+        QueryBuilder::table('migrations')
+            ->insert(['migration' => $table])
+            ->execute();
     }
     
     protected function removeMigrationTable(string $table): void

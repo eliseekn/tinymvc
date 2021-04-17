@@ -1,15 +1,20 @@
 <?php
 
-namespace App\Middlewares;
+namespace App\Http\Middlewares;
 
-class HandleCors
+use Framework\Http\Request;
+
+/**
+ * Manage HTTP CORS
+ */
+class HttpCors
 {    
     /**
      * handle function
      *
      * @return void
      */
-    public function handle(): void
+    public function handle(Request $request): void
     {
         response()->headers([
             'Access-Control-Allow-Origin' => '*',

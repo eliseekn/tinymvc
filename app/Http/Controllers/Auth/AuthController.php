@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Controllers\Auth;
+namespace App\Http\Controllers\Auth;
 
 use Carbon\Carbon;
 use App\Helpers\Auth;
 use App\Mails\WelcomeMail;
 use Framework\Http\Request;
-use App\Validators\AuthRequest;
-use App\Validators\RegisterUser;
 use Framework\Routing\Controller;
 use App\Database\Repositories\Users;
+use App\Http\Validators\AuthRequest;
 use App\Mails\EmailConfirmationMail;
 use App\Database\Repositories\Tokens;
+use App\Http\Validators\RegisterUser;
 
 /**
  * Manage user authentication
@@ -45,23 +45,23 @@ class AuthController extends Controller
         RegisterUser::register()->validate($request->inputs())->redirectOnFail();
         Auth::create($request, $users);
 
-        if ($users->count()->single()->value === 1) {
-            redirect()->route('dashboard.index')->go();
+        if (count($users->findAll()) === 1) {
+            redirect()->url('login')->withAlert('success', __('user_registered', true))->go();
         }
 
         if (!config('auth.email_confirmation')) {
             WelcomeMail::send($request->email, $request->name);
-            redirect()->route('dashboard.index')->withAlert('success', __('user_registered', true))->go();
-        } else {
-            $token = random_string(50, true);
-
-            if (EmailConfirmationMail::send($request->email, $token)) {
-                $tokens->store($request->email, $token, Carbon::now()->addDay()->toDateTimeString());
-                redirect()->route('dashboard.index')->withAlert('success', __('confirm_email_link_sent', true))->go();
-            } else {
-                redirect()->route('dashboard.index')->withAlert('error', __('confirm_email_link_not_sent', true))->go();
-            }
+            redirect()->url('login')->withAlert('success', __('user_registered', true))->go();
         }
+        
+        $token = random_string(50, true);
+
+        if (EmailConfirmationMail::send($request->email, $token)) {
+            $tokens->store($request->email, $token, Carbon::now()->addDay()->toDateTimeString());
+            redirect()->url('login')->withAlert('success', __('confirm_email_link_sent', true))->go();
+        }
+            
+        redirect()->back()->withAlert('error', __('confirm_email_link_not_sent', true))->go();
     }
 	
 	/**

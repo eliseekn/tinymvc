@@ -112,8 +112,8 @@ class Make
         $data = self::stubs()->readFile('Controller.stub');
         
         $data = is_null($namespace) 
-            ? str_replace('NAMESPACE', 'App\Controllers', $data) 
-            : str_replace('NAMESPACE', 'App\Controllers\\' . ucfirst($namespace), $data);
+            ? str_replace('NAMESPACE', 'App\Http\Controllers', $data) 
+            : str_replace('NAMESPACE', 'App\Http\Controllers\\' . ucfirst($namespace), $data);
         
         $data = str_replace('CLASSNAME', $class, $data);
         $data = str_replace('RESOURCENAME', $name, $data);
@@ -223,7 +223,7 @@ class Make
      */
     public static function createMiddleware(string $middleware): bool
     {
-        list($name, $class) = self::generateClass($middleware, 'middleware');
+        list($name, $class) = self::generateClass($middleware, '');
         
         $data = self::stubs()->readFile('Middleware.stub');
         $data = str_replace('CLASSNAME', $class, $data);
@@ -298,10 +298,7 @@ class Make
             ? self::stubs()->add('views')->readFile('layout.stub')
             : self::stubs()->add('views')->readFile('blank.stub');
 
-        $data = is_null($layout) 
-            ? str_replace('LAYOUTNAME', '', $data)
-            : str_replace('LAYOUTNAME', '{% extends "layouts/' . $layout . '.html.twig" %}', $data);
-
+        $data = str_replace('LAYOUTNAME', '{% extends "layouts/' . $layout . '.html.twig" %}', $data);
         $data = is_null($view) ? $data : str_replace('RESOURCENAME', $view, $data);
         
         $path = Storage::path(config('storage.views'));

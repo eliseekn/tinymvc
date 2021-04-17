@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Validators;
+namespace App\Http\Validators;
 
 use GUMP;
 use Framework\Http\Validator;
 use Framework\Database\Repository;
 
-class UpdateUser extends Validator
+class RegisterUser extends Validator
 {
     /**
      * rules
@@ -17,6 +17,7 @@ class UpdateUser extends Validator
         'name' => 'required|max_len,255',
         'email' => 'required|valid_email|max_len,255|unique,users',
         'phone' => 'required|numeric|max_len,255|unique,users',
+        'password' => 'required|max_len,255',
         'company' => 'max_len,255'
     ];
 
@@ -30,18 +31,13 @@ class UpdateUser extends Validator
     /**
      * register customs validators
      *
-     * @param  int $id
      * @return mixed
      */
-    public static function register(int $id): self
+    public static function register(): self
     {
-        GUMP::add_validator('unique', function($field, array $input, array $params, $value) use ($id) {
-            $data = (new Repository($params[0]))->findSingle($id);
-
-            if ($data->$field !== $value) {
-                $data = (new Repository($params[0]))->findBy($field, $value);
-                return !$data->exists();
-            }
+        GUMP::add_validator('unique', function($field, array $input, array $params, $value) {
+            $data = (new Repository($params[0]))->findBy($field, $value);
+            return !$data->exists();
         }, "Record of {field} field already exists");
 
         return new self();

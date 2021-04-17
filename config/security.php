@@ -17,9 +17,9 @@ $config = [
     ],
 
     'auth' => [
-        'max_attempts' => false, //set to 0 to disable
+        'max_attempts' => false,
         'unlock_timeout' => 1, //in minute
-        'email_confirmation' => false
+        'email_confirmation' => false,
     ],
 
     'session' => [

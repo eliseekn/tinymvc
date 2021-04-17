@@ -27,7 +27,7 @@ class View extends Command
         $this->setDescription('Create new view template');
         $this->setHelp('This command allows you to create view from template');
         $this->addArgument('view', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of view or layout (separated by space if many).');
-        $this->addOption('extends', null, InputOption::VALUE_OPTIONAL, 'Specify layout name');
+        $this->addOption('extends', null, InputOption::VALUE_REQUIRED, 'Specify layout name');
         $this->addOption('layout', null, InputOption::VALUE_NONE, 'Create layout view template');
     }
 

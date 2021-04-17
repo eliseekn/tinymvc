@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Middlewares;
+namespace App\Http\Middlewares;
 
 use Framework\System\Cookies;
 use Framework\System\Session;
