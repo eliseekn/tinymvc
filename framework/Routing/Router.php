@@ -8,7 +8,6 @@
 
 namespace Framework\Routing;
 
-use App\Helpers\Auth;
 use Closure;
 use Exception;
 use Framework\Http\Request;

@@ -1,10 +1,5 @@
-import React from 'react'
+import { h, Component } from 'preact'
 import '../mixed/avatar-icon'
-
-//new message alert icon
-const Icon = (props) => {
-    return props.count > 0 ? <span className="bg-danger notifications-icon"></span> : ''
-}
 
 //single message item
 const Message = (props) => {
@@ -20,15 +15,10 @@ const Message = (props) => {
 }
 
 //display messages dynamically
-class Messages extends React.Component {
+class Messages extends Component {
     constructor() {
         super()
-
-        this.state = {
-            messages: [],
-            translations: {}
-        }
-
+        this.state = { messages: [], translations: {} }
         this.getMessages = this.getMessages.bind(this)
         this.getTranslations = this.getTranslations.bind(this)
     }
@@ -52,7 +42,7 @@ class Messages extends React.Component {
     componentDidMount() {
         this.getMessages()
         this.getTranslations()
-        this.intervalID = window.setInterval(() => this.getMessages(), 10 * 1000) //every 10 seconds
+        //this.intervalID = window.setInterval(() => this.getMessages(), 10 * 1000) //every 10 seconds
     }
 
     componentWillUnmount() {
@@ -65,7 +55,7 @@ class Messages extends React.Component {
                 <button className="btn btn-sm" type="button" id="dropdown-messages" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title={this.state.translations.messages}>
                     <i className="fa fa-envelope fa-lg"></i>
                     
-                    <Icon count={this.state.messages.length} />
+                    {this.state.messages.length.count > 0 ? <span className="bg-danger notifications-icon"></span> : ''}
                 </button>
 
                 <div className="dropdown-menu dropdown-menu-right py-0" aria-labelledby="dropdown-messages" style={{ zIndex: 1111 }}>

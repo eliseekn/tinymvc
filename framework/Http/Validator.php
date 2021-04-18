@@ -8,7 +8,6 @@
 
 namespace Framework\Http;
 
-use App\Helpers\Auth;
 use GUMP;
 
 /**

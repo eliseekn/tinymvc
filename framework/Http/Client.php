@@ -8,8 +8,6 @@
 
 namespace Framework\Http;
 
-use Exception;
-
 /**
  * Send HTTP requests
  */
@@ -115,24 +113,14 @@ class Client
     }
 
     /**
-     * retrieves single response header
-     *
-     * @return mixed
-     */
-    public function getHeaders()
-    {
-        return self::$response['headers'];
-    }
-
-    /**
      * retrieves response headers
      *
-     * @param  string $field
-     * @return mixed returns field value or empty string
+     * @param  string $key
+     * @return mixed
      */
-    public function getHeader(string $field)
+    public function headers(string $key)
     {
-        return $this->getHeaders()[$field] ?? '';
+        return is_null($key) ? self::$response['headers'] : (self::$response['headers'][$key] ?? '');
     }
 
     /**
@@ -140,7 +128,7 @@ class Client
      *
      * @return mixed
      */
-    public function getBody()
+    public function body()
     {
         return self::$response['body'];
     }

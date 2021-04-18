@@ -1,5 +1,4 @@
 {% apply spaceless %}
-
 <!DOCTYPE html>
 <html lang="{{ config('app.lang') }}">
 	<head>
@@ -19,9 +18,8 @@
                 {% block error_message %}{% endblock %}
 			</p>
 
-            <p><a href="{{ url() }}">Go back home</a></p>
+            <p><a href="{{ url('/') }}">Go back home</a></p>
 		</div>
 	</body>
 </html>
-
 {% endapply %}

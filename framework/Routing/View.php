@@ -10,10 +10,10 @@ namespace Framework\Routing;
 
 use Exception;
 use Twig\Environment;
-use Framework\System\TwigExtensions;
 use Framework\System\Session;
 use Framework\System\Storage;
 use Twig\Loader\FilesystemLoader;
+use Framework\System\TwigExtensions;
 
 /**
  * Main view class

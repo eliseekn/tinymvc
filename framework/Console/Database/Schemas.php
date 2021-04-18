@@ -8,10 +8,11 @@
 
 namespace Framework\Console\Database;
 
+use Exception;
 use Framework\Database\Database;
 use Framework\Database\QueryBuilder;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -51,6 +52,8 @@ class Schemas extends Command
         else if ($input->getOption('list')) {
             $this->listSchemas($output);
         }
+
+        throw new Exception('Invalid command line arguments');
 
         return Command::SUCCESS;
     }

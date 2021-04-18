@@ -7,10 +7,10 @@
 		"dev": "concurrently \"yarn parcel-watch\" \"yarn sass-watch\"",
 		"build": "yarn parcel-build"
 	},
-    "dependencies": {
-        "react": "^17.0.1",
-        "react-dom": "^17.0.1"
-    },
+	"dependencies": {
+		"preact": "^10.5.13",
+		"preact-compat": "^3.19.0"
+	},
 	"devDependencies": {
 		"concurrently": "^5.3.0",
 		"parcel": "next"

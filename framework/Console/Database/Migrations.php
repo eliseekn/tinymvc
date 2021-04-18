@@ -8,6 +8,7 @@
 
 namespace Framework\Console\Database;
 
+use Exception;
 use Framework\System\Storage;
 use App\Database\Seeds\Seeder;
 use Framework\Database\Schema;
@@ -100,6 +101,8 @@ class Migrations extends Command
         else if ($input->getOption('list')) {
             $this->listMigrationsTables($output);
         }
+
+        throw new Exception('Invalid command line arguments');
 
         return Command::SUCCESS;
     }

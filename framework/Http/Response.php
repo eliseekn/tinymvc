@@ -89,10 +89,8 @@ class Response
         //encode body to json format
         $body = json_encode($body);
 
-        //send json header
+        //send json headers
         header('Content-Type: application/json');
-
-        //set content length header
         header('Content-Length: ' . strlen($body));
 
         //send response body

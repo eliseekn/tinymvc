@@ -21,7 +21,7 @@ class Route
      * 
      * @var array
      */
-    public static $uri;
+    protected static $uri;
 
     /**
      * routes paths
@@ -35,21 +35,21 @@ class Route
      * 
      * @var array
      */
-    private static $middlewares = [];
+    protected static $middlewares = [];
 
     /**
      * temporary routes paths
      * 
      * @var array
      */
-    private static $tmp_routes = [];
+    protected static $tmp_routes = [];
 
     /**
      * temporary middlewares paths
      * 
      * @var array
      */
-    private static $tmp_middlewares = [];
+    protected static $tmp_middlewares = [];
 
     /**
      * routes names
@@ -57,7 +57,6 @@ class Route
      * @var array
      */
     public static $names = [];
-
 
     /**
      * add route with GET method
@@ -295,9 +294,9 @@ class Route
         foreach (static::$tmp_routes as $uri => $options) {
             foreach (static::$tmp_middlewares as $_uri => $middlewares) {
                 if ($uri === $_uri) {
-                    $__uri = self::parse(self::addPrefix($prefix, $uri));
-                    static::$tmp_middlewares = self::replace_array_key($uri, $__uri, static::$tmp_middlewares);
-                    static::$tmp_middlewares[$__uri] += $middlewares;
+                    $tmp_uri = self::parse(self::addPrefix($prefix, $uri));
+                    static::$tmp_middlewares = self::replace_array_key($uri, $tmp_uri, static::$tmp_middlewares);
+                    static::$tmp_middlewares[$tmp_uri] += $middlewares;
                 }
             }
         }

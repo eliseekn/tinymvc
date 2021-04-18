@@ -1,5 +1,4 @@
 {% apply spaceless %}
-    
 <!DOCTYPE html>
 <html lang="{{ config('app.lang') }}">
     <head>
@@ -105,7 +104,6 @@
     
                     <div class="ml-auto d-flex align-items-center">
                         <div id="messages-icon"></div>
-    
                         <div id="notifications-bell"></div>
     
                         <a class="btn btn-sm" href="{{ route('settings.index', auth('id')) }}" title="{{ __('settings') }}">
@@ -139,5 +137,4 @@
         {% endif %}
     </body>
 </html>
-
 {% endapply %}

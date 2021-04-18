@@ -9,7 +9,6 @@
 namespace Framework\Routing;
 
 use App\Helpers\Activity;
-use Framework\Http\Client;
 use Framework\Support\Alert;
 
 /**
@@ -28,32 +27,6 @@ class Controller
     public function render(string $view, array $data = [], int $code = 200): void
     {
         View::render($view, $data, $code);
-    }
-
-    /**
-     * send GET request
-     *
-     * @param  array $urls
-     * @param  array $headers
-     * @return \Framework\Http\Client
-     */
-    public function get(array $urls, array $headers = []): \Framework\Http\Client
-    {
-        return Client::get($urls, $headers);
-    }
-
-    /**
-     * send POST request
-     *
-     * @param  array $urls
-     * @param  array $headers
-     * @param  array|null $data
-     * @param  bool $json send data in json
-     * @return \Framework\Http\Client
-     */
-    public function post(array $urls, array $headers = [], ?array $data = null, bool $json = false): \Framework\Http\Client
-    {
-        return Client::post($urls, $headers, $data, $json);
     }
     
     /**

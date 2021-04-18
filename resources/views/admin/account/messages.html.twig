@@ -5,7 +5,6 @@
 {% endblock %}
 
 {% block page_content %}
-
     <metrics-cards>
         <metric-card-item 
             title="{{ __('total') }}" 
@@ -95,7 +94,7 @@
                             <td>
                                 {% if data.sender_mail != auth('email') %}
                                 <update-item action="{{ route('messages.update', data.id) }}" {{ data.recipient_read == 'read' ? 'disabled' }}>
-                                    <button type="submit" class="btn text-dark p-1" {{ not data.recipient_read ? 'title="' ~ __('mark_as_read') ~ '"' }}>
+                                    <button type="submit" class="btn text-dark p-1" title="{{ not data.recipient_read ? __('mark_as_read') }}">
                                         <i class="fa fa-eye{{ not data.recipient_read ? '-slash' }}"></i>
                                     </button>
                                 </update-item>
@@ -131,5 +130,4 @@
             {% include "partials/pagination.html.twig" with {pagination: data} %}
         </div>
     </div>
-
 {% endblock %}

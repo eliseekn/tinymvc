@@ -5,7 +5,6 @@
 {% endblock %}
 
 {% block page_content %}
-
 	{% if auth_attempts_exceeded() %}
 		{% include "partials/alert.html.twig" with {
             type: 'danger',
@@ -69,5 +68,4 @@
 			<a href="{{ url('signup') }}">{{ __('signup_here', true) }}</a>
 		</p>
 	</div>
-
 {% endblock %}

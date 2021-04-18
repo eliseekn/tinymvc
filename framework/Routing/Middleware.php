@@ -21,7 +21,7 @@ class Middleware
      * 
      * @var array
      */
-    public static $middlewares = [];
+    protected static $middlewares = [];
 
     /**
      * execute middleware
@@ -29,7 +29,7 @@ class Middleware
      * @param  mixed $middleware
      * @return void
      */
-    public static function execute($middleware): void
+    private static function execute($middleware): void
     {
         $middleware = config('middlewares.' . $middleware);
 
@@ -43,7 +43,7 @@ class Middleware
     /**
      * execute middlewares associated to a given route
      *
-     * @param  string
+     * @param  string $route
      * @return void
      */
     public static function check(string $route): void
@@ -66,7 +66,9 @@ class Middleware
     {
         if (!is_null($route)) {
             self::$middlewares = $route;
-        } else if (!is_null($route) && !is_null($middlewares)) {
+        } 
+        
+        else if (!is_null($route) && !is_null($middlewares)) {
             self::$middlewares[$route] = $middlewares;
         }
     }

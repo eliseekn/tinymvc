@@ -37,19 +37,19 @@ class QueryBuilder
     protected static $table;
     
     /**
-     * table
+     * set table name
      *
-     * @param  mixed $table
+     * @param  string $table
      * @return  \Framework\Database\QueryBuilder
      */
     public static function table(string $table): self
     {
-        static::$table = $table . config('mysql.table_prefix');
+        static::$table = config('mysql.table_prefix')  . $table;
         return new self();
     }
 
     /**
-     * generate CREATE TABLE query 
+     * create table query
      *
      * @param  string $name
      * @return \Framework\Database\QueryBuilder
@@ -61,7 +61,7 @@ class QueryBuilder
 	}
 	
 	/**
-	 * generate DROP TABLE query
+	 * drop table query
 	 *
 	 * @param  string $table
 	 * @return \Framework\Database\QueryBuilder
@@ -73,7 +73,7 @@ class QueryBuilder
 	}
     
     /**
-     * generate ALTER TABLE query
+     * alter table query
      *
      * @param  string $table
      * @return \Framework\Database\QueryBuilder
@@ -85,7 +85,7 @@ class QueryBuilder
     }
 	
 	/**
-	 * generate DROP FOREIGN KEY query
+	 * drop foreign key table query
 	 *
 	 * @param  string $table
 	 * @param  string $key foreign key name
@@ -99,7 +99,7 @@ class QueryBuilder
 	}
     
     /**
-     * generate ADD COLUMN query
+     * add column query
      *
      * @param  string $table
      * @return \Framework\Database\QueryBuilder
@@ -112,7 +112,7 @@ class QueryBuilder
     }
     
     /**
-     * generate RENAME COLUMN query
+     * rename column query
      *
      * @param  string $table
      * @param  string $old
@@ -127,7 +127,7 @@ class QueryBuilder
     }
     
     /**
-     * generate CHANGE query
+     * change column query
      *
      * @param  string $table
      * @param  string $column
@@ -141,7 +141,7 @@ class QueryBuilder
     }
     
     /**
-     * generate DELETE COLUMN query
+     * delete column query
      *
      * @param  string $table
      * @param  string $column
@@ -178,7 +178,7 @@ class QueryBuilder
     }
 
 	/**
-	 * generate SELECT query
+	 * select query
 	 *
 	 * @param  string $columns
 	 * @return \Framework\Database\QueryBuilder
@@ -198,7 +198,7 @@ class QueryBuilder
 	}
         
     /**
-     * generate SELECT with raw query
+     * select raw query
      *
      * @param  string $query
      * @param  array $args
@@ -214,7 +214,7 @@ class QueryBuilder
     }
 
 	/**
-	 * generate INSERT query
+	 * insert query
 	 *
 	 * @param  array $items
 	 * @return \Framework\Database\QueryBuilder
@@ -242,7 +242,7 @@ class QueryBuilder
 	}
 
 	/**
-	 * generate UPDATE query
+	 * update query
 	 *
      * @param  array $items
 	 * @return \Framework\Database\QueryBuilder
@@ -268,7 +268,7 @@ class QueryBuilder
 	}
 
 	/**
-	 * generate DELETE FROM query
+	 * delete query
 	 * 
 	 * @return \Framework\Database\QueryBuilder
 	 */
@@ -279,7 +279,7 @@ class QueryBuilder
 	}
     
     /**
-     * add AFTER attribute
+     * add after attribute
      *
      * @param  string $column
      * @return \Framework\Database\QueryBuilder
@@ -291,7 +291,7 @@ class QueryBuilder
     }
     
     /**
-     * add FIRST attribute
+     * add first attribute
      *
      * @return \Framework\Database\QueryBuilder
      */
@@ -302,7 +302,7 @@ class QueryBuilder
     }
 		
 	/**
-	 * column
+	 * set column attribute
 	 *
 	 * @param  string $name
 	 * @param  string $type
@@ -389,7 +389,7 @@ class QueryBuilder
 	}
 	
 	/**
-	 * onUpdate
+	 * add on update query attribute
 	 *
 	 * @return \Framework\Database\QueryBuilder
 	 */
@@ -401,7 +401,7 @@ class QueryBuilder
 	}
 	
 	/**
-	 * onDelete
+	 * add on delete query attribute
 	 *
 	 * @return \Framework\Database\QueryBuilder
 	 */
@@ -413,7 +413,7 @@ class QueryBuilder
 	}
 	
 	/**
-	 * cascade
+	 * add cascade query attribute
 	 *
 	 * @return \Framework\Database\QueryBuilder
 	 */
@@ -424,7 +424,7 @@ class QueryBuilder
 	}
 	
 	/**
-	 * setNull
+	 * add set null attribute
 	 *
 	 * @return \Framework\Database\QueryBuilder
 	 */
@@ -455,7 +455,7 @@ class QueryBuilder
     }
 
 	/**
-	 * generate WHERE query
+	 * where query
 	 *
 	 * @param  string $column
 	 * @param  mixed $operator
@@ -475,7 +475,7 @@ class QueryBuilder
 	}
         
     /**
-     * generate WHERE with raw query
+     * where raw query
      *
      * @param  string $query
      * @param  array $args
@@ -487,7 +487,7 @@ class QueryBuilder
     }
 
 	/**
-	 * generate WHERE NOT query
+	 * where not query
 	 *
 	 * @param  string $column
 	 * @param  mixed $operator
@@ -507,7 +507,7 @@ class QueryBuilder
 	}
 
 	/**
-	 * generate WHERE query
+	 * where query
 	 *
 	 * @param  string $column
 	 * @return \Framework\Database\QueryBuilder
@@ -519,7 +519,7 @@ class QueryBuilder
 	}
 
 	/**
-	 * generate OR query
+	 * or query
 	 *
 	 * @param  string $column
 	 * @return \Framework\Database\QueryBuilder
@@ -531,7 +531,7 @@ class QueryBuilder
 	}
 
 	/**
-	 * generate AND query
+	 * and query
 	 *
 	 * @param  string $column
 	 * @return \Framework\Database\QueryBuilder
@@ -543,7 +543,7 @@ class QueryBuilder
 	}
 
 	/**
-	 * generate IS NULL query
+	 * add is null attribute
 	 *
 	 * @return \Framework\Database\QueryBuilder
 	 */
@@ -554,7 +554,7 @@ class QueryBuilder
 	}
 
 	/**
-	 * generate IS NOT NULL query
+	 * add is not null attribute 
 	 *
 	 * @param  string $column
 	 * @param  string $operator
@@ -568,7 +568,7 @@ class QueryBuilder
 	}
 
 	/**
-	 * generate IN query
+	 * in query
 	 *
 	 * @param  string $column
 	 * @return \Framework\Database\QueryBuilder
@@ -580,7 +580,7 @@ class QueryBuilder
     }
     
 	/**
-	 * generate NOT IN query
+	 * not in query
 	 *
 	 * @param  string $column
 	 * @return \Framework\Database\QueryBuilder
@@ -592,7 +592,7 @@ class QueryBuilder
     }
 
 	/**
-	 * generate BETWEEN query
+	 * between query
 	 *
 	 * @param  mixed $start
 	 * @param  mixed $end
@@ -605,7 +605,7 @@ class QueryBuilder
     }
     
 	/**
-	 * generate NOT BETWEEN query
+	 * not between query
 	 *
 	 * @param  mixed $start
 	 * @param  mixed $end
@@ -618,7 +618,7 @@ class QueryBuilder
     }
 
 	/**
-	 * generate LIKE query
+	 * like query
 	 *
 	 * @param  mixed $value
 	 * @return \Framework\Database\QueryBuilder
@@ -630,7 +630,7 @@ class QueryBuilder
 	}
 
 	/**
-	 * generate NOT LIKE query
+	 * not like query
 	 *
 	 * @param  mixed $value
 	 * @return \Framework\Database\QueryBuilder
@@ -642,7 +642,7 @@ class QueryBuilder
 	}
 
 	/**
-	 * generate AND query
+	 * and query
 	 *
 	 * @param  string $column
 	 * @param  mixed $operator
@@ -662,7 +662,7 @@ class QueryBuilder
 	}
 
 	/**
-	 * generate OR query
+	 * or query
 	 *
 	 * @param  string $column
 	 * @param  mixed $operator
@@ -682,7 +682,7 @@ class QueryBuilder
 	}
 
 	/**
-	 * generate HAVING query
+	 * having query
 	 *
 	 * @param  string $column
 	 * @param  mixed $operator
@@ -702,7 +702,7 @@ class QueryBuilder
 	}
         
     /**
-     * generate HAVING with raw query
+     * having raw query
      *
      * @param  string $query
      * @param  array $args
@@ -714,7 +714,7 @@ class QueryBuilder
     }
 
 	/**
-	 * generate ORDER BY query
+	 * order by query
 	 *
 	 * @param  string $column
 	 * @param  string $direction (ASC or DESC)
@@ -727,7 +727,7 @@ class QueryBuilder
 	}
 
 	/**
-	 * generate GROUP BY query
+	 * group by query
 	 *
 	 * @param  string[] $columns
 	 * @return \Framework\Database\QueryBuilder
@@ -745,7 +745,7 @@ class QueryBuilder
 	}
 
 	/**
-	 * generate LIMIT query
+	 * limit query
 	 *
 	 * @param  int $limit
 	 * @param  int $offset
@@ -763,7 +763,7 @@ class QueryBuilder
 	}
 
 	/**
-	 * generate INNER JOIN query
+	 * inner join query
 	 *
 	 * @param  string $table
 	 * @param  string $first_column
@@ -778,7 +778,7 @@ class QueryBuilder
 	}
 
 	/**
-	 * generate LEFT JOIN query
+	 * left join query
 	 *
 	 * @param  string $table
 	 * @param  string $first_column
@@ -793,7 +793,7 @@ class QueryBuilder
 	}
 
 	/**
-	 * generate RIGHT JOIN query
+	 * right join query
 	 *
 	 * @param  string $table
 	 * @param  string $first_column
@@ -808,7 +808,7 @@ class QueryBuilder
 	}
 
 	/**
-	 * generate FULL JOIN query
+	 * full join query
 	 *
 	 * @param  string $table
 	 * @param  string $first_column
@@ -823,7 +823,7 @@ class QueryBuilder
 	}
 
 	/**
-	 * generate FULL OUTER JOIN query
+	 * full outer join query
 	 *
 	 * @param  string $table
 	 * @param  string $first_column
@@ -896,7 +896,7 @@ class QueryBuilder
     }
     
     /**
-     * generate sub query
+     * sub query
      *
      * @param  mixed $callback
      * @return \Framework\Database\QueryBuilder

@@ -20,16 +20,12 @@ import CreateNotification from './components/modal/create-notification'
 import SendMessage from './components/modal/send-message'
 import UpdateItem from './components/forms/update-item'
 import DeleteItem from './components/forms/delete-item'
-
 import MetricsCards from './components/layout/metrics/metrics-cards'
 import MetricCardItem from './components/layout/metrics/metric-card-item'
 
-import React from 'react'
-import ReactDOM from 'react-dom'
-import Notifications from './components/react/notifications'
-import Messages from './components/react/messages'
-
-import hjs from '../vendor/hjs/highlight.pack'
+import { h, render } from 'preact'
+import Notifications from './components/preact/notifications'
+import Messages from './components/preact/messages'
 
 window.customElements.define('upload-modal', UploadModal)
 window.customElements.define('export-modal', ExportModal)
@@ -47,19 +43,16 @@ window.customElements.define('create-notification', CreateNotification)
 window.customElements.define('send-message', SendMessage)
 window.customElements.define('update-item', UpdateItem)
 window.customElements.define('delete-item', DeleteItem)
-
 window.customElements.define('metrics-cards', MetricsCards)
 window.customElements.define('metric-card-item', MetricCardItem)
 
 if (document.querySelector('#notifications-bell')) {
-    ReactDOM.render(<Notifications />, document.querySelector('#notifications-bell'))
+    render(h(Notifications), document.querySelector('#notifications-bell'))
 }
 
 if (document.querySelector('#messages-icon')) {
-    ReactDOM.render(<Messages />, document.querySelector('#messages-icon'))
+    render(h(Messages), document.querySelector('#messages-icon'))
 }
-
-hjs.initHighlightingOnLoad()
 
 window.addEventListener('beforeunload', () => {
     document.body.className = 'page-loading'

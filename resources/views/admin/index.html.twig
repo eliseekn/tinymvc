@@ -9,7 +9,6 @@
 {% endblock %}
 
 {% block page_content %}
-
     <metrics-cards>
         <metric-card-item 
             title="{{ __('users') }}" 
@@ -121,7 +120,7 @@
 									<td>{{ time_elapsed(notification.created_at) }}</td>
 									<td>
 										<update-item action="{{ route('messages.update', message.id) }}">
-											<button type="submit" class="btn text-dark p-1 {{ message.recipient_read ? 'disabled' }}" {{ not message.recipient_read ? 'title="' ~ __('mark_as_read') ~ '"' }}>
+											<button type="submit" class="btn text-dark p-1 {{ message.recipient_read ? 'disabled' }}" title="{{ not message.recipient_read ? ~ __('mark_as_read') }}">
 												<i class="fa fa-eye{{ not message.recipient_read ? '-slash' }}"></i>
 											</button>
 										</update-item>
@@ -167,7 +166,7 @@
 									<td>{{ time_elapsed(notification.created_at) }}</td>
 									<td>
 										<update-item action="{{ route('notifications.update', notification.id) }}">
-											<button type="submit" class="btn text-dark p-1 {{ notification.status ? 'disabled' }}" {{ not notification.status ? 'title="' ~ __('mark_as_read') ~ '"' }}>
+											<button type="submit" class="btn text-dark p-1 {{ notification.status ? 'disabled' }}" title="{{ not notification.status ? __('mark_as_read') }}">
 												<i class="fa fa-eye{{ not notification.status ? '-slash' }}"></i>
 											</button>
 										</update-item>
@@ -180,12 +179,9 @@
 			</div>
 		</div>
 	</div>
-
 {% endblock %}
 
 {% block scripts %}
-
 	<script defer src="{{ resources('vendor/morris/morris.min.js') }}"></script>
 	<script defer src="{{ resources('vendor/morris/raphael-min.js') }}"></script>
-
 {% endblock %}

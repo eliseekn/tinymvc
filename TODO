@@ -1,5 +1,1 @@
-- add interactive option to console for app:setup command
-- add "print usage" option to console
-- error when table already exists on migration
-- use preact instead of react
 - look for symfony cache component

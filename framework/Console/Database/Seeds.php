@@ -8,6 +8,7 @@
 
 namespace Framework\Console\Database;
 
+use Exception;
 use Framework\System\Storage;
 use App\Database\Seeds\Seeder;
 use Symfony\Component\Console\Helper\Table;
@@ -54,6 +55,8 @@ class Seeds extends Command
         else if ($input->getOption('list')) {
             $this->listSeeds($output);
         }
+
+        throw new Exception('Invalid command line arguments');
 
         return Command::SUCCESS;
     }

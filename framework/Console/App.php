@@ -8,7 +8,6 @@
 
 namespace Framework\Console;
 
-use Framework\System\Storage;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -22,35 +21,34 @@ class App extends Command
 
     protected function configure()
     {
-        $this->setDescription('Setup application');
-        $this->setHelp('This command allows you to setup application');
+        $this->setDescription('Setup application main configuration');
+        $this->setHelp('This command allows you to setup application main configuration');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /**
-         * echo '[+] Application name (ex: TinyMVC): ';
+        $output->writeln('<question>Application name (ex: TinyMVC):</question> ');
         $app_name = fgets(STDIN);
 
-        echo '[+] Application language (ex: en): ';
+        $output->writeln('<question>Application language (ex: en):</question> ');
         $app_lang = fgets(STDIN);
 
-        echo '[+] Application url (ex: http://example.com/): ';
+        $output->writeln('<question>Application url (ex: http://example.com/):</question> ');
         $app_url = fgets(STDIN);
 
-        echo '[+] Application folder name (leave empty if using root folder): ';
+        $output->writeln('<question>Application folder name (leave empty if not using sub-folder):</question> ');
         $app_folder = fgets(STDIN);
 
-        echo '[+] MySQL hostname (ex: localhost): ';
+        $output->writeln('<question>MySQL hostname (ex: localhost):</question> ');
         $mysql_host = fgets(STDIN);
 
-        echo '[+] MySQL database name: ';
+        $output->writeln('<question>MySQL database name:</question> ');
         $mysql_database = fgets(STDIN);
 
-        echo '[+] MySQL database username: ';
+        $output->writeln('<question>MySQL database username:</question> ');
         $mysql_username = fgets(STDIN);
 
-        echo '[+] MySQL database password: ';
+        $output->writeln('<question>MySQL database password:</question> ');
         $mysql_password = fgets(STDIN);
 
         $encryption_key = base64_encode(random_string(30, true));
@@ -69,10 +67,7 @@ class App extends Command
 
         save_env($config);
 
-        echo PHP_EOL; 
-        echo "\e[0;32;40m[+] Application has been setted up successfully\e[0m";
-        exit(PHP_EOL . PHP_EOL);
-         */
+        $output->writeln('<info>Application has been setted up successfully</info>');
 
         return Command::SUCCESS;
     }

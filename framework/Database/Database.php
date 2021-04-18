@@ -28,7 +28,7 @@ class Database
 	 *
 	 * @var mixed
 	 */
-	private $pdo;
+	protected $pdo;
 
 	/**
 	 * create instance of database connection
@@ -50,7 +50,7 @@ class Database
     }
 
 	/**
-	 * get connection to database instance
+	 * get database connection instance
 	 *
 	 * @return \Framework\Database\DB
 	 */
@@ -75,9 +75,7 @@ class Database
         try {
             $stmt = $this->pdo->query($query);
 		} catch (PDOException $e) {
-			if (config('errors.display')) {
-				throw new PDOException($e->getMessage());
-			}
+			throw new PDOException($e->getMessage());
         }
         
         return $stmt;
@@ -96,9 +94,7 @@ class Database
 			$stmt = $this->pdo->prepare(trim($query));
 			$stmt->execute($args);
 		} catch (PDOException $e) {
-			if (config('errors.display')) {
-				throw new PDOException($e->getMessage());
-			}
+			throw new PDOException($e->getMessage());
 		}
 
 		return $stmt;
