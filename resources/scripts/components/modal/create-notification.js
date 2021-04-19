@@ -1,5 +1,5 @@
 /**
- * affiche une fenêtre de création d'une notification
+ * display notification popup
  *
  * @class CreateNotification
  * @constructor
@@ -7,18 +7,12 @@
 class CreateNotification extends HTMLElement {
     constructor() {
         super()
-
         this.translations = {}
         this.getTranslations = this.getTranslations.bind(this)
         this.showDialog = this.showDialog.bind(this)
         this.addEventListener('click', this.showDialog)
     }
 
-    /**
-     * recupère les traductions
-     *
-     * @return
-     */
     getTranslations() {
         fetch('/tinymvc/api/translations')
             .then(response => response.json())
@@ -29,11 +23,6 @@ class CreateNotification extends HTMLElement {
         this.getTranslations()
     }
 
-    /**
-     * affiche la fenêtre modale
-     *
-     * @return
-     */
     showDialog() {
         let element = document.createElement('div')
         element.id = 'create-notification'
@@ -71,13 +60,12 @@ class CreateNotification extends HTMLElement {
 
         document.body.appendChild(element)
 
-        $('#create-notification').modal({
-            show: true
-        })
+        $('#create-notification').modal({ show: true })
+        $('#create-notification').on('hidden.bs.modal', function (e) { document.body.removeChild(element) })
+    }
 
-        $('#create-notification').on('hidden.bs.modal', function (e) {
-            document.body.removeChild(element)
-        })
+    disconnectedCallback() {
+        this.removeEventListener('click')
     }
 }
 

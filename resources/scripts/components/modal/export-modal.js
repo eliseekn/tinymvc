@@ -1,7 +1,12 @@
+/**
+ * display export data popup
+ *
+ * @class ExportModal
+ * @constructor
+ */
 class ExportModal extends HTMLElement {
     constructor() {
         super()
-
         this.translations = {}
         this.getTranslations = this.getTranslations.bind(this)
         this.showDialog = this.showDialog.bind(this)
@@ -93,13 +98,12 @@ class ExportModal extends HTMLElement {
 
         document.body.appendChild(element)
 
-        $('#export-modal').modal({
-            show: true
-        })
+        $('#export-modal').modal({ show: true })
+        $('#export-modal').on('hidden.bs.modal', function (e) { document.body.removeChild(element) })
+    }
 
-        $('#export-modal').on('hidden.bs.modal', function (e) {
-            document.body.removeChild(element)
-        })
+    disconnectedCallback() {
+        this.removeEventListener('click')
     }
 }
 

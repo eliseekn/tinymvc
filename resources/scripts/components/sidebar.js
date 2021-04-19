@@ -36,7 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.list-group-item-submenu-toggle').forEach(element => {
             element.addEventListener('click', event => {
                 event.preventDefault()
-
                 let submenu = document.querySelector('#' + element.dataset.target)
 
                 if (submenu.classList.contains('d-none')) {

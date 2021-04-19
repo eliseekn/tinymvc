@@ -110,7 +110,8 @@ class TwigExtensions extends \Twig\Extension\AbstractExtension implements \Twig\
             new \Twig\TwigFunction('generate_pagination', 'generate_pagination'),
             new \Twig\TwigFunction('save_log', 'save_log'),
             new \Twig\TwigFunction('curl', 'curl'),
-            new \Twig\TwigFunction('resources', 'resources')
+            new \Twig\TwigFunction('resources', 'resources'),
+            new \Twig\TwigFunction('date', 'date'),
         ];
     }
 }

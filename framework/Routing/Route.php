@@ -8,9 +8,6 @@
 
 namespace Framework\Routing;
 
-use App\Http\Middlewares\CsrfProtection;
-use App\Http\Middlewares\SanitizeInputs;
-
 /**
  * Manage routes
  */
@@ -383,8 +380,8 @@ class Route
     /**
      * parse
      *
-     * @param  mixed $uri
-     * @return void
+     * @param  string $uri
+     * @return string
      */
     private static function parse(string $uri): string
     {

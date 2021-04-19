@@ -17,8 +17,8 @@ class AuthLinkMail
     public static function send(string $email, string $token): bool
     {
         return Email::to($email)
-            ->from(config('mailer.sender_mail'), config('mailer.sender_name'))
-            ->reply(config('mailer.sender_mail'), config('mailer.sender_name'))
+            ->from(config('mailer.sender_email'), config('mailer.sender_name'))
+            ->reply(config('mailer.sender_email'), config('mailer.sender_name'))
 			->subject('Authentification link')
             ->html(View::getContent('emails.authlink', compact('email', 'token')))
 			->send();

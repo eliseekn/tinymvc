@@ -227,6 +227,7 @@
     'no_data_found' => 'Aucune donnée disponible',
     'items_not_checked' => 'Vous devez sélectionner au moins un élément',
     'click_to_enlarge' => 'Cliquez pour agrandir',
+    'all_rights_reserved' => 'Tous droits réservés',
 
     //modals
     'upload' => 'Importer',

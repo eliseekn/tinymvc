@@ -1,7 +1,12 @@
+/**
+ * display avatar with first name letter
+ * 
+ * @class AvatarIcon
+ * @constructor
+ */
 class AvatarIcon extends HTMLElement {
     constructor() {
         super()
-
         this.getFirstLetter = this.getFirstLetter.bind(this)
         this.getName = this.getName.bind(this)
     }

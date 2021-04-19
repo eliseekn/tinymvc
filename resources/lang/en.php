@@ -227,6 +227,7 @@
     'no_data_found' => 'No data found',
     'items_not_checked' => 'You must check at least one item',
     'click_to_enlarge' => 'Click to enlarge',
+    'all_rights_reserved' => 'All rights reserved',
 
     //modals
     'upload' => 'Upload',

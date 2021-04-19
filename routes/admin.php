@@ -56,7 +56,7 @@ Route::groupPrefix('admin', function () {
         Route::patch('account/messages/?{id}?/update', [MessagesController::class, 'update'])->name('messages.update')->where(['id' => 'num']);
         Route::post('account/messages/create', [MessagesController::class, 'create'])->name('messages.create');
         Route::post('account/messages/export', [MessagesController::class, 'export'])->name('messages.export');
-        Route::post('account/messages{id}/reply', [MessagesController::class, 'reply'])->name('messages.reply')->where(['id' => 'num']);
+        Route::post('account/messages/{id}/reply', [MessagesController::class, 'reply'])->name('messages.reply')->where(['id' => 'num']);
     
         Route::delete('account/notifications/?{id}?/delete', [NotificationsController::class, 'delete'])->name('notifications.delete')->where(['id' => 'num']);
         Route::patch('account/notifications/?{id}?/update', [NotificationsController::class, 'update'])->name('notifications.update')->where(['id' => 'num']);

@@ -43,7 +43,7 @@ class Users extends Repository
      * @param  int $items_per_pages
      * @return \Framework\Support\Pager
      */
-    public function findAllPaginate(int $items_per_pages = 20): \Framework\Support\Pager
+    public function findAllPaginate(int $items_per_pages = 10): \Framework\Support\Pager
     {
         return $this->find('!=', Auth::get('id'))
             ->oldest()

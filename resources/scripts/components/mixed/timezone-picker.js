@@ -1,3 +1,9 @@
+/**
+ * timezone select
+ * 
+ * @class TimezonePicker
+ * @constructor
+*/
 class TimezonePicker extends HTMLElement {
     constructor() {
         super()

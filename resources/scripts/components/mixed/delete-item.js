@@ -1,7 +1,12 @@
+/**
+ * send delete request
+ *
+ * @class DeleteItem
+ * @constructor
+ */
 class DeleteItem extends HTMLElement {
     constructor() {
         super()
-
         this.translations = {}
         this.getTranslations = this.getTranslations.bind(this)
         this.showDialog = this.showDialog.bind(this)
@@ -27,9 +32,9 @@ class DeleteItem extends HTMLElement {
     }
 
     showDialog() {
-        let submitButton = this.firstElementChild.querySelector('a')
-        let innerHTML = submitButton.innerHTML
-        submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>'
+        let submitLink = this.firstElementChild.querySelector('a')
+        let innerHTML = submitLink.innerHTML
+        submitLink.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>'
 
         let confirm = document.createElement('confirm-popup')
         confirm.setAttribute('message', this.translations.delete_item)
@@ -40,7 +45,11 @@ class DeleteItem extends HTMLElement {
         })
         
         document.body.removeChild(confirm)
-        submitButton.innerHTML = innerHTML
+        submitLink.innerHTML = innerHTML
+    }
+
+    disconnectedCallback() {
+        this.removeEventListener('click')
     }
 }
 

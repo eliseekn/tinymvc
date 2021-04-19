@@ -1,3 +1,9 @@
+/**
+ * metrics card layout
+ * 
+ * @class MetricCardItem
+ * @constructor
+ */
 class MetricsCards extends HTMLElement {
     constructor() {
         super()

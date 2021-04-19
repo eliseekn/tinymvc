@@ -59,11 +59,11 @@ class NotificationsController extends Controller
 	public function update(Request $request, ?int $id = null): void
 	{
         if (!is_null($id)) {
-            $this->notifications->updateIfExists($id, ['status' => 'read']);
+            $this->notifications->updateIfExists($id, ['status' => 1]);
             $this->log(__('notification_updated'));
             redirect()->back()->withToast('success', __('notification_updated'))->go();
 		} else {
-            $this->notifications->updateBy(['id', 'in', $request->items], ['status' => 'read']);
+            $this->notifications->updateBy(['id', 'in', $request->items], ['status' => 1]);
             $this->log(__('notifications_updated'));
 			$this->toast('success', __('notifications_updated'));
             response()->json(['redirect' => route('notifications.index')]);

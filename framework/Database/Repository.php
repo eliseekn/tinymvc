@@ -209,7 +209,7 @@ class Repository
         $result = $this->findSingleBy($column, $operator, $value);
 
         if ($result === false) {
-            throw new Exception('Data not found.');
+            throw new Exception('Record not found in database.');
         }
 
         return $result;
@@ -339,7 +339,7 @@ class Repository
      */
     public function delete(): self
     {
-        $this->qb = QueryBuilder::delete($this->table);
+        $this->qb = QueryBuilder::table($this->table)->delete();
         return $this;
     }
     

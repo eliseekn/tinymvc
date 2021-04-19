@@ -1,22 +1,16 @@
 /**
- * affiche une alerte de type popup
+ * display popup alert
  *
  * @class AlertPopup
  * @constructor
  */
- class AlertPopup extends HTMLElement {
+class AlertPopup extends HTMLElement {
     constructor() {
         super()
-
-        this.popupIcon = this.popupIcon.bind(this)
+        this.icon = this.icon.bind(this)
     }
 
-    /**
-     * génère l'icône pour la fenêtre
-     *
-     * @return
-     */
-    popupIcon() {
+    icon() {
         switch(this.getAttribute('type')) {
             case 'primary':
                 return '<i class="fa fa-info-circle text-primary fa-4x"></i>'
@@ -39,7 +33,7 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-body text-center">
-                        ${this.popupIcon()}
+                        ${this.icon()}
                         <p class="modal-title my-2">${this.getAttribute('message')}</p>
                         <button type="button" class="btn btn-${this.getAttribute('type')}" data-dismiss="modal">OK</button>
                     </div>
@@ -49,13 +43,8 @@
 
         document.body.appendChild(element)
 
-        $('#alert-popup').modal({
-            show: true
-        })
-
-        $('#alert-popup').on('hidden.bs.modal', function (e) {
-            document.body.removeChild(element)
-        })
+        $('#alert-popup').modal({ show: true })
+        $('#alert-popup').on('hidden.bs.modal', function () { document.body.removeChild(element) })
     }
 }
 

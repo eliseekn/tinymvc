@@ -1,7 +1,12 @@
+/**
+ * display upload file popup
+ *
+ * @class UploadModal
+ * @constructor
+ */
 class UploadModal extends HTMLElement {
     constructor() {
         super()
-
         this.translations = {}
         this.inputHTML = this.inputHTML.bind(this)
         this.getTranslations = this.getTranslations.bind(this)
@@ -59,13 +64,12 @@ class UploadModal extends HTMLElement {
 
         document.body.appendChild(element)
 
-        $('#upload-modal').modal({
-            show: true
-        })
+        $('#upload-modal').modal({ show: true })
+        $('#upload-modal').on('hidden.bs.modal', function (e) { document.body.removeChild(element) })
+    }
 
-        $('#upload-modal').on('hidden.bs.modal', function (e) {
-            document.body.removeChild(element)
-        })
+    disconnectedCallback() {
+        this.removeEventListener('click')
     }
 }
 

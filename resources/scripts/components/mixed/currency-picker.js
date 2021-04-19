@@ -1,3 +1,9 @@
+/**
+ * currency select
+ * 
+ * @class CurrencyPicker
+ * @constructor
+ */
 class CurrencyPicker extends HTMLElement {
     constructor() {
         super()

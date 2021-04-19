@@ -1,13 +1,12 @@
 /**
- * affiche les graphiques de types barres
+ * display morris bars chart
  *
  * @class BarsChart
  * @constructor
  */
- class BarsChart extends HTMLElement {
+class BarsChart extends HTMLElement {
     constructor() {
         super()
-
         this.translations = {}
         this.getTranslations = this.getTranslations.bind(this)
         this.setDefaultInnerHTML = this.setDefaultInnerHTML.bind(this)
@@ -15,11 +14,6 @@
         this.displayData = this.displayData.bind(this)
     }
 
-    /**
-     * recupère les traductions
-     *
-     * @return
-     */
     getTranslations() {
         fetch('/tinymvc/api/translations')
             .then(response => response.json())

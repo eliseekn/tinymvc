@@ -15,7 +15,7 @@ $config = [
         'default' => 'smtp',
 
         'sender_name' => 'TinyMVC',
-        'sender_mail' => 'tiny@mvc.framework',
+        'sender_email' => 'tiny@mvc.framework',
 
         'smtp' => [
             'host' => 'localhost',

@@ -1,7 +1,12 @@
+/**
+ * send update request
+ *
+ * @class UpdateItem
+ * @constructor
+ */
 class UpdateItem extends HTMLElement {
     constructor() {
         super()
-
         this.isDisabled = this.isDisabled.bind(this)
     }
 

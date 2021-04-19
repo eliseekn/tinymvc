@@ -31,9 +31,9 @@ class Messages extends Repository
      * @param  int $items_per_pages
      * @return \Framework\Support\Pager
      */
-    public function findAllPaginate(int $items_per_pages = 20): \Framework\Support\Pager
+    public function findAllPaginate(int $items_per_pages = 10): \Framework\Support\Pager
     {
-        return $this->select(['messages.*', 'u1.email AS sender_mail', 'u2.email AS recipient_email'])
+        return $this->select(['messages.*', 'u1.email AS sender_email', 'u2.email AS recipient_email'])
             ->join('users AS u1', 'messages.sender', '=', 'u1.id')
             ->join('users AS u2', 'messages.recipient', '=', 'u2.id')
             ->whereRaw('recipient = ' . Auth::get('id') . ' OR sender = ' . Auth::get('id'))
@@ -50,7 +50,7 @@ class Messages extends Repository
      */
     public function findReceivedMessages(int $limit = 5): array
     {
-        return $this->select(['messages.*', 'u.email AS sender_mail', 'u.name AS sender_name'])
+        return $this->select(['messages.*', 'u.email AS sender_email', 'u.name AS sender_name'])
             ->join('users As u', 'messages.sender', '=', 'u.id')
             ->where('recipient', Auth::get('id'))
             ->and('recipient_deleted', 0)

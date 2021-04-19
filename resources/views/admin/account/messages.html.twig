@@ -86,14 +86,14 @@
                             </td>
 
                             <td>{{ data.id }}</td>
-                            <td>{{ data.sender_mail }}</td>
+                            <td>{{ data.sender_email }}</td>
                             <td>{{ data.recipient_email }}</td>
                             <td>{{ data.message }}</td>
                             <td>{{ time_elapsed(data.created_at) }}</td>
 
                             <td>
-                                {% if data.sender_mail != auth('email') %}
-                                <update-item action="{{ route('messages.update', data.id) }}" {{ data.recipient_read == 'read' ? 'disabled' }}>
+                                {% if data.sender_email != auth('email') %}
+                                <update-item action="{{ route('messages.update', data.id) }}" disabled="{{ data.recipient_read ? 'disabled' }}">
                                     <button type="submit" class="btn text-dark p-1" title="{{ not data.recipient_read ? __('mark_as_read') }}">
                                         <i class="fa fa-eye{{ not data.recipient_read ? '-slash' }}"></i>
                                     </button>

@@ -11,30 +11,26 @@ namespace Framework\Support;
 use Framework\System\Storage;
 
 /**
- * Manage uploaded file
+ * Manage uploaded files
  */
 class Uploader
 {    
     /**
-     * file
+     * uploaded file
      *
      * @var array
      */
     private $file = [];
     
     /**
-     * uploaded filename
-     *
      * @var string
      */
     public $filename = '';
 
     /**
-     * allowed file extensions
-     * 
      * @var array
      */
-    public $allowed_extensions = [];
+    private $allowed_extensions = [];
 
     /**
      * __construct
@@ -136,7 +132,7 @@ class Uploader
      *
      * @return string
      */
-    public function getFileSizeToString(): string
+    public function fileSizeToString(): string
     {
         if ($this->getFileSize() <= 0) {
             return '';
@@ -183,7 +179,7 @@ class Uploader
     {
         $this->filename = $filename ?? $this->getOriginalFilename();
 
-        //create destination directory
+        //create destination directory if not exists
         if (!Storage::path($destination)->isDir()) {
             if (!Storage::path($destination)->createDir('', true)) {
                 return false;

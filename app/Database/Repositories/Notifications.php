@@ -32,7 +32,7 @@ class Notifications extends Repository
      */
     public function findMessages(int $limit = 5)
     {
-        return $this->findBy('status', 'unread')
+        return $this->findBy('status', 0)
             ->and('user_id', Auth::get('id'))
             ->oldest()
             ->take($limit);
@@ -44,7 +44,7 @@ class Notifications extends Repository
      * @param  int $items_per_pages
      * @return \Framework\Support\Pager
      */
-    public function findAllPaginate(int $items_per_pages = 20): \Framework\Support\Pager
+    public function findAllPaginate(int $items_per_pages = 10): \Framework\Support\Pager
     {
         return $this->findBy('user_id', Auth::get('id'))
             ->oldest()

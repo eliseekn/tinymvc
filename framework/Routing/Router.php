@@ -60,11 +60,12 @@ class Router
     /**
      * match routes and execute handlers
      *
+     * @param  \Framework\Http\Request $request
      * @param  array $routes
      * @return void
      */
     public static function dispatch(Request $request, array $routes): void
-    {
+    {   
         if (!empty($routes)) {
             foreach ($routes as $route => $options) {
                 $request->method($request->inputs('request_method', $options['method']));

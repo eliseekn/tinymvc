@@ -31,7 +31,7 @@ class Activities extends Repository
      * @param  int $items_per_pages
      * @return \Framework\Support\Pager
      */
-    public function findAllPaginate($items_per_pages = 20): \Framework\Support\Pager
+    public function findAllPaginate(int $items_per_pages = 10): \Framework\Support\Pager
     {
         return $this->select(['id', 'user', 'url', 'ip_address', 'action', 'created_at'])
             ->subQuery(function ($query) {

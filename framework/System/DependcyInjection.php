@@ -24,7 +24,7 @@ class DependcyInjection
 	* 
  	* @param string $class
  	* @param string|null $method
-    * @param array $paramns
+    * @param array $params
  	* @return void
  	*
  	* @throws Exception

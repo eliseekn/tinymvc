@@ -1,10 +1,16 @@
+/**
+ * display rich text editor
+ * 
+ * @class TextEditor
+ * @constructor
+*/
 class TextEditor extends HTMLElement {
     constructor() {
         super()
         this.submit = this.submit.bind(this)
 
-        let form = document.querySelector(this.getAttribute('form'))
-        form.addEventListener('submit', event => this.submit(event))
+        this.form = document.querySelector(this.getAttribute('form'))
+        this.form.addEventListener('submit', event => this.submit(event))
     }
 
     submit(event) {
@@ -45,6 +51,10 @@ class TextEditor extends HTMLElement {
         document.querySelector('.ql-editor').setAttribute('style', 'font-size: 1rem')
         document.querySelector('.ql-toolbar').classList.add('rounded-top')
         document.querySelector('#editor').classList.add('rounded-bottom')
+    }
+
+    disconnectedCallback() {
+        this.form.removeEventListener('submit')
     }
 }
 

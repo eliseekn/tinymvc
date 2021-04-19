@@ -1,3 +1,9 @@
+/**
+ * theme switch preview
+ * 
+ * @class ThemeSwitch
+ * @constructor
+*/
 class ThemeSwitch extends HTMLElement {
     constructor() {
         super()

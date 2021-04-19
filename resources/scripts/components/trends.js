@@ -25,7 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     .then(response => response.json())
                     .then(data => {
                         document.querySelector('#users-bars-chart').setAttribute('data', data.metrics)
-                        event.target.value === 'weeks' ? document.querySelector('#users-bars-chart').setAttribute('xkey', 'day') : document.querySelector('#users-bars-chart').setAttribute('xkey', 'month')
+                        event.target.value === 'weeks'
+                            ? document.querySelector('#users-bars-chart').setAttribute('xkey', 'day')
+                            : document.querySelector('#users-bars-chart').setAttribute('xkey', 'month')
                     })
             }
         })

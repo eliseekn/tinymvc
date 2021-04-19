@@ -103,9 +103,12 @@
                     </button>
     
                     <div class="ml-auto d-flex align-items-center">
-                        <div id="messages-icon"></div>
-                        <div id="notifications-bell"></div>
-    
+                        {# <div id="messages-icon"></div>
+                        <div id="notifications-bell"></div> #}
+
+                        <messages-icon></messages-icon>
+                        <notifications-icon></notifications-icon>
+
                         <a class="btn btn-sm" href="{{ route('settings.index', auth('id')) }}" title="{{ __('settings') }}">
                             <i class="fa fa-cog fa-lg"></i>
                         </a>

@@ -133,7 +133,7 @@ class Metrics
                         ->groupBy('MONTHNAME(created_at)')
                         ->fetchAll();
             
-            case 'years':
+            default:
                 return $interval > 0 ? 
                     QueryBuilder::table($this->table)
                         ->select($type . '(' . $column . ') AS value', 'YEAR(created_at) AS year')

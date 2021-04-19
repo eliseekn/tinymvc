@@ -1,2 +1,6 @@
-<p>Hello {{ username }} !</p>
-<p>Congratulations, your account has been successfully created.</p>
+{% extends "layouts/email.html.twig" %}
+
+{% block body %}
+    <p>Hello {{ username }} !</p>
+    <p>Congratulations, your account has been successfully created.</p>
+{% endblock %}

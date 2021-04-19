@@ -10,12 +10,14 @@
 
 {% block page_content %}
     <metrics-cards>
+        {% if auth('role') == USER_ROLE[0] %}
         <metric-card-item 
             title="{{ __('users') }}" 
             icon="fa fa-users fa-2x" 
             data="{{ total_users }}"
             columns="4">
         </metric-card-item>
+        {% endif %}
 
         <metric-card-item 
             title="{{ __('medias') }}" 
@@ -115,12 +117,12 @@
 						<tbody>
 							{% for message in messages %}
 								<tr>
-									<td>{{ message.sender_mail }}</td>
+									<td>{{ message.sender_email }}</td>
 									<td>{{ message.message }}</td>
 									<td>{{ time_elapsed(notification.created_at) }}</td>
 									<td>
 										<update-item action="{{ route('messages.update', message.id) }}">
-											<button type="submit" class="btn text-dark p-1 {{ message.recipient_read ? 'disabled' }}" title="{{ not message.recipient_read ? ~ __('mark_as_read') }}">
+											<button type="submit" class="btn text-dark p-1 {{ message.recipient_read ? 'disabled' }}" title="{{ not message.recipient_read ? __('mark_as_read') }}">
 												<i class="fa fa-eye{{ not message.recipient_read ? '-slash' }}"></i>
 											</button>
 										</update-item>

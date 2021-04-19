@@ -1,22 +1,16 @@
 /**
- * affiche une alerte de type toast
+ * display toast alert
  *
  * @class AlertToast
  * @constructor
  */
- class AlertToast extends HTMLElement {
+class AlertToast extends HTMLElement {
     constructor() {
         super()
-
-        this.toastIcon = this.toastIcon.bind(this)
+        this.icon = this.icon.bind(this)
     }
 
-    /**
-     * génère l'icône pour la fenêtre
-     *
-     * @return
-     */
-    toastIcon() {
+    icon() {
         switch(this.getAttribute('type')) {
             case 'primary':
                 return '<i class="fa fa-info-circle text-primary fa-lg"></i>'
@@ -37,7 +31,7 @@
             <div class="modal-dialog position-absolute shadow-sm rounded" style="top: -0.3em; right: .8em; z-index: 11111">
                 <div class="modal-content">
                     <div class="modal-body d-flex justify-content-around align-items-center">
-                        <div style="font-size: 1.5rem">${this.toastIcon()}</div>
+                        <div style="font-size: 1.5rem">${this.icon()}</div>
 
                         <div class="d-flex flex-column px-3">
                             <p class="modal-title mb-0">${this.getAttribute('message')}</p>
@@ -59,13 +53,13 @@
             show: true
         })
 
-        $('#alert-toast').on('shown.bs.modal', function (e) {
+        $('#alert-toast').on('shown.bs.modal', function () {
             window.setTimeout(function () {
                 $('#alert-toast').modal('hide');
             }, 4000)
         })
 
-        $('#alert-toast').on('hidden.bs.modal', function (e) {
+        $('#alert-toast').on('hidden.bs.modal', function () {
             document.body.removeChild(element)
         })
     }

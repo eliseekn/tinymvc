@@ -1,7 +1,12 @@
+/**
+ * display message popup
+ *
+ * @class SendMessage
+ * @constructor
+ */
 class SendMessage extends HTMLElement {
     constructor() {
         super()
-
         this.users = []
         this.translations = {}
         this.getTranslations = this.getTranslations.bind(this)
@@ -77,13 +82,12 @@ class SendMessage extends HTMLElement {
 
         document.body.appendChild(element)
 
-        $('#send-message').modal({
-            show: true
-        })
+        $('#send-message').modal({ show: true })
+        $('#send-message').on('hidden.bs.modal', function (e) { document.body.removeChild(element) })
+    }
 
-        $('#send-message').on('hidden.bs.modal', function (e) {
-            document.body.removeChild(element)
-        })
+    disconnectedCallback() {
+        this.removeEventListener('click')
     }
 }
 

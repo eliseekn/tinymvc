@@ -1,10 +1,10 @@
 /**
- * affiche une alerte de type popup
+ * display confirm popup
  *
  * @class ConfirmPopup
  * @constructor
  */
- class ConfirmPopup extends HTMLElement {
+class ConfirmPopup extends HTMLElement {
     constructor() {
         super()
     }
@@ -30,13 +30,8 @@
 
         document.body.appendChild(element)
 
-        $('#confirm-popup').modal({
-            show: true
-        })
-
-        $('#confirm-popup').on('hidden.bs.modal', function (e) {
-            document.body.removeChild(element)
-        })
+        $('#confirm-popup').modal({ show: true })
+        $('#confirm-popup').on('hidden.bs.modal', function () { document.body.removeChild(element) })
     }
 }
 

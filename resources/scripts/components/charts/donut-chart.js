@@ -1,3 +1,9 @@
+/**
+ * display morris donut chart
+ *
+ * @class DonutChart
+ * @constructor
+ */
 class DonutChart extends HTMLElement {
     constructor() {
         super()
