@@ -11,10 +11,8 @@
  */
 
 $config = [
-    'app' => [
-        'name' => env('APP_NAME', 'TinyMVC'),
-        'folder' => env('APP_FOLDER', 'tinymvc'),
-        'url' => env('APP_URL', 'http://localhost/tinymvc'),
-        'lang' => env('APP_LANG', 'en')
-    ]
+    'name' => env('APP_NAME', 'TinyMVC'),
+    'folder' => env('APP_FOLDER', 'tinymvc'),
+    'url' => env('APP_URL', 'http://localhost/tinymvc'),
+    'lang' => env('APP_LANG', 'en')
 ];

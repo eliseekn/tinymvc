@@ -25,7 +25,7 @@ class Validator extends Command
     {
         $this->setDescription('Create new request validator');
         $this->setHelp('This command allows you to create new request validator');
-        $this->addArgument('validator', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of validator (separated by space if many).');
+        $this->addArgument('validator', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of validator (separated by space if many)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -33,7 +33,7 @@ class Validator extends Command
         $validators = $input->getArgument('validator');
 
         foreach ($validators as $validator) {
-            list($name, $class) = Make::generateClass($validator, 'validator');
+            list($name, $class) = Make::generateClass($validator, '');
 
             if (!Make::createValidator($validator)) {
                 $output->writeln('<fg=yellow>Failed to create request validator "' . $class . '"</fg>');

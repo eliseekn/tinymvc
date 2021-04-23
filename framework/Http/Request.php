@@ -214,7 +214,7 @@ class Request
         $uri = $this->fullUri();
 
         //removes queries from uri
-        if (strpos($uri, '?') !== false) {
+        if (strpos($uri, '?')) {
             $uri = substr($uri, strpos($uri, '/'), strpos($uri, '?'));
         }
  

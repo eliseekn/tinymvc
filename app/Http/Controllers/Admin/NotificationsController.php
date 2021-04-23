@@ -38,18 +38,6 @@ class NotificationsController extends Controller
     }
 
 	/**
-	 * create
-	 *
-     * @param  \Framework\Http\Request $request
-	 * @return void
-	 */
-	public function create(Request $request): void
-	{
-        NotificationHelper::create($request->message);
-        redirect()->back()->withToast('success', __('notifications_created'))->go();
-    }
-    
-	/**
 	 * update
 	 *
      * @param  \Framework\Http\Request $request

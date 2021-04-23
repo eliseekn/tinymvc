@@ -29,7 +29,7 @@ $console->add(new \Framework\Console\Make\Seed());
 $console->add(new \Framework\Console\Make\View());
 $console->add(new \Framework\Console\Make\Mail());
 $console->add(new \Framework\Console\Make\Middleware());
-$console->add(new \Framework\Console\Make\Resources());
+$console->add(new \Framework\Console\Make\Resource());
 $console->add(new \Framework\Console\Make\MakeCommand());
 
 $console->add(new \Framework\Console\Cache());

@@ -24,10 +24,10 @@ class MakeCommand extends Command
 
     protected function configure()
     {
-        $this->setDescription('Create new command');
-        $this->setHelp('This command allows you to create new command');
-        $this->addArgument('name', InputArgument::REQUIRED, 'The name of table command (separated by space if many).');
-        $this->addArgument('cmd', InputArgument::REQUIRED, 'The command value.');
+        $this->setDescription('Create new console command');
+        $this->setHelp('This command allows you to create new console command');
+        $this->addArgument('name', InputArgument::REQUIRED, 'The name of command class');
+        $this->addArgument('cmd', InputArgument::REQUIRED, 'The command name');
         $this->addOption('description', 'd', InputOption::VALUE_REQUIRED, 'The command description (inside "")');
         $this->addOption('usage', 'u', InputOption::VALUE_OPTIONAL, 'The command help usage (inside "")');
     }

@@ -45,11 +45,7 @@ class AuthController extends Controller
         RegisterUser::register()->validate($request->inputs())->redirectOnFail();
         Auth::create($request, $users);
 
-        if (count($users->findAll()) === 1) {
-            redirect()->url('login')->withAlert('success', __('user_registered', true))->go();
-        }
-
-        if (!config('auth.email_confirmation')) {
+        if (!config('security.auth.email_confirmation')) {
             WelcomeMail::send($request->email, $request->name);
             redirect()->url('login')->withAlert('success', __('user_registered', true))->go();
         }
@@ -70,7 +66,7 @@ class AuthController extends Controller
      * @param  string $redirect
 	 * @return void
 	 */
-	public function logout(string $redirect = 'login'): void
+	public function logout(string $redirect = '/'): void
 	{
 		Auth::forget();
         redirect()->url($redirect)->go();

@@ -1,12 +1,13 @@
 /**
- * display notification popup
+ * display message popup
  *
- * @class CreateNotification
+ * @class TicketMessage
  * @constructor
  */
-class CreateNotification extends HTMLElement {
+class TicketMessage extends HTMLElement {
     constructor() {
         super()
+        this.users = []
         this.translations = {}
         this.getTranslations = this.getTranslations.bind(this)
         this.showDialog = this.showDialog.bind(this)
@@ -21,11 +22,12 @@ class CreateNotification extends HTMLElement {
 
     connectedCallback() {
         this.getTranslations()
+        this.getUsers()
     }
 
     showDialog() {
         let element = document.createElement('div')
-        element.id = 'create-notification'
+        element.id = 'ticket-message'
         element.setAttribute('tabindex', '-1')
         element.setAttribute('role', 'dialog')
         element.classList.add('modal', 'fade')
@@ -33,7 +35,7 @@ class CreateNotification extends HTMLElement {
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header bg-light text-dark align-items-center py-2">
-                        <h5 class="modal-title">${this.translations.create_notification}</h5>
+                        <h5 class="modal-title">${this.getAttribute('modal_title')}</h5>
                         <button type="button" class="btn" data-dismiss="modal" aria-label="Close">
                             <i class="fa fa-times"></i>
                         </button>
@@ -41,11 +43,12 @@ class CreateNotification extends HTMLElement {
 
                     <form method="post" action="${this.getAttribute('action')}">
                         <input type="hidden" name="csrf_token" value="${document.querySelector('meta[name="csrf_token"]').content}">
-
+                        <input type="hidden" name="ticket_id" value="${this.getAttribute('ticket_id')}">
+                        
                         <div class="modal-body">
                             <div class="form-group">
                                 <label for="message">${this.translations.message}</label>
-                                <input type="text" name="message" id="message" class="form-control" required>
+                                <textarea id="message" name="message" rows="3" class="form-control"></textarea>
                             </div>
                         </div>
 
@@ -60,8 +63,8 @@ class CreateNotification extends HTMLElement {
 
         document.body.appendChild(element)
 
-        $('#create-notification').modal({ show: true })
-        $('#create-notification').on('hidden.bs.modal', function (e) { document.body.removeChild(element) })
+        $('#ticket-message').modal({ show: true })
+        $('#ticket-message').on('hidden.bs.modal', function (e) { document.body.removeChild(element) })
     }
 
     disconnectedCallback() {
@@ -69,4 +72,4 @@ class CreateNotification extends HTMLElement {
     }
 }
 
-export default CreateNotification
+export default TicketMessage

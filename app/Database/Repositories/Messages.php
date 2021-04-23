@@ -36,8 +36,16 @@ class Messages extends Repository
         return $this->select(['messages.*', 'u1.email AS sender_email', 'u2.email AS recipient_email'])
             ->join('users AS u1', 'messages.sender', '=', 'u1.id')
             ->join('users AS u2', 'messages.recipient', '=', 'u2.id')
-            ->whereRaw('recipient = ' . Auth::get('id') . ' OR sender = ' . Auth::get('id'))
-            ->raw('AND (sender_deleted = (CASE WHEN u1.id = ' . Auth::get('id') . ' THEN 0 ELSE 1 END) OR recipient_deleted = (CASE WHEN u2.id = ' . Auth::get('id') . ' THEN 0 ELSE 1 END))')
+            ->subQuery(function ($query) {
+                $query->whereRaw('(IF (u1.id = ?, sender_deleted, recipient_deleted)) = 0', [Auth::get('id')])
+                 ->raw('OR (IF (u2.id = ?, recipient_deleted, sender_deleted)) = 0', [Auth::get('id')]);
+            })
+            ->subQuery(function ($query) {
+                $query->raw('AND (recipient = ? OR sender = ?)', [Auth::get('id'), Auth::get('id')]);
+            })
+            
+            /* ->raw('AND (sender_deleted = (CASE WHEN u1.id = ' . Auth::get('id') . ' THEN 0 END))')
+            ->raw('OR (recipient_deleted = (CASE WHEN u2.id = ' . Auth::get('id') . ' THEN 0 END))') */
             ->oldest('messages.created_at')
             ->paginate($items_per_pages);
     }

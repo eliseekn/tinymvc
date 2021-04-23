@@ -25,7 +25,7 @@ class Middleware extends Command
     {
         $this->setDescription('Create new middleware');
         $this->setHelp('This command allows you to create new middleware');
-        $this->addArgument('middleware', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of middleware (separated by space if many).');
+        $this->addArgument('middleware', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of middleware (separated by space if many)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

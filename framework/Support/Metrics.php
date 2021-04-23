@@ -74,6 +74,7 @@ class Metrics
                         ->fetchAll() :
                     QueryBuilder::table($this->table)
                         ->select($type . '(' . $column . ') AS value')
+                        ->where('DAY(created_at)', Carbon::now()->day)
                         ->subQuery(function ($q) use ($query) {
                             if (!is_null($query) && !empty($query)) {
                                 $q->rawQuery($query[0], $query[1]);
@@ -147,6 +148,7 @@ class Metrics
                         ->fetchAll() :
                     QueryBuilder::table($this->table)
                         ->select($type . '(' . $column . ') AS value', 'YEAR(created_at) AS year')
+                        ->where('YEAR(created_at)', Carbon::now()->year)
                         ->subQuery(function ($q) use ($query) {
                             if (!is_null($query) && !empty($query)) {
                                 $q->rawQuery($query[0], $query[1]);

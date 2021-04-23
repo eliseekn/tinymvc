@@ -31,7 +31,7 @@ class Migrations extends Command
     {
         $this->setDescription('Manage migrations tables');
         $this->setHelp('This command allows you to run or delete migrations');
-        $this->addArgument('migration', InputArgument::OPTIONAL|InputArgument::IS_ARRAY, 'The name of table migration (separated by space if many).');
+        $this->addArgument('migration', InputArgument::OPTIONAL|InputArgument::IS_ARRAY, 'The name of table migration (separated by space if many)');
         $this->addOption('run', null, InputOption::VALUE_NONE, 'Migrate tables');
         $this->addOption('refresh', 'r', InputOption::VALUE_NONE, 'Refresh migrations tables');
         $this->addOption('delete', 'd', InputOption::VALUE_NONE, 'Delete migrations tables');
@@ -102,7 +102,9 @@ class Migrations extends Command
             $this->listMigrationsTables($output);
         }
 
-        throw new Exception('Invalid command line arguments');
+        else {
+            $output->writeln('<error>Invalid command line arguments. Type "php console list" for commands list</error>');
+        }
 
         return Command::SUCCESS;
     }
@@ -114,25 +116,25 @@ class Migrations extends Command
             return;
         }
 
-        $this->saveMigrationTable($output, $table);
-
         $table = '\App\Database\Migrations\\' . $table;
         $table::migrate();
         $output->writeln('<info>Table "' . $table . '" migrated successfully</info>');
+
+        $this->saveMigrationTable($output, end(explode('\\', $table)));
     }
 
     protected function delete(OutputInterface $output, string $table)
     {
         if (!$this->IsAlreadyMigrated($table)) {
-            $output->writeln('<fg=yellow>Migration table "' . $table . '" has not been migrated</>');
+            $output->writeln('<fg=yellow>Table "' . $table . '" has not been migrated</>');
             return;
         }
-
-        $this->removeMigrationTable($table);
 
         $table = '\App\Database\Migrations\\' . $table;
         $table::delete();
         $output->writeln('<info>Table "' . $table . '" deleted successfully</info>');
+
+        $this->removeMigrationTable(end(explode('\\', $table)));
     }
 
     protected function refresh(OutputInterface $output, string $table)

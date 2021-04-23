@@ -21,7 +21,7 @@ class Auth
      */
     private static function getAttempts(): int
     {
-        return Session::has('auth_attempts') ? Session::get('auth_attempts') : 0;
+        return Session::get('auth_attempts', 0);
     }
 
     /**
@@ -35,12 +35,12 @@ class Auth
     public static function attempt(Request $request, Users $users, Tokens $tokens): void
     {
         //increment authentication attempts
-        Session::create('auth_attempts', (self::getAttempts() + 1));
+        Session::put('auth_attempts', 1, 0);
 
         //check credentials
         if (self::checkByCredentials($users, $request->email, $request->password, $user)) {
             //reset authentication attempts and disable lock
-            Session::close('auth_attempts', 'auth_attempts_timeout');
+            Session::flush('auth_attempts', 'auth_attempts_timeout');
 
             //check user state
             if (!$user->active) {
@@ -76,8 +76,8 @@ class Auth
         //authentication failed
         Activity::log(__('login_attempts_failed', true), $request->email);
 
-        if (config('auth.max_attempts') > 0 && self::getAttempts() >= config('auth.max_attempts')) {
-            redirect()->back()->with('auth_attempts_timeout', Carbon::now()->addMinutes(config('auth.unlock_timeout'))->toDateTimeString())->go();
+        if (config('security.auth.max_attempts') > 0 && self::getAttempts() >= config('security.auth.max_attempts')) {
+            redirect()->back()->with('auth_attempts_timeout', Carbon::now()->addMinutes(config('security.auth.unlock_timeout'))->toDateTimeString())->go();
         } else {
             redirect()->back()->withInputs($request->only('email', 'password'))
                 ->withAlert('error', __('login_failed', true))->go();
@@ -95,8 +95,23 @@ class Auth
      */
     public static function checkByCredentials(Users $users, string $email, string $password, &$user): bool
     {
-        $user = $users->findSingleByEmail($email);
-        return $user !== false && Encryption::check($password, $user->password);
+        if (filter_var($email, FILTER_VALIDATE_EMAIL) !== false) {
+            $user = $users->findSingleByEmail($email);
+            return $user !== false && Encryption::check($password, $user->password);
+        }
+
+        $users = $users->findManyByUsername($email);
+
+        if ($users !== false) {
+            foreach ($users as $u) {
+                if (Encryption::check($password, $u->password)) {
+                    $user = $u;
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
     
     /**
@@ -122,10 +137,8 @@ class Auth
      */
     public static function create(Request $request, Users $users): void
     {
-        $data = $users->selectAll(['email', 'phone']);
-        $active = empty($data) ? 1 : 0;
-        $role = empty($data) ? Roles::ROLE[0] : Roles::ROLE[2];
-        $users->store($request, $active, $role);
+        $users->register($request);
+        Activity::log(__('user_registered', true), $request->email);
     }
     
     /**
@@ -180,6 +193,17 @@ class Auth
     }
     
     /**
+     * check user role
+     *
+     * @param  string $role
+     * @return bool
+     */
+    public static function role(string $role): bool
+    {
+        return self::get('role') === $role;
+    }
+    
+    /**
      * forget user authentication
      *
      * @return void
@@ -191,7 +215,7 @@ class Auth
         }
 
         Activity::log(__('logged_out', true), self::get('email'));
-        Session::close('user', 'history', 'csrf_token');
+        Session::flush('user', 'history', 'csrf_token');
 
         if (self::remember()) {
             Cookies::delete('user');
@@ -209,7 +233,7 @@ class Auth
            return; 
         }
 
-        if (self::get('role') === Roles::ROLE[2]) {
+        if (self::get('role') === Roles::ROLE[3]) {
             if (Session::has('intended')) {
                 redirect()->url(Session::pull('intended'))->withToast('success', __('welcome_back') . ' ' . Auth::get('name'))->go();
             }

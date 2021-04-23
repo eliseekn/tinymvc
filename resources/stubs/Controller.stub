@@ -31,7 +31,7 @@ class CLASSNAME extends Controller
      */
     public function index(): void
 	{
-        $data = $this->repository->select()->oldest()->paginate(20);
+        $data = $this->repository->select()->oldest()->paginate(10);
 		$this->render('admin.RESOURCENAME.index', compact('data'));
 	}
 

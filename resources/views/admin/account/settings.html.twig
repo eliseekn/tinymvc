@@ -1,10 +1,10 @@
 {% extends "layouts/admin.html.twig" %}
 
-{% block page_title %}
+{% block title %}
 	{{ __('settings') ~ ' | Administration' }}
 {% endblock %}
 
-{% block page_content %}
+{% block body %}
     <form method="post" action="{{ route('settings.update', auth('id')) }}">
         {{ csrf_token_input()|raw }}
         {{ method_input('patch')|raw }}
@@ -20,7 +20,7 @@
                         <div class="form-group row">
                             <label for="company" class="col-sm-3 col-form-label">{{ __('company') }}</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" name="company" id="company" value="{{ inputs.company ?: data.company }}">
+                                <input type="text" class="form-control" name="company" id="company" value="{{ inputs.company ?: data.company }}" {{ auth('role') == USER_ROLE[2] ? 'readonly' }} autofocus>
                             </div>
                         </div>
 
@@ -164,7 +164,7 @@
                         <div class="form-group row d-flex align-items-center">
                             <label for="theme" class="col-sm-5 col-form-label">Dark theme</label>
                             <div class="col-sm-7">
-                                <theme-switch checked="{{ data.dark_theme ? 'checked' }}"></theme-switch>
+                                <theme-switch checked="{{ data.dark ? 'checked' }}"></theme-switch>
                             </div>
                         </div>
 

@@ -43,7 +43,7 @@ class Repository
      * select rows
      *
      * @param  array $columns
-     * @return \Framework\Database\Model
+     * @return \Framework\Database\Repository
      */
     public function select(array $columns = ['*']): self
     {
@@ -78,7 +78,7 @@ class Repository
      *
      * @param  string $query
      * @param  array $args
-     * @return \Framework\Database\Model
+     * @return \Framework\Database\Repository
      */
     public function selectRaw(string $query, array $args = []): self
     {
@@ -92,7 +92,7 @@ class Repository
 	 * @param  string $column
 	 * @param  mixed $operator
 	 * @param  mixed $value
-     * @return \Framework\Database\Model
+     * @return \Framework\Database\Repository
      */
     public function findBy(string $column, $operator = null, $value = null): self
 	{
@@ -104,7 +104,7 @@ class Repository
      *
 	 * @param  mixed $operator
 	 * @param  mixed $value
-     * @return \Framework\Database\Model
+     * @return \Framework\Database\Repository
      */
     public function find($operator = null, $value = null): self
 	{
@@ -166,7 +166,7 @@ class Repository
      *
 	 * @param  string $query
 	 * @param  array $args
-     * @return \Framework\Database\Model
+     * @return \Framework\Database\Repository
      */
     public function findRaw(string $query, array $args = []): self
 	{
@@ -178,7 +178,7 @@ class Repository
      *
      * @param  array $items
 	 * @param  string $glue
-     * @return \Framework\Database\Model
+     * @return \Framework\Database\Repository
      */
     public function findMany(array $items, string $glue = 'or'): self
     {
@@ -238,7 +238,7 @@ class Repository
      *
      * @param  array $items
 	 * @param  string $glue
-     * @return \Framework\Database\Model
+     * @return \Framework\Database\Repository
      */
     public function search(array $items, string $glue = 'or'): self
     {
@@ -272,7 +272,7 @@ class Repository
      * update row
      *
      * @param  array $items
-     * @return \Framework\Database\Model
+     * @return \Framework\Database\Repository
      */
     public function update(array $items): self
     {
@@ -335,7 +335,7 @@ class Repository
     /**
      * add DELETE clause
      *
-     * @return \Framework\Database\Model
+     * @return \Framework\Database\Repository
      */
     public function delete(): self
     {
@@ -376,7 +376,7 @@ class Repository
      * get column count value
      *
      * @param  string $column
-     * @return \Framework\Database\Model
+     * @return \Framework\Database\Repository
      */
     public function count(string $column = 'id'): self
     {
@@ -387,7 +387,7 @@ class Repository
      * get column sum value
      *
      * @param  string $column
-     * @return \Framework\Database\Model
+     * @return \Framework\Database\Repository
      */
     public function sum(string $column): self
     {
@@ -398,7 +398,7 @@ class Repository
      * get column max value
      *
      * @param  string $column
-     * @return \Framework\Database\Model
+     * @return \Framework\Database\Repository
      */
     public function max(string $column): self
     {
@@ -409,7 +409,7 @@ class Repository
      * get column min value
      *
      * @param  string $column
-     * @return \Framework\Database\Model
+     * @return \Framework\Database\Repository
      */
     public function min(string $column): self
     {
@@ -437,7 +437,7 @@ class Repository
 	 * @param  string $column
 	 * @param  mixed $operator
 	 * @param  mixed $value
-	 * @return \Framework\Database\Model
+	 * @return \Framework\Database\Repository
 	 */
     public function where(string $column, $operator = null, $value = null): self
 	{
@@ -490,7 +490,7 @@ class Repository
 	 * @param  mixed $column
 	 * @param  mixed $operator
 	 * @param  mixed $value
-	 * @return \Framework\Database\Model
+	 * @return \Framework\Database\Repository
 	 */
     public function whereNot(string $column, $operator = null, $value = null): self
 	{
@@ -510,7 +510,7 @@ class Repository
      *
      * @param  string $query
      * @param  array $args
-     * @return \Framework\Database\Model
+     * @return \Framework\Database\Repository
      */
     public function whereRaw(string $query, array $args = []): self
     {
@@ -524,7 +524,7 @@ class Repository
 	 * @param  mixed $column
 	 * @param  mixed $operator
 	 * @param  mixed $value
-	 * @return \Framework\Database\Model
+	 * @return \Framework\Database\Repository
 	 */
     public function and(string $column, $operator = null, $value = null): self
     {
@@ -577,7 +577,7 @@ class Repository
 	 * @param  mixed $column
 	 * @param  mixed $operator
 	 * @param  mixed $value
-	 * @return \Framework\Database\Model
+	 * @return \Framework\Database\Repository
 	 */
     public function or(string $column, $operator = null, $value = null): self
     {
@@ -630,7 +630,7 @@ class Repository
 	 * @param  mixed $column
 	 * @param  mixed $operator
 	 * @param  mixed $value
-	 * @return \Framework\Database\Model
+	 * @return \Framework\Database\Repository
 	 */
     public function having(string $column, $operator = null, $value = null): self
 	{
@@ -650,7 +650,7 @@ class Repository
      *
      * @param  string $query
      * @param  array $args
-     * @return \Framework\Database\Model
+     * @return \Framework\Database\Repository
      */
     public function havingRaw(string $query, array $args = []): self
     {
@@ -664,7 +664,7 @@ class Repository
      * @param  string $column
      * @param  mixed $start
      * @param  mixed $end
-     * @return \Framework\Database\Model
+     * @return \Framework\Database\Repository
      */
     public function whereBetween(string $column, $start, $end): self
     {
@@ -678,7 +678,7 @@ class Repository
      * @param  string $column
      * @param  mixed $start
      * @param  mixed $end
-     * @return \Framework\Database\Model
+     * @return \Framework\Database\Repository
      */
     public function whereNotBetween(string $column, $start, $end): self
     {
@@ -692,7 +692,7 @@ class Repository
      * @param  mixed $start
      * @param  mixed $end
      * @param  array $columns 
-     * @return \Framework\Database\Model
+     * @return \Framework\Database\Repository
      */
     public function between($start = null, $end = null, array $columns = ['*']): self
     {
@@ -705,7 +705,7 @@ class Repository
      * @param  mixed $start
      * @param  mixed $end
      * @param  array $columns 
-     * @return \Framework\Database\Model
+     * @return \Framework\Database\Repository
      */
     public function notBetween($start = null, $end = null, array $columns = ['*']): self
     {
@@ -716,7 +716,7 @@ class Repository
 	 * add WHERE NULL clause
 	 *
 	 * @param  string $column
-	 * @return \Framework\Database\Model
+	 * @return \Framework\Database\Repository
 	 */
     public function whereNull(string $column): self
 	{
@@ -728,7 +728,7 @@ class Repository
 	 * add WHERE NOT NULL clause
 	 *
 	 * @param  string $column
-	 * @return \Framework\Database\Model
+	 * @return \Framework\Database\Repository
 	 */
     public function whereNotNull(string $column): self
 	{
@@ -741,7 +741,7 @@ class Repository
 	 *
 	 * @param  string $column
 	 * @param  mixed $value
-	 * @return \Framework\Database\Model
+	 * @return \Framework\Database\Repository
 	 */
     public function whereLike(string $column, $value): self
 	{
@@ -754,7 +754,7 @@ class Repository
 	 *
 	 * @param  string $column
 	 * @param  mixed $value
-	 * @return \Framework\Database\Model
+	 * @return \Framework\Database\Repository
 	 */
     public function whereNotLike(string $column, $value): self
 	{
@@ -767,7 +767,7 @@ class Repository
 	 *
 	 * @param  string $column
 	 * @param  array $values
-	 * @return \Framework\Database\Model
+	 * @return \Framework\Database\Repository
 	 */
     public function whereIn(string $column, array $values): self
 	{
@@ -780,7 +780,7 @@ class Repository
 	 *
 	 * @param  string $column
 	 * @param  mixed $value
-	 * @return \Framework\Database\Model
+	 * @return \Framework\Database\Repository
 	 */
     public function whereNotIn(string $column, $value): self
 	{
@@ -796,7 +796,7 @@ class Repository
      * @param  string $operator
      * @param  string $second_column
      * @param  string $method
-     * @return \Framework\Database\Model
+     * @return \Framework\Database\Repository
      */
     public function join(string $table, string $first_column, string $operator, string $second_column, string $method = 'inner'): self
     {
@@ -810,7 +810,7 @@ class Repository
      *
      * @param  string $column
      * @param  string $direction
-     * @return \Framework\Database\Model
+     * @return \Framework\Database\Repository
      */
     public function orderBy(string $column, string $direction): self
     {
@@ -822,7 +822,7 @@ class Repository
      * add custom ORDER BY clause with DESC
      *
      * @param  string $column
-     * @return \Framework\Database\Model
+     * @return \Framework\Database\Repository
      */
     public function orderDesc(string $column = 'id'): self
     {
@@ -833,7 +833,7 @@ class Repository
      * add custom ORDER BY clause with ASC 
      *
      * @param  string $column
-     * @return \Framework\Database\Model
+     * @return \Framework\Database\Repository
      */
     public function orderAsc(string $column = 'id'): self
     {
@@ -888,7 +888,7 @@ class Repository
      * add GROUP clause
      *
      * @param  array $columns
-     * @return \Framework\Database\Model
+     * @return \Framework\Database\Repository
      */
     public function group(array $columns): self
     {
@@ -1017,7 +1017,7 @@ class Repository
      *
      * @param  mixed $query
      * @param  mixed $args
-     * @return \Framework\Database\Model
+     * @return \Framework\Database\Repository
      */
     public function raw(string $query, array $args = []): self
     {
@@ -1030,7 +1030,7 @@ class Repository
      *
      * @param  mixed $query
      * @param  mixed $args
-     * @return \Framework\Database\Model
+     * @return \Framework\Database\Repository
      */
     public function query(string $query, array $args = []): self
     {
@@ -1042,7 +1042,7 @@ class Repository
      * generate sub query
      *
      * @param  mixed $callback
-     * @return \Framework\Database\Model
+     * @return \Framework\Database\Repository
      */
     public function subQuery(callable $callback): self
     {

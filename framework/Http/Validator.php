@@ -79,7 +79,7 @@ class Validator
 
         foreach ((array) static::$errors as $error) {
             foreach (static::$inputs as $key => $input) {
-                if (strpos(strtolower($error), $key) !== false) {
+                if (strpos(strtolower($error), $key)) {
                     $errors = array_merge($errors, [$key => $error]);
                 }
             }

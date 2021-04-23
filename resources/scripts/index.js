@@ -6,8 +6,8 @@ import './components/trends'
 
 import UploadModal from './components/modal/upload-modal'
 import ExportModal from './components/modal/export-modal'
-import CreateNotification from './components/modal/create-notification'
 import SendMessage from './components/modal/send-message'
+import TicketMessage from './components/modal/ticket-message'
 import AlertPopup from './components/alert/alert-popup'
 import AlertToast from './components/alert/alert-toast'
 import ConfirmPopup from './components/alert/confirm-popup'
@@ -22,7 +22,7 @@ import NotificationsIcon from './components/mixed/notifications-icon'
 import MessagesIcon from './components/mixed/messages-icon'
 import DonutChart from './components/charts/donut-chart'
 import BarsChart from './components/charts/bars-chart'
-import MetricsCards from './components/cards/metrics-cards'
+import MetricsCard from './components/cards/metrics-card'
 import MetricsCardItem from './components/cards/metrics-card-item'
 
 window.customElements.define('upload-modal', UploadModal)
@@ -37,11 +37,11 @@ window.customElements.define('timezone-picker', TimezonePicker)
 window.customElements.define('currency-picker', CurrencyPicker)
 window.customElements.define('theme-switch', ThemeSwitch)
 window.customElements.define('avatar-icon', AvatarIcon)
-window.customElements.define('create-notification', CreateNotification)
 window.customElements.define('send-message', SendMessage)
+window.customElements.define('ticket-message', TicketMessage)
 window.customElements.define('update-item', UpdateItem)
 window.customElements.define('delete-item', DeleteItem)
-window.customElements.define('metrics-cards', MetricsCards)
+window.customElements.define('metrics-card', MetricsCard)
 window.customElements.define('metrics-card-item', MetricsCardItem)
 window.customElements.define('notifications-icon', NotificationsIcon)
 window.customElements.define('messages-icon', MessagesIcon)

@@ -12,7 +12,7 @@ class AuthRequest extends Validator
      * @var array
      */
     protected static $rules = [
-        'email' => 'required|valid_email|max_len,255',
+        'email' => 'required|max_len,255',
         'password' => 'required|max_len,255'
     ];
 

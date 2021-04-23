@@ -99,11 +99,12 @@ if (!function_exists('session_get')) {
 	 * get session data
 	 *
 	 * @param  string $name
-	 * @return mixed returns
+	 * @param  mixed $default
+	 * @return mixed
 	 */
-	function session_get(string $name)
+	function session_get(string $name, $default = null)
 	{
-		return Session::get($name);
+		return Session::get($name, $default);
 	}
 }
 
@@ -112,7 +113,7 @@ if (!function_exists('session_pull')) {
 	 * get session data and close it
 	 *
 	 * @param  string $name
-	 * @return mixed returns
+	 * @return mixed
 	 */
 	function session_pull(string $name)
 	{
@@ -126,11 +127,12 @@ if (!function_exists('session_put')) {
 	 *
 	 * @param  string $name
 	 * @param  mixed $data
-	 * @return mixed returns
+	 * @param  mixed $default
+	 * @return mixed
 	 */
-	function session_put(string $name, $data): void
+	function session_put(string $name, $data, $default = null): void
 	{
-		Session::put($name, $data);
+		Session::put($name, $data, $default);
 	}
 }
 
@@ -139,7 +141,7 @@ if (!function_exists('session_has')) {
 	 * check if session exists
 	 *
 	 * @param  string $name
-	 * @return bool returns true or false
+	 * @return bool
 	 */
 	function session_has(string $name): bool
 	{
@@ -147,16 +149,16 @@ if (!function_exists('session_has')) {
 	}
 }
 
-if (!function_exists('close_session')) {
+if (!function_exists('session_flush')) {
 	/**
-	 * close session
+	 * flush session
 	 *
 	 * @param  array $names
 	 * @return void
 	 */
-	function close_session(array $names): void
+	function session_flush(array $names): void
 	{
-		Session::close(implode(',', $names));
+		Session::flush(implode(',', $names));
 	}
 }
 
@@ -169,13 +171,13 @@ if (!function_exists('auth_attempts_exceeded')) {
     function auth_attempts_exceeded(): bool
     {
         //authentification attempts is disable
-        if (!config('auth.max_attempts')) {
+        if (!config('security.auth.max_attempts')) {
             return false;
         }
 
         $unlock_timeout = Carbon::parse(session_get('auth_attempts_timeout'));
         $auth_attempts = session_get('auth_attempts');
-        return !empty($auth_attempts) && ($auth_attempts >= config('auth.max_attempts')) && Carbon::now()->lt($unlock_timeout);
+        return !empty($auth_attempts) && ($auth_attempts >= config('security.auth.max_attempts')) && Carbon::now()->lt($unlock_timeout);
     }
 }
 
@@ -189,6 +191,11 @@ if (!function_exists('auth')) {
 	function auth(string $key)
 	{
         $data = session_get('user');
+
+        if (empty($data)) {
+            return '';
+        }
+
 		return $data->$key;
 	}
 }
@@ -303,10 +310,6 @@ if (!function_exists('url')) {
 			if ($url[0] !== '/') {
 				$url = '/' . $url;
 			}
-        }
-
-        if (!is_array($params)) {
-
         }
 
         $params = is_array($params) ? (empty($params) ? '' : implode('/', $params)) : $params;
@@ -623,13 +626,10 @@ if (!function_exists('config')) {
 	 */
 	function config(string $data)
 	{
-		$config = ConfigFactory::loadPath(absolute_path('config'));
-        
-        try {
-            return $config->$data;
-        } catch (Exception $e) {
-            return '';
-        }
+        $file = substr($data, 0, strpos($data, '.'));
+        $path = substr($data, strpos($data, '.') + 1, strlen($data));
+        $config = ConfigFactory::loadPath(absolute_path('config') . $file . '.php');
+        return $config->get($path);
 	}
 }
 

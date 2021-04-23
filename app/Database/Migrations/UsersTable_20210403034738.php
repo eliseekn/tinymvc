@@ -2,8 +2,8 @@
 
 namespace App\Database\Migrations;
 
-use App\Database\Repositories\Roles;
 use Framework\Database\Schema;
+use App\Database\Repositories\Roles;
 
 class UsersTable_20210403034738
 {         
@@ -23,17 +23,18 @@ class UsersTable_20210403034738
     {
         Schema::createTable(self::$table)
             ->addBigInt('id')->primaryKey()
+            ->addBigInt('parent_id')->null()
             ->addString('name')
             ->addString('email')->unique()
             ->addString('company')->null()
             ->addString('phone')->unique()
             ->addString('password')
-            ->addString('role')->default(Roles::ROLE[2])
+            ->addString('role')->default(Roles::ROLE[1])
             ->addString('lang')->default('en')
             ->addString('country')->default('US')
             ->addString('currency')->default('USD')
             ->addString('timezone')->default('UTC')
-            ->addBoolean('dark_theme')->default(1)
+            ->addBoolean('dark')->default(1)
             ->addBoolean('active')->default(0)
             ->addBoolean('two_steps')->default(0)
             ->addBoolean('alerts')->default(1)

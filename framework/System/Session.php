@@ -22,8 +22,8 @@ class Session
 	{
 		if (session_status() === PHP_SESSION_NONE) {
             //https://stackoverflow.com/questions/8311320/how-to-change-the-session-timeout-in-php/8311400
-            ini_set('session.gc_maxlifetime', config('session.lifetime'));
-            session_set_cookie_params(config('session.lifetime'));
+            ini_set('session.gc_maxlifetime', config('security.session.lifetime'));
+            session_set_cookie_params(config('security.session.lifetime'));
             
 			session_start();
 		}
@@ -46,12 +46,17 @@ class Session
      * get session data
      *
      * @param  string $name
+     * @param  mixed $default
      * @return mixed
      */
-    public static function get(string $name)
+    public static function get(string $name, $default = null)
     {
         self::start();
-		return $_SESSION[strtolower(config('app.name')) . '_' . $name] ?? '';
+
+        $data = $_SESSION[strtolower(config('app.name')) . '_' . $name] ?? '';
+        $data = !empty($data) ? $data : ($default ?? '');
+
+		return $data;
     }
     
     /**
@@ -67,12 +72,12 @@ class Session
     }
     
     /**
-     * close session
+     * flush session
      *
      * @param  string[] $names
      * @return void
      */
-    public static function close(string ...$names): void
+    public static function flush(string ...$names): void
     {
         self::start();
         
@@ -90,20 +95,21 @@ class Session
     public static function pull(string $name)
     {
         $data = self::get($name);
-        self::close($name);
+        self::flush($name);
         return $data;
     }
     
     /**
      * add data to session or create if empty
      *
-     * @param  mixed $name
+     * @param  string $name
      * @param  mixed $data
+     * @param  mixed $default
      * @return void
      */
-    public static function put(string $name, $data): void
+    public static function put(string $name, $data, $default = null): void
     {
-        $stored_data = self::get($name);
+        $stored_data = self::get($name, $default);
 
         if (empty($stored_data)) {
             $stored_data = $data;

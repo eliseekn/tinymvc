@@ -1,10 +1,10 @@
 /**
  * metrics card layout
  * 
- * @class MetricCardItem
+ * @class MetricsCard
  * @constructor
  */
-class MetricsCards extends HTMLElement {
+class MetricsCard extends HTMLElement {
     constructor() {
         super()
     }
@@ -14,4 +14,4 @@ class MetricsCards extends HTMLElement {
     }
 }
 
-export default MetricsCards
+export default MetricsCard

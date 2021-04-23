@@ -25,7 +25,7 @@ class Seed extends Command
     {
         $this->setDescription('Create new seed');
         $this->setHelp('This command allows you to create new seed');
-        $this->addArgument('seed', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of seed (separated by space if many).');
+        $this->addArgument('seed', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of seed table (separated by space if many)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

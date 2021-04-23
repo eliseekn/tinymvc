@@ -1,10 +1,10 @@
 {% extends "layouts/admin.html.twig" %}
 
-{% block page_title %}
+{% block title %}
 	{{ __('edit') ~ ' | Administration' }}
 {% endblock %}
 
-{% block page_content %}
+{% block body %}
     <div class="card shadow-sm">
         <div class="card-header">{{ __('edit') }}</div>
 
@@ -16,7 +16,7 @@
                 <div class="form-group row">
                     <label for="name" class="col-sm-2 col-form-label">{{ __('name') }}</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control {{ errors.name ? 'is-invalid' }}" name="name" id="name" value="{{ inputs.name ?: data.name }}" aria-describedby="name-error">
+                        <input type="text" class="form-control {{ errors.name ? 'is-invalid' }}" name="name" id="name" value="{{ inputs.name ?: data.name }}" aria-describedby="name-error" autofocus>
                     
                         {% if errors.name is not empty %}
                         <div id="name-error" class="invalid-feedback">
@@ -52,12 +52,20 @@
                     </div>
                 </div>
 
+                {% if auth('role') == USER_ROLE[0] %}
                 <div class="form-group row">
                     <label for="company" class="col-sm-2 col-form-label">{{ __('company') }}</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="company" id="company" value="{{ inputs.company ?: data.company }}">
+                        <input type="text" class="form-control {{ errors.company ? 'is-invalid' }}" name="company" id="company" value="{{ inputs.company ?: data.company }}" aria-describedby="company-error">
+
+                        {% if errors.company is not empty %}
+                            <div id="company-error" class="invalid-feedback">
+                                {{ errors.company|raw }}
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
+                {% endif %}
 
                 <div class="form-group row">
                     <label for="password" class="col-sm-2 col-form-label">{{ __('new_password') }}</label>
@@ -71,6 +79,7 @@
                     </div>
                 </div>
 
+                {% if auth('role') == USER_ROLE[0] %}
                 <fieldset class="form-group">
                     <div class="row">
                         <legend class="col-form-label col-sm-2 pt-0">{{ __('role') }}</legend>
@@ -78,12 +87,13 @@
                             {% for role in roles %}
                             <div class="custom-control custom-radio custom-control-inline">
                                 <input class="custom-control-input" type="radio" name="role" id="{{ role.name }}" value="{{ role.name }}" {{ data.role == role.name ? 'checked' }}>
-                                <label class="custom-control-label" for="{{ role.name }}">{{ role.name }}</label>
+                                <label class="custom-control-label" for="{{ role.name }}">{{ role.name|capitalize }}</label>
                             </div>
                             {% endfor %}
                         </div>
                     </div>
                 </fieldset>
+                {% endif %}
                 
                 <fieldset class="form-group">
                     <div class="row">

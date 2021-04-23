@@ -21,15 +21,13 @@ use App\Http\Middlewares\DashboardPolicy;
  */
 
 $config = [
-    'middlewares' => [
-        'csrf' => CsrfProtection::class,
-        'cors' => HttpCors::class,
-        'account' => AccountPolicy::class,
-        'dashboard' => DashboardPolicy::class,
-        'remember' => RememberUser::class,
-        'sanitize' => SanitizeInputs::class,
-        'auth' => AuthPolicy::class,
-        'api_auth' => ApiAuth::class,
-        'basic_auth' => BasicAuth::class
-    ]
+    'csrf' => CsrfProtection::class,
+    'cors' => HttpCors::class,
+    'account' => AccountPolicy::class,
+    'dashboard' => DashboardPolicy::class,
+    'remember' => RememberUser::class,
+    'sanitize' => SanitizeInputs::class,
+    'auth' => AuthPolicy::class,
+    'api_auth' => ApiAuth::class,
+    'basic_auth' => BasicAuth::class
 ];

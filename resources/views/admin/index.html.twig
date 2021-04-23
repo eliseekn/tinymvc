@@ -1,6 +1,6 @@
 {% extends "layouts/admin.html.twig" %}
 
-{% block page_title %}
+{% block title %}
 	{{ config('app.name') ~ ' | Administration' }}
 {% endblock %}
 
@@ -8,79 +8,81 @@
 	<link rel="stylesheet" href="{{ resources('vendor/morris/morris.css') }}">
 {% endblock %}
 
-{% block page_content %}
-    <metrics-cards>
-        {% if auth('role') == USER_ROLE[0] %}
-        <metric-card-item 
+{% block body %}
+    <metrics-card>
+        {% if auth('role') != USER_ROLE[2] %}
+        <metrics-card-item 
             title="{{ __('users') }}" 
             icon="fa fa-users fa-2x" 
             data="{{ total_users }}"
             columns="4">
-        </metric-card-item>
+        </metrics-card-item>
         {% endif %}
 
-        <metric-card-item 
+        <metrics-card-item 
             title="{{ __('medias') }}" 
             icon="fa fa-photo-video fa-2x" 
             data="{{ total_medias }}"
             columns="4">
-        </metric-card-item>
-    </metrics-cards>
+        </metrics-card-item>
+    </metrics-card>
 
-	{% if auth('role') != USER_ROLE[1] %}
-		<div class="row mb-4">
-			<div class="col-md-4">
-				<div class="card shadow-sm mb-4 mb-md-0">
-					<div class="card-header d-flex justify-content-between align-items-center">
-						<span>{{ __('all_users') }}</span>
+    {% if auth('role') != USER_ROLE[2] %}
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm mb-4 mb-md-0">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>{{ __('all_users') }}</span>
 
-						<a href="{{ route('users.index') }}" class="btn btn-outline-dark">
-							{{ __('view_all') }}
-						</a>
-					</div>
+                    <a href="{{ route('users.index') }}" class="btn btn-outline-dark">
+                        {{ __('view_all') }}
+                    </a>
+                </div>
 
-					<div class="card-body">
-                        {% set data = [ 
-                            {'label': 'Active', 'value': active_users}, 
-                            {'label': 'Inactive', 'value': total_users - active_users}
-                        ] %}
+                <div class="card-body">
+                    {% set data = [ 
+                        {'label': 'Active', 'value': active_users}, 
+                        {'label': 'Inactive', 'value': total_users - active_users}
+                    ] %}
 
-						<donut-chart el="users-donut" data={{ data|json_encode() }}></donut-chart>
-					</div>
-				</div>
-			</div>
+                    {% if active_users == 0 %} {% set data = [] %} {% endif %}
 
-			<div class="col-md-8">
-				<div class="card shadow-sm">
-					<div class="card-header d-flex justify-content-between align-items-center ">
-						<span>{{ __('registered_users') }}</span>
+                    <donut-chart el="users-donut" data={{ data|json_encode() }}></donut-chart>
+                </div>
+            </div>
+        </div>
 
-						<div class="d-flex">
-							<select id="users-trends" class="custom-select" data-url="{{ url('api/metrics/users') }}">
-								<option value="weeks">{{ __('this_week') }}</option>
-								<option value="months" selected>{{ __('this_year') }}</option>
-								<option value="last-weeks">{{ __('last_4_weeks') }}</option>
-								<option value="last-years">{{ __('last_5_years') }}</option>
-							</select>
-						</div>
-					</div>
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header d-flex justify-content-between align-items-center ">
+                    <span>{{ __('registered_users') }}</span>
 
-					<div class="card-body">
-                        {% set keys, labels = ['value'], ['Count'] %}
+                    <div class="d-flex">
+                        <select id="users-trends" class="custom-select" data-url="{{ url('api/metrics/users') }}">
+                            <option value="weeks">{{ __('this_week') }}</option>
+                            <option value="months" selected>{{ __('this_year') }}</option>
+                            <option value="last-weeks">{{ __('last_4_weeks') }}</option>
+                            <option value="last-years">{{ __('last_5_years') }}</option>
+                        </select>
+                    </div>
+                </div>
 
-						<bars-chart 
-                            id='users-bars-chart' 
-                            el='users-bars' 
-                            data={{ users_metrics|json_encode() }} 
-                            xkey='month' 
-                            ykeys={{ keys|json_encode() }} 
-                            labels={{ labels|json_encode() }}>
-                        </bars-chart>
-					</div>
-				</div>
-			</div>
-		</div>
-	{% endif %}
+                <div class="card-body">
+                    {% set keys, labels = ['value'], ['Count'] %}
+
+                    <bars-chart 
+                        id='users-bars-chart' 
+                        el='users-bars' 
+                        data={{ users_metrics|json_encode() }} 
+                        xkey='month' 
+                        ykeys={{ keys|json_encode() }} 
+                        labels={{ labels|json_encode() }}>
+                    </bars-chart>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 
 	<div class="row mb-4">
 		<div class="col-md-6">

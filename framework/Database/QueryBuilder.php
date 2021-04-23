@@ -44,7 +44,7 @@ class QueryBuilder
      */
     public static function table(string $table): self
     {
-        static::$table = config('mysql.table_prefix')  . $table;
+        static::$table = config('database.table_prefix')  . $table;
         return new self();
     }
 
@@ -56,7 +56,7 @@ class QueryBuilder
      */
     public static function createTable(string $name): self
     {
-        self::$query = "CREATE TABLE " . config('mysql.table_prefix') . "$name (";
+        self::$query = "CREATE TABLE " . config('database.table_prefix') . "$name (";
         return new self();
 	}
 	
@@ -68,7 +68,7 @@ class QueryBuilder
 	 */
 	public static function drop(string $table): self
 	{
-		self::$query = "DROP TABLE IF EXISTS " . config('mysql.table_prefix') . "$table";
+		self::$query = "DROP TABLE IF EXISTS " . config('database.table_prefix') . "$table";
 		return new self();
 	}
     
@@ -80,7 +80,7 @@ class QueryBuilder
      */
     public static function alter(string $table): self
     {
-        self::$query = "ALTER TABLE " . config('mysql.table_prefix') . $table;
+        self::$query = "ALTER TABLE " . config('database.table_prefix') . $table;
 		return new self();
     }
 	
@@ -162,7 +162,7 @@ class QueryBuilder
      */
     public static function tableExists(string $table): bool
     {
-        return self::setQuery('SELECT * FROM information_schema.tables WHERE table_schema = "' . config('mysql.database') .'" 
+        return self::setQuery('SELECT * FROM information_schema.tables WHERE table_schema = "' . config('database.database') .'" 
             AND table_name = "' . $table . '" LIMIT 1')->exists();
     }
     
@@ -252,7 +252,7 @@ class QueryBuilder
 		self::$query = "UPDATE " . static::$table . " SET ";
 
 		//update last modifed timestamp
-		if (config('mysql.timestamps')) {
+		if (config('database.timestamps')) {
             $items = array_merge($items, [
                 'updated_at' => Carbon::now()->toDateTimeString()
             ]);
@@ -384,7 +384,7 @@ class QueryBuilder
 	 */
 	public function references(string $table, string $column): self
 	{
-		self::$query .= " REFERENCES " . config('mysql.table_prefix') . "$table($column)";
+		self::$query .= " REFERENCES " . config('database.table_prefix') . "$table($column)";
         return $this;
 	}
 	
@@ -396,7 +396,7 @@ class QueryBuilder
 	public function onUpdate(): self
 	{
         self::$query = rtrim(self::$query, ', ');
-		self::$query .= " ON UPDATE";
+		self::$query .= " ON UPDATE, ";
         return $this;
 	}
 	
@@ -408,7 +408,7 @@ class QueryBuilder
 	public function onDelete(): self
 	{
         self::$query = rtrim(self::$query, ', ');
-		self::$query .= " ON DELETE";
+		self::$query .= " ON DELETE, ";
         return $this;
 	}
 	
@@ -441,8 +441,8 @@ class QueryBuilder
      */
     public function create(): self
     {
-        if (config('mysql.timestamps')) {
-            self::$query .= "created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+        if (config('database.timestamps')) {
+            self::$query .= " created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
 			    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)";
         }
 
@@ -450,7 +450,7 @@ class QueryBuilder
             self::$query .= ')';
         }
 
-        self::$query .= " ENGINE='" . config('mysql.storage_engine') . "'";
+        self::$query .= " ENGINE='" . config('database.storage_engine') . "'";
 		return $this;
     }
 
@@ -773,7 +773,7 @@ class QueryBuilder
 	 */
 	public function innerJoin(string $table, string $first_column, string $operator, string $second_column): self
 	{
-		self::$query .= " INNER JOIN " . config('mysql.table_prefix') . "$table ON $first_column $operator $second_column";
+		self::$query .= " INNER JOIN " . config('database.table_prefix') . "$table ON $first_column $operator $second_column";
 		return $this;
 	}
 
@@ -788,7 +788,7 @@ class QueryBuilder
 	 */
 	public function leftJoin(string $table, string $first_column, string $operator, string $second_column): self
 	{
-		self::$query .= " LEFT JOIN " . config('mysql.table_prefix') . "$table ON $first_column $operator $second_column";
+		self::$query .= " LEFT JOIN " . config('database.table_prefix') . "$table ON $first_column $operator $second_column";
 		return $this;
 	}
 
@@ -803,7 +803,7 @@ class QueryBuilder
 	 */
 	public function rightJoin(string $table, string $first_column, string $operator, string $second_column): self
 	{
-		self::$query .= " RIGHT JOIN " . config('mysql.table_prefix') . "$table ON $first_column $operator $second_column";
+		self::$query .= " RIGHT JOIN " . config('database.table_prefix') . "$table ON $first_column $operator $second_column";
 		return $this;
 	}
 
@@ -818,7 +818,7 @@ class QueryBuilder
 	 */
 	public function fullJoin(string $table, string $first_column, string $operator, string $second_column): self
 	{
-		self::$query .= " FULL JOIN " . config('mysql.table_prefix') . "$table ON $first_column $operator $second_column";
+		self::$query .= " FULL JOIN " . config('database.table_prefix') . "$table ON $first_column $operator $second_column";
 		return $this;
 	}
 
@@ -833,7 +833,7 @@ class QueryBuilder
 	 */
 	public function outerJoin(string $table, string $first_column, string $operator, string $second_column): self
 	{
-		self::$query .= " FULL OUTER JOIN " . config('mysql.table_prefix') . "$table ON $first_column $operator $second_column";
+		self::$query .= " FULL OUTER JOIN " . config('database.table_prefix') . "$table ON $first_column $operator $second_column";
 		return $this;
 	}
 

@@ -28,7 +28,7 @@ class Encryption
      */
     public static function encrypt(string $str)
     {
-        $enc_key = openssl_digest(config('encryption.key'), 'SHA256', TRUE);
+        $enc_key = openssl_digest(config('security.encryption.key'), 'SHA256', TRUE);
         $enc_iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length(self::$cipher_method));
         return openssl_encrypt($str, self::$cipher_method, $enc_key, 0, $enc_iv) . '::' . bin2hex($enc_iv);
     }
@@ -42,7 +42,7 @@ class Encryption
     public static function decrypt(string $enc_str)
     {
         list($str, $enc_iv) = explode('::', $enc_str);
-        $enc_key = openssl_digest(config('encryption.key'), 'SHA256', TRUE);
+        $enc_key = openssl_digest(config('security.encryption.key'), 'SHA256', TRUE);
         return openssl_decrypt($str, self::$cipher_method, $enc_key, 0, hex2bin($enc_iv));
     }
     

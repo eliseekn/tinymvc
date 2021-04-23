@@ -38,8 +38,8 @@ class Database
 	private function __construct()
 	{
 		try {
-            $this->pdo = new PDO('mysql:host=' . config('mysql.host') . ';dbname=' . config('mysql.database'), config('mysql.username'), config('mysql.password'));
-            $this->pdo->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, 'SET NAMES ' . config('mysql.charset') . ' COLLATE ' . config('mysql.collation'));
+            $this->pdo = new PDO('mysql:host=' . config('database.host') . ';dbname=' . config('database.database'), config('database.username'), config('database.password'));
+            $this->pdo->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, 'SET NAMES ' . config('database.charset') . ' COLLATE ' . config('database.collation'));
 			$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 			$this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);

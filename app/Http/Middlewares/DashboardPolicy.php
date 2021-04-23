@@ -18,7 +18,7 @@ class DashboardPolicy
      */
     public function handle(): void
     {
-        if (Auth::get('role') === Roles::ROLE[2]) {
+        if (Auth::role(Roles::ROLE[3])) {
             if (!empty(config('errors.views.403'))) {
                 View::render(config('errors.views.403'), [], 403);
             }

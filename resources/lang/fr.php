@@ -51,6 +51,7 @@
     'settings' => 'Paramètres',
     'logout' => 'Déconnexion',
     'notifications' => 'Notifications',
+    'support' => 'Assistance',
 
     //dashboard
     'total_users' => 'Total utilisateurs',
@@ -92,6 +93,7 @@
     'delete' => 'Supprimer',
     'download' => 'Télécharger',
     'bulk_delete' => 'Suppression multiple',
+    'bulk_update' => 'Mise à jour multiple',
     'total_results' => 'Total résultat(s):',
     'title' => 'Titre',
     'slug' => 'Slug',
@@ -135,6 +137,17 @@
     'featured_media' => 'Média mis en avant',
     'add' => 'Ajouter',
     'add_files' => 'Ajouter des fichiers',
+    'ticket' => 'Ticket',
+    'tickets' => 'Tickets',
+    'priority' => 'Priorité',
+    'high' => 'Haute',
+    'normal' => 'Normale',
+    'low' => 'Faible',
+    'object' => 'Objet',
+    'open' => 'Ouvert',
+    'closed' => 'Fermé',
+    'author' => 'Auteur',
+    'new_message' => 'Nouveau message',
 
     //pagination
     'previous' => 'Précédent',
@@ -189,7 +202,7 @@
     'login_attempts_failed' => 'Tentative de connexion échouée',
     'login_attempts_succeeded' => 'Tentative de connexion réussie',
     'logged_out' => 'Déconnecté',
-    'auth_attempts_exceeded' => "Nombre maximum de tentatives de connexions dépassé. Veuillez réessayez dans " . config('auth.unlock_timeout') . " minute(s)",
+    'auth_attempts_exceeded' => "Nombre maximum de tentatives de connexions dépassé. Veuillez réessayez dans " . config('security.auth.unlock_timeout') . " minute(s)",
     'activity_not_found' => 'Activité non trouvée',
     'activity_deleted' => 'Activité supprimée avec succès',
     'activities_deleted' => 'Activitées supprimées avec succès',
@@ -206,6 +219,9 @@
     'media_deleted' => 'Média supprimé avec succès',
     'media_not_found' => 'Média non trouvé',
     'upload_error' => 'Echec de téléversement des fichiers',
+    'new_notification' => 'Nouvelle notification',
+    'ticket_open' => 'Nouveau ticket ouvert',
+    'ticket_closed' => 'Ticket fermé',
 
     //misc
     'ago' => ' environ',

@@ -15,7 +15,7 @@
         
         {% block styles %}{% endblock %}
 
-        <title>{% block page_title %}{% endblock %}</title>
+        <title>{% block title %}{% endblock %}</title>
     </head>
 
     <body>
@@ -23,7 +23,7 @@
             {% include "partials/alert.html.twig" with {alert: alert} %}
         {% endif %}
 
-        {% block page_content %}{% endblock %}
+        {% block body %}{% endblock %}
 
         <script defer src="{{ resources('vendor/fontawesome-5.13-all.js') }}"></script>
         <script defer src="{{ resources('vendor/jquery-3.5.1.slim.min.js') }}"></script>

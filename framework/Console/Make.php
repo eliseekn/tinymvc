@@ -28,22 +28,22 @@ class Make
     /**
      * generate classname
      *
-     * @param  string $name
+     * @param  string $table
      * @param  string $class
      * @return array
      */
-    public static function generateClass(string $name, string $class): array
+    public static function generateClass(string $table, string $class): array
     {
-        $name = strtolower($name);
+        $table = strtolower($table);
 
-        if ($class !== 'validator') {
-            if ($name[-1] !== 's') {
-                $name .= 's';
-            }
+        if ($table[-1] !== 's') {
+            $table .= 's';
         }
 
-        if (strpos($name, '_')) {
-            list($f, $s) = explode('_', $name);
+        $name = ucfirst($table);
+
+        if (strpos($table, '_')) {
+            list($f, $s) = explode('_', $table);
             $name = ucfirst($f) . ucfirst($s);
         }
 
@@ -51,17 +51,13 @@ class Make
             $class = 'table';
         }
 
-        if ($class === 'validator') {
-            $class = '';
-        }
-
-        $class = ucfirst($name) . ucfirst($class);
+        $class = $name . ucfirst($class);
 
         if (strpos(strtolower($class), 'table')) {
             $class .= date('_YmdHis');
         }
 
-        return [strtolower($name), $class];
+        return [$table, $class];
     }
     
     /**
@@ -203,7 +199,7 @@ class Make
      */
     public static function createValidator(string $validator): bool
     {
-        list($name, $class) = self::generateClass($validator, 'validator');
+        list($name, $class) = self::generateClass($validator, '');
 
         $data = self::stubs()->readFile('Validator.stub');
         $data = str_replace('CLASSNAME', $class, $data);
@@ -245,8 +241,10 @@ class Make
     {
         list($name, $resource_folder) = self::generateResource($resource);
 
-        foreach(self::stubs()->add('views' . DIRECTORY_SEPARATOR . 'admin')->getFiles() as $file) {
-            $data = self::stubs()->add('views' . DIRECTORY_SEPARATOR . 'admin')->readFile($file);
+        $path = self::stubs()->add('views' . DIRECTORY_SEPARATOR . 'resources');
+
+        foreach($path->getFiles() as $file) {
+            $data = $path->readFile($file);
             $data = str_replace('RESOURCENAME', $name, $data);
             $file = str_replace('stub', 'html.twig', $file);
 

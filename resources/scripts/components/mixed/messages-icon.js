@@ -48,7 +48,7 @@ class MessagesIcon extends HTMLElement {
     connectedCallback() {
         this.getTranslations()
         this.getMessages()
-        this.intervalId = window.setInterval(() => this.getMessages(), 10 * 1000) //every 10 seconds
+        this.intervalId = window.setInterval(() => this.getMessages(), 30 * 1000) //every 30 seconds
     }
 
     disconnectedCallback() {

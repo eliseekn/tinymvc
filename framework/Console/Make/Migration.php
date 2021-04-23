@@ -26,7 +26,7 @@ class Migration extends Command
     {
         $this->setDescription('Create new migration');
         $this->setHelp('This command allows you to create new migration');
-        $this->addArgument('migration', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of table migration (separated by space if many).');
+        $this->addArgument('migration', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of migration table (separated by space if many)');
         $this->addOption('repository', 'r', InputOption::VALUE_NONE, 'Create new repository');
         $this->addOption('seed', 's', InputOption::VALUE_NONE, 'Create new seed');
     }

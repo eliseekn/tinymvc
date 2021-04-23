@@ -22,6 +22,6 @@ class CLASSNAME
     {
         QueryBuilder::table(self::$table)->insert([
             //
-        ]);
+        ])->execute();
     }
 }

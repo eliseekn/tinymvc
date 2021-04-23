@@ -38,6 +38,34 @@ class Users extends Repository
     }
     
     /**
+     * retrieves users by username from email address
+     *
+     * @param  string $username
+     * @return array
+     */
+    public function findManyByUsername(string $username): array
+    {
+        return $this->findAllBy('email', 'like', $username);
+    }
+    
+    /**
+     * retrieves users filtered by role
+     *
+     * @return array
+     */
+    public function findAllByRole(): array
+    {
+        return $this->select()
+            ->where('id', '!=', Auth::get('id'))
+            ->subQuery(function ($query) {
+                if (Auth::role(Roles::ROLE[1])) {
+                    $query->and('parent_id', Auth::get('id'));
+                }
+            })
+            ->all();
+    }
+    
+    /**
      * retrieves all users except authenticate
      *
      * @param  int $items_per_pages
@@ -45,7 +73,13 @@ class Users extends Repository
      */
     public function findAllPaginate(int $items_per_pages = 10): \Framework\Support\Pager
     {
-        return $this->find('!=', Auth::get('id'))
+        return $this->select()
+            ->where('id', '!=', Auth::get('id'))
+            ->subQuery(function ($query) {
+                if (Auth::role(Roles::ROLE[1])) {
+                    $query->and('parent_id', Auth::get('id'));
+                }
+            })
             ->oldest()
             ->paginate($items_per_pages);
     }
@@ -60,6 +94,11 @@ class Users extends Repository
         return $this->count()
             ->where('id', '!=', Auth::get('id'))
             ->and('active', 1)
+            ->subQuery(function ($query) {
+                if (Auth::role(Roles::ROLE[1])) {
+                    $query->and('parent_id', Auth::get('id'));
+                }
+            })
             ->single()
             ->value;
     }
@@ -68,11 +107,31 @@ class Users extends Repository
      * store user
      *
      * @param  \Framework\Http\Request $request
-     * @param  int $active
-     * @param  string $role
      * @return int
      */
-    public function store(Request $request, int $active = 1, string $role = Roles::ROLE[1]): int
+    public function store(Request $request): int
+    {
+        return $this->insert([
+            'parent_id' => Auth::role(Roles::ROLE[0]) ? null : Auth::get('id'),
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'company' => Auth::role(Roles::ROLE[0]) ? $request->company : Auth::get('company'),
+            'password' => Encryption::hash($request->password),
+            'active' => 1,
+            'role' => Auth::role(Roles::ROLE[0]) ? $request->role : Roles::ROLE[2],
+            'lang' => Auth::role(Roles::ROLE[0]) ? 'en' : Auth::get('lang'),
+            'country' => Auth::role(Roles::ROLE[0]) ? 'US' : Auth::get('country')
+        ]);
+    }
+
+    /**
+     * store user from signup form
+     *
+     * @param  \Framework\Http\Request $request
+     * @return int
+     */
+    public function register(Request $request): int
     {
         return $this->insert([
             'name' => $request->name,
@@ -80,8 +139,8 @@ class Users extends Repository
             'phone' => $request->phone,
             'company' => $request->company,
             'password' => Encryption::hash($request->password),
-            'active' => $active,
-            'role' => $role
+            'role' => Roles::ROLE[3],
+            'lang' => $request->lang,
         ]);
     }
     
@@ -137,13 +196,13 @@ class Users extends Repository
             'name' => $request->name,
             'email' => $request->email,
             'country' => $request->country,
-            'company' => $request->inputs('company', ''),
+            'company' => $request->company,
             'phone' => $request->phone,
             'two_steps' => $request->has('two_steps') ? 1 : 0,
             'lang' => $request->lang,
             'timezone' => $request->timezone,
             'currency' => $request->currency,
-            'dark_theme' => $request->has('dark_theme') ? 1 : 0,
+            'dark' => $request->has('dark') ? 1 : 0,
             'alerts' => $request->has('alerts') ? 1 : 0,
             'email_notifications' => $request->has('email_notifications') ? 1 : 0
 		];
@@ -151,6 +210,12 @@ class Users extends Repository
 		if ($request->has('password')) {
 			$data['password'] = Encryption::hash($request->password);
 		}
+
+        $users = $this->findAllBy('parent_id', $id);
+
+        foreach ($users as $user) {
+            $this->updateIfExists($user->id, ['company' => $request->company]);
+        }
 
         return $this->updateIfExists($id, $data);
     }
@@ -165,6 +230,7 @@ class Users extends Repository
     public function findAllDateRange($date_start, $date_end): array
     {
         return $this->select()
+            ->where('id', '!=', Auth::get('id'))
             ->subQuery(function($query) use ($date_start, $date_end) {
                 if (!empty($date_start) && !empty($date_end)) {
                     $query->whereBetween('created_at', $date_start, $date_end);

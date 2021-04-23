@@ -33,10 +33,15 @@ class Activities extends Repository
      */
     public function findAllPaginate(int $items_per_pages = 10): \Framework\Support\Pager
     {
-        return $this->select(['id', 'user', 'url', 'ip_address', 'action', 'created_at'])
+        return $this->select(['activities.id', 'user', 'url', 'ip_address', 'action', 'activities.created_at'])
+            ->join('users', 'activities.user', '=', 'users.email')
             ->subQuery(function ($query) {
-                if (Auth::get('role') !== Roles::ROLE[0]) {
+                if (!Auth::role(Roles::ROLE[0])) {
                     $query->where('user', Auth::get('email'));
+                        
+                    if (Auth::role(Roles::ROLE[1])) {
+                        $query->or('users.parent_id', Auth::get('id'));
+                    }
                 }
             })
             ->oldest()

@@ -29,10 +29,10 @@ class Schemas extends Command
     {
         $this->setDescription('Manage MySQL schemas');
         $this->setHelp('This command allows you to create or delete schemas');
-        $this->addArgument('schema', InputArgument::OPTIONAL|InputArgument::IS_ARRAY, 'The name of schema (separated by space if many).');
-        $this->addOption('create', 'c', InputOption::VALUE_NONE, 'Create new schema');
-        $this->addOption('delete', 'd', InputOption::VALUE_NONE, 'Delete schema');
-        $this->addOption('list', 'l', InputOption::VALUE_NONE, 'Display the list of schemas.');
+        $this->addArgument('schema', InputArgument::OPTIONAL|InputArgument::IS_ARRAY, 'The name of schema (separated by space if many)');
+        $this->addOption('create', 'c', InputOption::VALUE_NONE, 'Create new schemas');
+        $this->addOption('delete', 'd', InputOption::VALUE_NONE, 'Delete schemas');
+        $this->addOption('list', 'l', InputOption::VALUE_NONE, 'Display the list of schemas');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -53,7 +53,9 @@ class Schemas extends Command
             $this->listSchemas($output);
         }
 
-        throw new Exception('Invalid command line arguments');
+        else {
+            $output->writeln('<error>Invalid command line arguments. Type "php console list" for commands list</error>');
+        }
 
         return Command::SUCCESS;
     }
@@ -76,9 +78,9 @@ class Schemas extends Command
     protected function createSchema(OutputInterface $output, string $schema)
     {
         if (QueryBuilder::schemaExists($schema)) {
-            $output->writeln('<fg=yellow>Schema "' . $schema . '" exists already</>');
+            $output->writeln('<fg=yellow>Schema "' . $schema . '" already exists</error>');
         } else {
-            Database::connection()->query("CREATE DATABASE $schema CHARACTER SET " . config('mysql.charset') . " COLLATE " . config('mysql.collation'));
+            Database::connection()->query("CREATE DATABASE $schema CHARACTER SET " . config('database.charset') . " COLLATE " . config('database.collation'));
             $output->writeln('<info>Schema "' . $schema . '" created successfully</info>');
         }
     }

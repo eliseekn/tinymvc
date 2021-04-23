@@ -27,7 +27,7 @@ if (config('errors.display') === true) {
 //errors logging
 if (config('errors.log') === true) {
     ini_set('log_errors', 1);
-    ini_set('error_log', Storage::path(config('storage.logs'))->file('tinymvc_logs_' . date('m_d_y') . '.txt'));
+    ini_set('error_log', Storage::path(config('storage.logs'))->file('tinymvc_logs_' . date('m_d_y') . '.log'));
 } else {
     ini_set('log_errors', 0);
 }

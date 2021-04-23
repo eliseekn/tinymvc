@@ -30,9 +30,15 @@
 					<i class="fa fa-book"></i> Documentation
 				</a>
 
-				<a href="{{ url('login') }}" class="ml-3 btn btn-success">
+				{% if auth('id') is empty %}
+                <a href="{{ url('login') }}" class="ml-3 btn btn-success">
 					<i class="fa fa-user"></i> Log in
 				</a>
+                {% else %}
+                <a href="{{ url('logout') }}" class="ml-3 btn btn-danger">
+					<i class="fa fa-user"></i> Log out
+				</a>
+                {% endif %}
 			</span>
 		</div>
 

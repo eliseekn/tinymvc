@@ -1,15 +1,15 @@
 {% extends "layouts/auth.html.twig" %}
 
-{% block page_title %}
+{% block title %}
 	{{ __('reset_password', true) }}
 {% endblock %}
 
-{% block page_content %}
+{% block body %}
 	<div class="card shadow p-4">
 		<form method="post" action="{{ url('password/update') }}">
 			<div class="form-group">
 				<label for="email">{{ __('email', true) }}</label>
-				<input type="email" id="email" name="email" class="form-control" value="{{ email }}">
+				<input type="email" id="email" name="email" class="form-control" value="{{ email }}" autofocus>
 			</div>
 
 			<div class="form-group">

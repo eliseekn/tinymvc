@@ -25,7 +25,7 @@ class Mail extends Command
     {
         $this->setDescription('Create new mail template');
         $this->setHelp('This command allows you to create new mail template');
-        $this->addArgument('mail', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of mail template (separated by space if many).');
+        $this->addArgument('mail', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of mail template (separated by space if many)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Helpers\Report;
 use Framework\Http\Request;
 use Framework\Routing\Controller;
+use App\Helpers\NotificationHelper;
 use App\Database\Repositories\Messages;
 
 class MessagesController extends Controller
@@ -46,7 +47,7 @@ class MessagesController extends Controller
     public function create(Request $request): void
 	{
         $id = $this->messages->store($request);
-
+        
         $this->messages->updateIfExists($id, ['sender_read' => 1]);
         $this->log(__('message_sent'));
         redirect()->back()->withToast('success', __('message_sent'))->go();

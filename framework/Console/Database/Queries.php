@@ -26,7 +26,7 @@ class Queries extends Command
     {
         $this->setDescription('Execute MySQL queries and fetch results');
         $this->setHelp('This command allows you to execute MySQL queries');
-        $this->addArgument('query', InputArgument::REQUIRED, 'The query string to execute (inside "").');
+        $this->addArgument('query', InputArgument::REQUIRED, 'The query string to execute (inside "")');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

@@ -1,0 +1,73 @@
+{% extends "layouts/admin.html.twig" %}
+
+{% block title %}
+	{{ __('details') ~ ' | Administration' }}
+{% endblock %}
+
+{% block body %}
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <div class="d-flex flex-lg-row flex-column align-items-lg-center justify-content-lg-between">
+                <span>
+                    <span class="mr-2">{{ __('ticket') }}: #{{ data.ticket_id }} - {{ data.object }}</span> 
+
+                    {% if data.status %}
+                    <span class="badge badge-success">{{ __('open') }}</span>
+                    {% else %}
+                    <span class="badge badge-danger">{{ __('closed') }}</span>
+                    {% endif %}
+                </span>   
+
+                {% if data.status %}
+                <ticket-message action="{{ route('tickets.messages.create') }}" ticket_id="{{ data.id }}" modal_title="{{ __('new_message') }}">
+                    <button class="btn btn-outline-dark mr-2">
+                        {{ __('new_message') }}
+                    </button>
+                </ticket-message>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card-body">
+			<div class="table-responsive">
+				<table class="table table-striped table-hover mb-0">
+					<thead>
+						<tr>
+							<th scope="col">
+								<div class="custom-control custom-checkbox">
+									<input type="checkbox" class="custom-control-input" id="select-all">
+									<label class="custom-control-label" for="select-all"></label>
+								</div>
+							</th>
+
+							<th scope="col"><i class="fa fa-sort"></i>ID</th>
+							<th scope="col"><i class="fa fa-sort"></i>{{ __('message') }}</th>
+							<th scope="col"><i class="fa fa-sort"></i>{{ __('author') }}</th>
+							<th scope="col"><i class="fa fa-sort"></i>{{ __('created_at') }}</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						{% for message in messages.getItems() %}
+                        <tr>
+							<td>
+								<div class="custom-control custom-checkbox">
+									<input type="checkbox" class="custom-control-input" id="{{ message.id }}" message-id="{{ message.id }}">
+									<label class="custom-control-label" for="{{ message.id }}"></label>
+								</div>
+							</td>
+
+							<td>{{ message.id }}</td>
+							<td>{{ message.message }}</td>
+							<td>{{ message.author }}</td>
+							<td>{{ time_elapsed(message.created_at) }}</td>
+						</tr>
+                        {% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		{% include "partials/footer.html.twig" with {data: messages} %}
+    </div>
+{% endblock %}

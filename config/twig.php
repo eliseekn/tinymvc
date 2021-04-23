@@ -11,15 +11,13 @@
  */
 
 $config = [
-    'twig' => [
-        'disable_cache' => true,
-        'extensions' => [
-            'functions' => [],
-            'filters' => [],
-            'globals' => [
-                'USER_ROLE' => \App\Database\Repositories\Roles::ROLE,
-                'MEDIA_TYPE' => \App\Database\Repositories\Medias::TYPE
-            ]
+    'disable_cache' => true,
+    'extensions' => [
+        'functions' => [],
+        'filters' => [],
+        'globals' => [
+            'USER_ROLE' => \App\Database\Repositories\Roles::ROLE,
+            'MEDIA_TYPE' => \App\Database\Repositories\Medias::TYPE
         ]
     ]
 ];

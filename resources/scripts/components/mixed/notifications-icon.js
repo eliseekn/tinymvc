@@ -48,7 +48,7 @@ class NotificationsIcon extends HTMLElement {
     connectedCallback() {
         this.getTranslations()
         this.getNotifications()
-        this.intervalId = window.setInterval(() => this.getNotifications(), 10 * 1000) //every 10 seconds
+        this.intervalId = window.setInterval(() => this.getNotifications(), 60 * 1000) //every 60 seconds
     }
 
     disconnectedCallback() {

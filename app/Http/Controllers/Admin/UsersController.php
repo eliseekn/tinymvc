@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\Report;
 use Framework\Http\Request;
-use App\Http\Validators\UpdateUser;
-use App\Http\Validators\RegisterUser;
 use Framework\Routing\Controller;
+use App\Http\Validators\UpdateUser;
 use App\Database\Repositories\Roles;
 use App\Database\Repositories\Users;
+use App\Http\Validators\RegisterUser;
 
 class UsersController extends Controller
 {
@@ -43,11 +43,13 @@ class UsersController extends Controller
 	/**
 	 * new
 	 * 
+     * @param  \App\Database\Repositories\Roles $roles
 	 * @return void
 	 */
-	public function new(): void
+	public function new(Roles $roles): void
 	{
-		$this->render('admin.users.new');
+        $roles = $roles->selectAll();
+		$this->render('admin.users.new', compact('roles'));
 	}
 	
 	/**

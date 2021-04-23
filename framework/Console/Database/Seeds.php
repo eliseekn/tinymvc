@@ -29,7 +29,7 @@ class Seeds extends Command
     {
         $this->setDescription('Manage seeds');
         $this->setHelp('This command allows you to insert seeds into database');
-        $this->addArgument('seed', InputArgument::OPTIONAL|InputArgument::IS_ARRAY, 'The name of seed (separated by space if many).');
+        $this->addArgument('seed', InputArgument::OPTIONAL|InputArgument::IS_ARRAY, 'The name of seed (separated by space if many)');
         $this->addOption('run', null, InputOption::VALUE_NONE, 'Insert seeds');
         $this->addOption('list', 'l', InputOption::VALUE_NONE, 'Display the list of seeds');
     }
@@ -47,7 +47,6 @@ class Seeds extends Command
                 return Command::SUCCESS;
             }
 
-
             Seeder::run();
             $output->writeln('<info>All seeds inserted successfully</info>');
         }
@@ -56,7 +55,9 @@ class Seeds extends Command
             $this->listSeeds($output);
         }
 
-        throw new Exception('Invalid command line arguments');
+        else {
+            $output->writeln('<error>Invalid command line arguments. Type "php console list" for commands list</error>');
+        }
 
         return Command::SUCCESS;
     }

@@ -81,7 +81,7 @@ class TwigExtensions extends \Twig\Extension\AbstractExtension implements \Twig\
             new \Twig\TwigFunction('create_session', 'create_session'),
             new \Twig\TwigFunction('session_get', 'session_get'),
             new \Twig\TwigFunction('session_has', 'session_has'),
-            new \Twig\TwigFunction('close_session', 'close_session'),
+            new \Twig\TwigFunction('session_flush', 'session_flush'),
             new \Twig\TwigFunction('auth_attempts_exceeded', 'auth_attempts_exceeded'),
             new \Twig\TwigFunction('auth', 'auth'),
             new \Twig\TwigFunction('date_helper', 'date_helper'),
@@ -111,6 +111,7 @@ class TwigExtensions extends \Twig\Extension\AbstractExtension implements \Twig\
             new \Twig\TwigFunction('save_log', 'save_log'),
             new \Twig\TwigFunction('curl', 'curl'),
             new \Twig\TwigFunction('resources', 'resources'),
+            new \Twig\TwigFunction('storage', 'storage'),
             new \Twig\TwigFunction('date', 'date'),
         ];
     }

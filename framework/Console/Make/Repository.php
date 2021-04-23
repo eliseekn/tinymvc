@@ -25,7 +25,7 @@ class Repository extends Command
     {
         $this->setDescription('Create new repository');
         $this->setHelp('This command allows you to create new repository');
-        $this->addArgument('repository', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of table repository (separated by space if many).');
+        $this->addArgument('repository', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of repository table (separated by space if many)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

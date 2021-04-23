@@ -11,22 +11,20 @@
  */
 
 $config = [
-    'mailer' => [
-        'default' => 'smtp',
+    'default' => 'smtp',
 
-        'sender_name' => 'TinyMVC',
-        'sender_email' => 'tiny@mvc.framework',
+    'sender_name' => 'TinyMVC',
+    'sender_email' => 'tiny@mvc.framework',
 
-        'smtp' => [
-            'host' => 'localhost',
-            'port' => 1025,
-            'auth' => false,
-            'secure' => false,
-            'tls' => false,
-            'username' => '',
-            'password' => ''
-        ],
+    'smtp' => [
+        'host' => 'localhost',
+        'port' => 1025,
+        'auth' => false,
+        'secure' => false,
+        'tls' => false,
+        'username' => '',
+        'password' => ''
+    ],
 
-        'sendmail' => []
-    ]
+    'sendmail' => []
 ];

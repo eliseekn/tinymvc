@@ -17,7 +17,7 @@ use App\Database\Repositories\Notifications;
  * API routes
  */
 
-Route::group(['prefix' => 'api', 'middlewares' => ['cors']], function () {
+Route::groupPrefix('api', function () {
     Route::get('notifications', function() {
         $notifications = (new Notifications())->findMessages();
 
@@ -44,7 +44,12 @@ Route::group(['prefix' => 'api', 'middlewares' => ['cors']], function () {
     });
 
     Route::get('users', function () {
-        response()->json(['users' => (new Users())->find('!=', Auth::get('id'))->all()]);
+        $users = (new Users())->select(['id', 'email'])
+            ->where('id', '!=', Auth::get('id'))
+            ->and('company', Auth::get('company'))
+            ->all();
+
+        response()->json(['users' => $users]);
     });
 
     Route::get('translations', function() {

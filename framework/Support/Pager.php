@@ -222,17 +222,17 @@ class Pager
         $request = new Request();
         $uri = $request->fullUri();
 
-        if (strpos($uri, '?') !== false) {
+        if (strpos($uri, '?')) {
             $queries = substr($uri, strpos($uri, '?'), strlen($uri));
         }
 
         if (!isset($queries)) {
             $uri = $request->uri() . '?page=' . $page;
         } else {
-            if (strpos($queries, '&page=') !== false) {
+            if (strpos($queries, '&page=')) {
                 $queries = substr($queries, strpos($queries, '?'), -1);
                 $uri = $request->uri() . $queries . $page;
-            } else if (strpos($queries, '?page=') !== false) {
+            } else if (strpos($queries, '?page=')) {
                 $queries = substr($queries, strpos($queries, '?'), -1);
                 $uri = $request->uri() . $queries . $page;
             } else  {

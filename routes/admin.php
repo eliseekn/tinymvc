@@ -9,6 +9,7 @@
 use Framework\Routing\Route;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Admin\MediasController;
+use App\Http\Controllers\Admin\TicketsController;
 use App\Http\Controllers\Admin\MessagesController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -40,6 +41,10 @@ Route::groupPrefix('admin', function () {
         Route::get('account/notifications', [NotificationsController::class, 'index'])->name('notifications.index');
         Route::get('account/{id}/settings', [SettingsController::class, 'index'])->name('settings.index')->where(['id' => 'num']);
         Route::get('account/activities', [ActivitiesController::class, 'index'])->name('activities.index');
+
+        Route::get('account/tickets/new', [TicketsController::class, 'new'])->name('tickets.new');
+        Route::get('account/?{user_id}?/tickets', [TicketsController::class, 'index'])->name('tickets.index')->where(['user_id' => 'num']);
+        Route::get('account/tickets/{id}/read', [TicketsController::class, 'read'])->name('tickets.read')->where(['id' => 'num']);
     });
 
     Route::groupMiddlewares(['remember', 'auth', 'dashboard', 'csrf', 'sanitize'], function () {
@@ -66,5 +71,11 @@ Route::groupPrefix('admin', function () {
         
         Route::delete('account/activities/?{id}?/delete', [ActivitiesController::class, 'delete'])->name('activities.delete')->where(['id' => 'num']);
         Route::post('account/activities/export', [ActivitiesController::class, 'create'])->name('activities.export');
+
+        Route::delete('account/tickets/?{id}?/delete', [TicketsController::class, 'delete'])->name('tickets.delete')->where(['id' => 'num']);
+        Route::patch('account/tickets/?{id}?/{status}/update', [TicketsController::class, 'update'])->name('tickets.update')
+            ->where(['id' => 'num', 'status' => 'num']);
+        Route::post('account/tickets/create', [TicketsController::class, 'create'])->name('tickets.create');
+        Route::post('account/tickets/messages/create', [TicketsController::class, 'createMessage'])->name('tickets.messages.create');
     });
 })->register();

@@ -1,0 +1,125 @@
+{% extends "layouts/admin.html.twig" %}
+
+{% block title %}
+	{{ __('support') ~ ' | Administration' }}
+{% endblock %}
+
+{% block body %}
+	<metrics-card>
+		<metrics-card-item 
+            title="{{ __('total') }}" 
+            icon="fa fa-headset fa-2x" 
+            data="{{ data.getTotalItems() }}" 
+            columns="4">
+        </metrics-card-item>
+	</metrics-card>
+
+	<div class="card shadow-sm">
+		<div class="card-header">
+			<div class="d-flex flex-lg-row flex-column align-items-lg-center justify-content-lg-between">
+				<span>{{ __('tickets') }}</span>
+
+				<div class="d-flex flex-lg-row flex-column mt-lg-0 mt-2">
+					<span>
+						<input type="search" class="form-control" id="filter" placeholder="{{ __('search') }}">
+					</span>
+
+					<span class="mt-lg-0 mt-2">
+                        {% if auth('role') != USER_ROLE[0] %}
+                        <a href="{{ route('tickets.new') }}" class="btn btn-outline-dark ml-2">
+                            {{ __('new') }}
+                        </a>
+                        {% endif %}
+                        
+						<button class="btn btn-danger ml-2" id="bulk-delete" data-url="{{ route('tickets.delete') }}">
+							{{ __('bulk_delete') }}
+						</button>
+					</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="card-body">
+			<div class="table-responsive">
+				<table class="table table-striped table-hover mb-0">
+					<thead>
+						<tr>
+							<th scope="col">
+								<div class="custom-control custom-checkbox">
+									<input type="checkbox" class="custom-control-input" id="select-all">
+									<label class="custom-control-label" for="select-all"></label>
+								</div>
+							</th>
+
+							<th scope="col"><i class="fa fa-sort"></i>ID</th>
+							<th scope="col"><i class="fa fa-sort"></i>{{ __('ticket') }}</th>
+							<th scope="col"><i class="fa fa-sort"></i>{{ __('object') }}</th>
+							<th scope="col"><i class="fa fa-sort"></i>{{ __('status') }}</th>
+							<th scope="col"><i class="fa fa-sort"></i>{{ __('priority') }}</th>
+							<th scope="col"><i class="fa fa-sort"></i>{{ __('created_at') }}</th>
+							<th scope="col"><i class="fa fa-sort"></i>{{ __('updated_at') }}</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						{% for data in data.getItems() %}
+                        <tr>
+							<td>
+								<div class="custom-control custom-checkbox">
+									<input type="checkbox" class="custom-control-input" id="{{ data.id }}" data-id="{{ data.id }}">
+									<label class="custom-control-label" for="{{ data.id }}"></label>
+								</div>
+							</td>
+
+							<td>{{ data.id }}</td>
+							<td><strong>{{ '#' ~ data.ticket_id }} </strong></td>
+							<td>{{ data.object }}</td>
+							
+                            <td>
+                                {% if data.status %}
+                                <span class="badge badge-success">{{ __('open') }}</span>
+                                {% else %}
+                                <span class="badge badge-danger">{{ __('closed') }}</span>
+                                {% endif %}
+                            </td>
+
+							<td>
+                                {% if data.priority == 'high' %}
+                                <span class="badge badge-danger">{{ __(data.priority) }}</span>
+                                {% elseif data.priority == 'normal' %}
+                                <span class="badge badge-primary">{{ __(data.priority) }}</span>
+                                {% else %}
+                                <span class="badge badge-secondary">{{ __(data.priority) }}</span>
+                                {% endif %}
+                            </td>
+
+							<td>{{ date_helper(data.created_at) }}</td>
+                            <td>{{ data.updated_at != data.created_at ? date_helper(data.updated_at) : '-' }}</td>
+
+                            <td>
+                                <a class="btn text-dark p-1" href="{{ route('tickets.read', data.id) }}" title="{{ __('details') }}">
+                                    <i class="fa fa-eye"></i>
+                                </a>
+
+                                <update-item action="{{ route('tickets.update', {'id': data.id, 'status': data.status ? 0 : 1 }) }}">
+                                    <button type="submit" class="btn text-dark p-1" title="{{ __('update') }}">
+                                        <i class="fa fa-{{ data.status ? 'times' : 'sync' }}"></i>
+                                    </button>
+                                </update-item>
+
+                                <delete-item action="{{ route('tickets.delete', data.id) }}">
+                                    <a class="btn text-danger p-1" title="{{ __('delete') }}">
+                                        <i class="fa fa-trash-alt"></i>
+                                    </a>
+                                </delete-item>
+                            </td>
+						</tr>
+                        {% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		{% include "partials/footer.html.twig" with {data: data} %}
+	</div>
+{% endblock %}

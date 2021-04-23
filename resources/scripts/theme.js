@@ -36,6 +36,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('.btn-sm .fa-cog').classList.toggle('text-light')
     }
 
+    if (document.querySelector('.btn-sm .fa-headset')) {
+        document.querySelector('.btn-sm .fa-headset').classList.toggle('text-light')
+    }
+
     document.querySelector('.wrapper__sidebar').classList.toggle('bg-light')  
     document.querySelector('.wrapper__sidebar').classList.toggle('bg-white')
     document.querySelector('.wrapper__sidebar .sidebar-title').classList.toggle('bg-light')            

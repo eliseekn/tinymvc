@@ -51,6 +51,7 @@
     'settings' => 'Settings',
     'logout' => 'Log out',
     'notifications' => 'Notifications',
+    'support' => 'Support',
 
     //dashboard
     'total_users' => 'Total users',
@@ -92,6 +93,7 @@
     'delete' => 'Delete',
     'download' => 'Download',
     'bulk_delete' => 'Bulk delete',
+    'bulk_update' => 'Bulk update',
     'total_results' => 'Total result(s):',
     'title' => 'Title',
     'slug' => 'Slug',
@@ -135,6 +137,17 @@
     'featured_media' => 'Featured media',
     'add' => 'Add',
     'add_files' => 'Add files',
+    'ticket' => 'Ticket',
+    'tickets' => 'Tickets',
+    'priority' => 'Priority',
+    'high' => 'High',
+    'normal' => 'Normal',
+    'low' => 'Low',
+    'object' => 'Object',
+    'open' => 'Open',
+    'closed' => 'Closed',
+    'author' => 'Author',
+    'new_message' => 'New message',
 
     //pagination
     'previous' => 'Previous',
@@ -189,7 +202,7 @@
     'login_attempts_failed' => 'Log in attempts failed',
     'login_attempts_succeeded' => 'Log in attempts succeeded',
     'logged_out' => 'Logged out',
-    'auth_attempts_exceeded' => 'Max authentication attempts exceeded. Please retry in ' . config('auth.unlock_timeout') . ' minute(s)',
+    'auth_attempts_exceeded' => 'Max authentication attempts exceeded. Please retry in ' . config('security.auth.unlock_timeout') . ' minute(s)',
     'activity_not_found' => 'Activity not found',
     'activity_deleted' => 'Activity deleted successfully',
     'activities_deleted' => 'Activities deleted successfully',
@@ -206,6 +219,9 @@
     'media_deleted' => 'Media deleted successfully',
     'media_not_found' => 'Media not found',
     'upload_error' => 'Failed to upload files',
+    'new_notification' => 'New notification',
+    'ticket_open' => 'New ticket open',
+    'ticket_closed' => 'Ticket closed',
 
     //misc
     'ago' => ' ago',
