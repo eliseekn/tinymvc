@@ -18,7 +18,7 @@ class RegisterUser extends Validator
         'email' => 'required|valid_email|max_len,255|unique,users',
         'phone' => 'required|numeric|max_len,255|unique,users',
         'password' => 'required|max_len,255',
-        'company' => 'required|max_len,255'
+        'company' => 'required|max_len,255|unique,users'
     ];
 
     /**
@@ -26,7 +26,9 @@ class RegisterUser extends Validator
      * 
      * @var array
      */
-    protected static $messages = [];
+    protected static $messages = [
+        //
+    ];
     
     /**
      * register customs validators

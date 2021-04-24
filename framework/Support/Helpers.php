@@ -297,25 +297,33 @@ if (!function_exists('url')) {
 	/**
 	 * generate abosulte url
 	 *
-	 * @param  string $url
+	 * @param  string $uri
 	 * @return string
 	 */
-	function url(string $url = '/', $params = null): string
+	function url(string $uri, $params = null): string
 	{
-		if (empty($url)) {
-			$url = '/';
-		}
-
-		if (strlen($url) > 1) {
-			if ($url[0] !== '/') {
-				$url = '/' . $url;
-			}
-        }
-
+        $url = add_slash(config('app.url')) . add_slash(config('app.folder')) . ltrim($uri, '/');
         $params = is_array($params) ? (empty($params) ? '' : implode('/', $params)) : $params;
 
-		return is_null($params) ? config('app.url') . $url : config('app.url') . $url . '/' . $params;
+		return is_null($params) ? $url : $url . '/' . $params;
 	}
+}
+
+if (!function_exists('add_slash')) {      
+    /**
+     * add_slash
+     *
+     * @param  string $uri
+     * @return string
+     */
+    function add_slash(string $uri): string
+    {
+        if ($uri[-1] !== '/') {
+            $uri = $uri . '/';
+        }
+
+        return $uri;
+    }
 }
 
 if (!function_exists('route_uri')) {    
@@ -522,7 +530,7 @@ if (!function_exists('date_helper')) {
         } else if ($format === 'timestamp') {
             return $dh->timestamp();
         } else {
-            return $dh->date($format);
+            return $dh->datetime($format);
         }
     }
 }
@@ -923,7 +931,7 @@ if (!function_exists('save_env')) {
         foreach ($config as $key => $value) {
             $data .= "$key=$value";
 
-            if ($key === 'APP_FOLDER') {
+            if ($key === 'APP_URL') {
                 $data .= PHP_EOL;
             }
 

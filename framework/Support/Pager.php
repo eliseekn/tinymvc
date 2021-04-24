@@ -53,6 +53,16 @@ class Pager
     }
     
     /**
+     * set items array
+     *
+     * @return void
+     */
+    public function setItems(array $items): void
+    {
+        $this->items = $items;
+    }
+    
+    /**
      * get page first item
      *
      * @return int

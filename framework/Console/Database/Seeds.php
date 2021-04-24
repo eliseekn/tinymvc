@@ -31,7 +31,7 @@ class Seeds extends Command
         $this->setHelp('This command allows you to insert seeds into database');
         $this->addArgument('seed', InputArgument::OPTIONAL|InputArgument::IS_ARRAY, 'The name of seed (separated by space if many)');
         $this->addOption('run', null, InputOption::VALUE_NONE, 'Insert seeds');
-        $this->addOption('list', 'l', InputOption::VALUE_NONE, 'Display the list of seeds');
+        $this->addOption('list', null, InputOption::VALUE_NONE, 'Display the list of seeds');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

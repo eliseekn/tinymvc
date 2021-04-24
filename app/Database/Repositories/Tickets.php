@@ -3,8 +3,8 @@
 namespace App\Database\Repositories;
 
 use App\Helpers\Auth;
-use Framework\Database\Repository;
 use Framework\Http\Request;
+use Framework\Database\Repository;
 
 class Tickets extends Repository
 {
@@ -34,14 +34,14 @@ class Tickets extends Repository
      */
     public function findAllByUserPaginate(?int $user_id = null, int $items_per_pages = 10): \Framework\Support\Pager
     {
-        return $this->select()
-            ->join('users', 'tickets.user_id', '=', 'users.id')
+        return $this->select(['tickets.*'])
             ->subQuery(function ($query) use ($user_id) {
                 if (!is_null($user_id)) {
-                    $query->where('user_id', $user_id);
+                    $query->join('users', 'tickets.user_id', '=', 'users.id')
+                        ->where('user_id', $user_id);
                 }
             })
-            ->oldest('tickets.created_at')
+            ->latest('tickets.created_at')
             ->paginate($items_per_pages);
     }
     
@@ -55,21 +55,24 @@ class Tickets extends Repository
     {
         return $this->insert([
             'user_id' => Auth::get('id'),
-            'ticket_id' => strtoupper(random_string(10, true)),
+            'ticket_id' => strtoupper(random_string(8, true)),
             'object' => $request->object,
-            'priority' =>$request->priority
+            'priority' => $request->priority
         ]);
     }
-    
+
     /**
-     * refresh
+     * delete tickets
      *
+     * @param  \Framework\Http\Request $request
      * @param  int $id
-     * @param  int $status
      * @return bool
      */
-    public function refresh(int $id, int $status): bool
+    public function flush(Request $request, ?int $id = null): bool
     {
-        return $this->updateIfExists($id, ['status' => $status]);
+        return is_null($id) 
+            ? $this->deleteBy('id', 'in', explode(',', $request->items))
+            : $this->deleteIfExists($id);
     }
+
 }

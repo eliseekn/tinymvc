@@ -11,16 +11,16 @@ class RolesTable_20210403034738
      *
      * @var string
      */
-    public static $table = 'roles';
+    protected $table = 'roles';
 
     /**
      * create table
      *
      * @return void
      */
-    public static function migrate(): void
+    public function create(): void
     {
-        Schema::createTable(self::$table)
+        Schema::createTable($this->table)
             ->addInt('id')->primaryKey()
             ->addString('name')->unique()
             ->create();
@@ -31,19 +31,8 @@ class RolesTable_20210403034738
      *
      * @return void
      */
-    public static function delete(): void
+    public function drop(): void
     {
-        Schema::dropTable(self::$table);
-    }
-    
-    /**
-     * refresh table
-     *
-     * @return void
-     */
-    public static function refresh(): void
-    {
-        self::delete();
-        self::migrate();
+        Schema::dropTable($this->table);
     }
 }

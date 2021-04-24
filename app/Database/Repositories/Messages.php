@@ -33,21 +33,35 @@ class Messages extends Repository
      */
     public function findAllPaginate(int $items_per_pages = 10): \Framework\Support\Pager
     {
-        return $this->select(['messages.*', 'u1.email AS sender_email', 'u2.email AS recipient_email'])
+        $messages = $this->select(['messages.*', 'u1.email AS sender_email', 'u2.email AS recipient_email'])
             ->join('users AS u1', 'messages.sender', '=', 'u1.id')
             ->join('users AS u2', 'messages.recipient', '=', 'u2.id')
-            ->subQuery(function ($query) {
-                $query->whereRaw('(IF (u1.id = ?, sender_deleted, recipient_deleted)) = 0', [Auth::get('id')])
-                 ->raw('OR (IF (u2.id = ?, recipient_deleted, sender_deleted)) = 0', [Auth::get('id')]);
-            })
-            ->subQuery(function ($query) {
-                $query->raw('AND (recipient = ? OR sender = ?)', [Auth::get('id'), Auth::get('id')]);
-            })
-            
-            /* ->raw('AND (sender_deleted = (CASE WHEN u1.id = ' . Auth::get('id') . ' THEN 0 END))')
-            ->raw('OR (recipient_deleted = (CASE WHEN u2.id = ' . Auth::get('id') . ' THEN 0 END))') */
+            ->where('recipient', Auth::get('id'))
+            ->or('sender', Auth::get('id'))
             ->oldest('messages.created_at')
             ->paginate($items_per_pages);
+
+        $items = array_map(function ($item) {
+            if ($item->sender === Auth::get('id') && $item->sender_deleted === 1) {
+                $item = null;
+            }
+
+            else if ($item->recipient === Auth::get('id') && $item->recipient_deleted === 1) {
+                $item = null;
+            }
+
+            return $item;
+        }, $messages->getItems());
+
+        foreach ($items as $key => $value) {
+            if (is_null($value)) {
+                unset($items[$key]);
+            }
+        }
+
+        $messages->setItems($items);
+
+        return $messages;
     }
     
     /**
@@ -58,8 +72,8 @@ class Messages extends Repository
      */
     public function findReceivedMessages(int $limit = 5): array
     {
-        return $this->select(['messages.*', 'u.email AS sender_email', 'u.name AS sender_name'])
-            ->join('users As u', 'messages.sender', '=', 'u.id')
+        return $this->select(['messages.*', 'users.email AS sender_email', 'users.name AS sender_name'])
+            ->join('users', 'messages.sender', '=', 'users.id')
             ->where('recipient', Auth::get('id'))
             ->and('recipient_deleted', 0)
             ->and('recipient_read', 0)
@@ -77,6 +91,20 @@ class Messages extends Repository
         return $this->count()
             ->where('recipient', Auth::get('id'))
             ->and('recipient_read', 0)
+            ->single()
+            ->value;
+    }
+    
+    /**
+     * retrieves deleted messages count
+     *
+     * @return int
+     */
+    public function deletedCount(): int
+    {
+        return $this->count()
+            ->where('recipient', Auth::get('id'))
+            ->and('recipient_deleted', 1)
             ->single()
             ->value;
     }

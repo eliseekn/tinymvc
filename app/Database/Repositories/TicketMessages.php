@@ -36,7 +36,7 @@ class TicketMessages extends Repository
         return $this->select(['ticket_messages.*', 'users.email AS author'])
             ->join('users', 'ticket_messages.user_id', '=', 'users.id')
             ->where('ticket_id', $ticket_id)
-            ->oldest()
+            ->oldest('ticket_messages.created_at')
             ->paginate($items_per_pages);
     }
     

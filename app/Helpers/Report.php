@@ -3,7 +3,6 @@
 namespace App\Helpers;
 
 use Framework\Routing\View;
-use Framework\Support\Uploader;
 
 class Report
 {

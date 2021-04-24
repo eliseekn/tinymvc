@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Helpers\Report;
+use App\Helpers\Auth;
+use App\Helpers\Activity;
 use Framework\Http\Request;
+use Framework\Support\Alert;
 use Framework\Http\Validator;
 use Framework\Routing\Controller;
+use App\Helpers\NotificationHelper;
 use App\Database\Repositories\Tickets;
 use App\Database\Repositories\TicketMessages;
-use App\Helpers\NotificationHelper;
 
 class TicketsController extends Controller
 {
@@ -73,10 +75,12 @@ class TicketsController extends Controller
     public function create(Request $request): void
 	{
         Validator::validate($request->only('object'), ['object' => 'required|max_len,255'])->redirectOnFail();
-        $id = $this->tickets->store($request);
 
-        NotificationHelper::create(__('ticket_open'), route('tickets.read', $id));
-		redirect()->route('tickets.read', $id)->go();
+        $id = $this->tickets->store($request);
+        NotificationHelper::create(__('new_ticket_open'), route('tickets.read', $id));
+
+        Activity::log(__('new_ticket_open'));
+		$this->redirect()->route('tickets.read', $id)->withToast('success', __('ticket_open'))->go();
 	}
 
 	/**
@@ -88,11 +92,11 @@ class TicketsController extends Controller
 	 */
     public function createMessage(Request $request, TicketMessages $messages): void
 	{
-        Validator::validate($request->only('message'), ['message' => 'required|max_len,255'])->redirectOnFail();
         $messages->store($request);
-
         NotificationHelper::create(__('new_message'), route('tickets.read', $request->ticket_id));
-		redirect()->route('tickets.read', $request->ticket_id)->go();
+
+        Activity::log(__('new_message'));
+		$this->redirect()->route('tickets.read', $request->ticket_id)->withToast('success', __('message_sent'))->go();
 	}
     
 	/**
@@ -104,12 +108,13 @@ class TicketsController extends Controller
 	 */
 	public function update(int $id, int $status): void
 	{
-        $this->tickets->refresh($id, $status);
+        $this->tickets->updateIfExists($id, ['status' => $status]);
 
         $message = $status === 1 ? __('ticket_open') : __('ticket_closed');
         NotificationHelper::create($message, route('tickets.read', $id));
 
-		redirect()->route('tickets.read', $id)->withToast('success', $message)->go();
+        Activity::log($message);
+		$this->redirect()->route('tickets.read', $id)->withToast('success', $message)->go();
 	}
 
 	/**
@@ -121,40 +126,15 @@ class TicketsController extends Controller
 	 */
 	public function delete(Request $request, ?int $id = null): void
 	{
-        if (!is_null($id)) {
-            if (!$this->tickets->deleteIfExists($id)) {
-                redirect()->back()->go();
-			}
+        $this->tickets->flush($request, $id);
 
-            redirect()->route('tickets.index')->go();
+		if (!is_null($id)) {
+            Activity::log(__('ticket_deleted'));
+            $this->redirect()->route('tickets.index', Auth::get('id'))->withToast('success', __('ticket_deleted'))->go();
 		} else {
-            $this->tickets->deleteBy('id', 'in', explode(',', $request->items));
-            response()->json(['redirect' => route('tickets.index')]);
-		}
-	}
-
-	/**
-	 * export
-	 *
-     * @param  \Framework\Http\Request $request
-	 * @return void
-	 */
-    public function export(Request $request): void
-	{
-        $tickets = $this->tickets
-            ->select()
-            ->subQuery(function($query) use ($request) {
-                if (!$request->filled('date_start') && !$request->filled('date_end')) {
-                    $query->whereBetween('created_at', $request->date_start, $request->date_end);
-                }
-            })
-            ->oldest()
-            ->all();
-
-        $filename = 'tickets_' . date('Y_m_d_His') . '.' . $request->file_type;
-
-		Report::generate($filename, $tickets, [
-			//
-		]);
+            Activity::log(__('tickets_deleted'));
+            Alert::toast(__('tickets_deleted'))->success();
+            $this->response()->json(['redirect' => route('tickets.index', Auth::get('id'))]);
+        }
 	}
 }

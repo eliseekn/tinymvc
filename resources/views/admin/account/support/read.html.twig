@@ -5,6 +5,15 @@
 {% endblock %}
 
 {% block body %}
+	<metrics-card>
+		<metrics-card-item 
+            title="{{ __('total') }}" 
+            icon="fa fa-comments fa-2x" 
+            data="{{ messages.getTotalItems() }}" 
+            columns="4">
+        </metrics-card-item>
+	</metrics-card>
+
     <div class="card shadow-sm">
         <div class="card-header">
             <div class="d-flex flex-lg-row flex-column align-items-lg-center justify-content-lg-between">

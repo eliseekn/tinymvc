@@ -11,16 +11,16 @@ class NotificationsTable_20210403034738
      *
      * @var string
      */
-    public static $table = 'notifications';
+    protected $table = 'notifications';
 
     /**
      * create table
      *
      * @return void
      */
-    public static function migrate(): void
+    public function create(): void
     {
-        Schema::createTable(self::$table)
+        Schema::createTable($this->table)
             ->addBigInt('id')->primaryKey()
             ->addText('message')
             ->addBoolean('status')->default(0)
@@ -33,19 +33,8 @@ class NotificationsTable_20210403034738
      *
      * @return void
      */
-    public static function delete(): void
+    public function drop(): void
     {
-        Schema::dropTable(self::$table);
-    }
-    
-    /**
-     * refresh table
-     *
-     * @return void
-     */
-    public static function refresh(): void
-    {
-        self::delete();
-        self::migrate();
+        Schema::dropTable($this->table);
     }
 }

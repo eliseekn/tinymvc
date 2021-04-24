@@ -94,6 +94,18 @@ class Schema
     }
 
     /**
+     * drop foreign key
+     *
+     * @param  string $table
+	 * @param  string $key
+     * @return void
+     */
+    public static function dropForeign(string $table, string $key): void
+    {
+        QueryBuilder::dropForeign($table, $key)->execute();
+    }
+
+    /**
      * add column of type integer
      *
      * @param  string $name
@@ -446,9 +458,9 @@ class Schema
 	 *
 	 * @return \Framework\Database\Migration
 	 */
-	public function onUpdate(): self
+	public function onUpdateCascade(): self
 	{
-		self::$qb->onUpdate();
+		self::$qb->onUpdateCascade();
         return $this;
 	}
 	
@@ -457,9 +469,9 @@ class Schema
 	 *
 	 * @return \Framework\Database\Migration
 	 */
-	public function onDelete(): self
+	public function onDeleteCascade(): self
 	{
-		self::$qb->onDelete();
+		self::$qb->onDeleteCascade();
         return $this;
 	}
 	
@@ -468,9 +480,9 @@ class Schema
 	 *
 	 * @return \Framework\Database\Migration
 	 */
-	public function cascade(): self
+	public function onUpdateSetNull(): self
 	{
-		self::$qb->cascade();
+		self::$qb->onUpdateSetNull();
         return $this;
 	}
 	
@@ -479,9 +491,9 @@ class Schema
 	 *
 	 * @return \Framework\Database\Migration
 	 */
-	public function setNull(): self
+	public function onDeleteSetNull(): self
 	{
-		self::$qb->setNull();
+		self::$qb->onDeleteSetNull();
         return $this;
 	}
     
@@ -501,9 +513,9 @@ class Schema
      * 
      * @return \Framework\Database\Migration
      */
-    public function null(): self
+    public function setNull(): self
     {
-        self::$qb->null();
+        self::$qb->setNull();
         return $this;
     }
 

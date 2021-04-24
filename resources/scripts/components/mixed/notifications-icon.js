@@ -28,7 +28,7 @@ class NotificationsIcon extends HTMLElement {
     }
 
     getNotifications() {
-        fetch('/tinymvc/api/notifications')
+        fetch(process.env.APP_URL + '/api/notifications')
             .then(response => response.json())
             .then(data => {
                 this.notifications = data.notifications,
@@ -37,7 +37,7 @@ class NotificationsIcon extends HTMLElement {
     }
 
     getTranslations() {
-        fetch('/tinymvc/api/translations')
+        fetch(process.env.APP_URL + '/api/translations')
             .then(response => response.json())
             .then(data => {
                 this.translations = data.translations
@@ -74,7 +74,7 @@ class NotificationsIcon extends HTMLElement {
 
                     ${
                         this.notifications.map(notification => {
-                            return `<div class="dropdown-item py-2" style="width: 350px">
+                            return `<div class="dropdown-item py-2" style="width: 250px">
                                 <p class="text-wrap">${notification.message}</p>
                                 <span class="small text-muted">${notification.created_at}</span>
                             </div>
@@ -85,7 +85,7 @@ class NotificationsIcon extends HTMLElement {
                     <div class="dropdown-divider my-0"></div>
 
                     <div class="px-4 py-2 bg-light text-center">
-                        <a class="text-primary" href="/tinymvc/admin/account/notifications">
+                        <a class="text-primary" href="${process.env.APP_URL}/admin/account/notifications">
                             ${this.translations.view_all}
                         </a>
                     </div>

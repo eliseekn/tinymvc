@@ -28,8 +28,8 @@ class MakeCommand extends Command
         $this->setHelp('This command allows you to create new console command');
         $this->addArgument('name', InputArgument::REQUIRED, 'The name of command class');
         $this->addArgument('cmd', InputArgument::REQUIRED, 'The command name');
-        $this->addOption('description', 'd', InputOption::VALUE_REQUIRED, 'The command description (inside "")');
-        $this->addOption('usage', 'u', InputOption::VALUE_OPTIONAL, 'The command help usage (inside "")');
+        $this->addOption('description', null, InputOption::VALUE_REQUIRED, 'The command description (inside "")');
+        $this->addOption('usage', null, InputOption::VALUE_OPTIONAL, 'The command help usage (inside "")');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

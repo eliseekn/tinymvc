@@ -7,7 +7,6 @@
 class TicketMessage extends HTMLElement {
     constructor() {
         super()
-        this.users = []
         this.translations = {}
         this.getTranslations = this.getTranslations.bind(this)
         this.showDialog = this.showDialog.bind(this)
@@ -15,14 +14,13 @@ class TicketMessage extends HTMLElement {
     }
 
     getTranslations() {
-        fetch('/tinymvc/api/translations')
+        fetch(process.env.APP_URL + '/api/translations')
             .then(response => response.json())
             .then(data => this.translations = data.translations)
     }
 
     connectedCallback() {
         this.getTranslations()
-        this.getUsers()
     }
 
     showDialog() {
@@ -48,7 +46,7 @@ class TicketMessage extends HTMLElement {
                         <div class="modal-body">
                             <div class="form-group">
                                 <label for="message">${this.translations.message}</label>
-                                <textarea id="message" name="message" rows="3" class="form-control"></textarea>
+                                <textarea id="message" name="message" rows="3" class="form-control" required></textarea>
                             </div>
                         </div>
 

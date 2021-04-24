@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Helpers\Auth;
+use App\Helpers\Activity;
 use Framework\Http\Request;
-use App\Http\Validators\UpdateUser;
 use Framework\System\Session;
-use App\Helpers\CountriesHelper;
+use App\Helpers\Countries;
 use Framework\Routing\Controller;
+use App\Http\Validators\UpdateUser;
 use App\Database\Repositories\Users;
 
 class SettingsController extends Controller
@@ -37,7 +38,7 @@ class SettingsController extends Controller
 	public function index(int $id): void
 	{
         $data = $this->users->findSingle($id);
-        $countries = CountriesHelper::all();
+        $countries = Countries::all();
         $this->render('admin.account.settings', compact('data', 'countries'));
     }
     
@@ -57,7 +58,7 @@ class SettingsController extends Controller
             Session::create('user', $this->users->findSingle($id));
         }
 
-        $this->log(__('changes_saved'));
-        redirect()->back()->withToast('success', __('changes_saved'))->go();
+        Activity::log(__('changes_saved'));
+        $this->redirect()->back()->withToast('success', __('changes_saved'))->go();
     }
 }

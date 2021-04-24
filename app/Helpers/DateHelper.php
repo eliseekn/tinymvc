@@ -44,12 +44,12 @@ class DateHelper
     }
     
     /**
-     * get date in custom format
+     * get datetime in custom format
      *
      * @param  string $format
      * @return string
      */
-    public function date(string $format): string
+    public function datetime(string $format): string
     {
         return self::$date->format($format);
     }

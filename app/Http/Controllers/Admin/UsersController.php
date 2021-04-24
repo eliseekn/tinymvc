@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Helpers\Report;
+use App\Helpers\Activity;
 use Framework\Http\Request;
+use Framework\Support\Alert;
 use Framework\Routing\Controller;
 use App\Http\Validators\UpdateUser;
 use App\Database\Repositories\Roles;
@@ -89,8 +91,8 @@ class UsersController extends Controller
         RegisterUser::register()->validate($request->inputs())->redirectOnFail();
 	    $id = $this->users->store($request);
 
-        $this->log(__('user_created'));
-        redirect()->route('users.read', $id)->withToast('success', __('user_created'))->go();
+        Activity::log(__('user_created'));
+        $this->redirect()->route('users.read', $id)->withToast('success', __('user_created'))->go();
     }
     
 	/**
@@ -105,8 +107,8 @@ class UsersController extends Controller
 		UpdateUser::register($id)->validate($request->inputs())->redirectOnFail();
         $this->users->refresh($request, $id);
 		
-        $this->log(__('user_updated'));
-        redirect()->route('users.read', $id)->withToast('success', __('user_updated'))->go();
+        Activity::log(__('user_updated'));
+        $this->redirect()->route('users.read', $id)->withToast('success', __('user_updated'))->go();
     }
 
 	/**
@@ -121,12 +123,12 @@ class UsersController extends Controller
         $this->users->flush($request, $id);
 
 		if (!is_null($id)) {
-            $this->log(__('user_deleted'));
-            redirect()->route('users.index')->withToast('success', __('user_deleted'))->go();
+            Activity::log(__('user_deleted'));
+            $this->redirect()->route('users.index')->withToast('success', __('user_deleted'))->go();
 		} else {
-            $this->log(__('users_deleted'));
-            $this->toast('success', __('users_deleted'));
-            response()->json(['redirect' => route('users.index')]);
+            Activity::log(__('users_deleted'));
+            Alert::toast(__('users_deleted'))->success();
+            $this->response()->json(['redirect' => route('users.index')]);
         }
 	}
 
@@ -141,7 +143,7 @@ class UsersController extends Controller
 		$data = $this->users->findAllDateRange($request->date_start, $request->date_end);
         $filename = 'users_' . date('Y_m_d_His') . '.' . $request->file_type;
 
-        $this->log(__('data_exported'));
+        Activity::log(__('data_exported'));
         
 		Report::generate($filename, $data, [
 			'name' => __('name'), 

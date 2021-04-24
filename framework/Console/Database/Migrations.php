@@ -8,7 +8,6 @@
 
 namespace Framework\Console\Database;
 
-use Exception;
 use Framework\System\Storage;
 use App\Database\Seeds\Seeder;
 use Framework\Database\Schema;
@@ -30,20 +29,20 @@ class Migrations extends Command
     protected function configure()
     {
         $this->setDescription('Manage migrations tables');
-        $this->setHelp('This command allows you to run or delete migrations');
+        $this->setHelp('This command allows you to create or drop migrations tables');
         $this->addArgument('migration', InputArgument::OPTIONAL|InputArgument::IS_ARRAY, 'The name of table migration (separated by space if many)');
-        $this->addOption('run', null, InputOption::VALUE_NONE, 'Migrate tables');
-        $this->addOption('refresh', 'r', InputOption::VALUE_NONE, 'Refresh migrations tables');
-        $this->addOption('delete', 'd', InputOption::VALUE_NONE, 'Delete migrations tables');
-        $this->addOption('seed', 's', InputOption::VALUE_NONE, 'Insert all seeds');
-        $this->addOption('list', 'l', InputOption::VALUE_NONE, 'Display the list of migrations tables');
+        $this->addOption('migrate', null, InputOption::VALUE_NONE, 'Migrate tables');
+        $this->addOption('rollup', null, InputOption::VALUE_NONE, 'Rollup migrations tables');
+        $this->addOption('delete', null, InputOption::VALUE_NONE, 'Delete migrations tables');
+        $this->addOption('seed', null, InputOption::VALUE_NONE, 'Insert all seeds');
+        $this->addOption('list', null, InputOption::VALUE_NONE, 'Display the list of migrated tables');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $migrations = $input->getArgument('migration');
 
-        if ($input->getOption('run')) {
+        if ($input->getOption('migrate')) {
             if (!empty($migrations)) {
                 foreach ($migrations as $table) {
                     $this->migrate($output, $table);
@@ -63,17 +62,17 @@ class Migrations extends Command
             }
         }
 
-        else if ($input->getOption('refresh')) {
+        else if ($input->getOption('rollup')) {
             if (!empty($migrations)) {
                 foreach ($migrations as $table) {
-                    $this->refresh($output, $table);
+                    $this->rollup($output, $table);
                 }
             }
 
             else {
                 foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
                     $table = get_file_name($file);
-                    $this->refresh($output, $table);
+                    $this->rollup($output, $table);
                 }
             }
 
@@ -116,11 +115,10 @@ class Migrations extends Command
             return;
         }
 
-        $table = '\App\Database\Migrations\\' . $table;
-        $table::migrate();
+        $this->getMigration($table)->create();
         $output->writeln('<info>Table "' . $table . '" migrated successfully</info>');
 
-        $this->saveMigrationTable($output, end(explode('\\', $table)));
+        $this->saveMigrationTable($output, $table);
     }
 
     protected function delete(OutputInterface $output, string $table)
@@ -130,27 +128,29 @@ class Migrations extends Command
             return;
         }
 
-        $table = '\App\Database\Migrations\\' . $table;
-        $table::delete();
+        $this->getMigration($table)->drop();
         $output->writeln('<info>Table "' . $table . '" deleted successfully</info>');
 
-        $this->removeMigrationTable(end(explode('\\', $table)));
+        $this->removeMigrationTable($table);
     }
 
-    protected function refresh(OutputInterface $output, string $table)
+    protected function rollup(OutputInterface $output, string $table)
     {
-        $table = '\App\Database\Migrations\\' . $table;
-        $table::refresh();
-        $output->writeln('<info>Table "' . $table . '" refreshed successfully</info>');
+        $this->delete($output, $table);
+        $this->migrate($output, $table);
     }
     
     protected function listMigrationsTables(OutputInterface $output): void
     {
-        $tables = Storage::path(config('storage.migrations'))->getFiles();
+        $tables = QueryBuilder::table('migrations')
+            ->select('*')
+            ->orderBy('created_at', 'DESC')
+            ->fetchAll();
+
         $rows = [];
 
         foreach ($tables as $table) {
-            $rows[] = [$table];
+            $rows[] = [$table->migration];
         }
 
         $table = new Table($output);
@@ -192,5 +192,11 @@ class Migrations extends Command
             ->select('*')
             ->where('migration', $table)
             ->exists();
+    }
+    
+    protected function getMigration(string $table)
+    {
+        $migration = '\App\Database\Migrations\\' . $table;
+        return new $migration();
     }
 }

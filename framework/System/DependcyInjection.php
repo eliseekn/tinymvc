@@ -12,7 +12,7 @@ use Exception;
 use ReflectionClass;
 
 /**
- * Auto dependancy injection class
+ * Automatic dependancy injection class
  * 
  * @link https://indigotree.co.uk/automatic-dependency-injection-with-phps-reflection-api/
  *       https://dev.to/fadymr/php-auto-dependency-injection-with-reflection-api-27ci
@@ -20,21 +20,17 @@ use ReflectionClass;
 class DependcyInjection
 {
     /**
- 	* Build an instance of the given class
+ 	* execute class with dependecies and methods dependencies
 	* 
  	* @param string $class
- 	* @param string|null $method
+ 	* @param string $method
     * @param array $params
  	* @return void
- 	*
- 	* @throws Exception
  	*/
-	public function resolve(string $class, ?string $method = null, array $params = []): void
+	public function resolve(string $class, string $method, array $params = []): void
 	{
-
         $reflector = new ReflectionClass($class);
         $constructor = $reflector->getConstructor();
-
         $dependencies = [];
 
         if (is_null($constructor)) {
@@ -53,13 +49,13 @@ class DependcyInjection
             }
         }
 
-        $methods_dependencies = $this->getDependencies($parameters);
+        $dependencies = $this->getDependencies($parameters);
 
-        call_user_func_array([$class, $method], array_merge($methods_dependencies, $params));
+        call_user_func_array([$class, $method], array_merge($dependencies, $params));
 	}
 
 	/**
-	 * Build up a list of dependencies for a given methods parameters
+	 * generate new instance of dependencies
 	 *
 	 * @param array $parameters
 	 * @return array

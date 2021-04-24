@@ -97,13 +97,13 @@
                             <td>{{ data.updated_at != data.created_at ? date_helper(data.updated_at) : '-' }}</td>
 
                             <td>
-                                <a class="btn text-dark p-1" href="{{ route('tickets.read', data.id) }}" title="{{ __('details') }}">
+                                <a class="btn text-dark p-1" href="{{ route('tickets.read', data.id) }}" title="{{ __('messages') }}">
                                     <i class="fa fa-eye"></i>
                                 </a>
 
                                 <update-item action="{{ route('tickets.update', {'id': data.id, 'status': data.status ? 0 : 1 }) }}">
                                     <button type="submit" class="btn text-dark p-1" title="{{ __('update') }}">
-                                        <i class="fa fa-{{ data.status ? 'times' : 'sync' }}"></i>
+                                        <i class="fa fa-sync-alt"></i>
                                     </button>
                                 </update-item>
 

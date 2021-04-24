@@ -6,7 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Framework\Console;
+namespace Framework\Console\App;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Setup application
  */
-class App extends Command
+class Setup extends Command
 {
     protected static $defaultName = 'app:setup';
 
@@ -27,47 +27,37 @@ class App extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $config = [];
+
         $output->writeln('<question>Application name (ex: TinyMVC):</question> ');
-        $app_name = fgets(STDIN);
+        $config['APP_NAME'] = fgets(STDIN);
 
         $output->writeln('<question>Application language (ex: en):</question> ');
-        $app_lang = fgets(STDIN);
+        $config['APP_LANG'] = fgets(STDIN);
 
-        $output->writeln('<question>Application url (ex: http://example.com/):</question> ');
-        $app_url = fgets(STDIN);
+        $output->writeln('<question>Application url (ex: http://localhost:80/):</question> ');
+        $config['APP_URL'] = fgets(STDIN);
 
         $output->writeln('<question>Application folder name (leave empty if not using sub-folder):</question> ');
-        $app_folder = fgets(STDIN);
+        $config['APP_FOLDER'] = fgets(STDIN);
 
         $output->writeln('<question>MySQL hostname (ex: localhost):</question> ');
-        $mysql_host = fgets(STDIN);
+        $config['MYSQL_HOST'] = fgets(STDIN);
 
         $output->writeln('<question>MySQL database name:</question> ');
-        $mysql_database = fgets(STDIN);
+        $config['MYSQL_DATABASE'] = fgets(STDIN);
 
         $output->writeln('<question>MySQL database username:</question> ');
-        $mysql_username = fgets(STDIN);
+        $config['MYSQL_USERNAME'] = fgets(STDIN);
 
         $output->writeln('<question>MySQL database password:</question> ');
-        $mysql_password = fgets(STDIN);
+        $config['MYSQL_PASSWORD'] = fgets(STDIN);
 
-        $encryption_key = base64_encode(random_string(30, true));
-
-        $config = [
-            'APP_NAME' => $app_name,
-            'APP_LANG' => $app_lang,
-            'APP_FOLDER' => $app_folder,
-            'APP_URL' => $app_url,
-            'MYSQL_HOST' => $mysql_host,
-            'MYSQL_DATABASE' => $mysql_database,
-            'MYSQL_USERNAME' => $mysql_username,
-            'MYSQL_PASSWORD' => $mysql_password,
-            'ENCRYPTION_KEY' => $encryption_key
-        ];
+        $config['ENCRYPTION_KEY'] = base64_encode(random_string(30, true));
 
         save_env($config);
 
-        $output->writeln('<info>Application has been setted up successfully</info>');
+        $output->writeln('<info>Application has been setted up</info>');
 
         return Command::SUCCESS;
     }

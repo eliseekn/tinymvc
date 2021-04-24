@@ -16,13 +16,13 @@ class SendMessage extends HTMLElement {
     }
 
     getUsers() {
-        fetch('/tinymvc/api/users')
+        fetch(process.env.APP_URL + '/api/users')
             .then(response => response.json())
             .then(data => this.users = data.users)
     }
 
     getTranslations() {
-        fetch('/tinymvc/api/translations')
+        fetch(process.env.APP_URL + '/api/translations')
             .then(response => response.json())
             .then(data => this.translations = data.translations)
     }
@@ -54,7 +54,7 @@ class SendMessage extends HTMLElement {
                         <div class="modal-body">
                             <div class="form-group">
                                 <label for="recipient">${this.translations.user}</label>
-                                <select id="recipient" name="recipient" class="custom-select">
+                                <select id="recipient" name="recipient" class="custom-select" required>
                                     <option selected disabled>${this.translations.select_user}</option>
 
                                     ${
@@ -67,7 +67,7 @@ class SendMessage extends HTMLElement {
 
                             <div class="form-group">
                                 <label for="message">${this.translations.message}</label>
-                                <textarea id="message" name="message" rows="3" class="form-control"></textarea>
+                                <textarea id="message" name="message" rows="3" class="form-control" required></textarea>
                             </div>
                         </div>
 

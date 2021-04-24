@@ -8,9 +8,7 @@ use App\Mails\WelcomeMail;
 use Framework\Http\Request;
 use Framework\System\Session;
 use Framework\Routing\Controller;
-use App\Database\Repositories\Roles;
 use App\Database\Repositories\Users;
-use App\Http\Middlewares\DashboardPolicy;
 use App\Database\Repositories\Tokens;
 
 /**
@@ -30,12 +28,12 @@ class EmailController extends Controller
         $user = $users->findSingleByEmail($request->email);
 
 		if (!$user) {
-            redirect()->url('signup')->withAlert('error', __('user_not_registered', true))->go();
+            $this->redirect()->url('signup')->withAlert('error', __('user_not_registered', true))->go();
         }
 
         $users->updateBy(['email', $user->email], ['active' => 1]);
         WelcomeMail::send($user->email, $user->name);
-        redirect()->url('login')->withAlert('success', __('user_activated', true))->go();
+        $this->redirect()->url('login')->withAlert('success', __('user_activated', true))->go();
     }
         
     /**
@@ -51,11 +49,11 @@ class EmailController extends Controller
         $auth_token = $tokens->findSingleByEmail($request->email);
 
         if (!$auth_token || $auth_token->token !== $request->token) {
-			response()->send(__('invalid_two_steps_link', true));
+			$this->response()->send(__('invalid_two_steps_link', true));
 		}
 
 		if ($auth_token->expires < Carbon::now()->toDateTimeString()) {
-			response()->send(__('expired_two_steps_link', true));
+			$this->response()->send(__('expired_two_steps_link', true));
 		}
 
         $tokens->deleteByEmail($auth_token->email);

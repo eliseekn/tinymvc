@@ -11,20 +11,20 @@ class TokensTable_20210403034738
      *
      * @var string
      */
-    public static $table = 'tokens';
+    protected $table = 'tokens';
 
     /**
      * create table
      *
      * @return void
      */
-    public static function migrate(): void
+    public function create(): void
     {
-        Schema::createTable(self::$table)
+        Schema::createTable($this->table)
             ->addBigInt('id')->primaryKey()
             ->addString('email')->unique()
             ->addString('token')->unique()
-            ->addTimestamp('expires')->null()
+            ->addTimestamp('expires')->setNull()
             ->create();
     }
     
@@ -33,19 +33,8 @@ class TokensTable_20210403034738
      *
      * @return void
      */
-    public static function delete(): void
+    public function drop(): void
     {
-        Schema::dropTable(self::$table);
-    }
-    
-    /**
-     * refresh table
-     *
-     * @return void
-     */
-    public static function refresh(): void
-    {
-        self::delete();
-        self::migrate();
+        Schema::dropTable($this->table);
     }
 }

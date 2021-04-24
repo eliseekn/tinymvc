@@ -64,7 +64,7 @@ class Middleware
      */
     public static function add($route = null, $middlewares = null): void
     {
-        if (!is_null($route)) {
+        if (!is_null($route) && is_null($middlewares)) {
             self::$middlewares = $route;
         } 
         

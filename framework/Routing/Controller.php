@@ -8,8 +8,8 @@
 
 namespace Framework\Routing;
 
-use App\Helpers\Activity;
-use Framework\Support\Alert;
+use Framework\Http\Redirect;
+use Framework\Http\Response;
 
 /**
  * Main controller class
@@ -30,25 +30,22 @@ class Controller
     }
     
     /**
-     * generate alert
+     * response
      *
-     * @param  string $type
-     * @param  string $message
-     * @return void
+     * @return \Framework\Http\Response
      */
-    public function toast(string $type, string $message): void
+    public function response(): \Framework\Http\Response
     {
-        Alert::toast($message)->$type();
+        return new Response();
     }
     
     /**
-     * log user activity
+     * redirect
      *
-     * @param  string $action
-     * @return void
+     * @return \Framework\Http\Redirect
      */
-    public function log(string $action): void
+    public function redirect(): \Framework\Http\Redirect
     {
-        Activity::log($action);
+        return new Redirect();
     }
 }

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Helpers\Report;
+use App\Helpers\Activity;
 use Framework\Http\Request;
+use Framework\Support\Alert;
 use Framework\Routing\Controller;
 use App\Database\Repositories\Activities;
 
@@ -45,11 +47,11 @@ class ActivitiesController extends Controller
 	public function delete(Request $request): void
 	{
         if ($this->activities->deleteById($request)) {
-            $this->toast('error', __('activity_not_deleted'));
+            Alert::toast(__('activity_not_deleted'))->error();
         }
 
-        $this->toast('success', __('activities_deleted'));
-        response()->json(['redirect' => route('activities.index')]);
+        Alert::toast(__('activities_deleted'))->success();
+        $this->response()->json(['redirect' => route('activities.index')]);
 	}
 
 	/**
@@ -63,7 +65,7 @@ class ActivitiesController extends Controller
         $data = $this->activities->findAllDateRange($request->date_start, $request->date_end);
         $filename = 'activities_' . date('Y_m_d_His') . '.' . $request->file_type;
 
-        $this->log(__('data_exported'));
+        Activity::log(__('data_exported'));
 
 		Report::generate($filename, $data, [
 			'user' => __('user'), 

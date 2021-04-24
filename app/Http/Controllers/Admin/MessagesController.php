@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Helpers\Report;
+use App\Helpers\Activity;
 use Framework\Http\Request;
+use Framework\Support\Alert;
 use Framework\Routing\Controller;
-use App\Helpers\NotificationHelper;
 use App\Database\Repositories\Messages;
 
 class MessagesController extends Controller
@@ -35,7 +36,8 @@ class MessagesController extends Controller
 	{
         $data = $this->messages->findAllPaginate();
         $messages_unread = $this->messages->unreadCount();
-		$this->render('admin.account.messages', compact('data', 'messages_unread'));
+        $messages_deleted = $this->messages->deletedCount();
+		$this->render('admin.account.messages', compact('data', 'messages_unread', 'messages_deleted'));
 	}
 
 	/**
@@ -49,8 +51,8 @@ class MessagesController extends Controller
         $id = $this->messages->store($request);
         
         $this->messages->updateIfExists($id, ['sender_read' => 1]);
-        $this->log(__('message_sent'));
-        redirect()->back()->withToast('success', __('message_sent'))->go();
+        Activity::log(__('message_sent'));
+        $this->redirect()->back()->withToast('success', __('message_sent'))->go();
 	}
 	
 	/**
@@ -66,8 +68,8 @@ class MessagesController extends Controller
 
         $this->messages->updateIfExists($message_id, ['recipient_read' => 1]);
         $this->messages->updateIfExists($id, ['sender_read' => 1]);
-        $this->log(__('message_sent'));
-        redirect()->back()->withToast('success', __('message_sent'))->go();
+        Activity::log(__('message_sent'));
+        $this->redirect()->back()->withToast('success', __('message_sent'))->go();
 	}
 	
 	/**
@@ -82,12 +84,12 @@ class MessagesController extends Controller
         $this->messages->updateReadStatus($request, $id);
 
         if (!is_null($id)) {
-            $this->log(__('message_updated'));
-            redirect()->back()->withToast('success', __('message_updated'))->go();
+            Activity::log(__('message_updated'));
+            $this->redirect()->back()->withToast('success', __('message_updated'))->go();
 		} else {
-            $this->log(__('messages_updated'));
-			$this->toast('success', __('messages_updated'));
-            response()->json(['redirect' => route('messages.index')]);
+            Activity::log(__('messages_updated'));
+			Alert::toast(__('messages_updated'))->success();
+            $this->response()->json(['redirect' => route('messages.index')]);
 		}
 	}
 
@@ -103,12 +105,12 @@ class MessagesController extends Controller
         $this->messages->updateDeletedStatus($request, $id);
 
         if (!is_null($id)) {
-            $this->log(__('message_deleted'));
-            redirect()->back()->withToast('success', __('message_deleted'))->go();
+            Activity::log(__('message_deleted'));
+            $this->redirect()->back()->withToast('success', __('message_deleted'))->go();
 		} else {
-            $this->log(__('messages_deleted'));
-			$this->toast('success', __('messages_deleted'));
-            response()->json(['redirect' => route('messages.index')]);
+            Activity::log(__('messages_deleted'));
+			Alert::toast(__('messages_deleted'))->success();
+            $this->response()->json(['redirect' => route('messages.index')]);
 		}
 	}
 
@@ -123,7 +125,7 @@ class MessagesController extends Controller
         $data = $this->messages->findAllDateRange($request->date_start, $request->date_end);
         $filename = 'messages_' . date('Y_m_d_His') . '.' . $request->file_type;
 
-        $this->log(__('data_exported'));
+        Activity::log(__('data_exported'));
 
 		Report::generate($filename, $data, [
 			'sender' => __('sender'), 

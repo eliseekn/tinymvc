@@ -66,9 +66,9 @@ class Tokens extends Repository
      * delete token by email
      *
      * @param  string $email
-     * @return mixed
+     * @return bool
      */
-    public function deleteByEmail(string $email)
+    public function deleteByEmail(string $email): bool
     {
         return $this->deleteBy('email', $email);
     }

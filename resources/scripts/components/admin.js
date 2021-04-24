@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             })
 
-            fetch('/tinymvc/api/translations')
+            fetch(process.env.APP_URL + '/api/translations')
                 .then(response => response.json())
                 .then(data => {
                     const innerHTML = event.target.innerHTML
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             })
 
-            fetch('/tinymvc/api/translations')
+            fetch(process.env.APP_URL + '/api/translations')
                 .then(response => response.json())
                 .then(data => {
                     const innerHTML = event.target.innerHTML

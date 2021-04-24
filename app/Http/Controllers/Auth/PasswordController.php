@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Auth;
 use Carbon\Carbon;
 use App\Mails\TokenMail;
 use Framework\Http\Request;
-use App\Http\Validators\AuthRequest;
 use Framework\System\Encryption;
 use Framework\Routing\Controller;
 use App\Database\Repositories\Users;
+use App\Http\Validators\AuthRequest;
 use App\Database\Repositories\Tokens;
 
 /**
@@ -29,10 +29,10 @@ class PasswordController extends Controller
 
 		if (TokenMail::send($request->email, $token)) {
             $tokens->store($request->email, $token, Carbon::now()->addHour()->toDateTimeString());
-			redirect()->back()->withAlert('success', __('password_reset_link_sent', true))->go();
+			$this->redirect()->back()->withAlert('success', __('password_reset_link_sent', true))->go();
 		} 
         
-		redirect()->back()->withAlert('error', __('password_reset_link_not_sent', true))->go();
+		$this->redirect()->back()->withAlert('error', __('password_reset_link_not_sent', true))->go();
 	}
 	
 	/**
@@ -47,11 +47,11 @@ class PasswordController extends Controller
         $reset_token = $tokens->findSingleByEmail($request->email);
 
         if (!$reset_token || $reset_token->token !== $request->token) {
-			response()->json(__('invalid_password_reset_link', true));
+			$this->response()->json(__('invalid_password_reset_link', true));
 		}
 
 		if ($reset_token->expires < Carbon::now()->toDateTimeString()) {
-			response()->json(__('expired_password_reset_link', true));
+			$this->response()->json(__('expired_password_reset_link', true));
 		}
 
 		$tokens->deleteByEmail($reset_token->email);

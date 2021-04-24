@@ -88,7 +88,7 @@ class QueryBuilder
 	 * drop foreign key table query
 	 *
 	 * @param  string $table
-	 * @param  string $key foreign key name
+	 * @param  string $key
 	 * @return \Framework\Database\QueryBuilder
 	 */
 	public static function dropForeign(string $table, string $key): self
@@ -162,7 +162,7 @@ class QueryBuilder
      */
     public static function tableExists(string $table): bool
     {
-        return self::setQuery('SELECT * FROM information_schema.tables WHERE table_schema = "' . config('database.database') .'" 
+        return self::setQuery('SELECT * FROM information_schema.tables WHERE table_schema = "' . config('database.name') .'" 
             AND table_name = "' . $table . '" LIMIT 1')->exists();
     }
     
@@ -331,7 +331,7 @@ class QueryBuilder
      * 
      * @return \Framework\Database\QueryBuilder
      */
-    public function null(): self
+    public function setNull(): self
     {
         self::$query = str_replace('NOT NULL, ', 'NULL, ', self::$query);
         return $this;
@@ -389,48 +389,48 @@ class QueryBuilder
 	}
 	
 	/**
-	 * add on update query attribute
+	 * add on update cascade query attribute
 	 *
 	 * @return \Framework\Database\QueryBuilder
 	 */
-	public function onUpdate(): self
+	public function onUpdateCascade(): self
 	{
         self::$query = rtrim(self::$query, ', ');
-		self::$query .= " ON UPDATE, ";
+		self::$query .= " ON UPDATE CASCADE, ";
         return $this;
 	}
 	
 	/**
-	 * add on delete query attribute
+	 * add on delete cascade query attribute
 	 *
 	 * @return \Framework\Database\QueryBuilder
 	 */
-	public function onDelete(): self
+	public function onDeleteCascade(): self
 	{
         self::$query = rtrim(self::$query, ', ');
-		self::$query .= " ON DELETE, ";
+		self::$query .= " ON DELETE CASCADE, ";
         return $this;
 	}
 	
 	/**
-	 * add cascade query attribute
+	 * add on update set null query attribute
 	 *
 	 * @return \Framework\Database\QueryBuilder
 	 */
-	public function cascade(): self
+	public function onUpdateSetNull(): self
 	{
-		self::$query .= " CASCADE, ";
+		self::$query .= " ON UPDATE SET NULL, ";
         return $this;
 	}
 	
 	/**
-	 * add set null attribute
+	 * add on delete set null attribute
 	 *
 	 * @return \Framework\Database\QueryBuilder
 	 */
-	public function setNull(): self
+	public function onDeleteSetNull(): self
 	{
-		self::$query .= " SET NULL, ";
+		self::$query .= " ON DELETE SET NULL, ";
         return $this;
 	}
     

@@ -2,9 +2,9 @@
 
 namespace App\Helpers;
 
-use PragmaRX\Countries\Package\Countries;
+use PragmaRX\Countries\Package\Countries As _Countries;
 
-class CountriesHelper
+class Countries
 {    
     /**
      * retrieves countries list
@@ -13,7 +13,7 @@ class CountriesHelper
      */
     public static function all(): array
     {
-        $countries = new Countries();
+        $countries = new _Countries();
 
         return $countries->all()
             ->map(function ($country) use ($countries) {
@@ -35,7 +35,7 @@ class CountriesHelper
      */
     public static function countryName(string $country_code): string
     {
-        $countries = new Countries();
+        $countries = new _Countries();
         return $countries->where('cca2', $country_code)->first()['name_' . config('app.lang')];
     }
 }

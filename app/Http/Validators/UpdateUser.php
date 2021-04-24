@@ -17,7 +17,7 @@ class UpdateUser extends Validator
         'name' => 'required|max_len,255',
         'email' => 'required|valid_email|max_len,255|unique,users',
         'phone' => 'required|numeric|max_len,255|unique,users',
-        'company' => 'required|max_len,255'
+        'company' => 'required|max_len,255|unique,users'
     ];
 
     /**

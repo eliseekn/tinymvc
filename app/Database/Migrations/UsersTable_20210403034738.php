@@ -12,24 +12,24 @@ class UsersTable_20210403034738
      *
      * @var string
      */
-    public static $table = 'users';
+    protected $table = 'users';
 
     /**
      * create table
      *
      * @return void
      */
-    public static function migrate(): void
+    public function create(): void
     {
-        Schema::createTable(self::$table)
+        Schema::createTable($this->table)
             ->addBigInt('id')->primaryKey()
-            ->addBigInt('parent_id')->null()
+            ->addBigInt('parent_id')->setNull()
             ->addString('name')
             ->addString('email')->unique()
-            ->addString('company')->null()
+            ->addString('company')->unique()
             ->addString('phone')->unique()
             ->addString('password')
-            ->addString('role')->default(Roles::ROLE[1])
+            ->addString('role')
             ->addString('lang')->default('en')
             ->addString('country')->default('US')
             ->addString('currency')->default('USD')
@@ -47,19 +47,8 @@ class UsersTable_20210403034738
      *
      * @return void
      */
-    public static function delete(): void
+    public function drop(): void
     {
-        Schema::dropTable(self::$table);
-    }
-    
-    /**
-     * refresh table
-     *
-     * @return void
-     */
-    public static function refresh(): void
-    {
-        self::delete();
-        self::migrate();
+        Schema::dropTable($this->table);
     }
 }

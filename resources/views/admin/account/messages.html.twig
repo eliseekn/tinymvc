@@ -19,6 +19,13 @@
             data="{{ messages_unread }}"
             columns="4">
         </metrics-card-item>
+
+        <metrics-card-item 
+            title="{{ __('deleted') }}" 
+            icon="fa fa-trash fa-2x" 
+            data="{{ messages_deleted }}"
+            columns="4">
+        </metrics-card-item>
     </metrics-card>
 
     <div class="card shadow-sm">

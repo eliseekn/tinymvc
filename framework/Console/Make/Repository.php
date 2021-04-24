@@ -33,7 +33,7 @@ class Repository extends Command
         $repositories = $input->getArgument('repository');
 
         foreach ($repositories as $repository) {
-            list($name, $class) = Make::generateClass($repository, 'repository');
+            list($name, $class) = Make::generateClass($repository, '');
 
             if (!Make::createRepository($repository)) {
                 $output->writeln('<fg=yellow>Failed to create repository "' . $class . '"</fg>');

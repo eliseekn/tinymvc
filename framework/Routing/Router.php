@@ -63,6 +63,8 @@ class Router
      * @param  \Framework\Http\Request $request
      * @param  array $routes
      * @return void
+     * 
+     * @throws Exception
      */
     public static function dispatch(Request $request, array $routes): void
     {   
@@ -90,14 +92,14 @@ class Router
                             View::render($options['handler']);
                         }
                         
-                        //handler is controller and method
+                        //handler is controller and action
                         else if (is_array($options['handler'])) {
-                            list($controller, $method) = $options['handler'];
+                            list($controller, $action) = $options['handler'];
 
-                            if (class_exists($controller) && method_exists($controller, $method)) {
-                                (new DependcyInjection())->resolve($controller, $method, $params);
+                            if (class_exists($controller) && method_exists($controller, $action)) {
+                                (new DependcyInjection())->resolve($controller, $action, $params);
                             } else {
-                                throw new Exception('Handler "' . $controller . '" not found.');
+                                throw new Exception('Handler "' . $controller . '/' . $action . '" not found.');
                             }
                         }
                     }

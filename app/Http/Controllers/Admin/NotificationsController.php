@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\Activity;
 use Framework\Http\Request;
+use Framework\Support\Alert;
 use Framework\Routing\Controller;
-use App\Helpers\NotificationHelper;
 use App\Database\Repositories\Notifications;
 
 class NotificationsController extends Controller
@@ -48,13 +49,13 @@ class NotificationsController extends Controller
 	{
         if (!is_null($id)) {
             $this->notifications->updateIfExists($id, ['status' => 1]);
-            $this->log(__('notification_updated'));
-            redirect()->back()->withToast('success', __('notification_updated'))->go();
+            Activity::log(__('notification_updated'));
+            $this->redirect()->back()->withToast('success', __('notification_updated'))->go();
 		} else {
             $this->notifications->updateBy(['id', 'in', $request->items], ['status' => 1]);
-            $this->log(__('notifications_updated'));
-			$this->toast('success', __('notifications_updated'));
-            response()->json(['redirect' => route('notifications.index')]);
+            Activity::log(__('notifications_updated'));
+			Alert::toast(__('notifications_updated'))->success();
+            $this->response()->json(['redirect' => route('notifications.index')]);
 		}
     }
 	
@@ -69,13 +70,13 @@ class NotificationsController extends Controller
 	{
 		if (!is_null($id)) {
 			$this->notifications->deleteIfExists($id);
-            $this->log(__('notification_deleted'));
-            redirect()->back()->withToast('success', __('notification_deleted'))->go();
+            Activity::log(__('notification_deleted'));
+            $this->redirect()->back()->withToast('success', __('notification_deleted'))->go();
 		} else {
             $this->notifications->deleteBy('id', 'in', explode(',', $request->items));
-            $this->log(__('notifications_deleted'));
-			$this->toast('success', __('notifications_deleted'));
-			response()->json(['redirect' => route('notifications.index')]);
+            Activity::log(__('notifications_deleted'));
+			Alert::toast(__('notifications_deleted'))->success();
+			$this->response()->json(['redirect' => route('notifications.index')]);
 		}
 	}
 }

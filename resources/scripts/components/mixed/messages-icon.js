@@ -28,7 +28,7 @@ class MessagesIcon extends HTMLElement {
     }
 
     getMessages() {
-        fetch('/tinymvc/api/messages')
+        fetch(process.env.APP_URL + '/api/messages')
             .then(response => response.json())
             .then(data => {
                 this.messages = data.messages,
@@ -37,7 +37,7 @@ class MessagesIcon extends HTMLElement {
     }
 
     getTranslations() {
-        fetch('/tinymvc/api/translations')
+        fetch(process.env.APP_URL + '/api/translations')
             .then(response => response.json())
             .then(data => {
                 this.translations = data.translations
@@ -74,7 +74,7 @@ class MessagesIcon extends HTMLElement {
 
                     ${
                         this.messages.map(message => {
-                            return `<div class="dropdown-item py-2" style="width: 350px">
+                            return `<div class="dropdown-item py-2" style="width: 250px">
                                 <p class="text-wrap">
                                     <avatar-icon name=${message.sender_name} (${message.sender_email})></avatar-icon>
                                     ${message.message}
@@ -88,7 +88,7 @@ class MessagesIcon extends HTMLElement {
                     <div class="dropdown-divider my-0"></div>
 
                     <div class="px-4 py-2 bg-light text-center">
-                        <a class="text-primary" href="/tinymvc/admin/account/messages">
+                        <a class="text-primary" href="${process.env.APP_URL}/admin/account/messages">
                             ${this.translations.view_all}
                         </a>
                     </div>
