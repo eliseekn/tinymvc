@@ -49,19 +49,33 @@ class Users extends Repository
     }
     
     /**
-     * retrieves users filtered by role
+     * retrieves users by company
      *
      * @return array
      */
-    public function findAllByRole(): array
+    public function findAllByCompany(): array
     {
         return $this->select()
             ->where('id', '!=', Auth::get('id'))
             ->subQuery(function ($query) {
-                if (Auth::role(Roles::ROLE[1])) {
-                    $query->and('parent_id', Auth::get('id'));
+                if (!Auth::role(Roles::ROLE[0])) {
+                    $query->and('company', Auth::get('company'));
                 }
             })
+            ->all();
+    }
+    
+    /**
+     * retrieves users by role
+     *
+     * @param  string $role
+     * @return array
+     */
+    public function findAllByRole(string $role): array
+    {
+        return $this->select()
+            ->where('id', '!=', Auth::get('id'))
+            ->and('role', $role)
             ->all();
     }
     
@@ -76,8 +90,8 @@ class Users extends Repository
         return $this->select()
             ->where('id', '!=', Auth::get('id'))
             ->subQuery(function ($query) {
-                if (Auth::role(Roles::ROLE[1])) {
-                    $query->and('parent_id', Auth::get('id'));
+                if (!Auth::role(Roles::ROLE[0])) {
+                    $query->and('company', Auth::get('company'));
                 }
             })
             ->oldest()
@@ -95,8 +109,8 @@ class Users extends Repository
             ->where('id', '!=', Auth::get('id'))
             ->and('active', 1)
             ->subQuery(function ($query) {
-                if (Auth::role(Roles::ROLE[1])) {
-                    $query->and('parent_id', Auth::get('id'));
+                if (!Auth::role(Roles::ROLE[0])) {
+                    $query->and('company', Auth::get('company'));
                 }
             })
             ->single()
@@ -116,6 +130,7 @@ class Users extends Repository
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
+            'address' => $request->address,
             'company' => Auth::role(Roles::ROLE[0]) ? $request->company : Auth::get('company'),
             'password' => Encryption::hash($request->password),
             'active' => 1,
@@ -138,9 +153,9 @@ class Users extends Repository
             'email' => $request->email,
             'phone' => $request->phone,
             'company' => $request->company,
+            'address' => $request->address,
             'password' => Encryption::hash($request->password),
             'role' => Roles::ROLE[3],
-            'lang' => $request->lang,
         ]);
     }
     
@@ -201,7 +216,7 @@ class Users extends Repository
             'two_steps' => $request->has('two_steps') ? 1 : 0,
             'lang' => $request->lang,
             'timezone' => $request->timezone,
-            'currency' => $request->currency,
+            //'currency' => $request->currency,
             'dark' => $request->has('dark') ? 1 : 0,
             'alerts' => $request->has('alerts') ? 1 : 0,
             'email_notifications' => $request->has('email_notifications') ? 1 : 0

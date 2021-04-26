@@ -52,7 +52,7 @@ class EmailController extends Controller
 			$this->response()->send(__('invalid_two_steps_link', true));
 		}
 
-		if ($auth_token->expires < Carbon::now()->toDateTimeString()) {
+		if ($auth_token->expire < Carbon::now()->toDateTimeString()) {
 			$this->response()->send(__('expired_two_steps_link', true));
 		}
 

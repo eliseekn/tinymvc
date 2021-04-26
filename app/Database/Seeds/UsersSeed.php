@@ -26,6 +26,7 @@ class UsersSeed
             'name' => 'Webmaster',
             'email' => 'webmaster@tinymvc.com',
             'phone' => '00000000',
+            'address' => 'Github',
             'company' => 'TinyMVC',
             'password' => Encryption::hash('webmaster'),
             'role' => Roles::ROLE[0],

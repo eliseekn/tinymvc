@@ -51,6 +51,19 @@
                     </div>
                 </div>
 
+                <div class="form-group row">
+                    <label for="address" class="col-sm-2 col-form-label">{{ __('address') }}</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control {{ errors.address ? 'is-invalid' }}" name="address" id="address" value="{{ inputs.address ?: '' }}" aria-describedby="address-error">
+
+                        {% if errors.address is not empty %}
+                            <div id="address-error" class="invalid-feedback">
+                                {{ errors.address|raw }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
                 {% if auth('role') == USER_ROLE[0] %}
                 <div class="form-group row">
                     <label for="company" class="col-sm-2 col-form-label">{{ __('company') }}</label>
@@ -65,6 +78,23 @@
                     </div>
                 </div>
                 {% endif %}
+
+                <div class="form-group row">
+                    <label for="country" class="col-sm-2 col-form-label">{{ __('country') }}</label>
+                    <div class="col-sm-10">
+                        <select id="country" name="country" class="custom-select">
+                            {% for country in countries %}
+                            {% if country is not null %}
+                                {% for key, value in country %}
+                            <option value="{{ key }}">
+                                {{ value }} 
+                            </option>
+                                {% endfor %}
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
 
                 <div class="form-group row">
                     <label for="password" class="col-sm-2 col-form-label">{{ __('password') }}</label>
@@ -93,7 +123,7 @@
                         <div class="col-sm-10">
                             {% for role in roles %}
                             <div class="custom-control custom-radio custom-control-inline">
-                                <input class="custom-control-input" type="radio" name="role" id="{{ role.name }}" value="{{ role.name }}" {{ loop.index == 1 ? 'checked' }}>
+                                <input class="custom-control-input" type="radio" name="role" id="{{ role.name }}" value="{{ role.name }}" {{ loop.index == 2 ? 'checked' }}>
                                 <label class="custom-control-label" for="{{ role.name }}">{{ role.name|capitalize }}</label>
                             </div>
                             {% endfor %}

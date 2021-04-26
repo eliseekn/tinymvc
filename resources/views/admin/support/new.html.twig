@@ -30,6 +30,11 @@
                         <legend class="col-form-label col-sm-2 pt-0">{{ __('priority') }}</legend>
                         <div class="col-sm-10">
                             <div class="custom-control custom-radio custom-control-inline">
+                                <input class="custom-control-input" type="radio" name="priority" id="critical" value="critical">
+                                <label class="custom-control-label" for="critical">{{ __('critical') }}</label>
+                            </div>
+
+                            <div class="custom-control custom-radio custom-control-inline">
                                 <input class="custom-control-input" type="radio" name="priority" id="high" value="high">
                                 <label class="custom-control-label" for="high">{{ __('high') }}</label>
                             </div>

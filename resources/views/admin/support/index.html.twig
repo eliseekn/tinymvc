@@ -8,8 +8,15 @@
 	<metrics-card>
 		<metrics-card-item 
             title="{{ __('total') }}" 
-            icon="fa fa-headset fa-2x" 
+            icon="fa fa-comments fa-2x" 
             data="{{ data.getTotalItems() }}" 
+            columns="4">
+        </metrics-card-item>
+
+		<metrics-card-item 
+            title="{{ __('open') }}" 
+            icon="fa fa-comment-dots fa-2x" 
+            data="{{ open_tickets }}" 
             columns="4">
         </metrics-card-item>
 	</metrics-card>
@@ -72,7 +79,7 @@
 							</td>
 
 							<td>{{ data.id }}</td>
-							<td><strong>{{ '#' ~ data.ticket_id }} </strong></td>
+							<td>{{ data.ticket_id }}</td>
 							<td>{{ data.object }}</td>
 							
                             <td>
@@ -84,8 +91,10 @@
                             </td>
 
 							<td>
-                                {% if data.priority == 'high' %}
+                                {% if data.priority == 'critical' %}
                                 <span class="badge badge-danger">{{ __(data.priority) }}</span>
+                                {% elseif data.priority == 'high' %}
+                                <span class="badge badge-warning">{{ __(data.priority) }}</span>
                                 {% elseif data.priority == 'normal' %}
                                 <span class="badge badge-primary">{{ __(data.priority) }}</span>
                                 {% else %}

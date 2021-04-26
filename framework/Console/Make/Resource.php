@@ -108,7 +108,7 @@ class Resource extends Command
                 $output->writeln('<info>Routes for "' . $resource . '" created succesfully</info>');
             }
                 
-            $output->writeln('<info>CRUD resources for "' . $resource . '" created succesfully</info>');
+            $output->writeln('<info>Resources for "' . $resource . '" created succesfully</info>');
         }
 
         return Command::SUCCESS;

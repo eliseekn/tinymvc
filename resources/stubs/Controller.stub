@@ -77,7 +77,7 @@ class CLASSNAME extends Controller
 	 */
     public function create(Request $request): void
 	{
-        $id = $this->repository->insert($request->inputs());
+        $id = $this->repository->insert($request->except('csrf_token'));
 		redirect()->route('RESOURCENAME.read', $id)->go();
 	}
     
@@ -90,7 +90,7 @@ class CLASSNAME extends Controller
 	 */
 	public function update(Request $request, int $id): void
 	{
-        $this->repository->updateIfExists($id, $request->inputs());
+        $this->repository->updateIfExists($id, $request->except('csrf_token'));
 		redirect()->route('RESOURCENAME.read', $id)->go();
 	}
 

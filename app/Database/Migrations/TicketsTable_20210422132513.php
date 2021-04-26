@@ -26,7 +26,7 @@ class TicketsTable_20210422132513
             ->addString('ticket_id')
             ->addString('object')
             ->addBoolean('status')->default(1)
-            ->addEnum('priority', ['"high"', '"normal"', '"low"'])->default('low')
+            ->addEnum('priority', ['"critical"', '"high"', '"normal"', '"low"'])->default('low')
             ->create();
         
         Schema::createTable('ticket_messages')
@@ -45,7 +45,7 @@ class TicketsTable_20210422132513
      */
     public function drop(): void
     {
-        Schema::dropForeign('ticket_messages', 'fk_ticket');
+        Schema::dropForeign('ticket_messages', 'ticket');
         Schema::dropTable('ticket_messages');
         Schema::dropTable($this->table);
     }

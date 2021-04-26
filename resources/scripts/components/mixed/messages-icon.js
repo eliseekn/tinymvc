@@ -28,7 +28,7 @@ class MessagesIcon extends HTMLElement {
     }
 
     getMessages() {
-        fetch(process.env.APP_URL + '/api/messages')
+        fetch(process.env.APP_URL + process.env.APP_FOLDER + '/api/messages')
             .then(response => response.json())
             .then(data => {
                 this.messages = data.messages,
@@ -37,7 +37,7 @@ class MessagesIcon extends HTMLElement {
     }
 
     getTranslations() {
-        fetch(process.env.APP_URL + '/api/translations')
+        fetch(process.env.APP_URL + process.env.APP_FOLDER + '/api/translations')
             .then(response => response.json())
             .then(data => {
                 this.translations = data.translations
@@ -88,7 +88,7 @@ class MessagesIcon extends HTMLElement {
                     <div class="dropdown-divider my-0"></div>
 
                     <div class="px-4 py-2 bg-light text-center">
-                        <a class="text-primary" href="${process.env.APP_URL}/admin/account/messages">
+                        <a class="text-primary" href="${process.env.APP_URL + process.env.APP_FOLDER}/admin/account/messages">
                             ${this.translations.view_all}
                         </a>
                     </div>

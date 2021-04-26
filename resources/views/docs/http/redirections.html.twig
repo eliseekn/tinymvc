@@ -58,7 +58,7 @@ Redirect::back()->withPopup($message)->info()</code></pre>
         <p>Redirect and create cookie :</p>
 
         <div class="card mb-4">
-            <pre class="m-0"><code class="p-3">Redirect::back()->withCookie(string $name, string $value, int $expires = 3600, bool $secure = false, string $domain = '')->only()</code></pre>
+            <pre class="m-0"><code class="p-3">Redirect::back()->withCookie(string $name, string $value, int $expire = 3600, bool $secure = false, string $domain = '')->only()</code></pre>
         </div>
 
         <p class="font-weight-bold">Make redirections inside Controller class</p>

@@ -26,14 +26,14 @@ if (!function_exists('create_cookie')) {
 	 *
 	 * @param  string $name
 	 * @param  string $value
-	 * @param  int $expires in seconds
+	 * @param  int $expire in seconds
 	 * @param  bool $secure
 	 * @param  string $domain
 	 * @return bool
 	 */
-    function create_cookie(string $name, string $value, int $expires = 3600, bool $secure = false, string $domain = ''): bool 
+    function create_cookie(string $name, string $value, int $expire = 3600, bool $secure = false, string $domain = ''): bool 
     {
-        return Cookies::create($name, $value, $expires, $secure, $domain);
+        return Cookies::create($name, $value, $expire, $secure, $domain);
 	}
 }
 

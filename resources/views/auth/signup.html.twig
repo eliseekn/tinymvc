@@ -41,6 +41,17 @@
 			</div>
 
 			<div class="form-group">
+				<label for="address">{{ __('address', true) }}</label>
+				<input type="text" class="form-control {{ errors.address ? 'is-invalid'  }}" name="address" id="address" value="{{ inputs.address ?: '' }}" aria-describedby="address-error">
+
+				{% if errors.address is not empty %}
+					<div id="address-error" class="invalid-feedback">
+						{{ errors.address|raw }}
+					</div>
+				{% endif %}
+			</div>
+
+			<div class="form-group">
 				<label for="company">{{ __('company', true) }}</label>
 				<input type="text" class="form-control {{ errors.company ? 'is-invalid'  }}" name="company" id="company" value="{{ inputs.company ?: '' }}" aria-describedby="company-error">
 
@@ -52,11 +63,17 @@
 			</div>
 
             <div class="form-group">
-                <label for="lang">{{ __('language', true) }}</label>
-
-                <select id="lang" name="lang" class="custom-select">
-                    <option value="en" {{ inputs.lang == 'en' ? 'selected' }}>en</option>
-                    <option value="fr" {{ inputs.lang == 'fr' ? 'selected' }}>fr</option>
+                <label for="country">{{ __('country', true) }}</label>
+                <select id="country" name="country" class="custom-select">
+                    {% for country in countries %}
+                    {% if country is not null %}
+                        {% for key, value in country %}
+                    <option value="{{ key }}">
+                        {{ value }} 
+                    </option>
+                        {% endfor %}
+                    {% endif %}
+                    {% endfor %}
                 </select>
             </div>
 

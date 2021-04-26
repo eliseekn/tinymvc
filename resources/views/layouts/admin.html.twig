@@ -47,8 +47,10 @@
                     </button>
 
                     <div class="list-dropdown-menu {{ in_url('resources') ? '' : 'd-none' }} border-bottom" id="resources-dropdown-menu">
-                        {% if auth('role') == USER_ROLE[0] or auth('role') == USER_ROLE[1] %}
                         <a href="{{ route('users.index') }}" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                            {% if auth('role') == USER_ROLE[2] %}
+                            <i class="fa fa-dot-circle {{ in_url('users') ? 'text-primary' }}"></i> {{ __('users') }}
+                            {% else %}
                             <div class="d-flex justify-content-between align-items-center">
                                 <span><i class="fa fa-dot-circle {{ in_url('users') ? 'text-primary' }}"></i> {{ __('users') }}</span>
                                 <button class="btn ml-auto p-0 px-3 list-group-item-submenu-toggle {{ in_url('users') ? 'text-primary' }}" data-target="users-submenu">
@@ -59,15 +61,59 @@
                             <div id="users-submenu" class="card shadow-sm mt-2 d-none list-group-item-submenu">
                                 <div class="card-body py-2">
                                     <div data-url="{{ route('users.new') }}" class="list-group-item-submenu-item">
-                                        <i class="fa fa-plus"></i> Create new
+                                        <i class="fa fa-plus"></i> {{ __('create_new') }}
                                     </div>
                                 </div>
                             </div>
+                            {% endif %}
                         </a>
-                        {% endif %}
 
                         <a href="{{ route('medias.index') }}" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                             <i class="fa fa-dot-circle {{ in_url('medias') ? 'text-primary' }}"></i> {{ __('medias') }}
+                        </a>
+                            
+                        {% if auth('role') != USER_ROLE[2] %}
+                        <a href="{{ route('invoices.index', auth('role') == USER_ROLE[0] ? null : auth('id')) }}" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                            {% if auth('role') == USER_ROLE[1] %}
+                            <i class="fa fa-dot-circle {{ in_url('invoices') ? 'text-primary' }}"></i> {{ __('invoices') }}
+                            {% else %}
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span><i class="fa fa-dot-circle {{ in_url('invoices') ? 'text-primary' }}"></i> {{ __('invoices') }}</span>
+                                <button class="btn ml-auto p-0 px-3 list-group-item-submenu-toggle {{ in_url('invoices') ? 'text-primary' }}" data-target="invoices-submenu">
+                                    <i class="fa fa-bars"></i>
+                                </button>
+                            </div>
+
+                            <div id="invoices-submenu" class="card shadow-sm mt-2 d-none list-group-item-submenu">
+                                <div class="card-body py-2">
+                                    <div data-url="{{ route('invoices.new') }}" class="list-group-item-submenu-item">
+                                        <i class="fa fa-plus"></i> {{ __('create_new') }}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </a>
+                        {% endif %}
+
+                        <a href="{{ route('tickets.index', auth('role') == USER_ROLE[0] ? null : auth('id')) }}" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                            {% if auth('role') == USER_ROLE[0] %}
+                            <i class="fa fa-dot-circle {{ in_url('tickets') ? 'text-primary' }}"></i> {{ __('support') }}
+                            {% else %}
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span><i class="fa fa-dot-circle {{ in_url('tickets') ? 'text-primary' }}"></i> {{ __('support') }}</span>
+                                <button class="btn ml-auto p-0 px-3 list-group-item-submenu-toggle {{ in_url('tickets') ? 'text-primary' }}" data-target="tickets-submenu">
+                                    <i class="fa fa-bars"></i>
+                                </button>
+                            </div>
+
+                            <div id="tickets-submenu" class="card shadow-sm mt-2 d-none list-group-item-submenu">
+                                <div class="card-body py-2">
+                                    <div data-url="{{ route('tickets.new') }}" class="list-group-item-submenu-item">
+                                        <i class="fa fa-plus"></i> {{ __('open_ticket') }}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
                         </a>
                     </div>
     
@@ -85,26 +131,6 @@
                         </a>
                         <a href="{{ route('messages.index') }}" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                             <i class="fa fa-envelope {{ in_url('messages') ? 'text-primary' }}"></i> {{ __('messages') }}
-                        </a>
-                        <a href="{{ route('tickets.index', auth('role') == USER_ROLE[0] ? null : auth('id')) }}" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
-                            {% if auth('role') == USER_ROLE[0] %}
-                            <i class="fa fa-headset {{ in_url('tickets') ? 'text-primary' }}"></i> {{ __('support') }}
-                            {% else %}
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span><i class="fa fa-headset {{ in_url('tickets') ? 'text-primary' }}"></i> {{ __('support') }}</span>
-                                <button class="btn ml-auto p-0 px-3 list-group-item-submenu-toggle {{ in_url('tickets') ? 'text-primary' }}" data-target="tickets-submenu">
-                                    <i class="fa fa-bars"></i>
-                                </button>
-                            </div>
-
-                            <div id="tickets-submenu" class="card shadow-sm mt-2 d-none list-group-item-submenu">
-                                <div class="card-body py-2">
-                                    <div data-url="{{ route('tickets.new') }}" class="list-group-item-submenu-item">
-                                        <i class="fa fa-plus"></i> Open ticket
-                                    </div>
-                                </div>
-                            </div>
-                            {% endif %}
                         </a>
                         <a href="{{ route('activities.index') }}" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                             <i class="fa fa-user-clock {{ in_url('activities') ? 'text-primary' }}"></i> {{ __('activities') }}

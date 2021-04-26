@@ -255,7 +255,7 @@ class Request
      */
     public function filled(string $item): bool
     {
-        return $this->has($item) && !empty($this->{$item});
+        return $this->has($item) && (!empty($this->{$item}) || !is_null($this->{$item}));
     }
 
     /**

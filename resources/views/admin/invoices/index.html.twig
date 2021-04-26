@@ -1,52 +1,67 @@
 {% extends "layouts/admin.html.twig" %}
 
 {% block title %}
-	{{ __('users') ~ ' | Administration' }}
+	{{ __('invoices') ~ ' | Administration' }}
 {% endblock %}
 
 {% block body %}
     <metrics-card>
         <metrics-card-item 
             title="{{ __('total') }}" 
-            icon="fa fa-users fa-2x" 
+            icon="fa fa-file-invoice fa-2x" 
             data="{{ data.getTotalItems() }}"
-            columns="4">
+            columns="3">
         </metrics-card-item>
 
         <metrics-card-item 
-            title="{{ __('active') }}" 
-            icon="fa fa-user-check fa-2x" 
-            data="{{ active_users }}"
-            columns="4">
+            title="{{ __('pending') }}" 
+            icon="fa fa-file-medical-alt fa-2x" 
+            data="{{ pending_invoices }}"
+            columns="3">
+        </metrics-card-item>
+
+        <metrics-card-item 
+            title="{{ __('paid') }}" 
+            icon="fa fa-file-invoice-dollar fa-2x" 
+            data="{{ paid_invoices }}"
+            columns="3">
+        </metrics-card-item>
+
+        <metrics-card-item 
+            title="{{ __('expired') }}" 
+            icon="fa fa-file-excel fa-2x" 
+            data="{{ expired_invoices }}"
+            columns="3">
         </metrics-card-item>
     </metrics-card>
 
     <div class="card shadow-sm">
         <div class="card-header">
             <div class="d-flex flex-lg-row flex-column align-items-lg-center justify-content-lg-between">
-                <span>{{ __('users') }}</span>
+                <span>{{ __('invoices') }}</span>
 
-                <div class="d-flex flex-lg-row flex-column">
+                <div class="d-flex flex-lg-row flex-column mt-lg-0 mt-2">
                     <span class="mr-md-2">
                         <input type="search" class="form-control" id="filter" placeholder="{{ __('search') }}">
                     </span>
 
-                    {% if auth('role') == USER_ROLE[0] or auth('role') == USER_ROLE[1] %}
                     <span class="mt-lg-0 mt-2">
-                        <a href="{{ route('users.new') }}" class="btn btn-outline-dark">
+                        {% if auth('role') == USER_ROLE[0] %}
+                        <a href="{{ route('invoices.new') }}" class="btn btn-outline-dark">
                             {{ __('new') }}
                         </a>
+                        {% endif %}
                         
-                        <export-modal action="{{ route('users.export') }}">
+                        <export-modal action="{{ route('invoices.export') }}">
                             <button class="btn btn-outline-dark mx-2">{{ __('export') }}</button>
                         </export-modal>
 
-                        
-                        <button class="btn btn-danger" id="bulk-delete" data-url="{{ route('users.delete') }}">
-                            {{ __('bulk_delete') }}
+                        {% if auth('role') == USER_ROLE[0] %}
+                        <button class="btn btn-danger" id="bulk-delete" data-url="{{ route('invoices.delete') }}">
+                            {{ __('delete') }}
                         </button>
+                        {% endif %}
                     </span>
-                    {% endif %}
                 </div>
             </div>
         </div>
@@ -64,14 +79,11 @@
                             </th>
 
                             <th scope="col"><i class="fa fa-sort"></i> ID</th>
-                            <th scope="col"><i class="fa fa-sort"></i> {{ __('name') }}</th>
-                            <th scope="col"><i class="fa fa-sort"></i> {{ __('email') }}</th>
-                            <th scope="col"><i class="fa fa-sort"></i> {{ __('phone') }}</th>
-                            <th scope="col"><i class="fa fa-sort"></i> {{ __('company') }}</th>
-                            <th scope="col"><i class="fa fa-sort"></i> {{ __('role') }}</th>
+                            <th scope="col"><i class="fa fa-sort"></i> {{ __('invoice') }}</th>
+                            <th scope="col"><i class="fa fa-sort"></i> {{ __('customer') }}</th>
                             <th scope="col"><i class="fa fa-sort"></i> {{ __('status') }}</th>
                             <th scope="col"><i class="fa fa-sort"></i> {{ __('created_at') }}</th>
-                            <th scope="col"><i class="fa fa-sort"></i> {{ __('updated_at') }}</th>
+                            <th scope="col"><i class="fa fa-sort"></i> {{ __('expires_at') }}</th>
                             <th scope="col"></th>
                         </tr>
                     </thead>
@@ -87,38 +99,33 @@
                             </td>
 
                             <td>{{ data.id }}</td>
-
-                            <td>
-                                <avatar-icon name="{{ data.name }}"></avatar-icon>
-                            </td>
-
-                            <td>{{ data.email }}</td>
-                            <td>{{ data.phone }}</td>
+                            <td>{{ data.invoice_id }}</td>
                             <td>{{ data.company }}</td>
-                            <td>{{ data.role }}</td>
 
-                            <td>
-                                {% if data.active %}
-                                <span class="badge badge-success">{{ __('active') }}</span>
+							<td>
+                                {% if data.status == 'paid' %}
+                                <span class="badge badge-success">{{ __(data.status) }}</span>
+                                {% elseif data.status == 'pending' %}
+                                <span class="badge badge-secondary">{{ __(data.status) }}</span>
                                 {% else %}
-                                <span class="badge badge-danger">{{ __('inactive') }}</span>
+                                <span class="badge badge-danger">{{ __(data.status) }}</span>
                                 {% endif %}
                             </td>
 
                             <td>{{ date_helper(data.created_at) }}</td>
-                            <td>{{ data.updated_at != data.created_at ? date_helper(data.updated_at) : '-' }}</td>
+                            <td>{{ data.expire is empty ? '-' : date_helper(data.expire) }}</td>
 
                             <td>
-                                {% if auth('role') == USER_ROLE[0] or auth('role') == USER_ROLE[1] %}
-                                <a class="btn text-dark p-1" href="{{ route('users.read', data.id) }}" title="{{ __('details') }}">
+                                <a class="btn text-dark p-1" href="{{ route('invoices.read', data.id) }}" title="{{ __('details') }}">
                                     <i class="fa fa-eye"></i>
                                 </a>
 
-                                <a class="btn text-dark p-1" href="{{ route('users.edit', data.id) }}" title="{{ __('edit') }}">
+                                {% if auth('role') == USER_ROLE[0] %}
+                                <a class="btn text-dark p-1" href="{{ route('invoices.edit', data.id) }}" title="{{ __('edit') }}">
                                     <i class="fa fa-edit"></i>
                                 </a>
 
-                                <delete-item action="{{ route('users.delete', data.id) }}">
+                                <delete-item action="{{ route('invoices.delete', data.id) }}">
                                     <a class="btn text-danger p-1" title="{{ __('delete') }}">
                                         <i class="fa fa-trash-alt"></i>
                                     </a>

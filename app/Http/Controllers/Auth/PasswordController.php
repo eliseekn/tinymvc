@@ -50,7 +50,7 @@ class PasswordController extends Controller
 			$this->response()->json(__('invalid_password_reset_link', true));
 		}
 
-		if ($reset_token->expires < Carbon::now()->toDateTimeString()) {
+		if ($reset_token->expire < Carbon::now()->toDateTimeString()) {
 			$this->response()->json(__('expired_password_reset_link', true));
 		}
 

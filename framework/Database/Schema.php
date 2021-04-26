@@ -102,7 +102,7 @@ class Schema
      */
     public static function dropForeign(string $table, string $key): void
     {
-        QueryBuilder::dropForeign($table, $key)->execute();
+        QueryBuilder::dropForeign($table, 'fk_' . $key)->execute();
     }
 
     /**
@@ -432,11 +432,10 @@ class Schema
      */
 	public function addForeignKey(string $column, ?string $name = null): self
 	{
-        if (is_null($name)) {
-            $name = 'fk_' . $column;
-        }
+        $key = 'fk_';
+        $key .= is_null($name) ? $column : $name;
 
-		self::$qb->foreignKey($name, $column);
+		self::$qb->foreignKey($key, $column);
         return $this;
 	}
 	

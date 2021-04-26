@@ -55,6 +55,7 @@ class Validator
         $error_messages = empty($messages) ? static::$messages : $messages;
         static::$inputs = $inputs;
         static::$errors = GUMP::is_valid(static::$inputs, $validators, $error_messages);
+
         return new self();
     }
     

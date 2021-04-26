@@ -24,6 +24,7 @@ import DonutChart from './components/charts/donut-chart'
 import BarsChart from './components/charts/bars-chart'
 import MetricsCard from './components/cards/metrics-card'
 import MetricsCardItem from './components/cards/metrics-card-item'
+import ProductModal from './components/modal/product-modal'
 
 window.customElements.define('upload-modal', UploadModal)
 window.customElements.define('export-modal', ExportModal)
@@ -45,6 +46,7 @@ window.customElements.define('metrics-card', MetricsCard)
 window.customElements.define('metrics-card-item', MetricsCardItem)
 window.customElements.define('notifications-icon', NotificationsIcon)
 window.customElements.define('messages-icon', MessagesIcon)
+window.customElements.define('product-modal', ProductModal)
 
 window.addEventListener('beforeunload', () => {
     document.body.className = 'page-loading'

@@ -7,6 +7,7 @@
  */
 
 use App\Helpers\Auth;
+use App\Helpers\Countries;
 use Framework\Routing\View;
 use Framework\Routing\Route;
 use App\Http\Controllers\Auth\AuthController;
@@ -28,7 +29,8 @@ Route::groupMiddlewares(['remember'], function () {
 
     Route::get('signup', function () {
         if (!Auth::check()) {
-            View::render('auth.signup');
+            $countries = Countries::all();
+            View::render('auth.signup', compact('countries'));
         }
 
         Auth::redirect();

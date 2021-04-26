@@ -3,7 +3,6 @@
 namespace App\Database\Migrations;
 
 use Framework\Database\Schema;
-use App\Database\Repositories\Roles;
 
 class UsersTable_20210403034738
 {         
@@ -26,13 +25,13 @@ class UsersTable_20210403034738
             ->addBigInt('parent_id')->setNull()
             ->addString('name')
             ->addString('email')->unique()
-            ->addString('company')->unique()
+            ->addString('address')
+            ->addString('company')
             ->addString('phone')->unique()
             ->addString('password')
             ->addString('role')
             ->addString('lang')->default('en')
             ->addString('country')->default('US')
-            ->addString('currency')->default('USD')
             ->addString('timezone')->default('UTC')
             ->addBoolean('dark')->default(1)
             ->addBoolean('active')->default(0)

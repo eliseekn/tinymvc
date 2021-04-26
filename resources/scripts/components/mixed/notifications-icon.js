@@ -28,7 +28,7 @@ class NotificationsIcon extends HTMLElement {
     }
 
     getNotifications() {
-        fetch(process.env.APP_URL + '/api/notifications')
+        fetch(process.env.APP_URL + process.env.APP_FOLDER + '/api/notifications')
             .then(response => response.json())
             .then(data => {
                 this.notifications = data.notifications,
@@ -37,7 +37,7 @@ class NotificationsIcon extends HTMLElement {
     }
 
     getTranslations() {
-        fetch(process.env.APP_URL + '/api/translations')
+        fetch(process.env.APP_URL + process.env.APP_FOLDER + '/api/translations')
             .then(response => response.json())
             .then(data => {
                 this.translations = data.translations
@@ -85,7 +85,7 @@ class NotificationsIcon extends HTMLElement {
                     <div class="dropdown-divider my-0"></div>
 
                     <div class="px-4 py-2 bg-light text-center">
-                        <a class="text-primary" href="${process.env.APP_URL}/admin/account/notifications">
+                        <a class="text-primary" href="${process.env.APP_URL + process.env.APP_FOLDER}/admin/account/notifications">
                             ${this.translations.view_all}
                         </a>
                     </div>

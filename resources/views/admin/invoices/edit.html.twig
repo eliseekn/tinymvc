@@ -1,0 +1,115 @@
+{% extends "layouts/admin.html.twig" %}
+
+{% block title %}
+	{{ __('edit') ~ ' | Administration' }}
+{% endblock %}
+
+{% block body %}
+    <div class="card shadow-sm">
+        <div class="card-header">{{ __('edit') }}</div>
+
+        <form method="post" action="{{ route('invoices.update', data.id) }}">
+            {{ csrf_token_input()|raw }}
+            {{ method_input('patch')|raw }}
+
+            <div class="card-body">
+                <div class="form-group row">
+                    <label for="company" class="col-sm-2 col-form-label">{{ __('company') }}</label>
+                    <div class="col-sm-10">
+                        <select id="company" name="company" class="custom-select">
+                            {% for user in users %}
+                            <option value="{{ user.id }} {{ data.company == user.id ? 'selected' }}">
+                                {{ user.company }} 
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="products" class="col-sm-2 col-form-label">{{ __('products') }}</label>
+                    <div class="col-sm-10">
+                        <div class="d-flex align-items-start">
+                            <textarea rows="6" resize="none" class="form-control {{ errors.products ? 'is-invalid' }}" aria-describedby="products-error" name="products" id="products">{{ inputs.products ?: data.products }}</textarea>
+
+                            <div class="d-flex align-items-center ml-3">
+                                <product-modal>
+                                    <button class="btn btn-dark mr-2" type="button" title="{{ __('new') }}">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </product-modal>
+
+                                <button class="btn btn-danger" id="remove-products" type="button" title="{{ __('clear') }}">
+                                    <i class="fa fa-broom"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        {% if errors.products is not empty %}
+                        <div id="products-error" class="invalid-feedback d-block">
+                            {{ errors.products|raw }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="tax" class="col-sm-2 col-form-label">{{ __('tax') }} (%)</label>
+                    <div class="col-sm-10">
+                        <input type="number" class="form-control" value="{{ inputs.tax ?: data.tax }}" name="tax" id="tax">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="currency" class="col-sm-2 col-form-label">{{ __('currency') }}</label>
+                    <div class="col-sm-10">
+                        <currency-picker selected="{{ data.currency }}"></currency-picker>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="expire" class="col-sm-2 col-form-label">{{ __('expires_at') }}</label>
+                    <div class="col-sm-10">
+                        <input type="date" class="form-control" value="{{ inputs.expire ?: data.expire }}" name="expire" id="expire">
+                    </div>
+                </div>
+
+                <fieldset class="form-group">
+                    <div class="row">
+                        <legend class="col-form-label col-sm-2 pt-0">{{ __('status') }}</legend>
+                        <div class="col-sm-10">
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input class="custom-control-input" type="radio" name="status" id="paid" value="paid" {{ data.status == 'paid' ? 'checked' }}>
+                                <label class="custom-control-label" for="paid">{{ __('paid') }}</label>
+                            </div>
+
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input class="custom-control-input" type="radio" name="status" id="expires" value="expires" {{ data.status == 'expires' ? 'checked' }}>
+                                <label class="custom-control-label" for="expires">{{ __('expired') }}</label>
+                            </div>
+
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input class="custom-control-input" type="radio" name="status" id="pending" value="pending" {{ data.status == 'pending' ? 'checked' }}>
+                                <label class="custom-control-label" for="pending">{{ __('pending') }}</label>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="card-footer">
+                <button type="submit" class="btn btn-outline-dark loading">{{ __('update') }}</button>
+                <button type="reset" class="btn btn-outline-dark mx-2">{{ __('reset') }}</button>
+                <a href="{{ route('invoices.index') }}" class="btn btn-outline-dark">{{ __('cancel') }}</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        document.querySelector('#remove-products').addEventListener('click', event => {
+            document.querySelector('#products').value = ''
+        })
+    </script>
+{% endblock %}

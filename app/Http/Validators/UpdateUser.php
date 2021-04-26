@@ -17,7 +17,8 @@ class UpdateUser extends Validator
         'name' => 'required|max_len,255',
         'email' => 'required|valid_email|max_len,255|unique,users',
         'phone' => 'required|numeric|max_len,255|unique,users',
-        'company' => 'required|max_len,255|unique,users'
+        'company' => 'max_len,255',
+        'address' => 'max_len,255'
     ];
 
     /**
@@ -38,10 +39,12 @@ class UpdateUser extends Validator
         GUMP::add_validator('unique', function($field, array $input, array $params, $value) use ($id) {
             $data = (new Repository($params[0]))->findSingle($id);
 
-            if ($data->$field !== $value) {
+            if ($data->{$field} !== $value) {
                 $data = (new Repository($params[0]))->findBy($field, $value);
                 return !$data->exists();
             }
+
+            return true;
         }, "Record of {field} field already exists");
 
         return new self();

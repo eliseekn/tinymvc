@@ -40,12 +40,14 @@
                 </div>
 
                 <div class="card-body">
+                    {% set data = [] %}  
+
+                    {% if active_users > 0 %}
                     {% set data = [ 
                         {'label': 'Active', 'value': active_users}, 
                         {'label': 'Inactive', 'value': total_users - active_users}
                     ] %}
-
-                    {% if active_users == 0 %} {% set data = [] %} {% endif %}
+                    {% endif %}
 
                     <donut-chart el="users-donut" data={{ data|json_encode() }}></donut-chart>
                 </div>

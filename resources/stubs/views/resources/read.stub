@@ -1,7 +1,7 @@
 {% extends "layouts/admin.html.twig" %}
 
 {% block title %}
-	{{ __('RESOURCENAME') ~ ' | Administration' }}
+	{{ __('details') ~ ' | Administration' }}
 {% endblock %}
 
 {% block body %}
@@ -34,7 +34,7 @@
                 {{ __('edit') }}
             </a>
 
-            <a href="{{ route('RESOURCENAME.new') }}" class="btn btn-outline-dark ml-2">
+            <a href="{{ route('RESOURCENAME.new') }}" class="btn btn-outline-dark mx-2">
                 {{ __('new') }}
             </a>
 

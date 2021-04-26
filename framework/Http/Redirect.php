@@ -105,14 +105,14 @@ class Redirect
      *
      * @param  string $name
      * @param  string $value
-     * @param  int $expires in seconds
+     * @param  int $expire in seconds
      * @param  bool $secure
      * @param  string $domain
      * @return \Framework\Http\Redirect
      */
-    public function withCookie(string $name, string $value, int $expires = 3600, bool $secure = false, string $domain = ''): self
+    public function withCookie(string $name, string $value, int $expire = 3600, bool $secure = false, string $domain = ''): self
     {
-        Cookies::create($name, $value, $expires, $secure, $domain);
+        Cookies::create($name, $value, $expire, $secure, $domain);
         return $this;
     }
     

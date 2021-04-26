@@ -70,9 +70,10 @@ class Migrations extends Command
             }
 
             else {
-                foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
-                    $table = get_file_name($file);
-                    $this->rollup($output, $table);
+                $tables = QueryBuilder::table('migrations')->select('*')->fetchAll();
+
+                foreach ($tables as $table) {
+                    $this->rollup($output, $table->migration);
                 }
             }
 

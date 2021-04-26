@@ -50,15 +50,15 @@ class Tokens extends Repository
      *
      * @param  string $email
      * @param  string $token
-     * @param  mixed $expires
+     * @param  mixed $expire
      * @return int
      */
-    public function store(string $email, string $token, $expires = null): int
+    public function store(string $email, string $token, $expire = null): int
     {
         return $this->insert([
             'email' => $email,
             'token' => $token,
-            'expires' => $expires
+            'expire' => $expire
         ]);
     }
     

@@ -10,6 +10,7 @@ use Framework\Routing\Route;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Admin\MediasController;
 use App\Http\Controllers\Admin\TicketsController;
+use App\Http\Controllers\Admin\InvoicesController;
 use App\Http\Controllers\Admin\MessagesController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -37,14 +38,19 @@ Route::groupPrefix('admin', function () {
         Route::get('resources/medias/{id}/read', [MediasController::class, 'read'])->name('medias.read')->where(['id' => 'num']);
         Route::get('resources/medias/{id}/download', [MediasController::class, 'download'])->name('medias.download')->where(['id' => 'num']);
 
+        Route::get('resources/tickets/new', [TicketsController::class, 'new'])->name('tickets.new');
+        Route::get('resources/?{user_id}?/tickets', [TicketsController::class, 'index'])->name('tickets.index')->where(['user_id' => 'num']);
+        Route::get('resources/tickets/{id}/read', [TicketsController::class, 'read'])->name('tickets.read')->where(['id' => 'num']);
+        
+        Route::get('resources/invoices', [InvoicesController::class, 'index'])->name('invoices.index');
+        Route::get('resources/invoices/new', [InvoicesController::class, 'new'])->name('invoices.new');
+        Route::get('resources/invoices/{id}/edit', [InvoicesController::class, 'edit'])->name('invoices.edit')->where(['id' => 'num']);
+        Route::get('resources/invoices/{id}/read', [InvoicesController::class, 'read'])->name('invoices.read')->where(['id' => 'num']);
+
         Route::get('account/messages', [MessagesController::class, 'index'])->name('messages.index');
         Route::get('account/notifications', [NotificationsController::class, 'index'])->name('notifications.index');
         Route::get('account/{id}/settings', [SettingsController::class, 'index'])->name('settings.index')->where(['id' => 'num']);
         Route::get('account/activities', [ActivitiesController::class, 'index'])->name('activities.index');
-
-        Route::get('account/tickets/new', [TicketsController::class, 'new'])->name('tickets.new');
-        Route::get('account/?{user_id}?/tickets', [TicketsController::class, 'index'])->name('tickets.index')->where(['user_id' => 'num']);
-        Route::get('account/tickets/{id}/read', [TicketsController::class, 'read'])->name('tickets.read')->where(['id' => 'num']);
     });
 
     Route::groupMiddlewares(['remember', 'auth', 'dashboard', 'csrf', 'sanitize'], function () {
@@ -56,7 +62,18 @@ Route::groupPrefix('admin', function () {
         Route::delete('resources/medias/?{id}?/delete', [MediasController::class, 'delete'])->name('medias.delete')->where(['id' => 'num']);
         Route::patch('resources/medias/?{id}?/update', [MediasController::class, 'update'])->name('medias.update')->where(['id' => 'num']);
         Route::post('resources/medias/create', [MediasController::class, 'create'])->name('medias.create');
+
+        Route::delete('resources/tickets/?{id}?/delete', [TicketsController::class, 'delete'])->name('tickets.delete')->where(['id' => 'num']);
+        Route::patch('resources/tickets/?{id}?/{status}/update', [TicketsController::class, 'update'])->name('tickets.update')->where(['id' => 'num', 'status' => 'num']);
+        Route::post('resources/tickets/create', [TicketsController::class, 'create'])->name('tickets.create');
+        Route::post('resources/tickets/messages/create', [TicketsController::class, 'createMessage'])->name('tickets.messages.create');
     
+        Route::delete('resources/invoices/?{id}?/delete', [InvoicesController::class, 'delete'])->name('invoices.delete')->where(['id' => 'num']);
+        Route::patch('resources/invoices/?{id}?/update', [InvoicesController::class, 'update'])->name('invoices.update')->where(['id' => 'num']);
+        Route::post('resources/invoices/create', [InvoicesController::class, 'create'])->name('invoices.create');
+        Route::post('resources/invoices/export', [InvoicesController::class, 'export'])->name('invoices.export');
+        Route::post('resources/invoices/{id}/download', [InvoicesController::class, 'download'])->name('invoices.download')->where(['id' => 'num']);
+        
         Route::delete('account/messages/?{id}?/delete', [MessagesController::class, 'delete'])->name('messages.delete')->where(['id' => 'num']);
         Route::patch('account/messages/?{id}?/update', [MessagesController::class, 'update'])->name('messages.update')->where(['id' => 'num']);
         Route::post('account/messages/create', [MessagesController::class, 'create'])->name('messages.create');
@@ -71,11 +88,5 @@ Route::groupPrefix('admin', function () {
         
         Route::delete('account/activities/?{id}?/delete', [ActivitiesController::class, 'delete'])->name('activities.delete')->where(['id' => 'num']);
         Route::post('account/activities/export', [ActivitiesController::class, 'create'])->name('activities.export');
-
-        Route::delete('account/tickets/?{id}?/delete', [TicketsController::class, 'delete'])->name('tickets.delete')->where(['id' => 'num']);
-        Route::patch('account/tickets/?{id}?/{status}/update', [TicketsController::class, 'update'])->name('tickets.update')
-            ->where(['id' => 'num', 'status' => 'num']);
-        Route::post('account/tickets/create', [TicketsController::class, 'create'])->name('tickets.create');
-        Route::post('account/tickets/messages/create', [TicketsController::class, 'createMessage'])->name('tickets.messages.create');
     });
 })->register();

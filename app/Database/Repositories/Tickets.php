@@ -74,5 +74,28 @@ class Tickets extends Repository
             ? $this->deleteBy('id', 'in', explode(',', $request->items))
             : $this->deleteIfExists($id);
     }
+    
+    /**
+     * retrieves open tickets count
+     *
+     * @param  int|null $user_id
+     * @return int
+     */
+    public function openCount(?int $user_id = null): int
+    {
+        return $this->count()
+            ->subQuery(function ($query) use ($user_id) {
+                if (!is_null($user_id)) {
+                    $query->join('users', 'tickets.user_id', '=', 'users.id')
+                        ->where('user_id', $user_id)
+                        ->where('status', 1);
+                }
 
+                else {
+                    $query->where('status', 1);
+                }
+            })
+            ->single()
+            ->value;
+    }
 }

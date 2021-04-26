@@ -18,7 +18,7 @@
         <div class="card-header">
             <div class="d-flex flex-lg-row flex-column align-items-lg-center justify-content-lg-between">
                 <span>
-                    <span class="mr-2">{{ __('ticket') }}: #{{ data.ticket_id }} - {{ data.object }}</span> 
+                    <span class="mr-2">{{ __('ticket') }}: {{ data.ticket_id }} - {{ data.object }}</span> 
 
                     {% if data.status %}
                     <span class="badge badge-success">{{ __('open') }}</span>

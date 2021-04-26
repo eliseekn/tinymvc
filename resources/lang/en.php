@@ -22,6 +22,7 @@
     'signup_failed' => 'Sign up failed',
     'welcome' => 'Welcome',
     'welcome_back' => 'Welcome back',
+    'address' => 'Address',
 
     //sidebar
     'dashboard' => 'Dashboard',
@@ -43,6 +44,8 @@
     'post' => 'Post',
     'medias' => 'Medias',
     'media' => 'Media',
+    'invoice' => 'Invoice',
+    'invoices' => 'Invoices',
 
     //navabar
     'mark_as_read' => 'Mark as read',
@@ -101,6 +104,7 @@
     'description' => 'Description',
     'created_at' => 'Created at',
     'updated_at' => 'Updated at',
+    'expires_at' => 'Expires at',
     'details' => 'Details',
     'edit' => 'Edit',
     'update' => 'Update',
@@ -137,6 +141,8 @@
     'select_all' => 'Select all',
     'featured_media' => 'Featured media',
     'add' => 'Add',
+    'clear' => 'Clear',
+    'add_product' => 'Add product',
     'add_files' => 'Add files',
     'ticket' => 'Ticket',
     'tickets' => 'Tickets',
@@ -149,6 +155,18 @@
     'closed' => 'Closed',
     'author' => 'Author',
     'new_message' => 'New message',
+    'customer' => 'Customer',
+    'paid' => 'Paid',
+    'pending' => 'Pending',
+    'expired' => 'Expired',
+    'product' => 'Product',
+    'products' => 'Products',
+    'price' => 'Price',
+    'quantity' => 'Quantity',
+    'tax' => 'Tax',
+    'preview' => 'Preview',
+    'sub_total' => 'Subtotal',
+    'critical' => 'Critical',
 
     //pagination
     'previous' => 'Previous',
@@ -226,6 +244,10 @@
     'ticket_closed' => 'Ticket closed',
     'ticket_deleted' => 'Ticket deleted',
     'tickets_deleted' => 'Tickets deleted',
+    'open_ticket' => 'Open ticket',
+    'create_new' => 'Create new',
+    'new_invoice' => 'New invoice',
+    'invoice_updated' => 'Invoice updated',
 
     //misc
     'ago' => ' ago',

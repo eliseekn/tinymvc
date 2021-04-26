@@ -4,14 +4,14 @@ namespace App\Database\Migrations;
 
 use Framework\Database\Schema;
 
-class TokensTable_20210403034738
+class InvoicesTable_20210425224054
 {         
     /**
      * name of table
      *
      * @var string
      */
-    protected $table = 'tokens';
+    protected $table = 'invoices';
 
     /**
      * create table
@@ -22,9 +22,13 @@ class TokensTable_20210403034738
     {
         Schema::createTable($this->table)
             ->addBigInt('id')->primaryKey()
-            ->addString('email')->unique()
-            ->addString('token')->unique()
+            ->addBigInt('user_id')
+            ->addString('invoice_id')
+            ->addLongText('products')
+            ->addString('currency')
+            ->addDecimal('tax')->setNull()
             ->addTimestamp('expire')->setNull()
+            ->addEnum('status', ['"paid"', '"pending"', '"expired"'])->default('pending')
             ->create();
     }
     

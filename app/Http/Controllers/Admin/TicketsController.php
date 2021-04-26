@@ -39,7 +39,8 @@ class TicketsController extends Controller
     public function index(?int $user_id = null): void
 	{
         $data = $this->tickets->findAllByUserPaginate($user_id);
-		$this->render('admin.account.support.index', compact('data'));
+        $open_tickets = $this->tickets->openCount($user_id);
+		$this->render('admin.support.index', compact('data', 'open_tickets'));
 	}
 
     /**
@@ -49,7 +50,7 @@ class TicketsController extends Controller
 	 */
     public function new(): void
 	{
-		$this->render('admin.account.support.new');
+		$this->render('admin.support.new');
 	}
 	
 	/**
@@ -63,7 +64,7 @@ class TicketsController extends Controller
 	{
         $data = $this->tickets->findSingle($id);
         $messages = $messages->findAllByTicketPaginate($id);
-        $this->render('admin.account.support.read', compact('data', 'messages'));
+        $this->render('admin.support.read', compact('data', 'messages'));
 	}
 
 	/**

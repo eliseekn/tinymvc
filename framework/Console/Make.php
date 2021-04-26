@@ -61,16 +61,19 @@ class Make
     }
     
     /**
-     * generate resource name and folder
+     * generateResource
      *
-     * @param  string $name
+     * @param  string $resource
      * @return array
      */
-    public static function generateResource(string $name): array
+    public static function generateResource(string $resource): array
     {
-        $resource_name = strtolower($name);
-        $resource_folder = 'admin' . DIRECTORY_SEPARATOR . $resource_name;
-        return [$resource_name, $resource_folder];
+        if ($resource[-1] !== 's') {
+            $resource .= 's';
+        }
+
+        $resource_folder = 'admin' . DIRECTORY_SEPARATOR .  $resource;
+        return [$resource, $resource_folder];
     }
     
     /**
@@ -239,13 +242,11 @@ class Make
      */
     public static function createViews(string $resource): bool
     {
-        list($name, $resource_folder) = self::generateResource($resource);
+        list($resource_name, $resource_folder) = self::generateResource($resource);
 
-        $path = self::stubs()->add('views' . DIRECTORY_SEPARATOR . 'resources');
-
-        foreach($path->getFiles() as $file) {
-            $data = $path->readFile($file);
-            $data = str_replace('RESOURCENAME', $name, $data);
+        foreach(self::stubs()->add('views' . DIRECTORY_SEPARATOR . 'resources')->getFiles() as $file) {
+            $data = self::stubs()->add('views' . DIRECTORY_SEPARATOR . 'resources')->readFile($file);
+            $data = str_replace('RESOURCENAME', $resource_name, $data);
             $file = str_replace('stub', 'html.twig', $file);
 
             if (!Storage::path(config('storage.views'))->add($resource_folder)->writeFile($file, $data)) {

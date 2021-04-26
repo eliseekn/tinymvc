@@ -10,6 +10,8 @@ use Framework\Routing\Controller;
 use App\Http\Validators\UpdateUser;
 use App\Database\Repositories\Roles;
 use App\Database\Repositories\Users;
+use App\Helpers\Auth;
+use App\Helpers\Countries;
 use App\Http\Validators\RegisterUser;
 
 class UsersController extends Controller
@@ -51,7 +53,8 @@ class UsersController extends Controller
 	public function new(Roles $roles): void
 	{
         $roles = $roles->selectAll();
-		$this->render('admin.users.new', compact('roles'));
+        $countries = Countries::all();
+		$this->render('admin.users.new', compact('roles', 'countries'));
 	}
 	
 	/**
@@ -65,7 +68,8 @@ class UsersController extends Controller
 	{
         $data = $this->users->findSingle($id);
         $roles = $roles->selectAll();
-        $this->render('admin.users.edit', compact('data', 'roles'));
+        $countries = Countries::all();
+        $this->render('admin.users.edit', compact('data', 'roles', 'countries'));
 	}
 	
 	/**

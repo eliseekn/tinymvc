@@ -18,15 +18,15 @@ class Cookies
      *
      * @param  string $name
      * @param  string $value
-     * @param  int $expires in seconds
+     * @param  int $expire in seconds
      * @param  bool $secure
      * @param  string $domain
      * @return bool
      */
-    public static function create(string $name, string $value, int $expires = 3600, bool $secure = false, string $domain = ''): bool 
+    public static function create(string $name, string $value, int $expire = 3600, bool $secure = false, string $domain = ''): bool 
     {
         $value = config('security.encryption.cookies') ? Encryption::encrypt($value) : $value;
-		return setcookie(config('app.name') . '_' . $name, $value, time() + $expires, '/', $domain, $secure, true);
+		return setcookie(config('app.name') . '_' . $name, $value, time() + $expire, '/', $domain, $secure, true);
     }
     
     /**

@@ -22,6 +22,7 @@
     'signup_failed' => "Echec de l'inscription",
     'welcome' => 'Bienvenue',
     'welcome_back' => 'Bon retour',
+    'address' => 'Adresse',
 
     //sidebar
     'dashboard' => 'Tableau de bord',
@@ -43,6 +44,8 @@
     'post' => 'Article',
     'medias' => 'Medias',
     'media' => 'Media',
+    'invoice' => 'Facture',
+    'invoices' => 'Factures',
 
     //navabar
     'mark_as_read' => 'Marquer comme lu',
@@ -101,6 +104,7 @@
     'description' => 'Description',
     'created_at' => 'Date création',
     'updated_at' => 'Dernière modification',
+    'expires_at' => 'Date expiration',
     'details' => 'Détails',
     'edit' => 'Modifier',
     'update' => 'Mettre à jour',
@@ -137,6 +141,8 @@
     'select_all' => 'Tout sélectionner',
     'featured_media' => 'Média mis en avant',
     'add' => 'Ajouter',
+    'clear' => 'Effacer',
+    'add_product' => 'Ajouter un produit',
     'add_files' => 'Ajouter des fichiers',
     'ticket' => 'Ticket',
     'tickets' => 'Tickets',
@@ -149,6 +155,18 @@
     'closed' => 'Fermé',
     'author' => 'Auteur',
     'new_message' => 'Nouveau message',
+    'customer' => 'Client',
+    'paid' => 'Paiement effectué',
+    'pending' => 'En attente de paiment',
+    'expired' => 'Expiré',
+    'product' => 'Produit',
+    'products' => 'Produits',
+    'price' => 'Prix',
+    'quantity' => 'Quantité',
+    'tax' => 'Taxe',
+    'preview' => 'Apperçu',
+    'sub_total' => 'Sous-total',
+    'critical' => 'Critique',
 
     //pagination
     'previous' => 'Précédent',
@@ -226,6 +244,10 @@
     'ticket_closed' => 'Ticket fermé',
     'ticket_deleted' => 'Ticket supprimé',
     'tickets_deleted' => 'Tickets supprimés',
+    'open_ticket' => 'Ouvrir un ticket',
+    'create_new' => 'Créer',
+    'new_invoice' => 'Nouvelle facture',
+    'invoice_updated' => 'Facture mise à jour',
 
     //misc
     'ago' => ' environ',

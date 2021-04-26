@@ -73,20 +73,19 @@
                             <td>{{ date_helper(data.created_at) }}</td>
 
                             <td>
-                                <a class="btn text-dark p-1" href="{{ route('data.read', data.id) }}" title="{{ __('details') }}">
+                                <a class="btn text-dark p-1" href="{{ route('RESOURCENAME.read', data.id) }}" title="{{ __('details') }}">
                                     <i class="fa fa-eye"></i>
                                 </a>
 
-                                <a class="btn text-dark p-1" href="{{ route('data.edit', data.id) }}" title="{{ __('edit') }}">
+                                <a class="btn text-dark p-1" href="{{ route('RESOURCENAME.edit', data.id) }}" title="{{ __('edit') }}">
                                     <i class="fa fa-edit"></i>
                                 </a>
 
-                                <confirm-delete 
-                                    type="icon" 
-                                    title="{{ __('delete') }}"
-                                    content='<i class="fa fa-trash-alt"></i>' 
-                                    action="{{ route('data.delete', data.id) }}">
-                                </confirm-delete>
+                                <delete-item action="{{ route('RESOURCENAME.delete', data.id) }}">
+                                    <a class="btn text-danger p-1" title="{{ __('delete') }}">
+                                        <i class="fa fa-trash-alt"></i>
+                                    </a>
+                                </delete-item>
                             </td>
                         </tr>
                         {% endfor %}

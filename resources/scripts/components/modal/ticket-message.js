@@ -14,7 +14,7 @@ class TicketMessage extends HTMLElement {
     }
 
     getTranslations() {
-        fetch(process.env.APP_URL + '/api/translations')
+        fetch(process.env.APP_URL + process.env.APP_FOLDER + '/api/translations')
             .then(response => response.json())
             .then(data => this.translations = data.translations)
     }

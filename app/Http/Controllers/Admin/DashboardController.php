@@ -29,7 +29,7 @@ class DashboardController extends Controller
             : $users->metrics('id', Metrics::COUNT, Metrics::MONTHS, 0, ['AND id != ?', [Auth::get('id')]]);
 
 		$this->render('admin.index', [
-            'total_users' => count($users->findAllByRole()), 
+            'total_users' => count($users->findAllByCompany()), 
             'active_users' => $users->activeCount(), 
             'users_metrics' => $users_metrics, 
             'total_medias' => count($medias->findAllByUser()),
