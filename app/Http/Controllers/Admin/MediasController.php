@@ -64,7 +64,7 @@ class MediasController extends Controller
      */
     public function download(int $id): void
 	{
-        $data = $this->medias->findSingle($id);
+        $data = $this->medias->findOne($id);
         DownloadHelper::init($data->filename, true)->send();
 	}
 
@@ -76,7 +76,7 @@ class MediasController extends Controller
 	 */
     public function edit(int $id): void
 	{
-        $data = $this->medias->findSingle($id);
+        $data = $this->medias->findOne($id);
 		$this->render('admin.medias.edit', compact('data'));
 	}
 
@@ -114,7 +114,7 @@ class MediasController extends Controller
 	 */
 	public function read(int $id): void
 	{
-        $data = $this->medias->findSingle($id);
+        $data = $this->medias->findOne($id);
 		$this->render('admin.medias.read', compact('data'));
 	}
     
@@ -127,9 +127,9 @@ class MediasController extends Controller
 	 */
 	public function update(Request $request, int $id): void
 	{
-        UpdateMedia::validate($request->inputs())->redirectOnFail();
+        UpdateMedia::validate($request->except('csrf_token'))->redirectOnFail();
 
-        $media = $this->medias->findSingle($id);
+        $media = $this->medias->findOne($id);
 
         list($month, $year) = $this->getMediasFolders($media);
 
@@ -155,7 +155,7 @@ class MediasController extends Controller
 	public function delete(Request $request, ?int $id = null): void
 	{
         if (!is_null($id)) {
-            $media = $this->medias->findSingle($id);
+            $media = $this->medias->findOne($id);
 
             if ($media === false) {
 				$this->redirect()->back()->withToast('error', __('media_not_found'))->go();
@@ -169,7 +169,7 @@ class MediasController extends Controller
             $this->redirect()->back()->withToast('success', __('media_deleted'))->go();
 		} else {
 			foreach (explode(',', $request->items) as $id) {
-                $media = $this->medias->findSingle($id);
+                $media = $this->medias->findOne($id);
                 
                 if ($media !== false) {
                     list($month, $year) = $this->getMediasFolders($media);

@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\Auth;
 use App\Helpers\Report;
+use App\Helpers\Activity;
 use App\Helpers\Countries;
 use Framework\Http\Request;
 use Framework\Routing\View;
+use Framework\Support\Alert;
 use Framework\Http\Validator;
 use App\Helpers\DownloadHelper;
 use Framework\Routing\Controller;
@@ -39,11 +42,11 @@ class InvoicesController extends Controller
     public function index(?int $user_id = null): void
 	{
         $data = $this->invoices->findAllByUserPaginate($user_id);
-        $paid_invoices = $this->invoices->invoicesCount('paid', $user_id);
-        $pending_invoices = $this->invoices->invoicesCount('pending', $user_id);
-        $expired_invoices = $this->invoices->invoicesCount('expired', $user_id);
+        $paid_count = $this->invoices->invoicesCount('paid', $user_id);
+        $pending_count = $this->invoices->invoicesCount('pending', $user_id);
+        $expired_count = $this->invoices->invoicesCount('expired', $user_id);
 
-		$this->render('admin.invoices.index', compact('data', 'paid_invoices', 'pending_invoices', 'expired_invoices'));
+		$this->render('admin.invoices.index', compact('data', 'paid_count', 'pending_count', 'expired_count'));
 	}
 
     /**
@@ -67,7 +70,7 @@ class InvoicesController extends Controller
 	 */
     public function edit(Users $users, int $id): void
 	{
-        $data = $this->invoices->findSingleBy($id);
+        $data = $this->invoices->findOneBy($id);
         $users = $users->findAllByRole('customer');
         $this->render('admin.invoices.edit', compact('data', 'users'));
 	}
@@ -81,7 +84,7 @@ class InvoicesController extends Controller
 	 */
 	public function read(Users $users, int $id): void
 	{
-        $data = $this->invoices->findSingleByCompany($id);
+        $data = $this->invoices->findOneWithCompany($id);
         $products = json_decode('[' . $data->products . ']');
         $data->products = $products;
 
@@ -101,7 +104,8 @@ class InvoicesController extends Controller
         $id = $this->invoices->store($request);
         NotificationHelper::create(__('new_invoice'), route('invoices.read', $id));
         
-		redirect()->route('invoices.read', $id)->go();
+        Activity::log(__('invoice_created'));
+		redirect()->route('invoices.read', $id)->withToast('success', __('invoice_created'))->go();
 	}
     
 	/**
@@ -118,7 +122,8 @@ class InvoicesController extends Controller
         $this->invoices->refresh($request, $id);
         NotificationHelper::create(__('invoice_edited'), route('invoices.read', $id));
 
-		redirect()->route('invoices.read', $id)->go();
+        Activity::log(__('invoice_updated'));
+		redirect()->route('invoices.read', $id)->withToast('success', __('invoice_updated'))->go();
 	}
     
     /**
@@ -130,12 +135,12 @@ class InvoicesController extends Controller
      */
     public function download(Users $users, string $id): void
     {
-        $filename = __('invoice') . '_' . date('Y-m-d') . '_' . time() . '.pdf';
+        $filename = strtolower(__('invoice')) . '_' . date('Y-m-d') . '_' . time() . '.pdf';
 
-        $data = $this->invoices->findSingleByCompany($id);
-        $sender = $users->findSingle(1);
+        $data = $this->invoices->findOneWithCompany($id);
+        $sender = $users->findOne(1);
         $sender->country = Countries::countryName($sender->country);
-        $recipient = $users->findSingle($data->user_id);
+        $recipient = $users->findOne($data->user_id);
         $recipient->country = Countries::countryName($recipient->country);
 
         $products = json_decode('[' . $data->products . ']');
@@ -157,16 +162,16 @@ class InvoicesController extends Controller
 	 */
 	public function delete(Request $request, ?int $id = null): void
 	{
-        if (!is_null($id)) {
-            if (!$this->invoices->deleteIfExists($id)) {
-                redirect()->back()->go();
-			}
+        $this->invoices->flush($request, $id);
 
-            redirect()->route('invoices.index')->go();
+		if (!is_null($id)) {
+            Activity::log(__('invoice_deleted'));
+            $this->redirect()->route('invoices.index', Auth::get('id'))->withToast('success', __('invoice_deleted'))->go();
 		} else {
-            $this->invoices->deleteBy('id', 'in', explode(',', $request->items));
-            response()->json(['redirect' => route('invoices.index')]);
-		}
+            Activity::log(__('invoices_deleted'));
+            Alert::toast(__('invoices_deleted'))->success();
+            $this->response()->json(['redirect' => route('invoices.index', Auth::get('id'))]);
+        }
 	}
 
 	/**
@@ -181,7 +186,15 @@ class InvoicesController extends Controller
         $filename = 'invoices_' . date('Y_m_d_His') . '.' . $request->file_type;
 
 		Report::generate($filename, $invoices, [
-			//
+			'company' => __('company'), 
+            'invoice_id' => __('invoice'),
+            'phone' => __('phone'),
+            'sub_total' => __('sub_total'),
+			'tax' => __('tax'), 
+			'total_price' => __('total_price'), 
+			'status' => __('status'), 
+			'created_at' => __('created_at'),
+			'expires_at' => __('expires_at')
 		]);
 	}
 }

@@ -29,8 +29,8 @@ class CLASSNAME extends Repository
      * @param  mixed $value
      * @return mixed
      */
-    public function findSingleByValue($value)
+    public function findOneByValue($value)
     {
-        return $this->findSingleBy('value', $value);
+        return $this->findOneBy('value', $value);
     }
 }

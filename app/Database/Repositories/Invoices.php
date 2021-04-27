@@ -47,6 +47,20 @@ class Invoices extends Repository
     }
     
     /**
+     * findOneWithCompany
+     *
+     * @param  int $id
+     * @return mixed
+     */
+    public function findOneWithCompany(int $id)
+    {
+        return $this->select(['invoices.*', 'users.company AS company'])
+            ->join('users', 'invoices.user_id', '=', 'users.id')
+            ->where('invoices.id', $id)
+            ->single();
+    }
+    
+    /**
      * retrieves invoices count
      *
      * @param  string $status
@@ -79,12 +93,23 @@ class Invoices extends Repository
      */
     public function store(Request $request): int
     {
+        $products = json_decode('[' . $request->products . ']');
+        $tax = $request->inputs('tax', 0);
+        $sub_total = 0;
+
+        foreach ($products as $product) {
+            $sub_total += $product->price  * $product->quantity;
+        }
+
         return $this->insert([
             'user_id' => $request->company,
             'invoice_id' => Carbon::now()->format('Y/m/d/') . strtoupper(random_string(5)),
             'currency' => $request->currency,
-            'tax' => $request->inputs('tax', 0),
-            'products' => $request->products
+            'products' => $request->products,
+            'tax' => $tax,
+            'sub_total' => $sub_total,
+            'total_price' => $tax !== 0 ? $sub_total + (($sub_total * $tax) / 100) : $sub_total,
+            'expire' => $request->inputs('expire')
         ]);
     }
     
@@ -97,26 +122,38 @@ class Invoices extends Repository
      */
     public function refresh(Request $request, int $id): bool
     {
+        $products = json_decode('[' . $request->products . ']');
+        $tax = $request->inputs('tax', 0);
+        $sub_total = 0;
+
+        foreach ($products as $product) {
+            $sub_total += $product->price  * $product->quantity;
+        }
+
         return $this->updateIfExists($id, [
             'user_id' => $request->company,
             'currency' => $request->currency,
-            'tax' => $request->inputs('tax', 0),
-            'products' => $request->products
+            'tax' => $tax,
+            'products' => $request->products,
+            'sub_total' => $sub_total,
+            'total_price' => $tax !== 0 ? $sub_total + (($sub_total * $tax) / 100) : $sub_total,
+            'status' => $request->status,
+            'expire' => $request->inputs('expire')
         ]);
     }
-    
+
     /**
-     * findSingleByCompany
+     * delete invoices
      *
+     * @param  \Framework\Http\Request $request
      * @param  int $id
-     * @return mixed
+     * @return bool
      */
-    public function findSingleByCompany(int $id)
+    public function flush(Request $request, ?int $id = null): bool
     {
-        return $this->select(['invoices.*', 'users.company AS company'])
-            ->join('users', 'invoices.user_id', '=', 'users.id')
-            ->where('invoices.id', $id)
-            ->single();
+        return is_null($id) 
+            ? $this->deleteBy('id', 'in', explode(',', $request->items))
+            : $this->deleteIfExists($id);
     }
     
     /**
@@ -128,9 +165,13 @@ class Invoices extends Repository
      */
     public function findAllDateRange($date_start, $date_end): array
     {
-        return $this->select()
-            ->where('id', '!=', Auth::get('id'))
+        return $this->select(['invoices.*', 'users.company AS company'])
+            ->join('users', 'invoices.user_id', '=', 'users.id')
             ->subQuery(function($query) use ($date_start, $date_end) {
+                if (!Auth::role(Roles::ROLE[0])) {
+                    $query->where('user_id', Auth::get('id'));
+                }
+
                 if (!empty($date_start) && !empty($date_end)) {
                     $query->whereBetween('created_at', $date_start, $date_end);
                 }

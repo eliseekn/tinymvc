@@ -39,7 +39,7 @@ class Validator extends Command
                 $output->writeln('<fg=yellow>Failed to create request validator "' . $class . '"</fg>');
             }
 
-            $output->writeln('<info>Request validator "' . $class . '" created succesfully</info>');
+            $output->writeln('<info>Request validator "' . $class . '" has been created</info>');
         }
 
         return Command::SUCCESS;

@@ -248,6 +248,9 @@
     'create_new' => 'Create new',
     'new_invoice' => 'New invoice',
     'invoice_updated' => 'Invoice updated',
+    'invoice_deleted' => 'Invoice deleted',
+    'invoices_deleted' => 'Invoices deleted',
+    'invoice_created' => 'Invoice created',
 
     //misc
     'ago' => ' ago',

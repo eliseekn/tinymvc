@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use Carbon\Carbon;
 use App\Helpers\Auth;
+use App\Helpers\Countries;
 use App\Mails\WelcomeMail;
 use Framework\Http\Request;
+use Framework\Routing\View;
 use Framework\Routing\Controller;
 use App\Database\Repositories\Users;
 use App\Http\Validators\AuthRequest;
@@ -17,7 +19,36 @@ use App\Http\Validators\RegisterUser;
  * Manage user authentication
  */
 class AuthController extends Controller
-{
+{    
+    /**
+     * display login page
+     *
+     * @return void
+     */
+    public function login(): void
+    {
+        if (!Auth::check()) {
+            View::render('auth.login');
+        }
+
+        Auth::redirect();
+    }
+
+    /**
+     * display signup page
+     *
+     * @return void
+     */
+    public function signup(): void
+    {
+        if (!Auth::check()) {
+            $countries = Countries::all();
+            View::render('auth.signup', compact('countries'));
+        }
+
+        Auth::redirect();
+    }
+
 	/**
 	 * authenticate user
 	 * 
@@ -28,7 +59,7 @@ class AuthController extends Controller
 	 */
 	public function authenticate(Request $request, Users $users, Tokens $tokens): void
 	{
-        AuthRequest::validate($request->inputs())->redirectOnFail();
+        AuthRequest::validate($request->except('csrf_token'))->redirectOnFail();
         Auth::attempt($request, $users, $tokens);
     }
         
@@ -42,7 +73,7 @@ class AuthController extends Controller
      */
     public function register(Request $request, Users $users, Tokens $tokens): void
     {
-        RegisterUser::register()->validate($request->inputs())->redirectOnFail();
+        RegisterUser::register()->validate($request->except('csrf_token'))->redirectOnFail();
         Auth::create($request, $users);
 
         if (!config('security.auth.email_confirmation')) {
@@ -56,7 +87,7 @@ class AuthController extends Controller
             $tokens->store($request->email, $token, Carbon::now()->addDay()->toDateTimeString());
             $this->redirect()->url('login')->withAlert('success', __('confirm_email_link_sent', true))->go();
         }
-            
+        
         $this->redirect()->back()->withAlert('error', __('confirm_email_link_not_sent', true))->go();
     }
 	

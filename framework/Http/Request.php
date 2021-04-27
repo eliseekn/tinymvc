@@ -36,13 +36,8 @@ class Request
      */
     public function headers(?string $key = null, $default = null)
     {
-        $header = is_null($key) ? $_SERVER : ($_SERVER[$key] ?? '');
-
-        if (empty($header) && !is_null($default)) {
-            $header = $default;
-        }
-
-        return $header;
+        $header = is_null($key) ? $_SERVER : $_SERVER[$key];
+        return empty($header) || is_null($header) ? $default : $header;
     }
     
     /**
@@ -66,12 +61,7 @@ class Request
     public function queries(?string $key = null, $default = null)
     {
         $query = is_null($key) ? $_GET : ($_GET[$key] ?? '');
-
-        if (empty($query) && !is_null($default)) {
-            $query = $default;
-        }
-
-        return $query;
+        return empty($query) || is_null($query) ? $default : $query;
     }
 
     /**
@@ -84,12 +74,7 @@ class Request
     public function inputs(?string $key = null, $default = null)
     {
         $input = is_null($key) ? $_POST : ($_POST[$key] ?? '');
-
-        if (empty($input) && !is_null($default)) {
-            $input = $default;
-        }
-
-        return $input;
+        return empty($input) || is_null($input) ? $default : $input;
     }
 
     /**
@@ -313,6 +298,10 @@ class Request
     {
         $result = [];
 
+        if (empty($this->all())) {
+            return $result;
+        }
+
         foreach ($items as $item) {
             foreach ($this->all() as $key => $input) {
                 if ($item !== $key) {
@@ -333,6 +322,16 @@ class Request
      */
     public function all(): array
     {
-        return array_merge($this->inputs(), $this->queries());
+        $all = [];
+
+        if (!is_null($this->inputs())) {
+            $all = array_merge($all, $this->inputs());
+        }
+
+        if (!is_null($this->queries())) {
+            $all = array_merge($all, $this->queries());
+        }
+
+        return $all;
     }
 }

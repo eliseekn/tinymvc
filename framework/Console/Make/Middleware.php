@@ -39,7 +39,7 @@ class Middleware extends Command
                 $output->writeln('<fg=yellow>Failed to create middleware "' . $class . '"</fg>');
             }
 
-            $output->writeln('<info>Middleware "' . $class . '" created succesfully</info>');
+            $output->writeln('<info>Middleware "' . $class . '" has been created</info>');
         }
 
         return Command::SUCCESS;

@@ -44,7 +44,7 @@ class PasswordController extends Controller
 	 */
 	public function reset(Request $request, Tokens $tokens): void
 	{
-        $reset_token = $tokens->findSingleByEmail($request->email);
+        $reset_token = $tokens->findOneByEmail($request->email);
 
         if (!$reset_token || $reset_token->token !== $request->token) {
 			$this->response()->json(__('invalid_password_reset_link', true));
@@ -67,7 +67,7 @@ class PasswordController extends Controller
 	 */
 	public function update(Request $request, Users $users): void
 	{
-		AuthRequest::validate($request->inputs())->redirectOnFail();
+		AuthRequest::validate($request->except('csrf_token'))->redirectOnFail();
 
         $users->updateBy(
             ['email', $request->email], 

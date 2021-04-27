@@ -39,7 +39,7 @@ class Seed extends Command
                 $output->writeln('<fg=yellow>Failed to create seed "' . $class . '"</fg>');
             }
 
-            $output->writeln('<info>Seed "' . $class . '" created succesfully</info>');
+            $output->writeln('<info>Seed "' . $class . '" has been created</info>');
         }
 
         return Command::SUCCESS;

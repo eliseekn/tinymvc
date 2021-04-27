@@ -25,10 +25,12 @@ class InvoicesTable_20210425224054
             ->addBigInt('user_id')
             ->addString('invoice_id')
             ->addLongText('products')
+            ->addDecimal('sub_total')
+            ->addDecimal('total_price')
             ->addString('currency')
             ->addDecimal('tax')->setNull()
             ->addTimestamp('expire')->setNull()
-            ->addEnum('status', ['"paid"', '"pending"', '"expired"'])->default('pending')
+            ->addEnum('status', ['pending', 'paid', 'expired'])->default('pending')
             ->create();
     }
     

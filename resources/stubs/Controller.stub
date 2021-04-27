@@ -53,7 +53,7 @@ class CLASSNAME extends Controller
 	 */
     public function edit(int $id): void
 	{
-        $data = $this->repository->findSingleBy($id);
+        $data = $this->repository->findOneBy($id);
         $this->render('admin.RESOURCENAME.edit', compact('data'));
 	}
 	
@@ -65,7 +65,7 @@ class CLASSNAME extends Controller
 	 */
 	public function read(int $id): void
 	{
-        $data = $this->repository->findSingleBy($id);
+        $data = $this->repository->findOneBy($id);
         $this->render('admin.RESOURCENAME.read', compact('data'));
 	}
 

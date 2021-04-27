@@ -43,7 +43,7 @@ class MakeCommand extends Command
             $output->writeln('<fg=yellow>Failed to create command "' . $class . '"</fg>');
         }
 
-        $output->writeln('<info>Command "' . $class . '" created succesfully</info>');
+        $output->writeln('<info>Command "' . $class . '" has been created</info>');
 
         return Command::SUCCESS;
     }

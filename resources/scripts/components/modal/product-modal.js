@@ -28,7 +28,9 @@ class ProductModal extends HTMLElement {
             return
         }
 
-        document.querySelector('#products').value += ',' + JSON.stringify({
+        let sep = document.querySelector('#products').value === '' ? '' : ','
+
+        document.querySelector('#products').value += sep + JSON.stringify({
             name: document.querySelector('#product-name').value,
             quantity: document.querySelector('#product-quantity').value,
             price: document.querySelector('#product-price').value

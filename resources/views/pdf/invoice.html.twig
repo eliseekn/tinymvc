@@ -53,7 +53,7 @@
         }
 
         strong {
-            margin-left: 1em;
+            margin-left: .8em;
         }
     </style>
 </head>
@@ -94,10 +94,7 @@
         </thead>
 
         <tbody>
-            {% set total_price = 0 %}
-
             {% for product in data.products %}
-            {% set total_price = total_price + (product.price * product.quantity) %}
             <tr>
                 <td>{{ loop.index }}</td>
                 <td>{{ product.name }}</td>
@@ -109,16 +106,14 @@
 
             <tr>
                 <td colspan="5" align="right">
-                    {{ __('sub_total') }}: <strong>{{ total_price }} {{ data.currency }}</strong> <br>
+                    {{ __('sub_total') }}: <strong>{{ data.sub_total }} {{ data.currency }}</strong> <br>
                     {{ __('tax') }}: <strong>{{ data.tax }} %</strong> <br>
                 </td>
             </tr>
         </tbody>
     </table>
 
-    {% set total = data.tax != 0 ? total_price + ((total_price * data.tax) / 100) : total_price %}
-                    
-    <p class="total">{{ __('total') }}: <strong>{{ total }} {{ data.currency }}</strong></p>
+    <p class="total">{{ __('total') }}: <strong>{{ data.total_price }} {{ data.currency }}</strong></p>
 </body>
 
 </html>

@@ -248,6 +248,9 @@
     'create_new' => 'Créer',
     'new_invoice' => 'Nouvelle facture',
     'invoice_updated' => 'Facture mise à jour',
+    'invoice_deleted' => 'Facture supprimé',
+    'invoices_deleted' => 'Factures supprimées',
+    'invoice_created' => 'Facture générée',
 
     //misc
     'ago' => ' environ',

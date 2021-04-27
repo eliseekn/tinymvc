@@ -4,14 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\Report;
 use App\Helpers\Activity;
+use App\Helpers\Countries;
 use Framework\Http\Request;
 use Framework\Support\Alert;
 use Framework\Routing\Controller;
 use App\Http\Validators\UpdateUser;
 use App\Database\Repositories\Roles;
 use App\Database\Repositories\Users;
-use App\Helpers\Auth;
-use App\Helpers\Countries;
 use App\Http\Validators\RegisterUser;
 
 class UsersController extends Controller
@@ -66,7 +65,7 @@ class UsersController extends Controller
 	 */
 	public function edit(Roles $roles, int $id): void
 	{
-        $data = $this->users->findSingle($id);
+        $data = $this->users->findOne($id);
         $roles = $roles->selectAll();
         $countries = Countries::all();
         $this->render('admin.users.edit', compact('data', 'roles', 'countries'));
@@ -80,7 +79,7 @@ class UsersController extends Controller
 	 */
 	public function read(int $id): void
 	{
-        $data = $this->users->findSingle($id);
+        $data = $this->users->findOne($id);
         $this->render('admin.users.read', compact('data'));
 	}
 
@@ -92,7 +91,7 @@ class UsersController extends Controller
 	 */
 	public function create(Request $request): void
 	{
-        RegisterUser::register()->validate($request->inputs())->redirectOnFail();
+        RegisterUser::register()->validate($request->except('csrf_token'))->redirectOnFail();
 	    $id = $this->users->store($request);
 
         Activity::log(__('user_created'));
@@ -108,7 +107,7 @@ class UsersController extends Controller
 	 */
 	public function update(Request $request, int $id): void
 	{
-		UpdateUser::register($id)->validate($request->inputs())->redirectOnFail();
+		UpdateUser::register($id)->validate($request->except('csrf_token'))->redirectOnFail();
         $this->users->refresh($request, $id);
 		
         Activity::log(__('user_updated'));
@@ -151,10 +150,13 @@ class UsersController extends Controller
         
 		Report::generate($filename, $data, [
 			'name' => __('name'), 
+			'role' => __('role'), 
             'email' => __('email'),
             'phone' => __('phone'),
             'company' => __('company'),
-			'role' => __('role'), 
+            'address' => __('address'),
+            'lang' => __('lang'),
+            'country' => __('country'),
 			'created_at' => __('created_at')
 		]);
 	}

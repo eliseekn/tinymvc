@@ -62,7 +62,7 @@ class TicketsController extends Controller
 	 */
 	public function read(TicketMessages $messages, int $id): void
 	{
-        $data = $this->tickets->findSingle($id);
+        $data = $this->tickets->findOne($id);
         $messages = $messages->findAllByTicketPaginate($id);
         $this->render('admin.support.read', compact('data', 'messages'));
 	}

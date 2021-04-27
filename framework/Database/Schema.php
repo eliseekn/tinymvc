@@ -347,12 +347,20 @@ class Schema
      */
     public function addEnum(string $name, array $values): self 
     {
-        self::$qb->column($name, 'ENUM(' . implode(',', $values) . ')');
+        $v = '';
+
+        foreach ($values as $value) {
+            $v .= "'" . $value . "', ";
+        }
+
+        $v = rtrim($v, ', ');
+
+        self::$qb->column($name, "ENUM($v)");
         return $this;
     }
 
     /**
-     * add column of type date
+     * add column of type date  
      *
      * @param  string $name
      * @return \Framework\Database\Migration

@@ -134,18 +134,18 @@ class Messages extends Repository
     public function updateReadStatus(Request $request, ?int $id = null): void
     {
         if (!is_null($id)) {
-            if ($this->findSingle($id)->sender === Auth::get('id')) {
+            if ($this->findOne($id)->sender === Auth::get('id')) {
                 $data = 'sender_read';
-            } else if ($this->findSingle($id)->recipient === Auth::get('id')) {
+            } else if ($this->findOne($id)->recipient === Auth::get('id')) {
                 $data = 'recipient_read';
             }
 
             $this->updateIfExists($id, [$data => 1]);
         } else {
 			foreach (explode(',', $request->items) as $id) {
-				if ($this->findSingle($id)->sender === Auth::get('id')) {
+				if ($this->findOne($id)->sender === Auth::get('id')) {
                     $data = 'sender_read';
-                } else if ($this->findSingle($id)->recipient === Auth::get('id')) {
+                } else if ($this->findOne($id)->recipient === Auth::get('id')) {
                     $data = 'recipient_read';
                 }
     
@@ -164,42 +164,23 @@ class Messages extends Repository
     public function updateDeletedStatus(Request $request, ?int $id = null): void
     {
         if (!is_null($id)) {
-            if ($this->findSingle($id)->sender === Auth::get('id')) {
+            if ($this->findOne($id)->sender === Auth::get('id')) {
                 $data = 'sender_deleted';
-            } else if ($this->findSingle($id)->recipient === Auth::get('id')) {
+            } else if ($this->findOne($id)->recipient === Auth::get('id')) {
                 $data = 'recipient_deleted';
             }
 
             $this->updateIfExists($id, [$data => 1]);
         } else {
 			foreach (explode(',', $request->items) as $id) {
-				if ($this->findSingle($id)->sender === Auth::get('id')) {
+				if ($this->findOne($id)->sender === Auth::get('id')) {
                     $data = 'sender_deleted';
-                } else if ($this->findSingle($id)->recipient === Auth::get('id')) {
+                } else if ($this->findOne($id)->recipient === Auth::get('id')) {
                     $data = 'recipient_deleted';
                 }
     
                 $this->updateIfExists($id, [$data => 1]);
 			}
         }
-    }
-    
-    /**
-     * retrieves data from date range
-     *
-     * @param  mixed $start
-     * @param  mixed $end
-     * @return array
-     */
-    public function findAllDateRange($date_start, $date_end): array
-    {
-        return $this->select()
-            ->subQuery(function($query) use ($date_start, $date_end) {
-                if (!empty($date_start) && !empty($date_end)) {
-                    $query->whereBetween('created_at', $date_start, $date_end);
-                }
-            })
-            ->oldest()
-            ->all();
     }
 }

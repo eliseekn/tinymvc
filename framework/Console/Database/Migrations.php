@@ -58,7 +58,7 @@ class Migrations extends Command
 
             if ($input->getOption('seed')) {
                 Seeder::run();
-                $output->writeln('<info>All seeds inserted successfully</info>');
+                $output->writeln('<info>All seeds inserted</info>');
             }
         }
 
@@ -79,7 +79,7 @@ class Migrations extends Command
 
             if ($input->getOption('seed')) {
                 Seeder::run();
-                $output->writeln('<info>All seeds inserted successfully</info>');
+                $output->writeln('<info>All seeds inserted</info>');
             }
         }
 
@@ -112,12 +112,12 @@ class Migrations extends Command
     protected function migrate(OutputInterface $output, string $table)
     {
         if ($this->IsAlreadyMigrated($table)) {
-            $output->writeln('<fg=yellow>Table "' . $table . '" already migrated</>');
+            $output->writeln('<fg=yellow>Table "' . $table . '" has already been migrated</>');
             return;
         }
 
         $this->getMigration($table)->create();
-        $output->writeln('<info>Table "' . $table . '" migrated successfully</info>');
+        $output->writeln('<info>Table "' . $table . '" has been migrated</info>');
 
         $this->saveMigrationTable($output, $table);
     }
@@ -130,7 +130,7 @@ class Migrations extends Command
         }
 
         $this->getMigration($table)->drop();
-        $output->writeln('<info>Table "' . $table . '" deleted successfully</info>');
+        $output->writeln('<info>Table "' . $table . '" has been deleted</info>');
 
         $this->removeMigrationTable($table);
     }
@@ -168,7 +168,7 @@ class Migrations extends Command
                 ->addString('migration')
                 ->create();
 
-            $output->writeln('<info>Migrations tables created successfully</info>');
+            $output->writeln('<info>Migrations tables have been created</info>');
         }
 
         QueryBuilder::table('migrations')

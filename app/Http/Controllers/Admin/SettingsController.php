@@ -37,7 +37,7 @@ class SettingsController extends Controller
 	 */
 	public function index(int $id): void
 	{
-        $data = $this->users->findSingle($id);
+        $data = $this->users->findOne($id);
         $countries = Countries::all();
         $this->render('admin.account.settings', compact('data', 'countries'));
     }
@@ -51,11 +51,11 @@ class SettingsController extends Controller
      */
     public function update(Request $request, int $id): void
     {
-        UpdateUser::register($id)->validate($request->inputs())->redirectOnFail();
+        UpdateUser::register($id)->validate($request->except('csrf_token'))->redirectOnFail();
         $this->users->updateSettings($request, $id);
 
         if (Auth::get('id') === $id) {
-            Session::create('user', $this->users->findSingle($id));
+            Session::create('user', $this->users->findOne($id));
         }
 
         Activity::log(__('changes_saved'));

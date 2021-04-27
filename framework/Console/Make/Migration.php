@@ -42,7 +42,7 @@ class Migration extends Command
                 $output->writeln('<fg=yellow>Failed to create migration "' . $class . '"</fg>');
             }
 
-            $output->writeln('<info>Migration "' . $class . '" created succesfully</info>');
+            $output->writeln('<info>Migration "' . $class . '" has been created</info>');
         }
 
         if ($input->getOption('repository')) {
@@ -53,7 +53,7 @@ class Migration extends Command
                     $output->writeln('<fg=yellow>Failed to create repository "' . $class . '"</fg>');
                 }
 
-                $output->writeln('<info>Repository "' . $class . '" created succesfully</info>');
+                $output->writeln('<info>Repository "' . $class . '" has been created</info>');
             }
         }
 
@@ -65,7 +65,7 @@ class Migration extends Command
                     $output->writeln('<fg=yellow>Failed to create seed "' . $class . '"</fg>');
                 }
 
-                $output->writeln('<info>Seed "' . $class . '" created succesfully</info>');
+                $output->writeln('<info>Seed "' . $class . '" has been created</info>');
             }
         }
 

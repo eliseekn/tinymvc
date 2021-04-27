@@ -31,7 +31,11 @@ class Queries extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+
         $stmt = Database::connection()->query($input->getArgument('query'));
+        $output->writeln('<info>Query executed</info>');
+        $output->writeln('');
+
         $result = $stmt->fetchAll();
         $rows = [];
 

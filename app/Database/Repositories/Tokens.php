@@ -29,9 +29,9 @@ class Tokens extends Repository
      * @param  string $email
      * @return mixed
      */
-    public function findSingleByEmail(string $email)
+    public function findOneByEmail(string $email)
     {
-        return $this->findSingleBy('email', $email);
+        return $this->findOneBy('email', $email);
     }
 
     /**
@@ -40,9 +40,9 @@ class Tokens extends Repository
      * @param  string $token
      * @return mixed
      */
-    public function findSingleByToken(string $token)
+    public function findOneByToken(string $token)
     {
-        return $this->findSingleBy('token', $token);
+        return $this->findOneBy('token', $token);
     }
 
     /**

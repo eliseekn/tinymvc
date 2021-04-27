@@ -6,9 +6,6 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-use App\Helpers\Auth;
-use App\Helpers\Countries;
-use Framework\Routing\View;
 use Framework\Routing\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\EmailController;
@@ -19,22 +16,8 @@ use App\Http\Controllers\Auth\PasswordController;
  */
 
 Route::groupMiddlewares(['remember'], function () {
-    Route::get('login', function () {
-        if (!Auth::check()) {
-            View::render('auth.login');
-        }
-
-        Auth::redirect();
-    });
-
-    Route::get('signup', function () {
-        if (!Auth::check()) {
-            $countries = Countries::all();
-            View::render('auth.signup', compact('countries'));
-        }
-
-        Auth::redirect();
-    });
+    Route::get('login', [AuthController::class, 'login']);
+    Route::get('signup', [AuthController::class, 'signup']);
 })->register();
 
 Route::get('logout', [AuthController::class, 'logout'])->register();

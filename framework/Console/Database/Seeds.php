@@ -48,7 +48,7 @@ class Seeds extends Command
             }
 
             Seeder::run();
-            $output->writeln('<info>All seeds inserted successfully</info>');
+            $output->writeln('<info>All seeds have been inserted</info>');
         }
 
         else if ($input->getOption('list')) {
@@ -66,7 +66,7 @@ class Seeds extends Command
     {
         $seed = $this->getSeed($seed);
         $seed::insert();
-        $output->writeln('<info>Seed "' . $seed . '" inserted successfully</info>');
+        $output->writeln('<info>Seed "' . $seed . '" has been inserted</info>');
     }
     
     protected function listSeeds(OutputInterface $output): void
@@ -88,7 +88,6 @@ class Seeds extends Command
     
     protected function getSeed(string $seed): string
     {
-        $seed = ucfirst($seed) . 'Seed';
         return '\App\Database\Seeds\\' . $seed;
     }
 }

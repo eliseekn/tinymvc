@@ -41,7 +41,7 @@ class Controller extends Command
                 $output->writeln('<fg=yellow>Failed to create controller "' . $class . '"</fg>');
             }
 
-            $output->writeln('<info>Controller "' . $class . '" created succesfully</info>');
+            $output->writeln('<info>Controller "' . $class . '" has been created</info>');
         }
 
         return Command::SUCCESS;

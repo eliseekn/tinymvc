@@ -8,14 +8,14 @@
 	<metrics-card>
 		<metrics-card-item 
             title="{{ __('total') }}" 
-            icon="fa fa-comments fa-2x" 
+            icon="fa fa-comment fa-2x" 
             data="{{ data.getTotalItems() }}" 
             columns="4">
         </metrics-card-item>
 
 		<metrics-card-item 
             title="{{ __('open') }}" 
-            icon="fa fa-comment-dots fa-2x" 
+            icon="fa fa-comments fa-2x" 
             data="{{ open_tickets }}" 
             columns="4">
         </metrics-card-item>
@@ -118,7 +118,7 @@
 
                                 <delete-item action="{{ route('tickets.delete', data.id) }}">
                                     <a class="btn text-danger p-1" title="{{ __('delete') }}">
-                                        <i class="fa fa-trash-alt"></i>
+                                        <i class="fa fa-trash"></i>
                                     </a>
                                 </delete-item>
                             </td>

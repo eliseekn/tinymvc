@@ -39,7 +39,7 @@ class Mail extends Command
                 $output->writeln('<fg=yellow>Failed to create mail template "' . $class . '"</fg>');
             }
 
-            $output->writeln('<info>Mail template "' . $class . '" created succesfully</info>');
+            $output->writeln('<info>Mail template "' . $class . '" has been created</info>');
         }
 
         return Command::SUCCESS;

@@ -248,14 +248,43 @@ class Route
     /**
      * add middlewares to route
      *
-     * @param  array $middlewares
+     * @param  string[] $middlewares
      * @return \Framework\Routing\Route
      */
-    public function middlewares(array $middlewares): self
+    public function middlewares(string ...$middlewares): self
     {
         static::$tmp_routes[static::$uri] += ['middlewares' => $middlewares];
         static::$tmp_middlewares[static::$uri] = $middlewares;
         return $this;
+    }
+    
+    /**
+     * add protected to route
+     *
+     * @param  string[] $roles
+     * @return \Framework\Routing\Route
+     */
+    public function protected(string ...$roles): self
+    {
+        static::$tmp_routes[static::$uri] += ['protected' => $roles];
+        return $this;
+    }
+
+    /**
+     * group protected routes
+     *
+     * @param  string[] $roles
+     * @return \Framework\Routing\Route
+     */
+    public static function groupProtected(array $roles, $callback): self
+    {
+        call_user_func($callback);
+
+        foreach (static::$tmp_routes as $uri => $options) {
+            static::$tmp_routes[$uri] += ['protected' => $roles];
+        }
+
+        return new self();
     }
 
     /**

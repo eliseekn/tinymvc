@@ -96,7 +96,7 @@ class Auth
     public static function checkByCredentials(Users $users, string $email, string $password, &$user): bool
     {
         if (filter_var($email, FILTER_VALIDATE_EMAIL) !== false) {
-            $user = $users->findSingleByEmail($email);
+            $user = $users->findOneByEmail($email);
             return $user !== false && Encryption::check($password, $user->password);
         }
 
@@ -124,7 +124,7 @@ class Auth
      */
     public static function checkByToken(Tokens $tokens, string $token, &$user): bool
     {
-        $user = $tokens->findSingleByToken($token);
+        $user = $tokens->findOneByToken($token);
         return $user !== false;
     }
     

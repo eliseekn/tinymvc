@@ -25,7 +25,7 @@ class EmailController extends Controller
 	 */
 	public function confirm(Request $request, Users $users): void
 	{
-        $user = $users->findSingleByEmail($request->email);
+        $user = $users->findOneByEmail($request->email);
 
 		if (!$user) {
             $this->redirect()->url('signup')->withAlert('error', __('user_not_registered', true))->go();
@@ -46,7 +46,7 @@ class EmailController extends Controller
      */
     public function auth(Request $request, Users $users, Tokens $tokens): void
     {
-        $auth_token = $tokens->findSingleByEmail($request->email);
+        $auth_token = $tokens->findOneByEmail($request->email);
 
         if (!$auth_token || $auth_token->token !== $request->token) {
 			$this->response()->send(__('invalid_two_steps_link', true));
@@ -57,7 +57,7 @@ class EmailController extends Controller
 		}
 
         $tokens->deleteByEmail($auth_token->email);
-        $user = $users->findSingleByEmail($request->email);
+        $user = $users->findOneByEmail($request->email);
 
         Session::create('user', $user);
         Auth::redirect();

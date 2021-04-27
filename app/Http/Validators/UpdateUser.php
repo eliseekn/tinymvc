@@ -37,7 +37,7 @@ class UpdateUser extends Validator
     public static function register(int $id): self
     {
         GUMP::add_validator('unique', function($field, array $input, array $params, $value) use ($id) {
-            $data = (new Repository($params[0]))->findSingle($id);
+            $data = (new Repository($params[0]))->findOne($id);
 
             if ($data->{$field} !== $value) {
                 $data = (new Repository($params[0]))->findBy($field, $value);

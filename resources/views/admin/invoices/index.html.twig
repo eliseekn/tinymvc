@@ -16,21 +16,21 @@
         <metrics-card-item 
             title="{{ __('pending') }}" 
             icon="fa fa-file-medical-alt fa-2x" 
-            data="{{ pending_invoices }}"
+            data="{{ pending_count }}"
             columns="3">
         </metrics-card-item>
 
         <metrics-card-item 
             title="{{ __('paid') }}" 
             icon="fa fa-file-invoice-dollar fa-2x" 
-            data="{{ paid_invoices }}"
+            data="{{ paid_count }}"
             columns="3">
         </metrics-card-item>
 
         <metrics-card-item 
             title="{{ __('expired') }}" 
             icon="fa fa-file-excel fa-2x" 
-            data="{{ expired_invoices }}"
+            data="{{ expired_count }}"
             columns="3">
         </metrics-card-item>
     </metrics-card>
@@ -127,7 +127,7 @@
 
                                 <delete-item action="{{ route('invoices.delete', data.id) }}">
                                     <a class="btn text-danger p-1" title="{{ __('delete') }}">
-                                        <i class="fa fa-trash-alt"></i>
+                                        <i class="fa fa-trash"></i>
                                     </a>
                                 </delete-item>
                                 {% endif %}

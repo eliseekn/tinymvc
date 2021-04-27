@@ -39,7 +39,7 @@ class Repository extends Command
                 $output->writeln('<fg=yellow>Failed to create repository "' . $class . '"</fg>');
             }
 
-            $output->writeln('<info>Repository "' . $class . '" created succesfully</info>');
+            $output->writeln('<info>Repository "' . $class . '" has been created</info>');
         }
 
         return Command::SUCCESS;

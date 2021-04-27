@@ -41,7 +41,7 @@ class Resource extends Command
                     $output->writeln('<fg=yellow>Failed to create views for "' . $resource . '"</fg>');
                 }
 
-                $output->writeln('<info>Views for "' . $resource . '" created succesfully</info>');
+                $output->writeln('<info>Views for "' . $resource . '" have been created</info>');
             }
         }
 
@@ -51,7 +51,7 @@ class Resource extends Command
                     $output->writeln('<fg=yellow>Failed to create routes for "' . $resource . '"</fg>');
                 }
 
-                $output->writeln('<info>Routes for "' . $resource . '" created succesfully</info>');
+                $output->writeln('<info>Routes for "' . $resource . '" have been created</info>');
             }
         }
         
@@ -64,7 +64,7 @@ class Resource extends Command
                     $output->writeln('<fg=yellow>Failed to create controller "' . $class . '"</fg>');
                 }
     
-                $output->writeln('<info>Controller "' . $class . '" created succesfully</info>');
+                $output->writeln('<info>Controller "' . $class . '" has been created</info>');
     
                 //migration
                 list($name, $class) = Make::generateClass($resource, 'migration');
@@ -73,7 +73,7 @@ class Resource extends Command
                     $output->writeln('<fg=yellow>Failed to create migration "' . $class . '"</fg>');
                 }
     
-                $output->writeln('<info>Migration "' . $class . '" created succesfully</info>');
+                $output->writeln('<info>Migration "' . $class . '" has been created</info>');
     
                 //repository
                 list($name, $class) = Make::generateClass($resource, 'repository');
@@ -82,7 +82,7 @@ class Resource extends Command
                     $output->writeln('<fg=yellow>Failed to create repository "' . $class . '"</fg>');
                 }
     
-                $output->writeln('<info>Repository "' . $class . '" created succesfully</info>');
+                $output->writeln('<info>Repository "' . $class . '" has been created</info>');
     
                 //seed
                 list($name, $class) = Make::generateClass($resource, 'seed');
@@ -91,24 +91,24 @@ class Resource extends Command
                     $output->writeln('<fg=yellow>Failed to create seed "' . $class . '"</fg>');
                 }
     
-                $output->writeln('<info>Seed "' . $class . '" created succesfully</info>');
+                $output->writeln('<info>Seed "' . $class . '" has been created</info>');
     
                 //views
                 if (!Make::createViews($resource)) {
                     $output->writeln('<fg=yellow>Failed to create views for "' . $resource . '"</fg>');
                 }
     
-                $output->writeln('<info>Views for "' . $resource . '" created succesfully</info>');
+                $output->writeln('<info>Views for "' . $resource . '" have been created</info>');
     
                 //route
                 if (!Make::createRoute($resource)) {
                     $output->writeln('<fg=yellow>Failed to create route for "' . $resource . '"</fg>');
                 }
     
-                $output->writeln('<info>Routes for "' . $resource . '" created succesfully</info>');
+                $output->writeln('<info>Routes for "' . $resource . '" have been created</info>');
             }
                 
-            $output->writeln('<info>Resources for "' . $resource . '" created succesfully</info>');
+            $output->writeln('<info>Resources for "' . $resource . '" have been created</info>');
         }
 
         return Command::SUCCESS;

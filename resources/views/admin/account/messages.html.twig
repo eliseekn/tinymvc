@@ -45,13 +45,9 @@
                             </button>
                         </send-message>
 
-                        <button class="btn btn-outline-dark" id="bulk-read" data-url="{{ route('messages.update') }}">
+                        <button class="btn btn-outline-dark mx-2" id="bulk-read" data-url="{{ route('messages.update') }}">
                             {{ __('mark_all_as_read') }}
                         </button>
-
-                        <export-modal action="{{ route('messages.export') }}">
-                            <button class="btn btn-outline-dark mx-2">{{ __('export') }}</button>
-                        </export-modal>
 
                         <button class="btn btn-danger" id="bulk-delete" data-url="{{ route('messages.delete') }}">
                             {{ __('bulk_delete') }}
@@ -115,7 +111,7 @@
 
                                 <delete-item action="{{ route('messages.delete', data.id) }}">
                                     <a class="btn text-danger p-1" title="{{ __('delete') }}">
-                                        <i class="fa fa-trash-alt"></i>
+                                        <i class="fa fa-trash"></i>
                                     </a>
                                 </delete-item>
                             </td>

@@ -41,7 +41,7 @@ class View extends Command
                     $output->writeln('<fg=yellow>Failed to create layout "' . $view . '"</fg>');
                 }
     
-                $output->writeln('<info>Layout "' . $view . '" created succesfully</info>');
+                $output->writeln('<info>Layout "' . $view . '" has been created</info>');
             }
 
             return Command::SUCCESS;
@@ -52,7 +52,7 @@ class View extends Command
                 $output->writeln('<fg=yellow>Failed to create view template "' . $view . '"</fg>');
             }
 
-            $output->writeln('<info>View template "' . $view . '" created succesfully</info>');
+            $output->writeln('<info>View template "' . $view . '" has been created</info>');
         }
 
         return Command::SUCCESS;

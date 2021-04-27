@@ -81,7 +81,7 @@ class Schemas extends Command
             $output->writeln('<fg=yellow>Schema "' . $schema . '" already exists</error>');
         } else {
             Database::connection()->query("CREATE DATABASE $schema CHARACTER SET " . config('database.charset') . " COLLATE " . config('database.collation'));
-            $output->writeln('<info>Schema "' . $schema . '" created successfully</info>');
+            $output->writeln('<info>Schema "' . $schema . '" created</info>');
         }
     }
 
@@ -91,7 +91,7 @@ class Schemas extends Command
             $output->writeln('<fg=yellow>Schema "' . $schema . '" does not exists</>');
         } else {
             Database::connection()->query("DROP DATABASE IF EXISTS $schema");
-            $output->writeln('<info>Schema "' . $schema . '" deleted successfully</info>');
+            $output->writeln('<info>Schema "' . $schema . '" has been deleted</info>');
         }
     }
 }

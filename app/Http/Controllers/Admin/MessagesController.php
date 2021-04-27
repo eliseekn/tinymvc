@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Helpers\Report;
 use App\Helpers\Activity;
 use Framework\Http\Request;
 use Framework\Support\Alert;
@@ -112,26 +111,5 @@ class MessagesController extends Controller
 			Alert::toast(__('messages_deleted'))->success();
             $this->response()->json(['redirect' => route('messages.index')]);
 		}
-	}
-
-	/**
-	 * export
-	 *
-     * @param  \Framework\Http\Request $request
-	 * @return void
-	 */
-    public function export(Request $request): void
-	{
-        $data = $this->messages->findAllDateRange($request->date_start, $request->date_end);
-        $filename = 'messages_' . date('Y_m_d_His') . '.' . $request->file_type;
-
-        Activity::log(__('data_exported'));
-
-		Report::generate($filename, $data, [
-			'sender' => __('sender'), 
-			'recipient' => __('recipient'), 
-			'message' => __('message'), 
-			'created_at' => __('created_at')
-		]);
 	}
 }

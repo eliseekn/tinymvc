@@ -119,7 +119,7 @@ class Repository
 	 * @param  mixed $value
      * @return mixed
      */
-    public function findSingleBy(string $column, $operator = null, $value = null)
+    public function findOneBy(string $column, $operator = null, $value = null)
 	{
         return $this->select()->where($column, $operator, $value)->single();
 	}
@@ -131,9 +131,9 @@ class Repository
 	 * @param  mixed $value
      * @return mixed
      */
-    public function findSingle($operator = null, $value = null)
+    public function findOne($operator = null, $value = null)
 	{
-        return $this->findSingleBy('id', $operator, $value);
+        return $this->findOneBy('id', $operator, $value);
 	}
     
     /**
@@ -206,7 +206,7 @@ class Repository
      */
     public function findOrFail(string $column, $operator = null, $value = null)
     {
-        $result = $this->findSingleBy($column, $operator, $value);
+        $result = $this->findOneBy($column, $operator, $value);
 
         if ($result === false) {
             throw new Exception('Record not found in database.');

@@ -29,7 +29,7 @@ class Cache extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         Storage::path(config('storage.cache'))->deleteDir();
-        $output->writeln('<info>Cache cleared succesfully</info>');
+        $output->writeln('<info>Cache has been cleared</info>');
 
         return Command::SUCCESS;
     }

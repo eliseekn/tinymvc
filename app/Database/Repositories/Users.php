@@ -32,9 +32,9 @@ class Users extends Repository
      * @param  string $email
      * @return mixed
      */
-    public function findSingleByEmail(string $email)
+    public function findOneByEmail(string $email)
     {
-        return $this->findSingleBy('email', $email);
+        return $this->findOneBy('email', $email);
     }
     
     /**
@@ -216,7 +216,6 @@ class Users extends Repository
             'two_steps' => $request->has('two_steps') ? 1 : 0,
             'lang' => $request->lang,
             'timezone' => $request->timezone,
-            //'currency' => $request->currency,
             'dark' => $request->has('dark') ? 1 : 0,
             'alerts' => $request->has('alerts') ? 1 : 0,
             'email_notifications' => $request->has('email_notifications') ? 1 : 0
@@ -245,10 +244,15 @@ class Users extends Repository
     public function findAllDateRange($date_start, $date_end): array
     {
         return $this->select()
-            ->where('id', '!=', Auth::get('id'))
             ->subQuery(function($query) use ($date_start, $date_end) {
                 if (!empty($date_start) && !empty($date_end)) {
                     $query->whereBetween('created_at', $date_start, $date_end);
+                }
+            
+                $query->and('id', '!=', Auth::get('id'));
+                
+                if (!Auth::role(Roles::ROLE[0])) {
+                    $query->and('company', Auth::get('company'));
                 }
             })
             ->oldest()

@@ -25,8 +25,47 @@
             </div>
 
             <div class="form-group row">
+                <p class="col-sm-2 col-form-label">{{ __('products') }}</p>
+                <div class="col-form-label col-sm-10 font-weight-bold">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col"><i class="fa fa-sort"></i> {{ __('name') }}</th>
+                                    <th scope="col"><i class="fa fa-sort"></i> {{ __('quantity') }}</th>
+                                    <th scope="col"><i class="fa fa-sort"></i> {{ __('price') }}</th>
+                                    <th scope="col"><i class="fa fa-sort"></i> {{ __('total') }}</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for product in data.products %}
+                                <tr>
+                                    <td>{{ product.name }}</td>
+                                    <td>{{ product.quantity }}</td>
+                                    <td>{{ product.price }} {{ data.currency }}</td>
+                                    <td>{{ product.price * product.quantity }} {{ data.currency }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <p class="col-sm-2 col-form-label">{{ __('sub_total') }}</p>
+                <div class="col-form-label col-sm-10 font-weight-bold">{{ data.sub_total }}</div>
+            </div>
+
+            <div class="form-group row">
                 <p class="col-sm-2 col-form-label">{{ __('tax') }} (%)</p>
                 <div class="col-form-label col-sm-10 font-weight-bold">{{ data.tax }}</div>
+            </div>
+
+            <div class="form-group row">
+                <p class="col-sm-2 col-form-label">{{ __('total') }}</p>
+                <div class="col-form-label col-sm-10 font-weight-bold">{{ data.total_price }}</div>
             </div>
 
             <div class="form-group row">
@@ -45,35 +84,6 @@
                     {% else %}
                     <span class="badge badge-danger">{{ __(data.status) }}</span>
                     {% endif %}
-                </div>
-            </div>
-
-            <div class="form-group row">
-                <p class="col-sm-2 col-form-label">{{ __('products') }}</p>
-                <div class="col-form-label col-sm-10 font-weight-bold">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover mb-0">
-                            <thead>
-                                <tr>
-                                    <th scope="col">{{ __('name') }}</th>
-                                    <th scope="col">{{ __('quantity') }}</th>
-                                    <th scope="col">{{ __('price') }}</th>
-                                    <th scope="col">{{ __('total') }}</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                {% for product in data.products %}
-                                <tr>
-                                    <td>{{ product.name }}</td>
-                                    <td>{{ product.quantity }}</td>
-                                    <td>{{ product.price }}</td>
-                                    <td>{{ product.price * product.quantity }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
                 </div>
             </div>
 

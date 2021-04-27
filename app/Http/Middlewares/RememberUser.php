@@ -19,7 +19,7 @@ class RememberUser
     public function handle(Users $users): void
     {
         if (Cookies::has('user')) {
-            $user = $users->findSingleByEmail(Cookies::get('user'));
+            $user = $users->findOneByEmail(Cookies::get('user'));
 
             if ($user !== false && $user->remember) {
                 Session::create('user', $user);

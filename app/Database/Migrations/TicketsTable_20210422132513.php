@@ -26,7 +26,7 @@ class TicketsTable_20210422132513
             ->addString('ticket_id')
             ->addString('object')
             ->addBoolean('status')->default(1)
-            ->addEnum('priority', ['"critical"', '"high"', '"normal"', '"low"'])->default('low')
+            ->addEnum('priority', ['critical', 'high', 'normal', 'low'])->default('low')
             ->create();
         
         Schema::createTable('ticket_messages')
