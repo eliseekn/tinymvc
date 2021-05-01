@@ -63,12 +63,12 @@ class TwigExtensions extends \Twig\Extension\AbstractExtension implements \Twig\
 
     public function getGlobals(): array
     {
-        return $this->getCustomGlobals() + [];
+        return $this->getCustomGlobals();
     }
 
     public function getFilters()
     {
-        return $this->getCustomFilters() + [];
+        return $this->getCustomFilters();
     }
 
     public function getFunctions()

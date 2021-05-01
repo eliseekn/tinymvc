@@ -28,7 +28,7 @@ class NotificationsIcon extends HTMLElement {
     }
 
     getNotifications() {
-        fetch(process.env.APP_URL + 'api/notifications')
+        fetch('/api/notifications')
             .then(response => response.json())
             .then(data => {
                 this.notifications = data.notifications,
@@ -37,7 +37,7 @@ class NotificationsIcon extends HTMLElement {
     }
 
     getTranslations() {
-        fetch(process.env.APP_URL + 'api/translations')
+        fetch('/api/translations')
             .then(response => response.json())
             .then(data => {
                 this.translations = data.translations

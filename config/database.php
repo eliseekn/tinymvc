@@ -13,10 +13,10 @@
 $config = [
     'charset' => 'utf8',
     'collation' => 'utf8_unicode_ci',
-    'host' => env('MYSQL_HOST', 'localhost'),
-    'name' => env('MYSQL_DATABASE', 'test'),
-    'username' => env('MYSQL_USERNAME', 'root'),
-    'password' => env('MYSQL_PASSWORD', 'root'),
+    'host' => env('DB_HOST', 'localhost'),
+    'name' => env('DB_NAME', 'test'),
+    'username' => env('DB_USERNAME', 'root'),
+    'password' => env('DB_PASSWORD', 'root'),
     'table_prefix' => '',
     'timestamps' => true,
     'storage_engine' => 'InnoDB'

@@ -72,7 +72,7 @@ class Redirect
      * @param  string $uri
      * @return \Framework\Http\Redirect
      */
-    public function intended(string $uri = '/'): self
+    public function intended(string $uri): self
     {
         return $this->with('intended', $uri);
     }

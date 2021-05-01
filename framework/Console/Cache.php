@@ -23,7 +23,6 @@ class Cache extends Command
     protected function configure()
     {
         $this->setDescription('Clear twig templates cache');
-        $this->setHelp('This command allows you to clear twig templates cache');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

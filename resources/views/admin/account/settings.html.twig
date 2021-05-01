@@ -18,13 +18,6 @@
 
                     <div class="card-body">
                         <div class="form-group row">
-                            <label for="company" class="col-sm-3 col-form-label">{{ __('company') }}</label>
-                            <div class="col-sm-9">
-                                <input type="text" class="form-control" name="company" id="company" value="{{ inputs.company ?: data.company }}" {{ auth('role') == USER_ROLE[2] ? 'readonly' }} autofocus>
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
                             <label for="name" class="col-sm-3 col-form-label">{{ __('name') }}</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control {{ errors.name ? 'is-invalid' }}" name="name" id="name" value="{{ inputs.name ?: data.name }}" aria-describedby="name-error">
@@ -34,6 +27,13 @@
                                     {{ errors.name|raw  }}                            
                                 </div>
                                 {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="company" class="col-sm-3 col-form-label">{{ __('company') }}</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="company" id="company" value="{{ inputs.company ?: data.company }}" {{ auth('role') == USER_ROLE[2] ? 'readonly' }} autofocus>
                             </div>
                         </div>
 
@@ -77,6 +77,13 @@
                                     {% endif %}
                                     {% endfor %}
                                 </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="address" class="col-sm-3 col-form-label">{{ __('address') }}</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="address" id="address" value="{{ inputs.address ?: data.address }}" {{ auth('role') == USER_ROLE[2] ? 'readonly' }} autofocus>
                             </div>
                         </div>
                     </div>

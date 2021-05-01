@@ -8,7 +8,7 @@ class AvatarIcon extends HTMLElement {
     constructor() {
         super()
         this.getFirstLetter = this.getFirstLetter.bind(this)
-        this.getName = this.getName.bind(this)
+        this.getFirstName = this.getFirstName.bind(this)
     }
 
     connectedCallback() {
@@ -18,12 +18,12 @@ class AvatarIcon extends HTMLElement {
                     <span class="small font-weight-bold">${this.getFirstLetter()}</span>
                 </div>
 
-                <span class="ml-2">${this.getName()}</span>
+                <span class="ml-2">${this.getFirstName()}</span>
             </div>
         `
     }
 
-    getName() {
+    getFirstName() {
         const fullName = this.getAttribute('name')
         const firstName = fullName.split(' ')
 
@@ -35,7 +35,7 @@ class AvatarIcon extends HTMLElement {
     }
 
     getFirstLetter() {
-        return this.getName()[0].toUpperCase()
+        return this.getFirstName()[0].toUpperCase()
     }
 }
 

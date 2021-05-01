@@ -18,27 +18,23 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Create new repository file 
  */
-class MakeCommand extends Command
+class Cmd extends Command
 {
-    protected static $defaultName = 'make:command';
+    protected static $defaultName = 'make:cmd';
 
     protected function configure()
     {
         $this->setDescription('Create new console command');
-        $this->setHelp('This command allows you to create new console command');
-        $this->addArgument('class', InputArgument::REQUIRED, 'The class name');
-        $this->addArgument('name', InputArgument::REQUIRED, 'The command name');
+        $this->addArgument('cmd', InputArgument::REQUIRED, 'The command class name');
+        $this->addOption('name', null, InputOption::VALUE_REQUIRED, 'The command name');
         $this->addOption('description', null, InputOption::VALUE_REQUIRED, 'The command description (inside "")');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $class = $input->getArgument('class');
-        $name = $input->getArgument('name');
+        list($name, $class) = Make::generateClass($input->getArgument('cmd'), '', true);
 
-        list($_name, $class) = Make::generateClass($class, '');
-
-        if (!Make::createCommand($name, $input->getOption('description'))) {
+        if (!Make::createCommand($input->getArgument('cmd'), $input->getOption('name'), $input->getOption('description'))) {
             $output->writeln('<fg=yellow>Failed to create command "' . $class . '"</fg>');
         }
 

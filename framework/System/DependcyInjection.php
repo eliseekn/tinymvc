@@ -8,7 +8,6 @@
 
 namespace Framework\System;
 
-use Exception;
 use ReflectionClass;
 
 /**

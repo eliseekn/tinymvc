@@ -36,7 +36,7 @@ class Request
      */
     public function headers(?string $key = null, $default = null)
     {
-        $header = is_null($key) ? $_SERVER : $_SERVER[$key];
+        $header = is_null($key) ? $_SERVER : ($_SERVER[$key] ?? '');
         return empty($header) || is_null($header) ? $default : $header;
     }
     
@@ -48,7 +48,7 @@ class Request
     public function http_auth(): array
     {
         $header = $this->headers('HTTP_AUTHORIZATION');
-        return explode(' ', $header);
+        return is_null($header) ? [] : explode(' ', $header);
     }
     
     /**
@@ -176,7 +176,7 @@ class Request
     public function fullUri(): string
     {
         $uri = $this->headers('REQUEST_URI');
-        return $uri;
+        return is_null($uri) ? '' : $uri;
     }
 
     /**
@@ -208,7 +208,8 @@ class Request
      */
     public function remoteIP(): string
     {
-        return $this->headers('REMOTE_ADDR');
+        $ip = $this->headers('REMOTE_ADDR');
+        return is_null($ip) ? '' : $ip;
     }
     
     /**

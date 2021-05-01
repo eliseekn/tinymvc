@@ -25,7 +25,6 @@ class Migration extends Command
     protected function configure()
     {
         $this->setDescription('Create new migration');
-        $this->setHelp('This command allows you to create new migration');
         $this->addArgument('migration', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of migration table (separated by space if many)');
         $this->addOption('repository', null, InputOption::VALUE_NONE, 'Create new repository');
         $this->addOption('seed', null, InputOption::VALUE_NONE, 'Create new seed');

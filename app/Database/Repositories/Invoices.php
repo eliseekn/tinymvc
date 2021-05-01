@@ -27,6 +27,24 @@ class Invoices extends Repository
     }
 
     /**
+     * retrieves total incomes
+     *
+     * @param  string|null $status
+     * @return int
+     */
+    public function findSumByStatus(?string $status = null): int
+    {
+        return $this->sum('total_price')
+            ->subQuery(function ($query) use ($status) {
+                if (!is_null($status)) {
+                    $query->where('status', 'paid');
+                }
+            })
+            ->single()
+            ->value;
+    }
+
+    /**
      * retrieves all invoices by role
      *
      * @param  int|null $user_id

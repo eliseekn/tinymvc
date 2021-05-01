@@ -24,7 +24,6 @@ class Middleware extends Command
     protected function configure()
     {
         $this->setDescription('Create new middleware');
-        $this->setHelp('This command allows you to create new middleware');
         $this->addArgument('middleware', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of middleware (separated by space if many)');
     }
 
@@ -33,7 +32,7 @@ class Middleware extends Command
         $middlewares = $input->getArgument('middleware');
 
         foreach ($middlewares as $middleware) {
-            list($name, $class) = Make::generateClass($middleware, '');
+            list($name, $class) = Make::generateClass($middleware, '', true);
 
             if (!Make::createMiddleware($middleware)) {
                 $output->writeln('<fg=yellow>Failed to create middleware "' . $class . '"</fg>');

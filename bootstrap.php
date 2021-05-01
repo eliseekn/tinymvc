@@ -46,7 +46,7 @@ set_time_limit(0);
 
 //load .env file
 if (!Storage::path()->isFile('.env') && !empty((new Request())->uri())) {
-    throw new Exception('Missing ".env" file. Run "php console app:setup" on your terminal to setup application.');
+    throw new Exception('Missing ".env" file. Run "php console app:setup" on your terminal to setup application or create ".env" file from ".env.example"');
 }
 
 if (Storage::path()->isFile('.env')) {

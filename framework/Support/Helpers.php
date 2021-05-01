@@ -311,13 +311,17 @@ if (!function_exists('url')) {
 
 if (!function_exists('add_slash')) {      
     /**
-     * add_slash
+     * add trailing slash
      *
      * @param  string $uri
      * @return string
      */
     function add_slash(string $uri): string
     {
+        if (empty($uri)) {
+            return '/';
+        }
+
         if ($uri[-1] !== '/') {
             $uri = $uri . '/';
         }
@@ -887,12 +891,7 @@ if (!function_exists('env')) {
     function env(string $key, $default = null)
     {
         $data = getenv($key, true);
-
-        if ($data === false || empty($data)) {
-            $data = $default;
-        }
-
-        return $data;
+        return $data === false || empty($data) ? $default : $data;
     }
 }
 
@@ -905,7 +904,7 @@ if (!function_exists('set_env')) {
      */
     function set_env(array $config): void
     {
-        if (!is_array($config)) {
+        if (!is_array($config) || empty($config)) {
             return;
         }
 
@@ -935,7 +934,7 @@ if (!function_exists('save_env')) {
                 $data .= PHP_EOL;
             }
 
-            if ($key === 'MYSQL_PASSWORD') {
+            if ($key === 'DB_PASSWORD') {
                 $data .= PHP_EOL;
             }
         }
@@ -952,18 +951,19 @@ if (!function_exists('load_env')) {
      */
     function load_env(): void
     {
+        if (!Storage::path()->isFile('.env')) {
+            return;
+        }
+
         $lines = file(Storage::path()->file('.env'), FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
         foreach ($lines as $line) {
-            if (strpos(trim($line), '#') === 0) {
+            if (strpos(trim($line), '#')) {
                 continue;
             }
 
             list($name, $value) = explode('=', $line, 2);
-
-            if (!array_key_exists($name, getenv())) {
-                set_env([trim($name) => trim($value)]);
-            }
+            set_env([trim($name) => trim($value)]);
         }
     }
 }

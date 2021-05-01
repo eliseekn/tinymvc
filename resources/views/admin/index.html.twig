@@ -121,7 +121,7 @@
 			<div class="card shadow-sm mb-4 mb-md-0">
 				<div class="card-header">
 					<div class="d-flex flex-lg-row flex-column align-items-lg-center justify-content-lg-between">
-						<span>{{ __('latest_messages') }}</span>
+						<span>{{ __('recent_messages') }}</span>
 
 						<div class="d-flex flex-lg-row flex-column mt-lg-0 mt-2">
 							<send-message action="{{ route('messages.create') }}" recipient="0" modal_title="{{ __('new') }}">
@@ -172,7 +172,7 @@
 		<div class="col-md-6">
 			<div class="card shadow-sm">
 				<div class="card-header d-flex justify-content-between align-items-center ">
-					<span>{{ __('latest_notifications') }}</span>
+					<span>{{ __('recent_notifications') }}</span>
 
 					<div class="d-flex flex-lg-row flex-column mt-lg-0 mt-2">
 						<create-notification action="{{ route('notifications.create') }}">

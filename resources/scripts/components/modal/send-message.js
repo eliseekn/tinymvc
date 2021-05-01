@@ -16,13 +16,13 @@ class SendMessage extends HTMLElement {
     }
 
     getUsers() {
-        fetch(process.env.APP_URL + 'api/users')
+        fetch('/api/users')
             .then(response => response.json())
             .then(data => this.users = data.users)
     }
 
     getTranslations() {
-        fetch(process.env.APP_URL + 'api/translations')
+        fetch('/api/translations')
             .then(response => response.json())
             .then(data => this.translations = data.translations)
     }

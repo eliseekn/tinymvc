@@ -27,7 +27,6 @@ class Schemas extends Command
     protected function configure()
     {
         $this->setDescription('Manage MySQL schemas');
-        $this->setHelp('This command allows you to create or delete schemas');
         $this->addArgument('schema', InputArgument::OPTIONAL|InputArgument::IS_ARRAY, 'The name of schema (separated by space if many)');
         $this->addOption('create', null, InputOption::VALUE_NONE, 'Create new schemas');
         $this->addOption('delete', null, InputOption::VALUE_NONE, 'Delete schemas');

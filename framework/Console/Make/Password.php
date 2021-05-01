@@ -24,7 +24,6 @@ class Password extends Command
     protected function configure()
     {
         $this->setDescription('Generate hashed password');
-        $this->setHelp('This command allows you to generate hashed password');
         $this->addArgument('password', InputArgument::REQUIRED, 'The password to hash');
     }
 

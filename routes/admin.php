@@ -17,7 +17,6 @@ use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ActivitiesController;
 use App\Http\Controllers\Admin\NotificationsController;
-use App\Http\Controllers\Admin\WalletController;
 
 /**
  * Admin routes
@@ -43,18 +42,16 @@ Route::groupPrefix('admin', function () {
         Route::get('resources/tickets/new', [TicketsController::class, 'new'])->name('tickets.new')->protected(Roles::ROLE[0]);
         Route::get('resources/?{user_id}?/tickets', [TicketsController::class, 'index'])->name('tickets.index')->where(['user_id' => 'num']);
         Route::get('resources/tickets/{id}/read', [TicketsController::class, 'read'])->name('tickets.read')->where(['id' => 'num']);
-
-        Route::get('account/messages', [MessagesController::class, 'index'])->name('messages.index');
-        Route::get('account/notifications', [NotificationsController::class, 'index'])->name('notifications.index');
-        Route::get('account/{id}/settings', [SettingsController::class, 'index'])->name('settings.index')->where(['id' => 'num']);
-        Route::get('account/activities', [ActivitiesController::class, 'index'])->name('activities.index');
         
         Route::get('resources/invoices', [InvoicesController::class, 'index'])->name('invoices.index');
         Route::get('resources/invoices/new', [InvoicesController::class, 'new'])->name('invoices.new')->protected(Roles::ROLE[2]);
         Route::get('resources/invoices/{id}/edit', [InvoicesController::class, 'edit'])->name('invoices.edit')->where(['id' => 'num'])->protected(Roles::ROLE[2]);
         Route::get('resources/invoices/{id}/read', [InvoicesController::class, 'read'])->name('invoices.read')->where(['id' => 'num'])->protected(Roles::ROLE[2]);
-    
-        Route::get('account/wallet', [WalletController::class, 'index'])->name('wallet.index')->protected(Roles::ROLE[1], Roles::ROLE[2]);
+
+        Route::get('account/messages', [MessagesController::class, 'index'])->name('messages.index');
+        Route::get('account/notifications', [NotificationsController::class, 'index'])->name('notifications.index');
+        Route::get('account/{id}/settings', [SettingsController::class, 'index'])->name('settings.index')->where(['id' => 'num']);
+        Route::get('account/activities', [ActivitiesController::class, 'index'])->name('activities.index');
     });
 
     Route::groupMiddlewares(['remember', 'auth', 'csrf', 'sanitize'], function () {
@@ -71,6 +68,12 @@ Route::groupPrefix('admin', function () {
         Route::patch('resources/tickets/?{id}?/{status}/update', [TicketsController::class, 'update'])->name('tickets.update')->where(['id' => 'num', 'status' => 'num']);
         Route::post('resources/tickets/create', [TicketsController::class, 'create'])->name('tickets.create')->protected(Roles::ROLE[0]);
         Route::post('resources/tickets/messages/create', [TicketsController::class, 'createMessage'])->name('tickets.messages.create');
+
+        Route::delete('resources/invoices/?{id}?/delete', [InvoicesController::class, 'delete'])->name('invoices.delete')->where(['id' => 'num'])->protected(Roles::ROLE[0]);
+        Route::patch('resources/invoices/?{id}?/update', [InvoicesController::class, 'update'])->name('invoices.update')->where(['id' => 'num'])->protected(Roles::ROLE[0]);
+        Route::post('resources/invoices/create', [InvoicesController::class, 'create'])->name('invoices.create')->protected(Roles::ROLE[0]);
+        Route::post('resources/invoices/export', [InvoicesController::class, 'export'])->name('invoices.export')->protected(Roles::ROLE[2]);
+        Route::post('resources/invoices/{id}/download', [InvoicesController::class, 'download'])->name('invoices.download')->where(['id' => 'num'])->protected(Roles::ROLE[2]);
         
         Route::delete('account/messages/?{id}?/delete', [MessagesController::class, 'delete'])->name('messages.delete')->where(['id' => 'num']);
         Route::patch('account/messages/?{id}?/update', [MessagesController::class, 'update'])->name('messages.update')->where(['id' => 'num']);
@@ -85,11 +88,5 @@ Route::groupPrefix('admin', function () {
         
         Route::delete('account/activities/?{id}?/delete', [ActivitiesController::class, 'delete'])->name('activities.delete')->where(['id' => 'num']);
         Route::post('account/activities/export', [ActivitiesController::class, 'create'])->name('activities.export');
-
-        Route::delete('resources/invoices/?{id}?/delete', [InvoicesController::class, 'delete'])->name('invoices.delete')->where(['id' => 'num'])->protected(Roles::ROLE[0]);
-        Route::patch('resources/invoices/?{id}?/update', [InvoicesController::class, 'update'])->name('invoices.update')->where(['id' => 'num'])->protected(Roles::ROLE[0]);
-        Route::post('resources/invoices/create', [InvoicesController::class, 'create'])->name('invoices.create')->protected(Roles::ROLE[0]);
-        Route::post('resources/invoices/export', [InvoicesController::class, 'export'])->name('invoices.export')->protected(Roles::ROLE[2]);
-        Route::post('resources/invoices/{id}/download', [InvoicesController::class, 'download'])->name('invoices.download')->where(['id' => 'num'])->protected(Roles::ROLE[2]);
     });
 })->register();

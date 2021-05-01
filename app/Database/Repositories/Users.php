@@ -199,6 +199,7 @@ class Users extends Repository
             'name' => $request->name,
             'email' => $request->email,
             'country' => $request->country,
+            'address' => $request->address,
             'company' => $request->company,
             'phone' => $request->phone,
             'two_steps' => $request->has('two_steps') ? 1 : 0,

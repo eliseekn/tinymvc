@@ -25,7 +25,6 @@ class Controller extends Command
     protected function configure()
     {
         $this->setDescription('Create new controller');
-        $this->setHelp('This command allows you to create new controller');
         $this->addArgument('controller', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of controller (separated by space if many)');
         $this->addOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Specify controller namespace');
     }

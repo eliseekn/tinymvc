@@ -24,7 +24,6 @@ class Seed extends Command
     protected function configure()
     {
         $this->setDescription('Create new seed');
-        $this->setHelp('This command allows you to create new seed');
         $this->addArgument('seed', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of seed table (separated by space if many)');
     }
 

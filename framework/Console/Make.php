@@ -28,22 +28,25 @@ class Make
     /**
      * generate classname
      *
-     * @param  string $table
+     * @param  string $base_name
      * @param  string $class
+     * @param  bool $singular
      * @return array
      */
-    public static function generateClass(string $table, string $class): array
+    public static function generateClass(string $base_name, string $class, bool $singular = false): array
     {
-        $table = strtolower($table);
+        $base_name = strtolower($base_name);
 
-        if ($table[-1] !== 's') {
-            $table .= 's';
+        if (!$singular) {
+            if ($base_name[-1] !== 's') {
+                $base_name .= 's';
+            }
         }
 
-        $name = ucfirst($table);
+        $name = ucfirst($base_name);
 
-        if (strpos($table, '_')) {
-            list($f, $s) = explode('_', $table);
+        if (strpos($base_name, '_')) {
+            list($f, $s) = explode('_', $base_name);
             $name = ucfirst($f) . ucfirst($s);
         }
 
@@ -57,7 +60,7 @@ class Make
             $class .= date('_YmdHis');
         }
 
-        return [$table, $class];
+        return [$base_name, $class];
     }
     
     /**
@@ -202,7 +205,7 @@ class Make
      */
     public static function createValidator(string $validator): bool
     {
-        list($name, $class) = self::generateClass($validator, '');
+        list($name, $class) = self::generateClass($validator, '', true);
 
         $data = self::stubs()->readFile('Validator.stub');
         $data = str_replace('CLASSNAME', $class, $data);
@@ -222,7 +225,7 @@ class Make
      */
     public static function createMiddleware(string $middleware): bool
     {
-        list($name, $class) = self::generateClass($middleware, '');
+        list($name, $class) = self::generateClass($middleware, '', true);
         
         $data = self::stubs()->readFile('Middleware.stub');
         $data = str_replace('CLASSNAME', $class, $data);
@@ -324,12 +327,10 @@ class Make
      * @param  string $description
      * @return bool
      */
-    public static function createCommand(string $name, string $description): bool
+    public static function createCommand(string $cmd, string $name, string $description): bool
     {
-        list($_name, $class) = self::generateClass($name, '');
+        list($_name, $class) = self::generateClass($cmd, '', true);
 
-        dd($class);
-        
         $data = self::stubs()->readFile('Command.stub');
         $data = str_replace('CLASSNAME', $class, $data);
         $data = str_replace('COMMANDNAME', $name, $data);

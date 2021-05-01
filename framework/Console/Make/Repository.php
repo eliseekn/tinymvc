@@ -24,7 +24,6 @@ class Repository extends Command
     protected function configure()
     {
         $this->setDescription('Create new repository');
-        $this->setHelp('This command allows you to create new repository');
         $this->addArgument('repository', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of repository table (separated by space if many)');
     }
 

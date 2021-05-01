@@ -13,7 +13,7 @@
 $config = [
     'default' => 'smtp',
 
-    'sender_name' => 'TinyMVC',
+    'sender_name' => config('app.name'),
     'sender_email' => 'tiny@mvc.framework',
 
     'smtp' => [

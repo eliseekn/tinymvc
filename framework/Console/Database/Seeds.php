@@ -8,7 +8,6 @@
 
 namespace Framework\Console\Database;
 
-use Exception;
 use Framework\System\Storage;
 use App\Database\Seeds\Seeder;
 use Symfony\Component\Console\Helper\Table;
@@ -28,7 +27,6 @@ class Seeds extends Command
     protected function configure()
     {
         $this->setDescription('Manage seeds');
-        $this->setHelp('This command allows you to insert seeds into database');
         $this->addArgument('seed', InputArgument::OPTIONAL|InputArgument::IS_ARRAY, 'The name of seed (separated by space if many)');
         $this->addOption('run', null, InputOption::VALUE_NONE, 'Insert seeds');
         $this->addOption('list', null, InputOption::VALUE_NONE, 'Display the list of seeds');

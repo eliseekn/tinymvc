@@ -31,14 +31,13 @@ $console->add(new \Framework\Console\Make\View());
 $console->add(new \Framework\Console\Make\Mail());
 $console->add(new \Framework\Console\Make\Middleware());
 $console->add(new \Framework\Console\Make\Resource());
-$console->add(new \Framework\Console\Make\MakeCommand());
+$console->add(new \Framework\Console\Make\Cmd());
 $console->add(new \Framework\Console\Make\Password());
 
 $console->add(new \Framework\Console\App\Setup());
 $console->add(new \Framework\Console\App\Key());
 
 $console->add(new \Framework\Console\Cache());
-
 $console->add(new \Framework\Console\Server());
 
 $console->run();

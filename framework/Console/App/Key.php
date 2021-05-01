@@ -22,21 +22,19 @@ class Key extends Command
     protected function configure()
     {
         $this->setDescription('Generate application encryption key');
-        $this->setHelp('This command allows you to generate application encryption key');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $config = [
             'APP_NAME' => config('app.name') . PHP_EOL,
-            'APP_LANG' => config('app.lang') . PHP_EOL,
-            'APP_FOLDER' => config('app.folder') . PHP_EOL,
             'APP_URL' => config('app.url') . PHP_EOL,
+            'APP_LANG' => config('app.lang') . PHP_EOL,
             'APP_CURRENCY' => config('app.currency') . PHP_EOL,
-            'MYSQL_HOST' => config('database.host') . PHP_EOL,
-            'MYSQL_DATABASE' => config('database.name') . PHP_EOL,
-            'MYSQL_USERNAME' => config('database.username') . PHP_EOL,
-            'MYSQL_PASSWORD' => config('database.password') . PHP_EOL,
+            'DB_HOST' => config('database.host') . PHP_EOL,
+            'DB_NAME' => config('database.name') . PHP_EOL,
+            'DB_USERNAME' => config('database.username') . PHP_EOL,
+            'DB_PASSWORD' => config('database.password') . PHP_EOL,
             'ENCRYPTION_KEY' => base64_encode(random_string(30, true))
         ];
 

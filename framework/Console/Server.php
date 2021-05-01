@@ -14,7 +14,6 @@ class Server extends Command
     protected function configure()
     {
         $this->setDescription('Start a local server development');
-        $this->setHelp('This command allows you to start a local server development');
         $this->addArgument('port', InputArgument::OPTIONAL, 'Specify server port');
     }
 

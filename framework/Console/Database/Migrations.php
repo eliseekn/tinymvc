@@ -29,7 +29,6 @@ class Migrations extends Command
     protected function configure()
     {
         $this->setDescription('Manage migrations tables');
-        $this->setHelp('This command allows you to create or drop migrations tables');
         $this->addArgument('migration', InputArgument::OPTIONAL|InputArgument::IS_ARRAY, 'The name of table migration (separated by space if many)');
         $this->addOption('migrate', null, InputOption::VALUE_NONE, 'Migrate tables');
         $this->addOption('rollup', null, InputOption::VALUE_NONE, 'Rollup migrations tables');

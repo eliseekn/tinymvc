@@ -22,40 +22,82 @@ class Setup extends Command
     protected function configure()
     {
         $this->setDescription('Setup application main configuration');
-        $this->setHelp('This command allows you to setup application main configuration');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $config = [];
+        $finish_setup = false;
 
-        $output->writeln('<question>Application name (ex: TinyMVC):</question> ');
-        $config['APP_NAME'] = fgets(STDIN);
+        while (!$finish_setup) {
+            $output->write('<info>Application name (eg: TinyMVC):</info> ');
+            $config['APP_NAME'] = fgets(STDIN);
 
-        $output->writeln('<question>Application language (ex: en):</question> ');
-        $config['APP_LANG'] = fgets(STDIN);
+            if (strlen($config['APP_NAME']) <= 1) {
+                $output->writeln('<error>This option is required</error>');
+                continue;
+            }
 
-        $output->writeln('<question>Application url (ex: http://localhost:80/):</question> ');
-        $config['APP_URL'] = fgets(STDIN);
-        $config['APP_URL'] = add_slash($config['APP_URL']);
+            $output->write('<info>Application url (eg: http://127.0.0.1:8080/):</info> ');
+            $app_url = fgets(STDIN);
 
-        $output->writeln('<question>Application folder name (leave empty if not using sub-folder):</question> ');
-        $config['APP_FOLDER'] = fgets(STDIN);
+            if (strlen($app_url) <= 1) {
+                $output->writeln('<error>This option is required</error>');
+                continue;
+            }
 
-        $output->writeln('<question>Application currency (ex: USD):</question> ');
-        $config['APP_CURRENCY'] = fgets(STDIN);
+            $config['APP_URL'] = add_slash(rtrim($app_url, PHP_EOL)) . PHP_EOL;
 
-        $output->writeln('<question>MySQL hostname (ex: localhost):</question> ');
-        $config['MYSQL_HOST'] = fgets(STDIN);
+            $output->write('<info>Application language (eg: en):</info> ');
+            $config['APP_LANG'] = fgets(STDIN);
 
-        $output->writeln('<question>MySQL database name:</question> ');
-        $config['MYSQL_DATABASE'] = fgets(STDIN);
+            if (strlen($config['APP_LANG']) <= 1) {
+                $output->writeln('<error>This option is required</error>');
+                continue;
+            }
 
-        $output->writeln('<question>MySQL database username:</question> ');
-        $config['MYSQL_USERNAME'] = fgets(STDIN);
+            $output->write('<info>Application currency (eg: USD):</info> ');
+            $config['APP_CURRENCY'] = fgets(STDIN);
 
-        $output->writeln('<question>MySQL database password:</question> ');
-        $config['MYSQL_PASSWORD'] = fgets(STDIN);
+            if (strlen($config['APP_CURRENCY']) <= 1) {
+                $output->writeln('<error>This option is required</error>');
+                continue;
+            }
+
+            $output->write('<info>Database host (eg: localhost):</info> ');
+            $config['DB_HOST'] = fgets(STDIN);
+
+            if (strlen($config['DB_HOST']) <= 1) {
+                $output->writeln('<error>This option is required</error>');
+                continue;
+            }
+
+            $output->write('<info>Database name (eg: tinymvc):</info> ');
+            $config['DB_NAME'] = fgets(STDIN);
+
+            if (strlen($config['DB_NAME']) <= 1) {
+                $output->writeln('<error>This option is required</error>');
+                continue;
+            }
+
+            $output->write('<info>Database username:</info> ');
+            $config['DB_USERNAME'] = fgets(STDIN);
+
+            if (strlen($config['DB_USERNAME']) <= 1) {
+                $output->writeln('<error>This option is required</error>');
+                continue;
+            }
+
+            $output->write('<info>Database password:</info> ');
+            $config['DB_PASSWORD'] = fgets(STDIN);
+
+            if (strlen($config['DB_PASSWORD']) <= 1) {
+                $output->writeln('<error>This option is required</error>');
+                continue;
+            }
+
+            $finish_setup = true;
+        }
 
         $config['ENCRYPTION_KEY'] = base64_encode(random_string(30, true));
 

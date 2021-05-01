@@ -25,7 +25,6 @@ class Resource extends Command
     protected function configure()
     {
         $this->setDescription('Create new admin resource');
-        $this->setHelp('This command allows you to create new admin resource');
         $this->addArgument('resource', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of resource (separated by space if many)');
         $this->addOption('views', null, InputOption::VALUE_NONE, 'Create views only');
         $this->addOption('routes', null, InputOption::VALUE_NONE, 'Create routes only');
