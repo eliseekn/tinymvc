@@ -320,20 +320,20 @@ class Make
     /**
      * create console command
      *
-     * @param  string $command
+     * @param  string $name
      * @param  string $description
-     * @param  string $help
      * @return bool
      */
-    public static function createCommand(string $command, string $description, string $help = ''): bool
+    public static function createCommand(string $name, string $description): bool
     {
-        list($name, $class) = self::generateClass($command, 'command');
+        list($_name, $class) = self::generateClass($name, '');
+
+        dd($class);
         
         $data = self::stubs()->readFile('Command.stub');
         $data = str_replace('CLASSNAME', $class, $data);
-        $data = str_replace('COMMANDNAME', $command, $data);
+        $data = str_replace('COMMANDNAME', $name, $data);
         $data = str_replace('COMMANDDESCPTION', $description, $data);
-        $data = str_replace('COMMANDHELP', $help, $data);
 
         if (!Storage::path(config('storage.commands'))->writeFile($class . '.php', $data)) {
             return false;

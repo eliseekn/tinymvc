@@ -46,6 +46,9 @@
     'media' => 'Media',
     'invoice' => 'Facture',
     'invoices' => 'Factures',
+    'incomes' => 'Revenus',
+    'expenses' => 'Dépenses',
+    'wallet' => 'Finances',
 
     //navabar
     'mark_as_read' => 'Marquer comme lu',
@@ -155,7 +158,8 @@
     'closed' => 'Fermé',
     'author' => 'Auteur',
     'new_message' => 'Nouveau message',
-    'customer' => 'Client',
+    'customer' => 'Client',    
+    'customers' => 'Clients',
     'paid' => 'Paiement effectué',
     'pending' => 'En attente de paiment',
     'expired' => 'Expiré',
@@ -167,6 +171,10 @@
     'preview' => 'Apperçu',
     'sub_total' => 'Sous-total',
     'critical' => 'Critique',
+    'administrator' => 'Administrateur',
+    'administrators' => 'Administrateurs',
+    'visitor' => 'Visiteur',
+    'visitors' => 'Visiteurs',
 
     //pagination
     'previous' => 'Précédent',

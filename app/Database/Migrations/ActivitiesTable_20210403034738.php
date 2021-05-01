@@ -2,7 +2,7 @@
 
 namespace App\Database\Migrations;
 
-use Framework\Database\Schema;
+use Framework\Database\Migration;
 
 class ActivitiesTable_20210403034738
 {         
@@ -20,7 +20,7 @@ class ActivitiesTable_20210403034738
      */
     public function create(): void
     {
-        Schema::createTable($this->table)
+        Migration::newTable($this->table)
             ->addBigInt('id')->primaryKey()
             ->addString('user')
             ->addString('url')
@@ -37,6 +37,6 @@ class ActivitiesTable_20210403034738
      */
     public function drop(): void
     {
-        Schema::dropTable($this->table);
+        Migration::dropTable($this->table);
     }
 }

@@ -10,7 +10,7 @@ namespace Framework\Console\Database;
 
 use Framework\System\Storage;
 use App\Database\Seeds\Seeder;
-use Framework\Database\Schema;
+use Framework\Database\Migration;
 use Framework\Database\QueryBuilder;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Command\Command;
@@ -163,7 +163,7 @@ class Migrations extends Command
     protected function saveMigrationTable(OutputInterface $output, string $table): void
     {
         if (!QueryBuilder::tableExists('migrations')) {
-            Schema::createTable('migrations')
+            Migration::newTable('migrations')
                 ->addInt('id')->primaryKey()
                 ->addString('migration')
                 ->create();

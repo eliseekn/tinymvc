@@ -8,7 +8,6 @@
 
 namespace Framework\Console\Database;
 
-use Exception;
 use Framework\Database\Database;
 use Framework\Database\QueryBuilder;
 use Symfony\Component\Console\Helper\Table;

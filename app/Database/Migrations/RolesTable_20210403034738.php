@@ -2,7 +2,7 @@
 
 namespace App\Database\Migrations;
 
-use Framework\Database\Schema;
+use Framework\Database\Migration;
 
 class RolesTable_20210403034738
 {         
@@ -20,7 +20,7 @@ class RolesTable_20210403034738
      */
     public function create(): void
     {
-        Schema::createTable($this->table)
+        Migration::newTable($this->table)
             ->addInt('id')->primaryKey()
             ->addString('name')->unique()
             ->create();
@@ -33,6 +33,6 @@ class RolesTable_20210403034738
      */
     public function drop(): void
     {
-        Schema::dropTable($this->table);
+        Migration::dropTable($this->table);
     }
 }

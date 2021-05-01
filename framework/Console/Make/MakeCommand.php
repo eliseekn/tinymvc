@@ -26,20 +26,19 @@ class MakeCommand extends Command
     {
         $this->setDescription('Create new console command');
         $this->setHelp('This command allows you to create new console command');
-        $this->addArgument('name', InputArgument::REQUIRED, 'The name of command class');
-        $this->addArgument('cmd', InputArgument::REQUIRED, 'The command name');
+        $this->addArgument('class', InputArgument::REQUIRED, 'The class name');
+        $this->addArgument('name', InputArgument::REQUIRED, 'The command name');
         $this->addOption('description', null, InputOption::VALUE_REQUIRED, 'The command description (inside "")');
-        $this->addOption('usage', null, InputOption::VALUE_OPTIONAL, 'The command help usage (inside "")');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $class = $input->getArgument('class');
         $name = $input->getArgument('name');
-        $command = $input->getArgument('cmd');
 
-        list($name, $class) = Make::generateClass($name, 'command');
+        list($_name, $class) = Make::generateClass($class, '');
 
-        if (!Make::createCommand($command, $input->getOption('description'), $input->getOption('help'))) {
+        if (!Make::createCommand($name, $input->getOption('description'))) {
             $output->writeln('<fg=yellow>Failed to create command "' . $class . '"</fg>');
         }
 

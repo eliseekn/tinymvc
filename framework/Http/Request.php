@@ -158,23 +158,14 @@ class Request
     }
     
     /**
-     * check if request method is GET
+     * check request method
      *
+     * @param  string $method
      * @return bool
      */
-    public function isGet(): bool
+    public function is(string $method): bool
     {
-        return $this->method() === 'GET';
-    }
-    
-    /**
-     * check if request method is POST
-     *
-     * @return bool
-     */
-    public function isPost(): bool
-    {
-        return $this->method() === 'POST';
+        return $this->method() === $method;
     }
 
     /**
@@ -185,7 +176,6 @@ class Request
     public function fullUri(): string
     {
         $uri = $this->headers('REQUEST_URI');
-        $uri = str_replace('/' . config('app.folder'), '', $uri); //remove app folder if exists
         return $uri;
     }
 
@@ -224,23 +214,39 @@ class Request
     /**
      * check if request item exists
      *
-     * @param  string $item
+     * @param  string[] $items
      * @return bool
      */
-    public function has(string $item): bool
+    public function has(string ...$items): bool
     {
-        return isset($this->{$item});
+        $result = false;
+
+        foreach ($items as $item) {
+            $result = isset($this->{$item});
+        }
+
+        return $result;
     }
     
     /**
      * check if request item exists and not empty
      *
-     * @param  string $item
+     * @param  string[] $items
      * @return bool
      */
-    public function filled(string $item): bool
+    public function filled(string ...$items): bool
     {
-        return $this->has($item) && (!empty($this->{$item}) || !is_null($this->{$item}));
+        $result = $this->has(implode(',', $items));
+
+        if (!$result) {
+            return false;
+        } 
+
+        foreach ($items as $item) {
+            $result = !empty($this->{$item}) || !is_null($this->{$item});
+        }
+
+        return $result;
     }
 
     /**

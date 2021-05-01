@@ -39,4 +39,6 @@ $console->add(new \Framework\Console\App\Key());
 
 $console->add(new \Framework\Console\Cache());
 
+$console->add(new \Framework\Console\Server());
+
 $console->run();

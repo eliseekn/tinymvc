@@ -1,6 +1,6 @@
 <?php
 
-namespace Framework\Console\Commands;
+namespace App\Commands;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -13,7 +13,6 @@ class CLASSNAME extends Command
     protected function configure()
     {
         $this->setDescription('COMMANDDESCPTION');
-        $this->setHelp('COMMANDHELP');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

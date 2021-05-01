@@ -99,21 +99,21 @@
                 <td>{{ loop.index }}</td>
                 <td>{{ product.name }}</td>
                 <td>{{ product.quantity }}</td>
-                <td>{{ product.price }} {{ data.currency }}</td>
-                <td>{{ product.price * product.quantity }} {{ data.currency }}</td>
+                <td>{{ product.price }} {{ config('app.currency') }}</td>
+                <td>{{ product.price * product.quantity }} {{ config('app.currency') }}</td>
             </tr>
             {% endfor %}
 
             <tr>
                 <td colspan="5" align="right">
-                    {{ __('sub_total') }}: <strong>{{ data.sub_total }} {{ data.currency }}</strong> <br>
+                    {{ __('sub_total') }}: <strong>{{ data.sub_total }} {{ config('app.currency') }}</strong> <br>
                     {{ __('tax') }}: <strong>{{ data.tax }} %</strong> <br>
                 </td>
             </tr>
         </tbody>
     </table>
 
-    <p class="total">{{ __('total') }}: <strong>{{ data.total_price }} {{ data.currency }}</strong></p>
+    <p class="total">{{ __('total') }}: <strong>{{ data.total_price }} {{ config('app.currency') }}</strong></p>
 </body>
 
 </html>

@@ -76,6 +76,11 @@ class Users extends Repository
         return $this->select()
             ->where('id', '!=', Auth::get('id'))
             ->and('role', $role)
+            ->subQuery(function ($query) {
+                if (!Auth::role(Roles::ROLE[0])) {
+                    $query->and('company', Auth::get('company'));
+                }
+            })
             ->all();
     }
     
@@ -97,25 +102,6 @@ class Users extends Repository
             ->oldest()
             ->paginate($items_per_pages);
     }
-    
-    /**
-     * retrieves active users count
-     *
-     * @return int
-     */
-    public function activeCount(): int
-    {
-        return $this->count()
-            ->where('id', '!=', Auth::get('id'))
-            ->and('active', 1)
-            ->subQuery(function ($query) {
-                if (!Auth::role(Roles::ROLE[0])) {
-                    $query->and('company', Auth::get('company'));
-                }
-            })
-            ->single()
-            ->value;
-    }
 
     /**
      * store user
@@ -133,7 +119,7 @@ class Users extends Repository
             'address' => $request->address,
             'company' => Auth::role(Roles::ROLE[0]) ? $request->company : Auth::get('company'),
             'password' => Encryption::hash($request->password),
-            'active' => 1,
+            'status' => 1,
             'role' => Auth::role(Roles::ROLE[0]) ? $request->role : Roles::ROLE[2],
             'lang' => Auth::role(Roles::ROLE[0]) ? 'en' : Auth::get('lang'),
             'country' => Auth::role(Roles::ROLE[0]) ? 'US' : Auth::get('country')
@@ -152,10 +138,10 @@ class Users extends Repository
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'company' => $request->company,
             'address' => $request->address,
+            'company' => $request->company,
+            'country' => $request->country,
             'password' => Encryption::hash($request->password),
-            'role' => Roles::ROLE[3],
         ]);
     }
     
@@ -173,8 +159,10 @@ class Users extends Repository
             'email' => $request->email,
             'role' => $request->role,
             'phone' => $request->phone,
+            'address' => $request->address,
             'company' => $request->company,
-            'active' => $request->account_state
+            'country' => $request->country,
+            'status' => $request->account_state
 		];
 		
 		if ($request->filled('password')) {

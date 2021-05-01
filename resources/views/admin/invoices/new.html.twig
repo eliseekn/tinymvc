@@ -60,13 +60,6 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="currency" class="col-sm-2 col-form-label">{{ __('currency') }}</label>
-                    <div class="col-sm-10">
-                        <currency-picker selected="{{ data.currency }}"></currency-picker>
-                    </div>
-                </div>
-
-                <div class="form-group row">
                     <label for="expire" class="col-sm-2 col-form-label">{{ __('expires_at') }}</label>
                     <div class="col-sm-10">
                         <input type="date" class="form-control" value="{{ inputs.expire ?: '' }}" name="expire" id="expire">

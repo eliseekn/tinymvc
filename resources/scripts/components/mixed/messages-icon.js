@@ -28,7 +28,7 @@ class MessagesIcon extends HTMLElement {
     }
 
     getMessages() {
-        fetch(process.env.APP_URL + process.env.APP_FOLDER + '/api/messages')
+        fetch(process.env.APP_URL + 'api/messages')
             .then(response => response.json())
             .then(data => {
                 this.messages = data.messages,
@@ -37,7 +37,7 @@ class MessagesIcon extends HTMLElement {
     }
 
     getTranslations() {
-        fetch(process.env.APP_URL + process.env.APP_FOLDER + '/api/translations')
+        fetch(process.env.APP_URL + 'api/translations')
             .then(response => response.json())
             .then(data => {
                 this.translations = data.translations

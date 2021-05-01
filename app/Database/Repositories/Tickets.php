@@ -84,15 +84,10 @@ class Tickets extends Repository
     public function openCount(?int $user_id = null): int
     {
         return $this->count()
+            ->where('status', 1)
             ->subQuery(function ($query) use ($user_id) {
                 if (!is_null($user_id)) {
-                    $query->join('users', 'tickets.user_id', '=', 'users.id')
-                        ->where('user_id', $user_id)
-                        ->where('status', 1);
-                }
-
-                else {
-                    $query->where('status', 1);
+                    $query->and('user_id', $user_id);
                 }
             })
             ->single()

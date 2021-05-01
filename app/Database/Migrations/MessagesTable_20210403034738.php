@@ -2,7 +2,7 @@
 
 namespace App\Database\Migrations;
 
-use Framework\Database\Schema;
+use Framework\Database\Migration;
 
 class MessagesTable_20210403034738
 {         
@@ -20,7 +20,7 @@ class MessagesTable_20210403034738
      */
     public function create(): void
     {
-        Schema::createTable($this->table)
+        Migration::newTable($this->table)
             ->addBigInt('id')->primaryKey()
             ->addBigInt('sender')
             ->addBigInt('recipient')
@@ -39,6 +39,6 @@ class MessagesTable_20210403034738
      */
     public function drop(): void
     {
-        Schema::dropTable($this->table);
+        Migration::dropTable($this->table);
     }
 }

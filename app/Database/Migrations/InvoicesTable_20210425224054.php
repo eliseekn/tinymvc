@@ -2,7 +2,7 @@
 
 namespace App\Database\Migrations;
 
-use Framework\Database\Schema;
+use Framework\Database\Migration;
 
 class InvoicesTable_20210425224054
 {         
@@ -20,14 +20,13 @@ class InvoicesTable_20210425224054
      */
     public function create(): void
     {
-        Schema::createTable($this->table)
+        Migration::newTable($this->table)
             ->addBigInt('id')->primaryKey()
             ->addBigInt('user_id')
             ->addString('invoice_id')
             ->addLongText('products')
             ->addDecimal('sub_total')
             ->addDecimal('total_price')
-            ->addString('currency')
             ->addDecimal('tax')->setNull()
             ->addTimestamp('expire')->setNull()
             ->addEnum('status', ['pending', 'paid', 'expired'])->default('pending')
@@ -41,6 +40,6 @@ class InvoicesTable_20210425224054
      */
     public function drop(): void
     {
-        Schema::dropTable($this->table);
+        Migration::dropTable($this->table);
     }
 }

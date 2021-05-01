@@ -59,22 +59,14 @@ class Router
     }
     
     /**
-     * check user access to protected routes
+     * check access to protected routes
      *
      * @param  array $roles
      * @return void
      */
     private static function checkAccess(array $roles): void
     {
-        if (!Auth::check()) {
-            if (!empty(config('errors.views.403'))) {
-                View::render(config('errors.views.403'), [], 403);
-            }
-                
-            response()->send(__('no_access_permission', true), [], 403);
-        }
-
-        if (!in_array(Auth::get('role'), $roles)) {
+        if (in_array(Auth::get('role'), $roles)) {
             if (!empty(config('errors.views.403'))) {
                 View::render(config('errors.views.403'), [], 403);
             }

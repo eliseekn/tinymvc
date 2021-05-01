@@ -32,6 +32,7 @@ class Key extends Command
             'APP_LANG' => config('app.lang') . PHP_EOL,
             'APP_FOLDER' => config('app.folder') . PHP_EOL,
             'APP_URL' => config('app.url') . PHP_EOL,
+            'APP_CURRENCY' => config('app.currency') . PHP_EOL,
             'MYSQL_HOST' => config('database.host') . PHP_EOL,
             'MYSQL_DATABASE' => config('database.name') . PHP_EOL,
             'MYSQL_USERNAME' => config('database.username') . PHP_EOL,

@@ -39,8 +39,11 @@ class UsersController extends Controller
     public function index(): void
     {
         $data = $this->users->findAllPaginate();
-        $active_users = $this->users->activeCount();
-        $this->render('admin.users.index', compact('data', 'active_users'));
+        $customers = count($this->users->findAllByRole(Roles::ROLE[1]));
+        $administrators = count($this->users->findAllByRole(Roles::ROLE[0]));
+        $users = count($this->users->findAllByRole(Roles::ROLE[2]));
+
+        $this->render('admin.users.index', compact('data', 'customers', 'administrators', 'users'));
     }
 
 	/**

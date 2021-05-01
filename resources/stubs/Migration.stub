@@ -2,7 +2,7 @@
 
 namespace App\Database\Migrations;
 
-use Framework\Database\Schema;
+use Framework\Database\Migration;
 
 class CLASSNAME
 {         
@@ -20,7 +20,7 @@ class CLASSNAME
      */
     public function create(): void
     {
-        Schema::createTable($this->table)
+        Migration::newTable($this->table)
             ->addBigInt('id')->primaryKey()
             ->create();
     }
@@ -32,6 +32,6 @@ class CLASSNAME
      */
     public function drop(): void
     {
-        Schema::dropTable($this->table);
+        Migration::dropTable($this->table);
     }
 }

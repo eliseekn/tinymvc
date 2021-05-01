@@ -302,7 +302,7 @@ if (!function_exists('url')) {
 	 */
 	function url(string $uri, $params = null): string
 	{
-        $url = add_slash(config('app.url')) . add_slash(config('app.folder')) . ltrim($uri, '/');
+        $url = config('app.url') . ltrim($uri, '/');
         $params = is_array($params) ? (empty($params) ? '' : implode('/', $params)) : $params;
 
 		return is_null($params) ? $url : $url . '/' . $params;
@@ -931,7 +931,7 @@ if (!function_exists('save_env')) {
         foreach ($config as $key => $value) {
             $data .= "$key=$value";
 
-            if ($key === 'APP_URL') {
+            if ($key === 'APP_CURRENCY') {
                 $data .= PHP_EOL;
             }
 

@@ -104,7 +104,6 @@ class Invoices extends Repository
         return $this->insert([
             'user_id' => $request->company,
             'invoice_id' => Carbon::now()->format('Y/m/d/') . strtoupper(random_string(5)),
-            'currency' => $request->currency,
             'products' => $request->products,
             'tax' => $tax,
             'sub_total' => $sub_total,
@@ -132,7 +131,6 @@ class Invoices extends Repository
 
         return $this->updateIfExists($id, [
             'user_id' => $request->company,
-            'currency' => $request->currency,
             'tax' => $tax,
             'products' => $request->products,
             'sub_total' => $sub_total,

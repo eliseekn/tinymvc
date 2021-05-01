@@ -43,7 +43,7 @@ class Auth
             Session::flush('auth_attempts', 'auth_attempts_timeout');
 
             //check user state
-            if (!$user->active) {
+            if (!$user->status) {
                 redirect()->back()->withAlert('error', __('user_not_activated', true))->go();
             }
 
@@ -118,13 +118,14 @@ class Auth
      * check users tokens
      *
      * @param  \App\Database\Repositories\Tokens $tokens
+     * @param  \App\Database\Repositories\Users $users
      * @param  string $token
      * @param  mixed $user
      * @return bool
      */
-    public static function checkByToken(Tokens $tokens, string $token, &$user): bool
+    public static function checkByToken(Users $users, Tokens $tokens, string $token, &$user): bool
     {
-        $user = $tokens->findOneByToken($token);
+        $user = $tokens->findOneByToken($users, $token);
         return $user !== false;
     }
     

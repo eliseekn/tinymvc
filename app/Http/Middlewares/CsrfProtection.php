@@ -13,6 +13,7 @@ class CsrfProtection
     /**
      * handle function
      *
+     * @param  \Framework\Http\Request $request
      * @return void
      */
     public function handle(Request $request): void

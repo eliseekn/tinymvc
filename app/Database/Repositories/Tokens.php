@@ -40,9 +40,15 @@ class Tokens extends Repository
      * @param  string $token
      * @return mixed
      */
-    public function findOneByToken(string $token)
+    public function findOneByToken(Users $users, string $token)
     {
-        return $this->findOneBy('token', $token);
+        $token = $this->findOneBy('token', $token);
+
+        if (!$token) {
+            return false;
+        }
+
+        return $users->findOneByEmail($token->email);
     }
 
     /**
@@ -63,13 +69,13 @@ class Tokens extends Repository
     }
     
     /**
-     * delete token by email
+     * delete token by value
      *
-     * @param  string $email
+     * @param  string $token
      * @return bool
      */
-    public function deleteByEmail(string $email): bool
+    public function flush(string $token): bool
     {
-        return $this->deleteBy('email', $email);
+        return $this->deleteBy('token', $token);
     }
 }

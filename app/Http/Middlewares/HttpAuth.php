@@ -9,11 +9,13 @@ use App\Database\Repositories\Users;
 /**
  * Authenticated user api
  */
-class BasicAuth
+class HttpAuth
 {    
     /**
      * handle function
      *
+     * @param  \Framework\Http\Request $request
+     * @param  \App\Database\Repositories\Users $users
      * @return void
      */
     public function handle(Request $request, Users $users): void

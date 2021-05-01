@@ -259,7 +259,7 @@ class Route
     }
     
     /**
-     * add protected to route
+     * add protection access from roles
      *
      * @param  string[] $roles
      * @return \Framework\Routing\Route
@@ -268,23 +268,6 @@ class Route
     {
         static::$tmp_routes[static::$uri] += ['protected' => $roles];
         return $this;
-    }
-
-    /**
-     * group protected routes
-     *
-     * @param  string[] $roles
-     * @return \Framework\Routing\Route
-     */
-    public static function groupProtected(array $roles, $callback): self
-    {
-        call_user_func($callback);
-
-        foreach (static::$tmp_routes as $uri => $options) {
-            static::$tmp_routes[$uri] += ['protected' => $roles];
-        }
-
-        return new self();
     }
 
     /**

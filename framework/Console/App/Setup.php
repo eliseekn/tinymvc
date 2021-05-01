@@ -37,9 +37,13 @@ class Setup extends Command
 
         $output->writeln('<question>Application url (ex: http://localhost:80/):</question> ');
         $config['APP_URL'] = fgets(STDIN);
+        $config['APP_URL'] = add_slash($config['APP_URL']);
 
         $output->writeln('<question>Application folder name (leave empty if not using sub-folder):</question> ');
         $config['APP_FOLDER'] = fgets(STDIN);
+
+        $output->writeln('<question>Application currency (ex: USD):</question> ');
+        $config['APP_CURRENCY'] = fgets(STDIN);
 
         $output->writeln('<question>MySQL hostname (ex: localhost):</question> ');
         $config['MYSQL_HOST'] = fgets(STDIN);

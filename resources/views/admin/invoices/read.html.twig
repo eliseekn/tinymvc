@@ -43,8 +43,8 @@
                                 <tr>
                                     <td>{{ product.name }}</td>
                                     <td>{{ product.quantity }}</td>
-                                    <td>{{ product.price }} {{ data.currency }}</td>
-                                    <td>{{ product.price * product.quantity }} {{ data.currency }}</td>
+                                    <td>{{ product.price }} {{ config('app.currency') }}</td>
+                                    <td>{{ product.price * product.quantity }} {{ config('app.currency') }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -66,11 +66,6 @@
             <div class="form-group row">
                 <p class="col-sm-2 col-form-label">{{ __('total') }}</p>
                 <div class="col-form-label col-sm-10 font-weight-bold">{{ data.total_price }}</div>
-            </div>
-
-            <div class="form-group row">
-                <p class="col-sm-2 col-form-label">{{ __('currency') }}</p>
-                <div class="col-form-label col-sm-10 font-weight-bold">{{ data.currency }}</div>
             </div>
 
             <div class="form-group row">

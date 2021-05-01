@@ -9,9 +9,9 @@
 namespace Framework\Database;
 
 /**
- * Manage database schemas
+ * Manage migrations tables
  */
-class Schema
+class Migration
 {
     /**
 	 * @var \Framework\Database\QueryBuilder $qb
@@ -24,7 +24,7 @@ class Schema
      * @param  string $name
      * @return \Framework\Database\Migration
      */
-    public static function createTable(string $name): self
+    public static function newTable(string $name): self
     {
         self::$qb = QueryBuilder::createTable($name);
         return new self();

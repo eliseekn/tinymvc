@@ -56,7 +56,7 @@ class EmailController extends Controller
 			$this->response()->send(__('expired_two_steps_link', true));
 		}
 
-        $tokens->deleteByEmail($auth_token->email);
+        $tokens->flush($auth_token->token);
         $user = $users->findOneByEmail($request->email);
 
         Session::create('user', $user);

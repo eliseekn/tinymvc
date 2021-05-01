@@ -8,7 +8,7 @@
 
 use App\Helpers\Auth;
 use Framework\Routing\Route;
-use Framework\Support\Metrics;
+use Framework\Database\Repository;
 use App\Database\Repositories\Users;
 use App\Database\Repositories\Messages;
 use App\Database\Repositories\Notifications;
@@ -28,10 +28,17 @@ Route::groupPrefix('api', function () {
         response()->json(['notifications' => $notifications]);
     });
 
-    Route::get('metrics/users/{trends}/?{interval}?', function (string $trends, int $interval = 0) {
-        $metrics = (new Users())->metrics('id', Metrics::COUNT, $trends, $interval);
-        response()->json(['metrics' => json_encode($metrics)]);
-    })->where(['trends' => 'str','interval' => 'num']);
+    Route::get('metrics/{repository}/{column}/{type}/{trends}/?{interval}?', 
+        function (string $repository, string $column, string $type, string $trends, int $interval = 0) {
+            $metrics = (new Repository($repository))->metrics($column, strtoupper($type), $trends, $interval);
+            response()->json(['metrics' => json_encode($metrics)]);
+    })->where([
+        'repository' => 'str',
+        'column' => 'str',
+        'type' => 'str',
+        'trends' => 'str',
+        'interval' => 'num',
+    ]);
 
     Route::get('messages', function () {
         $messages = (new Messages())->findReceivedMessages();

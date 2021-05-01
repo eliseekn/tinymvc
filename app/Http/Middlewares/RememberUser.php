@@ -14,6 +14,7 @@ class RememberUser
     /**
      * handle function
      *
+     * @param  \App\Database\Repositories\Users $users
      * @return void
      */
     public function handle(Users $users): void

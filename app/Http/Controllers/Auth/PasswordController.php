@@ -44,17 +44,21 @@ class PasswordController extends Controller
 	 */
 	public function reset(Request $request, Tokens $tokens): void
 	{
+        if (!$request->has('email', 'token')) {
+            response()->send('Bad Request', [], 400);
+        }
+
         $reset_token = $tokens->findOneByEmail($request->email);
 
         if (!$reset_token || $reset_token->token !== $request->token) {
-			$this->response()->json(__('invalid_password_reset_link', true));
+			$this->response()->send(__('invalid_password_reset_link', true), [], 400);
 		}
 
 		if ($reset_token->expire < Carbon::now()->toDateTimeString()) {
-			$this->response()->json(__('expired_password_reset_link', true));
+			$this->response()->send(__('expired_password_reset_link', true), [], 400);
 		}
 
-		$tokens->deleteByEmail($reset_token->email);
+		$tokens->flush($reset_token->token);
 		$this->render('auth.password.new', ['email' => $reset_token->email]);
 	}
 	

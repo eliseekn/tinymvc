@@ -13,12 +13,13 @@ class AccountPolicy
     /**
      * handle function
      *
+     * @param  \Framework\Http\Request $request
      * @return void
      */
     public function handle(Request $request): void
     {
         if (config('security.auth.email_confirmation') === true) {
-            if (!Auth::get('active')) {
+            if (!Auth::get('status')) {
                 redirect()->url('login')->intended($request->fullUri())
                     ->withAlert('error', __('account_not_activated', true))->go();
             }

@@ -46,6 +46,9 @@
     'media' => 'Media',
     'invoice' => 'Invoice',
     'invoices' => 'Invoices',
+    'incomes' => 'Incomes',
+    'expenses' => 'Expenses',
+    'wallet' => 'Wallet',
 
     //navabar
     'mark_as_read' => 'Mark as read',
@@ -156,6 +159,7 @@
     'author' => 'Author',
     'new_message' => 'New message',
     'customer' => 'Customer',
+    'customers' => 'Customers',
     'paid' => 'Paid',
     'pending' => 'Pending',
     'expired' => 'Expired',
@@ -167,6 +171,10 @@
     'preview' => 'Preview',
     'sub_total' => 'Subtotal',
     'critical' => 'Critical',
+    'administrator' => 'Administrator',
+    'administrators' => 'Administrators',
+    'visitor' => 'Visitor',
+    'visitors' => 'Visitors',
 
     //pagination
     'previous' => 'Previous',

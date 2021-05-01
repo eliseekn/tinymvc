@@ -2,7 +2,7 @@
 
 namespace App\Database\Migrations;
 
-use Framework\Database\Schema;
+use Framework\Database\Migration;
 
 class TicketsTable_20210422132513
 {         
@@ -20,7 +20,7 @@ class TicketsTable_20210422132513
      */
     public function create(): void
     {
-        Schema::createTable($this->table)
+        Migration::newTable($this->table)
             ->addBigInt('id')->primaryKey()
             ->addBigInt('user_id')
             ->addString('ticket_id')
@@ -29,7 +29,7 @@ class TicketsTable_20210422132513
             ->addEnum('priority', ['critical', 'high', 'normal', 'low'])->default('low')
             ->create();
         
-        Schema::createTable('ticket_messages')
+        Migration::newTable('ticket_messages')
             ->addBigInt('id')->primaryKey()
             ->addBigInt('user_id')
             ->addBigInt('ticket_id')
@@ -45,8 +45,8 @@ class TicketsTable_20210422132513
      */
     public function drop(): void
     {
-        Schema::dropForeign('ticket_messages', 'ticket');
-        Schema::dropTable('ticket_messages');
-        Schema::dropTable($this->table);
+        Migration::dropForeign('ticket_messages', 'ticket');
+        Migration::dropTable('ticket_messages');
+        Migration::dropTable($this->table);
     }
 }

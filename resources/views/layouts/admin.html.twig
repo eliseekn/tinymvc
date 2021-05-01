@@ -135,6 +135,11 @@
                         <a href="{{ route('activities.index') }}" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                             <i class="fa fa-user-clock {{ in_url('activities') ? 'text-primary' }}"></i> {{ __('activities') }}
                         </a>
+                        {% if auth('role') == USER_ROLE[0] %}
+                        <a href="{{ route('wallet.index', auth('id')) }}" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
+                            <i class="fa fa-wallet {{ in_url('wallet') ? 'text-primary' }}"></i> {{ __('wallet') }}
+                        </a>
+                        {% endif %}
                         <a href="{{ route('settings.index', auth('id')) }}" class="list-group-item list-group-item-action border-0 dropdown-menu-item">
                             <i class="fa fa-cog {{ in_url('settings') ? 'text-primary' }}"></i> {{ __('settings') }}
                         </a>

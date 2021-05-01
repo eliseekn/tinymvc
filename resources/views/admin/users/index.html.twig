@@ -10,15 +10,31 @@
             title="{{ __('total') }}" 
             icon="fa fa-users fa-2x" 
             data="{{ data.getTotalItems() }}"
-            columns="4">
+            columns="{{ auth('role') == USER_ROLE[0] ? 3 : 4 }}">
+        </metrics-card-item>
+
+        {% if auth('role') == USER_ROLE[0] %}
+        <metrics-card-item 
+            title="{{ __('customers') }}" 
+            icon="fa fa-user-tie fa-2x" 
+            data="{{ customers }}"
+            columns="3">
         </metrics-card-item>
 
         <metrics-card-item 
-            title="{{ __('active') }}" 
-            icon="fa fa-user-check fa-2x" 
-            data="{{ active_users }}"
-            columns="4">
+            title="{{ __('users') }}" 
+            icon="fa fa-user fa-2x" 
+            data="{{ users }}"
+            columns="3">
         </metrics-card-item>
+
+        <metrics-card-item 
+            title="{{ __('administrators') }}" 
+            icon="fa fa-user-cog fa-2x" 
+            data="{{ administrators }}"
+            columns="3">
+        </metrics-card-item>
+        {% endif %}
     </metrics-card>
 
     <div class="card shadow-sm">
@@ -98,7 +114,7 @@
                             <td>{{ data.role }}</td>
 
                             <td>
-                                {% if data.active %}
+                                {% if data.status %}
                                 <span class="badge badge-success">{{ __('active') }}</span>
                                 {% else %}
                                 <span class="badge badge-danger">{{ __('inactive') }}</span>

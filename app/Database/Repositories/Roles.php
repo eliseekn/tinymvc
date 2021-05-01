@@ -21,8 +21,7 @@ class Roles extends Repository
     public const ROLE = [
         0 => 'admin',
         1 => 'customer',
-        2 => 'user',
-        3 => 'visitor'
+        2 => 'user'
     ];
     
     /**
