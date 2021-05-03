@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use App\Helpers\DateHelper;
 use Configula\ConfigFactory;
 use Framework\Http\Redirect;
+use Framework\Http\Request;
 use Framework\Http\Response;
 use Framework\Routing\Route;
 use Framework\System\Cookies;
@@ -280,7 +281,7 @@ if (!function_exists('valid_csrf_token')) {
     /**
      * check if crsf token is valid
      *
-     * @param  string $csrf_token token value
+     * @param  string $csrf_token
      * @return bool
      */
     function valid_csrf_token(string $csrf_token): bool
@@ -345,46 +346,37 @@ if (!function_exists('route_uri')) {
         }
 
         $route = Route::$names[$route];
-        $options = Route::$routes[$route];
-
-        if (!isset($options['parameters']) || empty($options['parameters'])) {
-            return $route;
-        }
-
         $pieces = explode('/', $route);
 
-        foreach ($pieces as $piece) {
-            foreach ($options['parameters'] as $parameter => $type) {
-                if (!is_array($params)) {
-                    if (strpos($piece, '?') === false) {
-                        if ($piece === '{' . $parameter . '}') {
-                            $route = str_replace($piece, $params, $route);
-                        }
-                    } else {
-                        if ($piece === '?{' . $parameter . '}?') {
-                            $route = str_replace($piece, $params, $route);
-                        }
-                    }
-                }
-
-                else {
-                    foreach ($params as $param => $value) {
-                        if ($parameter === $param) {
-                            if (strpos($piece, '?') === false) {
-                                if ($piece === '{' . $parameter . '}') {
-                                    $route = str_replace($piece, $value, $route);
-                                }
-                            } else {
-                                if ($piece === '?{' . $parameter . '}?') {
-                                    $route = str_replace($piece, $value, $route);
-                                }
-                            }
-                        }
-                    }
+        if (is_null($params)) {
+            foreach ($pieces as $piece) {
+                if (strpos($piece, '+)?')) {
+                    $route = substr_replace($route, '', strpos($route, $piece), strlen($piece));
+                    continue;
                 }
             }
         }
-        
+
+        else {
+            $params = is_array($params) ? $params : [$params];
+            reset($params);
+
+            foreach ($pieces as $piece) {
+                if (strpos($piece, '+)')) {
+                    if (strpos($piece, '+)?')) {
+                        if (!isset($params)) {
+                            $route = substr_replace($route, '', strpos($route, $piece), strlen($piece));
+                            next($params);
+                            continue;
+                        }
+                    }
+                        
+                    $route = substr_replace($route, current($params), strpos($route, $piece), strlen($piece));
+                    next($params);
+               }
+            }
+        }
+
         if (strpos($route, '//') !== false) {
             $route = str_replace('//', '/', $route);
         }
@@ -454,11 +446,10 @@ if (!function_exists('current_url')) {
 	 * get current url
 	 *
 	 * @return string
-	 * @link   https://stackoverflow.com/questions/6768793/get-the-full-url-in-php#6768831
 	 */
 	function current_url(): string
 	{
-		return 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+		return url((new Request())->fullUri());
 	}
 }
 
@@ -569,7 +560,7 @@ if (!function_exists('slugify')) {
 	/**
 	 * generate slug from string with utf8 encoding
 	 *
-	 * @param  string $str original string
+	 * @param  string $str
 	 * @param  string $separator
 	 * @return string
 	 * @link   https://ourcodeworld.com/articles/read/253/creating-url-slugs-properly-in-php-including-transliteration-support-for-utf-8
@@ -601,9 +592,9 @@ if (!function_exists('truncate')) {
 	/**
 	 * truncate string
 	 *
-	 * @param  string $str original string
-	 * @param  int $length length of truncated string
-	 * @param  string $end end of truncated string
+	 * @param  string $str
+	 * @param  int $length
+	 * @param  string $end
 	 * @return string
 	 */
 	function truncate(string $str, int $length, string $end = '[...]'): string
@@ -617,7 +608,7 @@ if (!function_exists('random_string')) {
 	 * random string generator
 	 *
 	 * @param  int $length
-	 * @param  bool $alphanumeric use alphanumeric
+	 * @param  bool $alphanumeric
 	 * @return string
 	 * @link   https://www.php.net/manual/en/function.str-shuffle.php
 	 */
@@ -727,12 +718,12 @@ if (!function_exists('__')) {
      * return translated word or expression
      *
      * @param  string $expr
-     * @param  bool $app_config use application language configuration
+     * @param  bool $app_lang
      * @return string
      */
-    function __(string $expr, bool $app_config = false): string
+    function __(string $expr, bool $app_lang = false): string
     {
-        $lang = $app_config ? config('app.lang') : auth('lang');
+        $lang = $app_lang ? config('app.lang') : auth('lang');
         $config = ConfigFactory::loadPath(absolute_path('resources.lang') . $lang . '.php');
 		return $config($expr, '');
     }
@@ -745,7 +736,7 @@ if (!function_exists('generate_pagination')) {
 	 * @param  int $page
 	 * @param  int $total_items
 	 * @param  int $items_per_pages
-	 * @return array returns pagination parameters
+	 * @return array
 	 */
 	function generate_pagination(int $page, int $total_items, int $items_per_pages): array
 	{
@@ -791,11 +782,11 @@ if (!function_exists('curl')) {
     /**
      * send asynchronous HTTP request using curl
      *
-     * @param  string $method request method
-     * @param  array $urls urls to connect
-     * @param  array $data data to send
-     * @param  bool $json send data in json format
-     * @return array returns headers and body reponse
+     * @param  string $method
+     * @param  array $urls
+     * @param  array $data
+     * @param  bool $json
+     * @return array
      * @link   https://niraeth.com/php-quick-function-for-asynchronous-multi-curl/
      *         https://stackoverflow.com/questions/9183178/can-php-curl-retrieve-response-headers-and-body-in-a-single-request
      *         https://www.codexworld.com/post-receive-json-data-using-php-curl/

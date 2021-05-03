@@ -37,7 +37,7 @@ class DashboardController extends Controller
 		$this->render('admin.index', [
             'users' => count($users->findAllByCompany()),
             'customers' => count($users->findAllByRole(Roles::ROLE[1])),
-            'incomes' => $invoices->findSumByStatus('paid'),
+            'incomes' => $invoices->findSumByStatus('paid') ?? 0,
             'tickets' => $tickets->openCount(Auth::role(Roles::ROLE[0]) ? null : Auth::get('id')),
             'medias' => count($medias->findAllByUser()),
             'notifications' => $notifications->findMessages(), 

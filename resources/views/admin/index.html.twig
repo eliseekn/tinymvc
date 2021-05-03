@@ -55,36 +55,6 @@
     {% if auth('role') == USER_ROLE[0] %}
     <div class="row mb-4">
         <div class="col-md-6">
-            <div class="card shadow-sm mb-4 mb-md-0">
-                <div class="card-header d-flex justify-content-between align-items-center ">
-                    <span>{{ __('incomes') }}</span>
-
-                    <div class="d-flex">
-                        <select id="incomes-trends" class="custom-select">
-                            <option value="weeks">{{ __('this_week') }}</option>
-                            <option value="months" selected>{{ __('this_year') }}</option>
-                            <option value="last-weeks">{{ __('last_4_weeks') }}</option>
-                            <option value="last-years">{{ __('last_5_years') }}</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="card-body">
-                    {% set keys, labels = ['value'], ['Count'] %}
-
-                    <bars-chart 
-                        id='incomes-bars-chart' 
-                        el='incomes-bars' 
-                        data={{ incomes_metrics|json_encode() }} 
-                        xkey='month' 
-                        ykeys={{ keys|json_encode() }} 
-                        labels={{ labels|json_encode() }}>
-                    </bars-chart>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
             <div class="card shadow-sm">
                 <div class="card-header d-flex justify-content-between align-items-center ">
                     <span>{{ __('customers') }}</span>
@@ -106,6 +76,36 @@
                         id='users-bars-chart' 
                         el='users-bars' 
                         data={{ users_metrics|json_encode() }} 
+                        xkey='month' 
+                        ykeys={{ keys|json_encode() }} 
+                        labels={{ labels|json_encode() }}>
+                    </bars-chart>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4 mb-md-0">
+                <div class="card-header d-flex justify-content-between align-items-center ">
+                    <span>{{ __('incomes') }}</span>
+
+                    <div class="d-flex">
+                        <select id="incomes-trends" class="custom-select">
+                            <option value="weeks">{{ __('this_week') }}</option>
+                            <option value="months" selected>{{ __('this_year') }}</option>
+                            <option value="last-weeks">{{ __('last_4_weeks') }}</option>
+                            <option value="last-years">{{ __('last_5_years') }}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    {% set keys, labels = ['value'], ['Count'] %}
+
+                    <bars-chart 
+                        id='incomes-bars-chart' 
+                        el='incomes-bars' 
+                        data={{ incomes_metrics|json_encode() }} 
                         xkey='month' 
                         ykeys={{ keys|json_encode() }} 
                         labels={{ labels|json_encode() }}>
@@ -175,10 +175,6 @@
 					<span>{{ __('recent_notifications') }}</span>
 
 					<div class="d-flex flex-lg-row flex-column mt-lg-0 mt-2">
-						<create-notification action="{{ route('notifications.create') }}">
-							<button class="btn btn-outline-dark mr-2">{{ __('create') }}</button>
-						</create-notification>
-
 						<a href="{{ route('notifications.index') }}" class="btn btn-outline-dark">
 							{{ __('view_all') }}
 						</a>

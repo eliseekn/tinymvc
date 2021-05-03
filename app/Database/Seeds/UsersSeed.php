@@ -30,7 +30,7 @@ class UsersSeed
             'company' => 'TinyMVC',
             'password' => Encryption::hash('webmaster'),
             'role' => Roles::ROLE[0],
-            'active' => 1
+            'status' => 1
         ])->execute();
     }
 }

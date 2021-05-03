@@ -19,7 +19,12 @@ class MessagesIcon extends HTMLElement {
 
         this.addEventListener('render', () => {
             this.render()
-            document.querySelector('#dropdown-messages').classList.toggle('text-light')
+
+            if (document.querySelector('.wrapper__content nav').classList.contains('bg-light')) {
+                document.querySelector('#dropdown-messages').classList.toggle('text-dark')
+            } else if (document.querySelector('.wrapper__content nav').classList.contains('bg-dark')) {
+                document.querySelector('#dropdown-messages').classList.toggle('text-light')
+            } 
         })
     }
 
@@ -28,7 +33,7 @@ class MessagesIcon extends HTMLElement {
     }
 
     getMessages() {
-        fetch('/api/messages')
+        fetch(process.env.APP_URL + 'api/messages')
             .then(response => response.json())
             .then(data => {
                 this.messages = data.messages,
@@ -37,7 +42,7 @@ class MessagesIcon extends HTMLElement {
     }
 
     getTranslations() {
-        fetch('/api/translations')
+        fetch(process.env.APP_URL + 'api/translations')
             .then(response => response.json())
             .then(data => {
                 this.translations = data.translations
@@ -88,7 +93,7 @@ class MessagesIcon extends HTMLElement {
                     <div class="dropdown-divider my-0"></div>
 
                     <div class="px-4 py-2 bg-light text-center">
-                        <a class="text-primary" href="${process.env.APP_URL + process.env.APP_FOLDER}/admin/account/messages">
+                        <a class="text-primary" href="${process.env.APP_URL}admin/account/messages">
                             ${this.translations.view_all}
                         </a>
                     </div>

@@ -59,6 +59,7 @@ class Route
      * add route with GET method
      *
      * @param  string $uri
+     * @param  \Closure $callback
      * @return \Framework\Routing\Route
      */
     public static function get(string $uri, $callback): self
@@ -208,31 +209,6 @@ class Route
     }
 
     /**
-     * set route parameters types
-     *
-     * @param  array $parameters
-     * @return \Framework\Routing\Route
-     */
-    public function where(array $parameters): self
-    {
-        $params = [];
-
-        foreach ($parameters as $parameter => $type) {
-            $type = preg_replace('/\bstr\b/', '([a-zA-Z-_]+)', $type);
-            $type = preg_replace('/\bnum\b/', '(\d+)', $type);
-            $type = preg_replace('/\bany\b/', '([^/]+)', $type);
-
-            $params += [$parameter => $type];
-        }
-
-        static::$tmp_routes[static::$uri] += [
-            'parameters' => $params
-        ];
-
-        return $this;
-    }
-    
-    /**
      * set route name
      *
      * @param  string $name
@@ -259,14 +235,14 @@ class Route
     }
     
     /**
-     * add protection access from roles
+     * add locked route
      *
      * @param  string[] $roles
      * @return \Framework\Routing\Route
      */
-    public function protected(string ...$roles): self
+    public function locked(string ...$roles): self
     {
-        static::$tmp_routes[static::$uri] += ['protected' => $roles];
+        static::$tmp_routes[static::$uri] += ['roles' => $roles];
         return $this;
     }
 
@@ -406,6 +382,12 @@ class Route
                 $uri = '/' . $uri;
             }
         }
+
+        $uri = preg_replace('/{([a-zA-Z-_]+)}/i', 'any', $uri);
+        $uri = preg_replace('/{([a-zA-Z-_]+):([^\}]+)}/i', '$2', $uri);
+        $uri = preg_replace('/\bstr\b/', '([a-zA-Z-_]+)', $uri);
+        $uri = preg_replace('/\bnum\b/', '(\d+)', $uri);
+        $uri = preg_replace('/\bany\b/', '([^/]+)', $uri);
 
         return $uri;
     }

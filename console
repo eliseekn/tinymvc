@@ -17,9 +17,14 @@ require 'bootstrap.php';
 
 $console = new \Symfony\Component\Console\Application();
 
-$console->add(new \Framework\Console\Database\Schemas());
-$console->add(new \Framework\Console\Database\Queries());
-$console->add(new \Framework\Console\Database\Migrations());
+$console->add(new \Framework\Console\Database\Schemas\Create());
+$console->add(new \Framework\Console\Database\Schemas\Delete());
+$console->add(new \Framework\Console\Database\Schemas\Status());
+$console->add(new \Framework\Console\Database\Query());
+$console->add(new \Framework\Console\Database\Migrations\Delete());
+$console->add(new \Framework\Console\Database\Migrations\Status());
+$console->add(new \Framework\Console\Database\Migrations\Run());
+$console->add(new \Framework\Console\Database\Migrations\Reset());
 $console->add(new \Framework\Console\Database\Seeds());
 
 $console->add(new \Framework\Console\Make\Migration());

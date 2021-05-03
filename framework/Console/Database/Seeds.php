@@ -8,17 +8,14 @@
 
 namespace Framework\Console\Database;
 
-use Framework\System\Storage;
 use App\Database\Seeds\Seeder;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Manage database seeds 
+ * Insert seeds 
  */
 class Seeds extends Command
 {
@@ -26,35 +23,21 @@ class Seeds extends Command
 
     protected function configure()
     {
-        $this->setDescription('Manage seeds');
-        $this->addArgument('seed', InputArgument::OPTIONAL|InputArgument::IS_ARRAY, 'The name of seed (separated by space if many)');
-        $this->addOption('run', null, InputOption::VALUE_NONE, 'Insert seeds');
-        $this->addOption('list', null, InputOption::VALUE_NONE, 'Display the list of seeds');
+        $this->setDescription('Insert seeds');
+        $this->addArgument('seed', InputArgument::OPTIONAL|InputArgument::IS_ARRAY, 'The name of seeds (separated by space if many)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $seeds = $input->getArgument('seed');
 
-        if ($input->getOption('run')) {
-            if (!empty($seeds)) {
-                foreach ($seeds as $seed) {
-                    $this->seed($output, $seed);
-                }
-                
-                return Command::SUCCESS;
-            }
-
+        if (empty($seeds)) {
             Seeder::run();
             $output->writeln('<info>All seeds have been inserted</info>');
-        }
-
-        else if ($input->getOption('list')) {
-            $this->listSeeds($output);
-        }
-
-        else {
-            $output->writeln('<error>Invalid command line arguments. Type "php console list" for commands list</error>');
+        } else {
+            foreach ($seeds as $seed) {
+                $this->seed($output, $seed);
+            }
         }
 
         return Command::SUCCESS;
@@ -62,30 +45,8 @@ class Seeds extends Command
 
     protected function seed(OutputInterface $output, string $seed)
     {
-        $seed = $this->getSeed($seed);
+        $seed = '\App\Database\Seeds\\' . $seed;
         $seed::insert();
         $output->writeln('<info>Seed "' . $seed . '" has been inserted</info>');
-    }
-    
-    protected function listSeeds(OutputInterface $output): void
-    {
-        $seeds = Storage::path(config('storage.seeds'))->getFiles();
-        $rows = [];
-
-        foreach ($seeds as $seed) {
-            if ($seed === 'RoleSeed.php') {
-                $rows[] = [$seed];
-            }
-        }
-
-        $table = new Table($output);
-        $table->setHeaders(['Seeds']);
-        $table->setRows($rows);
-        $table->render();
-    }
-    
-    protected function getSeed(string $seed): string
-    {
-        return '\App\Database\Seeds\\' . $seed;
     }
 }

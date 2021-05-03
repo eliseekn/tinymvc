@@ -14,7 +14,7 @@ class DeleteItem extends HTMLElement {
     }
 
     getTranslations() {
-        fetch('/api/translations')
+        fetch(process.env.APP_URL + 'api/translations')
             .then(response => response.json())
             .then(data => this.translations = data.translations)
     }

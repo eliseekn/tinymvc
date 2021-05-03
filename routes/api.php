@@ -28,17 +28,11 @@ Route::groupPrefix('api', function () {
         response()->json(['notifications' => $notifications]);
     });
 
-    Route::get('metrics/{repository}/{column}/{type}/{trends}/?{interval}?', 
+    Route::get('metrics/{repository:str}/{column:str}/{type:str}/{trends:str}/?{interval:num}?', 
         function (string $repository, string $column, string $type, string $trends, int $interval = 0) {
             $metrics = (new Repository($repository))->metrics($column, strtoupper($type), $trends, $interval);
             response()->json(['metrics' => json_encode($metrics)]);
-    })->where([
-        'repository' => 'str',
-        'column' => 'str',
-        'type' => 'str',
-        'trends' => 'str',
-        'interval' => 'num',
-    ]);
+    });
 
     Route::get('messages', function () {
         $messages = (new Messages())->findReceivedMessages();

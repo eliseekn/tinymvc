@@ -19,7 +19,12 @@ class NotificationsIcon extends HTMLElement {
 
         this.addEventListener('render', () => {
             this.render()
-            document.querySelector('#dropdown-notifications').classList.toggle('text-light')
+
+            if (document.querySelector('.wrapper__content nav').classList.contains('bg-light')) {
+                document.querySelector('#dropdown-notifications').classList.toggle('text-dark')
+            } else if (document.querySelector('.wrapper__content nav').classList.contains('bg-dark')) {
+                document.querySelector('#dropdown-notifications').classList.toggle('text-light')
+            } 
         })
     }
 
@@ -28,7 +33,7 @@ class NotificationsIcon extends HTMLElement {
     }
 
     getNotifications() {
-        fetch('/api/notifications')
+        fetch(process.env.APP_URL + 'api/notifications')
             .then(response => response.json())
             .then(data => {
                 this.notifications = data.notifications,
@@ -37,7 +42,7 @@ class NotificationsIcon extends HTMLElement {
     }
 
     getTranslations() {
-        fetch('/api/translations')
+        fetch(process.env.APP_URL + 'api/translations')
             .then(response => response.json())
             .then(data => {
                 this.translations = data.translations
@@ -85,7 +90,7 @@ class NotificationsIcon extends HTMLElement {
                     <div class="dropdown-divider my-0"></div>
 
                     <div class="px-4 py-2 bg-light text-center">
-                        <a class="text-primary" href="${process.env.APP_URL + process.env.APP_FOLDER}/admin/account/notifications">
+                        <a class="text-primary" href="${process.env.APP_URL}admin/account/notifications">
                             ${this.translations.view_all}
                         </a>
                     </div>

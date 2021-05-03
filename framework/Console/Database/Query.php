@@ -16,21 +16,20 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Execute database queries 
+ * Execute MySQL queries 
  */
-class Queries extends Command
+class Query extends Command
 {
     protected static $defaultName = 'db:query';
 
     protected function configure()
     {
-        $this->setDescription('Execute MySQL queries and fetch results');
+        $this->setDescription('Execute MySQL query and fetch results');
         $this->addArgument('query', InputArgument::REQUIRED, 'The query string to execute (inside "")');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
         $stmt = Database::connection()->query($input->getArgument('query'));
         $output->writeln('<info>Query executed</info>');
         $output->writeln('');

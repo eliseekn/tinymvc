@@ -30,9 +30,9 @@ class Invoices extends Repository
      * retrieves total incomes
      *
      * @param  string|null $status
-     * @return int
+     * @return mixed
      */
-    public function findSumByStatus(?string $status = null): int
+    public function findSumByStatus(?string $status = null)
     {
         return $this->sum('total_price')
             ->subQuery(function ($query) use ($status) {
