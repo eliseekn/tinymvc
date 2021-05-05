@@ -8,8 +8,10 @@
 
 use App\Helpers\Auth;
 use Framework\Routing\Route;
-use Framework\Database\Repository;
+use Framework\Support\Metrics;
+use App\Database\Repositories\Roles;
 use App\Database\Repositories\Users;
+use App\Database\Repositories\Invoices;
 use App\Database\Repositories\Messages;
 use App\Database\Repositories\Notifications;
 
@@ -18,6 +20,20 @@ use App\Database\Repositories\Notifications;
  */
 
 Route::groupPrefix('api', function () {
+    Route::groupPrefix('metrics', function () {
+        Route::get('users/{period:str}/?{interval:num}?', 
+            function (string $period, int $interval = 0) {
+                $metrics = (new Users())->metrics('id', Metrics::COUNT, $period, $interval, ['AND role = ?', [Roles::ROLE[1]]]);
+                response()->json(['metrics' => json_encode($metrics)]);
+        });
+
+        Route::get('invoices/{period:str}/?{interval:num}?', 
+            function (string $period, int $interval = 0) {
+                $metrics = (new Invoices())->metrics('total_price', Metrics::SUM, $period, $interval);
+                response()->json(['metrics' => json_encode($metrics)]);
+        });
+    });
+
     Route::get('notifications', function() {
         $notifications = (new Notifications())->findMessages();
 
@@ -26,12 +42,6 @@ Route::groupPrefix('api', function () {
         }
 
         response()->json(['notifications' => $notifications]);
-    });
-
-    Route::get('metrics/{repository:str}/{column:str}/{type:str}/{trends:str}/?{interval:num}?', 
-        function (string $repository, string $column, string $type, string $trends, int $interval = 0) {
-            $metrics = (new Repository($repository))->metrics($column, strtoupper($type), $trends, $interval);
-            response()->json(['metrics' => json_encode($metrics)]);
     });
 
     Route::get('messages', function () {

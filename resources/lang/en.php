@@ -70,8 +70,8 @@
     'recent_messages' => 'Recent messages',
     'this_year' => 'This year',
     'this_week' => 'This week',
-    'last_4_weeks' => 'Last 4 weeks',
-    'last_5_years' => 'Last 5 years',
+    'today' => 'Today',
+    'this_month' => 'This month',
 
     //settings
     'profile' => 'Profile',

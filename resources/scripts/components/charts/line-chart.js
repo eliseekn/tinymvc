@@ -1,10 +1,10 @@
 /**
- * display morris bars chart
+ * display morris line chart
  *
- * @class BarsChart
+ * @class LineChart
  * @constructor
  */
-class BarsChart extends HTMLElement {
+class LineChart extends HTMLElement {
     constructor() {
         super()
         this.translations = {}
@@ -33,14 +33,14 @@ class BarsChart extends HTMLElement {
 
     drawChart(data, xkey) {
         this.innerHTML = `<div id="${this.getAttribute('el')}" style="height: 230px"></div>`
-        
-        new Morris.Bar({
+
+        new Morris.Line({
             element: this.getAttribute('el'),
             resize: true,
             data: data,
             xkey: xkey,
             ykeys: JSON.parse(this.getAttribute('ykeys')),
-            labels: JSON.parse(this.getAttribute('labels'))
+            labels: JSON.parse(this.getAttribute('labels')),
         })
     }
 
@@ -66,4 +66,4 @@ class BarsChart extends HTMLElement {
     }
 }
 
-export default BarsChart
+export default LineChart

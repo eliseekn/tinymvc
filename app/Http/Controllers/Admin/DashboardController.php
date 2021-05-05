@@ -42,8 +42,8 @@ class DashboardController extends Controller
             'medias' => count($medias->findAllByUser()),
             'notifications' => $notifications->findMessages(), 
             'messages' => $messages->findReceivedMessages(),
-            'users_metrics' => $users->metrics('id', Metrics::COUNT, Metrics::MONTHS, 0, ['AND role = ? AND id != ?', [Roles::ROLE[1], Auth::get('id')]]), 
-            'incomes_metrics' => $invoices->metrics('total_price', Metrics::SUM, Metrics::MONTHS)
+            'users_metrics' => $users->metrics('id', Metrics::COUNT, Metrics::MONTH, 0, ['AND role = ? AND id != ?', [Roles::ROLE[1], Auth::get('id')]]), 
+            'incomes_metrics' => $invoices->metrics('total_price', Metrics::SUM, Metrics::MONTH)
         ]);
     }
 }

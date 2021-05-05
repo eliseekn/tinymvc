@@ -1,10 +1,10 @@
 /**
- * display morris bars chart
+ * display morris area chart
  *
- * @class BarsChart
+ * @class AreaChart
  * @constructor
  */
-class BarsChart extends HTMLElement {
+class AreaChart extends HTMLElement {
     constructor() {
         super()
         this.translations = {}
@@ -34,7 +34,7 @@ class BarsChart extends HTMLElement {
     drawChart(data, xkey) {
         this.innerHTML = `<div id="${this.getAttribute('el')}" style="height: 230px"></div>`
         
-        new Morris.Bar({
+        new Morris.Area({
             element: this.getAttribute('el'),
             resize: true,
             data: data,
@@ -66,4 +66,4 @@ class BarsChart extends HTMLElement {
     }
 }
 
-export default BarsChart
+export default AreaChart

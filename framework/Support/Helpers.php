@@ -7,10 +7,11 @@
  */
 
 use Carbon\Carbon;
+use App\Helpers\Auth;
 use App\Helpers\DateHelper;
+use Framework\Http\Request;
 use Configula\ConfigFactory;
 use Framework\Http\Redirect;
-use Framework\Http\Request;
 use Framework\Http\Response;
 use Framework\Routing\Route;
 use Framework\System\Cookies;
@@ -345,13 +346,13 @@ if (!function_exists('route_uri')) {
             throw new Exception('Route name "' . $route . '" is not defined.');
         }
 
-        $route = Route::$names[$route];
-        $pieces = explode('/', $route);
+        $uri = Route::$names[$route];
+        $pieces = explode('/', $uri);
 
         if (is_null($params)) {
             foreach ($pieces as $piece) {
                 if (strpos($piece, '+)?')) {
-                    $route = substr_replace($route, '', strpos($route, $piece), strlen($piece));
+                    $uri = substr_replace($uri, '', strpos($uri, $piece), strlen($piece));
                     continue;
                 }
             }
@@ -365,23 +366,20 @@ if (!function_exists('route_uri')) {
                 if (strpos($piece, '+)')) {
                     if (strpos($piece, '+)?')) {
                         if (!isset($params)) {
-                            $route = substr_replace($route, '', strpos($route, $piece), strlen($piece));
+                            $uri = substr_replace($uri, '', strpos($uri, $piece), strlen($piece));
                             next($params);
                             continue;
                         }
                     }
                         
-                    $route = substr_replace($route, current($params), strpos($route, $piece), strlen($piece));
+                    $uri = substr_replace($uri, current($params), strpos($uri, $piece), strlen($piece));
                     next($params);
                }
             }
         }
 
-        if (strpos($route, '//') !== false) {
-            $route = str_replace('//', '/', $route);
-        }
-
-        return $route;
+        $uri = str_replace('//', '/', $uri);
+        return $uri;
     }
 }
 
@@ -718,12 +716,11 @@ if (!function_exists('__')) {
      * return translated word or expression
      *
      * @param  string $expr
-     * @param  bool $app_lang
      * @return string
      */
-    function __(string $expr, bool $app_lang = false): string
+    function __(string $expr): string
     {
-        $lang = $app_lang ? config('app.lang') : auth('lang');
+        $lang = Auth::check() ? auth('lang') : config('app.lang');
         $config = ConfigFactory::loadPath(absolute_path('resources.lang') . $lang . '.php');
 		return $config($expr, '');
     }

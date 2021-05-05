@@ -54,26 +54,26 @@
 
     {% if auth('role') == USER_ROLE[0] %}
     <div class="row mb-4">
-        <div class="col-md-6">
-            <div class="card shadow-sm">
+        <div class="col-lg-6">
+            <div class="card shadow-sm mb-4 mb-lg-0">
                 <div class="card-header d-flex justify-content-between align-items-center ">
                     <span>{{ __('customers') }}</span>
 
                     <div class="d-flex">
-                        <select id="users-trends" class="custom-select">
-                            <option value="weeks">{{ __('this_week') }}</option>
-                            <option value="months" selected>{{ __('this_year') }}</option>
-                            <option value="last-weeks">{{ __('last_4_weeks') }}</option>
-                            <option value="last-years">{{ __('last_5_years') }}</option>
+                        <select id="users-chart-period" class="custom-select">
+                            <option value="today">{{ __('today') }}</option>
+                            <option value="day">{{ __('this_week') }}</option>
+                            <option value="week">{{ __('this_month') }}</option>
+                            <option value="month" selected>{{ __('this_year') }}</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="card-body">
-                    {% set keys, labels = ['value'], ['Count'] %}
+                    {% set keys, labels = ['value'], [__('total')] %}
 
                     <bars-chart 
-                        id='users-bars-chart' 
+                        id='users-chart' 
                         el='users-bars' 
                         data={{ users_metrics|json_encode() }} 
                         xkey='month' 
@@ -84,32 +84,32 @@
             </div>
         </div>
 
-        <div class="col-md-6">
-            <div class="card shadow-sm mb-4 mb-md-0">
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
                 <div class="card-header d-flex justify-content-between align-items-center ">
                     <span>{{ __('incomes') }}</span>
 
                     <div class="d-flex">
-                        <select id="incomes-trends" class="custom-select">
-                            <option value="weeks">{{ __('this_week') }}</option>
-                            <option value="months" selected>{{ __('this_year') }}</option>
-                            <option value="last-weeks">{{ __('last_4_weeks') }}</option>
-                            <option value="last-years">{{ __('last_5_years') }}</option>
+                        <select id="incomes-chart-period" class="custom-select">
+                            <option value="today">{{ __('today') }}</option>
+                            <option value="day">{{ __('this_week') }}</option>
+                            <option value="week">{{ __('this_month') }}</option>
+                            <option value="month" selected>{{ __('this_year') }}</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="card-body">
-                    {% set keys, labels = ['value'], ['Count'] %}
+                    {% set keys, labels = ['value'], [__('total')] %}
 
-                    <bars-chart 
-                        id='incomes-bars-chart' 
-                        el='incomes-bars' 
+                    <line-chart 
+                        id='incomes-chart' 
+                        el='incomes-line' 
                         data={{ incomes_metrics|json_encode() }} 
                         xkey='month' 
                         ykeys={{ keys|json_encode() }} 
                         labels={{ labels|json_encode() }}>
-                    </bars-chart>
+                    </line-chart>
                 </div>
             </div>
         </div>
@@ -117,19 +117,13 @@
     {% endif %}
 
 	<div class="row mb-4">
-		<div class="col-md-6">
-			<div class="card shadow-sm mb-4 mb-md-0">
+		<div class="col-lg-6">
+			<div class="card shadow-sm mb-4 mb-lg-0">
 				<div class="card-header">
 					<div class="d-flex flex-lg-row flex-column align-items-lg-center justify-content-lg-between">
 						<span>{{ __('recent_messages') }}</span>
 
 						<div class="d-flex flex-lg-row flex-column mt-lg-0 mt-2">
-							<send-message action="{{ route('messages.create') }}" recipient="0" modal_title="{{ __('new') }}">
-								<button class="btn btn-outline-dark mr-2" title="{{ __('new') }}">
-									{{ __('new') }}
-								</button>
-							</send-message>
-
 							<a href="{{ route('messages.index') }}" class="btn btn-outline-dark">
 								{{ __('view_all') }}
 							</a>
@@ -169,16 +163,18 @@
 			</div>
 		</div>
 
-		<div class="col-md-6">
+		<div class="col-lg-6">
 			<div class="card shadow-sm">
-				<div class="card-header d-flex justify-content-between align-items-center ">
-					<span>{{ __('recent_notifications') }}</span>
+				<div class="card-header">
+					<div class="d-flex flex-lg-row flex-column align-items-lg-center justify-content-lg-between">
+                        <span>{{ __('recent_notifications') }}</span>
 
-					<div class="d-flex flex-lg-row flex-column mt-lg-0 mt-2">
-						<a href="{{ route('notifications.index') }}" class="btn btn-outline-dark">
-							{{ __('view_all') }}
-						</a>
-					</div>
+                        <div class="d-flex flex-lg-row flex-column mt-lg-0 mt-2">
+                            <a href="{{ route('notifications.index') }}" class="btn btn-outline-dark">
+                                {{ __('view_all') }}
+                            </a>
+                        </div>
+                    </div>
 				</div>
 
 				<div class="card-body">

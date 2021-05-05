@@ -44,7 +44,7 @@ class Auth
 
             //check user state
             if (!$user->status) {
-                redirect()->back()->withAlert('error', __('user_not_activated', true))->go();
+                redirect()->back()->withAlert('error', __('user_not_activated'))->go();
             }
 
             //check if two factor authentication is enabled
@@ -53,9 +53,9 @@ class Auth
 
                 if (AuthLinkMail::send($user->email, $token)) {
                     $tokens->store($user->email, $token, Carbon::now()->addHour()->toDateTimeString());
-                    redirect()->back()->withAlert('success', __('confirm_email_link_sent', true))->go();
+                    redirect()->back()->withAlert('success', __('confirm_email_link_sent'))->go();
                 } else {
-                    redirect()->back()->withAlert('error', __('confirm_email_link_not_sent', true))->go();
+                    redirect()->back()->withAlert('error', __('confirm_email_link_not_sent'))->go();
                 }
             }
 
@@ -67,7 +67,7 @@ class Auth
                 Cookies::create('user', $user->email, 3600 * 24 * 365);
             }
             
-            Activity::log(__('login_attempts_succeeded', true));
+            Activity::log(__('login_attempts_succeeded'));
 
             //redirect authenticated user
             self::redirect();   
@@ -80,7 +80,7 @@ class Auth
             redirect()->back()->with('auth_attempts_timeout', Carbon::now()->addMinutes(config('security.auth.unlock_timeout'))->toDateTimeString())->go();
         } else {
             redirect()->back()->withInputs($request->only('email', 'password'))
-                ->withAlert('error', __('login_failed', true))->go();
+                ->withAlert('error', __('login_failed'))->go();
         }
     }
     

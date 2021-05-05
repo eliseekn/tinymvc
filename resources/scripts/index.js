@@ -22,6 +22,8 @@ import NotificationsIcon from './components/mixed/notifications-icon'
 import MessagesIcon from './components/mixed/messages-icon'
 import DonutChart from './components/charts/donut-chart'
 import BarsChart from './components/charts/bars-chart'
+import LineChart from './components/charts/line-chart'
+import AreaChart from './components/charts/area-chart'
 import MetricsCard from './components/cards/metrics-card'
 import MetricsCardItem from './components/cards/metrics-card-item'
 import ProductModal from './components/modal/product-modal'
@@ -34,6 +36,8 @@ window.customElements.define('confirm-popup', ConfirmPopup)
 window.customElements.define('text-editor', TextEditor)
 window.customElements.define('donut-chart', DonutChart)
 window.customElements.define('bars-chart', BarsChart)
+window.customElements.define('line-chart', LineChart)
+window.customElements.define('area-chart', AreaChart)
 window.customElements.define('timezone-picker', TimezonePicker)
 window.customElements.define('currency-picker', CurrencyPicker)
 window.customElements.define('theme-switch', ThemeSwitch)

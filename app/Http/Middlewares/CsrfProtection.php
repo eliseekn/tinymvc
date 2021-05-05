@@ -22,7 +22,7 @@ class CsrfProtection
             if (!empty(config('errors.views.403'))) {
                 View::render(config('errors.views.403'), [], 403);
             } else {
-                response()->send(__('no_access_permission', true), [], 403);
+                response()->send(__('no_access_permission'), [], 403);
             }
         }
     }

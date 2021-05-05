@@ -1,69 +1,35 @@
 document.addEventListener('DOMContentLoaded', () => {
-    //users metrics trends
-    if (document.querySelector('#users-trends')) {
-        document.querySelector('#users-trends').addEventListener('change', event => {
-            if (event.target.value === 'last-years') {
-                fetch(process.env.APP_URL + 'api/metrics/users/id/count/years/5')
-                    .then(response => response.json())
-                    .then(data => {
-                        document.querySelector('#users-bars-chart').setAttribute('data', data.metrics)
-                        document.querySelector('#users-bars-chart').setAttribute('xkey', 'year')
-                    })
-            }
-            
-            else if (event.target.value === 'last-weeks') {
-                fetch(process.env.APP_URL + 'api/metrics/users/id/count/weeks/4')
-                    .then(response => response.json())
-                    .then(data => {
-                        document.querySelector('#users-bars-chart').setAttribute('data', data.metrics)
-                        document.querySelector('#users-bars-chart').setAttribute('xkey', 'day')
-                    })
-            }
+    //users metrics data
+    if (document.querySelector('#users-chart-period')) {
+        document.querySelector('#users-chart-period').addEventListener('change', event => {
+            fetch(process.env.APP_URL + 'api/metrics/users/' + event.target.value)
+                .then(response => response.json())
+                .then(data => {
+                    document.querySelector('#users-chart').setAttribute('data', data.metrics)
 
-            else {
-                fetch(process.env.APP_URL + 'api/metrics/users/id/count/' + event.target.value)
-                    .then(response => response.json())
-                    .then(data => {
-                        document.querySelector('#users-bars-chart').setAttribute('data', data.metrics)
-                        event.target.value === 'weeks'
-                            ? document.querySelector('#users-bars-chart').setAttribute('xkey', 'day')
-                            : document.querySelector('#users-bars-chart').setAttribute('xkey', 'month')
-                    })
-            }
+                    if (event.target.value === 'today' || event.target.value === 'week') {
+                        document.querySelector('#users-chart').setAttribute('xkey', 'day')
+                    } else {
+                        document.querySelector('#users-chart').setAttribute('xkey', event.target.value)
+                    }
+                })
         })
     }
 
     //incomes metrics trends
-    if (document.querySelector('#incomes-trends')) {
-        document.querySelector('#incomes-trends').addEventListener('change', event => {
-            if (event.target.value === 'last-years') {
-                fetch(process.env.APP_URL + 'api/metrics/invoices/total_price/sum/years/5')
-                    .then(response => response.json())
-                    .then(data => {
-                        document.querySelector('#incomes-bars-chart').setAttribute('data', data.metrics)
-                        document.querySelector('#incomes-bars-chart').setAttribute('xkey', 'year')
-                    })
-            }
-            
-            else if (event.target.value === 'last-weeks') {
-                fetch(process.env.APP_URL + 'api/metrics/invoices/total_price/sum/weeks/4')
-                    .then(response => response.json())
-                    .then(data => {
-                        document.querySelector('#incomes-bars-chart').setAttribute('data', data.metrics)
-                        document.querySelector('#incomes-bars-chart').setAttribute('xkey', 'day')
-                    })
-            }
+    if (document.querySelector('#incomes-chart-period')) {
+        document.querySelector('#incomes-chart-period').addEventListener('change', event => {
+            fetch(process.env.APP_URL + 'api/metrics/invoices/' + event.target.value)
+                .then(response => response.json())
+                .then(data => {
+                    document.querySelector('#incomes-chart').setAttribute('data', data.metrics)
 
-            else {
-                fetch(process.env.APP_URL + 'api/metrics/invoices/total_price/sum/' + event.target.value)
-                    .then(response => response.json())
-                    .then(data => {
-                        document.querySelector('#incomes-bars-chart').setAttribute('data', data.metrics)
-                        event.target.value === 'weeks'
-                            ? document.querySelector('#incomes-bars-chart').setAttribute('xkey', 'day')
-                            : document.querySelector('#incomes-bars-chart').setAttribute('xkey', 'month')
-                    })
-            }
+                    if (event.target.value === 'today' || event.target.value === 'week') {
+                        document.querySelector('#incomes-chart').setAttribute('xkey', 'day')
+                    } else {
+                        document.querySelector('#incomes-chart').setAttribute('xkey', event.target.value)
+                    }
+                })
         })
     }
 })

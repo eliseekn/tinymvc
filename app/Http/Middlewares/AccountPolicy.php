@@ -21,7 +21,7 @@ class AccountPolicy
         if (config('security.auth.email_confirmation') === true) {
             if (!Auth::get('status')) {
                 redirect()->url('login')->intended($request->fullUri())
-                    ->withAlert('error', __('account_not_activated', true))->go();
+                    ->withAlert('error', __('account_not_activated'))->go();
             }
         }
     }

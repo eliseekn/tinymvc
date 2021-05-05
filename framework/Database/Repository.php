@@ -421,14 +421,14 @@ class Repository
      *
      * @param  string $column
      * @param  string $type
-     * @param  string $trends
+     * @param  string $period
      * @param  int $interval
      * @param  array|null $query
      * @return array
      */
-    public function metrics(string $column, string $type, string $trends, int $interval = 0, ?array $query = null): array
+    public function metrics(string $column, string $type, string $period, int $interval = 0, ?array $query = null): array
     {
-        return (new Metrics($this->table))->getTrends($type, $column, $trends, $interval, $query);
+        return (new Metrics($this->table))->trends($column, $type, $period, $interval, $query);
     }
     
 	/**

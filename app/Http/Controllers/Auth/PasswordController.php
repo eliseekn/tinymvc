@@ -29,10 +29,10 @@ class PasswordController extends Controller
 
 		if (TokenMail::send($request->email, $token)) {
             $tokens->store($request->email, $token, Carbon::now()->addHour()->toDateTimeString());
-			$this->redirect()->back()->withAlert('success', __('password_reset_link_sent', true))->go();
+			$this->redirect()->back()->withAlert('success', __('password_reset_link_sent'))->go();
 		} 
         
-		$this->redirect()->back()->withAlert('error', __('password_reset_link_not_sent', true))->go();
+		$this->redirect()->back()->withAlert('error', __('password_reset_link_not_sent'))->go();
 	}
 	
 	/**
@@ -51,11 +51,11 @@ class PasswordController extends Controller
         $reset_token = $tokens->findOneByEmail($request->email);
 
         if (!$reset_token || $reset_token->token !== $request->token) {
-			$this->response()->send(__('invalid_password_reset_link', true), [], 400);
+			$this->response()->send(__('invalid_password_reset_link'), [], 400);
 		}
 
 		if ($reset_token->expire < Carbon::now()->toDateTimeString()) {
-			$this->response()->send(__('expired_password_reset_link', true), [], 400);
+			$this->response()->send(__('expired_password_reset_link'), [], 400);
 		}
 
 		$tokens->flush($reset_token->token);
@@ -78,6 +78,6 @@ class PasswordController extends Controller
             ['password' => Encryption::hash($request->password)]
         );
 
-        redirect()->url('login')->withAlert('success', __('password_resetted', true))->go();
+        redirect()->url('login')->withAlert('success', __('password_resetted'))->go();
 	}
 }

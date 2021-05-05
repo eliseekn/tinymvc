@@ -1,14 +1,14 @@
 {% extends "layouts/auth.html.twig" %}
 
 {% block title %}
-	{{ __('login', true) }}
+	{{ __('login') }}
 {% endblock %}
 
 {% block body %}
 	{% if auth_attempts_exceeded() %}
 		{% include "partials/alert.html.twig" with {
             type: 'danger',
-            message: __('auth_attempts_exceeded', true),
+            message: __('auth_attempts_exceeded'),
             display: 'default',
             dismiss: false
         } %}
@@ -19,7 +19,7 @@
 			{{ csrf_token_input()|raw }}
 
 			<div class="form-group">
-				<label for="email">{{ __('email', true) }}</label>
+				<label for="email">{{ __('email') }}</label>
 				<input type="text" id="email" name="email" class="form-control {{ errors.email ? 'is-invalid' }}" value="{{ inputs.email ?: '' }}" aria-describedby="email-error" autofocus>
 
 				{% if errors.email is not empty %}
@@ -30,7 +30,7 @@
 			</div>
 
 			<div class="form-group">
-				<label for="password">{{ __('password', true) }}</label>
+				<label for="password">{{ __('password') }}</label>
 
 				<div class="d-flex align-items-center">
 					<input type="password" id="password" name="password" class="form-control {{ errors.password ? 'is-invalid' }}" value="{{ inputs.password ?: '' }}" aria-describedby="password-error">
@@ -50,22 +50,22 @@
 			<div class="d-flex flex-column flex-lg-row justify-content-lg-between justify-content-center mb-3 mb-lg-0 mx-auto">
 				<div class="form-group custom-control custom-switch">
 					<input type="checkbox" class="custom-control-input" id="remember" name="remember">
-					<label class="custom-control-label" for="remember">{{ __('remember', true) }}</label>
+					<label class="custom-control-label" for="remember">{{ __('remember') }}</label>
 				</div>
 
 				<a href="{{ url('password/forgot') }}">
-					{{ __('forgot_password', true) }}
+					{{ __('forgot_password') }}
 				</a>
 			</div>
 
 			<button type="submit" class="btn btn-block btn-primary loading" {{ auth_attempts_exceeded() ? 'disabled' }}>
-				{{ __('submit', true) }}
+				{{ __('submit') }}
 			</button>
 		</form>
 
 		<p class="mt-4 text-center">
-			{{ __('no_account', true) }}
-			<a href="{{ url('signup') }}">{{ __('signup_here', true) }}</a>
+			{{ __('no_account') }}
+			<a href="{{ url('signup') }}">{{ __('signup_here') }}</a>
 		</p>
 	</div>
 {% endblock %}

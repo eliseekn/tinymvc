@@ -24,14 +24,14 @@ class DonutChart extends HTMLElement {
     displayData() {
         if (JSON.parse(this.getAttribute('data')).length == 0) {
             this.innerHTML = `
-                <div class="d-flex justify-content-center align-items-center" style="height: 200px">
+                <div class="d-flex justify-content-center align-items-center" style="height: 230px">
                     ${this.translations.no_data_found}
                 </div>
             ` 
         }
         
         else {
-            this.innerHTML = `<div id="${this.getAttribute('el')}" style="height: 200px"></div>`
+            this.innerHTML = `<div id="${this.getAttribute('el')}" style="height: 230px"></div>`
         
             new Morris.Donut({
                 element: this.getAttribute('el'),

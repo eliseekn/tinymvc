@@ -1,14 +1,14 @@
 {% extends "layouts/auth.html.twig" %}
 
 {% block title %}
-	{{ __('signup', true) }}
+	{{ __('signup') }}
 {% endblock %}
 
 {% block body %}
 	<div class="card shadow p-4">
 		<form method="post" action="{{ url('register') }}">
 			<div class="form-group">
-				<label for="name">{{ __('name', true) }}</label>
+				<label for="name">{{ __('name') }}</label>
 				<input type="text" class="form-control {{ errors.name ? 'is-invalid'  }}" value="{{ inputs.name ?: '' }}" aria-describedby="name-error" name="name" id="name" autofocus>
 
 				{% if errors.name is not empty %}
@@ -19,7 +19,7 @@
 			</div>
 
 			<div class="form-group">
-				<label for="email">{{ __('email', true) }}</label>
+				<label for="email">{{ __('email') }}</label>
 				<input type="email" id="email" name="email" class="form-control {{ errors.email ? 'is-invalid'  }}" value="{{ inputs.email ?: '' }}" aria-describedby="email-error">
 
 				{% if errors.email is not empty %}
@@ -30,7 +30,7 @@
 			</div>
 
 			<div class="form-group">
-				<label for="phone">{{ __('phone', true) }}</label>
+				<label for="phone">{{ __('phone') }}</label>
 				<input type="text" class="form-control {{ errors.phone ? 'is-invalid'  }}" value="{{ inputs.phone ?: '' }}" aria-describedby="phone-error" name="phone" id="phone">
 
 				{% if errors.phone is not empty %}
@@ -41,7 +41,7 @@
 			</div>
 
 			<div class="form-group">
-				<label for="address">{{ __('address', true) }}</label>
+				<label for="address">{{ __('address') }}</label>
 				<input type="text" class="form-control {{ errors.address ? 'is-invalid'  }}" name="address" id="address" value="{{ inputs.address ?: '' }}" aria-describedby="address-error">
 
 				{% if errors.address is not empty %}
@@ -52,7 +52,7 @@
 			</div>
 
 			<div class="form-group">
-				<label for="company">{{ __('company', true) }}</label>
+				<label for="company">{{ __('company') }}</label>
 				<input type="text" class="form-control {{ errors.company ? 'is-invalid'  }}" name="company" id="company" value="{{ inputs.company ?: '' }}" aria-describedby="company-error">
 
 				{% if errors.company is not empty %}
@@ -63,7 +63,7 @@
 			</div>
 
             <div class="form-group">
-                <label for="country">{{ __('country', true) }}</label>
+                <label for="country">{{ __('country') }}</label>
                 <select id="country" name="country" class="custom-select">
                     {% for country in countries %}
                     {% if country is not null %}
@@ -78,7 +78,7 @@
             </div>
 
 			<div class="form-group">
-				<label for="password">{{ __('password', true) }}</label>
+				<label for="password">{{ __('password') }}</label>
 
 				<div class="d-flex align-items-center">
 					<input type="password" id="password" name="password" class="form-control {{ errors.password ? 'is-invalid'  }}" value="{{ inputs.password ?: '' }}" aria-describedby="password-error">
@@ -96,13 +96,13 @@
 			</div>
 
 			<button type="submit" class="btn btn-block btn-primary loading">
-				{{ __('submit', true) }}
+				{{ __('submit') }}
 			</button>
 		</form>
 
 		<p class="mt-4 text-center">
-			{{ __('have_account', true) }}
-			<a href="{{ url('login') }}">{{ __('login_here', true) }}</a>
+			{{ __('have_account') }}
+			<a href="{{ url('login') }}">{{ __('login_here') }}</a>
 		</p>
 	</div>
 {% endblock %}

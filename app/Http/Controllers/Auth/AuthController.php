@@ -78,17 +78,17 @@ class AuthController extends Controller
 
         if (!config('security.auth.email_confirmation')) {
             WelcomeMail::send($request->email, $request->name);
-            $this->redirect()->url('login')->withAlert('success', __('user_registered', true))->go();
+            $this->redirect()->url('login')->withAlert('success', __('user_registered'))->go();
         }
         
         $token = random_string(50, true);
 
         if (EmailConfirmationMail::send($request->email, $token)) {
             $tokens->store($request->email, $token, Carbon::now()->addDay()->toDateTimeString());
-            $this->redirect()->url('login')->withAlert('success', __('confirm_email_link_sent', true))->go();
+            $this->redirect()->url('login')->withAlert('success', __('confirm_email_link_sent'))->go();
         }
         
-        $this->redirect()->back()->withAlert('error', __('confirm_email_link_not_sent', true))->go();
+        $this->redirect()->back()->withAlert('error', __('confirm_email_link_not_sent'))->go();
     }
 	
 	/**

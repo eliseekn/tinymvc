@@ -1,19 +1,19 @@
 {% extends "layouts/auth.html.twig" %}
 
 {% block title %}
-	{{ __('reset_password', true) }}
+	{{ __('reset_password') }}
 {% endblock %}
 
 {% block body %}
 	<div class="card shadow p-4">
 		<form method="post" action="{{ url('password/update') }}">
 			<div class="form-group">
-				<label for="email">{{ __('email', true) }}</label>
+				<label for="email">{{ __('email') }}</label>
 				<input type="email" id="email" name="email" class="form-control" value="{{ email }}" autofocus>
 			</div>
 
 			<div class="form-group">
-				<label for="password">{{ __('new_password', true) }}</label>
+				<label for="password">{{ __('new_password') }}</label>
 
 				<div class="d-flex align-items-center">
 					<input type="password" id="password" name="password" class="form-control">
@@ -25,7 +25,7 @@
 			</div>
 
 			<button type="submit" class="btn btn-block btn-primary loading">
-				{{ __('submit', true) }}
+				{{ __('submit') }}
 			</button>
 		</form>
 	</div>

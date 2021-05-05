@@ -20,7 +20,7 @@ class AuthPolicy
     {
         if (!Auth::check()) {
             redirect()->url('login')->intended($request->fullUri())
-                ->withAlert('error', __('not_logged_error', true))->go();
+                ->withAlert('error', __('not_logged_error'))->go();
         }
 
     }

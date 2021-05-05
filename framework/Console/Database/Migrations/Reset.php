@@ -36,7 +36,7 @@ class Reset extends Command
         $this->getApplication()->find('db:migrations:delete')->run(new ArrayInput($tables), $output);
         $this->getApplication()->find('db:migrations:run')->run(new ArrayInput($tables), $output);
 
-        if ($input->getOption('seed')) {
+        if ($input->hasOption('seed')) {
             $this->getApplication()->find('db:seed')->run(new ArrayInput($tables), $output);
         }
 

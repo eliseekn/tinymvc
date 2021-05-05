@@ -1,14 +1,14 @@
 {% extends "layouts/auth.html.twig" %}
 
 {% block title %}
-	{{ __('forgot_password', true) }}
+	{{ __('forgot_password') }}
 {% endblock %}
 
 {% block body %}
 	<div class="card mb-3">
 		<div class="card-body bg-light">
 			<p class="card-text">
-				{{ __('reset_password_instructions', true) }}
+				{{ __('reset_password_instructions') }}
 			</p>
 		</div>
 	</div>
@@ -16,11 +16,11 @@
 	<div class="card shadow p-4">
 		<form method="post" action="{{ url('password/notify') }}">
 			<div class="form-group">
-				<label for="email">{{ __('email', true) }}</label>
+				<label for="email">{{ __('email') }}</label>
 				<input type="email" id="email" name="email" class="form-control" required autofocus>
 			</div>
 
-			<button type="submit" class="btn btn-block btn-primary loading">{{ __('submit', true) }}</button>
+			<button type="submit" class="btn btn-block btn-primary loading">{{ __('submit') }}</button>
 		</form>
 	</div>
 {% endblock %}

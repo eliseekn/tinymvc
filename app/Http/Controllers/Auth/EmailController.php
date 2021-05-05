@@ -28,12 +28,12 @@ class EmailController extends Controller
         $user = $users->findOneByEmail($request->email);
 
 		if (!$user) {
-            $this->redirect()->url('signup')->withAlert('error', __('user_not_registered', true))->go();
+            $this->redirect()->url('signup')->withAlert('error', __('user_not_registered'))->go();
         }
 
         $users->updateBy(['email', $user->email], ['active' => 1]);
         WelcomeMail::send($user->email, $user->name);
-        $this->redirect()->url('login')->withAlert('success', __('user_activated', true))->go();
+        $this->redirect()->url('login')->withAlert('success', __('user_activated'))->go();
     }
         
     /**
@@ -49,11 +49,11 @@ class EmailController extends Controller
         $auth_token = $tokens->findOneByEmail($request->email);
 
         if (!$auth_token || $auth_token->token !== $request->token) {
-			$this->response()->send(__('invalid_two_steps_link', true));
+			$this->response()->send(__('invalid_two_steps_link'));
 		}
 
 		if ($auth_token->expire < Carbon::now()->toDateTimeString()) {
-			$this->response()->send(__('expired_two_steps_link', true));
+			$this->response()->send(__('expired_two_steps_link'));
 		}
 
         $tokens->flush($auth_token->token);

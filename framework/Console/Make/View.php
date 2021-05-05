@@ -26,21 +26,20 @@ class View extends Command
     {
         $this->setDescription('Create new view template');
         $this->addArgument('view', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of view or layout (separated by space if many)');
-        $this->addOption('extends', null, InputOption::VALUE_REQUIRED, 'Specify layout name');
-        $this->addOption('layout', null, InputOption::VALUE_NONE, 'Create layout view template');
+        $this->addOption('extends', null, InputOption::VALUE_REQUIRED, 'Extends from layout');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $views = $input->getArgument('view');
 
-        if ($input->getOption('layout')) {
+        if (is_null($input->getOption('extends'))) {
             foreach ($views as $view) {
                 if (!Make::createView(null, $view)) {
-                    $output->writeln('<fg=yellow>Failed to create layout "' . $view . '"</fg>');
+                    $output->writeln('<fg=yellow>Failed to create view layout "' . $view . '"</fg>');
                 }
     
-                $output->writeln('<info>Layout "' . $view . '" has been created</info>');
+                $output->writeln('<info>View layout "' . $view . '" has been created</info>');
             }
 
             return Command::SUCCESS;
