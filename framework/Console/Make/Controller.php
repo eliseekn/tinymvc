@@ -8,7 +8,6 @@
 
 namespace Framework\Console\Make;
 
-use Framework\Console\Make;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;

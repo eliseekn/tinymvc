@@ -10,7 +10,7 @@
  * Mailer configuration
  */
 
-$config = [
+return [
     'default' => 'smtp',
 
     'sender_name' => config('app.name'),

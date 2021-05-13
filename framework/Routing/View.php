@@ -14,9 +14,10 @@ use Framework\System\Session;
 use Framework\System\Storage;
 use Twig\Loader\FilesystemLoader;
 use Framework\System\TwigExtensions;
+use Twig\Extension\DebugExtension;
 
 /**
- * Main view class
+ * Manage views templates
  */
 class View
 {
@@ -37,11 +38,17 @@ class View
         }
 
         $loader = new FilesystemLoader($path->get());
+
         $twig = new Environment($loader, [
             'cache' => config('twig.disable_cache') ? false : config('storage.cache'),
+            'debug' => config('twig.debug')
         ]);
 
         $twig->addExtension(new TwigExtensions());
+        
+        if (config('twig.debug')) {
+            $twig->addExtension(new DebugExtension());
+        }
 
         return $twig->render($view, array_merge($data, [
             'inputs' => (object) Session::pull('inputs'), 

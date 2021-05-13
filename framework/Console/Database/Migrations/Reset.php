@@ -26,7 +26,7 @@ class Reset extends Command
     {
         $this->setDescription('Reset migrations tables');
         $this->addArgument('table', InputArgument::OPTIONAL|InputArgument::IS_ARRAY, 'The name of migrations tables (separated by space if many)');
-        $this->addOption('seed', null, InputOption::VALUE_OPTIONAL, 'Insert all seeds');
+        $this->addOption('seed', null, InputOption::VALUE_NONE, 'Insert all seeds');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -36,7 +36,7 @@ class Reset extends Command
         $this->getApplication()->find('db:migrations:delete')->run(new ArrayInput($tables), $output);
         $this->getApplication()->find('db:migrations:run')->run(new ArrayInput($tables), $output);
 
-        if ($input->hasOption('seed')) {
+        if ($input->getOption('seed')) {
             $this->getApplication()->find('db:seed')->run(new ArrayInput($tables), $output);
         }
 

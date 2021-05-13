@@ -8,7 +8,6 @@
 
 namespace Framework\Console\Make;
 
-use Framework\Console\Make;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
@@ -46,7 +45,7 @@ class Migration extends Command
 
         if ($input->getOption('repository')) {
             foreach ($migrations as $migration) {
-                list($name, $class) = Make::generateClass($migration, 'repository');
+                list($name, $class) = Make::generateClass($migration, '');
 
                 if (!Make::createRepository($migration)) {
                     $output->writeln('<fg=yellow>Failed to create repository "' . $class . '"</fg>');

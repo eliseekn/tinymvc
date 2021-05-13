@@ -10,14 +10,13 @@
  * Twig configuration
  */
 
-$config = [
+return [
     'disable_cache' => true,
+    'debug' => true,
+    
     'extensions' => [
         'functions' => [],
         'filters' => [],
-        'globals' => [
-            'USER_ROLE' => \App\Database\Repositories\Roles::ROLE,
-            'MEDIA_TYPE' => \App\Database\Repositories\Medias::TYPE
-        ]
+        'globals' => []
     ]
 ];

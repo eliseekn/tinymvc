@@ -1,0 +1,11 @@
+@import 'components/page_loading';
+@import 'components/animations';
+
+html {
+    scroll-behavior: smooth;
+}
+
+.alert,
+.modal-dialog {
+    @include fadeIn(.1s);
+}

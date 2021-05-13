@@ -30,54 +30,6 @@
 			</div>
 
 			<div class="form-group">
-				<label for="phone">{{ __('phone') }}</label>
-				<input type="text" class="form-control {{ errors.phone ? 'is-invalid'  }}" value="{{ inputs.phone ?: '' }}" aria-describedby="phone-error" name="phone" id="phone">
-
-				{% if errors.phone is not empty %}
-					<div id="phone-error" class="invalid-feedback">
-						{{ errors.phone|raw }}
-					</div>
-				{% endif %}
-			</div>
-
-			<div class="form-group">
-				<label for="address">{{ __('address') }}</label>
-				<input type="text" class="form-control {{ errors.address ? 'is-invalid'  }}" name="address" id="address" value="{{ inputs.address ?: '' }}" aria-describedby="address-error">
-
-				{% if errors.address is not empty %}
-					<div id="address-error" class="invalid-feedback">
-						{{ errors.address|raw }}
-					</div>
-				{% endif %}
-			</div>
-
-			<div class="form-group">
-				<label for="company">{{ __('company') }}</label>
-				<input type="text" class="form-control {{ errors.company ? 'is-invalid'  }}" name="company" id="company" value="{{ inputs.company ?: '' }}" aria-describedby="company-error">
-
-				{% if errors.company is not empty %}
-					<div id="company-error" class="invalid-feedback">
-						{{ errors.company|raw }}
-					</div>
-				{% endif %}
-			</div>
-
-            <div class="form-group">
-                <label for="country">{{ __('country') }}</label>
-                <select id="country" name="country" class="custom-select">
-                    {% for country in countries %}
-                    {% if country is not null %}
-                        {% for key, value in country %}
-                    <option value="{{ key }}">
-                        {{ value }} 
-                    </option>
-                        {% endfor %}
-                    {% endif %}
-                    {% endfor %}
-                </select>
-            </div>
-
-			<div class="form-group">
 				<label for="password">{{ __('password') }}</label>
 
 				<div class="d-flex align-items-center">

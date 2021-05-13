@@ -31,7 +31,7 @@ class Status extends Command
     {
         $rows = [];
 
-        foreach (Storage::path(config('storage.migrations'))->getFiles() as $table) {
+        foreach (Storage::path(config('storage.migrations'))->files() as $table) {
             $status = $this->isMigrated(get_file_name($table)) ? '<info>migrated</info>' : '<fg=red>not migrated</info>';
             $rows[] = [get_file_name($table), $status];
         }

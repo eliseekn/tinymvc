@@ -32,16 +32,23 @@ class Pager
     /**
      * instantiates class
      *
-     * @param  mixed $items
-     * @param  array $pagination
+	 * @param  int $total_items
+	 * @param  int $items_per_page
      * @return void
      */
-    public function __construct($items, array $pagination)
+    public function __construct(int $total_items, int $items_per_page)
     {
-        $this->pagination = $pagination;
-        $this->items = $items;
+        $page = (new Request())->queries('page', 1);
+
+        $this->pagination = [
+			'page' => $page,
+            'first_item' => ($page - 1) * $items_per_page,
+			'total_items' => $total_items,
+			'items_per_page' => $items_per_page,
+			'total_pages' => $items_per_page > 0 ? ceil($total_items / $items_per_page) : 1
+        ];
     }
-    
+
     /**
      * get items array
      *
@@ -55,11 +62,12 @@ class Pager
     /**
      * set items array
      *
-     * @return void
+     * @return \Framework\Support\Pager
      */
-    public function setItems(array $items): void
+    public function setItems(array $items): self
     {
         $this->items = $items;
+        return $this;
     }
     
     /**
@@ -99,7 +107,7 @@ class Pager
      */
     public function getItemsPerPage(): int
     {
-        return $this->pagination['items_per_pages'];
+        return $this->pagination['items_per_page'];
     }
     
     /**
@@ -238,7 +246,9 @@ class Pager
 
         if (!isset($queries)) {
             $uri = $request->uri() . '?page=' . $page;
-        } else {
+        } 
+        
+        else {
             if (strpos($queries, '&page=')) {
                 $queries = substr($queries, strpos($queries, '?'), -1);
                 $uri = $request->uri() . $queries . $page;

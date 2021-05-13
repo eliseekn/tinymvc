@@ -2,6 +2,7 @@
 
 namespace App\Database\Repositories;
 
+use Framework\Http\Request;
 use Framework\Database\Repository;
 
 class CLASSNAME extends Repository
@@ -31,6 +32,39 @@ class CLASSNAME extends Repository
      */
     public function findOneByValue($value)
     {
-        return $this->findOneBy('value', $value);
+        return $this->findOneWhere('value', $value);
+    }
+
+    /**
+     * retrieves all data by value
+     *
+     * @param  mixed $value
+     * @return array
+     */
+    public function findAllByValue($value): array
+    {
+        return $this->findAllWhere('value', $value);
+    }
+
+    /**
+     * store data
+     *
+     * @param  \Framework\Http\Request $request
+     * @return int
+     */
+    public function store(): int
+    {
+        return $this->insert($request->except('csrf_token'));
+    }
+
+    /**
+     * delete data
+     *
+     * @param  int $id
+     * @return bool
+     */
+    public function flush(int $id): bool
+    {
+        return $this->deleteIfExists($id);
     }
 }

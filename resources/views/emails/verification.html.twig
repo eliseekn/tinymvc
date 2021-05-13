@@ -1,0 +1,7 @@
+{% extends "layouts/email.html.twig" %}
+
+{% block body %}
+    <p>You are seeing this email because you have registered an account to {{ config('app.name') }}. Click the link below to verify your email adress:</p>
+    <p><a href="{{ url('email/verify?email=' ~ email ~ '&token=' ~ token) }}">{{ url('email/verify?email=' ~ email ~ '&token=' ~ token) }}</a></p>
+    <p>If you did not registered an account, no further action is required.</p>
+{% endblock %}

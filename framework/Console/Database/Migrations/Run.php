@@ -29,7 +29,7 @@ class Run extends Command
     {
         $this->setDescription('Run migrations tables');
         $this->addArgument('table', InputArgument::OPTIONAL|InputArgument::IS_ARRAY, 'The name of migrations tables (separated by space if many)');
-        $this->addOption('seed', null, InputOption::VALUE_OPTIONAL, 'Insert all seeds');
+        $this->addOption('seed', null, InputOption::VALUE_NONE, 'Insert all seeds');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -37,16 +37,16 @@ class Run extends Command
         $tables = $input->getArgument('table');
 
         if (!QueryBuilder::tableExists('migrations')) {
-            Migration::newTable('migrations')
+            Migration::table('migrations')
                 ->addInt('id')->primaryKey()
                 ->addString('name')
-                ->create();
+                ->migrate();
 
             $output->writeln('<info>Migrations tables have been created</info>');
         }
 
         if (empty($tables)) {
-            foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
+            foreach (Storage::path(config('storage.migrations'))->files() as $file) {
                 $this->migrate($output, get_file_name($file));
             }
         }
@@ -71,19 +71,18 @@ class Run extends Command
             return;
         }
 
-        $this->migration($table)->create();
-        $this->save($table);
+        //create migration table
+        $migration = '\App\Database\Migrations\\' . $table;
+        (new $migration())->create();
+        
+        //add migration table from migrated tables
+        QueryBuilder::table('migrations')
+            ->insert(['name' => $table])
+            ->execute();
 
         $output->writeln('<info>Table "' . $table . '" has been migrated</info>');
     }
 
-    protected function save(string $table): void
-    {
-        QueryBuilder::table('migrations')
-            ->insert(['name' => $table])
-            ->execute();
-    }
-    
     protected function isMigrated(string $table): bool
     {
         if (!QueryBuilder::tableExists('migrations')) {
@@ -94,11 +93,5 @@ class Run extends Command
             ->select('*')
             ->where('name', $table)
             ->exists();
-    }
-    
-    protected function migration(string $table)
-    {
-        $migration = '\App\Database\Migrations\\' . $table;
-        return new $migration();
     }
 }

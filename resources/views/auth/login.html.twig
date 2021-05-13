@@ -7,10 +7,12 @@
 {% block body %}
 	{% if auth_attempts_exceeded() %}
 		{% include "partials/alert.html.twig" with {
-            type: 'danger',
-            message: __('auth_attempts_exceeded'),
-            display: 'default',
-            dismiss: false
+            alert: {
+                type: 'danger',
+                message: __('auth_attempts_exceeded', {'timeout': config('security.auth.unlock_timeout')}),
+                dismiss: false,
+                display: 'default'
+            }
         } %}
 	{% endif %}
 

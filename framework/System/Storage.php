@@ -47,7 +47,7 @@ class Storage
      */
     public function add(string $path): self
     {
-        self::$path .= $path . DIRECTORY_SEPARATOR;
+        self::$path .= real_path($path) . DS;
         return $this;
     }
 
@@ -187,7 +187,7 @@ class Storage
     {
         if ($this->isDir($pathname)) {
             $objects = scandir(self::$path . $pathname);
-            $pathname = empty($pathname) ? $pathname : $pathname . DIRECTORY_SEPARATOR;
+            $pathname = empty($pathname) ? $pathname : $pathname . DS;
 
             foreach ($objects as $object) {
                 if ($object != '.' && $object != '..') {
@@ -211,13 +211,12 @@ class Storage
     /**
      * get list of files
      *
-     * @param  string $pathname
      * @return array
      */
-    public function getFiles(string $pathname = ''): array
+    public function files(): array
     {
         $results = [];
-        $objects = scandir(self::$path . $pathname);
+        $objects = scandir(self::$path);
 
         foreach ($objects as $object) {
             if ($object != '.' && $object != '..' && $this->isFile($object)) {
@@ -231,13 +230,12 @@ class Storage
     /**
      * get list of folders
      *
-     * @param  string $pathname
      * @return array
      */
-    public function getFolders(string $pathname = ''): array
+    public function getFolders(): array
     {
         $results = [];
-        $objects = scandir(self::$path . $pathname);
+        $objects = scandir(self::$path);
 
         foreach ($objects as $object) {
             if ($object != '.' && $object != '..' && $this->isDir($object)) {

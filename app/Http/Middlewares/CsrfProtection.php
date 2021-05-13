@@ -3,7 +3,6 @@
 namespace App\Http\Middlewares;
 
 use Framework\Http\Request;
-use Framework\Routing\View;
 
 /**
  * CSRF token validator
@@ -20,10 +19,10 @@ class CsrfProtection
     {
         if ($request->filled('csrf_token') && !valid_csrf_token($request->csrf_token)) {
             if (!empty(config('errors.views.403'))) {
-                View::render(config('errors.views.403'), [], 403);
-            } else {
-                response()->send(__('no_access_permission'), [], 403);
+                render(config('errors.views.403'), [], 403);
             }
+                
+            response()->send(__('access_denied'), [], 403);
         }
     }
 }

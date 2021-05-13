@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Framework\Routing\Controller;
 
-class HomeController extends Controller
+class HomeController
 {
 	/**
 	 * index
@@ -13,6 +12,6 @@ class HomeController extends Controller
 	 */
 	public function index(): void
 	{
-        $this->render('index');
+        render('index');
 	}
 }

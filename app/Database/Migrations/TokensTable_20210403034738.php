@@ -20,11 +20,12 @@ class TokensTable_20210403034738
      */
     public function create(): void
     {
-        Migration::newTable($this->table)
-            ->addBigInt('id')->primaryKey()
-            ->addString('email')->unique()
+        Migration::table($this->table)
+            ->addPrimaryKey('id')
+            ->addString('email')
             ->addString('token')->unique()
-            ->addTimestamp('expire')->setNull()
+            ->addTimestamp('expire')->nullable()
+            ->addBoolean('api')->default(0)
             ->create();
     }
     

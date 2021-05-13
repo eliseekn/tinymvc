@@ -7,6 +7,8 @@
  */
 
 use Framework\Http\Request;
+use Framework\Support\Whoops;
+use Framework\System\Config;
 use Framework\System\Storage;
 
 /**
@@ -14,7 +16,11 @@ use Framework\System\Storage;
  */
 
 //application root path
-define('APP_ROOT', __DIR__  . DIRECTORY_SEPARATOR);
+define('DS', DIRECTORY_SEPARATOR);
+define('APP_ROOT', __DIR__  . DS);
+
+//register whoops error handler
+Whoops::register();
 
 //errors display
 if (config('errors.display') === true) {
@@ -27,28 +33,33 @@ if (config('errors.display') === true) {
 //errors logging
 if (config('errors.log') === true) {
     ini_set('log_errors', 1);
-    ini_set('error_log', Storage::path(config('storage.logs'))->file('tinymvc_logs_' . date('m_d_y') . '.log'));
+    ini_set('error_log', Storage::path(config('storage.logs'))->file('tinymvc_' . date('m_d_y') . '.log'));
 } else {
     ini_set('log_errors', 0);
 }
 
-//handle errors exceptions
+//handle exceptions
 function handleExceptions($e)
 {
     throw new ErrorException($e->getMessage(), $e->getCode(), 1, $e->getFile(), $e->getLine(), $e->getPrevious());
 }
 
-//set exception handler
+//handle errors exceptions
+function handleErrors($e)
+{
+    throw new ErrorException($e->getMessage(), $e->getCode(), 1, $e->getFile(), $e->getLine(), $e->getPrevious());
+}
+
+//set exceptions and errors handlers
 set_exception_handler('handleExceptions');
+set_error_handler('handleErrors');
 
 //remove PHP maximum execution time 
 set_time_limit(0);
 
 //load .env file
 if (!Storage::path()->isFile('.env') && !empty((new Request())->uri())) {
-    throw new Exception('Missing ".env" file. Run "php console app:setup" on your terminal to setup application or create ".env" file from ".env.example"');
+    throw new Exception('Run "php console app:setup" console command to setup application or create ".env" file from ".env.example"');
 }
 
-if (Storage::path()->isFile('.env')) {
-    load_env();
-}
+Config::loadEnv();

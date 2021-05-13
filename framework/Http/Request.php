@@ -47,8 +47,8 @@ class Request
      */
     public function http_auth(): array
     {
-        $header = $this->headers('HTTP_AUTHORIZATION');
-        return is_null($header) ? [] : explode(' ', $header);
+        $header = $this->headers('HTTP_AUTHORIZATION', '');
+        return empty($header) ? [] : explode(' ', $header);
     }
     
     /**
@@ -94,7 +94,7 @@ class Request
      * @param  array $allowed_extensions
      * @return \Framework\Support\Uploader
      */
-    private function getFile(string $input, array $allowed_extensions = []): \Framework\Support\Uploader
+    private function getSingleFile(string $input, array $allowed_extensions = []): \Framework\Support\Uploader
     {
         return new Uploader([
             'name' => $_FILES[$input]['name'],
@@ -112,22 +112,24 @@ class Request
      * @param  array $allowed_extensions
      * @return array
      */
-    private function getFiles(string $input, array $allowed_extensions = []): array
+    private function getMultipleFiles(string $input, array $allowed_extensions = []): array
     {
         $files = [];
 
-        if (isset($_FILES[$input]) && !empty($_FILES[$input])) {
-            $count = is_array($_FILES[$input]['tmp_name']) ? count($_FILES[$input]['tmp_name']) : 1;
+        if (!isset($_FILES[$input]) || empty($_FILES[$input])) {
+            return $files;
+        }
 
-            for ($i = 0; $i < $count; $i++) {
-                $files[] = new Uploader([
-                    'name' => $_FILES[$input]['name'][$i],
-                    'tmp_name' => $_FILES[$input]['tmp_name'][$i],
-                    'size' => $_FILES[$input]['size'][$i],
-                    'type' => $_FILES[$input]['type'][$i],
-                    'error' => $_FILES[$input]['error'][$i]
-                ], $allowed_extensions);
-            }
+        $count = is_array($_FILES[$input]['tmp_name']) ? count($_FILES[$input]['tmp_name']) : 1;
+
+        for ($i = 0; $i < $count; $i++) {
+            $files[] = new Uploader([
+                'name' => $_FILES[$input]['name'][$i],
+                'tmp_name' => $_FILES[$input]['tmp_name'][$i],
+                'size' => $_FILES[$input]['size'][$i],
+                'type' => $_FILES[$input]['type'][$i],
+                'error' => $_FILES[$input]['error'][$i]
+            ], $allowed_extensions);
         }
         
         return $files;
@@ -138,12 +140,14 @@ class Request
      *
      * @param  string $input
      * @param  array $allowed_extensions
-     * @param  bool $mutliple
+     * @param  bool $multiple
      * @return \Framework\Support\Uploader|array
      */
-    public function files(string $input, array $allowed_extensions = [], bool $mutliple = false)
+    public function files(string $input, array $allowed_extensions = [], bool $multiple = false)
     {
-        return $mutliple ? $this->getFiles($input, $allowed_extensions) : $this->getFile($input, $allowed_extensions);
+        return $multiple 
+            ? $this->getMultipleFiles($input, $allowed_extensions) 
+            : $this->getSingleFile($input, $allowed_extensions);
     }
 
     /**
@@ -154,7 +158,7 @@ class Request
      */
     public function method(?string $value = null)
     {
-        return is_null($value) ? $this->headers('REQUEST_METHOD') : $_SERVER['REQUEST_METHOD'] = $value;
+        return is_null($value) ? $this->headers('REQUEST_METHOD', '') : $_SERVER['REQUEST_METHOD'] = $value;
     }
     
     /**
@@ -175,8 +179,16 @@ class Request
      */
     public function fullUri(): string
     {
-        $uri = $this->headers('REQUEST_URI');
-        return is_null($uri) ? '' : $uri;
+        $uri = $this->headers('REQUEST_URI', '');
+        $uri = urldecode($uri);
+        $uri = filter_var($uri, FILTER_SANITIZE_URL) === false ? $uri : filter_var($uri, FILTER_SANITIZE_URL);
+        $uri = str_replace('//', '/', $uri);
+ 
+        if ($uri !== '/') {
+            $uri = rtrim($uri, '/');
+        }
+
+        return $uri;
     }
 
     /**
@@ -192,13 +204,8 @@ class Request
         if (strpos($uri, '?')) {
             $uri = substr($uri, strpos($uri, '/'), strpos($uri, '?'));
         }
- 
-        if ($uri !== '/') {
-            $uri = rtrim($uri, '/');
-        }
 
-        //return sanitized url
-        return filter_var($uri, FILTER_SANITIZE_URL) === false ? $uri : filter_var($uri, FILTER_SANITIZE_URL);
+        return $uri;        
     }
     
     /**
@@ -208,8 +215,7 @@ class Request
      */
     public function remoteIP(): string
     {
-        $ip = $this->headers('REMOTE_ADDR');
-        return is_null($ip) ? '' : $ip;
+        return $this->headers('REMOTE_ADDR', '');
     }
     
     /**
@@ -266,11 +272,19 @@ class Request
      * set value of POST/GET request
      *
      * @param  string $item
-     * @param  string $value
+     * @param  mixed $value
      * @return void
      */
-    public function set(string $item, string $value): void
+    public function set(string $item, $value): void
     {
+        if (isset($_POST[$item])) {
+            $_POST[$item] = $value;
+        }
+
+        if (isset($_GET[$item])) {
+            $_GET[$item] = $value;
+        }
+
         $this->{$item} = $value;
     }
     

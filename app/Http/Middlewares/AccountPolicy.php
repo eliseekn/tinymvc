@@ -2,7 +2,7 @@
 
 namespace App\Http\Middlewares;
 
-use App\Helpers\Auth;
+use Framework\System\Auth;
 use Framework\Http\Request;
 
 /**
@@ -18,10 +18,10 @@ class AccountPolicy
      */
     public function handle(Request $request): void
     {
-        if (config('security.auth.email_confirmation') === true) {
-            if (!Auth::get('status')) {
+        if (config('security.auth.email_verification') === true) {
+            if (!Auth::get('email_verified')) {
                 redirect()->url('login')->intended($request->fullUri())
-                    ->withAlert('error', __('account_not_activated'))->go();
+                    ->withAlert('error', __('email_not_verifed'))->go();
             }
         }
     }

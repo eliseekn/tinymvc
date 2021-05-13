@@ -1,9 +1,6 @@
-{% if alert.display == 'popup' %}
-    <alert-popup type="{{ alert.type }}" message="{{ alert.message }}"></alert-popup>
-{% elseif alert.display == 'toast' %}
+{% if alert.display == 'toast' %}
     <alert-toast type="{{ alert.type }}" message="{{ alert.message }}"></alert-toast>
 {% else %}
-
     <div class="alert alert-{{ alert.type }} alert-dismissible show" role="alert">
         {{ alert.message|raw }}
 
@@ -13,5 +10,4 @@
         </button>
         {% endif %}
     </div>
-
 {% endif %}

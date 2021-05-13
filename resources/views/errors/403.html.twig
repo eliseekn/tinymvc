@@ -1,7 +1,7 @@
 {% extends "layouts/error.html.twig" %}
 
 {% block error_description %}
-	You do not have permission to access this page
+	{{ __('access_denied') }}
 {% endblock %}
 
 {% block error_title %}
@@ -9,5 +9,5 @@
 {% endblock %}
 
 {% block error_message %}
-	You do not have permission to access this page.
+	{{ __('access_denied') }}
 {% endblock %}

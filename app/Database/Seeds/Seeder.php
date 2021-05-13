@@ -20,7 +20,6 @@ class Seeder
      */
     public static function run(): void
     {
-        RolesSeed::insert();
         UsersSeed::insert();
     }
 }

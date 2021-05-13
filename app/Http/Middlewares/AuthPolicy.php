@@ -2,7 +2,7 @@
 
 namespace App\Http\Middlewares;
 
-use App\Helpers\Auth;
+use Framework\System\Auth;
 use Framework\Http\Request;
 
 /**
@@ -20,8 +20,7 @@ class AuthPolicy
     {
         if (!Auth::check()) {
             redirect()->url('login')->intended($request->fullUri())
-                ->withAlert('error', __('not_logged_error'))->go();
+                ->withAlert('error', __('not_logged'))->go();
         }
-
     }
 }

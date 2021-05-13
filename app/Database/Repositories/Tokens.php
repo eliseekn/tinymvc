@@ -31,7 +31,7 @@ class Tokens extends Repository
      */
     public function findOneByEmail(string $email)
     {
-        return $this->findOneBy('email', $email);
+        return $this->findOneWhere('email', $email);
     }
 
     /**
@@ -40,15 +40,9 @@ class Tokens extends Repository
      * @param  string $token
      * @return mixed
      */
-    public function findOneByToken(Users $users, string $token)
+    public function findOneByToken(string $token)
     {
-        $token = $this->findOneBy('token', $token);
-
-        if (!$token) {
-            return false;
-        }
-
-        return $users->findOneByEmail($token->email);
+        return $this->findOneWhere('token', $token);
     }
 
     /**
@@ -57,14 +51,16 @@ class Tokens extends Repository
      * @param  string $email
      * @param  string $token
      * @param  mixed $expire
+     * @param  bool $api
      * @return int
      */
-    public function store(string $email, string $token, $expire = null): int
+    public function store(string $email, string $token, bool $api = false, $expire = null): int
     {
         return $this->insert([
             'email' => $email,
             'token' => $token,
-            'expire' => $expire
+            'expire' => $expire,
+            'api' => (int) $api
         ]);
     }
     
@@ -72,10 +68,14 @@ class Tokens extends Repository
      * delete token by value
      *
      * @param  string $token
-     * @return bool
+     * @param  bool $api
+     * @return void
      */
-    public function flush(string $token): bool
+    public function flush(string $token, bool $api = false): void
     {
-        return $this->deleteBy('token', $token);
+        $this->delete()
+            ->where('token', $token)
+            ->and('api', (int) $api)
+            ->execute();
     }
 }

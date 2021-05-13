@@ -33,15 +33,15 @@ class Delete extends Command
         $tables = $input->getArgument('table');
 
         if (empty($tables)) {
-            foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
+            foreach (Storage::path(config('storage.migrations'))->files() as $file) {
                 $this->delete($output, get_file_name($file));
             }
+
+            return Command::SUCCESS;
         }
 
-        else {
-            foreach ($tables as $table) {
-                $this->delete($output, $table);
-            }
+        foreach ($tables as $table) {
+            $this->delete($output, $table);
         }
 
         return Command::SUCCESS;
@@ -54,19 +54,18 @@ class Delete extends Command
             return;
         }
 
-        $this->migration($table)->drop();
-        $this->remove($table);
+        //drop migration table
+        $migration = '\App\Database\Migrations\\' . $table;
+        (new $migration())->drop();
+        
+        //remove migration table from migrated tables
+        QueryBuilder::table('migrations')->delete()
+            ->where('name', $table)
+            ->execute();
 
         $output->writeln('<info>Table "' . $table . '" has been deleted</info>');
     }
 
-    protected function remove(string $table): void
-    {
-        QueryBuilder::table('migrations')->delete()
-            ->where('name', $table)
-            ->execute();
-    }
-    
     protected function isMigrated(string $table): bool
     {
         if (!QueryBuilder::tableExists('migrations')) {
@@ -77,11 +76,5 @@ class Delete extends Command
             ->select('*')
             ->where('name', $table)
             ->exists();
-    }
-    
-    protected function migration(string $table)
-    {
-        $migration = '\App\Database\Migrations\\' . $table;
-        return new $migration();
     }
 }

@@ -10,7 +10,7 @@
  * Application configuration
  */
 
-$config = [
+return [
     'encryption' => [
         'key' => env('ENCRYPTION_KEY'),
         'cookies' => true,
@@ -19,10 +19,10 @@ $config = [
     'auth' => [
         'max_attempts' => false,
         'unlock_timeout' => 1, //in minute
-        'email_confirmation' => false,
+        'email_verification' => false,
     ],
 
     'session' => [
-        'lifetime' => 3600 * 5, //5 hours in seconds
+        'lifetime' => 3600 * 5, //in seconds
     ]
 ];

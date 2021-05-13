@@ -6,19 +6,17 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-use Framework\Support\Storage;
-
 /**
  * Errors configuration
  */
 
-$config = [
+return [
     'display' => true,
-    'log' => false,
+    'log' => true,
 
     'views' => [
-        '403' => 'errors' . DIRECTORY_SEPARATOR . '403',
-        '404' => 'errors' . DIRECTORY_SEPARATOR . '404',
-        '500' => 'errors' . DIRECTORY_SEPARATOR . '500'
+        '403' => 'errors' . DS . '403',
+        '404' => 'errors' . DS . '404',
+        '500' => 'errors' . DS . '500'
     ]
 ];

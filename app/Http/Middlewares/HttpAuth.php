@@ -2,7 +2,7 @@
 
 namespace App\Http\Middlewares;
 
-use App\Helpers\Auth;
+use Framework\System\Auth;
 use Framework\Http\Request;
 use App\Database\Repositories\Users;
 
@@ -21,20 +21,20 @@ class HttpAuth
     public function handle(Request $request, Users $users): void
     {
         if (empty($request->http_auth())) {
-            response()->json(['Authorization Required'], [], 401);
+            response()->json(__('auth_required'), [], 401);
         }
 
         list($method, $credentials) = $request->http_auth();
 
         if (trim($method) !== 'Basic') {
-            response()->json(['Invalid authentication method'], [], 401);
+            response()->json(__('invalid_auth_method'), [], 401);
         }
 
         $credentials = base64_decode($credentials);
         list($email, $password) = explode(':', $credentials);
 
-        if (!Auth::checkByCredentials($users, $email, $password, $user)) {
-            response()->json(['Invalid credentials'], [], 401);
+        if (!Auth::checkCredentials($users, $email, $password, $user)) {
+            response()->json(__('invalid_credentials'), [], 401);
         }
     }
 }

@@ -135,16 +135,12 @@ class Uploader
     public function fileSizeToString(): string
     {
         if ($this->getFileSize() <= 0) {
-            return '';
+            return '0 KB';
         }
 
         $bytes = $this->getFileSize() / 1024;
 
-		if ($bytes > 1024) {
-			return number_format($bytes/1024, 1) . ' MB';
-		} else {
-			return number_format($bytes, 1) . ' KB';
-		}
+        return $bytes > 1024 ? number_format($bytes/1024, 1) . ' MB' : number_format($bytes, 1) . ' KB';
     }
     
     /**

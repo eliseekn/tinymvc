@@ -34,10 +34,12 @@ class Seeds extends Command
         if (empty($seeds)) {
             Seeder::run();
             $output->writeln('<info>All seeds have been inserted</info>');
-        } else {
-            foreach ($seeds as $seed) {
-                $this->seed($output, $seed);
-            }
+            
+            return Command::SUCCESS;
+        }
+        
+        foreach ($seeds as $seed) {
+            $this->seed($output, $seed);
         }
 
         return Command::SUCCESS;

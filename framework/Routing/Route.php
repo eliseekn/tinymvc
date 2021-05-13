@@ -54,6 +54,26 @@ class Route
      * @var array
      */
     public static $names = [];
+    
+    /**
+     * add new route
+     *
+     * @param  string $method
+     * @param  string $uri
+     * @param  \Closure $callback
+     * @return \Framework\Routing\Route
+     */
+    public static function add(string $method, string $uri, $callback): self
+    {
+        static::$uri = self::parse($uri);
+
+        static::$tmp_routes[static::$uri] = [
+            'method' => $method,
+            'handler' => $callback
+        ];
+
+        return new self();
+    }
 
     /**
      * add route with GET method
@@ -64,14 +84,7 @@ class Route
      */
     public static function get(string $uri, $callback): self
     {
-        static::$uri = self::parse($uri);
-
-        static::$tmp_routes[static::$uri] = [
-            'method' => 'GET|HEAD',
-            'handler' => $callback
-        ];
-
-        return new self();
+        return self::add('GET|HEAD', $uri, $callback);
     }
 
     /**
@@ -83,14 +96,7 @@ class Route
      */
     public static function post(string $uri, $callback): self
     {
-        static::$uri = self::parse($uri);
-
-        static::$tmp_routes[static::$uri] = [
-            'method' => 'POST',
-            'handler' => $callback
-        ];
-
-        return new self();
+        return self::add('POST', $uri, $callback);
     }
     
     /**
@@ -102,14 +108,7 @@ class Route
      */
     public static function delete(string $uri, $callback): self
     {
-        static::$uri = self::parse($uri);
-
-        static::$tmp_routes[static::$uri] = [
-            'method' => 'DELETE',
-            'handler' => $callback
-        ];
-
-        return new self();
+        return self::add('DELETE', $uri, $callback);
     }
     
     /**
@@ -121,14 +120,7 @@ class Route
      */
     public static function put(string $uri, $callback): self
     {
-        static::$uri = self::parse($uri);
-
-        static::$tmp_routes[static::$uri] = [
-            'method' => 'PUT',
-            'handler' => $callback
-        ];
-
-        return new self();
+        return self::add('PUT', $uri, $callback);
     }
     
     /**
@@ -140,14 +132,7 @@ class Route
      */
     public static function options(string $uri, $callback): self
     {
-        static::$uri = self::parse($uri);
-
-        static::$tmp_routes[static::$uri] = [
-            'method' => 'OPTIONS',
-            'handler' => $callback
-        ];
-
-        return new self();
+        return self::add('OPTIONS', $uri, $callback);
     }
     
     /**
@@ -159,14 +144,7 @@ class Route
      */
     public static function patch(string $uri, $callback): self
     {
-        static::$uri = self::parse($uri);
-
-        static::$tmp_routes[static::$uri] = [
-            'method' => 'PATCH',
-            'handler' => $callback
-        ];
-
-        return new self();
+        return self::add('PATCH', $uri, $callback);
     }
     
     /**
@@ -178,14 +156,7 @@ class Route
      */
     public static function any(string $uri, $callback): self
     {
-        static::$uri = self::parse($uri);
-
-        static::$tmp_routes[static::$uri] = [
-            'method' => 'GET|HEAD|POST|PUT|DELETE|OPTIONS|PATCH',
-            'handler' => $callback
-        ];
-
-        return new self();
+        return self::add('GET|HEAD|POST|PUT|DELETE|OPTIONS|PATCH', $uri, $callback);
     }
     
     /**
@@ -198,14 +169,7 @@ class Route
      */
     public static function match(string $methods, string $uri, $callback): self
     {
-        static::$uri = self::parse($uri);
-
-        static::$tmp_routes[static::$uri] = [
-            'method' => $methods,
-            'handler' => $callback
-        ];
-
-        return new self();
+        return self::add($methods, $uri, $callback);
     }
 
     /**
@@ -307,12 +271,12 @@ class Route
     {
         $route = new self();
 
-        if (isset($groups['middlewares'])) {
-            $route->groupMiddlewares($groups['middlewares'], $callback);
+        if (array_key_exists('prefix', $groups)) {
+            $route->groupPrefix($groups['prefix'], $callback);
         }
 
-        if (isset($groups['prefix'])) {
-            $route->groupPrefix($groups['prefix'], $callback);
+        if (array_key_exists('middlewares', $groups)) {
+            $route->groupMiddlewares($groups['middlewares'], $callback);
         }
 
         return $route;
@@ -329,6 +293,10 @@ class Route
         self::$middlewares += static::$tmp_middlewares;
         static::$tmp_middlewares = [];
         static::$tmp_routes = [];
+
+        if (empty(self::$routes)) {
+            return;
+        }
 
         foreach (static::$routes as $uri => $options) {
             if (isset($options['name']) && !empty($options['name'])) {

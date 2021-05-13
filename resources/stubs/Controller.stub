@@ -2,12 +2,9 @@
 
 namespace NAMESPACE;
 
-use App\Helpers\Report;
-use Framework\Http\Request;
-use Framework\Routing\Controller;
 use Framework\Database\Repository;
 
-class CLASSNAME extends Controller
+class CLASSNAME
 {
     /**
      * @var \Framework\Database\Repository $repository
@@ -23,120 +20,4 @@ class CLASSNAME extends Controller
     {
         $this->repository = new Repository('RESOURCENAME');
     }
-
-    /**
-     * index
-     *
-     * @return void
-     */
-    public function index(): void
-	{
-        $data = $this->repository->select()->oldest()->paginate(10);
-		$this->render('admin.RESOURCENAME.index', compact('data'));
-	}
-
-    /**
-	 * new
-	 * 
-	 * @return void
-	 */
-    public function new(): void
-	{
-		$this->render('admin.RESOURCENAME.new');
-	}
-	
-	/**
-	 * edit
-	 * 
-	 * @param  int $id
-	 * @return void
-	 */
-    public function edit(int $id): void
-	{
-        $data = $this->repository->findOneBy($id);
-        $this->render('admin.RESOURCENAME.edit', compact('data'));
-	}
-	
-	/**
-	 * read
-	 * 
-	 * @param  int $id
-	 * @return void
-	 */
-	public function read(int $id): void
-	{
-        $data = $this->repository->findOneBy($id);
-        $this->render('admin.RESOURCENAME.read', compact('data'));
-	}
-
-	/**
-	 * create
-	 *
-     * @param  \Framework\Http\Request $request
-	 * @return void
-	 */
-    public function create(Request $request): void
-	{
-        $id = $this->repository->insert($request->except('csrf_token'));
-		redirect()->route('RESOURCENAME.read', $id)->go();
-	}
-    
-	/**
-	 * update
-	 *
-     * @param  \Framework\Http\Request $request
-     * @param  int $id
-	 * @return void
-	 */
-	public function update(Request $request, int $id): void
-	{
-        $this->repository->updateIfExists($id, $request->except('csrf_token'));
-		redirect()->route('RESOURCENAME.read', $id)->go();
-	}
-
-	/**
-	 * delete
-	 *
-     * @param  \Framework\Http\Request $request
-     * @param  int|null $id
-	 * @return void
-	 */
-	public function delete(Request $request, ?int $id = null): void
-	{
-        if (!is_null($id)) {
-            if (!$this->repository->deleteIfExists($id)) {
-                redirect()->back()->go();
-			}
-
-            redirect()->route('RESOURCENAME.index')->go();
-		} else {
-            $this->repository->deleteBy('id', 'in', explode(',', $request->items));
-            response()->json(['redirect' => route('RESOURCENAME.index')]);
-		}
-	}
-
-	/**
-	 * export
-	 *
-     * @param  \Framework\Http\Request $request
-	 * @return void
-	 */
-    public function export(Request $request): void
-	{
-        $RESOURCENAME = $this->repository
-            ->select()
-            ->subQuery(function($query) use ($request) {
-                if (!$request->filled('date_start') && !$request->filled('date_end')) {
-                    $query->whereBetween('created_at', $request->date_start, $request->date_end);
-                }
-            })
-            ->oldest()
-            ->all();
-
-        $filename = 'RESOURCENAME_' . date('Y_m_d_His') . '.' . $request->file_type;
-
-		Report::generate($filename, $RESOURCENAME, [
-			//
-		]);
-	}
 }

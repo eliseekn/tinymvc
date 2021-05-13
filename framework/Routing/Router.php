@@ -10,9 +10,8 @@ namespace Framework\Routing;
 
 use Closure;
 use Exception;
-use App\Helpers\Auth;
+use Framework\System\Auth;
 use Framework\Http\Request;
-use Framework\Routing\View;
 use Framework\System\Session;
 use Framework\System\DependcyInjection;
 
@@ -30,7 +29,7 @@ class Router
      * @param  string[] &$matches
      * @return bool
      */
-    private static function match(Request $request, string $method, string $route, ?array &$matches = null): bool
+    private static function match(Request $request, string $method, string $route, &$matches): bool
     {
         if (preg_match('/' . strtoupper($method) . '/', strtoupper($request->method()))) {
             if (preg_match('#^' . $route . '$#', $request->uri(), $matches)) {
@@ -52,10 +51,10 @@ class Router
     {
         if (in_array(Auth::get('role'), $roles)) {
             if (!empty(config('errors.views.403'))) {
-                View::render(config('errors.views.403'), [], 403);
+                render(config('errors.views.403'), [], 403);
             }
                 
-            response()->send(__('no_access_permission', true), [], 403);
+            response()->send(__('access_denied'), [], 403);
         }
     }
     
@@ -71,7 +70,7 @@ class Router
     public static function dispatch(Request $request, array $routes): void
     {   
         if (empty($routes)) {
-            throw new Exception('No route not defined');
+            throw new Exception('No route defined');
         }
 
         foreach ($routes as $route => $options) {
@@ -100,7 +99,7 @@ class Router
                 
                 //handler is view template
                 else if (is_string($options['handler'])) {
-                    View::render($options['handler']);
+                    render($options['handler']);
                 }
                 
                 //handler is controller and action
@@ -109,18 +108,18 @@ class Router
 
                     if (class_exists($controller) && method_exists($controller, $action)) {
                         (new DependcyInjection())->resolve($controller, $action, $params);
-                    } else {
-                        throw new Exception('Handler "' . $controller . '/' . $action . '" not found.');
                     }
+                        
+                    throw new Exception('Controller "' . $controller . '/' . $action . '" not found.');
                 }
             }
         }
 
         //send 404 response
         if (!empty(config('errors.views.404'))) {
-            View::render(config('errors.views.404'), [], 404);
-        } else {
-            response()->send('The page you have requested does not exists', [], 404);
+            render(config('errors.views.404'), [], 404);
         }
+            
+        response()->send(__('page_not_exists'), [], 404);
     }
 }

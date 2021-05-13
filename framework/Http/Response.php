@@ -16,19 +16,24 @@ class Response
     /**
      * send HTTP headers only
      *
-     * @param  array $headers
+     * @param  string|array $name
+     * @param  mixed $value
      * @param  int $code
      * @return void
      */
-    public function headers(array $headers, int $code = 200): void
+    public function headers($name, $value = null, int $code = 200): void
     {
-        //send response status code
         http_response_code($code);
 
-        //send response headers
-        foreach ($headers as $name => $value) {
-            header($name . ': ' . $value);
+        if (is_array($name)) {
+            foreach ($name as $k => $v) {
+                header($k . ': ' . $v);
+            }
+
+            return;
         }
+
+        header($name . ': ' . $value);
     }
     
     /**
@@ -45,20 +50,16 @@ class Response
             return;
         }
         
-        //send response status code
         http_response_code($code);
 
-        //send response headers
         if (!empty($headers)) {
             foreach ($headers as $name => $value) {
                 header($name . ': ' . $value);
             }
         }
 
-        //set content length header
-        header('Content-Length: ' . strlen($body));
+        $this->headers('Content-Length', strlen($body));
 
-        //send response body
         exit($body);
     }
     
@@ -76,24 +77,55 @@ class Response
             return;
         }
         
-        //send response status code
         http_response_code($code);
 
-        //send response headers
         if (!empty($headers)) {
             foreach ($headers as $name => $value) {
                 header($name . ': ' . $value);
             }
         }
 
-        //encode body to json format
+        if (!is_array($body)) {
+            $body = [$body];
+        }
+
         $body = json_encode($body);
 
-        //send json headers
-        header('Content-Type: application/json');
-        header('Content-Length: ' . strlen($body));
+        $this->headers('Content-Type', 'application/json');
+        $this->headers('Content-Length', strlen($body));
 
-        //send response body
         exit($body);
+    }
+    
+    /**
+     * send download file response
+     *
+     * @param  string $filename
+     * @param  string|null $base_name
+     * @return void
+     */
+    public function download(string $filename, ?string $base_name = null): void
+    {
+        if (!file_exists($filename)) {
+            return;
+        }
+
+        http_response_code(200);
+
+        $filename = is_null($base_name) ? basename($filename) : $base_name;
+
+        $this->headers([
+            'Content-Type' => mime_content_type($filename),
+            'Content-Length' => filesize($filename),
+			'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+			'Cache-Control' => 'no-cache',
+			'Pragma' => 'no-cache',
+            'Expires' => '0'
+        ]);
+
+        ob_clean();
+        flush();
+
+        exit(readfile($filename));
     }
 }

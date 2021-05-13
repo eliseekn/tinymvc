@@ -2,8 +2,6 @@
 
 namespace App\Database\Seeds;
 
-use Framework\System\Encryption;
-use App\Database\Repositories\Roles;
 use Framework\Database\QueryBuilder;
 
 class UsersSeed
@@ -25,12 +23,8 @@ class UsersSeed
         QueryBuilder::table(self::$table)->insert([
             'name' => 'admin',
             'email' => 'admin@tinymvc.com',
-            'phone' => '00000000',
-            'address' => 'Github',
-            'company' => 'TinyMVC',
-            'password' => Encryption::hash('admin'),
-            'role' => Roles::ROLE[0],
-            'status' => 1
+            'password' => pwd_hash('admin'),
+            'email_verified' => 1
         ])->execute();
     }
 }

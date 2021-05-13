@@ -84,7 +84,7 @@ class Redirect
      */
     public function go(): void
     {
-        redirect_to($this->url);
+        exit((new Response())->headers(['Location' => url($this->url)], 302));
     }
     
     /**
@@ -150,7 +150,7 @@ class Redirect
      */
     public function withAlert(string $type, $message, bool $dismiss = true): self
     {
-        Alert::default($message, $dismiss)->$type();
+        Alert::default($message, $dismiss)->{$type}();
         return $this;
     }
 
@@ -163,7 +163,7 @@ class Redirect
      */
     public function withToast(string $type, $message): self
     {
-        Alert::toast($message)->$type();
+        Alert::toast($message)->{$type}();
         return $this;
     }
 }

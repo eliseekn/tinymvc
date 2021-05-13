@@ -41,6 +41,8 @@ class Query extends Command
             foreach ($value as $k => $v) {
                 $rows[] = [$k, $v];
             }
+
+            $rows[] = ['', ''];
         }
 
         $table = new Table($output);

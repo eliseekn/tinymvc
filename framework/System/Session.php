@@ -17,14 +17,13 @@ class Session
 	 * start session
 	 *
 	 * @return void
+     * @link  https://stackoverflow.com/questions/8311320/how-to-change-the-session-timeout-in-php/8311400
 	 */
     private static function start(): void
 	{
 		if (session_status() === PHP_SESSION_NONE) {
-            //https://stackoverflow.com/questions/8311320/how-to-change-the-session-timeout-in-php/8311400
             ini_set('session.gc_maxlifetime', config('security.session.lifetime'));
             session_set_cookie_params(config('security.session.lifetime'));
-            
 			session_start();
 		}
 	}
@@ -52,11 +51,7 @@ class Session
     public static function get(string $name, $default = null)
     {
         self::start();
-
-        $data = $_SESSION[strtolower(config('app.name')) . '_' . $name] ?? '';
-        $data = !empty($data) ? $data : ($default ?? '');
-
-		return $data;
+        return $_SESSION[strtolower(config('app.name')) . '_' . $name] ?? $default;
     }
     
     /**

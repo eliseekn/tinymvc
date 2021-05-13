@@ -20,8 +20,8 @@ class CLASSNAME
      */
     public function create(): void
     {
-        Migration::newTable($this->table)
-            ->addBigInt('id')->primaryKey()
+        Migration::table($this->table)
+            ->addPrimaryKey('id')
             ->create();
     }
     

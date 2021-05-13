@@ -19,7 +19,7 @@ use App\Http\Middlewares\SanitizeInputs;
  * Middlewares configuration
  */
 
-$config = [
+return [
     'csrf' => CsrfProtection::class,
     'cors' => HttpCors::class,
     'account' => AccountPolicy::class,

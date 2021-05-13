@@ -8,12 +8,12 @@
 
 namespace Framework;
 
-use Exception;
 use Framework\Http\Request;
-use Framework\Routing\View;
 use Framework\Routing\Route;
 use Framework\Routing\Router;
+use Framework\Support\Whoops;
 use Framework\System\Storage;
+use Framework\Support\Exception;
 
 /**
  * Main application
@@ -27,7 +27,10 @@ class Application
      */
     public function __construct()
     {
-        $routes = Storage::path(config('storage.routes'))->getFiles();
+        //register whoops error handler
+        Whoops::register();
+
+        $routes = Storage::path(config('storage.routes'))->files();
 
         foreach ($routes as $route) {
             require_once config('storage.routes') . $route;
@@ -46,21 +49,20 @@ class Application
         try {
             Router::dispatch($request, Route::$routes);
         } catch (Exception $e) {
-            //log exception message
-            if (config('errors.log') === true) {
-                save_log('Application Error: ' . $e->getMessage());
+            if (config('errors.log')) {
+                save_log('Exception: ' . $e);
             }
 
-            //send 500 response
-            if (config('errors.display') === true) {
-                die($e->getMessage());
-            } else {
-                if (!empty(config('errors.views.500'))) {
-                    View::render(config('errors.views.500'), [], 500);
-                } else {
-                    response()->send('Try to refresh the page or feel free to contact us if the problem persists', [], 500);
-                }
+            if (config('errors.display')) {
+                die($e);
             }
+        
+            //send 500 response
+            if (!empty(config('errors.views.500'))) {
+                render(config('errors.views.500'), [], 500);
+            }
+                
+            response()->send('Try to refresh the page or feel free to contact us if the problem persists', [], 500);
         }
     }
 }

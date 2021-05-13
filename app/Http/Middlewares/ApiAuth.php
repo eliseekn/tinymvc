@@ -2,14 +2,14 @@
 
 namespace App\Http\Middlewares;
 
-use App\Helpers\Auth;
+use Framework\System\Auth;
 use Framework\Http\Request;
 use Framework\System\Encryption;
 use App\Database\Repositories\Users;
 use App\Database\Repositories\Tokens;
 
 /**
- * Authenticated user api
+ * Authenticate user by api token
  */
 class ApiAuth
 {    
@@ -24,17 +24,17 @@ class ApiAuth
     public function handle(Request $request, Users $users, Tokens $tokens): void
     {
         if (empty($request->http_auth())) {
-            response()->json(['Authorization Required'], [], 401);
+            response()->json(__('auth_required'), [], 401);
         }
 
         list($method, $token) = $request->http_auth();
 
         if (trim($method) !== 'Bearer') {
-            response()->json(['Invalid authentication method'], [], 401);
+            response()->json(__('invalid_auth_method'), [], 401);
         }
 
-        if (!Auth::checkByToken($users, $tokens, Encryption::decrypt($token), $user)) {
-            response()->json(['Invalid credentials'], [], 401);
+        if (!Auth::checkToken($users, $tokens, Encryption::decrypt($token), $user)) {
+            response()->json(__('invalid_credentials'), [], 401);
         }
     }
 }

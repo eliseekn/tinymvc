@@ -18,14 +18,14 @@ class QueryBuilder
 	/**
 	 * sql query string
 	 *
-	 * @var string
+	 * @var string $query
 	 */
 	protected static $query = '';
 		
 	/**
 	 * sql query arguments
 	 *
-	 * @var array
+	 * @var array $args
 	 */
     protected static $args = [];
     
@@ -39,12 +39,12 @@ class QueryBuilder
     /**
      * set table name
      *
-     * @param  string $table
+     * @param  string $name
      * @return  \Framework\Database\QueryBuilder
      */
-    public static function table(string $table): self
+    public static function table(string $name): self
     {
-        static::$table = config('database.table_prefix')  . $table;
+        static::$table = config('database.table_prefix')  . $name;
         return new self();
     }
 
@@ -66,9 +66,9 @@ class QueryBuilder
 	 * @param  string $table
 	 * @return \Framework\Database\QueryBuilder
 	 */
-	public static function drop(string $table): self
+	public static function dropTable(string $table): self
 	{
-		self::$query = "DROP TABLE IF EXISTS " . config('database.table_prefix') . "$table";
+		self::$query = "DROP TABLE IF EXISTS " . config('database.table_prefix') . $table;
 		return new self();
 	}
     
@@ -174,13 +174,13 @@ class QueryBuilder
      */
     public static function schemaExists(string $db): bool
     {
-        return self::setQuery('SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = "' . $db .'"')->exists();
+        return self::setQuery('SELECT schema_name FROM information_schema.schemata WHERE schema_name = "' . $db .'"')->exists();
     }
 
 	/**
 	 * select query
 	 *
-	 * @param  string $columns
+	 * @param  string[] $columns
 	 * @return \Framework\Database\QueryBuilder
 	 */
 	public function select(string ...$columns): self
@@ -251,7 +251,6 @@ class QueryBuilder
 	{
 		self::$query = "UPDATE " . static::$table . " SET ";
 
-		//update last modifed timestamp
 		if (config('database.timestamps')) {
             $items = array_merge($items, [
                 'updated_at' => Carbon::now()->toDateTimeString()
@@ -315,14 +314,26 @@ class QueryBuilder
 	}
     
     /**
-     * add primary key and auto increment attributes
+     * add auto-increment attribute
+     *
+     * @return self
+     */
+    public function autoIncrement(): self
+    {
+        self::$query = rtrim(self::$query, ', ');
+        self::$query .= ' AUTO_INCREMENT, ';
+        return $this;
+    }
+    
+    /**
+     * add primary key attribute
      *
      * @return \Framework\Database\QueryBuilder
      */
     public function primaryKey(): self
     {
         self::$query = rtrim(self::$query, ', ');
-        self::$query .= ' AUTO_INCREMENT PRIMARY KEY, ';
+        self::$query .= ' PRIMARY KEY, ';
         return $this;
     }
     
@@ -331,7 +342,7 @@ class QueryBuilder
      * 
      * @return \Framework\Database\QueryBuilder
      */
-    public function setNull(): self
+    public function nullable(): self
     {
         self::$query = str_replace('NOT NULL, ', 'NULL, ', self::$query);
         return $this;
@@ -435,11 +446,11 @@ class QueryBuilder
 	}
     
     /**
-     * create new table
+     * migrate table
      *
-     * @return \Framework\Database\QueryBuilder
+     * @return void
      */
-    public function create(): self
+    public function migrate(): void
     {
         if (config('database.timestamps')) {
             self::$query .= " created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
@@ -450,8 +461,8 @@ class QueryBuilder
             self::$query .= ')';
         }
 
-        self::$query .= " ENGINE='" . config('database.storage_engine') . "'";
-		return $this;
+        self::$query .= " ENGINE='" . config('database.engine') . "'";
+		$this->execute();
     }
 
 	/**
@@ -484,6 +495,30 @@ class QueryBuilder
     public function whereRaw(string $query, array $args = []): self
     {
         return $this->rawQuery(' WHERE ' . $query, $args);
+    }
+        
+    /**
+     * and raw query
+     *
+     * @param  string $query
+     * @param  array $args
+     * @return \Framework\Database\QueryBuilder
+     */
+    public function andRaw(string $query, array $args = []): self
+    {
+        return $this->rawQuery(' AND ' . $query, $args);
+    }
+        
+    /**
+     * or raw query
+     *
+     * @param  string $query
+     * @param  array $args
+     * @return \Framework\Database\QueryBuilder
+     */
+    public function orRaw(string $query, array $args = []): self
+    {
+        return $this->rawQuery(' OR ' . $query, $args);
     }
 
 	/**
@@ -838,13 +873,14 @@ class QueryBuilder
 	}
 
     /**
-     * remove end comma if exists
+     * remove last comma
      *
-     * @return void
+     * @return \Framework\Database\QueryBuilder
      */
-    public function flush()
+    public function flush(): self
     {
         self::$query = rtrim(self::$query, ', ');
+        return $this;
     }
 
     /**
@@ -898,10 +934,10 @@ class QueryBuilder
     /**
      * sub query
      *
-     * @param  mixed $callback
+     * @param  \Closure $callback
      * @return \Framework\Database\QueryBuilder
      */
-    public function subQuery(callable $callback): self
+    public function subQuery($callback): self
     {
         call_user_func_array($callback, [$this]);
         return $this;
@@ -914,6 +950,7 @@ class QueryBuilder
 	 */
 	public function execute(): \PDOStatement
 	{
+        self::$query = trim(self::$query, '  ');
         $stmt = Database::connection()->statement(self::$query, self::$args);
 		self::setQuery('');
 		return $stmt;

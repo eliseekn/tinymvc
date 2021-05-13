@@ -3,7 +3,7 @@
 namespace App\Mails;
 
 use Framework\Routing\View;
-use Framework\System\Email;
+use Framework\System\Mailer;
 
 class TokenMail
 {
@@ -16,10 +16,10 @@ class TokenMail
      */
     public static function send(string $email, string $token): bool
     {
-        return Email::to($email)
+        return Mailer::to($email)
             ->from(config('mailer.sender_email'), config('mailer.sender_name'))
             ->reply(config('mailer.sender_email'), config('mailer.sender_name'))
-			->subject('Password reset notification')
+			->subject('Password reset')
             ->html(View::getContent('emails.token', compact('email', 'token')))
 			->send();
     }

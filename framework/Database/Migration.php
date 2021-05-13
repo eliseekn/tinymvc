@@ -24,7 +24,7 @@ class Migration
      * @param  string $name
      * @return \Framework\Database\Migration
      */
-    public static function newTable(string $name): self
+    public static function table(string $name): self
     {
         self::$qb = QueryBuilder::createTable($name);
         return new self();
@@ -90,7 +90,7 @@ class Migration
      */
     public static function dropTable(string $table): void
     {
-        QueryBuilder::drop($table)->execute();
+        QueryBuilder::dropTable($table)->execute();
     }
 
     /**
@@ -505,14 +505,42 @@ class Migration
 	}
     
     /**
-     * add primary key and auto increment attributes
+     * add auto-increment attribute
      *
      * @return \Framework\Database\Migration
      */
-    public function primaryKey(): self
+    public function autoIncrement(): self
     {
+        self::$qb->autoIncrement();
+        return $this;
+    }
+    
+    /**
+     * add primary key attribute
+     * 
+     * @param bool $auto_increment
+     * @return \Framework\Database\Migration
+     */
+    public function primaryKey(bool $auto_increment = true): self
+    {
+        if ($auto_increment) {
+            $this->autoIncrement();
+        }
+
         self::$qb->primaryKey();
         return $this;
+    }
+    
+    /**
+     * add big int column as primary key and set auto-increment
+     *
+     * @param  string $column
+     * @param  bool $auto_increment
+     * @return \Framework\Database\Migration
+     */
+    public function addPrimaryKey(string $column, bool $auto_increment = true): self
+    {
+        return $this->addBigInt($column)->primaryKey($auto_increment);
     }
     
     /**
@@ -520,9 +548,9 @@ class Migration
      * 
      * @return \Framework\Database\Migration
      */
-    public function setNull(): self
+    public function nullable(): self
     {
-        self::$qb->setNull();
+        self::$qb->nullable();
         return $this;
     }
 
@@ -550,23 +578,16 @@ class Migration
     }
     
     /**
-     * create new table
+     * migrate table
      *
      * @return void
      */
-    public function create()
+    public function migrate(bool $table = true)
     {
-        self::$qb->create()->execute();
-    }
-    
-    /**
-     * execute query
-     *
-     * @return void
-     */
-    public function execute()
-    {
-        self::$qb->flush();
-        self::$qb->execute();
+        if ($table) {
+            self::$qb->migrate();
+        } else {
+            self::$qb->flush()->execute();
+        }
     }
 }

@@ -8,6 +8,7 @@
 
 namespace Framework\Console\App;
 
+use Framework\System\Config;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -21,7 +22,7 @@ class Setup extends Command
 
     protected function configure()
     {
-        $this->setDescription('Setup application main configuration');
+        $this->setDescription('Setup application');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -34,7 +35,7 @@ class Setup extends Command
             $config['APP_NAME'] = fgets(STDIN);
 
             if (strlen($config['APP_NAME']) <= 1) {
-                $output->writeln('<error>This option is required</error>');
+                $output->writeln('<error>This parameter is required</error>');
                 continue;
             }
 
@@ -42,25 +43,23 @@ class Setup extends Command
             $app_url = fgets(STDIN);
 
             if (strlen($app_url) <= 1) {
-                $output->writeln('<error>This option is required</error>');
+                $output->writeln('<error>This parameter is required</error>');
                 continue;
             }
 
-            $config['APP_URL'] = add_slash(rtrim($app_url, PHP_EOL)) . PHP_EOL;
+            $app_url = rtrim($app_url, PHP_EOL);
+
+            if (!empty($app_url) && $app_url[-1] !== '/') {
+                $app_url = $app_url . '/';
+            }
+
+            $config['APP_URL'] = $app_url . PHP_EOL;
 
             $output->write('<info>Application language (eg: en):</info> ');
             $config['APP_LANG'] = fgets(STDIN);
 
             if (strlen($config['APP_LANG']) <= 1) {
-                $output->writeln('<error>This option is required</error>');
-                continue;
-            }
-
-            $output->write('<info>Application currency (eg: USD):</info> ');
-            $config['APP_CURRENCY'] = fgets(STDIN);
-
-            if (strlen($config['APP_CURRENCY']) <= 1) {
-                $output->writeln('<error>This option is required</error>');
+                $output->writeln('<error>This parameter is required</error>');
                 continue;
             }
 
@@ -68,7 +67,7 @@ class Setup extends Command
             $config['DB_HOST'] = fgets(STDIN);
 
             if (strlen($config['DB_HOST']) <= 1) {
-                $output->writeln('<error>This option is required</error>');
+                $output->writeln('<error>This parameter is required</error>');
                 continue;
             }
 
@@ -76,7 +75,7 @@ class Setup extends Command
             $config['DB_NAME'] = fgets(STDIN);
 
             if (strlen($config['DB_NAME']) <= 1) {
-                $output->writeln('<error>This option is required</error>');
+                $output->writeln('<error>This parameter is required</error>');
                 continue;
             }
 
@@ -84,7 +83,7 @@ class Setup extends Command
             $config['DB_USERNAME'] = fgets(STDIN);
 
             if (strlen($config['DB_USERNAME']) <= 1) {
-                $output->writeln('<error>This option is required</error>');
+                $output->writeln('<error>This parameter is required</error>');
                 continue;
             }
 
@@ -92,7 +91,7 @@ class Setup extends Command
             $config['DB_PASSWORD'] = fgets(STDIN);
 
             if (strlen($config['DB_PASSWORD']) <= 1) {
-                $output->writeln('<error>This option is required</error>');
+                $output->writeln('<error>This parameter is required</error>');
                 continue;
             }
 
@@ -101,7 +100,7 @@ class Setup extends Command
 
         $config['ENCRYPTION_KEY'] = base64_encode(random_string(30, true));
 
-        save_env($config);
+        Config::saveEnv($config);
 
         $output->writeln('<info>Application has been setted up</info>');
 

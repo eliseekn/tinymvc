@@ -8,8 +8,8 @@
 
 use Framework\Routing\Route;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Auth\EmailController;
-use App\Http\Controllers\Auth\PasswordController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\EmailVerificationController;
 
 /**
  * Authentication routes
@@ -23,12 +23,10 @@ Route::groupMiddlewares(['remember'], function () {
 Route::get('logout', [AuthController::class, 'logout'])->register();
 Route::post('authenticate', [AuthController::class, 'authenticate'])->register();
 Route::post('register', [AuthController::class, 'register'])->register();
-Route::get('password/forgot', 'auth.password.forgot')->register();
-Route::get('password/reset', [PasswordController::class, 'reset'])->register();
-Route::post('password/notify', [PasswordController::class, 'notify'])->register();
-Route::post('password/update', [PasswordController::class, 'update'])->register();
 
-Route::groupPrefix('email', function () {
-    Route::get('confirm', [EmailController::class, 'confirm']);
-    Route::get('auth', [EmailController::class, 'auth']);
-})->register();
+Route::get('password/forgot', 'auth.password.forgot')->register();
+Route::get('password/reset', [ForgotPasswordController::class, 'reset'])->register();
+Route::post('password/notify', [ForgotPasswordController::class, 'notify'])->register();
+Route::post('password/update', [ForgotPasswordController::class, 'update'])->register();
+
+Route::get('email/verify', [EmailVerificationController::class, 'verify'])->register();
