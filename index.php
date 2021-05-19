@@ -6,7 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-use Framework\Application;
+use Core\Application;
 
 /**
  * Main application entry

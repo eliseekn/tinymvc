@@ -6,7 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-use Framework\Routing\Route;
+use Core\Routing\Route;
 use App\Http\Controllers\HomeController;
 
 /**

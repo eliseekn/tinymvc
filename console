@@ -17,34 +17,34 @@ require 'bootstrap.php';
 
 $console = new \Symfony\Component\Console\Application();
 
-$console->add(new \Framework\Console\Database\Create());
-$console->add(new \Framework\Console\Database\Delete());
-$console->add(new \Framework\Console\Database\Status());
-$console->add(new \Framework\Console\Database\Query());
-$console->add(new \Framework\Console\Database\Migrations\Delete());
-$console->add(new \Framework\Console\Database\Migrations\Status());
-$console->add(new \Framework\Console\Database\Migrations\Run());
-$console->add(new \Framework\Console\Database\Migrations\Reset());
-$console->add(new \Framework\Console\Database\Seeds());
+$console->add(new \Core\Console\Database\Create());
+$console->add(new \Core\Console\Database\Delete());
+$console->add(new \Core\Console\Database\Status());
+$console->add(new \Core\Console\Database\Query());
+$console->add(new \Core\Console\Database\Migrations\Delete());
+$console->add(new \Core\Console\Database\Migrations\Status());
+$console->add(new \Core\Console\Database\Migrations\Run());
+$console->add(new \Core\Console\Database\Migrations\Reset());
+$console->add(new \Core\Console\Database\Seeds());
 
-$console->add(new \Framework\Console\Make\Migration());
-$console->add(new \Framework\Console\Make\Repository());
-$console->add(new \Framework\Console\Make\Controller());
-$console->add(new \Framework\Console\Make\Validator());
-$console->add(new \Framework\Console\Make\Seed());
-$console->add(new \Framework\Console\Make\View());
-$console->add(new \Framework\Console\Make\Mail());
-$console->add(new \Framework\Console\Make\Middleware());
-$console->add(new \Framework\Console\Make\Cmd());
-$console->add(new \Framework\Console\Make\Password());
-$console->add(new \Framework\Console\Make\Helper());
-$console->add(new \Framework\Console\Make\Test());
+$console->add(new \Core\Console\Make\Migration());
+$console->add(new \Core\Console\Make\Repository());
+$console->add(new \Core\Console\Make\Controller());
+$console->add(new \Core\Console\Make\Validator());
+$console->add(new \Core\Console\Make\Seed());
+$console->add(new \Core\Console\Make\View());
+$console->add(new \Core\Console\Make\Mail());
+$console->add(new \Core\Console\Make\Middleware());
+$console->add(new \Core\Console\Make\Cmd());
+$console->add(new \Core\Console\Make\Password());
+$console->add(new \Core\Console\Make\Helper());
+$console->add(new \Core\Console\Make\Test());
 
-$console->add(new \Framework\Console\App\Setup());
-$console->add(new \Framework\Console\App\Key());
+$console->add(new \Core\Console\App\Setup());
+$console->add(new \Core\Console\App\Key());
 
-$console->add(new \Framework\Console\Cache());
-$console->add(new \Framework\Console\Server());
-
+$console->add(new \Core\Console\Cache());
+$console->add(new \Core\Console\Server());
+$console->add(new \Core\Console\Tests());
 
 $console->run();

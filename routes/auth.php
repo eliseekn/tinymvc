@@ -6,7 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-use Framework\Routing\Route;
+use Core\Routing\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\EmailVerificationController;
@@ -20,9 +20,12 @@ Route::groupMiddlewares(['remember'], function () {
     Route::get('signup', [AuthController::class, 'signup']);
 })->register();
 
+Route::groupMiddlewares(['csrf'], function () {
+    Route::post('authenticate', [AuthController::class, 'authenticate']);
+    Route::post('register', [AuthController::class, 'register']);
+})->register();
+
 Route::get('logout', [AuthController::class, 'logout'])->register();
-Route::post('authenticate', [AuthController::class, 'authenticate'])->register();
-Route::post('register', [AuthController::class, 'register'])->register();
 
 Route::get('password/forgot', 'auth.password.forgot')->register();
 Route::get('password/reset', [ForgotPasswordController::class, 'reset'])->register();

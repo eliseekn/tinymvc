@@ -41,7 +41,5 @@
     'auth_required' => 'Authorization Required',
     'invalid_auth_method' => 'Invalid authentication method',
     'invalid_credentials' => 'Invalid credentials',
-    'access_denied' => 'You do not have permission to access this page',
-    'page_not_exists' => 'The page you have requested does not exists',
     'all_rights_reserved' => 'All rights reserved',
 ];

@@ -6,12 +6,12 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-use Framework\Routing\Route;
+use Core\Routing\Route;
 
 /**
  * API routes
  */
 
-Route::groupPrefix('api', function () {
-    //
-})->register();
+/* Route::groupPrefix('api', function () {
+    
+})->register(); */

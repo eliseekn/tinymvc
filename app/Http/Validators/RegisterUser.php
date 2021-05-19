@@ -3,8 +3,8 @@
 namespace App\Http\Validators;
 
 use GUMP;
-use Framework\Http\Validator;
-use Framework\Database\Repository;
+use Core\Http\Validator;
+use Core\Database\Repository;
 
 class RegisterUser extends Validator
 {

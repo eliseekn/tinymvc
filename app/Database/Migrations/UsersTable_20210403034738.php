@@ -2,7 +2,7 @@
 
 namespace App\Database\Migrations;
 
-use Framework\Database\Migration;
+use Core\Database\Migration;
 
 class UsersTable_20210403034738
 {         

@@ -2,8 +2,8 @@
 
 namespace App\Http\Middlewares;
 
-use Framework\System\Auth;
-use Framework\Http\Request;
+use Core\System\Auth;
+use Core\Http\Request;
 
 /**
  * Check if user is authenticated
@@ -13,7 +13,7 @@ class AuthPolicy
     /**
      * handle function
      *
-     * @param  \Framework\Http\Request $request
+     * @param  \Core\Http\Request $request
      * @return void
      */
     public function handle(Request $request): void

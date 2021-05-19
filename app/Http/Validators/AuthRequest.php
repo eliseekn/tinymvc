@@ -2,7 +2,7 @@
 
 namespace App\Http\Validators;
 
-use Framework\Http\Validator;
+use Core\Http\Validator;
 
 class AuthRequest extends Validator
 {

@@ -2,8 +2,8 @@
 
 namespace App\Http\Middlewares;
 
-use Framework\System\Auth;
-use Framework\Http\Request;
+use Core\System\Auth;
+use Core\Http\Request;
 use App\Database\Repositories\Users;
 
 /**
@@ -14,7 +14,7 @@ class HttpAuth
     /**
      * handle function
      *
-     * @param  \Framework\Http\Request $request
+     * @param  \Core\Http\Request $request
      * @param  \App\Database\Repositories\Users $users
      * @return void
      */

@@ -2,8 +2,8 @@
 
 namespace App\Database\Repositories;
 
-use Framework\Http\Request;
-use Framework\Database\Repository;
+use Core\Http\Request;
+use Core\Database\Repository;
 
 class Users extends Repository
 {
@@ -67,7 +67,7 @@ class Users extends Repository
     /**
      * store user
      *
-     * @param  \Framework\Http\Request $request
+     * @param  \Core\Http\Request $request
      * @return int
      */
     public function store(Request $request): int

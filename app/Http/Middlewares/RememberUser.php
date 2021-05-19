@@ -2,8 +2,8 @@
 
 namespace App\Http\Middlewares;
 
-use Framework\System\Cookies;
-use Framework\System\Session;
+use Core\System\Cookies;
+use Core\System\Session;
 use App\Database\Repositories\Users;
 
 /**

@@ -2,7 +2,7 @@
 
 namespace App\Database\Repositories;
 
-use Framework\Database\Repository;
+use Core\Database\Repository;
 
 class Tokens extends Repository
 {

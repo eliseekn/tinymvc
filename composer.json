@@ -12,11 +12,11 @@
     "autoload": {
         "files": [
             "app/Functions.php",
-            "framework/Support/Helpers.php"
+            "core/Support/Helpers.php"
         ],
         "psr-4": {
             "App\\" : "app/",
-            "Framework\\" : "framework/"
+            "Core\\" : "core/"
         }
     },
     "config": {

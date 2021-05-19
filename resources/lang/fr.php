@@ -24,7 +24,7 @@
     'welcome' => 'Bienvenu {name}',
     'logged_out' => 'Vous avez été déconnecté',
     'account_created' => 'Votre compte a été créé',
-    'reset_password_instructions' => "Veuillez entrer l'adresse email associée à ce compte. Nous vous y enverrons un lien afin de réinitialiser votre de mote de passe.",
+    'reset_password_instructions' => "Veuillez entrer l'adresse email associée à ce compte. Nous y enverrons un lien afin de réinitialiser votre de mote de passe.",
     'signup_failed' => "Echec de l'inscription",
     'email_not_verifed' => "Votre adresse email n'a pas encore été vérifiée.",
     'not_logged' => 'Connectez-vous avant de pouvoir accéder à cette page',
@@ -41,7 +41,5 @@
     'auth_required' => 'Autorisation Requise',
     'invalid_auth_method' => "Méthode d'autentification invalide",
     'invalid_credentials' => 'Accès invalides',
-    'access_denied' => "Vous n'avez pas les droits d'accès à cette page",
-    'page_not_exists' => "La page que vous avez demandez n'existe pas",
     'all_rights_reserved' => 'Tous droits réservés',
  ];

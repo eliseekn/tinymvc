@@ -3,7 +3,7 @@
 namespace App\Http\Validators;
 
 use GUMP;
-use Framework\Http\Validator;
+use Core\Http\Validator;
 
 class CLASSNAME extends Validator
 {

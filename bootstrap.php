@@ -6,10 +6,10 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-use Framework\Http\Request;
-use Framework\Support\Whoops;
-use Framework\System\Config;
-use Framework\System\Storage;
+use Core\Http\Request;
+use Core\Support\Whoops;
+use Core\System\Config;
+use Core\System\Storage;
 
 /**
  * Define application environnement
@@ -44,15 +44,8 @@ function handleExceptions($e)
     throw new ErrorException($e->getMessage(), $e->getCode(), 1, $e->getFile(), $e->getLine(), $e->getPrevious());
 }
 
-//handle errors exceptions
-function handleErrors($e)
-{
-    throw new ErrorException($e->getMessage(), $e->getCode(), 1, $e->getFile(), $e->getLine(), $e->getPrevious());
-}
-
 //set exceptions and errors handlers
 set_exception_handler('handleExceptions');
-set_error_handler('handleErrors');
 
 //remove PHP maximum execution time 
 set_time_limit(0);

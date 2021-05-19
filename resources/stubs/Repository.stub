@@ -2,8 +2,8 @@
 
 namespace App\Database\Repositories;
 
-use Framework\Http\Request;
-use Framework\Database\Repository;
+use Core\Http\Request;
+use Core\Database\Repository;
 
 class CLASSNAME extends Repository
 {
@@ -49,7 +49,7 @@ class CLASSNAME extends Repository
     /**
      * store data
      *
-     * @param  \Framework\Http\Request $request
+     * @param  \Core\Http\Request $request
      * @return int
      */
     public function store(): int

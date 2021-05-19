@@ -4,3 +4,4 @@
 /storage/
 /vendor/
 .env
+.phpunit.result.cache

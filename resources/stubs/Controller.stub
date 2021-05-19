@@ -2,12 +2,12 @@
 
 namespace NAMESPACE;
 
-use Framework\Database\Repository;
+use Core\Database\Repository;
 
 class CLASSNAME
 {
     /**
-     * @var \Framework\Database\Repository $repository
+     * @var \Core\Database\Repository $repository
      */
     private $repository;
 

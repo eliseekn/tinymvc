@@ -2,8 +2,8 @@
 
 namespace App\Mails;
 
-use Framework\Routing\View;
-use Framework\System\Mailer;
+use Core\Routing\View;
+use Core\System\Mailer;
 
 class CLASSNAME
 {

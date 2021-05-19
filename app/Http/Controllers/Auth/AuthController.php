@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Core\System\Auth;
+use Core\Http\Request;
 use App\Mails\WelcomeMail;
-use Framework\System\Auth;
-use Framework\Http\Request;
 use App\Database\Repositories\Users;
 use App\Http\Validators\AuthRequest;
 use App\Database\Repositories\Tokens;
@@ -46,7 +46,7 @@ class AuthController
 	/**
 	 * authenticate user
 	 * 
-     * @param  \Framework\Http\Request $request
+     * @param  \Core\Http\Request $request
      * @param  \App\Database\Repositories\Users $users
      * @param  \App\Database\Repositories\Tokens $tokens
 	 * @return void
@@ -60,7 +60,7 @@ class AuthController
     /**
      * register new user
      *
-     * @param  \Framework\Http\Request $request
+     * @param  \Core\Http\Request $request
      * @param  \App\Database\Repositories\Users $users
      * @param  \App\Database\Repositories\Tokens $tokens
      * @return void

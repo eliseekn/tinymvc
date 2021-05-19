@@ -2,7 +2,7 @@
 
 namespace App\Http\Middlewares;
 
-use Framework\Http\Request;
+use Core\Http\Request;
 
 /**
  * Sanitize form fields
@@ -12,7 +12,7 @@ class SanitizeInputs
     /**
      * handle function
      * 
-     * @param  \Framework\Http\Request $request
+     * @param  \Core\Http\Request $request
      * @return void
      */
     public function handle(Request $request): void

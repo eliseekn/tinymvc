@@ -2,9 +2,9 @@
 
 namespace App\Http\Middlewares;
 
-use Framework\System\Auth;
-use Framework\Http\Request;
-use Framework\System\Encryption;
+use Core\System\Auth;
+use Core\Http\Request;
+use Core\System\Encryption;
 use App\Database\Repositories\Users;
 use App\Database\Repositories\Tokens;
 
@@ -16,7 +16,7 @@ class ApiAuth
     /**
      * handle function
      *
-     * @param  \Framework\Http\Request $request
+     * @param  \Core\Http\Request $request
      * @param  \App\Database\Repositories\Users $users
      * @param  \App\Database\Repositories\Tokens $tokens
      * @return void

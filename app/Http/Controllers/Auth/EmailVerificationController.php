@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use Carbon\Carbon;
 use App\Mails\WelcomeMail;
-use Framework\Http\Request;
+use Core\Http\Request;
 use App\Mails\VerificationMail;
 use App\Database\Repositories\Users;
 use App\Database\Repositories\Tokens;
@@ -17,7 +17,7 @@ class EmailVerificationController
     /**
      * send email verification link
      *
-     * @param  \Framework\Http\Request $request
+     * @param  \Core\Http\Request $request
      * @param  \App\Database\Repositories\Tokens $tokens
      * @return void
      */
@@ -36,7 +36,7 @@ class EmailVerificationController
 	/**
 	 * check email verification link
 	 *
-     * @param  \Framework\Http\Request $request
+     * @param  \Core\Http\Request $request
      * @param  \App\Database\Repositories\Users $users
 	 * @return void
 	 */

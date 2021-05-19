@@ -8,7 +8,6 @@
 		"dev": "concurrently \"yarn parcel-watch\" \"yarn sass-watch\"",
 		"build": "concurrently \"yarn parcel-build\" \"yarn sass-build\""
 	},
-	"dependencies": {},
 	"devDependencies": {
 		"concurrently": "^5.3.0",
 		"parcel": "next"

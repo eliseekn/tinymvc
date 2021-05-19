@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use Carbon\Carbon;
 use App\Mails\TokenMail;
-use Framework\Http\Request;
+use Core\Http\Request;
 use App\Database\Repositories\Users;
 use App\Http\Validators\AuthRequest;
 use App\Database\Repositories\Tokens;
@@ -17,7 +17,7 @@ class ForgotPasswordController
 	/**
 	 * send reset password link notification
 	 *
-     * @param  \Framework\Http\Request $request
+     * @param  \Core\Http\Request $request
      * @param  \App\Database\Repositories\Tokens $tokens
 	 * @return void
 	 */
@@ -36,7 +36,7 @@ class ForgotPasswordController
 	/**
 	 * reset password
 	 *
-     * @param  \Framework\Http\Request $request
+     * @param  \Core\Http\Request $request
      * @param  \App\Database\Repositories\Tokens $tokens
 	 * @return void
 	 */
@@ -63,7 +63,7 @@ class ForgotPasswordController
 	/**
 	 * update user password
 	 *
-     * @param  \Framework\Http\Request $request
+     * @param  \Core\Http\Request $request
      * @param  \App\Database\Repositories\Users $users
 	 * @return void
 	 */
