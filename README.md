@@ -6,9 +6,8 @@ TinyMVC is a PHP framework based on MVC architecture that helps you build easly 
 ```
 PHP >= 7.2
 MySQL
-node
 composer
-yarn or npm
+yarn
 ```
 
 ## Installation
@@ -35,9 +34,27 @@ server {
     }
 }
 ```
+3\. Install PHP and Javascript packages dependencies
 
-## Documentation
-After installation open your browser and go to ```http://localhost/tinymvc/docs```
+On your terminal run:
+```
+cd ./tinymvc
+composer install && yarn
+```
+4\. Setup your application
+
+On your terminal run:
+```
+php console app:setup
+```
+Then start a local server development by running this command:
+```
+php console server:start
+```
+For more console commands run:
+```
+php console list
+```
 
 ## License
 [MIT](https://opensource.org/licenses/MIT)

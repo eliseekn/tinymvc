@@ -22,7 +22,7 @@ class Test extends Command
 
     protected function configure()
     {
-        $this->setDescription('Create new test');
+        $this->setDescription('Create new PHPUnit test case');
         $this->addArgument('test', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of test (separated by space if many)');
     }
 
