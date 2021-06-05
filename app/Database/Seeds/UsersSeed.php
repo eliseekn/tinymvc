@@ -23,7 +23,7 @@ class UsersSeed
         QueryBuilder::table(self::$table)->insert([
             'name' => 'admin',
             'email' => 'admin@tinymvc.com',
-            'password' => pwd_hash('admin'),
+            'password' => hash_pwd('admin'),
             'email_verified' => 1
         ])->execute();
     }

@@ -8,19 +8,24 @@ class AlertToast extends HTMLElement {
     constructor() {
         super()
         this.icon = this.icon.bind(this)
+        this.message = this.message.bind(this)
     }
 
     icon() {
         switch(this.getAttribute('type')) {
             case 'primary':
-                return '<i class="fa fa-info-circle text-primary fa-lg"></i>'
+                return '<i class="fa fa-info-circle text-primary"></i>'
             case 'danger':
-                return '<i class="fa fa-times-circle text-danger fa-lg"></i>'
+                return '<i class="fa fa-times-circle text-danger"></i>'
             case 'warning':
-                return '<i class="fa fa-exclamation-triangle text-warning fa-lg"></i>'
+                return '<i class="fa fa-exclamation-triangle text-warning"></i>'
             default:
-                return '<i class="fa fa-check-circle text-success fa-lg"></i>'
+                return '<i class="fa fa-check-circle text-success"></i>'
         }
+    }
+
+    message() {
+        return this.getAttribute('message')
     }
 
     connectedCallback() {
@@ -31,10 +36,10 @@ class AlertToast extends HTMLElement {
             <div class="modal-dialog position-absolute shadow-sm rounded" style="top: -0.3em; right: .8em; z-index: 11111">
                 <div class="modal-content">
                     <div class="modal-body d-flex justify-content-around align-items-center">
-                        <div style="font-size: 1.5rem">${this.icon()}</div>
+                        ${this.icon()}
 
-                        <div class="d-flex flex-column px-3">
-                            <p class="modal-title mb-0">${this.getAttribute('message')}</p>
+                        <div class="d-flex flex-column px-2">
+                            <p class="modal-title mb-0">${this.message()}</p>
                         </div>
 
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">

@@ -52,7 +52,7 @@ class CLASSNAME extends Repository
      * @param  \Core\Http\Request $request
      * @return int
      */
-    public function store(): int
+    public function store(Request $request): int
     {
         return $this->insert($request->except('csrf_token'));
     }

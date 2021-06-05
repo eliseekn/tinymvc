@@ -191,7 +191,7 @@ class Auth
     }
     
     /**
-     * perform redirection of authenticated user
+     * perform redirection
      * 
      * @return void
      */

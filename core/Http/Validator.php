@@ -18,28 +18,28 @@ class Validator
     /**
      * rules
      * 
-     * @var array $rules
+     * @var array
      */
     protected static $rules = [];
 
     /**
      * custom errors messages
      * 
-     * @var array $messages
+     * @var array
      */
     protected static $messages = [];
 
     /**
      * validation errors messages
      * 
-     * @var bool|array $errors
+     * @var bool|array
      */
     protected static $errors;
 
     /**
      * request inputs
      * 
-     * @var array $inputs
+     * @var array
      */
     protected static $inputs = [];
 

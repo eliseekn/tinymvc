@@ -16,7 +16,7 @@ use Core\System\Session;
 class Alert
 {
     /**
-     * @var array $alert
+     * @var array
      */
     protected static $alert = [];
 

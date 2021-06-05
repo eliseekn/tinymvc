@@ -12,6 +12,6 @@ use Core\Routing\Route;
  * API routes
  */
 
-/* Route::groupPrefix('api', function () {
-    
-})->register(); */
+Route::groupPrefix('api', function () {
+    //
+})->register();

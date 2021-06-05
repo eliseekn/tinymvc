@@ -23,6 +23,7 @@ class Server extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $port = $input->getArgument('port') ?? 8080;
+
         system('php -S 127.0.0.1:' . $port);
 
         return Command::SUCCESS;

@@ -129,7 +129,7 @@ class Route
      */
     public static function any(string $uri, $callback): self
     {
-        return self::add('* ' . $uri, $callback);
+        return self::add('GET|POST|DELETE|PUT|OPTIONS|PATCH ' . $uri, $callback);
     }
     
     /**
@@ -247,6 +247,10 @@ class Route
      */
     public function register(): void
     {
+        if (empty(static::$tmp_routes)) {
+            return;
+        }
+
         static::$routes += static::$tmp_routes;
         static::$tmp_routes = [];
     }

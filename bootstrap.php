@@ -7,7 +7,7 @@
  */
 
 use Core\Http\Request;
-use Core\Support\Whoops;
+use Core\System\Whoops;
 use Core\System\Config;
 use Core\System\Storage;
 

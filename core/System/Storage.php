@@ -14,7 +14,7 @@ namespace Core\System;
 class Storage
 {
     /**
-     * @var string $path
+     * @var string
      */
     protected static $path = '';
     

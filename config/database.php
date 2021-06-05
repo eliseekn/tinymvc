@@ -12,6 +12,7 @@
 
 return [
     'dsn' => 'mysql:host=' . env('DB_HOST', 'localhost') . ';dbname=' . env('DB_NAME', 'tinymvc'),
+    'name' => env('DB_NAME', 'tinymvc'),
     'username' => env('DB_USERNAME', 'root'),
     'password' => env('DB_PASSWORD', 'root'),
     'table_prefix' => '',

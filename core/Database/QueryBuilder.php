@@ -18,21 +18,21 @@ class QueryBuilder
 	/**
 	 * sql query string
 	 *
-	 * @var string $query
+	 * @var string
 	 */
 	protected static $query = '';
 		
 	/**
 	 * sql query arguments
 	 *
-	 * @var array $args
+	 * @var array
 	 */
     protected static $args = [];
     
     /**
      * name of table
      * 
-     * @var string $table
+     * @var string
      */
     protected static $table;
     
@@ -194,7 +194,7 @@ class QueryBuilder
 		self::$query = rtrim(self::$query, ', ');
         self::$query .= ' FROM ' . static::$table;
 
-		return new self();
+		return $this;
 	}
         
     /**
@@ -210,8 +210,21 @@ class QueryBuilder
         self::$args = array_merge(self::$args, $args);
         self::$query .= ' FROM ' . static::$table;
 
-        return new self();
+        return $this;
     }
+
+	/**
+	 * select where query
+	 * 
+	 * @param  string $column
+	 * @param  mixed $operator
+	 * @param  mixed $value
+	 * @return \Core\Database\QueryBuilder
+	 */
+	public function selectWhere(string $column, $operator = null, $value = null): self
+	{
+        return $this->select('*')->where($column, $operator, $value);
+	}
 
 	/**
 	 * insert query
@@ -238,7 +251,7 @@ class QueryBuilder
 		self::$query = rtrim(self::$query, ', ');
 		self::$query .= ')';
 
-		return new self();
+		return $this;
 	}
 
 	/**
@@ -274,7 +287,20 @@ class QueryBuilder
 	public function delete(): self
 	{
 		self::$query = "DELETE FROM " . static::$table;
-		return new self();
+		return $this;
+	}
+
+	/**
+	 * delete where query
+	 * 
+	 * @param  string $column
+	 * @param  mixed $operator
+	 * @param  mixed $value
+	 * @return \Core\Database\QueryBuilder
+	 */
+	public function deleteWhere(string $column, $operator = null, $value = null): self
+	{
+        return $this->delete()->where($column, $operator, $value);
 	}
     
     /**
@@ -454,7 +480,7 @@ class QueryBuilder
     {
         if (config('database.timestamps')) {
             self::$query .= " created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
-			    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)";
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)";
         }
 
         if (self::$query[-1] !== ')') {
@@ -462,6 +488,7 @@ class QueryBuilder
         }
 
         self::$query .= " ENGINE='" . config('database.engine') . "'";
+
 		$this->execute();
     }
 
@@ -605,24 +632,42 @@ class QueryBuilder
 	/**
 	 * in query
 	 *
-	 * @param  string $column
+	 * @param  array $values
 	 * @return \Core\Database\QueryBuilder
 	 */
 	public function in(array $values): self
 	{
-		self::$query .= ' IN (' . implode(',', $values) . ') ';
+        $items = '';
+
+        foreach ($values as $value) {
+            $items .= '?, ';
+            self::$args[] = $value;
+        }
+
+        $items = rtrim($items, ', ');
+
+		self::$query .= ' IN (' . $items . ') ';
 		return $this;
     }
     
 	/**
 	 * not in query
 	 *
-	 * @param  string $column
+	 * @param  array $values
 	 * @return \Core\Database\QueryBuilder
 	 */
 	public function notIn(array $values): self
 	{
-		self::$query .= ' NOT IN (' . implode(',', $values) . ') ';
+        $items = '';
+
+        foreach ($values as $value) {
+            $items .= '?, ';
+            self::$args[] = $value;
+        }
+
+        $items = rtrim($items, ', ');
+
+		self::$query .= ' NOT IN (' . $items . ') ';
 		return $this;
     }
 
@@ -890,7 +935,11 @@ class QueryBuilder
      */
     public function exists(): bool
     {
-        return !$this->fetch() === false;
+        if ($this->fetch() === false) {
+            return false;
+        }
+
+        return true;
     }
 
 	/**
@@ -900,6 +949,8 @@ class QueryBuilder
 	 */
 	public function toSQL(): array
 	{
+        $this->trim_query();
+
 		return [self::$query, self::$args];
 	}
 
@@ -950,7 +1001,7 @@ class QueryBuilder
 	 */
 	public function execute(): \PDOStatement
 	{
-        self::$query = trim(self::$query, '  ');
+        $this->trim_query();
         $stmt = Database::connection()->statement(self::$query, self::$args);
 		self::setQuery('');
 		return $stmt;
@@ -984,5 +1035,16 @@ class QueryBuilder
     public static function lastInsertedId(): int
     {
         return self::setQuery('SELECT LAST_INSERT_ID()')->execute()->fetchColumn();
+    }
+    
+    /**
+     * remove unwanted spaces in query
+     *
+     * @return void
+     */
+    private function trim_query(): void
+    {
+        self::$query = trim(self::$query);
+        self::$query = str_replace('  ', ' ', self::$query);
     }
 }

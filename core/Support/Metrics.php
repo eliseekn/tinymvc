@@ -17,13 +17,10 @@ use Core\Database\QueryBuilder;
 class Metrics
 {
     /**
-     * @var string $table
+     * @var string
      */
     private $table;
 
-    /**
-     * metrics constants
-     */
     public const COUNT = 'COUNT';
     public const AVERAGE = 'AVG';
     public const SUM = 'SUM';

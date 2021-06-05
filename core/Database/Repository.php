@@ -18,12 +18,12 @@ use Core\Support\Metrics;
 class Repository
 {
     /**
-     * @var string $table
+     * @var string
      */
     protected $table;
 
     /**
-     * @var \Core\Database\QueryBuilder $qb
+     * @var \Core\Database\QueryBuilder
      */
     protected $qb;
     
@@ -235,7 +235,7 @@ class Repository
     }
 
     /**
-     * add SELECT BETWEEN query
+     * add select between query
      *
      * @param  string $column
      * @param  mixed $start
@@ -248,7 +248,7 @@ class Repository
     }
     
     /**
-     * add SELECT BETWEEN query
+     * add select between query
      *
      * @param  string $column
      * @param  mixed $start
@@ -261,7 +261,7 @@ class Repository
     }
     
     /**
-     * add SELECT BETWEEN query
+     * add select between query
      *
      * @param  string $column
      * @param  mixed $start
@@ -274,7 +274,7 @@ class Repository
     }
     
     /**
-     * add SELECT NOT BETWEEN query
+     * add select not between query
      *
      * @param  string $column
      * @param  mixed $start
@@ -287,7 +287,7 @@ class Repository
     }
     
     /**
-     * add SELECT NOT BETWEEN query
+     * add select not between query
      *
      * @param  string $column
      * @param  mixed $start
@@ -300,7 +300,7 @@ class Repository
     }
     
     /**
-     * add SELECT NOT BETWEEN query
+     * add select not between query
      *
      * @param  string $column
      * @param  mixed $start
@@ -412,7 +412,7 @@ class Repository
     }
     
     /**
-     * add DELETE clause
+     * add delete clause
      *
      * @return \Core\Database\Repository
      */
@@ -423,7 +423,7 @@ class Repository
     }
     
     /**
-     * add DELETE and WEHRE clauses
+     * add delete and where clauses
      *
 	 * @param  string $column
 	 * @param  mixed $operator
@@ -441,7 +441,7 @@ class Repository
     }
     
     /**
-     * add DELETE and WEHRE clauses
+     * add delete and where clauses
      *
 	 * @param  mixed $id
      * @return bool
@@ -511,7 +511,7 @@ class Repository
     }
     
 	/**
-	 * add WHERE clause
+	 * add where clause
 	 *
 	 * @param  string $column
 	 * @param  mixed $operator
@@ -576,7 +576,7 @@ class Repository
 	}
 
 	/**
-	 * add AND clause
+	 * add and clause
 	 *
 	 * @param  string $column
 	 * @param  mixed $operator
@@ -641,7 +641,7 @@ class Repository
     }
 
 	/**
-	 * add OR clause
+	 * add or clause
 	 *
 	 * @param  string $column
 	 * @param  mixed $operator
@@ -706,7 +706,7 @@ class Repository
     }
 
     /**
-	 * add WHERE NOT clause
+	 * add where not clause
 	 *
 	 * @param  string $column
 	 * @param  mixed $operator
@@ -872,7 +872,7 @@ class Repository
     }
     
     /**
-     * add WHERE BETWEEN clause for range
+     * add where BETWEEN clause for range
      *
      * @param  string $column
      * @param  mixed $start
@@ -886,7 +886,7 @@ class Repository
     }
     
     /**
-     * add WHERE NOT BETWEEN clause for range
+     * add where not BETWEEN clause for range
      *
      * @param  string $column
      * @param  mixed $start
@@ -900,7 +900,7 @@ class Repository
     }
     
     /**
-	 * add WHERE NULL clause
+	 * add where NULL clause
 	 *
 	 * @param  string $column
 	 * @return \Core\Database\Repository
@@ -912,7 +912,7 @@ class Repository
 	}
 
     /**
-	 * add WHERE NOT NULL clause
+	 * add where not NULL clause
 	 *
 	 * @param  string $column
 	 * @return \Core\Database\Repository
@@ -924,7 +924,7 @@ class Repository
 	}
 
     /**
-	 * add WHERE LIKE clause
+	 * add where LIKE clause
 	 *
 	 * @param  string $column
 	 * @param  mixed $value
@@ -937,7 +937,7 @@ class Repository
 	}
 
     /**
-	 * add WHERE NOT LIKE clause
+	 * add where not LIKE clause
 	 *
 	 * @param  string $column
 	 * @param  mixed $value
@@ -950,7 +950,7 @@ class Repository
 	}
 
     /**
-	 * add WHERE IN clause
+	 * add where IN clause
 	 *
 	 * @param  string $column
 	 * @param  array $values
@@ -963,7 +963,7 @@ class Repository
 	}
 
     /**
-	 * add WHERE NOT IN clause
+	 * add where not IN clause
 	 *
 	 * @param  string $column
 	 * @param  mixed $value
@@ -993,7 +993,7 @@ class Repository
     }
     
     /**
-     * add ORDER BY clause
+     * add orDER BY clause
      *
      * @param  string $column
      * @param  string $direction

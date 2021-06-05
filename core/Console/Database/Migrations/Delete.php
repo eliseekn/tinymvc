@@ -59,9 +59,7 @@ class Delete extends Command
         (new $migration())->drop();
         
         //remove migration table from migrated tables
-        QueryBuilder::table('migrations')->delete()
-            ->where('name', $table)
-            ->execute();
+        QueryBuilder::table('migrations')->deleteWhere('name', $table)->execute();
 
         $output->writeln('<info>Table "' . $table . '" has been deleted</info>');
     }

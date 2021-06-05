@@ -31,7 +31,7 @@ class Router
      */
     private static function match(Request $request, string $method, string $route, &$params): bool
     {
-        if ($method !== '*' && !preg_match('/' . strtoupper($method) . '/', strtoupper($request->method()))) {
+        if (preg_match('/' . strtoupper($method) . '/', strtoupper($request->method())) === false) {
             render(config('errors.views.405'), [], 405);
         }
 

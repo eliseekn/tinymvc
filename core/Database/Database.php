@@ -19,14 +19,14 @@ class Database
 	/**
 	 * database class instance
 	 * 
-	 * @var Database\null
+	 * @var \Core\Database\Database
 	 */
 	protected static $instance = null;
 
 	/**
 	 * database connection instance
 	 *
-	 * @var mixed
+	 * @var PDO
 	 */
 	protected $pdo;
 
@@ -54,7 +54,7 @@ class Database
 	/**
 	 * get database connection instance
 	 *
-	 * @return \Core\Database\DB
+	 * @return \Core\Database\Database
 	 */
 	public static function connection(): self
 	{

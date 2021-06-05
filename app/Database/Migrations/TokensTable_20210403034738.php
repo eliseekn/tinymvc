@@ -26,7 +26,7 @@ class TokensTable_20210403034738
             ->addString('token')->unique()
             ->addTimestamp('expire')->nullable()
             ->addBoolean('api')->default(0)
-            ->create();
+            ->migrate();
     }
     
     /**

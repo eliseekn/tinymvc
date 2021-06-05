@@ -61,7 +61,7 @@ class ForgotPasswordController
 	}
 	
 	/**
-	 * update user password
+	 * update password
 	 *
      * @param  \Core\Http\Request $request
      * @param  \App\Database\Repositories\Users $users
@@ -72,7 +72,7 @@ class ForgotPasswordController
 		AuthRequest::validate($request->except('csrf_token'))->redirectOnFail();
 
         $users->updateWhere($request->only('email'), 
-            ['password' => pwd_hash($request->password)]
+            ['password' => hash_pwd($request->password)]
         );
 
         redirect()->url('login')->withAlert('success', __('password_reset'))->go();

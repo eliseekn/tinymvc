@@ -10,9 +10,9 @@ namespace Core;
 
 use Core\Http\Request;
 use Core\Routing\Router;
-use Core\Support\Whoops;
+use Core\System\Whoops;
 use Core\System\Storage;
-use Core\Support\Exception;
+use Core\System\Exception;
 
 /**
  * Main application

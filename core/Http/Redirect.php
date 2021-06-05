@@ -20,7 +20,7 @@ class Redirect
     /**
      * url to redirect
      *
-     * @var string $url
+     * @var string
      */
     public $url = '';
 

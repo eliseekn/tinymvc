@@ -12,7 +12,7 @@
     stopOnFailure = "false">
 
     <testsuites>
-        <testsuite name="TinyMVC Framework Tests">
+        <testsuite name="TinyMVC Tests">
             <directory>./tests</directory>
         </testsuite>
     </testsuites>

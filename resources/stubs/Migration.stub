@@ -22,7 +22,7 @@ class CLASSNAME
     {
         Migration::table($this->table)
             ->addPrimaryKey('id')
-            ->create();
+            ->migrate();
     }
     
     /**

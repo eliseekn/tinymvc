@@ -9,7 +9,6 @@
 use Carbon\Carbon;
 use Core\Http\Request;
 use Core\Routing\View;
-use Configula\ConfigFactory;
 use Core\Http\Redirect;
 use Core\Http\Response;
 use Core\Routing\Route;
@@ -20,7 +19,7 @@ use Core\System\Storage;
 use Core\System\Encryption;
 
 /**
- * Cookies management functions
+ * Cookies management
  */
 
 if (!function_exists('create_cookie')) {
@@ -80,7 +79,7 @@ if (!function_exists('delete_cookie')) {
 }
 
 /**
- * Sessions management functions
+ * Sessions management
  */
 
 if (!function_exists('create_session')) {
@@ -208,17 +207,17 @@ if (!function_exists('auth')) {
 }
 
 /**
- * Security utils functions
+ * Security utils
  */
 
-if (!function_exists('pwd_hash')) {    
+if (!function_exists('hash_pwd')) {    
     /**
      * password hash helper
      *
      * @param  string $password
      * @return string
      */
-    function pwd_hash(string $password): string
+    function hash_pwd(string $password): string
     {
         return Encryption::hash($password);
     }
@@ -310,7 +309,7 @@ if (!function_exists('valid_csrf_token')) {
 }
 
 /**
- * Miscellaneous URL utils functions
+ * Miscellaneous URL utils
  */
 
 if (!function_exists('url')) {
@@ -521,7 +520,7 @@ if (!function_exists('render')) {
 }
 
 /**
- * Miscellaneous utils functions
+ * Miscellaneous utils
  */
 
 if (!function_exists('real_path')) {    
@@ -609,6 +608,10 @@ if (!function_exists('config')) {
 	 */
 	function config(string $data, $default = null)
 	{
+        if (strpos($data, '.') === false) {
+            return null;
+        }
+
         $file = substr($data, 0, strpos($data, '.'));
         $data = substr($data, strpos($data, '.') + 1, strlen($data));
         $path = absolute_path('config') . $file . '.php';

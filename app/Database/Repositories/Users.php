@@ -75,7 +75,7 @@ class Users extends Repository
         return $this->insert([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => pwd_hash($request->password)
+            'password' => hash_pwd($request->password)
         ]);
     }
 }

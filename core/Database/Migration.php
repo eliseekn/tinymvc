@@ -14,7 +14,7 @@ namespace Core\Database;
 class Migration
 {
     /**
-	 * @var \Core\Database\QueryBuilder $qb
+	 * @var \Core\Database\QueryBuilder
 	 */
     protected static $qb;
     
@@ -518,15 +518,10 @@ class Migration
     /**
      * add primary key attribute
      * 
-     * @param bool $auto_increment
      * @return \Core\Database\Migration
      */
-    public function primaryKey(bool $auto_increment = true): self
+    public function primaryKey(): self
     {
-        if ($auto_increment) {
-            $this->autoIncrement();
-        }
-
         self::$qb->primaryKey();
         return $this;
     }
@@ -540,7 +535,13 @@ class Migration
      */
     public function addPrimaryKey(string $column, bool $auto_increment = true): self
     {
-        return $this->addBigInt($column)->primaryKey($auto_increment);
+        $pk = $this->addBigInt($column);
+
+        if ($auto_increment) {
+            $pk->autoIncrement();
+        }
+
+        return $pk->primaryKey();
     }
     
     /**
@@ -582,12 +583,13 @@ class Migration
      *
      * @return void
      */
-    public function migrate(bool $table = true)
+    public function migrate(bool $table = true): void
     {
         if ($table) {
             self::$qb->migrate();
-        } else {
-            self::$qb->flush()->execute();
+            return;
         }
+            
+        self::$qb->flush()->execute();
     }
 }

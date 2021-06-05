@@ -18,7 +18,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 class Mailer
 {
     /**
-     * @var PHPMailer\PHPMailer\PHPMailer $mail
+     * @var PHPMailer\PHPMailer\PHPMailer
      */
     protected static $mail;
 

@@ -38,7 +38,7 @@ class Run extends Command
 
         if (!QueryBuilder::tableExists('migrations')) {
             Migration::table('migrations')
-                ->addInt('id')->primaryKey()
+                ->addInt('id')->autoIncrement()->primaryKey()
                 ->addString('name')
                 ->migrate();
 

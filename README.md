@@ -12,17 +12,25 @@ yarn
 
 ## Installation
 
-1\. Download your TinyMVC framework copy [here](https://github.com/eliseekn/tinymvc/archive/master.zip)
+1\. Download a TinyMVC framework copy [here](https://github.com/eliseekn/tinymvc/archive/master.zip)
 
 2\. Setup your web server configuration
 
 For ***Apache*** server, edit your ```.htaccess``` with the following lines: 
 
 ```
-RewriteEngine on
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-l
-RewriteRule ^(.*)$ index.php
+<IfModule mod_rewrite.c>
+    RewriteEngine on
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Redirect request to main controller
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-l
+    RewriteRule ^(.*)$ index.php
+</IfModule>
 ```
 
 For ***Nginx*** server, add the following to your server declaration
@@ -34,24 +42,35 @@ server {
     }
 }
 ```
-3\. Install PHP and Javascript packages dependencies
+3\. Install packages dependencies
 
-On your terminal run:
+On your terminal:
 ```
 cd ./tinymvc
 composer install && yarn
 ```
-4\. Setup your application
 
-On your terminal run:
+## Your first application
+
+1\. Setup application
+
+On your terminal:
 ```
 php console app:setup
 ```
-Then start a local server development by running this command:
+2\. Setup database
+
+On your terminal:
+```
+php console db:migrations:run --seed
+```
+3\. Start a local server development
+
+On your terminal:
 ```
 php console server:start
 ```
-For more console commands run:
+For more console commands:
 ```
 php console list
 ```

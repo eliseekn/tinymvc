@@ -56,7 +56,7 @@ class AuthController
         AuthRequest::validate($request->except('csrf_token'))->redirectOnFail();
         Auth::attempt($request, $users, $tokens);
     }
-        
+    
     /**
      * register new user
      *

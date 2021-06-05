@@ -6,7 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Core\Support;
+namespace Core\System;
 
 use Whoops\Run;
 use Exception as BaseException;

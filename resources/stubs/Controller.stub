@@ -7,7 +7,7 @@ use Core\Database\Repository;
 class CLASSNAME
 {
     /**
-     * @var \Core\Database\Repository $repository
+     * @var \Core\Database\Repository
      */
     private $repository;
 

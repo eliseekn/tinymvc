@@ -16,7 +16,7 @@ use Exception;
 class Client
 {
     /**
-     * @var array $response
+     * @var array
      */
     protected static $response = [];
 

@@ -18,14 +18,14 @@ class Pager
     /**
      * generated pagination array
      *
-     * @var array $pagination
+     * @var array
      */
     protected $pagination = [];
 
     /**
      * pages items
      * 
-     * @var array $items
+     * @var array
      */
     protected $items = [];
 
