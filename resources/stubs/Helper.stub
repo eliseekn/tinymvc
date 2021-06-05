@@ -1,0 +1,16 @@
+<?php
+
+namespace App\Helpers;
+
+class CLASSNAME
+{
+    /**
+     * do doSomething
+     *
+     * @var string
+     */
+    public static function doSomething(): string
+    {
+        return '';
+    }
+}

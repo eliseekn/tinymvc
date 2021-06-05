@@ -12,266 +12,39 @@
  * Application command line interface
  */
 
-require_once 'vendor/autoload.php';
-require_once 'config/env.php';
+require 'vendor/autoload.php';
+require 'bootstrap.php';
 
-array_shift($argv);
+$console = new \Symfony\Component\Console\Application();
 
-$commands = [
-    'db',
-    'make'
-];
+$console->add(new \Core\Console\Database\Create());
+$console->add(new \Core\Console\Database\Delete());
+$console->add(new \Core\Console\Database\Status());
+$console->add(new \Core\Console\Database\Query());
+$console->add(new \Core\Console\Database\Migrations\Delete());
+$console->add(new \Core\Console\Database\Migrations\Status());
+$console->add(new \Core\Console\Database\Migrations\Run());
+$console->add(new \Core\Console\Database\Migrations\Reset());
+$console->add(new \Core\Console\Database\Seeds());
 
-$options = [
-    'controller',
-    'model',
-    'migration',
-    'seed',
-    'schema',
-    'query',
-    'request',
-    'middleware',
-    'mail'
-];
+$console->add(new \Core\Console\Make\Migration());
+$console->add(new \Core\Console\Make\Repository());
+$console->add(new \Core\Console\Make\Controller());
+$console->add(new \Core\Console\Make\Validator());
+$console->add(new \Core\Console\Make\Seed());
+$console->add(new \Core\Console\Make\View());
+$console->add(new \Core\Console\Make\Mail());
+$console->add(new \Core\Console\Make\Middleware());
+$console->add(new \Core\Console\Make\Cmd());
+$console->add(new \Core\Console\Make\Password());
+$console->add(new \Core\Console\Make\Helper());
+$console->add(new \Core\Console\Make\Test());
 
-$arguments = [
-    '--create',
-    '--delete',
-    '--reset',
-    '--execute',
-    '--namespace',
-    '--migrate',
-    '--resources',
-    '--run'
-];
+$console->add(new \Core\Console\App\Setup());
+$console->add(new \Core\Console\App\Key());
 
-function print_help()
-{
-    $help_message = 'Manage database operations' . PHP_EOL;
-    $help_message .= '   db:schema --create=posts                 Create posts database with utf8 encoding character' . PHP_EOL;
-    $help_message .= '   db:schema --create=posts,comments        Create posts and comments databases' . PHP_EOL;
-    $help_message .= '   db:schema --delete=posts                 Delete posts database' . PHP_EOL;
-    $help_message .= '   db:schema --delete=posts,comments        Delete posts and comments databases' . PHP_EOL;
-    $help_message .= PHP_EOL;
-    $help_message .= '   db:migration --migrate                   Migrate all tables' . PHP_EOL;
-    $help_message .= '   db:migration --migrate=posts             Migrate posts table only' . PHP_EOL;
-    $help_message .= '   db:migration --migrate=posts,comments    Migrate posts and comments tables only' . PHP_EOL;
-    $help_message .= '   db:migration --migrate --seed            Migrate all tables and insert all seeds' . PHP_EOL;
-    $help_message .= '   db:migration --migrate=posts --seed      Migrate posts table only and insert all seeds' . PHP_EOL;
-    $help_message .= '   db:migration --reset                     Reset all migrations' . PHP_EOL;
-    $help_message .= '   db:migration --reset=posts               Reset posts table only' . PHP_EOL;
-    $help_message .= '   db:migration --reset --seed              Reset all migrations and insert all seeds' . PHP_EOL;
-    $help_message .= '   db:migration --delete                    Drop all tables' . PHP_EOL;
-    $help_message .= '   db:migration --delete=comments           Drop comments table only' . PHP_EOL;
-    $help_message .= PHP_EOL;
-    $help_message .= '   db:seed --run                            Insert all seeds' . PHP_EOL;
-    $help_message .= '   db:seed --run=users                      Insert user seed only' . PHP_EOL;
-    $help_message .= '   db:seed --run=users,comments             Insert user and comment seeds only' . PHP_EOL;
-    $help_message .= PHP_EOL;
-    $help_message .= "   db:query --execute='query'               Execute MySQL query" . PHP_EOL;
-    $help_message .= "   db:query --execute='query' --db=tinymvc  Execute MySQL query from the database 'tinymvc'" . PHP_EOL;
-    $help_message .= PHP_EOL;
-    $help_message .= 'Manage resources build operations' . PHP_EOL;
-    $help_message .= '   make:controller posts                    Create posts controller' . PHP_EOL;
-    $help_message .= '   make:controller posts --namespace=blog   Create posts controller in app\Controllers\Blog folder' . PHP_EOL;
-    $help_message .= '   make:controller posts --resources        Create posts resources (controller, migration, model, views and routes)' . PHP_EOL;
-    $help_message .= PHP_EOL;
-    $help_message .= '   make:migration posts                     Create posts migration table' . PHP_EOL;
-    $help_message .= '   make:migration posts -cms                Create posts migration table with controller = c, model = m, seed = s' . PHP_EOL;
-    $help_message .= '   make:migration posts -c --namespace=blog Create posts migration table with controller in app\Controllers\Blog folder' . PHP_EOL;
-    $help_message .= PHP_EOL;
-    $help_message .= '   make:model posts                         Create posts model only' . PHP_EOL;
-    $help_message .= '   make:model posts,comments                Create posts and comments model' . PHP_EOL;
-    $help_message .= PHP_EOL;
-    $help_message .= '   make:seed posts                          Create posts seed only' . PHP_EOL;
-    $help_message .= '   make:seed posts,comments                 Create posts and comments seed only' . PHP_EOL;
-    $help_message .= PHP_EOL;
-    $help_message .= '   make:request AuthRequest                 Create AuthRequest in app\Requests folder' . PHP_EOL;
-    $help_message .= '   make:middleware AuthPolicy               Create AuthPolicy in app\Middlewares folder' . PHP_EOL;
-    $help_message .= '   make:mail welcome                        Create welcome email notification' . PHP_EOL;
-    
-    exit($help_message);
-}
+$console->add(new \Core\Console\Cache());
+$console->add(new \Core\Console\Server());
+$console->add(new \Core\Console\Tests());
 
-if (!isset($argv[0]) || strpos(strtolower($argv[0]), ':') === false) {
-    print_help();
-}
-
-list($command, $option) = explode(':', $argv[0]);
-
-if (in_array($command, $commands)) {
-    if (!in_array($option, $options)) {
-        print_help();
-    }
-
-    switch ($command) {
-        case 'db':
-            list($argument, $data) = isset($argv[1]) && strpos(strtolower($argv[1]), '=') !== false 
-                ? explode('=', $argv[1]) 
-                : [$argv[1], ''];
-
-            if (!in_array($argument, $arguments)) {
-                print_help();
-            }
-
-            switch ($option) {
-                case 'schema':
-                    switch ($argument) {
-                        case '--create':
-                            \Framework\Console\Database::createSchema($data);
-                            break;
-
-                        case '--delete':
-                            \Framework\Console\Database::deleteSchema($data);
-                            break;
-                    }
-                    
-                    break;
-
-                case 'query':
-                    if ($argument !== '--execute') {
-                        print_help();
-                    }
-
-                    list($arg, $db) = isset($argv[2]) && strpos(strtolower($argv[2]), '=') !== false 
-                        ? explode('=', $argv[2]) 
-                        : (isset($argv[2]) ? [$argv[2], null] : [null, null]);
-
-                    $db = $arg === '--db' ? $db : null;
-
-                    \Framework\Console\Database::executeQuery($data, $db);
-
-                    break;
-
-                case 'migration':
-                    list($arg, $seed) = isset($argv[2]) && strpos(strtolower($argv[2]), '=') !== false 
-                        ? explode('=', $argv[2]) 
-                        : (isset($argv[2]) ? [$argv[2], ''] : [null, '']);
-
-                    $seed = $arg === '--seed' ? $seed : null;
-
-                    switch ($argument) {
-                        case '--migrate':
-                            \Framework\Console\Database::migrateTable($data);
-
-                            if (!is_null($seed)) {
-                                \Framework\Console\Database::runSeeder($seed);
-                            }
-
-                            break;
-
-                        case '--reset':
-                            \Framework\Console\Database::resetTable($data);
-
-                            if (!is_null($seed)) {
-                                \Framework\Console\Database::runSeeder($seed);
-                            }
-
-                            break;
-
-                        case '--delete':
-                            \Framework\Console\Database::deleteTable($data);
-                            break;
-                    }
-
-                    break;
-
-                case 'seed':
-                    if ($argument !== '--run') {
-                        print_help();
-                    }
-
-                    \Framework\Console\Database::runSeeder($data);
-                    break;
-            }
-
-        case 'make':
-            list($argument, $data) = isset($argv[1]) && strpos(strtolower($argv[1]), '=') !== false 
-                ? explode('=', $argv[1]) 
-                : (isset($argv[1]) ? [$argv[1], null] : [null, null]);
-
-            if (is_null($argument)) {
-                print_help();
-            }
-
-            list($arg, $namespace) = isset($argv[2]) && strpos(strtolower($argv[2]), '=') !== false 
-                ? explode('=', $argv[2]) 
-                : (isset($argv[2]) ? [$argv[2], null] : [null, null]);
-            
-            switch ($option) {
-                case 'controller':
-                    $namespace = $arg === '--namespace' ? $namespace : null;
-                    $resources = $arg === '--resources';
-
-                    if (!$resources) {
-                        \Framework\Console\Make::makeController($argument, $namespace);
-                    } else {
-                        \Framework\Console\Make::makeController($argument, 'admin');
-                        \Framework\Console\Make::makeMigration($argument);
-                        \Framework\Console\Make::makeModel($argument);
-                        \Framework\Console\Make::makeSeed($argument);
-                        \Framework\Console\Make::makeViews($argument);
-                        \Framework\Console\Make::makeRoute($argument);
-                    }
-
-                    break;
-
-                case 'migration':
-                    \Framework\Console\Make::makeMigration($argument);
-
-                    list($_arg, $_namespace) = isset($argv[3]) && strpos(strtolower($argv[3]), '=') !== false 
-                        ? explode('=', $argv[3]) 
-                        : (isset($argv[3]) ? [$argv[3], null] : [null, null]);
-
-                    $_namespace = $_arg === '--namespace' ? $_namespace : null;
-
-                    if ($arg === '-m') {
-                        \Framework\Console\Make::makeModel($argument);
-                    } else if ($arg === '-c') {
-                        \Framework\Console\Make::makeController($argument, $namespace);
-                    } else if ($arg === '-s') {
-                        \Framework\Console\Make::makeSeed($argument);
-                    } else if ($arg === '-mc' || $arg === '-cm') {
-                        \Framework\Console\Make::makeController($argument, $namespace);
-                        \Framework\Console\Make::makeModel($argument);
-                    } else if ($arg === '-ms' || $arg === '-sm') {
-                        \Framework\Console\Make::makeModel($argument);
-                        \Framework\Console\Make::makeSeed($argument);
-                    } else if ($arg === '-cs' || $arg === '-sc') {
-                        \Framework\Console\Make::makeController($argument, $namespace);
-                        \Framework\Console\Make::makeSeed($argument);
-                    } else if (in_array($arg, ['-mcs', '-msc', '-csm', '-cms', '-smc', '-scm'])) {
-                        \Framework\Console\Make::makeController($argument, $namespace);
-                        \Framework\Console\Make::makeModel($argument);
-                        \Framework\Console\Make::makeSeed($argument);
-                    }
-                    
-                    break;
-
-                case 'model':
-                    \Framework\Console\Make::makeModel($argument);
-                    break;
-
-                case 'seed':
-                    \Framework\Console\Make::makeSeed($argument);
-                    break;
-
-                case 'mail':
-                    \Framework\Console\Make::makeMail($argument);
-                    break;
-
-                case 'middleware':
-                    \Framework\Console\Make::makeMiddleware($argument);
-                    break;
-
-                case 'request':
-                    \Framework\Console\Make::makeRequest($argument);
-                    break;
-            }
-
-            break;
-
-        default:
-            print_help();
-    }
-}
+$console->run();

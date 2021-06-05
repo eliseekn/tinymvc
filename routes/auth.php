@@ -6,53 +6,30 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-use Framework\Routing\View;
-use Framework\Routing\Route;
+use Core\Routing\Route;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\EmailVerificationController;
 
 /**
  * Authentication routes
  */
 
-Route::group([
-    'login' => [
-        'handler' => function() {
-            View::render('auth.login');
-        }
-    ],
+Route::groupMiddlewares(['remember'], function () {
+    Route::get('login', [AuthController::class, 'login']);
+    Route::get('signup', [AuthController::class, 'signup']);
+})->register();
 
-    'signup' => [
-        'handler' => function() {
-            View::render('auth.signup');
-        }
-    ]
-])->by([
-    'method' => 'GET',
-    'middlewares' => [
-        'RememberUser', 
-        'AuthPolicy'
-    ]
-]);
+Route::groupMiddlewares(['csrf'], function () {
+    Route::post('authenticate', [AuthController::class, 'authenticate']);
+    Route::post('register', [AuthController::class, 'register']);
+})->register();
 
-Route::get('logout', ['handler' => 'Auth\AuthController@logout']);
-Route::post('authenticate', ['handler' => 'Auth\AuthController@authenticate']);
-Route::post('register', ['handler' => 'Auth\AuthController@register']);
+Route::get('logout', [AuthController::class, 'logout'])->register();
 
-//password reset routes
-Route::get('password/forgot', [
-    'handler' => function() {
-        View::render('auth.password.forgot');
-    }
-]);
+Route::get('password/forgot', 'auth.password.forgot')->register();
+Route::get('password/reset', [ForgotPasswordController::class, 'reset'])->register();
+Route::post('password/notify', [ForgotPasswordController::class, 'notify'])->register();
+Route::post('password/update', [ForgotPasswordController::class, 'update'])->register();
 
-Route::get('password/reset', ['handler' => 'Auth\PasswordController@reset']);
-Route::post('password/notify', ['handler' => 'Auth\PasswordController@notify']);
-Route::post('password/update', ['handler' => 'Auth\PasswordController@update']);
-
-//email routes
-Route::group([
-    'confirm' => ['handler' => 'Auth\EmailController@confirm'],
-    'auth' => ['handler' => 'Auth\EmailController@auth']
-])->by([
-    'method' => 'GET',
-    'prefix' => 'email'
-]);
+Route::get('email/verify', [EmailVerificationController::class, 'verify'])->register();

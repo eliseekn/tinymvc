@@ -1,0 +1,70 @@
+<?php
+
+namespace App\Database\Repositories;
+
+use Core\Http\Request;
+use Core\Database\Repository;
+
+class CLASSNAME extends Repository
+{
+    /**
+     * name of table
+     *
+     * @var string
+     */
+    public $table = 'TABLENAME';
+
+    /**
+     * __construct
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct($this->table);
+    }
+
+    /**
+     * retrieves single data by value
+     *
+     * @param  mixed $value
+     * @return mixed
+     */
+    public function findOneByValue($value)
+    {
+        return $this->findOneWhere('value', $value);
+    }
+
+    /**
+     * retrieves all data by value
+     *
+     * @param  mixed $value
+     * @return array
+     */
+    public function findAllByValue($value): array
+    {
+        return $this->findAllWhere('value', $value);
+    }
+
+    /**
+     * store data
+     *
+     * @param  \Core\Http\Request $request
+     * @return int
+     */
+    public function store(Request $request): int
+    {
+        return $this->insert($request->except('csrf_token'));
+    }
+
+    /**
+     * delete data
+     *
+     * @param  int $id
+     * @return bool
+     */
+    public function flush(int $id): bool
+    {
+        return $this->deleteIfExists($id);
+    }
+}

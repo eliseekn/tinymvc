@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Middlewares;
-
-use Framework\Http\Request;
+namespace App\Http\Middlewares;
 
 class CLASSNAME
 {    
@@ -11,7 +9,7 @@ class CLASSNAME
      *
      * @return void
      */
-    public static function handle(Request $request): void
+    public function handle(): void
     {
        //
     }

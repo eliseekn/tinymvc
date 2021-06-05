@@ -2,8 +2,7 @@
 
 namespace App\Database\Migrations;
 
-use App\Database\Models\Roles;
-use Framework\Database\Schema;
+use Core\Database\Migration;
 
 class UsersTable_20210403034738
 {         
@@ -12,33 +11,22 @@ class UsersTable_20210403034738
      *
      * @var string
      */
-    public static $table = 'users';
+    protected $table = 'users';
 
     /**
      * create table
      *
      * @return void
      */
-    public static function migrate(): void
+    public function create(): void
     {
-        Schema::createTable(self::$table)
-            ->addBigInt('id')->primaryKey()
+        Migration::table($this->table)
+            ->addPrimaryKey('id')
             ->addString('name')
             ->addString('email')->unique()
-            ->addString('company')->null()
-            ->addString('phone')->unique()
+            ->addBoolean('email_verified')->default(0)
             ->addString('password')
-            ->addString('role')->default(Roles::ROLE[2])
-            ->addString('lang')->default('en')
-            ->addString('country')->default('US')
-            ->addString('currency')->default('USD')
-            ->addString('timezone')->default('UTC')
-            ->addBoolean('dark_theme')->default(1)
-            ->addBoolean('active')->default(0)
-            ->addBoolean('two_steps')->default(0)
-            ->addBoolean('alerts')->default(1)
-            ->addBoolean('email_notifications')->default(1)
-            ->create();
+            ->migrate();
     }
     
     /**
@@ -46,19 +34,8 @@ class UsersTable_20210403034738
      *
      * @return void
      */
-    public static function delete(): void
+    public function drop(): void
     {
-        Schema::dropTable(self::$table);
-    }
-    
-    /**
-     * reset table
-     *
-     * @return void
-     */
-    public static function reset(): void
-    {
-        self::delete();
-        self::migrate();
+        Migration::dropTable($this->table);
     }
 }

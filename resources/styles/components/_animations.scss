@@ -12,41 +12,6 @@
     -o-animation: fadeIn $time;
 }
 
-@mixin fadeOut($time) {
-    animation: fadeOut $time;
-    -webkit-animation: fadeOut $time;
-    -moz-animation: fadeOut $time;
-    -o-animation: fadeOut $time;
-}
-
-@mixin slideIn($time) {
-    animation: slideIn $time;
-    -webkit-animation: slideIn $time;
-    -moz-animation: slideIn $time;
-    -o-animation: slideIn $time;
-}
-
-@mixin slideOut($time) {
-    animation: slideOut $time;
-    -webkit-animation: slideOut $time;
-    -moz-animation: slideOut $time;
-    -o-animation: slideOut $time;
-}
-
-@mixin zoomIn($scale) {
-    transform: scale($scale);
-    -webkit-transform: scale($scale);
-    -moz-transform: scale($scale);
-    -o-transform: scale($scale);
-}
-
-@mixin rotate($deg) {
-    transform: rotate($deg);
-    -webkit-transform: rotate($deg);
-    -moz-transform: rotate($deg);
-    -o-transform: rotate($deg);
-}
-
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -54,30 +19,5 @@
 
     to {
         opacity: 1;
-    }
-}
-
-@keyframes fadeOut {
-    to {
-        opacity: 0;
-    }
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(5px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0px);
-    }
-}
-  
-@keyframes slideOut {
-    to {
-        opacity: 0;
-        transform: translateY(5px);
     }
 }

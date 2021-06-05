@@ -6,7 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-use Framework\Application;
+use Core\Application;
 
 /**
  * Main application entry
@@ -14,7 +14,7 @@ use Framework\Application;
 
 //load packages and main configuration
 require 'vendor/autoload.php';
-require_once 'config/env.php';
+require_once 'bootstrap.php';
 
 //start application
 $app = new Application();

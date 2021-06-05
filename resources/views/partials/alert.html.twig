@@ -1,0 +1,13 @@
+{% if alert.display == 'toast' %}
+    <alert-toast type="{{ alert.type }}" message="{{ alert.message }}"></alert-toast>
+{% else %}
+    <div class="alert alert-{{ alert.type }} alert-dismissible show" role="alert">
+        {{ alert.message|raw }}
+
+        {% if alert.dismiss %}
+        <button class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {% endif %}
+    </div>
+{% endif %}

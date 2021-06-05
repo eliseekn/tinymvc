@@ -2,8 +2,8 @@
 
 namespace App\Mails;
 
-use Framework\Routing\View;
-use Framework\Support\Email;
+use Core\Routing\View;
+use Core\System\Mailer;
 
 class WelcomeMail
 {
@@ -16,9 +16,9 @@ class WelcomeMail
      */
     public static function send(string $email, string $username): bool
     {
-        return Email::to($email)
-            ->from(config('mailer.from'), config('mailer.name'))
-            ->reply(config('mailer.from'), config('mailer.name'))
+        return Mailer::to($email)
+            ->from(config('mailer.sender_email'), config('mailer.sender_name'))
+            ->reply(config('mailer.sender_email'), config('mailer.sender_name'))
 			->subject('Welcome')
             ->html(View::getContent('emails.welcome', compact('username')))
 			->send();

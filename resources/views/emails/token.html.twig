@@ -1,0 +1,7 @@
+{% extends "layouts/email.html.twig" %}
+
+{% block body %}
+    <p>You are seeing this email because we received a password reset request for your account. Click the link below to reset your password:</p>
+    <p><a href="{{ url('password/reset?email=' ~ email ~ '&token=' ~ token) }}">{{ url('password/reset?email=' ~ email ~ '&token=' ~ token) }}</a></p>
+    <p>If you did not requested a password reset, no further action is required.</p>
+{% endblock %}

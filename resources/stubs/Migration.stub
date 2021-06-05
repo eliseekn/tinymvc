@@ -2,7 +2,7 @@
 
 namespace App\Database\Migrations;
 
-use Framework\Database\Schema;
+use Core\Database\Migration;
 
 class CLASSNAME
 {         
@@ -11,18 +11,18 @@ class CLASSNAME
      *
      * @var string
      */
-    public static $table = 'TABLENAME';
+    protected $table = 'TABLENAME';
 
     /**
      * create table
      *
      * @return void
      */
-    public static function migrate(): void
+    public function create(): void
     {
-        Schema::createTable(self::$table)
-            ->addBigInt('id')->primaryKey()
-            ->create();
+        Migration::table($this->table)
+            ->addPrimaryKey('id')
+            ->migrate();
     }
     
     /**
@@ -30,19 +30,8 @@ class CLASSNAME
      *
      * @return void
      */
-    public static function delete(): void
+    public function drop(): void
     {
-        Schema::dropTable(self::$table);
-    }
-    
-    /**
-     * reset table
-     *
-     * @return void
-     */
-    public static function reset(): void
-    {
-        self::delete();
-        self::migrate();
+        Migration::dropTable($this->table);
     }
 }

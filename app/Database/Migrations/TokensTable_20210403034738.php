@@ -2,7 +2,7 @@
 
 namespace App\Database\Migrations;
 
-use Framework\Database\Schema;
+use Core\Database\Migration;
 
 class TokensTable_20210403034738
 {         
@@ -11,21 +11,22 @@ class TokensTable_20210403034738
      *
      * @var string
      */
-    public static $table = 'tokens';
+    protected $table = 'tokens';
 
     /**
      * create table
      *
      * @return void
      */
-    public static function migrate(): void
+    public function create(): void
     {
-        Schema::createTable(self::$table)
-            ->addBigInt('id')->primaryKey()
-            ->addString('email')->unique()
+        Migration::table($this->table)
+            ->addPrimaryKey('id')
+            ->addString('email')
             ->addString('token')->unique()
-            ->addTimestamp('expires')->null()
-            ->create();
+            ->addTimestamp('expire')->nullable()
+            ->addBoolean('api')->default(0)
+            ->migrate();
     }
     
     /**
@@ -33,19 +34,8 @@ class TokensTable_20210403034738
      *
      * @return void
      */
-    public static function delete(): void
+    public function drop(): void
     {
-        Schema::dropTable(self::$table);
-    }
-    
-    /**
-     * reset table
-     *
-     * @return void
-     */
-    public static function reset(): void
-    {
-        self::delete();
-        self::migrate();
+        Migration::dropTable($this->table);
     }
 }

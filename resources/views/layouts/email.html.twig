@@ -1,0 +1,55 @@
+{% apply spaceless %}
+<!DOCTYPE html>
+<html lang="{{ config('app.lang') }}">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<style>
+			.card {
+                padding: 1em;
+                border: 0px solid gray;
+                border-radius: .5em;
+                box-shadow: 0 0 5px gray;
+            }
+
+            .footer {
+                font-size: 1em;
+            }
+		</style>
+	</head>
+
+	<body>
+		<table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+			<tr>
+				<td align="center">
+					<table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+						{% block header %}
+                        <h1>TinyMVC</h1>
+                        {% endblock %}
+
+						<tr>
+							<td class="body" width="100%" cellpadding="0" cellspacing="0">
+								<table align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
+									<tr>
+										<td class="card">{% block body %}{% endblock %}</td>
+									</tr>
+
+								</table>
+							</td>
+						</tr>
+
+						<tr>
+                            <td align="center" class="footer">
+                                {% block footer %}
+                                <p>© {{ date('Y') }} {{ config('app.name') }}. {{ __('all_rights_reserved') }}</p>
+                                {% endblock %}
+                            </td>
+                        </tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>
+{% endapply %}

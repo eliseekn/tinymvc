@@ -1,16 +1,13 @@
 {
 	"private": true,
 	"scripts": {
-		"parcel-watch": "parcel watch resources/scripts/index.js resources/scripts/theme.js --dist-dir public/js",
+		"parcel-watch": "parcel watch resources/scripts/index.js --dist-dir public/js",
 		"sass-watch": "sass --watch resources/styles:public/css --style=compressed",
-		"parcel-build": "parcel build resources/scripts/index.js resources/scripts/theme.js --dist-dir public/js",
+		"parcel-build": "parcel build resources/scripts/index.js --dist-dir public/js",
+		"sass-build": "sass resources/styles:public/css --style=compressed",
 		"dev": "concurrently \"yarn parcel-watch\" \"yarn sass-watch\"",
-		"build": "yarn parcel-build"
+		"build": "concurrently \"yarn parcel-build\" \"yarn sass-build\""
 	},
-    "dependencies": {
-        "react": "^17.0.1",
-        "react-dom": "^17.0.1"
-    },
 	"devDependencies": {
 		"concurrently": "^5.3.0",
 		"parcel": "next"

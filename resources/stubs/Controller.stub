@@ -2,125 +2,22 @@
 
 namespace NAMESPACE;
 
-use Exception;
-use App\Helpers\ReportHelper;
-use Framework\Routing\Controller;
+use Core\Database\Repository;
 
-class CLASSNAME extends Controller
+class CLASSNAME
 {
     /**
-     * index
+     * @var \Core\Database\Repository
+     */
+    private $repository;
+
+    /**
+     * __construct
      *
      * @return void
      */
-    public function index()
-	{
-		$this->render('admin.RESOURCENAME.index', [
-            'RESOURCENAME' => $this->model('RESOURCENAME')->select()->oldest()->paginate(20)
-        ]);
-	}
-
-    /**
-	 * new
-	 * 
-	 * @return void
-	 */
-    public function new()
-	{
-		$this->render('admin.RESOURCENAME.new');
-	}
-	
-	/**
-	 * edit
-	 * 
-	 * @param  int $id
-	 * @return void
-	 */
-    public function edit(int $id)
-	{
-        try {
-            $RESOURCENAME = $this->model('RESOURCENAME')->findOrFail('id', $id);
-            $this->render('admin.RESOURCENAME.edit', compact('RESOURCENAME'));
-        } catch (Exception $e) {
-            $this->redirect('admin/resources/RESOURCENAME')->only();
-        }
-	}
-	
-	/**
-	 * read
-	 * 
-	 * @param  int $id
-	 * @return void
-	 */
-	public function read(int $id)
-	{
-        try {
-            $RESOURCENAME = $this->model('RESOURCENAME')->findOrFail('id', $id);
-            $this->render('admin.RESOURCENAME.read', compact('RESOURCENAME'));
-        } catch (Exception $e) {
-            $this->redirect('admin/resources/RESOURCENAME')->only();
-        }
-	}
-
-	/**
-	 * create
-	 *
-	 * @return void
-	 */
-    public function create()
-	{
-        $id = $this->model('RESOURCENAME')->insert($this->request()->inputs());
-		$this->redirect('admin/resources/RESOURCENAME/read', $id)->only();
-	}
-    
-	/**
-	 * update
-	 *
-     * @param  int $id
-	 * @return void
-	 */
-	public function update(int $id)
-	{
-        $this->model('RESOURCENAME')->updateIfExists($id, $this->request()->inputs());
-		$this->redirect('admin/resources/RESOURCENAME/read', $id)->only();
-	}
-
-	/**
-	 * delete
-	 *
-     * @param  int|null $id
-	 * @return void
-	 */
-	public function delete(?int $id = null)
-	{
-        if (!is_null($id)) {
-            if (!$this->model('RESOURCENAME')->deleteIfExists($id)) {
-                $this->back()->only();
-			}
-
-            $this->redirect('admin/resources/RESOURCENAME')->only();
-		} else {
-            $this->model('RESOURCENAME')->deleteBy('id', 'in', explode(',', $this->request('items')));
-            $this->response(['redirect' => absolute_url('admin/resources/RESOURCENAME')], true);
-		}
-	}
-
-	/**
-	 * export
-	 *
-	 * @return void
-	 */
-    public function export()
-	{
-        $RESOURCENAME = $this->model('RESOURCENAME')
-            ->between($this->request('date_start'), $this->request('date_end'))
-            ->oldest()
-            ->all();
-        
-        $filename = 'RESOURCENAME_' . date('Y_m_d_His') . '.' . $this->request('file_type');
-
-		ReportHelper::export($filename, $RESOURCENAME, [
-			//
-		]);
-	}
+    public function __construct()
+    {
+        $this->repository = new Repository('RESOURCENAME');
+    }
 }
