@@ -168,7 +168,7 @@ class RequestTest extends TestCase
 
     public function testHttpAuthHeader()
     {
-        $header = $this->request->http_auth();
+        $header = $this->request->getHttpAuth;
 
         $this->assertEquals('Bearer', $header[0]);
         $this->assertEquals('abcde1234', $header[1]);

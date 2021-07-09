@@ -6,26 +6,15 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Core\System;
+namespace Core\Support;
 
 /**
  * String encryption/decryption cipher
  */
 class Encryption
 {    
-    /**
-     * cipher method
-     *
-     * @var string
-     */
     public static $cipher_method = 'aes-128-ctr';
     
-    /**
-     * encrypt
-     *
-     * @param  string $str
-     * @return false|string
-     */
     public static function encrypt(string $str)
     {
         $enc_key = openssl_digest(config('security.encryption.key'), 'SHA256', TRUE);
@@ -33,12 +22,6 @@ class Encryption
         return openssl_encrypt($str, self::$cipher_method, $enc_key, 0, $enc_iv) . '::' . bin2hex($enc_iv);
     }
     
-    /**
-     * decrypt
-     *
-     * @param  string $enc_str
-     * @return false|string
-     */
     public static function decrypt(string $enc_str)
     {
         list($str, $enc_iv) = explode('::', $enc_str);
@@ -46,25 +29,15 @@ class Encryption
         return openssl_decrypt($str, self::$cipher_method, $enc_key, 0, hex2bin($enc_iv));
     }
     
-    /**
-     * hash string
-     *
-     * @param  string $str
-     * @return string
-     */
-    public static function hash(string $str): string
+    public static function hash(string $str)
     {
         return password_hash($str, PASSWORD_DEFAULT);
     }
 
     /**
-     * compare hashed string
-     *
-     * @param  string $str
-     * @param  string $hash
-     * @return bool
+     * Compare hashed string
      */
-    public static function check(string $str, string $hash): bool
+    public static function check(string $str, string $hash)
     {
         return password_verify($str, $hash);
     }

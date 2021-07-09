@@ -30,7 +30,7 @@ class Query extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $stmt = Database::connection()->query($input->getArgument('query'));
+        $stmt = Database::connection()->executeQuery($input->getArgument('query'));
         $output->writeln('<info>Query executed</info>');
         $output->writeln('');
 

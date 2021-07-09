@@ -6,19 +6,9 @@ use Core\Database\QueryBuilder;
 
 class CLASSNAME
 {     
-    /**
-     * name of table
-     *
-     * @var string
-     */
     public static $table = 'TABLENAME';
 
-    /**
-     * insert row
-     *
-     * @return void
-     */
-    public static function insert(): void
+    public static function insert()
     {
         QueryBuilder::table(self::$table)->insert([
             //

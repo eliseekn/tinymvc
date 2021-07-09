@@ -13,8 +13,10 @@
 return [
     'default' => 'smtp',
 
-    'sender_name' => config('app.name'),
-    'sender_email' => 'tiny@mvc.framework',
+    'sender' => [
+        'name' => config('app.name'),
+        'email' => 'tiny@mvc.framework',
+    ],
 
     'smtp' => [
         'host' => 'localhost',

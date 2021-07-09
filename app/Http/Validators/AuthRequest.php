@@ -7,9 +7,7 @@ use Core\Http\Validator;
 class AuthRequest extends Validator
 {
     /**
-     * rules
-     * 
-     * @var array
+     * Validation rules
      */
     protected static $rules = [
         'email' => 'required|max_len,255',
@@ -17,9 +15,7 @@ class AuthRequest extends Validator
     ];
 
     /**
-     * custom errors messages
-     * 
-     * @var array
+     * Custom errors messages
      */
     protected static $messages = [
         //

@@ -10,10 +10,10 @@ namespace Core\Routing;
 
 use Exception;
 use Twig\Environment;
-use Core\System\Session;
-use Core\System\Storage;
+use Core\Support\Session;
+use Core\Support\Storage;
 use Twig\Loader\FilesystemLoader;
-use Core\System\TwigExtensions;
+use Core\Support\TwigExtensions;
 use Twig\Extension\DebugExtension;
 
 /**
@@ -22,15 +22,11 @@ use Twig\Extension\DebugExtension;
 class View
 {
     /**
-     * get view content
-     *
-     * @param  string $view
-     * @param  array $data
-     * @return string
+     * Retrieves view template content
      * 
      * @throws Exception
      */
-    public static function getContent(string $view, array $data = []): string
+    public static function getContent(string $view, array $data = [])
     {
         $path = Storage::path(config('storage.views'));
         $view = real_path($view) . '.html.twig';
@@ -39,7 +35,7 @@ class View
             throw new Exception('File "' . $path->file($view) . ' not found.');
         }
 
-        $loader = new FilesystemLoader($path->get());
+        $loader = new FilesystemLoader($path->getPath());
 
         $twig = new Environment($loader, [
             'cache' => config('twig.disable_cache') ? false : config('storage.cache'),
@@ -60,13 +56,9 @@ class View
     }
 
     /**
-     * display view
-     *
-     * @param  string $view
-     * @param  array $data
-     * @return void
+     * Render view template
      */
-    public static function render(string $view, array $data = [], int $code = 200): void
+    public static function render(string $view, array $data = [], int $code = 200)
     {
         response()->send(self::getContent($view, $data), [], $code);
     }

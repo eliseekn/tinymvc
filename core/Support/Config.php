@@ -6,7 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Core\System;
+namespace Core\Support;
 
 use Dflydev\DotAccessData\Data;
 
@@ -15,13 +15,7 @@ use Dflydev\DotAccessData\Data;
  */
 class Config
 {
-    /**
-     * save environnement variables to file
-     *
-     * @param  array $config
-     * @return void
-     */
-    public static function saveEnv(array $config): void
+    public static function saveEnv(array $config)
     {
         if (empty($config)) {
             return;
@@ -37,12 +31,7 @@ class Config
         Storage::path()->writeFile('.env', $data);
     }
 
-    /**
-     * load environnement variables
-     *
-     * @return void
-     */
-    public static function loadEnv(): void
+    public static function loadEnv()
     {
         if (!Storage::path()->isFile('.env')) {
             return;
@@ -60,27 +49,12 @@ class Config
         }
     }
 
-    /**
-     * read environnement variable
-     *
-     * @param  string $key
-     * @param  mixed $default
-     * @return mixed
-     */
     public static function readEnv(string $key, $default = null)
     {
         $data = getenv($key, true);
         return $data === false || empty($data) ? $default : $data;
     }
     
-    /**
-     * read configuration from file
-     *
-     * @param  string $config
-     * @param  string $path
-     * @param  mixed $default
-     * @return mixed
-     */
     public static function readFile(string $config, string $path, $default = null)
     {
         $config = require $config;
@@ -89,13 +63,6 @@ class Config
         return $data->get($path, $default);
     }
 
-    /**
-     * return translated word or expression
-     *
-     * @param  string $expr
-     * @param  array $data
-     * @return string
-     */
     public static function readTranslations(string $expr, array $data = []): string
     {
         $translations = require absolute_path('resources.lang') . config('app.lang') . '.php';

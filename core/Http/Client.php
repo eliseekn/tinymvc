@@ -15,20 +15,11 @@ use Exception;
  */
 class Client
 {
-    /**
-     * @var array
-     */
     protected static $response = [];
 
     /**
-     * send asynchronous HTTP request using curl
+     * Send asynchronous HTTP requests using curl
      *
-     * @param  string $method
-     * @param  mixed $urls
-     * @param  array $headers
-     * @param  array|null $data
-     * @param  bool $json
-     * @return \Core\Http\Client|void
      * @link   https://niraeth.com/php-quick-function-for-asynchronous-multi-curl/
      *         https://stackoverflow.com/questions/9183178/can-php-curl-retrieve-response-headers-and-body-in-a-single-request
      *         https://www.codexworld.com/post-receive-json-data-using-php-curl/
@@ -36,7 +27,7 @@ class Client
      * 
      * @throws Exception
      */
-    public static function send(string $method, $urls, array $headers = [], ?array $data = null, bool $json = false) 
+    public static function send(string $method, $urls, array $headers = [], ?array $data = null, bool $json = false)
     {
         $response_headers = [];
         $response = [];
@@ -120,108 +111,47 @@ class Client
         return new self();
     }
 
-    /**
-     * send GET request
-     *
-     * @param  mixed $urls
-     * @param  array $headers
-     * @return \Core\Http\Client
-     */
-    public static function get($urls, array $headers = []): self {
+    public static function get($urls, array $headers = []): self 
+    {
         return self::send('GET', $urls, $headers);
     }
     
-    /**
-     * send POST request
-     *
-     * @param  mixed $urls
-     * @param  array $headers
-     * @param  array|null $data
-     * @param  bool $json
-     * @return \Core\Http\Client
-     */
-    public static function post($urls, array $headers = [], ?array $data = null, bool $json = false): self {
+    public static function post($urls, array $headers = [], ?array $data = null, bool $json = false): self 
+    {
         return self::send('POST', $urls, $headers, $data, $json);
     }
 
-    /**
-     * send PUT request
-     *
-     * @param  mixed $urls
-     * @param  array $headers
-     * @param  array|null $data
-     * @param  bool $json
-     * @return \Core\Http\Client
-     */
-    public static function put($urls, array $headers = [], ?array $data = null, bool $json = false): self {
+    public static function put($urls, array $headers = [], ?array $data = null, bool $json = false): self 
+    {
         return self::send('PUT', $urls, $headers, $data, $json);
     }
 
-    /**
-     * send DELETE request
-     *
-     * @param  mixed $urls
-     * @param  array $headers
-     * @param  array|null $data
-     * @param  bool $json send data in json
-     * @return \Core\Http\Client
-     */
-    public static function delete($urls, array $headers = [], ?array $data = null, bool $json = false): self {
+    public static function delete($urls, array $headers = [], ?array $data = null, bool $json = false): self 
+    {
         return self::send('DELETE', $urls, $headers, $data, $json);
     }
 
-    /**
-     * send OPTIONS request
-     *
-     * @param  mixed $urls
-     * @param  array $headers
-     * @param  array|null $data
-     * @param  bool $json
-     * @return \Core\Http\Client
-     */
-    public static function options($urls, array $headers = [], ?array $data = null, bool $json = false): self {
+    public static function options($urls, array $headers = [], ?array $data = null, bool $json = false): self 
+    {
         return self::send('OPTIONS', $urls, $headers, $data, $json);
     }
 
-    /**
-     * send PATCH request
-     *
-     * @param  mixed $urls
-     * @param  array $headers
-     * @param  array|null $data
-     * @param  bool $json
-     * @return \Core\Http\Client
-     */
-    public static function patch($urls, array $headers = [], ?array $data = null, bool $json = false): self {
+    public static function patch($urls, array $headers = [], ?array $data = null, bool $json = false): self 
+    {
         return self::send('PATCH', $urls, $headers, $data, $json);
     }
 
-    /**
-     * retrieves response headers
-     *
-     * @return array
-     */
-    public function getHeaders(): array
+    public function getHeaders()
     {
         return self::$response['headers'];
     }
 
-    /**
-     * retrieves response body
-     *
-     * @return array
-     */
-    public function getBody(): array
+    public function getBody()
     {
         return self::$response['body'];
     }
 
-    /**
-     * retrieves status code
-     *
-     * @return array
-     */
-    public function getStatusCode(): array
+    public function getStatusCode()
     {
         return self::$response['status_code'];
     }

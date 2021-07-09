@@ -2,22 +2,10 @@
 
 namespace NAMESPACE;
 
-use Core\Database\Repository;
-
 class CLASSNAME
 {
-    /**
-     * @var \Core\Database\Repository
-     */
-    private $repository;
-
-    /**
-     * __construct
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->repository = new Repository('RESOURCENAME');
-    }
+    public function index()
+	{
+        //
+	}
 }

@@ -6,31 +6,16 @@ use Core\Database\Migration;
 
 class CLASSNAME
 {         
-    /**
-     * name of table
-     *
-     * @var string
-     */
     protected $table = 'TABLENAME';
 
-    /**
-     * create table
-     *
-     * @return void
-     */
-    public function create(): void
+    public function create()
     {
-        Migration::table($this->table)
+        Migration::createTable($this->table)
             ->addPrimaryKey('id')
             ->migrate();
     }
     
-    /**
-     * drop table
-     *
-     * @return void
-     */
-    public function drop(): void
+    public function drop()
     {
         Migration::dropTable($this->table);
     }

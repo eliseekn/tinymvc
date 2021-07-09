@@ -17,9 +17,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Display list of databases
  */
-class Status extends Command
+class Show extends Command
 {
-    protected static $defaultName = 'db:status';
+    protected static $defaultName = 'db:show';
 
     protected function configure()
     {
@@ -29,7 +29,7 @@ class Status extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $rows = [];
-        $databases = Database::connection()->query("SHOW DATABASES")->fetchAll();
+        $databases = Database::connection()->executeQuery("SHOW DATABASES")->fetchAll();
 
         foreach ($databases as $db) {
             $rows[] = [$db->Database];

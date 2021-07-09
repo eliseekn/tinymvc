@@ -15,40 +15,11 @@ use GUMP;
  */
 class Validator
 {
-    /**
-     * rules
-     * 
-     * @var array
-     */
     protected static $rules = [];
-
-    /**
-     * custom errors messages
-     * 
-     * @var array
-     */
     protected static $messages = [];
-
-    /**
-     * validation errors messages
-     * 
-     * @var bool|array
-     */
     protected static $errors;
-
-    /**
-     * request inputs
-     * 
-     * @var array
-     */
     protected static $inputs = [];
 
-    /**
-     * validate inputs 
-     *
-     * @param  array $inputs
-     * @return \Core\Support\Validator
-     */
     public static function validate(array $inputs, array $rules = [], array $messages = []): self
     {
         $validators = empty($rules) ? static::$rules : $rules;
@@ -59,22 +30,12 @@ class Validator
         return new self();
     }
     
-    /**
-     * check if validation fails
-     *
-     * @return bool
-     */
-    public function fails(): bool
+    public function fails()
     {
         return is_array(static::$errors);
     }
     
-    /**
-     * get validation errors
-     *
-     * @return array
-     */
-    public function errors(): array
+    public function errors()
     {
         $errors = [];
 
@@ -89,21 +50,11 @@ class Validator
         return $errors;
     }
     
-    /**
-     * get request inputs
-     *
-     * @return array
-     */
-    public function inputs(): array
+    public function inputs()
     {
         return static::$inputs;
     }
     
-    /**
-     * redirect on fail or return validator instance
-     *
-     * @return self|void
-     */
     public function redirectOnFail()
     {
         return !$this->fails() ? $this 

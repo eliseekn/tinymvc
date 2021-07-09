@@ -4,27 +4,17 @@ namespace App\Database\Seeds;
 
 use Core\Database\QueryBuilder;
 
-class UsersSeed
+class UserSeed
 {     
-    /**
-     * name of table
-     *
-     * @var string
-     */
     public static $table = 'users';
 
-    /**
-     * insert row
-     *
-     * @return void
-     */
-    public static function insert(): void
+    public static function insert()
     {
         QueryBuilder::table(self::$table)->insert([
             'name' => 'admin',
-            'email' => 'admin@tinymvc.com',
+            'email' => 'admin@tinymvc.dev',
             'password' => hash_pwd('admin'),
-            'email_verified' => 1
+            'verified' => 1
         ])->execute();
     }
 }

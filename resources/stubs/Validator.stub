@@ -8,31 +8,25 @@ use Core\Http\Validator;
 class CLASSNAME extends Validator
 {
     /**
-     * rules
-     * 
-     * @var array
+     * Validation rules
      */
     protected static $rules = [
         //
     ];
 
     /**
-     * custom errors messages
-     * 
-     * @var array
+     * Custom errors messages
      */
     protected static $messages = [
         //
     ];
 
     /**
-     * register customs validators
-     *
-     * @return mixed
+     * Register customs validators
      */
     public static function register(): self
     {
-        GUMP::add_validator('name_of_rule', function($field, array $input, array $params, $value) {
+        GUMP::add_validator('name', function($field, array $input, array $params, $value) {
             return true;
         }, '');
 

@@ -7,9 +7,9 @@
  */
 
 use Core\Http\Request;
-use Core\System\Whoops;
-use Core\System\Config;
-use Core\System\Storage;
+use Core\Support\Whoops;
+use Core\Support\Config;
+use Core\Support\Storage;
 
 /**
  * Define application environnement

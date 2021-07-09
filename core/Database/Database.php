@@ -12,29 +12,21 @@ use PDO;
 use PDOException;
 
 /**
- * Connection to database
+ * Manage database connection
  */
 class Database
 {
 	/**
-	 * database class instance
-	 * 
 	 * @var \Core\Database\Database
 	 */
 	protected static $instance = null;
 
 	/**
-	 * database connection instance
-	 *
 	 * @var PDO
 	 */
 	protected $pdo;
 
 	/**
-	 * create instance of database connection
-	 *
-	 * @return void
-     * 
      * @throws PDOException
 	 */
 	private function __construct()
@@ -46,16 +38,12 @@ class Database
 			$this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 			$this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
 			$this->pdo->setAttribute(PDO::ATTR_ORACLE_NULLS, PDO::NULL_EMPTY_STRING);
+            $this->pdo->setAttribute(PDO::MYSQL_ATTR_FOUND_ROWS, true);
 		} catch (PDOException $e) {
             throw new PDOException($e->getMessage());
 		}
     }
 
-	/**
-	 * get database connection instance
-	 *
-	 * @return \Core\Database\Database
-	 */
 	public static function connection(): self
 	{
 		if (is_null(self::$instance)) {
@@ -66,33 +54,21 @@ class Database
     }
 
 	/**
-	 * execute sql query
-	 *
-	 * @return \PDOStatement
-     * 
      * @throws PDOException
 	 */
-    public function query(string $query): \PDOStatement
+    public function executeStatement(string $query)
     {
-        $stmt = null;
-
         try {
-            $stmt = $this->pdo->query($query);
+            return $this->pdo->exec($query);
 		} catch (PDOException $e) {
 			throw new PDOException($e->getMessage(), $e->getCode(), $e->getPrevious());
         }
-        
-        return $stmt;
     }
 
 	/**
-	 * execute safe sql query
-	 *
-	 * @return \PDOStatement
-     * 
      * @throws PDOException
 	 */
-	public function statement(string $query, array $args): \PDOStatement
+	public function executeQuery(string $query, ?array $args = null)
 	{
 		$stmt = null;
 

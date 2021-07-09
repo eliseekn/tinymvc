@@ -6,7 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Core\System;
+namespace Core\Support;
 
 use Whoops\Run;
 use Exception as BaseException;
@@ -20,11 +20,9 @@ class Exception extends BaseException {}
 class Whoops 
 {    
     /**
-     * register whoops instance
-     *
-     * @return void
+     * Register whoops instance
      */
-    public static function register(): void
+    public static function register()
     {
         $run = new Run();
         $handler = new PrettyPageHandler();

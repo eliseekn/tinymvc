@@ -9,34 +9,28 @@ use Core\Database\Repository;
 class RegisterUser extends Validator
 {
     /**
-     * rules
-     * 
-     * @var array
+     * Validation rules
      */
     protected static $rules = [
-        'name' => 'required|max_len,255',
-        'email' => 'required|valid_email|max_len,255|unique,users',
-        'password' => 'required|max_len,255'
+        'name' => 'required|between_len,10;30',
+        'email' => 'required|valid_email|max_len,30|unique,users',
+        'password' => 'required|between_len,8;10'
     ];
 
     /**
-     * custom errors messages
-     * 
-     * @var array
+     * Custom errors messages
      */
     protected static $messages = [
         //
     ];
     
     /**
-     * register customs validators
-     *
-     * @return mixed
+     * Register custom validators
      */
     public static function register(): self
     {
         GUMP::add_validator('unique', function($field, array $input, array $params, $value) {
-            $data = (new Repository($params[0]))->findWhere($field, $value);
+            $data = (new Repository($params[0]))->where($field, $value);
             return !$data->exists();
         }, "Record of {field} field already exists");
 

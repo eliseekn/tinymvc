@@ -3,22 +3,18 @@
 namespace App\Mails;
 
 use Core\Routing\View;
-use Core\System\Mailer;
+use Core\Support\Mailer;
 
 class TokenMail
 {
     /**
-     * send password reset token link notification
-     *
-     * @param  string $email
-     * @param  string $token
-     * @return bool
+     * Send password reset token link notification
      */
-    public static function send(string $email, string $token): bool
+    public static function send(string $email, string $token)
     {
         return Mailer::to($email)
-            ->from(config('mailer.sender_email'), config('mailer.sender_name'))
-            ->reply(config('mailer.sender_email'), config('mailer.sender_name'))
+            ->from(config('mailer.sender.email'), config('mailer.sender.name'))
+            ->reply(config('mailer.sender.email'), config('mailer.sender.name'))
 			->subject('Password reset')
             ->html(View::getContent('emails.token', compact('email', 'token')))
 			->send();

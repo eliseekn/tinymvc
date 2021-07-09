@@ -2,7 +2,7 @@
 
 namespace App\Http\Middlewares;
 
-use Core\System\Auth;
+use Core\Support\Auth;
 use Core\Http\Request;
 
 /**
@@ -10,16 +10,10 @@ use Core\Http\Request;
  */
 class AccountPolicy
 {    
-    /**
-     * handle function
-     *
-     * @param  \Core\Http\Request $request
-     * @return void
-     */
-    public function handle(Request $request): void
+    public function handle(Request $request)
     {
         if (config('security.auth.email_verification') === true) {
-            if (!Auth::get('email_verified')) {
+            if (!Auth::get('verified')) {
                 redirect()->url('login')->intended($request->fullUri())
                     ->withAlert('error', __('email_not_verifed'))->go();
             }

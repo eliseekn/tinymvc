@@ -9,13 +9,7 @@ use Core\Http\Request;
  */
 class SanitizeInputs
 {
-    /**
-     * handle function
-     * 
-     * @param  \Core\Http\Request $request
-     * @return void
-     */
-    public function handle(Request $request): void
+    public function handle(Request $request)
     {
         foreach ($request->except('csrf_token') as $field => $value) {
             $request->set($field, sanitize($value));

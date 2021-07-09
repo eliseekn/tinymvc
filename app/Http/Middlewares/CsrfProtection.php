@@ -11,17 +11,12 @@ use Core\Http\Request;
 class CsrfProtection
 {    
     /**
-     * handle function
-     *
-     * @param  \Core\Http\Request $request
-     * @return void
-     * 
      * @throws Exception
      */
-    public function handle(Request $request): void
+    public function handle(Request $request)
     {
         if (!$request->filled('csrf_token')) {
-            throw new Exception('Missing csrf token input');
+            throw new Exception('Missing csrf token');
         }
 
         if (!valid_csrf_token($request->csrf_token)) {

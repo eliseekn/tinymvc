@@ -13,15 +13,7 @@ namespace Core\Http;
  */
 class Response
 {
-    /**
-     * send HTTP headers only
-     *
-     * @param  string|array $name
-     * @param  mixed $value
-     * @param  int $code
-     * @return void
-     */
-    public function headers($name, $value = null, int $code = 200): void
+    public function headers($name, $value = null, int $code = 200)
     {
         http_response_code($code);
 
@@ -36,15 +28,7 @@ class Response
         header($name . ': ' . $value);
     }
     
-    /**
-     * send HTTP response
-     *
-     * @param  mixed $body
-     * @param  array $headers
-     * @param  int $code
-     * @return void
-     */
-    public function send($body, array $headers = [], int $code = 200): void
+    public function send($body, array $headers = [], int $code = 200)
     {
         if (!isset($body) or empty($body)) {
             return;
@@ -59,15 +43,7 @@ class Response
         exit($body);
     }
     
-    /**
-     * send HTTP response with json body
-     *
-     * @param  mixed $body
-     * @param  array $headers
-     * @param  int $code
-     * @return void
-     */
-    public function json($body, array $headers = [], int $code = 200): void
+    public function json($body, array $headers = [], int $code = 200)
     {
         if (!isset($body) or empty($body)) {
             return;
@@ -87,14 +63,7 @@ class Response
         exit($body);
     }
     
-    /**
-     * send download file response
-     *
-     * @param  string $filename
-     * @param  string|null $base_name
-     * @return void
-     */
-    public function download(string $filename, ?string $base_name = null): void
+    public function download(string $filename, ?string $base_name = null)
     {
         if (!file_exists($filename)) {
             return;

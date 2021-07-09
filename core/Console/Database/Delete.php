@@ -36,7 +36,7 @@ class Delete extends Command
             if (!QueryBuilder::schemaExists($database)) {
                 $output->writeln('<fg=yellow>Database "' . $database . '" does not exists</>');
             } else {
-                Database::connection()->query("DROP DATABASE IF EXISTS $database");
+                Database::connection()->executeStatement("DROP DATABASE IF EXISTS $database");
                 $output->writeln('<info>Database "' . $database . '" has been deleted</info>');
             }
         }

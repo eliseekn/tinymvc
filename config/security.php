@@ -7,7 +7,7 @@
  */
 
 /**
- * Application configuration
+ * Security configuration
  */
 
 return [

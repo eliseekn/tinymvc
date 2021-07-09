@@ -8,7 +8,7 @@
 
 namespace Core\Console\App;
 
-use Core\System\Config;
+use Core\Support\Config;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -98,7 +98,7 @@ class Setup extends Command
             $finish_setup = true;
         }
 
-        $config['ENCRYPTION_KEY'] = base64_encode(random_string(30, true));
+        $config['ENCRYPTION_KEY'] = generate_token();
 
         Config::saveEnv($config);
 

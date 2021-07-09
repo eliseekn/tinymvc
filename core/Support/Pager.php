@@ -15,27 +15,9 @@ use Core\Http\Request;
  */
 class Pager
 {
-    /**
-     * generated pagination array
-     *
-     * @var array
-     */
     protected $pagination = [];
-
-    /**
-     * pages items
-     * 
-     * @var array
-     */
     protected $items = [];
 
-    /**
-     * instantiates class
-     *
-	 * @param  int $total_items
-	 * @param  int $items_per_page
-     * @return void
-     */
     public function __construct(int $total_items, int $items_per_page)
     {
         $page = (new Request())->queries('page', 1);
@@ -49,73 +31,38 @@ class Pager
         ];
     }
 
-    /**
-     * get items array
-     *
-     * @return array
-     */
     public function getItems(): array
     {
         return $this->items;
     }
     
-    /**
-     * set items array
-     *
-     * @return \Core\Support\Pager
-     */
     public function setItems(array $items): self
     {
         $this->items = $items;
         return $this;
     }
     
-    /**
-     * get page first item
-     *
-     * @return int
-     */
-    public function getFirstItem(): int
+    public function getFirstItem()
     {
         return $this->pagination['first_item'];
     }
     
-    /**
-     * get total items
-     *
-     * @return int
-     */
-    public function getTotalItems(): int
+    public function getTotalItems()
     {
         return $this->pagination['total_items'];
     }
     
-    /**
-     * get page total items
-     *
-     * @return int
-     */
-    public function getPageTotalItems(): int
+    public function getPageTotalItems()
     {
         return count($this->items);
     }
     
-    /**
-     * get items count per pages
-     *
-     * @return int
-     */
-    public function getItemsPerPage(): int
+    public function getItemsPerPage()
     {
         return $this->pagination['items_per_page'];
     }
     
-    /**
-     * get current page number
-     *
-     * @return int
-     */
-    public function currentPage(): int
+    public function currentPage()
     {
         if ($this->pagination['page'] < 1) {
             return 1;
@@ -128,114 +75,66 @@ class Pager
         return $this->pagination['page'];
     }
     
-    /**
-     * get previous page number
-     *
-     * @return int
-     */
-    public function previousPage(): int
+    public function previousPage()
     {
         return $this->currentPage() - 1;
     }
     
-    /**
-     * get next page number
-     *
-     * @return int
-     */
-    public function nextPage(): int
+    public function nextPage()
     {
         return $this->currentPage() + 1;
     }
     
     /**
-     * check if pagination has less pages
-     *
-     * @return bool
+     * Check if pagination has less pages
      */
-    public function hasLess(): bool
+    public function hasLess()
     {
         return $this->currentPage() > 1;
     }
     
     /**
-     * check if pagination has more pages
-     *
-     * @return bool
+     * Check if pagination has more pages
      */
-    public function hasMore(): bool
+    public function hasMore()
     {
         return $this->currentPage() < $this->totalPages();
     }
     
-    /**
-     * get total pages
-     *
-     * @return int
-     */
-    public function totalPages(): int
+    public function totalPages()
     {
         return $this->pagination['total_pages'];
     }
 
-    /**
-     * generate first page url
-     *
-     * @return string
-     */
-    public function firstPageUrl(): string
+    public function firstPageUrl()
     {
         return url($this->generateUri(1));
     }
 
-    /**
-     * generate previous page url
-     *
-     * @return string
-     */
-    public function previousPageUrl(): string
+    public function previousPageUrl()
     {
         return url($this->generateUri($this->previousPage()));
     }
     
-    /**
-     * generate next page url
-     *
-     * @return string
-     */
-    public function nextPageUrl(): string
+    public function nextPageUrl()
     {
         return url($this->generateUri($this->nextPage()));
     }
 
-    /**
-     * generate last page url
-     *
-     * @return string
-     */
-    public function lastPageUrl(): string
+    public function lastPageUrl()
     {
         return url($this->generateUri($this->totalPages()));
     }
     
-    /**
-     * generate page url
-     *
-     * @param  int $page
-     * @return string
-     */
-    public function pageUrl(int $page): string
+    public function pageUrl(int $page)
     {
         return url($this->generateUri($page));
     }
     
     /**
-     * generate uri with queries or not
-     *
-     * @param  mixed $page
-     * @return string
+     * Generate uri with queries or not
      */
-    private function generateUri(int $page): string
+    private function generateUri(int $page)
     {
         $request = new Request();
         $uri = $request->fullUri();
@@ -252,7 +151,7 @@ class Pager
             if (strpos($queries, '&page=')) {
                 $queries = substr($queries, strpos($queries, '?'), -1);
                 $uri = $request->uri() . $queries . $page;
-            } else if (strpos($queries, '?page=')) {
+            } elseif (strpos($queries, '?page=')) {
                 $queries = substr($queries, strpos($queries, '?'), -1);
                 $uri = $request->uri() . $queries . $page;
             } else  {

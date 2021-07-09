@@ -8,7 +8,7 @@
 
 namespace Core\Console;
 
-use Core\System\Storage;
+use Core\Support\Storage;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -18,7 +18,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Cache extends Command
 {
-    protected static $defaultName = 'cache:clear';
+    protected static $defaultName = 'twig:clear';
 
     protected function configure()
     {
@@ -28,7 +28,7 @@ class Cache extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         Storage::path(config('storage.cache'))->deleteDir();
-        $output->writeln('<info>Cache has been cleared</info>');
+        $output->writeln('<info>Twig templates cache has been cleared</info>');
 
         return Command::SUCCESS;
     }

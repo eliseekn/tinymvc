@@ -10,26 +10,17 @@ namespace Core\Routing;
 
 use Closure;
 use Exception;
-use Core\System\Auth;
+use Core\Support\Auth;
 use Core\Http\Request;
-use Core\System\Session;
-use Core\System\DependcyInjection;
+use Core\Support\Session;
+use Core\Support\DependencyInjection;
 
 /**
  * Routing system
  */
 class Router
 {
-    /**
-     * check if request uri match route
-     *
-     * @param  \Core\Http\Request $request
-     * @param  string $method
-     * @param  string $route
-     * @param  string[] &$params
-     * @return bool
-     */
-    private static function match(Request $request, string $method, string $route, &$params): bool
+    private static function match(Request $request, string $method, string $route, &$params)
     {
         if (preg_match('/' . strtoupper($method) . '/', strtoupper($request->method())) === false) {
             render(config('errors.views.405'), [], 405);
@@ -43,28 +34,14 @@ class Router
         return false;
     }
     
-    /**
-     * check if route is locked
-     *
-     * @param  array $roles
-     * @return void
-     */
-    private static function isLocked(array $roles): void
+    private static function isLocked(array $roles)
     {
         if (in_array(Auth::get('role'), $roles)) {
             render(config('errors.views.403'), [], 403);
         }
     }
     
-    /**
-     * execute route middlewares
-     *
-     * @param  array $middlewares
-     * @return void
-     * 
-     * @throws Exception
-     */
-    private static function executeMiddlewares(array $middlewares): void
+    private static function executeMiddlewares(array $middlewares)
     {
         foreach ($middlewares as $middleware) {
             $middleware = config('middlewares.' . $middleware);
@@ -73,37 +50,31 @@ class Router
                 throw new Exception('Middleware "' . $middleware . '" not found');
             }
 
-            (new DependcyInjection())->resolve($middleware, 'handle');
+            (new DependencyInjection())->resolve($middleware, 'handle');
         }
     }
     
     /**
-     * load route handler
-     *
-     * @param  mixed $handler
-     * @param  array $params
-     * @return void
-     * 
      * @throws Exception
      */
-    private static function loadHandler($handler, array $params): void
+    private static function executeHandler($handler, array $params)
     {
         //handler is closure
         if ($handler instanceof Closure) {
             call_user_func_array($handler, array_values($params));
         } 
         
-        //handler is view template
-        else if (is_string($handler)) {
+        //handler is string, means is view template
+        elseif (is_string($handler)) {
             render($handler);
         }
         
         //handler is controller and action
-        else if (is_array($handler)) {
+        elseif (is_array($handler)) {
             list($controller, $action) = $handler;
 
             if (class_exists($controller) && method_exists($controller, $action)) {
-                (new DependcyInjection())->resolve($controller, $action, $params);
+                (new DependencyInjection())->resolve($controller, $action, $params);
             }
                 
             throw new Exception('Controller "' . $controller . '/' . $action . '" not found.');
@@ -111,12 +82,9 @@ class Router
     }
     
     /**
-     * match routes and execute handlers
-     *
-     * @param  \Core\Http\Request $request
-     * @return void
+     * @throws Exception
      */
-    public static function dispatch(Request $request): void
+    public static function dispatch(Request $request)
     {   
         $routes = Route::$routes;
 
@@ -140,8 +108,8 @@ class Router
                     self::isLocked($options['locked']);
                 }
 
-                //add route to browsing history
-                if (!url_contains('api')) {
+                //add route to browsing history if api not in uri
+                if (!$request->uriContains('api')) {
                     Session::put('history', [$request->fullUri()]);
                 }
 
@@ -150,8 +118,8 @@ class Router
                     self::executeMiddlewares($options['middlewares']);
                 }
 
-                //load handler
-                self::loadHandler($options['handler'], $params);
+                //execute handler
+                self::executeHandler($options['handler'], $params);
             }
         }
 

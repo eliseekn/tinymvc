@@ -6,7 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Core\System;
+namespace Core\Support;
 
 use Exception;
 use PHPMailer\PHPMailer\SMTP;
@@ -17,17 +17,10 @@ use PHPMailer\PHPMailer\PHPMailer;
  */
 class Mailer
 {
-    /**
-     * @var PHPMailer\PHPMailer\PHPMailer
-     */
     protected static $mail;
 
     /**
      * setup PHPMailer and set address 
-     *
-     * @param  string $address
-     * @param  string $name
-     * @return \Core\System\Email
      */
     public static function to(string $address, string $name = ''): self
     {
@@ -59,98 +52,42 @@ class Mailer
         return new self();
     }
 
-    /**
-     * from
-     *
-     * @param  string $address
-     * @param  string $name
-     * @return \Core\System\Email
-     */
     public function from(string $address, string $name = ''): self
     {
         self::$mail->setFrom($address, $name);
         return $this;
     }
 
-    /**
-     * reply to
-     *
-     * @param  string $address
-     * @param  string $name
-     * @return \Core\System\Email
-     */
     public function reply(string $address, string $name = ''): self
     {
         self::$mail->addReplyTo($address, $name);
         return $this;
     }
     
-    /**
-     * cc
-     *
-     * @param  mixed $address
-     * @param  mixed $name
-     * @return \Core\System\Email
-     */
     public function cc(string $address, string $name = ''): self
     {
         self::$mail->addCC($address, $name);
         return $this;
     }
     
-    /**
-     * bcc
-     *
-     * @param  mixed $address
-     * @param  mixed $name
-     * @return \Core\System\Email
-     */
     public function bcc(string $address, string $name = ''): self
     {
         self::$mail->addBCC($address, $name);
         return $this;
     }
 
-    /**
-     * subject
-     *
-     * @param  string $subject
-     * @return \Core\System\Email
-     */
     public function subject(string $subject): self
     {
         self::$mail->Subject = $subject;
         return $this;
     }
 
-    /**
-     * message
-     *
-     * @param  string $message
-     * @return \Core\System\Email
-     */
     public function message(string $message): self
     {
         self::$mail->Body = $message;
         return $this;
     }
 
-    /**
-     * set message as html
-     *
-     * @param  string $message
-     * @return \Core\System\Email
-     */
-    public function html(string $message): self
-    {
-        return $this->message($message)->asHTML();
-    }
-
-    /**
-     * set email format to HTML
-     *
-     * @return \Core\System\Email
-     */
     public function asHTML(): self
     {
         self::$mail->IsHTML(true);
@@ -158,12 +95,13 @@ class Mailer
     }
 
     /**
-     * add attachment
-     *
-     * @param  string $attachment
-     * @param  string $filename
-     * @return \Core\System\Email
+     * Set message as html
      */
+    public function html(string $message): self
+    {
+        return $this->message($message)->asHTML();
+    }
+
     public function addAttachment(string $attachment, string $filename = ''): self
     {
         self::$mail->addAttachment($attachment, $filename);
@@ -171,10 +109,6 @@ class Mailer
     }
     
     /**
-     * send email
-     *
-     * @return bool
-     * 
      * @throws Exception
      */
     public function send(): bool

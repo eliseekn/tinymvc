@@ -36,7 +36,7 @@ class Create extends Command
             if (QueryBuilder::schemaExists($database)) {
                 $output->writeln('<fg=yellow>Database "' . $database . '" already exists</error>');
             } else {
-                Database::connection()->query("CREATE DATABASE $database CHARACTER SET " . config('database.charset') . " COLLATE " . config('database.collation'));
+                Database::connection()->executeStatement("CREATE DATABASE $database CHARACTER SET " . config('database.charset') . " COLLATE " . config('database.collation'));
                 $output->writeln('<info>Database "' . $database . '" has been created</info>');
             }
         }

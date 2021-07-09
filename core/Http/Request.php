@@ -15,11 +15,6 @@ use Core\Support\Uploader;
  */
 class Request
 {    
-    /**
-     * __construct
-     *
-     * @return void
-     */
     public function __construct()
     {
         foreach ($this->all() as $key => $value) {
@@ -27,84 +22,41 @@ class Request
         }
     }
 
-    /**
-     * retrieves headers
-     *
-     * @param  string|null $key
-     * @param  mixed $default
-     * @return mixed
-     */
     public function headers(?string $key = null, $default = null)
     {
         $header = is_null($key) ? $_SERVER : ($_SERVER[$key] ?? '');
         return empty($header) || is_null($header) ? $default : $header;
     }
     
-    /**
-     * retrieves http authentication credentials
-     *
-     * @return array
-     */
-    public function http_auth(): array
+    public function getHttpAuth()
     {
         $header = $this->headers('HTTP_AUTHORIZATION', '');
         return empty($header) ? [] : explode(' ', $header);
     }
     
-    /**
-     * retrieves request host
-     *
-     * @return string
-     */
-    public function host(): string
+    public function host()
     {
         return $this->headers('HTTP_HOST', '');
     }
     
-    /**
-     * retrieves queries
-     *
-     * @param  string|null $key
-     * @param  mixed $default
-     * @return mixed
-     */
     public function queries(?string $key = null, $default = null)
     {
         $query = is_null($key) ? $_GET : ($_GET[$key] ?? '');
         return empty($query) || is_null($query) ? $default : $query;
     }
 
-    /**
-     * retrieves inputs
-     *
-     * @param  string|null $key
-     * @param  mixed $default
-     * @return mixed
-     */
     public function inputs(?string $key = null, $default = null)
     {
         $input = is_null($key) ? $_POST : ($_POST[$key] ?? '');
         return empty($input) || is_null($input) ? $default : $input;
     }
 
-    /**
-     * retrieves raw data
-     *
-     * @return mixed
-     */
     public function rawData()
     {
         return file_get_contents('php://input');
     }
 
-    /**
-     * retrieves single file
-     *
-     * @param  string $input
-     * @param  array $allowed_extensions
-     * @return \Core\Support\Uploader
-     */
-    private function getSingleFile(string $input, array $allowed_extensions = []): \Core\Support\Uploader
+    private function getSingleFile(string $input, array $allowed_extensions = [])
     {
         return new Uploader([
             'name' => $_FILES[$input]['name'],
@@ -115,14 +67,7 @@ class Request
         ], $allowed_extensions);
     }
 
-    /**
-     * retrieves multiple files
-     *
-     * @param  string $input
-     * @param  array $allowed_extensions
-     * @return array
-     */
-    private function getMultipleFiles(string $input, array $allowed_extensions = []): array
+    private function getMultipleFiles(string $input, array $allowed_extensions = [])
     {
         $files = [];
 
@@ -145,14 +90,6 @@ class Request
         return $files;
     }
     
-    /**
-     * retrieves files
-     *
-     * @param  string $input
-     * @param  bool $multiple
-     * @param  array $allowed_extensions
-     * @return \Core\Support\Uploader|array
-     */
     public function files(string $input, bool $multiple = false, array $allowed_extensions = [])
     {
         return $multiple 
@@ -160,34 +97,17 @@ class Request
             : $this->getSingleFile($input, $allowed_extensions);
     }
 
-    /**
-     * retrieves request method
-     *
-     * @param  string|null $value
-     * @return string|void
-     */
     public function method(?string $value = null)
     {
         return is_null($value) ? $this->headers('REQUEST_METHOD', '') : $_SERVER['REQUEST_METHOD'] = $value;
     }
     
-    /**
-     * check request method
-     *
-     * @param  string $method
-     * @return bool
-     */
-    public function is(string $method): bool
+    public function is(string $method)
     {
-        return $this->method() === $method;
+        return $this->method() === strtoupper($method);
     }
 
-    /**
-     * retrieves full uri
-     *
-     * @return string
-     */
-    public function fullUri(): string
+    public function fullUri()
     {
         $uri = $this->headers('REQUEST_URI', '');
         $uri = urldecode($uri);
@@ -201,12 +121,7 @@ class Request
         return $uri;
     }
 
-    /**
-     * retrieves partial uri
-     *
-     * @return string
-     */
-    public function uri(): string
+    public function uri()
     {
         $uri = $this->fullUri();
 
@@ -217,24 +132,18 @@ class Request
 
         return $uri;        
     }
+
+    public function uriContains(string $uri)
+    {
+        return url_contains($uri);
+    }
     
-    /**
-     * retrieves ip address
-     *
-     * @return string
-     */
-    public function remoteIP(): string
+    public function remoteIP()
     {
         return $this->headers('REMOTE_ADDR', '');
     }
     
-    /**
-     * check if request item exists
-     *
-     * @param  string[] $items
-     * @return bool
-     */
-    public function has(string ...$items): bool
+    public function has(string ...$items)
     {
         $result = false;
 
@@ -245,13 +154,7 @@ class Request
         return $result;
     }
     
-    /**
-     * check if request $_GET item exists
-     *
-     * @param  string[] $items
-     * @return bool
-     */
-    public function hasQueries(string ...$items): bool
+    public function hasQuerie(string ...$items)
     {
         $result = false;
 
@@ -262,13 +165,7 @@ class Request
         return $result;
     }
     
-    /**
-     * check if request $_POST item exists
-     *
-     * @param  string[] $items
-     * @return bool
-     */
-    public function hasInputs(string ...$items): bool
+    public function hasInput(string ...$items)
     {
         $result = false;
 
@@ -279,13 +176,7 @@ class Request
         return $result;
     }
     
-    /**
-     * check if request item exists and not empty
-     *
-     * @param  string[] $items
-     * @return bool
-     */
-    public function filled(string ...$items): bool
+    public function filled(string ...$items)
     {
         $result = $this->has(...$items);
 
@@ -301,11 +192,7 @@ class Request
     }
 
     /**
-     * retrieves value of POST/GET request or return default
-     *
-     * @param  string $item
-     * @param  mixed $default
-     * @return mixed
+     * Retrieves POST/GET item value
      */
     public function get(string $item, $default = null)
     {
@@ -313,13 +200,9 @@ class Request
     }
 
     /**
-     * set value of POST/GET request
-     *
-     * @param  string $item
-     * @param  mixed $value
-     * @return void
+     * Set POST/GET item value
      */
-    public function set(string $item, $value): void
+    public function set(string $item, $value)
     {
         if (isset($_POST[$item])) {
             $_POST[$item] = $value;
@@ -332,13 +215,7 @@ class Request
         $this->{$item} = $value;
     }
     
-    /**
-     * retrieves certains items only
-     *
-     * @param  string[] $items
-     * @return array
-     */
-    public function only(string ...$items): array
+    public function only(string ...$items)
     {
         $result = [];
 
@@ -353,13 +230,7 @@ class Request
         return $result;
     }
     
-    /**
-     * retrieves all items except certains
-     *
-     * @param  string[] $items
-     * @return array
-     */
-    public function except(string ...$items): array
+    public function except(string ...$items)
     {
         $result = [];
 
@@ -380,12 +251,7 @@ class Request
         return $result;
     }
     
-    /**
-     * retrieves all items from POST and GET
-     *
-     * @return array
-     */
-    public function all(): array
+    public function all()
     {
         $all = [];
 

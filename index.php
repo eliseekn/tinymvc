@@ -12,10 +12,8 @@ use Core\Application;
  * Main application entry
  */
 
-//load packages and main configuration
 require 'vendor/autoload.php';
 require_once 'bootstrap.php';
 
-//start application
 $app = new Application();
 $app->run();

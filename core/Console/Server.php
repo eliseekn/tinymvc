@@ -17,14 +17,16 @@ class Server extends Command
     protected function configure()
     {
         $this->setDescription('Start a local server development');
+        $this->addArgument('host', InputArgument::OPTIONAL, 'Specify server host');
         $this->addArgument('port', InputArgument::OPTIONAL, 'Specify server port');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $host = $input->getArgument('host') ?? '127.0.0.1';
         $port = $input->getArgument('port') ?? 8080;
 
-        system('php -S 127.0.0.1:' . $port);
+        system("php -S {$host}:{$port}");
 
         return Command::SUCCESS;
     }

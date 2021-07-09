@@ -2,7 +2,7 @@
 
 namespace App\Http\Middlewares;
 
-use Core\System\Auth;
+use Core\Support\Auth;
 use Core\Http\Request;
 
 /**
@@ -10,13 +10,7 @@ use Core\Http\Request;
  */
 class AuthPolicy
 {    
-    /**
-     * handle function
-     *
-     * @param  \Core\Http\Request $request
-     * @return void
-     */
-    public function handle(Request $request): void
+    public function handle(Request $request)
     {
         if (!Auth::check()) {
             redirect()->url('login')->intended($request->fullUri())

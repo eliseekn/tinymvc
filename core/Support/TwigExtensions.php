@@ -6,19 +6,14 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Core\System;
+namespace Core\Support;
 
 /**
  * Manage twig extensions and filters
  */
 class TwigExtensions extends \Twig\Extension\AbstractExtension implements \Twig\Extension\GlobalsInterface
 {    
-    /**
-     * get custom functions from configuration
-     *
-     * @return array
-     */
-    public function getCustomFunctions(): array
+    public function getCustomFunctions()
     {
         $functions = [];
 
@@ -29,12 +24,7 @@ class TwigExtensions extends \Twig\Extension\AbstractExtension implements \Twig\
         return $functions;
     }
 
-    /**
-     * get custom filters from configuration
-     *
-     * @return array
-     */
-    public function getCustomFilters(): array
+    public function getCustomFilters()
     {
         $filters = [];
 
@@ -45,12 +35,7 @@ class TwigExtensions extends \Twig\Extension\AbstractExtension implements \Twig\
         return $filters;
     }
 
-    /**
-     * get custom globals from configuration
-     *
-     * @return array
-     */
-    public function getCustomGlobals(): array
+    public function getCustomGlobals()
     {
         $globals = [];
 
@@ -89,6 +74,7 @@ class TwigExtensions extends \Twig\Extension\AbstractExtension implements \Twig\
             new \Twig\TwigFunction('get_file_extension', 'get_file_extension'),
             new \Twig\TwigFunction('get_file_name', 'get_file_name'),
             new \Twig\TwigFunction('__', '__'),
+            new \Twig\TwigFunction('env', 'env'),
             new \Twig\TwigFunction('date', 'date'),
         ];
     }

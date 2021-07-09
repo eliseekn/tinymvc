@@ -6,23 +6,17 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Core\System;
+namespace Core\Support;
 
 /**
  * Manage files and folders
  */
 class Storage
 {
-    /**
-     * @var string
-     */
     protected static $path = '';
     
     /**
-     * set storage path
-     *
-     * @param  string $path
-     * @return \Core\System\Storage
+     * Set storage path
      */
     public static function path(string $path = APP_ROOT): self
     {
@@ -30,59 +24,28 @@ class Storage
         return new self();
     }
     
-    /**
-     * get current storage path
-     *
-     * @return string
-     */
-    public function get(): string
+    public function getPath()
     {
         return self::$path;
     }
 
-    /**
-     * add path to current path
-     *
-     * @return \Core\System\Storage
-     */
-    public function add(string $path): self
+    public function addPath(string $path): self
     {
         self::$path .= real_path($path) . DS;
         return $this;
     }
 
-    /**
-     * add file to current path
-     *
-     * @return string
-     */
-    public function file(string $filename): string
+    public function file(string $filename)
     {
         return self::$path .= $filename;
     }
 
-    /**
-     * create new directory
-     *
-     * @param  string $pathname
-     * @param  int $mode
-     * @param  bool $recursive
-     * @return bool
-     */
-    public function createDir(string $pathname = '', bool $recursive = false, int $mode = 0777): bool
+    public function createDir(string $pathname = '', bool $recursive = false, int $mode = 0777)
     {
         return mkdir(self::$path . $pathname, $mode, $recursive);
     }
     
-    /**
-     * create new file or write into
-     *
-     * @param  string $filename
-     * @param  mixed $content
-     * @param  bool $append
-     * @return bool
-     */
-    public function writeFile(string $filename, $content, bool $append = false): bool
+    public function writeFile(string $filename, $content, bool $append = false)
     {
         if (!$this->isDir()) {
             if (!$this->createDir('', true)) {
@@ -95,95 +58,46 @@ class Storage
         return $success === false ? false : true;
     }
     
-    /**
-     * get file content
-     *
-     * @param  string $filename
-     * @return string
-     */
-    public function readFile(string $filename): string
+    public function readFile(string $filename)
     {
         $data = file_get_contents(self::$path . $filename);
         return $data === false ? '' : $data;
     }
     
-    /**
-     * copy file or folder
-     *
-     * @param  string $filename
-     * @param  string $destination
-     * @return bool
-     */
-    public function copyFile(string $filename, string $destination): bool
+    public function copyFile(string $filename, string $destination)
     {
         return copy(self::$path . $filename, self::$path . $destination);
     } 
     
-    /**
-     * rename file or folder
-     *
-     * @param  string $oldname
-     * @param  string $newname
-     * @return bool
-     */
-    public function renameFile(string $oldname, string $newname): bool
+    public function renameFile(string $oldname, string $newname)
     {
         return rename(self::$path . $oldname, self::$path . $newname);
     } 
     
-    /**
-     * move file or folder
-     *
-     * @param  string $filename
-     * @param  string $destination
-     * @return bool
-     */
-    public function moveFile(string $filename, string $destination): bool
+    public function moveFile(string $filename, string $destination)
     {
         return $this->renameFile($filename, $destination);
     }
     
-    /**
-     * check if file exists
-     *
-     * @param  string $filename
-     * @return bool
-     */
-    public function isFile(string $filename): bool
+    public function isFile(string $filename)
     {
         return is_file(self::$path . $filename);
     }
 
-    /**
-     * check if folder exists
-     *
-     * @param  string $pathname
-     * @return bool
-     */
-    public function isDir(string $pathname = ''): bool
+    public function isDir(string $pathname = '')
     {
         return is_dir(self::$path . $pathname);
     }
     
-    /**
-     * delete file
-     *
-     * @param  string $filename
-     * @return bool
-     */
-    public function deleteFile(string $filename): bool
+    public function deleteFile(string $filename)
     {
         return unlink(self::$path . $filename);
     }
     
     /**
-     * delete directory
-     *
-     * @param  string $pathname
-     * @return bool
      * @link https://stackoverflow.com/questions/3338123/how-do-i-recursively-delete-a-directory-and-its-entire-contents-files-sub-dir
      */
-    public function deleteDir(string $pathname = ''): bool
+    public function deleteDir(string $pathname = '')
     {
         if ($this->isDir($pathname)) {
             $objects = scandir(self::$path . $pathname);
@@ -209,11 +123,9 @@ class Storage
     }
     
     /**
-     * get list of files
-     *
-     * @return array
+     * Get list of files
      */
-    public function files(): array
+    public function files()
     {
         $results = [];
         $objects = scandir(self::$path);
@@ -228,11 +140,9 @@ class Storage
     }
 
     /**
-     * get list of folders
-     *
-     * @return array
+     * Get list of folders
      */
-    public function getFolders(): array
+    public function getFolders()
     {
         $results = [];
         $objects = scandir(self::$path);

@@ -31,13 +31,13 @@ class Seed extends Command
         $seeds = $input->getArgument('seed');
 
         foreach ($seeds as $seed) {
-            list($name, $class) = Make::generateClass($seed, 'seed');
+            list($name, $class) = Make::generateClass($seed, 'seed', true, true);
 
             if (!Make::createSeed($seed)) {
-                $output->writeln('<fg=yellow>Failed to create seed "' . $class . '"</fg>');
+                $output->writeln('<fg=yellow>Failed to create seed "' . Make::fixPluralTypo($class, true) . '"</fg>');
             }
 
-            $output->writeln('<info>Seed "' . $class . '" has been created</info>');
+            $output->writeln('<info>Seed "' . Make::fixPluralTypo($class, true) . '" has been created</info>');
         }
 
         return Command::SUCCESS;

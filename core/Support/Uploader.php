@@ -8,131 +8,64 @@
 
 namespace Core\Support;
 
-use Core\System\Storage;
+use Core\Support\Storage;
 
 /**
  * Manage uploaded files
  */
 class Uploader
 {    
-    /**
-     * uploaded file
-     *
-     * @var array
-     */
     private $file = [];
-    
-    /**
-     * @var string
-     */
     public $filename = '';
-
-    /**
-     * @var array
-     */
     private $allowed_extensions = [];
 
-    /**
-     * __construct
-     *
-     * @param  array $file
-     * @param  array $allowed_extensions
-     * @param  int $max_size
-     * @return void
-     */
     public function __construct(array $file, array $allowed_extensions)
     {
         $this->file = $file;
         $this->allowed_extensions = $allowed_extensions;
     }
     
-    /**
-     * get original filename
-     *
-     * @return string
-     */
-    public function getOriginalFilename(): string
+    public function getOriginalFilename()
     {
         return $this->file['name'] ?? '';
     }
     
-    /**
-     * get temp filename
-     *
-     * @return string
-     */
-    public function getTempFilename(): string
+    public function getTempFilename()
     {
         return $this->file['tmp_name'] ?? '';
     }
-        
-    /**
-     * get file type
-     *
-     * @return string
-     */
-    public function getFileType(): string
+    
+    public function getFileType()
     {
         return $this->file['type'] ?? '';
     }
     
-    /**
-     * get file extension
-     *
-     * @return string
-     */
-    public function getFileExtension(): string
+    public function getFileExtension()
     {
         return get_file_extension($this->getOriginalFilename());
     }
-        
-    /**
-     * check if file extension is allowed
-     *
-     * @return bool
-     */
+    
     public function isAllowed(): bool
     {
         return empty($this->allowed_extensions) ? true : in_array(strtolower($this->getFileExtension()), $this->allowed_extensions);
     }
-        
-    /**
-     * check if file is uploaded
-     *
-     * @return bool
-     */
+    
     public function isUploaded(): bool
     {
         return is_uploaded_file($this->getTempFilename());
     }
 
-    /**
-     * check if file is oversize
-     * 
-     * @param  int $max_size
-     * @return bool
-     */
     public function isOverSized(int $max_size): bool
     {
         return $this->getFileSize() > $max_size;
     }
-        
-    /**
-     * get file size
-     *
-     * @return int
-     */
+    
     public function getFileSize(): int
     {
         return $this->file['size'] ?? 0;
     }
-        
-    /**
-     * convert file size from byte to KB or MB
-     *
-     * @return string
-     */
-    public function fileSizeToString(): string
+    
+    public function fileSizeToString()
     {
         if ($this->getFileSize() <= 0) {
             return '0 KB';
@@ -143,12 +76,7 @@ class Uploader
         return $bytes > 1024 ? number_format($bytes/1024, 1) . ' MB' : number_format($bytes, 1) . ' KB';
     }
     
-    /**
-     * get file upload error
-     *
-     * @return string
-     */
-    public function getError(): string
+    public function getError()
     {
         if ($this->file['error'] != UPLOAD_ERR_OK) {
             switch($this->file['error']) {
@@ -164,13 +92,6 @@ class Uploader
         }
     }
 
-    /**
-     * save uploaded file
-     *
-     * @param  string $destination
-     * @param  string|null $filename
-     * @return bool
-     */
     public function save(string $destination, ?string $filename = null): bool
     {
         $this->filename = $filename ?? $this->getOriginalFilename();

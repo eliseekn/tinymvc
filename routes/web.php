@@ -7,10 +7,9 @@
  */
 
 use Core\Routing\Route;
-use App\Http\Controllers\HomeController;
 
 /**
  * Web routes
  */
 
-Route::get('/', [HomeController::class, 'index'])->register();
+Route::get('/', 'index')->register();

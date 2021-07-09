@@ -8,7 +8,7 @@
 
 namespace Core\Console\Make;
 
-use Core\System\Encryption;
+use Core\Support\Encryption;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

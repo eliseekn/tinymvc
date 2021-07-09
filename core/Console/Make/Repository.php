@@ -31,13 +31,15 @@ class Repository extends Command
         $repositories = $input->getArgument('repository');
 
         foreach ($repositories as $repository) {
-            list($name, $class) = Make::generateClass($repository, '');
+            list($name, $class) = Make::generateClass($repository, 'repository', true, true);
 
             if (!Make::createRepository($repository)) {
                 $output->writeln('<fg=yellow>Failed to create repository "' . $class . '"</fg>');
             }
 
             $output->writeln('<info>Repository "' . $class . '" has been created</info>');
+
+            $this->getApplication()->find('make:model')->run($input, $output);
         }
 
         return Command::SUCCESS;

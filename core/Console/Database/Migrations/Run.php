@@ -8,7 +8,7 @@
 
 namespace Core\Console\Database\Migrations;
 
-use Core\System\Storage;
+use Core\Support\Storage;
 use Core\Database\Migration;
 use Core\Database\QueryBuilder;
 use Symfony\Component\Console\Command\Command;
@@ -37,7 +37,7 @@ class Run extends Command
         $tables = $input->getArgument('table');
 
         if (!QueryBuilder::tableExists('migrations')) {
-            Migration::table('migrations')
+            Migration::createTable('migrations')
                 ->addInt('id')->autoIncrement()->primaryKey()
                 ->addString('name')
                 ->migrate();

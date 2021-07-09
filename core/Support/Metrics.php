@@ -16,9 +16,6 @@ use Core\Database\QueryBuilder;
  */
 class Metrics
 {
-    /**
-     * @var string
-     */
     private $table;
 
     public const COUNT = 'COUNT';
@@ -32,30 +29,16 @@ class Metrics
     public const MONTH = 'month';
     public const YEAR = 'year';
     
-    /**
-     * __construct
-     *
-     * @param  string $table
-     * @return void
-     */
     public function __construct(string $table)
     {
         $this->table = $table;
     }
     
     /**
-     * get metrics data
-     *
-     * @param  string $column
-     * @param  string $type
-     * @param  string $period
-     * @param  int $interval
-     * @param  array|null $query
-     * @return array
      * @link   https://www.tutsmake.com/mysql-get-data-of-current-date-week-month-year/
      *         https://www.tutsmake.com/query-for-get-data-of-last-day-week-month-year-mysql/
      */
-    public function trends(string $column, string $type, string $period, int $interval = 0, array $query = null): array
+    public function trends(string $column, string $type, string $period, int $interval = 0, array $query = null)
     {
         $qb = QueryBuilder::table($this->table);
         $year = Carbon::now()->year;

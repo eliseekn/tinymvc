@@ -15,32 +15,12 @@ use Carbon\Carbon;
  */
 class QueryBuilder
 {
-	/**
-	 * sql query string
-	 *
-	 * @var string
-	 */
 	protected static $query = '';
-		
-	/**
-	 * sql query arguments
-	 *
-	 * @var array
-	 */
     protected static $args = [];
-    
-    /**
-     * name of table
-     * 
-     * @var string
-     */
     protected static $table;
     
     /**
-     * set table name
-     *
-     * @param  string $name
-     * @return  \Core\Database\QueryBuilder
+     * Set table name
      */
     public static function table(string $name): self
     {
@@ -48,49 +28,24 @@ class QueryBuilder
         return new self();
     }
 
-    /**
-     * create table query
-     *
-     * @param  string $name
-     * @return \Core\Database\QueryBuilder
-     */
     public static function createTable(string $name): self
     {
         self::$query = "CREATE TABLE " . config('database.table_prefix') . "$name (";
         return new self();
 	}
 	
-	/**
-	 * drop table query
-	 *
-	 * @param  string $table
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public static function dropTable(string $table): self
 	{
 		self::$query = "DROP TABLE IF EXISTS " . config('database.table_prefix') . $table;
 		return new self();
 	}
     
-    /**
-     * alter table query
-     *
-     * @param  string $table
-     * @return \Core\Database\QueryBuilder
-     */
     public static function alter(string $table): self
     {
         self::$query = "ALTER TABLE " . config('database.table_prefix') . $table;
 		return new self();
     }
 	
-	/**
-	 * drop foreign key table query
-	 *
-	 * @param  string $table
-	 * @param  string $key
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public static function dropForeign(string $table, string $key): self
 	{
         self::alter($table);
@@ -98,12 +53,6 @@ class QueryBuilder
 		return new self();
 	}
     
-    /**
-     * add column query
-     *
-     * @param  string $table
-     * @return \Core\Database\QueryBuilder
-     */
     public static function addColumn(string $table): self
     {
         self::alter($table);
@@ -111,14 +60,6 @@ class QueryBuilder
         return new self();
     }
     
-    /**
-     * rename column query
-     *
-     * @param  string $table
-     * @param  string $old
-     * @param  string $new
-     * @return \Core\Database\QueryBuilder
-     */
     public static function renameColumn(string $table, string $old, string $new): self
     {
         self::alter($table);
@@ -126,13 +67,6 @@ class QueryBuilder
         return new self();
     }
     
-    /**
-     * change column query
-     *
-     * @param  string $table
-     * @param  string $column
-     * @return \Core\Database\QueryBuilder
-     */
     public static function updateColumn(string $table, string $column): self
     {
         self::alter($table);
@@ -140,13 +74,6 @@ class QueryBuilder
         return new self();
     }
     
-    /**
-     * delete column query
-     *
-     * @param  string $table
-     * @param  string $column
-     * @return \Core\Database\QueryBuilder
-     */
     public static function deleteColumn(string $table, string $column): self
     {
         self::alter($table);
@@ -154,35 +81,20 @@ class QueryBuilder
         return new self();
     }
     
-    /**
-     * check if table exists
-     *
-     * @param  mixed $table
-     * @return bool
-     */
-    public static function tableExists(string $table): bool
+    public static function tableExists(string $table)
     {
         return self::setQuery('SELECT * FROM information_schema.tables WHERE table_schema = "' . config('database.name') .'" 
             AND table_name = "' . $table . '" LIMIT 1')->exists();
     }
     
     /**
-     * check if database exists
-     *
-     * @param  mixed $db
-     * @return bool
+     * Check if database exists
      */
-    public static function schemaExists(string $db): bool
+    public static function schemaExists(string $db)
     {
         return self::setQuery('SELECT schema_name FROM information_schema.schemata WHERE schema_name = "' . $db .'"')->exists();
     }
 
-	/**
-	 * select query
-	 *
-	 * @param  string[] $columns
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function select(string ...$columns): self
 	{
 		self::$query = 'SELECT ';
@@ -196,14 +108,7 @@ class QueryBuilder
 
 		return $this;
 	}
-        
-    /**
-     * select raw query
-     *
-     * @param  string $query
-     * @param  array $args
-     * @return \Core\Database\QueryBuilder
-     */
+    
     public function selectRaw(string $query, array $args = []): self
     {
         self::$query = 'SELECT ' . $query;
@@ -213,25 +118,11 @@ class QueryBuilder
         return $this;
     }
 
-	/**
-	 * select where query
-	 * 
-	 * @param  string $column
-	 * @param  mixed $operator
-	 * @param  mixed $value
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function selectWhere(string $column, $operator = null, $value = null): self
 	{
         return $this->select('*')->where($column, $operator, $value);
 	}
 
-	/**
-	 * insert query
-	 *
-	 * @param  array $items
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function insert(array $items): self
 	{
 		self::$query = "INSERT INTO " . static::$table . " (";
@@ -254,12 +145,6 @@ class QueryBuilder
 		return $this;
 	}
 
-	/**
-	 * update query
-	 *
-     * @param  array $items
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function update(array $items): self
 	{
 		self::$query = "UPDATE " . static::$table . " SET ";
@@ -279,35 +164,19 @@ class QueryBuilder
 		return $this;
 	}
 
-	/**
-	 * delete query
-	 * 
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function delete(): self
 	{
 		self::$query = "DELETE FROM " . static::$table;
 		return $this;
 	}
 
-	/**
-	 * delete where query
-	 * 
-	 * @param  string $column
-	 * @param  mixed $operator
-	 * @param  mixed $value
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function deleteWhere(string $column, $operator = null, $value = null): self
 	{
         return $this->delete()->where($column, $operator, $value);
 	}
     
     /**
-     * add after attribute
-     *
-     * @param  string $column
-     * @return \Core\Database\QueryBuilder
+     * Add after attribute
      */
     public function after(string $column): self
     {
@@ -316,9 +185,7 @@ class QueryBuilder
     }
     
     /**
-     * add first attribute
-     *
-     * @return \Core\Database\QueryBuilder
+     * Add first attribute
      */
     public function first(): self
     {
@@ -326,24 +193,12 @@ class QueryBuilder
         return $this;
     }
 		
-	/**
-	 * set column attribute
-	 *
-	 * @param  string $name
-	 * @param  string $type
-	 * @return self
-	 */
 	public function column(string $name, string $type): self
 	{
 		self::$query .= "$name $type NOT NULL, ";
 		return $this;
 	}
     
-    /**
-     * add auto-increment attribute
-     *
-     * @return self
-     */
     public function autoIncrement(): self
     {
         self::$query = rtrim(self::$query, ', ');
@@ -351,11 +206,6 @@ class QueryBuilder
         return $this;
     }
     
-    /**
-     * add primary key attribute
-     *
-     * @return \Core\Database\QueryBuilder
-     */
     public function primaryKey(): self
     {
         self::$query = rtrim(self::$query, ', ');
@@ -363,22 +213,12 @@ class QueryBuilder
         return $this;
     }
     
-    /**
-     * add null attribute
-     * 
-     * @return \Core\Database\QueryBuilder
-     */
     public function nullable(): self
     {
         self::$query = str_replace('NOT NULL, ', 'NULL, ', self::$query);
         return $this;
     }
 
-    /**
-     * add unique attribute
-     *
-     * @return \Core\Database\QueryBuilder
-     */
     public function unique(): self
     {
         self::$query = rtrim(self::$query, ', ');
@@ -386,12 +226,6 @@ class QueryBuilder
         return $this;
     }
 
-    /**
-     * add default attribute
-     *
-     * @param  mixed $default
-     * @return \Core\Database\QueryBuilder
-     */
     public function default($default): self
     {
         self::$query = rtrim(self::$query, ', ');
@@ -399,37 +233,18 @@ class QueryBuilder
         return $this;
 	}
 		
-	/**
-	 * add foreign key constraint
-	 *
-	 * @param  string $name
-	 * @param  string $column
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function foreignKey(string $name, string $column): self
 	{
 		self::$query .= " CONSTRAINT $name FOREIGN KEY ($column)";
         return $this;
 	}
 	
-	/**
-	 * add references
-	 *
-	 * @param  string $table
-	 * @param  string $column
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function references(string $table, string $column): self
 	{
 		self::$query .= " REFERENCES " . config('database.table_prefix') . "$table($column)";
         return $this;
 	}
 	
-	/**
-	 * add on update cascade query attribute
-	 *
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function onUpdateCascade(): self
 	{
         self::$query = rtrim(self::$query, ', ');
@@ -437,11 +252,6 @@ class QueryBuilder
         return $this;
 	}
 	
-	/**
-	 * add on delete cascade query attribute
-	 *
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function onDeleteCascade(): self
 	{
         self::$query = rtrim(self::$query, ', ');
@@ -449,22 +259,12 @@ class QueryBuilder
         return $this;
 	}
 	
-	/**
-	 * add on update set null query attribute
-	 *
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function onUpdateSetNull(): self
 	{
 		self::$query .= " ON UPDATE SET NULL, ";
         return $this;
 	}
 	
-	/**
-	 * add on delete set null attribute
-	 *
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function onDeleteSetNull(): self
 	{
 		self::$query .= " ON DELETE SET NULL, ";
@@ -472,15 +272,12 @@ class QueryBuilder
 	}
     
     /**
-     * migrate table
-     *
-     * @return void
+     * Create migration table
      */
-    public function migrate(): void
+    public function migrate()
     {
         if (config('database.timestamps')) {
-            self::$query .= " created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
-                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)";
+            self::$query .= " created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)";
         }
 
         if (self::$query[-1] !== ')') {
@@ -492,14 +289,6 @@ class QueryBuilder
 		$this->execute();
     }
 
-	/**
-	 * where query
-	 *
-	 * @param  string $column
-	 * @param  mixed $operator
-	 * @param  mixed $value
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function where(string $column, $operator = null, $value = null): self
 	{
         if (!is_null($operator) && is_null($value)) {
@@ -512,50 +301,21 @@ class QueryBuilder
 		return $this;
 	}
         
-    /**
-     * where raw query
-     *
-     * @param  string $query
-     * @param  array $args
-     * @return \Core\Database\QueryBuilder
-     */
     public function whereRaw(string $query, array $args = []): self
     {
         return $this->rawQuery(' WHERE ' . $query, $args);
     }
         
-    /**
-     * and raw query
-     *
-     * @param  string $query
-     * @param  array $args
-     * @return \Core\Database\QueryBuilder
-     */
     public function andRaw(string $query, array $args = []): self
     {
         return $this->rawQuery(' AND ' . $query, $args);
     }
         
-    /**
-     * or raw query
-     *
-     * @param  string $query
-     * @param  array $args
-     * @return \Core\Database\QueryBuilder
-     */
     public function orRaw(string $query, array $args = []): self
     {
         return $this->rawQuery(' OR ' . $query, $args);
     }
 
-	/**
-	 * where not query
-	 *
-	 * @param  string $column
-	 * @param  mixed $operator
-	 * @param  mixed $value
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function whereNot(string $column, $operator = null, $value = null): self
 	{
         if (!is_null($operator) && is_null($value)) {
@@ -568,73 +328,36 @@ class QueryBuilder
 		return $this;
 	}
 
-	/**
-	 * where query
-	 *
-	 * @param  string $column
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function whereColumn(string $column): self
 	{
 		self::$query .= " WHERE $column ";
 		return $this;
 	}
 
-	/**
-	 * or query
-	 *
-	 * @param  string $column
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function orColumn(string $column): self
 	{
 		self::$query .= " OR $column ";
 		return $this;
 	}
 
-	/**
-	 * and query
-	 *
-	 * @param  string $column
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function andColumn(string $column): self
 	{
 		self::$query .= " AND $column ";
 		return $this;
 	}
 
-	/**
-	 * add is null attribute
-	 *
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function isNull(): self
 	{
 		self::$query .= ' IS NULL ';
 		return $this;
 	}
 
-	/**
-	 * add is not null attribute 
-	 *
-	 * @param  string $column
-	 * @param  string $operator
-	 * @param  mixed $value
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function notNull(): self
 	{
 		self::$query .= ' IS NOT NULL ';
 		return $this;
 	}
 
-	/**
-	 * in query
-	 *
-	 * @param  array $values
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function in(array $values): self
 	{
         $items = '';
@@ -650,12 +373,6 @@ class QueryBuilder
 		return $this;
     }
     
-	/**
-	 * not in query
-	 *
-	 * @param  array $values
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function notIn(array $values): self
 	{
         $items = '';
@@ -671,64 +388,30 @@ class QueryBuilder
 		return $this;
     }
 
-	/**
-	 * between query
-	 *
-	 * @param  mixed $start
-	 * @param  mixed $end
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function between($start, $end): self
 	{
 		self::$query .= " BETWEEN $start AND $end ";
 		return $this;
     }
     
-	/**
-	 * not between query
-	 *
-	 * @param  mixed $start
-	 * @param  mixed $end
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function notBetween($start, $end): self
 	{
 		self::$query .= " NOT BETWEEN $start AND $end ";
 		return $this;
     }
 
-	/**
-	 * like query
-	 *
-	 * @param  mixed $value
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function like($value): self
 	{
 		self::$query .= " LIKE '%$value%' ";
 		return $this;
 	}
 
-	/**
-	 * not like query
-	 *
-	 * @param  mixed $value
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function notLike($value): self
 	{
 		self::$query .= " NOT LIKE '%$value%' ";
 		return $this;
 	}
 
-	/**
-	 * and query
-	 *
-	 * @param  string $column
-	 * @param  mixed $operator
-	 * @param  mixed $value
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function and(string $column, $operator = null, $value = null): self
 	{
         if (!is_null($operator) && is_null($value)) {
@@ -741,14 +424,6 @@ class QueryBuilder
 		return $this;
 	}
 
-	/**
-	 * or query
-	 *
-	 * @param  string $column
-	 * @param  mixed $operator
-	 * @param  mixed $value
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function or(string $column, $operator = null, $value = null): self
 	{
         if (!is_null($operator) && is_null($value)) {
@@ -761,14 +436,6 @@ class QueryBuilder
 		return $this;
 	}
 
-	/**
-	 * having query
-	 *
-	 * @param  string $column
-	 * @param  mixed $operator
-	 * @param  mixed $value
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function having(string $column, $operator = null, $value = null): self
 	{
         if (!is_null($operator) && is_null($value)) {
@@ -781,37 +448,17 @@ class QueryBuilder
 		return $this;
 	}
         
-    /**
-     * having raw query
-     *
-     * @param  string $query
-     * @param  array $args
-     * @return \Core\Database\QueryBuilder
-     */
     public function havingRaw(string $query, array $args = []): self
     {
         return $this->rawQuery(' HAVING ' . $query, $args);
     }
 
-	/**
-	 * order by query
-	 *
-	 * @param  string $column
-	 * @param  string $direction (ASC or DESC)
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function orderBy(string $column, string $direction): self
 	{
 		self::$query .= " ORDER BY $column " . strtoupper($direction);
 		return $this;
 	}
 
-	/**
-	 * group by query
-	 *
-	 * @param  string[] $columns
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function groupBy(string ...$columns): self
 	{
 		self::$query .= ' GROUP BY ';
@@ -824,13 +471,6 @@ class QueryBuilder
 		return $this;
 	}
 
-	/**
-	 * limit query
-	 *
-	 * @param  int $limit
-	 * @param  int $offset
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function limit(int $limit, ?int $offset = null): self
 	{
 		self::$query .= " LIMIT $limit";
@@ -842,75 +482,30 @@ class QueryBuilder
 		return $this;
 	}
 
-	/**
-	 * inner join query
-	 *
-	 * @param  string $table
-	 * @param  string $first_column
-     * @param  string $operator
-	 * @param  string $second_column
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function innerJoin(string $table, string $first_column, string $operator, string $second_column): self
 	{
 		self::$query .= " INNER JOIN " . config('database.table_prefix') . "$table ON $first_column $operator $second_column";
 		return $this;
 	}
 
-	/**
-	 * left join query
-	 *
-	 * @param  string $table
-	 * @param  string $first_column
-     * @param  string $operator
-	 * @param  string $second_column
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function leftJoin(string $table, string $first_column, string $operator, string $second_column): self
 	{
 		self::$query .= " LEFT JOIN " . config('database.table_prefix') . "$table ON $first_column $operator $second_column";
 		return $this;
 	}
 
-	/**
-	 * right join query
-	 *
-	 * @param  string $table
-	 * @param  string $first_column
-     * @param  string $operator
-	 * @param  string $second_column
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function rightJoin(string $table, string $first_column, string $operator, string $second_column): self
 	{
 		self::$query .= " RIGHT JOIN " . config('database.table_prefix') . "$table ON $first_column $operator $second_column";
 		return $this;
 	}
 
-	/**
-	 * full join query
-	 *
-	 * @param  string $table
-	 * @param  string $first_column
-     * @param  string $operator
-	 * @param  string $second_column
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function fullJoin(string $table, string $first_column, string $operator, string $second_column): self
 	{
 		self::$query .= " FULL JOIN " . config('database.table_prefix') . "$table ON $first_column $operator $second_column";
 		return $this;
 	}
 
-	/**
-	 * full outer join query
-	 *
-	 * @param  string $table
-	 * @param  string $first_column
-     * @param  string $operator
-	 * @param  string $second_column
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public function outerJoin(string $table, string $first_column, string $operator, string $second_column): self
 	{
 		self::$query .= " FULL OUTER JOIN " . config('database.table_prefix') . "$table ON $first_column $operator $second_column";
@@ -918,9 +513,7 @@ class QueryBuilder
 	}
 
     /**
-     * remove last comma
-     *
-     * @return \Core\Database\QueryBuilder
+     * Flush query string by removing latest comma
      */
     public function flush(): self
     {
@@ -928,11 +521,6 @@ class QueryBuilder
         return $this;
     }
 
-    /**
-     * check if row exists
-     *
-     * @return bool
-     */
     public function exists(): bool
     {
         if ($this->fetch() === false) {
@@ -942,25 +530,12 @@ class QueryBuilder
         return true;
     }
 
-	/**
-	 * returns query string and arguments
-	 *
-	 * @return array
-	 */
 	public function toSQL(): array
 	{
-        $this->trim_query();
-
+        $this->trimQuery();
 		return [self::$query, self::$args];
 	}
 
-	/**
-	 * set query string and arguments
-	 *
-     * @param  string $query
-     * @param  array $args
-	 * @return \Core\Database\QueryBuilder
-	 */
 	public static function setQuery(string $query, array $args = []): self
 	{
 		self::$query = $query;
@@ -968,13 +543,6 @@ class QueryBuilder
 		return new self();
     }
     
-    /**
-     * add custom query string with arguments
-     *
-     * @param  string $query
-     * @param  array $args
-     * @return \Core\Database\QueryBuilder
-     */
     public function rawQuery(string $query, array $args = []): self
     {
         self::$query .= ' ' . $query;
@@ -982,67 +550,36 @@ class QueryBuilder
         return $this;
     }
     
-    /**
-     * sub query
-     *
-     * @param  \Closure $callback
-     * @return \Core\Database\QueryBuilder
-     */
     public function subQuery($callback): self
     {
         call_user_func_array($callback, [$this]);
         return $this;
     }
 	
-	/**
-	 * execute query with arguments
-	 *
-	 * @return \PDOStatement
-	 */
-	public function execute(): \PDOStatement
+	public function execute()
 	{
-        $this->trim_query();
-        $stmt = Database::connection()->statement(self::$query, self::$args);
+        $this->trimQuery();
+        $stmt = Database::connection()->executeQuery(self::$query, self::$args);
 		self::setQuery('');
 		return $stmt;
     }
 
-    /**
-     * fetch single row
-     *
-     * @return mixed
-     */
     public function fetch()
     {   
         return $this->execute()->fetch();
     }
     
-    /**
-     * fetch all rows
-     *
-     * @return array
-     */
     public function fetchAll(): array
     {
         return $this->execute()->fetchAll();
     }
         
-    /**
-     * retrieves last inserted id
-     *
-     * @return int
-     */
     public static function lastInsertedId(): int
     {
         return self::setQuery('SELECT LAST_INSERT_ID()')->execute()->fetchColumn();
     }
     
-    /**
-     * remove unwanted spaces in query
-     *
-     * @return void
-     */
-    private function trim_query(): void
+    private function trimQuery()
     {
         self::$query = trim(self::$query);
         self::$query = str_replace('  ', ' ', self::$query);

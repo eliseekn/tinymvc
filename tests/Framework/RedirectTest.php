@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 
 use Core\Routing\Route;
-use Core\System\Session;
+//use Core\Support\Session;
 use PHPUnit\Framework\TestCase;
 
 class RedirectTest extends TestCase

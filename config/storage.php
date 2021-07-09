@@ -20,6 +20,7 @@ return [
     'stubs' => absolute_path('resources.stubs'),
     'controllers' => absolute_path('app.Http.Controllers'),
     'repositories' => absolute_path('app.Database.Repositories'),
+    'models' => absolute_path('app.Database.Models'),
     'middlewares' => absolute_path('app.Http.Middlewares'),
     'validators' => absolute_path('app.Http.Validators'),
     'logs' => absolute_path('storage.logs'),

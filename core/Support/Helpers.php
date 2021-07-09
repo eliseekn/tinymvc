@@ -12,67 +12,39 @@ use Core\Routing\View;
 use Core\Http\Redirect;
 use Core\Http\Response;
 use Core\Routing\Route;
-use Core\System\Config;
-use Core\System\Cookies;
-use Core\System\Session;
-use Core\System\Storage;
-use Core\System\Encryption;
+use Core\Support\Config;
+use Core\Support\Cookies;
+use Core\Support\Session;
+use Core\Support\Storage;
+use Core\Support\Encryption;
 
 /**
  * Cookies management
  */
 
 if (!function_exists('create_cookie')) {
-	/**
-	 * create cookie and set value
-	 *
-	 * @param  string $name
-	 * @param  string $value
-	 * @param  int $expire in seconds
-	 * @param  bool $secure
-	 * @param  string $domain
-	 * @return bool
-	 */
-    function create_cookie(string $name, string $value, int $expire = 3600, bool $secure = false, string $domain = ''): bool 
+    function create_cookie(string $name, string $value, int $expire = 3600, bool $secure = false, string $domain = '') 
     {
         return Cookies::create($name, $value, $expire, $secure, $domain);
 	}
 }
 
 if (!function_exists('get_cookie')) {
-	/**
-	 * return cookie value
-	 *
-	 * @param  string $name
-	 * @return string
-	 */
-	function get_cookie(string $name): string
+	function get_cookie(string $name)
 	{
         return Cookies::get($name);
 	}
 }
 
 if (!function_exists('cookie_has')) {
-	/**
-	 * check if cookie exists
-	 *
-	 * @param  string $name
-	 * @return bool
-	 */
-	function cookie_has(string $name): bool
+	function cookie_has(string $name)
 	{
 		return Cookies::has($name);
 	}
 }
 
 if (!function_exists('delete_cookie')) {
-	/**
-	 * delete cookie by name
-	 *
-	 * @param  string $name
-	 * @return bool
-	 */
-	function delete_cookie(string $name): bool
+	function delete_cookie(string $name)
 	{
 		return Cookies::delete($name);
 	}
@@ -83,27 +55,13 @@ if (!function_exists('delete_cookie')) {
  */
 
 if (!function_exists('create_session')) {
-	/**
-	 * create session data
-	 *
-	 * @param  string $name
-	 * @param  mixed $data
-	 * @return void
-	 */
-	function create_session(string $name, $data): void
+	function create_session(string $name, $data)
 	{
 		Session::create($name, $data);
 	}
 }
 
 if (!function_exists('session_get')) {
-	/**
-	 * get session data
-	 *
-	 * @param  string $name
-	 * @param  mixed $default
-	 * @return mixed
-	 */
 	function session_get(string $name, $default = null)
 	{
 		return Session::get($name, $default);
@@ -111,12 +69,6 @@ if (!function_exists('session_get')) {
 }
 
 if (!function_exists('session_pull')) {
-	/**
-	 * get session data and close it
-	 *
-	 * @param  string $name
-	 * @return mixed
-	 */
 	function session_pull(string $name)
 	{
 		return Session::pull($name);
@@ -124,53 +76,28 @@ if (!function_exists('session_pull')) {
 }
 
 if (!function_exists('session_put')) {
-	/**
-	 * add data to session or create if empty
-	 *
-	 * @param  string $name
-	 * @param  mixed $data
-	 * @param  mixed $default
-	 * @return mixed
-	 */
-	function session_put(string $name, $data, $default = null): void
+	function session_put(string $name, $data, $default = null)
 	{
 		Session::put($name, $data, $default);
 	}
 }
 
 if (!function_exists('session_has')) {
-	/**
-	 * check if session exists
-	 *
-	 * @param  string $name
-	 * @return bool
-	 */
-	function session_has(string $name): bool
+	function session_has(string $name)
 	{
 		return Session::has($name);
 	}
 }
 
 if (!function_exists('session_flush')) {
-	/**
-	 * flush session
-	 *
-	 * @param  string[] $names
-	 * @return void
-	 */
-	function session_flush(string ...$names): void
+	function session_flush(string ...$names)
 	{
 		Session::flush(...$names);
 	}
 }
 
-if (!function_exists('auth_attempts_exceeded')) {    
-    /**
-     * check if auth attempts exceeded
-     *
-     * @return bool
-     */
-    function auth_attempts_exceeded(): bool
+if (!function_exists('auth_attempts_exceeded')) {
+    function auth_attempts_exceeded()
     {
         if (!config('security.auth.max_attempts')) {
             return false;
@@ -189,10 +116,7 @@ if (!function_exists('auth_attempts_exceeded')) {
 
 if (!function_exists('auth')) {
 	/**
-	 * get authenticated user session data
-	 *
-     * @param  string $key
-	 * @return mixed
+	 * Get authenticated user session data
 	 */
 	function auth(string $key)
 	{
@@ -212,12 +136,9 @@ if (!function_exists('auth')) {
 
 if (!function_exists('hash_pwd')) {    
     /**
-     * password hash helper
-     *
-     * @param  string $password
-     * @return string
+     * Hash password
      */
-    function hash_pwd(string $password): string
+    function hash_pwd(string $password)
     {
         return Encryption::hash($password);
     }
@@ -225,12 +146,9 @@ if (!function_exists('hash_pwd')) {
 
 if (!function_exists('sanitize')) {
 	/**
-     * sanitize html and others scripting languages
-     *
-     * @param  string $str
-     * @return string
+     * Sanitize html and others scripting languages
      */
-    function sanitize(string $str): string
+    function sanitize(string $str)
     {
         $str = stripslashes($str);
         $str = htmlspecialchars($str);
@@ -240,17 +158,12 @@ if (!function_exists('sanitize')) {
 }
 
 if (!function_exists('generate_csrf_token')) {
-    /**
-     * generate crsf token
-     *
-     * @return string
-     */
-    function generate_csrf_token(): string
+    function generate_csrf_token()
     {
         if (session_has('csrf_token')) {
             $csrf_token = session_get('csrf_token');
         } else {
-            $csrf_token = bin2hex(random_bytes(32));
+            $csrf_token = generate_token();
             create_session('csrf_token', $csrf_token);
         }
 
@@ -260,11 +173,9 @@ if (!function_exists('generate_csrf_token')) {
 
 if (!function_exists('csrf_token_input')) {
     /**
-     * generate crsf token html input
-     *
-     * @return string
+     * Generate crsf token html input tag
      */
-    function csrf_token_input(): string
+    function csrf_token_input()
     {
         return '<input type="hidden" name="csrf_token" id="csrf_token" value="' . generate_csrf_token() . '">';
     }
@@ -272,11 +183,9 @@ if (!function_exists('csrf_token_input')) {
 
 if (!function_exists('csrf_token_meta')) {
     /**
-     * generate crsf token html meta
-     *
-     * @return string
+     * Generate crsf token html meta tag
      */
-    function csrf_token_meta(): string
+    function csrf_token_meta()
     {
         return '<meta name="csrf_token" content="' . generate_csrf_token() . '">';
     }
@@ -284,25 +193,16 @@ if (!function_exists('csrf_token_meta')) {
 
 if (!function_exists('method_input')) {
     /**
-     * generate method input
-     *
-     * @param  string $method
-     * @return string
+     * Set custom request method with html input tag
      */
-    function method_input(string $method): string
+    function method_input(string $method)
     {
         return '<input type="hidden" name="_method" value="' . $method . '">';
     }
 }
 
 if (!function_exists('valid_csrf_token')) {
-    /**
-     * check if crsf token is valid
-     *
-     * @param  string $csrf_token
-     * @return bool
-     */
-    function valid_csrf_token(string $csrf_token): bool
+    function valid_csrf_token(string $csrf_token)
     {
         return hash_equals(session_get('csrf_token'), $csrf_token);
     }
@@ -314,12 +214,9 @@ if (!function_exists('valid_csrf_token')) {
 
 if (!function_exists('url')) {
 	/**
-	 * generate abosulte url
-	 *
-	 * @param  string $uri
-	 * @return string
+	 * Generate abosulte url
 	 */
-	function url(string $uri, $params = null): string
+	function url(string $uri, $params = null)
 	{
         $url = config('app.url') . ltrim($uri, '/');
         $params = is_array($params) ? (empty($params) ? '' : implode('/', $params)) : $params;
@@ -328,15 +225,8 @@ if (!function_exists('url')) {
 	}
 }
 
-if (!function_exists('route_uri')) {    
-    /**
-     * get route uri
-     *
-     * @param  string $name
-     * @param  mixed $params
-     * @return string
-     */
-    function route_uri(string $name, $params = null): string
+if (!function_exists('route_uri')) {
+    function route_uri(string $name, $params = null)
     {
         $uri = '';
         $patterns = ['([a-zA-Z-_]+)', '(\d+)', '([^/]+)'];
@@ -401,13 +291,9 @@ if (!function_exists('route_uri')) {
 
 if (!function_exists('route')) {    
     /**
-     * get route absolute url
-     *
-     * @param  string $name
-     * @param  mixed $params
-     * @return string
+     * Get route absolute url
      */
-    function route(string $name, $params = null): string
+    function route(string $name, $params = null)
     {
         return url(route_uri($name, $params));
     }
@@ -415,13 +301,9 @@ if (!function_exists('route')) {
 
 if (!function_exists('assets')) {    
     /**
-     * generate assets url from public folder
-     *
-     * @param  string $asset
-     * @param  mixed $params
-     * @return string
+     * Generate assets url from public path
      */
-    function assets(string $asset, $params = null): string
+    function assets(string $asset, $params = null)
     {
         return url('public/' . $asset, $params);
     }
@@ -429,13 +311,9 @@ if (!function_exists('assets')) {
 
 if (!function_exists('storage')) {    
     /**
-     * generate storage url
-     *
-     * @param  string $path
-     * @param  mixed $params
-     * @return string
+     * Generate storage path url
      */
-    function storage(string $path, $params = null): string
+    function storage(string $path, $params = null)
     {
         return url('storage/' . $path, $params);
     }
@@ -443,38 +321,23 @@ if (!function_exists('storage')) {
 
 if (!function_exists('resources')) {    
     /**
-     * generate resources url
-     *
-     * @param  string $path
-     * @param  mixed $params
-     * @return string
+     * generate resources path url
      */
-    function resources(string $path, $params = null): string
+    function resources(string $path, $params = null)
     {
         return url('resources/' . $path, $params);
     }
 }
 
 if (!function_exists('current_url')) {
-	/**
-	 * get current url
-	 *
-	 * @return string
-	 */
-	function current_url(): string
+	function current_url()
 	{
 		return url((new Request())->fullUri());
 	}
 }
 
 if (!function_exists('url_contains')) {	
-	/**
-	 * check if current url contains specific string
-	 *
-	 * @param  string $str
-	 * @return bool
-	 */
-	function url_contains(string $str): bool
+	function url_contains(string $str)
 	{
         return preg_match('/' . $str . '/', explode('//', current_url())[1]);
 	}
@@ -483,8 +346,6 @@ if (!function_exists('url_contains')) {
 if (!function_exists('response')) {
     /**
      * Response helper function
-     *
-     * @return \Core\Http\Response
      */
     function response(): \Core\Http\Response
     {
@@ -495,8 +356,6 @@ if (!function_exists('response')) {
 if (!function_exists('redirect')) {
     /**
      * Redirect helper function
-     *
-     * @return \Core\Http\Redirect
      */
     function redirect(): \Core\Http\Redirect
     {
@@ -506,14 +365,9 @@ if (!function_exists('redirect')) {
 
 if (!function_exists('render')) {
     /**
-     * render view template
-     *
-     * @param  string $view
-     * @param  array $data
-     * @param  int $code
-     * @return void
+     * Render view template helper
      */
-    function render(string $view, array $data = [], int $code = 200): void
+    function render(string $view, array $data = [], int $code = 200)
     {
         View::render($view, $data, $code);
     }
@@ -525,12 +379,9 @@ if (!function_exists('render')) {
 
 if (!function_exists('real_path')) {    
     /**
-     * replace '.' by DS
-     *
-     * @param  string $path
-     * @return string
+     * Replace '.' by directory separator
      */
-    function real_path(string $path): string
+    function real_path(string $path)
     {
         return str_replace('.', DS, $path);
     }
@@ -538,12 +389,9 @@ if (!function_exists('real_path')) {
 
 if (!function_exists('absolute_path')) {    
     /**
-     * get absolute path
-     *
-     * @param  string $path
-     * @return string
+     * Generate absolute path
      */
-    function absolute_path(string $path): string
+    function absolute_path(string $path)
     {
         return APP_ROOT . real_path($path) . DS;
     }
@@ -551,14 +399,9 @@ if (!function_exists('absolute_path')) {
 
 if (!function_exists('slugify')) {
 	/**
-	 * generate slug from string with utf8 encoding
-	 *
-	 * @param  string $str
-	 * @param  string $separator
-	 * @return string
 	 * @link   https://ourcodeworld.com/articles/read/253/creating-url-slugs-properly-in-php-including-transliteration-support-for-utf-8
 	 */
-	function slugify(string $str, string $separator = '-'): string
+	function slugify(string $str, string $separator = '-')
 	{
 		return strtolower(
 			trim(
@@ -581,30 +424,19 @@ if (!function_exists('slugify')) {
 	}
 }
 
-if (!function_exists('random_string')) {
+if (!function_exists('generate_token')) {
 	/**
-	 * random string generator
-	 *
-	 * @param  int $length
-	 * @param  bool $alphanumeric
-	 * @return string
-	 * @link   https://www.php.net/manual/en/function.str-shuffle.php
+	 * Random token generator
 	 */
-	function random_string(int $length = 10, bool $alphanumeric = false): string
+	function generate_token(int $length = 32)
 	{
-		$chars = 'abcefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-		$chars .= $alphanumeric ? '0123456789' : '';
-		return substr(str_shuffle($chars), 0, $length);
+		return bin2hex(random_bytes($length));
 	}
 }
 
 if (!function_exists('config')) {	
 	/**
-	 * read configuration
-	 *
-	 * @param  string $data
-     * @param  mixed $default
-	 * @return mixed
+	 * Read configuration
 	 */
 	function config(string $data, $default = null)
 	{
@@ -622,26 +454,16 @@ if (!function_exists('config')) {
 
 if (!function_exists('__')) {    
     /**
-     * return translated word or expression
-     *
-     * @param  string $expr
-     * @param  array $data
-     * @return string
+     * Translate words and expressions
      */
-    function __(string $expr, array $data = []): string
+    function __(string $expr, array $data = [])
     {
         return Config::readTranslations($expr, $data);
     }
 }
 
 if (!function_exists('get_file_extension')) {	
-	/**
-	 * get file extension
-	 *
-	 * @param  string $file
-	 * @return string
-	 */
-	function get_file_extension(string $file): string
+	function get_file_extension(string $file)
 	{
 		if (empty($file) || strpos($file, '.') === false) {
             return '';
@@ -653,13 +475,7 @@ if (!function_exists('get_file_extension')) {
 }
 
 if (!function_exists('get_file_name')) {	
-	/**
-	 * get file name
-	 *
-	 * @param  string $file
-	 * @return string
-	 */
-	function get_file_name(string $file): string
+	function get_file_name(string $file)
 	{
 		if (empty($file) || strpos($file, '.') === false) {
             return '';
@@ -672,12 +488,9 @@ if (!function_exists('get_file_name')) {
 
 if (!function_exists('save_log')) {
     /**
-	 * save log message to file
-	 *
-	 * @param  string $message 
-	 * @return void
+	 * Save log message to file
 	 */
-	function save_log(string $message): void
+	function save_log(string $message)
 	{
         if (!Storage::path(config('storage.logs'))->isDir()) {
             Storage::path(config('storage.logs'))->createDir();
@@ -689,11 +502,7 @@ if (!function_exists('save_log')) {
 
 if (!function_exists('env')) {    
     /**
-     * get environnement key variable
-     *
-     * @param  string $key
-     * @param  mixed $default
-     * @return mixed
+     * Get environnement variable key
      */
     function env(string $key, $default = null)
     {

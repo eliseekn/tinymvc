@@ -3,21 +3,15 @@
 namespace App\Mails;
 
 use Core\Routing\View;
-use Core\System\Mailer;
+use Core\Support\Mailer;
 
 class CLASSNAME
 {
-    /**
-     * send email notification
-     *
-     * @param  string $email
-     * @return bool
-     */
-    public static function send(string $email): bool
+    public static function send(string $email)
     {
         return Mailer::to($email)
-            ->from(config('mailer.sender_email'), config('mailer.sender_name'))
-            ->reply(config('mailer.sender_email'), config('mailer.sender_name'))
+            ->from(config('mailer.sender.email'), config('mailer.sender.name'))
+            ->reply(config('mailer.sender.email'), config('mailer.sender.name'))
 			->subject('Subject')
             ->html(View::getContent('emails.RESOURCENAME'))
 			->send();

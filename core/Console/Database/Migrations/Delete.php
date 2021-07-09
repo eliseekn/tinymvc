@@ -8,7 +8,7 @@
 
 namespace Core\Console\Database\Migrations;
 
-use Core\System\Storage;
+use Core\Support\Storage;
 use Core\Database\QueryBuilder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;

@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use Carbon\Carbon;
-use App\Mails\TokenMail;
 use Core\Http\Request;
-use App\Database\Repositories\Users;
+use App\Mails\TokenMail;
+use App\Database\Models\User;
+use App\Database\Repositories\TokenRepository;
+use App\Database\Repositories\UserRepository;
 use App\Http\Validators\AuthRequest;
-use App\Database\Repositories\Tokens;
 
 /**
  * Manage password forgot
@@ -15,38 +16,27 @@ use App\Database\Repositories\Tokens;
 class ForgotPasswordController
 {
 	/**
-	 * send reset password link notification
-	 *
-     * @param  \Core\Http\Request $request
-     * @param  \App\Database\Repositories\Tokens $tokens
-	 * @return void
+	 * Send reset password link notification
 	 */
-	public function notify(Request $request, Tokens $tokens): void
+	public function notify(Request $request, TokenRepository $tokenRepository)
 	{
-		$token = random_string(50, true);
+		$token = generate_token();
 
 		if (TokenMail::send($request->email, $token)) {
-            $tokens->store($request->email, $token, Carbon::now()->addHour()->toDateTimeString());
+            $tokenRepository->store($request->email, $token, Carbon::now()->addHour()->toDateTimeString());
 			redirect()->back()->withAlert('success', __('password_reset_link_sent'))->go();
 		} 
         
 		redirect()->back()->withAlert('error', __('password_reset_link_not_sent'))->go();
 	}
 	
-	/**
-	 * reset password
-	 *
-     * @param  \Core\Http\Request $request
-     * @param  \App\Database\Repositories\Tokens $tokens
-	 * @return void
-	 */
-	public function reset(Request $request, Tokens $tokens): void
+	public function reset(Request $request, TokenRepository $tokenRepository)
 	{
         if (!$request->has('email', 'token')) {
             response()->send('Bad Request', [], 400);
         }
 
-        $token = $tokens->findOneByEmail($request->email);
+        $token = $tokenRepository->findByEmail($request->email);
 
         if (!$token || $token->token !== $request->token) {
 			response()->send(__('invalid_password_reset_link'), [], 400);
@@ -56,24 +46,22 @@ class ForgotPasswordController
 			response()->send(__('expired_password_reset_link'), [], 400);
 		}
 
-		$tokens->flush($token->token);
+        $token->delete();
+
 		render('auth.password.new', ['email' => $token->email]);
 	}
 	
-	/**
-	 * update password
-	 *
-     * @param  \Core\Http\Request $request
-     * @param  \App\Database\Repositories\Users $users
-	 * @return void
-	 */
-	public function update(Request $request, Users $users): void
+	public function update(Request $request, UserRepository $userRepository)
 	{
 		AuthRequest::validate($request->except('csrf_token'))->redirectOnFail();
+        $user = $userRepository->findByEmail($request->email);
 
-        $users->updateWhere($request->only('email'), 
-            ['password' => hash_pwd($request->password)]
-        );
+        if (!$user) {
+		    redirect()->back()->withAlert('error', __('password_not_reset'))->go();
+        }
+
+        $user->password = hash_pwd($request->password);
+        $user->save();
 
         redirect()->url('login')->withAlert('success', __('password_reset'))->go();
 	}

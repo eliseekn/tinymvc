@@ -2,69 +2,34 @@
 
 namespace App\Database\Repositories;
 
+use App\Database\Models\MODELNAME;
 use Core\Http\Request;
-use Core\Database\Repository;
 
-class CLASSNAME extends Repository
+class CLASSNAME
 {
-    /**
-     * name of table
-     *
-     * @var string
-     */
-    public $table = 'TABLENAME';
-
-    /**
-     * __construct
-     *
-     * @return void
-     */
-    public function __construct()
+    public function findByValue($value)
     {
-        parent::__construct($this->table);
+        return MODELNAME::findBy('value', $value);
     }
 
-    /**
-     * retrieves single data by value
-     *
-     * @param  mixed $value
-     * @return mixed
-     */
-    public function findOneByValue($value)
+    public function findAllByValue($value)
     {
-        return $this->findOneWhere('value', $value);
+        return MODELNAME::where('value', $value)->getAll();
     }
 
-    /**
-     * retrieves all data by value
-     *
-     * @param  mixed $value
-     * @return array
-     */
-    public function findAllByValue($value): array
+    public function store(Request $request)
     {
-        return $this->findAllWhere('value', $value);
+        return MODELNAME::create($request->except('csrf_token'));
     }
 
-    /**
-     * store data
-     *
-     * @param  \Core\Http\Request $request
-     * @return int
-     */
-    public function store(Request $request): int
+    public function delete(int $id)
     {
-        return $this->insert($request->except('csrf_token'));
-    }
+        $data = MODELNAME::find($id);
 
-    /**
-     * delete data
-     *
-     * @param  int $id
-     * @return bool
-     */
-    public function flush(int $id): bool
-    {
-        return $this->deleteIfExists($id);
+        if (!$data) {
+            return false;
+        }
+
+        return $data->delete();
     }
 }

@@ -13,13 +13,8 @@ namespace App\Database\Seeds;
  */
 class Seeder
 {
-    /**
-     * insert seeds
-     *
-     * @return void
-     */
-    public static function run(): void
+    public static function run()
     {
-        UsersSeed::insert();
+        UserSeed::insert();
     }
 }

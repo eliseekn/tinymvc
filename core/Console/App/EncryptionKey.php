@@ -8,7 +8,7 @@
 
 namespace Core\Console\App;
 
-use Core\System\Config;
+use Core\Support\Config;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -16,7 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Generate application encryption key
  */
-class Key extends Command
+class EncryptionKey extends Command
 {
     protected static $defaultName = 'app:key';
 
@@ -35,7 +35,7 @@ class Key extends Command
             'DB_NAME' => config('database.name') . PHP_EOL,
             'DB_USERNAME' => config('database.username') . PHP_EOL,
             'DB_PASSWORD' => config('database.password') . PHP_EOL,
-            'ENCRYPTION_KEY' => base64_encode(random_string(30, true))
+            'ENCRYPTION_KEY' => generate_token()
         ];
 
         Config::saveEnv($config);

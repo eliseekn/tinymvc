@@ -6,7 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Core\System;
+namespace Core\Support;
 
 use ReflectionClass;
 
@@ -16,17 +16,12 @@ use ReflectionClass;
  * @link https://indigotree.co.uk/automatic-dependency-injection-with-phps-reflection-api/
  *       https://dev.to/fadymr/php-auto-dependency-injection-with-reflection-api-27ci
  */
-class DependcyInjection
+class DependencyInjection
 {
     /**
- 	* execute class with dependecies and methods dependencies
-	* 
- 	* @param string $class
- 	* @param string $method
-    * @param array $params
- 	* @return void
+ 	* Execute class with dependecies and methods dependencies
  	*/
-	public function resolve(string $class, string $method, array $params = []): void
+	public function resolve(string $class, string $method, array $params = [])
 	{
         $reflector = new ReflectionClass($class);
         $constructor = $reflector->getConstructor();
@@ -54,12 +49,9 @@ class DependcyInjection
 	}
 
 	/**
-	 * generate new instance of dependencies
-	 *
-	 * @param array $parameters
-	 * @return array
+	 * Generate new instance of dependencies
 	 */
-	public function getDependencies(array $parameters): array
+	public function getDependencies(array $parameters)
 	{
 		$dependencies = [];
 

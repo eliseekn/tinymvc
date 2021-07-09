@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use Carbon\Carbon;
-use App\Mails\WelcomeMail;
 use Core\Http\Request;
+use App\Mails\WelcomeMail;
 use App\Mails\VerificationMail;
-use App\Database\Repositories\Users;
-use App\Database\Repositories\Tokens;
+use App\Database\Repositories\UserRepository;
+use App\Database\Repositories\TokenRepository;
 
 /**
  * Manage email verification link
@@ -15,18 +15,14 @@ use App\Database\Repositories\Tokens;
 class EmailVerificationController
 {
     /**
-     * send email verification link
-     *
-     * @param  \Core\Http\Request $request
-     * @param  \App\Database\Repositories\Tokens $tokens
-     * @return void
+     * Send email verification link
      */
-    public function notify(Request $request, Tokens $tokens): void
+    public function notify(Request $request, TokenRepository $tokenRepository)
     {
-        $token = random_string(50, true);
+        $token = generate_token();
 
         if (VerificationMail::send($request->email, $token)) {
-            $tokens->store($request->email, $token, Carbon::now()->addDay()->toDateTimeString());
+            $tokenRepository->store($request->email, $token, Carbon::now()->addDay()->toDateTimeString());
             redirect()->url('login')->withAlert('success', __('email_verification_link_sent'))->go();
         }
         
@@ -34,22 +30,20 @@ class EmailVerificationController
     }
 
 	/**
-	 * check email verification link
-	 *
-     * @param  \Core\Http\Request $request
-     * @param  \App\Database\Repositories\Users $users
-	 * @return void
+	 * Check email verification link
 	 */
-	public function verify(Request $request, Users $users): void
+	public function verify(Request $request, UserRepository $userRepository)
 	{
-        $user = $users->findOneByEmail($request->queries('email'));
+        $user = $userRepository->findByEmail($request->queries('email'));
 
 		if (!$user) {
             redirect()->url('signup')->withAlert('error', __('account_not_found'))->go();
         }
 
-        $users->updateWhere(['email', $user->email], ['email_verified' => 1]);
+        $user->verified = 1;
+        $user = $user->save();
+
         WelcomeMail::send($user->email, $user->name);
-        redirect()->url('login')->withAlert('success', __('email_verified'))->go();
+        redirect()->url('login')->withAlert('success', __('verified'))->go();
     }
 }

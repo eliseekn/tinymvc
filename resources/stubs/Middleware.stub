@@ -4,12 +4,7 @@ namespace App\Http\Middlewares;
 
 class CLASSNAME
 {    
-    /**
-     * handle function
-     *
-     * @return void
-     */
-    public function handle(): void
+    public function handle()
     {
        //
     }

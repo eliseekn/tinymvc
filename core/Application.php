@@ -10,20 +10,15 @@ namespace Core;
 
 use Core\Http\Request;
 use Core\Routing\Router;
-use Core\System\Whoops;
-use Core\System\Storage;
-use Core\System\Exception;
+use Core\Support\Whoops;
+use Core\Support\Storage;
+use Core\Support\Exception;
 
 /**
  * Main application
  */
 class Application
 {
-    /**
-     * load routes files
-     *
-     * @return void
-     */
     public function __construct()
     {
         //register whoops error handler
@@ -36,12 +31,7 @@ class Application
         }
     }
     
-    /**
-     * start application
-     *
-     * @return void
-     */
-    public function run(): void
+    public function run()
     {
         try {
             Router::dispatch(new Request());
