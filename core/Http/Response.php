@@ -8,6 +8,8 @@
 
 namespace Core\Http;
 
+use Exception;
+
 /**
  * Send HTTP responses
  */
@@ -17,15 +19,14 @@ class Response
     {
         http_response_code($code);
 
-        if (is_array($name)) {
-            foreach ($name as $k => $v) {
-                header($k . ': ' . $v);
-            }
-
+        if (!is_array($name)) {
+            header($name . ': ' . $value);
             return;
         }
 
-        header($name . ': ' . $value);
+        foreach ($name as $k => $v) {
+            header($k . ': ' . $v);
+        }
     }
     
     public function send($body, array $headers = [], int $code = 200)
@@ -49,34 +50,33 @@ class Response
             return;
         }
 
-        if (!empty($headers)) {
-            $this->headers($headers, null, $code);
-        }
-
         $body = json_encode($body);
 
-        $this->headers([
+        $this->headers($headers + [
             'Content-Type' => 'application/json',
             'Content-Length' => strlen($body)
         ], null, $code);
 
         exit($body);
     }
-    
+        
+    /**
+     * @throws Exception
+     */
     public function download(string $filename, ?string $base_name = null)
     {
         if (!file_exists($filename)) {
-            return;
+            throw new Exception("File $filename does not exists");
         }
 
         http_response_code(200);
 
-        $filename = is_null($base_name) ? basename($filename) : $base_name;
+        $base_name = is_null($base_name) ? basename($filename) : $base_name;
 
         $this->headers([
             'Content-Type' => mime_content_type($filename),
             'Content-Length' => filesize($filename),
-			'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+			'Content-Disposition' => 'attachment; filename="' . $base_name . '"',
 			'Cache-Control' => 'no-cache',
 			'Pragma' => 'no-cache',
             'Expires' => '0'

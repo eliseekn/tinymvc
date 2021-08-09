@@ -552,7 +552,10 @@ class QueryBuilder
     
     public function subQuery($callback): self
     {
-        call_user_func_array($callback, [$this]);
+        if (!is_null($callback)) {
+            call_user_func_array($callback, [$this]);
+        }
+        
         return $this;
     }
 	

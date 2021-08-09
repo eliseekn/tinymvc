@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 
 use Core\Routing\Route;
 use PHPUnit\Framework\TestCase;
@@ -24,13 +23,6 @@ class RouteTest extends TestCase
     public function testRouteUri()
     {
         Route::get('uri', function () {})->register();
-        $this->assertArrayHasKey('GET /uri',  Route::$routes);
-        $this->resetRoutes();
-    }
-
-    public function testAddRoute()
-    {
-        Route::add('GET /uri', function () {})->register();
         $this->assertArrayHasKey('GET /uri',  Route::$routes);
         $this->resetRoutes();
     }

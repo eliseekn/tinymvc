@@ -8,12 +8,11 @@
 
 namespace Core\Http;
 
-use Core\Support\Alert;
 use Core\Support\Cookies;
 use Core\Support\Session;
 
 /**
- * Handle HTTP redirection
+ * Handle HTTP redirections
  */
 class Redirect
 {
@@ -74,18 +73,6 @@ class Redirect
     public function withInputs(array $inputs): self
     {
         Session::create('inputs', $inputs);
-        return $this;
-    }
-
-    public function withAlert(string $type, $message, bool $dismiss = true): self
-    {
-        Alert::default($message, $dismiss)->{$type}();
-        return $this;
-    }
-
-    public function withToast(string $type, $message): self
-    {
-        Alert::toast($message)->{$type}();
         return $this;
     }
 }

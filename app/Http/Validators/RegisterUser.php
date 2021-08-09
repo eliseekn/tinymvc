@@ -12,9 +12,9 @@ class RegisterUser extends Validator
      * Validation rules
      */
     protected static $rules = [
-        'name' => 'required|between_len,10;30',
+        'name' => 'required|between_len,2;30',
         'email' => 'required|valid_email|max_len,30|unique,users',
-        'password' => 'required|between_len,8;10'
+        'password' => 'required|between_len,4;10'
     ];
 
     /**
@@ -30,7 +30,7 @@ class RegisterUser extends Validator
     public static function register(): self
     {
         GUMP::add_validator('unique', function($field, array $input, array $params, $value) {
-            $data = (new Repository($params[0]))->where($field, $value);
+            $data = (new Repository($params[0]))->select('*')->where($field, $value);
             return !$data->exists();
         }, "Record of {field} field already exists");
 

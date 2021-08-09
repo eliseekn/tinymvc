@@ -62,7 +62,7 @@ class Session
     /**
      * Add data to session or create if empty
      */
-    public static function put(string $name, $data, $default = null)
+    public static function push(string $name, $data, $default = null)
     {
         $stored_data = self::get($name, $default);
 
@@ -75,6 +75,8 @@ class Session
                 $stored_data .= $data;
             } elseif (is_numeric($stored_data)) {
                 $stored_data += $data;
+            } elseif (is_object($stored_data)) {
+                $stored_data = (object) array_merge((array) $stored_data, (array) $data);
             }
         }
 

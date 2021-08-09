@@ -56,7 +56,7 @@ class Repository
         return $this->select('*')->where($column, $operator, $value)->get();
 	}
     
-    public function find($operator = null, $value = null): self
+    public function find($operator = null, $value = null)
 	{
         return $this->findWhere('id', $operator, $value);
 	}
@@ -93,7 +93,7 @@ class Repository
     }
     
     /**
-     * Retrieves data or throw exception not found
+     * Retrieves data or throw exception if not found
      * 
      * @throws Exception
      */
@@ -111,7 +111,7 @@ class Repository
     /**
      * Insert data if item not found
      */
-    public function findOrCreate($id, array $items)
+    public function findOrCreate(int $id, array $items)
     {
         try {
             $result = $this->findOrFail('id', $id);
@@ -188,16 +188,15 @@ class Repository
             return false;
         }
 
-        $rows = $this->update($items)->where($data[0], $data[1], $data[2])->execute()->rowCount();
-        return $rows > 0;
+        return $this->update($items)->where($data[0], $data[1], $data[2])->execute()->rowCount() > 0;
     }
     
-    public function updateIfExists($id, array $items)
+    public function updateIfExists(int $id, array $items)
     {
         return $this->updateWhere(['id', $id], $items);
     }
     
-    public function updateOrCreate($id, array $items)
+    public function updateOrCreate(int $id, array $items)
     {
         try {
             $this->findOrFail('id', $id);
@@ -221,11 +220,10 @@ class Repository
             return false;
         }
 
-        $rows = $this->delete()->where($column, $operator, $value)->execute()->rowCount() > 0;
-        return $rows > 0;
+        return $this->delete()->where($column, $operator, $value)->execute()->rowCount() > 0;
     }
     
-    public function deleteIfExists($id)
+    public function deleteIfExists(int $id)
     {
         return $this->deleteWhere('id', $id);
     }
@@ -575,17 +573,17 @@ class Repository
     
     public function newest(string $column = 'created_at'): self
     {
-        return $this->orderAsc($column);
+        return $this->orderDesc($column);
     }
     
     public function oldest(string $column = 'created_at'): self
     {
-        return $this->orderDesc($column);
+        return $this->orderAsc($column);
     }
     
     public function latest(string $column = 'id'): self
     {
-        return $this->orderAsc($column);
+        return $this->orderDesc($column);
     }
     
     public function groupBy(string ...$columns): self
@@ -616,9 +614,9 @@ class Repository
         return $this->getAll();
     }
     
-    public function take(int $value)
+    public function take(int $count)
     {
-        return $this->range(0, $value);
+        return $this->range(0, $count);
     }
 
     public function paginate(int $items_per_page): Pager
@@ -664,7 +662,10 @@ class Repository
     
     public function subQuery($callback): self
     {
-        call_user_func_array($callback, [$this]);
+        if (!is_null($callback)) {
+            call_user_func_array($callback, [$this]);
+        }
+
         return $this;
     }
     

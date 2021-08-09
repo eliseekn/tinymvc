@@ -15,7 +15,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Create new repository file 
+ * Create new console command 
  */
 class Cmd extends Command
 {

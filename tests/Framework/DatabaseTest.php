@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 
 use Core\Database\QueryBuilder;
 use Core\Database\Repository;
@@ -19,6 +18,8 @@ class DatabaseTest extends TestCase
 
     function setUp(): void
     {
+        
+
         $this->qb = QueryBuilder::table('users');
         $this->repository = new Repository('users');
     }
@@ -160,7 +161,7 @@ class DatabaseTest extends TestCase
         $this->assertEquals('SELECT * FROM users', $query);
         $this->resetQuery();
 
-        list($query, $args) = $this->repository->find(1)->toSQL();
+        list($query, $args) = $this->repository->select('*')->where('id', 1)->toSQL();
 
         $this->assertEquals('SELECT * FROM users WHERE id = ?', $query);
         $this->assertEquals(1, $args[0]);
@@ -192,15 +193,15 @@ class DatabaseTest extends TestCase
 
     public function testRepositoryFind()
     {
-        $data = $this->repository->find(1)->one();
+        $data = $this->repository->find(1);
         $this->assertEquals('admin', $data->name);
         $this->resetQuery();
 
-        $data = $this->repository->findOne(1);
+        /* $data = $this->repository->findOne(1);
         $this->assertEquals('admin', $data->name);
-        $this->resetQuery();
+        $this->resetQuery(); */
 
-        $data = $this->repository->find(1)->all();
+        $data = $this->repository->findAll(1);
         $this->assertEquals(1, count($data));
         $this->resetQuery();
 
@@ -208,87 +209,87 @@ class DatabaseTest extends TestCase
         $this->assertEquals(1, count($data));
         $this->resetQuery();
 
-        $data = $this->repository->findRaw('id = 1')->one();
+        $data = $this->repository->findRaw('id = 1')->get();
         $this->assertEquals('admin', $data->name);
         $this->resetQuery();
 
-        $data = $this->repository->findRaw('id = ?', [1])->one();
+        $data = $this->repository->findRaw('id = ?', [1])->get();
         $this->assertEquals('admin', $data->name);
         $this->resetQuery();
 
-        $data = $this->repository->findRaw('id = :id', ['id' => 1])->one();
+        $data = $this->repository->findRaw('id = :id', ['id' => 1])->get();
         $this->assertEquals('admin', $data->name);
         $this->resetQuery();
 
-        $data = $this->repository->select('name')->where('id', 'null')->one();
+        $data = $this->repository->select('name')->where('id', 'null')->get();
         $this->assertFalse($data);
         $this->resetQuery();
 
-        $data = $this->repository->select('name')->whereNull('id')->one();
+        $data = $this->repository->select('name')->whereNull('id')->get();
         $this->assertFalse($data);
         $this->resetQuery();
 
-        $data = $this->repository->select('name')->where('id', '!null')->one();
+        $data = $this->repository->select('name')->where('id', '!null')->get();
         $this->assertEquals('admin', $data->name);
         $this->resetQuery();
 
-        $data = $this->repository->select('name')->whereNotNull('id')->one();
+        $data = $this->repository->select('name')->whereNotNull('id')->get();
         $this->assertEquals('admin', $data->name);
         $this->resetQuery();
 
-        $data = $this->repository->select('name')->where('id', 'in', [1, 2, 3])->one();
+        $data = $this->repository->select('name')->where('id', 'in', [1, 2, 3])->get();
         $this->assertEquals('admin', $data->name);
         $this->resetQuery();
 
-        $data = $this->repository->select('name')->whereIn('id', [1, 2, 3])->one();
+        $data = $this->repository->select('name')->whereIn('id', [1, 2, 3])->get();
         $this->assertEquals('admin', $data->name);
         $this->resetQuery();
 
-        $data = $this->repository->select('name')->where('id', '!in', [2, 3])->one();
+        $data = $this->repository->select('name')->where('id', '!in', [2, 3])->get();
         $this->assertEquals('admin', $data->name);
         $this->resetQuery();
 
-        $data = $this->repository->select('name')->whereNotIn('id', [2, 3])->one();
+        $data = $this->repository->select('name')->whereNotIn('id', [2, 3])->get();
         $this->assertEquals('admin', $data->name);
         $this->resetQuery();
 
-        $data = $this->repository->select('name')->where('id', 'between', [1, 3])->one();
+        $data = $this->repository->select('name')->where('id', 'between', [1, 3])->get();
         $this->assertEquals('admin', $data->name);
         $this->resetQuery();
 
-        $data = $this->repository->select('name')->whereBetween('id', 1, 3)->one();
+        $data = $this->repository->select('name')->whereBetween('id', 1, 3)->get();
         $this->assertEquals('admin', $data->name);
         $this->resetQuery();
 
-        $data = $this->repository->select('name')->where('id', '!between', [2, 3])->one();
+        $data = $this->repository->select('name')->where('id', '!between', [2, 3])->get();
         $this->assertEquals('admin', $data->name);
         $this->resetQuery();
 
-        $data = $this->repository->select('name')->whereNotBetween('id', 2, 3)->one();
+        $data = $this->repository->select('name')->whereNotBetween('id', 2, 3)->get();
         $this->assertEquals('admin', $data->name);
         $this->resetQuery();
 
-        $data = $this->repository->select('name')->where('name', 'like', 'admin')->one();
+        $data = $this->repository->select('name')->where('name', 'like', 'admin')->get();
         $this->assertEquals('admin', $data->name);
         $this->resetQuery();
 
-        $data = $this->repository->select('name')->whereLike('name', 'admin')->one();
+        $data = $this->repository->select('name')->whereLike('name', 'admin')->get();
         $this->assertEquals('admin', $data->name);
         $this->resetQuery();
 
-        $data = $this->repository->select('name')->where('name', '!like', 'admin')->all();
+        $data = $this->repository->select('name')->where('name', '!like', 'admin')->getAll();
         $this->assertEmpty($data);
         $this->resetQuery();
 
-        $data = $this->repository->select('name')->whereNotLike('name', 'admin')->all();
+        $data = $this->repository->select('name')->whereNotLike('name', 'admin')->getAll();
         $this->assertEmpty($data);
         $this->resetQuery();
 
-        $data = $this->repository->select('name')->where('id', 1)->and('name', 'admin')->one();
+        $data = $this->repository->select('name')->where('id', 1)->and('name', 'admin')->get();
         $this->assertEquals('admin', $data->name);
         $this->resetQuery();
 
-        $data = $this->repository->select('name')->where('id', 2)->or('name', 'test')->one();
+        $data = $this->repository->select('name')->where('id', 2)->or('name', 'test')->get();
         $this->assertFalse($data);
         $this->resetQuery();
 
@@ -297,22 +298,22 @@ class DatabaseTest extends TestCase
 
     public function testRepositoryHaving()
     {
-        $data = $this->repository->select('name')->having('name', 'admin')->one();
+        $data = $this->repository->select('name')->having('name', 'admin')->get();
         $this->assertEquals('admin', $data->name);
         $this->resetQuery();
 
-        $data = $this->repository->select('name')->havingRaw('name = ?', ['admin'])->one();
+        $data = $this->repository->select('name')->havingRaw('name = ?', ['admin'])->get();
         $this->assertEquals('admin', $data->name);
         $this->resetQuery();
 
-        $data = $this->repository->select('name')->havingRaw('name = :name', ['name' => 'admin'])->one();
+        $data = $this->repository->select('name')->havingRaw('name = :name', ['name' => 'admin'])->get();
         $this->assertEquals('admin', $data->name);
         $this->resetQuery();
     }
 
     public function testRepositoryExists()
     {
-        $data = $this->repository->find( 1)->exists();
+        $data = $this->repository->select('*')->where('id', 1)->exists();
         $this->assertTrue($data);
         $this->resetQuery();
     }

@@ -12,8 +12,8 @@ class TokensTable_20210403034738
     {
         Migration::createTable($this->table)
             ->addPrimaryKey('id')
-            ->addString('email')
-            ->addString('token')->unique()
+            ->addString('email', 30)
+            ->addString('token', 50)->unique()
             ->addTimestamp('expire')->nullable()
             ->migrate();
     }

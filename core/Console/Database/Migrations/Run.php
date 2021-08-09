@@ -23,7 +23,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Run extends Command
 {
-    protected static $defaultName = 'db:migrations:run';
+    protected static $defaultName = 'migrations:run';
 
     protected function configure()
     {
@@ -38,7 +38,7 @@ class Run extends Command
 
         if (!QueryBuilder::tableExists('migrations')) {
             Migration::createTable('migrations')
-                ->addInt('id')->autoIncrement()->primaryKey()
+                ->addprimaryKey('id')
                 ->addString('name')
                 ->migrate();
 
@@ -71,11 +71,9 @@ class Run extends Command
             return;
         }
 
-        //create migration table
         $migration = '\App\Database\Migrations\\' . $table;
         (new $migration())->create();
         
-        //add migration table from migrated tables
         QueryBuilder::table('migrations')
             ->insert(['name' => $table])
             ->execute();

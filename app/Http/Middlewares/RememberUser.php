@@ -4,17 +4,17 @@ namespace App\Http\Middlewares;
 
 use Core\Support\Cookies;
 use Core\Support\Session;
-use App\Database\Repositories\UserRepository;
+use App\Database\Models\User;
 
 /**
  * Check for user cookie
  */
 class RememberUser
 {    
-    public function handle(UserRepository $userRepository)
+    public function handle()
     {
         if (Cookies::has('user')) {
-            $user = $userRepository->findByEmail(Cookies::get('user'));
+            $user = User::findBy('email', Cookies::get('user'));
 
             if ($user !== false && $user->remember) {
                 Session::create('user', $user);

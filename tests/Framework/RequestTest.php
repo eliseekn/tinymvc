@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 
 use Core\Http\Request;
 use PHPUnit\Framework\TestCase;
@@ -69,16 +68,16 @@ class RequestTest extends TestCase
         $this->assertFalse($this->request->has('dummy_item'));
     }
 
-    public function testRequestHasQueries()
+    public function testRequestHasQuerie()
     {
-        $this->assertTrue($this->request->hasQueries('qKey'));
-        $this->assertFalse($this->request->hasQueries('dummy_item'));
+        $this->assertTrue($this->request->hasQuerie('qKey'));
+        $this->assertFalse($this->request->hasQuerie('dummy_item'));
     }
 
-    public function testRequestHasInputs()
+    public function testRequestHasInput()
     {
-        $this->assertTrue($this->request->hasInputs('pKey'));
-        $this->assertFalse($this->request->hasInputs('dummy_item'));
+        $this->assertTrue($this->request->hasInput('pKey'));
+        $this->assertFalse($this->request->hasInput('dummy_item'));
     }
 
     public function testRequestFilled()
@@ -168,7 +167,7 @@ class RequestTest extends TestCase
 
     public function testHttpAuthHeader()
     {
-        $header = $this->request->getHttpAuth;
+        $header = $this->request->getHttpAuth();
 
         $this->assertEquals('Bearer', $header[0]);
         $this->assertEquals('abcde1234', $header[1]);

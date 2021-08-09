@@ -265,4 +265,17 @@ class Request
 
         return $all;
     }
+
+    public function validate(array $inputs = [], array $rules = [], array $messages = [])
+    {
+        if (empty($inputs)) {
+            $inputs = $this->inputs();
+        }
+
+        $validator = Validator::validate($inputs, $rules, $messages);
+
+        if ($validator->fails()) {
+            redirect()->back()->withInputs($inputs)->withErrors($validator->errors())->go();
+        }
+    }
 }

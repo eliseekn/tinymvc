@@ -61,7 +61,7 @@ class Database
         try {
             return $this->pdo->exec($query);
 		} catch (PDOException $e) {
-			throw new PDOException($e->getMessage(), $e->getCode(), $e->getPrevious());
+			throw new PDOException($e->getMessage(), (int) $e->getCode(), $e->getPrevious());
         }
     }
 
@@ -76,7 +76,7 @@ class Database
 			$stmt = $this->pdo->prepare(trim($query));
 			$stmt->execute($args);
 		} catch (PDOException $e) {
-			throw new PDOException($e->getMessage(), $e->getCode(), $e->getPrevious());
+			throw new PDOException($e->getMessage(), (int) $e->getCode(), $e->getPrevious());
 		}
 
 		return $stmt;

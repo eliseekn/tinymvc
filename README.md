@@ -62,7 +62,7 @@ php console app:setup
 
 On your terminal:
 ```
-php console db:migrations:run --seed
+php console migrations:run --seed
 ```
 3\. Start a local server development
 

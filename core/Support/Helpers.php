@@ -76,9 +76,9 @@ if (!function_exists('session_pull')) {
 }
 
 if (!function_exists('session_put')) {
-	function session_put(string $name, $data, $default = null)
+	function session_push(string $name, $data, $default = null)
 	{
-		Session::put($name, $data, $default);
+		Session::push($name, $data, $default);
 	}
 }
 
@@ -153,6 +153,7 @@ if (!function_exists('sanitize')) {
         $str = stripslashes($str);
         $str = htmlspecialchars($str);
         $str = strip_tags($str);
+
         return $str;
     }
 }
@@ -321,7 +322,7 @@ if (!function_exists('storage')) {
 
 if (!function_exists('resources')) {    
     /**
-     * generate resources path url
+     * Generate resources path url
      */
     function resources(string $path, $params = null)
     {
@@ -379,7 +380,7 @@ if (!function_exists('render')) {
 
 if (!function_exists('real_path')) {    
     /**
-     * Replace '.' by directory separator
+     * Replace '.' by OS's directory separator
      */
     function real_path(string $path)
     {
@@ -425,9 +426,6 @@ if (!function_exists('slugify')) {
 }
 
 if (!function_exists('generate_token')) {
-	/**
-	 * Random token generator
-	 */
 	function generate_token(int $length = 32)
 	{
 		return bin2hex(random_bytes($length));
@@ -487,9 +485,6 @@ if (!function_exists('get_file_name')) {
 }
 
 if (!function_exists('save_log')) {
-    /**
-	 * Save log message to file
-	 */
 	function save_log(string $message)
 	{
         if (!Storage::path(config('storage.logs'))->isDir()) {

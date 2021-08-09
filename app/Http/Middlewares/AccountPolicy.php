@@ -2,8 +2,9 @@
 
 namespace App\Http\Middlewares;
 
-use Core\Support\Auth;
 use Core\Http\Request;
+use Core\Support\Auth;
+use Core\Support\Alert;
 
 /**
  * Check if email is verified
@@ -14,8 +15,8 @@ class AccountPolicy
     {
         if (config('security.auth.email_verification') === true) {
             if (!Auth::get('verified')) {
-                redirect()->url('login')->intended($request->fullUri())
-                    ->withAlert('error', __('email_not_verifed'))->go();
+                Alert::default(__('email_not_verifed'))->error();
+                redirect()->url('login')->intended($request->fullUri())->go();
             }
         }
     }

@@ -22,10 +22,10 @@ class Validator
 
     public static function validate(array $inputs, array $rules = [], array $messages = []): self
     {
-        $validators = empty($rules) ? static::$rules : $rules;
-        $error_messages = empty($messages) ? static::$messages : $messages;
+        $rules = empty($rules) ? static::$rules : $rules;
+        $messages = empty($messages) ? static::$messages : $messages;
         static::$inputs = $inputs;
-        static::$errors = GUMP::is_valid(static::$inputs, $validators, $error_messages);
+        static::$errors = GUMP::is_valid(static::$inputs, $rules, $messages);
 
         return new self();
     }
@@ -34,13 +34,25 @@ class Validator
     {
         return is_array(static::$errors);
     }
-    
+        
+    /**
+     * Generate errors messages array according to input field name
+     * 
+     * To work properly on custom errors messages you must explicitly define the
+     * input field name as {field} in your error message string
+     *
+     * @return array
+     */
     public function errors()
     {
         $errors = [];
 
-        foreach ((array) static::$errors as $error) {
-            foreach (static::$inputs as $key => $input) {
+        if (!$this->fails()) {
+            return $errors;
+        }
+
+        foreach (static::$errors as $error) {
+            foreach (static::$inputs as $key => $value) {
                 if (strpos(strtolower($error), $key)) {
                     $errors = array_merge($errors, [$key => $error]);
                 }
@@ -58,6 +70,6 @@ class Validator
     public function redirectOnFail()
     {
         return !$this->fails() ? $this 
-            : redirect()->back()->withErrors($this->errors())->withInputs($this->inputs())->go(400);
+            : redirect()->back()->withErrors($this->errors())->withInputs($this->inputs())->go();
     }
 }

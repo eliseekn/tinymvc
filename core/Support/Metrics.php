@@ -25,6 +25,7 @@ class Metrics
     public const MIN = 'MIN';
     public const TODAY = 'today';
     public const DAY = 'day';
+    public const WEEKDAY = 'weekday';
     public const WEEK = 'week';
     public const MONTH = 'month';
     public const YEAR = 'year';
@@ -73,8 +74,8 @@ class Metrics
                     ->groupBy('DAYNAME(created_at)')
                     ->fetchAll();
 
-            case self::WEEK:
-                $qb->select($type . '(' . $column . ') AS value', 'DAYNAME(created_at) AS day');
+            case self::WEEKDAY:
+                $qb->select($type . '(' . $column . ') AS value', 'WEEKDAY(created_at) AS weekday');
 
                 $interval > 0
                     ? $qb->where('DATE(created_at)', '>', Carbon::now()->subWeeks($interval)->toDateString())
@@ -85,9 +86,24 @@ class Metrics
                         $q->rawQuery($query[0], $query[1]);
                     }
                 })
-                    ->groupBy('DAYNAME(created_at)')
+                    ->groupBy('WEEKDAY(created_at)')
                     ->fetchAll();
 
+            case self::WEEK:
+                $qb->select($type . '(' . $column . ') AS value', 'WEEK(created_at) AS week');
+
+                $interval > 0
+                    ? $qb->where('DATE(created_at)', '>', Carbon::now()->subWeeks($interval)->toDateString())
+                    : $qb->where('MONTH(created_at)', $month)->and('YEAR(created_at)', $year);
+
+                return $qb->subQuery(function ($q) use ($query) {
+                    if (!is_null($query) && !empty($query)) {
+                        $q->rawQuery($query[0], $query[1]);
+                    }
+                })
+                    ->groupBy('WEEK(created_at)')
+                    ->fetchAll();
+    
             case self::MONTH:
                 $qb->select($type . '(' . $column . ') AS value', 'MONTHNAME(created_at) AS month');
 

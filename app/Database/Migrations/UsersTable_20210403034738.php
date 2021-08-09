@@ -12,8 +12,8 @@ class UsersTable_20210403034738
     {
         Migration::createTable($this->table)
             ->addPrimaryKey('id')
-            ->addString('name')
-            ->addString('email')->unique()
+            ->addString('name', 30)
+            ->addString('email', 30)->unique()
             ->addBoolean('verified')->default(0)
             ->addString('password')
             ->migrate();

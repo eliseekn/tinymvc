@@ -20,7 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Delete extends Command
 {
-    protected static $defaultName = 'db:migrations:delete';
+    protected static $defaultName = 'migrations:delete';
 
     protected function configure()
     {
@@ -54,11 +54,9 @@ class Delete extends Command
             return;
         }
 
-        //drop migration table
         $migration = '\App\Database\Migrations\\' . $table;
         (new $migration())->drop();
         
-        //remove migration table from migrated tables
         QueryBuilder::table('migrations')->deleteWhere('name', $table)->execute();
 
         $output->writeln('<info>Table "' . $table . '" has been deleted</info>');

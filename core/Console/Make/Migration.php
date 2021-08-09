@@ -25,7 +25,6 @@ class Migration extends Command
     {
         $this->setDescription('Create new migration');
         $this->addArgument('migration', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of migration table (separated by space if many)');
-        $this->addOption('repository', null, InputOption::VALUE_NONE, 'Create new repository');
         $this->addOption('seed', null, InputOption::VALUE_NONE, 'Create new seed');
     }
 
@@ -41,18 +40,6 @@ class Migration extends Command
             }
 
             $output->writeln('<info>Migration "' . $class . '" has been created</info>');
-        }
-
-        if ($input->getOption('repository')) {
-            foreach ($migrations as $migration) {
-                list($name, $class) = Make::generateClass($migration, '');
-
-                if (!Make::createRepository($migration)) {
-                    $output->writeln('<fg=yellow>Failed to create repository "' . $class . '"</fg>');
-                }
-
-                $output->writeln('<info>Repository "' . $class . '" has been created</info>');
-            }
         }
 
         if ($input->getOption('seed')) {

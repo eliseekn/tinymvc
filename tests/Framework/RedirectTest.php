@@ -1,8 +1,7 @@
 <?php
-declare(strict_types = 1);
 
 use Core\Routing\Route;
-//use Core\Support\Session;
+use Core\Support\Session;
 use PHPUnit\Framework\TestCase;
 
 class RedirectTest extends TestCase
@@ -20,11 +19,12 @@ class RedirectTest extends TestCase
     public function testRedirectRoute()
     {
         Route::get('test', function () {})->name('test.name')->register();
+            
         $this->assertEquals(url('test'), redirect()->route('test.name')->url);
         $this->resetRoutes();
     }
 
-    /* public function testRedirectBack()
+    public function testRedirectBack()
     {
         Session::create('history', [
             url('test/1'),
@@ -34,5 +34,5 @@ class RedirectTest extends TestCase
 
         $this->assertEquals(url('test/2'), redirect()->back()->url);
         $this->resetRoutes();
-    } */
+    }
 }

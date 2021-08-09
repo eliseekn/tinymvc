@@ -4,14 +4,13 @@ namespace App\Http\Middlewares;
 
 use Core\Support\Auth;
 use Core\Http\Request;
-use App\Database\Repositories\UserRepository;
 
 /**
  * Authenticated user api
  */
 class HttpAuth
 {    
-    public function handle(Request $request, UserRepository $userRepository)
+    public function handle(Request $request)
     {
         if (empty($request->getHttpAuth)) {
             response()->json(__('auth_required'), [], 401);
@@ -26,7 +25,7 @@ class HttpAuth
         $credentials = base64_decode($credentials);
         list($email, $password) = explode(':', $credentials);
 
-        if (!Auth::checkCredentials($userRepository, $email, $password, $user)) {
+        if (!Auth::checkCredentials($email, $password, $user)) {
             response()->json(__('invalid_credentials'), [], 401);
         }
     }

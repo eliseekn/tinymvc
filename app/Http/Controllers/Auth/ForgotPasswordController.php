@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use Carbon\Carbon;
 use Core\Http\Request;
+use Core\Support\Alert;
 use App\Mails\TokenMail;
 use App\Database\Models\User;
-use App\Database\Repositories\TokenRepository;
-use App\Database\Repositories\UserRepository;
+use App\Database\Models\Token;
 use App\Http\Validators\AuthRequest;
 
 /**
@@ -18,25 +18,32 @@ class ForgotPasswordController
 	/**
 	 * Send reset password link notification
 	 */
-	public function notify(Request $request, TokenRepository $tokenRepository)
+	public function notify(Request $request)
 	{
 		$token = generate_token();
 
 		if (TokenMail::send($request->email, $token)) {
-            $tokenRepository->store($request->email, $token, Carbon::now()->addHour()->toDateTimeString());
-			redirect()->back()->withAlert('success', __('password_reset_link_sent'))->go();
-		} 
+            Token::create([
+                'email'=> $request->email,
+                'token' => $token,
+                'expire' => Carbon::now()->addHour()->toDateTimeString()
+            ]);
+
+            Alert::default(__('password_reset_link_sent'))->success();
+			redirect()->back()->go();
+		}
         
-		redirect()->back()->withAlert('error', __('password_reset_link_not_sent'))->go();
+        Alert::default(__('password_reset_link_not_sent'))->error();
+        redirect()->back()->go();
 	}
 	
-	public function reset(Request $request, TokenRepository $tokenRepository)
+	public function reset(Request $request)
 	{
         if (!$request->has('email', 'token')) {
             response()->send('Bad Request', [], 400);
         }
 
-        $token = $tokenRepository->findByEmail($request->email);
+        $token = Token::findBy('email', $request->email);
 
         if (!$token || $token->token !== $request->token) {
 			response()->send(__('invalid_password_reset_link'), [], 400);
@@ -48,21 +55,23 @@ class ForgotPasswordController
 
         $token->delete();
 
-		render('auth.password.new', ['email' => $token->email]);
+		render('auth.password.new', ['email' => $request->email]);
 	}
 	
-	public function update(Request $request, UserRepository $userRepository)
+	public function update(Request $request)
 	{
 		AuthRequest::validate($request->except('csrf_token'))->redirectOnFail();
-        $user = $userRepository->findByEmail($request->email);
+        $user = User::findBy('email', $request->email);
 
         if (!$user) {
-		    redirect()->back()->withAlert('error', __('password_not_reset'))->go();
+            Alert::default(__('password_not_reset'))->error();
+            redirect()->back()->go();
         }
 
         $user->password = hash_pwd($request->password);
         $user->save();
 
-        redirect()->url('login')->withAlert('success', __('password_reset'))->go();
+        Alert::default(__('password_reset'))->success();
+        redirect()->url('login')->go();
 	}
 }

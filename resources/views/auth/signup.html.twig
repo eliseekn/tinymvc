@@ -7,6 +7,8 @@
 {% block body %}
 	<div class="card shadow p-4">
 		<form method="post" action="{{ url('register') }}">
+			{{ csrf_token_input()|raw }}
+
 			<div class="form-group">
 				<label for="name">{{ __('name') }}</label>
 				<input type="text" class="form-control {{ errors.name ? 'is-invalid'  }}" value="{{ inputs.name ?: '' }}" aria-describedby="name-error" name="name" id="name" autofocus>

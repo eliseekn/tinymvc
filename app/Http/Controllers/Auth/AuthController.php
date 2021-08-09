@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Core\Support\Auth;
 use Core\Http\Request;
+use Core\Support\Auth;
+use Core\Support\Alert;
 use App\Mails\WelcomeMail;
-use App\Database\Repositories\UserRepository;
 use App\Http\Validators\AuthRequest;
-use App\Database\Repositories\TokenRepository;
 use App\Http\Validators\RegisterUser;
 
 /**
@@ -39,23 +38,25 @@ class AuthController
         Auth::redirectIfLogged();
     }
 
-	public function authenticate(Request $request, UserRepository $userRepository, TokenRepository $tokenRepository)
+	public function authenticate(Request $request)
 	{
         AuthRequest::validate($request->except('csrf_token'))->redirectOnFail();
-        Auth::attempt($request, $userRepository, $tokenRepository);
+        Auth::attempt($request);
     }
     
-    public function register(Request $request, UserRepository $userRepository, TokenRepository $tokenRepository)
+    public function register(Request $request)
     {
         RegisterUser::register()->validate($request->except('csrf_token'))->redirectOnFail();
-        Auth::create($request, $userRepository);
+        $user = Auth::create($request);
 
         if (!config('security.auth.email_verification')) {
-            WelcomeMail::send($request->email, $request->name);
-            redirect()->url('login')->withAlert('success', __('account_created'))->go();
+            WelcomeMail::send($user->email, $user->name);
+
+            Alert::default(__('account_created'))->success();
+            redirect()->url('login')->go();
         }
 
-        (new EmailVerificationController())->notify($request, $tokenRepository);
+        (new EmailVerificationController())->notify($request);
     }
 	
 	public function logout(string $redirect = '/')

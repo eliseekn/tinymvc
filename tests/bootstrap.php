@@ -9,3 +9,5 @@
 //load packages and main configuration for tests
 require 'vendor/autoload.php';
 require_once 'bootstrap.php';
+
+session_start();

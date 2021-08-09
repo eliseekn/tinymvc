@@ -71,8 +71,6 @@ class TwigExtensions extends \Twig\Extension\AbstractExtension implements \Twig\
             new \Twig\TwigFunction('current_url', 'current_url'),
             new \Twig\TwigFunction('url_contains', 'url_contains'),
             new \Twig\TwigFunction('config', 'config'),
-            new \Twig\TwigFunction('get_file_extension', 'get_file_extension'),
-            new \Twig\TwigFunction('get_file_name', 'get_file_name'),
             new \Twig\TwigFunction('__', '__'),
             new \Twig\TwigFunction('env', 'env'),
             new \Twig\TwigFunction('date', 'date'),

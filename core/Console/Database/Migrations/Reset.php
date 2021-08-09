@@ -20,7 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Reset extends Command
 {
-    protected static $defaultName = 'db:migrations:reset';
+    protected static $defaultName = 'migrations:reset';
 
     protected function configure()
     {

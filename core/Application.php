@@ -21,7 +21,6 @@ class Application
 {
     public function __construct()
     {
-        //register whoops error handler
         Whoops::register();
 
         $routes = Storage::path(config('storage.routes'))->files();
@@ -46,7 +45,6 @@ class Application
                 die($e);
             }
         
-            //send 500 response
             render(config('errors.views.500'), [], 500);
         }
     }

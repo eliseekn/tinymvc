@@ -103,21 +103,6 @@ class Make
         return true;
     }
 
-    public static function createRepository(string $repository)
-    {
-        list($name, $class) = self::generateClass($repository, 'repository', true, true);
-
-        $data = self::stubs()->readFile('Repository.stub');
-        $data = str_replace('CLASSNAME', $class, $data);
-        $data = str_replace('MODELNAME', ucfirst($name), $data);
-
-        if (!Storage::path(config('storage.repositories'))->writeFile($class . '.php', $data)) {
-            return false;
-        }
-        
-        return true;
-    }
- 
     public static function createModel(string $model)
     {
         list($name, $class) = self::generateClass($model, '');

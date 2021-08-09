@@ -13,8 +13,8 @@ use Core\Http\Request;
 use Core\Support\Cookies;
 use Core\Support\Session;
 use Core\Support\Encryption;
-use App\Database\Repositories\UserRepository;
-use App\Database\Repositories\TokenRepository;
+use App\Database\Models\User;
+use App\Database\Models\Token;
 
 /**
  * Manage authentications
@@ -26,11 +26,11 @@ class Auth
         return Session::get('auth_attempts', 0);
     }
 
-    public static function attempt(Request $request, UserRepository $userRepository)
+    public static function attempt(Request $request)
     {
-        Session::put('auth_attempts', 1, 0);
+        Session::push('auth_attempts', 1, 0);
 
-        if (self::checkCredentials($userRepository, $request->email, $request->password, $user)) {
+        if (self::checkCredentials($request->email, $request->password, $user)) {
             Session::flush('auth_attempts', 'auth_attempts_timeout');
             Session::create('user', $user);
                 
@@ -44,18 +44,19 @@ class Auth
         if (config('security.auth.max_attempts') > 0 && self::getAttempts() >= config('security.auth.max_attempts')) {
             redirect()->back()->with('auth_attempts_timeout', Carbon::now()->addMinutes(config('security.auth.unlock_timeout'))->toDateTimeString())->go();
         }
-            
-        redirect()->back()->withInputs($request->only('email', 'password'))->withAlert('error', __('login_failed'))->go();
+         
+        Alert::default(__('login_failed'))->error();
+        redirect()->back()->withInputs($request->only('email', 'password'))->go();
     }
     
-    public static function checkCredentials(UserRepository $userRepository, string $email, string $password, &$user)
+    public static function checkCredentials(string $email, string $password, &$user)
     {
         if (filter_var($email, FILTER_VALIDATE_EMAIL) !== false) {
-            $user = $userRepository->findByEmail($email);
+            $user = User::findBy('email', $email);
             return $user !== false && Encryption::check($password, $user->password);
         }
 
-        $users = $userRepository->findAllByEmail($email);
+        $users = User::where('email', 'like', $email)->getAll();
 
         if (!$users) {
             return false;
@@ -71,22 +72,29 @@ class Auth
         return false;
     }
     
-    public static function checkToken(UserRepository $userRepository, TokenRepository $tokens, string $token, &$user)
+    public static function checkToken(string $token, &$user)
     {
-        $user = $userRepository->findByToken($tokens, $token);
+        $email = Token::findBy('token', $token)->email;
+        $user = User::findBy('email', $email);
+
         return $user !== false;
     }
     
-    public static function create(Request $request, UserRepository $userRepository)
+    public static function create(Request $request)
     {
-        return $userRepository->store($request);
+        $request->set('password', hash_pwd($request->password));
+
+        return User::create($request->except('csrf_token'));
     }
     
-    public static function createToken(TokenRepository $tokenRepository, string $email): string
+    public static function createToken(string $email): string
     {
-        $token = generate_token();
-        $tokenRepository->store($email, $token);
-        return Encryption::encrypt($token);
+        $token = Token::create([
+            'email' => $email,
+            'token' => generate_token(),
+        ]);
+
+        return Encryption::encrypt($token->token);
     }
 
     public static function check()
@@ -113,7 +121,8 @@ class Auth
     public static function forget()
     {
         if (!self::check()) {
-            redirect()->url('login')->withAlert('error', __('not_logged'))->go();
+            Alert::default(__('not_logged'))->error();
+            redirect()->url('login')->go();
         }
 
         Session::flush('user', 'history', 'csrf_token');
@@ -126,16 +135,21 @@ class Auth
     public static function forgetAndRedirect(string $redirect = '/')
     {
         self::forget();
-        redirect()->url($redirect)->withToast('success', __('logged_out'))->go();
+
+        Alert::toast(__('logged_out'))->success();
+        redirect()->url($redirect)->go();
     }
     
     public static function redirectIfLogged(string $redirect = '/')
     {
         if (!self::check()) {
-           redirect()->url('login')->withAlert('error', __('not_logged'))->go();
+            Alert::toast(__('not_logged'))->error();
+            redirect()->url('login')->go();
         }
 
         $url = !Session::has('intended') ? $redirect : Session::pull('intended');
-        redirect()->url($url)->withToast('success', __('welcome', ['name' => Auth::get('name')]))->go();
+
+        Alert::toast(__('welcome', ['name' => Auth::get('name')]))->success();
+        redirect()->url($url)->go();
     }
 }

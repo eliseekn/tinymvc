@@ -49,6 +49,11 @@ class Route
         return self::add('PATCH ' . $uri, $callback);
     }
     
+    public static function put(string $uri, $callback): self
+    {
+        return self::add('PUT ' . $uri, $callback);
+    }
+    
     public static function any(string $uri, $callback): self
     {
         return self::add('GET|POST|DELETE|PUT|OPTIONS|PATCH ' . $uri, $callback);
@@ -57,6 +62,13 @@ class Route
     public static function match(string $methods, string $uri, $callback): self
     {
         return self::add($methods . ' ' . $uri, $callback);
+    }
+
+    public static function view(string $uri, string $view, array $params = []): self
+    {
+        return self::get($uri, function () use ($view, $params) {
+            render($view, $params);
+        });
     }
 
     public function name(string $name): self
@@ -71,12 +83,6 @@ class Route
         return $this;
     }
     
-    public function lock(string ...$roles): self
-    {
-        static::$tmp_routes[static::$route] += ['locked' => $roles];
-        return $this;
-    }
-
     public static function groupMiddlewares(array $middlewares, $callback): self
     {
         call_user_func($callback);

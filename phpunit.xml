@@ -12,8 +12,8 @@
     stopOnFailure = "false">
 
     <testsuites>
-        <testsuite name="TinyMVC Tests">
-            <directory>./tests</directory>
+        <testsuite name="Project Tests Suite">
+            <directory>tests</directory>
         </testsuite>
     </testsuites>
 </phpunit>

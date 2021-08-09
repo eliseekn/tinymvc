@@ -20,7 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Status extends Command
 {
-    protected static $defaultName = 'db:migrations:status';
+    protected static $defaultName = 'migrations:status';
 
     protected function configure()
     {
@@ -32,7 +32,7 @@ class Status extends Command
         $rows = [];
 
         foreach (Storage::path(config('storage.migrations'))->files() as $table) {
-            $status = $this->isMigrated(get_file_name($table)) ? '<info>migrated</info>' : '<fg=red>not migrated</info>';
+            $status = $this->isMigrated(get_file_name($table)) ? '<info>migrated</info>' : '<fg=red>not migrated</>';
             $rows[] = [get_file_name($table), $status];
         }
 
