@@ -8,6 +8,8 @@
 
 namespace Core\Database;
 
+use Core\Support\Storage;
+
 /**
  * Manage database models
  */
@@ -24,6 +26,20 @@ class Model
             foreach ($data as $key => $value) {
                 $this->{$key} = $value;
             }
+        }
+    }
+
+    /**
+     * Generate model factory
+     * 
+     * @return \Core\Database\Factory
+     */
+    public static function factory(int $count = 1)
+    {
+        foreach (Storage::path(config('storage.factories'))->getFiles() as $file) {
+            $factory = '\App\Database\Factories\\' . get_file_name($file);
+
+            return new $factory($count);
         }
     }
 

@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Database\Factories;
+
+use App\Database\Models\MODELNAME;
+use Core\Database\Factory;
+
+class CLASSNAME extends Factory
+{
+    public static $model = MODELNAME::class;
+
+    public function __construct(int $count = 1)
+    {
+        parent::__construct($count);
+    }
+
+    public function data()
+    {
+        return [
+            //
+        ];
+    }
+}

@@ -148,6 +148,22 @@ class Make
         return true;
     }
     
+    public static function createFactory(string $factory)
+    {
+        list($name, $class) = self::generateClass($factory, 'factory', true, true);
+
+        $data = self::stubs()->readFile('Factory.stub');
+        $data = str_replace('CLASSNAME', self::fixPluralTypo($class, true), $data);
+        $data = str_replace('TABLENAME', self::fixPluralTypo($name), $data);
+        $data = str_replace('MODELNAME', self::fixPluralTypo(ucfirst($name), true), $data);
+
+        if (!Storage::path(config('storage.factories'))->writeFile(self::fixPluralTypo($class, true) . '.php', $data)) {
+            return false;
+        }
+        
+        return true;
+    }
+    
     public static function createHelper(string $helper)
     {
         list($name, $class) = self::generateClass($helper, 'helper', true);

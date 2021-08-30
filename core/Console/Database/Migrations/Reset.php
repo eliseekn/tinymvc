@@ -33,8 +33,8 @@ class Reset extends Command
     {
         $tables = $input->getArgument('table');
 
-        $this->getApplication()->find('db:migrations:delete')->run(new ArrayInput($tables), $output);
-        $this->getApplication()->find('db:migrations:run')->run(new ArrayInput($tables), $output);
+        $this->getApplication()->find('migrations:delete')->run(new ArrayInput($tables), $output);
+        $this->getApplication()->find('migrations:run')->run(new ArrayInput($tables), $output);
 
         if ($input->getOption('seed')) {
             $this->getApplication()->find('db:seed')->run(new ArrayInput($tables), $output);

@@ -8,6 +8,8 @@
 
 namespace App\Database\Seeds;
 
+use App\Database\Models\User;
+
 /**
  * Manage database seeds
  */
@@ -15,6 +17,6 @@ class Seeder
 {
     public static function run()
     {
-        UserSeed::insert();
+        User::factory(5)->create();
     }
 }

@@ -61,15 +61,15 @@ class Migration
         QueryBuilder::dropForeign($table, 'fk_' . $key)->execute();
     }
 
-    /* public static function disableForeignKeyCheck()
+    public static function disableForeignKeyCheck()
     {
-        return;
+        QueryBuilder::setQuery('SET foreign_key_checks = 0')->execute();
     }
 
     public static function enableForeignKeyCheck()
     {
-        return;
-    } */
+        QueryBuilder::setQuery('SET foreign_key_checks = 1')->execute();
+    }
 
     public function addInt(string $name, int $size = 11, bool $unsigned = false): self 
     {

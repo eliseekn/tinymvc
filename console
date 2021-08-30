@@ -32,6 +32,7 @@ $console->add(new \Core\Console\Make\Model());
 $console->add(new \Core\Console\Make\Controller());
 $console->add(new \Core\Console\Make\Validator());
 $console->add(new \Core\Console\Make\Seed());
+$console->add(new \Core\Console\Make\Factory());
 $console->add(new \Core\Console\Make\View());
 $console->add(new \Core\Console\Make\Mail());
 $console->add(new \Core\Console\Make\Middleware());
