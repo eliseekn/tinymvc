@@ -11,7 +11,7 @@
 
 			<div class="form-group">
 				<label for="name">{{ __('name') }}</label>
-				<input type="text" class="form-control {{ errors.name ? 'is-invalid'  }}" value="{{ inputs.name ?: '' }}" aria-describedby="name-error" name="name" id="name" autofocus>
+				<input type="text" class="form-control {{ errors.name ? 'is-invalid'  }}" value="{{ inputs.name ?: '' }}" aria-describedby="name-error" name="name" id="name" maxlenght="50" autofocus>
 
 				{% if errors.name is not empty %}
 					<div id="name-error" class="invalid-feedback">
@@ -22,7 +22,7 @@
 
 			<div class="form-group">
 				<label for="email">{{ __('email') }}</label>
-				<input type="email" id="email" name="email" class="form-control {{ errors.email ? 'is-invalid'  }}" value="{{ inputs.email ?: '' }}" aria-describedby="email-error">
+				<input type="email" id="email" name="email" class="form-control {{ errors.email ? 'is-invalid'  }}" value="{{ inputs.email ?: '' }}" aria-describedby="email-error" maxlenght="50">
 
 				{% if errors.email is not empty %}
 					<div id="email-error" class="invalid-feedback">
@@ -35,7 +35,7 @@
 				<label for="password">{{ __('password') }}</label>
 
 				<div class="d-flex align-items-center">
-					<input type="password" id="password" name="password" class="form-control {{ errors.password ? 'is-invalid'  }}" value="{{ inputs.password ?: '' }}" aria-describedby="password-error">
+					<input type="password" id="password" name="password" class="form-control {{ errors.password ? 'is-invalid'  }}" value="{{ inputs.password ?: '' }}" aria-describedby="password-error" maxlenght="50">
 
 					<span class="btn" id="password-toggler" title="Toggle display">
 						<i class="fa fa-eye-slash"></i>

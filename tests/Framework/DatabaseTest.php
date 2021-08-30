@@ -18,8 +18,6 @@ class DatabaseTest extends TestCase
 
     function setUp(): void
     {
-        
-
         $this->qb = QueryBuilder::table('users');
         $this->repository = new Repository('users');
     }
@@ -30,6 +28,9 @@ class DatabaseTest extends TestCase
         $this->repository->setQuery('');
     }
 
+    /**
+     * Tests on query builder
+     */
     public function testQueryBuilderQuery()
     {
         list($query, $args) = $this->qb->select('*')->toSQL();
@@ -154,6 +155,9 @@ class DatabaseTest extends TestCase
         $this->resetQuery();
     }
 
+    /**
+     * Tests on repository
+     */
     public function testRepositoryQuery()
     {
         list($query, $args) = $this->repository->select('*')->toSQL();
@@ -195,14 +199,6 @@ class DatabaseTest extends TestCase
     {
         $data = $this->repository->find(1);
         $this->assertEquals('admin', $data->name);
-        $this->resetQuery();
-
-        /* $data = $this->repository->findOne(1);
-        $this->assertEquals('admin', $data->name);
-        $this->resetQuery(); */
-
-        $data = $this->repository->findAll(1);
-        $this->assertEquals(1, count($data));
         $this->resetQuery();
 
         $data = $this->repository->findAll(1);
@@ -317,4 +313,6 @@ class DatabaseTest extends TestCase
         $this->assertTrue($data);
         $this->resetQuery();
     }
+
+    //add more tests case
 }

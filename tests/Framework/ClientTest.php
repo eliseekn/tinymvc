@@ -3,6 +3,13 @@
 use Core\Http\Client;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * TODO
+ * 
+ * 1- Duplicate tinymvc folder and start server OR Start your own 
+ * 2- Setup routes properly
+ * 3- Come back here, uncomment code and run tests
+ */
 class ClientTest extends TestCase
 {
     /* private $url = 'http://127.0.0.1:8080/';
@@ -34,13 +41,13 @@ class ClientTest extends TestCase
 
     public function testGetStatusCode404()
     {
-        $client = Client::get($this->url('dummy-uri'));
+        $client = Client::get($this->url('fake-uri'));
         $this->assertEquals(404, $client->getStatusCode()[0]);
     }
 
     public function testPostStatusCode404()
     {
-        $client = Client::post($this->url('dummy-uri'));
+        $client = Client::post($this->url('fake-uri'));
         $this->assertEquals(404, $client->getStatusCode()[0]);
     }
 
@@ -58,13 +65,13 @@ class ClientTest extends TestCase
 
     public function testPatchStatusCode404()
     {
-        $client = Client::patch($this->url('dummy-uri'));
+        $client = Client::patch($this->url('fake-uri'));
         $this->assertEquals(404, $client->getStatusCode()[0]);
     }
 
     public function testPutStatusCode404()
     {
-        $client = Client::put($this->url('dummy-uri'));
+        $client = Client::put($this->url('fake-uri'));
         $this->assertEquals(404, $client->getStatusCode()[0]);
     }
 
@@ -76,13 +83,13 @@ class ClientTest extends TestCase
 
     public function testDeleteStatusCode404()
     {
-        $client = Client::delete($this->url('dummy-uri'));
+        $client = Client::delete($this->url('fake-uri'));
         $this->assertEquals(404, $client->getStatusCode()[0]);
     }
 
     public function testStatusCode405()
     {
-        $client = Client::options($this->url('dummy-uri'));
+        $client = Client::options($this->url('fake-uri'));
         $this->assertEquals(405, $client->getStatusCode()[0]);
     }
 
@@ -156,6 +163,20 @@ class ClientTest extends TestCase
     {
         $data = ['key' => 'value'];
         $client = Client::post($this->url('test/data'), [], $data);
+        $this->assertJsonStringEqualsJsonString(json_encode($data), $client->getBody()[0]);
+    }
+
+    public function testSendDataPutRequest()
+    {
+        $data = ['key' => 'value'];
+        $client = Client::put($this->url('test/data'), [], $data);
+        $this->assertJsonStringEqualsJsonString(json_encode($data), $client->getBody()[0]);
+    }
+
+    public function testSendDataPatchRequest()
+    {
+        $data = ['key' => 'value'];
+        $client = Client::patch($this->url('test/data'), [], $data);
         $this->assertJsonStringEqualsJsonString(json_encode($data), $client->getBody()[0]);
     } */
 }

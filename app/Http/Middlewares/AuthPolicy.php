@@ -7,7 +7,7 @@ use Core\Http\Request;
 use Core\Support\Alert;
 
 /**
- * Check if user is authenticated
+ * Check if user has been authenticated
  */
 class AuthPolicy
 {    

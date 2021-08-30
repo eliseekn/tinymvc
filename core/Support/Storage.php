@@ -122,10 +122,7 @@ class Storage
         return false;
     }
     
-    /**
-     * Get list of files
-     */
-    public function files()
+    public function getFiles()
     {
         $results = [];
         $objects = scandir(self::$path);
@@ -139,9 +136,6 @@ class Storage
         return $results;
     }
 
-    /**
-     * Get list of folders
-     */
     public function getFolders()
     {
         $results = [];

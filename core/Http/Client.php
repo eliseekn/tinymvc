@@ -33,7 +33,7 @@ class Client
         $response = [];
         $status_code = [];
         $curl_array = [];
-        $curl_multi = curl_multi_init(); //init multiple curl processing
+        $curl_multi = curl_multi_init();
         
         if (!is_array($urls)) {
             if (!is_string($urls)) {

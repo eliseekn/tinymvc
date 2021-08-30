@@ -46,7 +46,7 @@ class Run extends Command
         }
 
         if (empty($tables)) {
-            foreach (Storage::path(config('storage.migrations'))->files() as $file) {
+            foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
                 $this->migrate($output, get_file_name($file));
             }
         }

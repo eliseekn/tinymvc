@@ -15,9 +15,6 @@ use App\Mails\VerificationMail;
  */
 class EmailVerificationController
 {
-    /**
-     * Send email verification link
-     */
     public function notify(Request $request)
     {
         $token = generate_token();
@@ -37,9 +34,6 @@ class EmailVerificationController
         redirect()->back()->go();
     }
 
-	/**
-	 * Check email verification link
-	 */
 	public function verify(Request $request)
 	{
         $user = User::findBy('email', $request->queries('email'));

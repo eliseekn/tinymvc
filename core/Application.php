@@ -23,7 +23,7 @@ class Application
     {
         Whoops::register();
 
-        $routes = Storage::path(config('storage.routes'))->files();
+        $routes = Storage::path(config('storage.routes'))->getFiles();
 
         foreach ($routes as $route) {
             require_once config('storage.routes') . $route;

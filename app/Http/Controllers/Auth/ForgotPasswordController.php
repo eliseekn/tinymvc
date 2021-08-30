@@ -15,9 +15,6 @@ use App\Http\Validators\AuthRequest;
  */
 class ForgotPasswordController
 {
-	/**
-	 * Send reset password link notification
-	 */
 	public function notify(Request $request)
 	{
 		$token = generate_token();

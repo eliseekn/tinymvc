@@ -100,16 +100,6 @@ class RouteTest extends TestCase
         $this->resetRoutes();
     }
 
-    public function testLocked()
-    {
-        $roles = ['role1', 'role2'];
-
-        Route::get('uri', function () {})->lock(...$roles)->register();
-
-        $this->assertEquals($roles, $this->getRoute('GET /uri', 'locked'));
-        $this->resetRoutes();
-    }
-
     public function testGroupMiddlewares()
     {
         $middlewares = ['middleware1', 'middleware2'];

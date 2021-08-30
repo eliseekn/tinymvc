@@ -61,6 +61,16 @@ class Migration
         QueryBuilder::dropForeign($table, 'fk_' . $key)->execute();
     }
 
+    /* public static function disableForeignKeyCheck()
+    {
+        return;
+    }
+
+    public static function enableForeignKeyCheck()
+    {
+        return;
+    } */
+
     public function addInt(string $name, int $size = 11, bool $unsigned = false): self 
     {
         self::$qb->column($name, "INT($size)" . ($unsigned ? ' UNSIGNED' : ''));

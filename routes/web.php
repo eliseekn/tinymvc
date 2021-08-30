@@ -7,7 +7,6 @@
  */
 
 use Core\Routing\Route;
-use App\Database\Models\User;
 
 /**
  * Web routes

@@ -27,7 +27,7 @@ Route::groupMiddlewares(['csrf'], function () {
 
 Route::get('logout', [AuthController::class, 'logout'])->register();
 
-Route::get('password/forgot', 'auth.password.forgot')->register();
+Route::view('password/forgot', 'auth.password.forgot')->register();
 Route::get('password/reset', [ForgotPasswordController::class, 'reset'])->register();
 Route::post('password/notify', [ForgotPasswordController::class, 'notify'])->register();
 Route::post('password/update', [ForgotPasswordController::class, 'update'])->register();

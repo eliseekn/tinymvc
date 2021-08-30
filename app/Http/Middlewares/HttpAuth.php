@@ -6,7 +6,7 @@ use Core\Support\Auth;
 use Core\Http\Request;
 
 /**
- * Authenticated user api
+ * Authenticate user by http
  */
 class HttpAuth
 {    

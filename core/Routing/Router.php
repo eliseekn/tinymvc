@@ -10,7 +10,6 @@ namespace Core\Routing;
 
 use Closure;
 use Exception;
-use Core\Support\Auth;
 use Core\Http\Request;
 use Core\Support\Session;
 use Core\Support\DependencyInjection;
@@ -34,6 +33,9 @@ class Router
         return false;
     }
     
+    /**
+     * @throws Exception
+     */
     private static function executeMiddlewares(array $middlewares)
     {
         foreach ($middlewares as $middleware) {

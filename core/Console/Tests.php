@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Tests extends Command
 {
-    protected static $defaultName = 'tests';
+    protected static $defaultName = 'tests:run';
 
     protected function configure()
     {

@@ -7,7 +7,7 @@ use Core\Support\Auth;
 use Core\Support\Alert;
 
 /**
- * Check if email is verified
+ * Check if email has been verified
  */
 class AccountPolicy
 {    

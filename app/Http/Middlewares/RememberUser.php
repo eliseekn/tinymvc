@@ -7,7 +7,7 @@ use Core\Support\Session;
 use App\Database\Models\User;
 
 /**
- * Check for user cookie
+ * Check for stored user cookie
  */
 class RememberUser
 {    

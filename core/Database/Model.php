@@ -21,8 +21,8 @@ class Model
         static::$table = $table;
 
         if (!is_null($data)) {
-            foreach ($data as $key => $column) {
-                $this->{$key} = $column;
+            foreach ($data as $key => $value) {
+                $this->{$key} = $value;
             }
         }
     }
@@ -113,24 +113,6 @@ class Model
         return (new Repository(static::$table))->metrics($column, $type, $period, $interval, $query);
     }
 
-    public function children(string $table, ?string $column = null)
-    {
-        if (is_null($column)) {
-            $column = $this->getColumnFromTable(static::$table);
-        }
-
-        return (new Repository($table))->select('*')->where($column, $this->id);
-    }
-
-    public function parent(string $table, ?string $column = null)
-    {
-        if (is_null($column)) {
-            $column = $this->getColumnFromTable($table);
-        }
-
-        return (new Repository($table))->select('*')->where('id', $this->{$column});
-    }
-
     public static function create(array $data)
     {
         $id = (new Repository(static::$table))->insertGetId($data);
@@ -140,6 +122,61 @@ class Model
         }
 
         return self::find($id);
+    }
+    
+    /**
+     * Get relationship of the model 
+     *
+     * @param  string $table
+     * @param  string|null $column
+     * @return \Core\Database\Repository
+     */
+    public function has(string $table, ?string $column = null)
+    {
+        if (is_null($column)) {
+            $column = $this->getColumnFromTable(static::$table);
+        }
+
+        return (new Repository($table))->select('*')->where($column, $this->id);
+    }
+    
+    /**
+     * Get relationship belongs to the model
+     *
+     * @param  string $table
+     * @param  string|null $column
+     * @return \Core\Database\Repository
+     */
+    public function for(string $table, ?string $column = null)
+    {
+        if (is_null($column)) {
+            $column = $this->getColumnFromTable($table);
+        }
+
+        return (new Repository($table))->select('*')->where('id', $this->{$column});
+    }
+
+    public function set(string $key, $value)
+    {
+        $this->{$key} = $value;
+    }
+
+    public function get(string $key)
+    {
+        return $this->{$key};
+    }
+    
+    /**
+     * Fill model attributes with custom data
+     *
+     * @param  array $data
+     * @return void
+     */
+    public function fill(array $data)
+    {
+        foreach ($data as $key => $value) {
+            $this->{$key} = $value;
+        }
     }
     
     public function update(array $data)
@@ -167,22 +204,24 @@ class Model
     {
         if (is_null($value)) {
             $this->{$column}++;
-        } else {
-            $this->{$column} = $this->{$column} + $value;
+            return;
         }
-
-        return $this->save();
+            
+        $this->{$column} = $this->{$column} + $value;
     }
 
     public function decrement(string $column, $value = null)
     {
         if (is_null($value)) {
             $this->{$column}--;
-        } else {
-            $this->{$column} = $this->{$column} - $value;
         }
 
-        return $this->save();
+        $this->{$column} = $this->{$column} - $value;
+    }
+
+    public function toArray()
+    {
+        return (array) $this;
     }
 
     protected function getColumnFromTable(string $table)

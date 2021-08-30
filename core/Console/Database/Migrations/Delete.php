@@ -33,7 +33,7 @@ class Delete extends Command
         $tables = $input->getArgument('table');
 
         if (empty($tables)) {
-            foreach (Storage::path(config('storage.migrations'))->files() as $file) {
+            foreach (Storage::path(config('storage.migrations'))->getFiles() as $file) {
                 $this->delete($output, get_file_name($file));
             }
 

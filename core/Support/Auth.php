@@ -74,8 +74,8 @@ class Auth
     
     public static function checkToken(string $token, &$user)
     {
-        $email = Token::findBy('token', $token)->email;
-        $user = User::findBy('email', $email);
+        $token = Token::findBy('token', $token);
+        $user = User::findBy('email', $token->email);
 
         return $user !== false;
     }

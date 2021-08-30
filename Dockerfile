@@ -12,6 +12,6 @@ COPY composer.json .
 RUN composer install --no-scripts
 COPY . ./
 
-EXPOSE 8000
+EXPOSE 8080
 
-CMD php console server:start --host=0.0.0.0 --port=8000
+CMD php console server:start --host=0.0.0.0 --port=8080

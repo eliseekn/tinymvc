@@ -14,9 +14,6 @@ use App\Http\Validators\RegisterUser;
  */
 class AuthController
 { 
-    /**
-     * Display login page
-     */
     public function login()
     {
         if (!Auth::check()) {
@@ -26,9 +23,6 @@ class AuthController
         Auth::redirectIfLogged();
     }
 
-    /**
-     * Display signup page
-     */
     public function signup()
     {
         if (!Auth::check()) {
