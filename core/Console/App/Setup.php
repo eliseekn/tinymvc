@@ -98,6 +98,7 @@ class Setup extends Command
             $finish_setup = true;
         }
 
+        $config['APP_ENV'] = 'development';
         $config['ENCRYPTION_KEY'] = generate_token();
 
         Config::saveEnv($config);

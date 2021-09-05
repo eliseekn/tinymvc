@@ -16,7 +16,7 @@ class AccountPolicy
         if (config('security.auth.email_verification') === true) {
             if (!Auth::get('verified')) {
                 Alert::default(__('email_not_verifed'))->error();
-                redirect()->url('login')->intended($request->fullUri())->go();
+                redirect()->to('login')->intended($request->fullUri())->go();
             }
         }
     }

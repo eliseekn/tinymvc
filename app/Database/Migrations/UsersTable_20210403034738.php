@@ -2,6 +2,7 @@
 
 namespace App\Database\Migrations;
 
+use App\Database\Models\User;
 use Core\Database\Migration;
 
 class UsersTable_20210403034738
@@ -16,6 +17,7 @@ class UsersTable_20210403034738
             ->addString('email')->unique()
             ->addString('password')
             ->addBoolean('verified')->default(0)
+            ->addString('role')->default(User::ROLE_USER)
             ->migrate();
     }
     

@@ -26,7 +26,7 @@ class Server extends Command
         $host = $input->getArgument('host') ?? '127.0.0.1';
         $port = $input->getArgument('port') ?? 8080;
 
-        system("php -S {$host}:{$port}");
+        shell_exec("php -S {$host}:{$port}");
 
         return Command::SUCCESS;
     }

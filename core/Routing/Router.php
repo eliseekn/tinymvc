@@ -21,8 +21,8 @@ class Router
 {
     private static function match(Request $request, string $method, string $route, &$params)
     {
-        if (preg_match('/' . strtoupper($method) . '/', strtoupper($request->method())) === false) {
-            render(config('errors.views.405'), [], 405);
+        if (!preg_match('/' . strtoupper($method) . '/', strtoupper($request->method()))) {
+            return false;
         }
 
         if (preg_match('#^' . $route . '$#', $request->uri(), $params)) {
@@ -68,7 +68,7 @@ class Router
             throw new Exception("Controller $controller/$action not found");
         }
 
-        throw new Exception('Invalid handler "' . (string) $handler . '"');
+        throw new Exception('Invalid route handler');
     }
     
     /**
@@ -94,7 +94,7 @@ class Router
                 }
 
                 if (!$request->uriContains('api')) {
-                    Session::push('history', [$request->fullUri()]);
+                    Session::push('history', [$request->uri()]);
                 }
 
                 if (isset($options['middlewares'])) {

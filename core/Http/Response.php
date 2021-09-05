@@ -17,6 +17,10 @@ class Response
 {
     public function headers($name, $value = null, int $code = 200)
     {
+        if (config('app.env') === 'test') {
+            header('Session:' . json_encode($_SESSION));
+        }
+
         http_response_code($code);
 
         if (!is_array($name)) {
@@ -35,16 +39,14 @@ class Response
             return;
         }
 
-        if (!empty($headers)) {
-            $this->headers($headers, null, $code);
-        }
-
-        $this->headers('Content-Length', strlen($body), $code);
+        $this->headers(array_merge($headers, [
+            'Content-Length' => strlen($body)
+        ]), null, $code);
 
         exit($body);
     }
     
-    public function json($body, array $headers = [], int $code = 200)
+    public function json(array $body, array $headers = [], int $code = 200)
     {
         if (!isset($body) or empty($body)) {
             return;
@@ -52,10 +54,10 @@ class Response
 
         $body = json_encode($body);
 
-        $this->headers($headers + [
+        $this->headers(array_merge($headers, [
             'Content-Type' => 'application/json',
-            'Content-Length' => strlen($body)
-        ], null, $code);
+            'Content-Length' => strlen($body),
+        ]), null, $code);
 
         exit($body);
     }

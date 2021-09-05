@@ -10,8 +10,8 @@ class AuthRequest extends Validator
      * Validation rules
      */
     protected static $rules = [
-        'email' => 'required|min,5',
-        'password' => 'required|min,5'
+        'email' => 'required|min_len,5',
+        'password' => 'required|min_len,5'
     ];
 
     /**

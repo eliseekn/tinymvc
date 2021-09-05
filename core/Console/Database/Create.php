@@ -9,7 +9,6 @@
 namespace Core\Console\Database;
 
 use Core\Database\Database;
-use Core\Database\QueryBuilder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -25,16 +24,20 @@ class Create extends Command
     protected function configure()
     {
         $this->setDescription('Create new database');
-        $this->addArgument('database', InputArgument::IS_ARRAY, 'The name of database (separated by space if many)');
+        $this->addArgument('database', InputArgument::IS_ARRAY|InputArgument::OPTIONAL, 'The name of database (separated by space if many) or leave empty to for application database');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $databases = $input->getArgument('database');
 
+        if (is_null($databases) || empty($databases)) {
+            $databases = [config('database.name')];
+        }
+
         foreach ($databases as $database) {
-            if (QueryBuilder::schemaExists($database)) {
-                $output->writeln('<fg=yellow>Database "' . $database . '" already exists</error>');
+            if (Database::connection()->schemaExists($database)) {
+                $output->writeln('<fg=yellow>Database "' . $database . '" already exists</>');
             } else {
                 Database::connection()->executeStatement("CREATE DATABASE $database CHARACTER SET " . config('database.charset') . " COLLATE " . config('database.collation'));
                 $output->writeln('<info>Database "' . $database . '" has been created</info>');

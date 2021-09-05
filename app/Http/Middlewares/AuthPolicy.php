@@ -15,7 +15,7 @@ class AuthPolicy
     {
         if (!Auth::check()) {
             Alert::default(__('not_logged'))->error();
-            redirect()->url('login')->intended($request->fullUri())->go();
+            redirect()->to('login')->intended($request->fullUri())->go();
         }
     }
 }

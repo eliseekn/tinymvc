@@ -102,7 +102,7 @@ class Repository
         $result = $this->findWhere($column, $operator, $value);
 
         if ($result === false) {
-            throw new Exception('Record not found in database.');
+            throw new Exception('Records not found in database.');
         }
 
         return $result;

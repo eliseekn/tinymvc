@@ -9,7 +9,6 @@
 namespace Core\Console\Database;
 
 use Core\Database\Database;
-use Core\Database\QueryBuilder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -33,7 +32,7 @@ class Delete extends Command
         $databases = $input->getArgument('database');
 
         foreach ($databases as $database) {
-            if (!QueryBuilder::schemaExists($database)) {
+            if (!Database::connection()->schemaExists($database)) {
                 $output->writeln('<fg=yellow>Database "' . $database . '" does not exists</>');
             } else {
                 Database::connection()->executeStatement("DROP DATABASE IF EXISTS $database");

@@ -7,8 +7,8 @@
  */
 
 use Core\Http\Request;
-use Core\Support\Whoops;
 use Core\Support\Config;
+use Core\Support\Whoops;
 use Core\Support\Storage;
 
 /**

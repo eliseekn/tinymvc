@@ -174,18 +174,21 @@ class Make
         if (!Storage::path(config('storage.helpers'))->writeFile($class . '.php', $data)) {
             return false;
         }
-        
+
         return true;
     }
     
-    public static function createTest(string $test)
+    public static function createTest(string $test, bool $unit_test)
     {
         list($name, $class) = self::generateClass($test, 'test', true);
 
-        $data = self::stubs()->readFile('Test.stub');
+        $data = $unit_test 
+            ? self::stubs()->addPath('tests')->readFile('UnitTest.stub')
+            : self::stubs()->addPath('tests')->readFile('ApplicationTest.stub');
+
         $data = str_replace('CLASSNAME', $class, $data);
 
-        if (!Storage::path(config('storage.tests'))->writeFile($class . '.php', $data)) {
+        if (!Storage::path(config('storage.tests'))->addPath($unit_test ? 'Unit' : 'Application')->writeFile($class . '.php', $data)) {
             return false;
         }
         

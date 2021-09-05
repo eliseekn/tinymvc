@@ -15,9 +15,7 @@ return [
     'log' => true,
 
     'views' => [
-        '403' => 'errors' . DS . '403',
         '404' => 'errors' . DS . '404',
-        '405' => 'errors' . DS . '405',
         '500' => 'errors' . DS . '500'
     ]
 ];

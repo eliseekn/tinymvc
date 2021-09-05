@@ -47,7 +47,7 @@ class AuthController
             WelcomeMail::send($user->email, $user->name);
 
             Alert::default(__('account_created'))->success();
-            redirect()->url('login')->go();
+            redirect()->to('login')->go();
         }
 
         (new EmailVerificationController())->notify($request);

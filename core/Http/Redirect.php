@@ -16,17 +16,17 @@ use Core\Support\Session;
  */
 class Redirect
 {
-    public $url = '';
+    public $uri = '';
 
-    public function url(string $url): self
+    public function to(string $uri): self
     {
-        $this->url = url($url);
+        $this->uri = $uri;
         return $this;
     }
     
     public function route(string $route, $params = null): self
     {
-        $this->url = route($route, $params);
+        $this->uri = route_uri($route, $params);
         return $this;
     }
 
@@ -36,7 +36,7 @@ class Redirect
 
         if (!empty($history)) {
             end($history);
-            $this->url = prev($history);
+            $this->uri = prev($history);
         }
 
         return $this;
@@ -49,7 +49,7 @@ class Redirect
 
     public function go(int $code = 302)
     {
-        exit((new Response())->headers(['Location' => $this->url], $code));
+        exit((new Response())->headers('Location', url($this->uri), $code));
     }
     
     public function with(string $key, $data): self

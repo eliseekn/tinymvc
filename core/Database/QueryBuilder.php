@@ -18,31 +18,54 @@ class QueryBuilder
 	protected static $query = '';
     protected static $args = [];
     protected static $table;
-    
+    protected static $db;
+
+    protected static function getTable(string $name)
+    {
+        return static::$db . '.' . config('database.table_prefix') . $name;
+    }
+
+    /**
+     * Set database connection name
+     */
+    public static function setConnection(?string $db = null)
+    {
+        static::$db = is_null($db) ? config('database.name') : $db;
+        return new self();
+    }
+
     /**
      * Set table name
      */
     public static function table(string $name): self
     {
-        static::$table = config('database.table_prefix')  . $name;
+        self::setConnection();
+
+        static::$table = self::getTable($name);
         return new self();
     }
 
     public static function createTable(string $name): self
     {
-        self::$query = "CREATE TABLE " . config('database.table_prefix') . "$name (";
+        self::setConnection();
+
+        self::$query = "CREATE TABLE " . self::getTable($name) . " (";
         return new self();
 	}
 	
-	public static function dropTable(string $table): self
+	public static function dropTable(string $name): self
 	{
-		self::$query = "DROP TABLE IF EXISTS " . config('database.table_prefix') . $table;
+		self::setConnection();
+
+        self::$query = "DROP TABLE IF EXISTS " . self::getTable($name);
 		return new self();
 	}
     
     public static function alter(string $table): self
     {
-        self::$query = "ALTER TABLE " . config('database.table_prefix') . $table;
+        self::setConnection();
+
+        self::$query = "ALTER TABLE " . self::getTable($table);
 		return new self();
     }
 	
@@ -87,20 +110,12 @@ class QueryBuilder
             AND table_name = "' . $table . '" LIMIT 1')->exists();
     }
     
-    /**
-     * Check if database exists
-     */
-    public static function schemaExists(string $db)
-    {
-        return self::setQuery('SELECT schema_name FROM information_schema.schemata WHERE schema_name = "' . $db .'"')->exists();
-    }
-
 	public function select(string ...$columns): self
 	{
 		self::$query = 'SELECT ';
 
 		foreach ($columns as $column) {
-			self::$query .= "$column, ";
+			self::$query .= "{$column}, ";
 		}
 
 		self::$query = rtrim(self::$query, ', ');
@@ -128,7 +143,7 @@ class QueryBuilder
 		self::$query = "INSERT INTO " . static::$table . " (";
 
 		foreach ($items as $key => $value) {
-			self::$query .= "$key, ";
+			self::$query .= "{$key}, ";
 		}
 
 		self::$query = rtrim(self::$query, ', ');
@@ -156,7 +171,7 @@ class QueryBuilder
         }
 
 		foreach ($items as $key => $value) {
-			self::$query .= "$key = ?, ";
+			self::$query .= "{$key} = ?, ";
 			self::$args[] = $value;
 		}
 
@@ -195,7 +210,7 @@ class QueryBuilder
 		
 	public function column(string $name, string $type): self
 	{
-		self::$query .= "$name $type NOT NULL, ";
+		self::$query .= "{$name} $type NOT NULL, ";
 		return $this;
 	}
     
@@ -235,13 +250,13 @@ class QueryBuilder
 		
 	public function foreignKey(string $name, string $column): self
 	{
-		self::$query .= " CONSTRAINT $name FOREIGN KEY ($column)";
+		self::$query .= " CONSTRAINT $name FOREIGN KEY ({$column})";
         return $this;
 	}
 	
 	public function references(string $table, string $column): self
 	{
-		self::$query .= " REFERENCES " . config('database.table_prefix') . "$table($column)";
+		self::$query .= " REFERENCES " . self::getTable($table) . "({$column})";
         return $this;
 	}
 	
@@ -464,7 +479,7 @@ class QueryBuilder
 		self::$query .= ' GROUP BY ';
 
 		foreach ($columns as $column) {
-			self::$query .= "$column, ";
+			self::$query .= "{$column}, ";
 		}
 
 		self::$query = rtrim(self::$query, ', ');
@@ -484,31 +499,31 @@ class QueryBuilder
 
 	public function innerJoin(string $table, string $first_column, string $operator, string $second_column): self
 	{
-		self::$query .= " INNER JOIN " . config('database.table_prefix') . "$table ON $first_column $operator $second_column";
+		self::$query .= " INNER JOIN " . self::getTable($table) . " ON $first_column $operator $second_column";
 		return $this;
 	}
 
 	public function leftJoin(string $table, string $first_column, string $operator, string $second_column): self
 	{
-		self::$query .= " LEFT JOIN " . config('database.table_prefix') . "$table ON $first_column $operator $second_column";
+		self::$query .= " LEFT JOIN " . self::getTable($table) . " ON $first_column $operator $second_column";
 		return $this;
 	}
 
 	public function rightJoin(string $table, string $first_column, string $operator, string $second_column): self
 	{
-		self::$query .= " RIGHT JOIN " . config('database.table_prefix') . "$table ON $first_column $operator $second_column";
+		self::$query .= " RIGHT JOIN " . self::getTable($table) . " ON $first_column $operator $second_column";
 		return $this;
 	}
 
 	public function fullJoin(string $table, string $first_column, string $operator, string $second_column): self
 	{
-		self::$query .= " FULL JOIN " . config('database.table_prefix') . "$table ON $first_column $operator $second_column";
+		self::$query .= " FULL JOIN " . self::getTable($table) . " ON $first_column $operator $second_column";
 		return $this;
 	}
 
 	public function outerJoin(string $table, string $first_column, string $operator, string $second_column): self
 	{
-		self::$query .= " FULL OUTER JOIN " . config('database.table_prefix') . "$table ON $first_column $operator $second_column";
+		self::$query .= " FULL OUTER JOIN " . self::getTable($table) . " ON $first_column $operator $second_column";
 		return $this;
 	}
 
@@ -523,11 +538,7 @@ class QueryBuilder
 
     public function exists(): bool
     {
-        if ($this->fetch() === false) {
-            return false;
-        }
-
-        return true;
+        return !($this->fetch() === false);
     }
 
 	public function toSQL(): array

@@ -69,6 +69,6 @@ class ForgotPasswordController
         $user->save();
 
         Alert::default(__('password_reset'))->success();
-        redirect()->url('login')->go();
+        redirect()->to('login')->go();
 	}
 }

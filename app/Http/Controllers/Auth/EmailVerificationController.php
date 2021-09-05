@@ -27,7 +27,7 @@ class EmailVerificationController
             ]);
 
             Alert::default(__('email_verification_link_sent'))->success();
-            redirect()->url('login')->go();
+            redirect()->to('login')->go();
         }
         
         Alert::default(__('email_verification_link_not_sent'))->error();
@@ -40,7 +40,7 @@ class EmailVerificationController
 
 		if (!$user) {
             Alert::default(__('account_not_found'))->error();
-            redirect()->url('signup')->go();
+            redirect()->to('signup')->go();
         }
 
         $user->verified = 1;
@@ -49,6 +49,6 @@ class EmailVerificationController
         WelcomeMail::send($user->email, $user->name);
 
         Alert::default(__('verified'))->success();
-        redirect()->url('login')->go();
+        redirect()->to('login')->go();
     }
 }

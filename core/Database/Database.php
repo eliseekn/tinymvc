@@ -32,7 +32,7 @@ class Database
 	private function __construct()
 	{
 		try {
-            $this->pdo = new PDO(config('database.dsn'), config('database.username'), config('database.password'));
+            $this->pdo = new PDO('mysql:host=' . env('DB_HOST', 'localhost'), config('database.username'), config('database.password'));
             $this->pdo->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, 'SET NAMES ' . config('database.charset') . ' COLLATE ' . config('database.collation'));
 			$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
@@ -81,4 +81,11 @@ class Database
 
 		return $stmt;
 	}
+
+    public function schemaExists(string $db)
+    {
+        $stmt = $this->executeQuery('SELECT schema_name FROM information_schema.schemata WHERE schema_name = "' . $db .'"');
+        return !($stmt->fetch() === false);
+    }
+
 }

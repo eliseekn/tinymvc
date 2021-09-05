@@ -1,0 +1,11 @@
+<?php
+
+use Core\Testing\ApplicationTestCase;
+
+class CLASSNAME extends ApplicationTestCase
+{
+    public function testExampleTestName()
+    {
+        //
+    }
+}

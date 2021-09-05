@@ -6,7 +6,6 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-use App\Database\Models\User;
 use Core\Routing\Route;
 
 /**
@@ -14,10 +13,3 @@ use Core\Routing\Route;
  */
 
 Route::view('/', 'index')->register();
-
-Route::get('/test', function () {
-
-    $user = User::all();
-
-    dd($user);
-})->register();

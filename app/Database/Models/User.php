@@ -8,8 +8,16 @@ class User extends Model
 {
     public static $table = 'users';
 
+    public const ROLE_USER = 'user';
+    public const ROLE_ADMIN = 'admin';
+
     public function __construct()
     {
         parent::__construct(static::$table);
+    }
+
+    public function isRoleAdmin()
+    {
+        return $this->role === self::ROLE_ADMIN;
     }
 }

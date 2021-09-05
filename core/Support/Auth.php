@@ -46,7 +46,7 @@ class Auth
         }
          
         Alert::default(__('login_failed'))->error();
-        redirect()->back()->withInputs($request->only('email', 'password'))->go();
+        redirect()->to('login')->withInputs($request->only('email', 'password'))->withErrors([__('login_failed')])->go();
     }
     
     public static function checkCredentials(string $email, string $password, &$user)
@@ -58,9 +58,7 @@ class Auth
 
         $users = User::where('email', 'like', $email)->getAll();
 
-        if (!$users) {
-            return false;
-        }
+        if (!$users) return false;
 
         foreach ($users as $u) {
             if (Encryption::check($password, $u->password)) {
@@ -111,9 +109,7 @@ class Auth
     {
         $user = Session::get('user');
 
-        if (is_null($key)) {
-            return $user;
-        }
+        if (is_null($key)) return $user;
 
         return $user->{$key};
     }
@@ -122,7 +118,7 @@ class Auth
     {
         if (!self::check()) {
             Alert::default(__('not_logged'))->error();
-            redirect()->url('login')->go();
+            redirect()->to('login')->go();
         }
 
         Session::flush('user', 'history', 'csrf_token');
@@ -137,19 +133,19 @@ class Auth
         self::forget();
 
         Alert::toast(__('logged_out'))->success();
-        redirect()->url($redirect)->go();
+        redirect()->to($redirect)->go();
     }
     
     public static function redirectIfLogged(string $redirect = '/')
     {
         if (!self::check()) {
             Alert::toast(__('not_logged'))->error();
-            redirect()->url('login')->go();
+            redirect()->to('login')->go();
         }
 
         $url = !Session::has('intended') ? $redirect : Session::pull('intended');
 
         Alert::toast(__('welcome', ['name' => Auth::get('name')]))->success();
-        redirect()->url($url)->go();
+        redirect()->to($url)->go();
     }
 }

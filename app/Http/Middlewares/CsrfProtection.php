@@ -15,12 +15,14 @@ class CsrfProtection
      */
     public function handle(Request $request)
     {
+        if (config('app.env') === 'test') return;
+
         if (!$request->filled('csrf_token')) {
             throw new Exception('Missing csrf token');
         }
 
         if (!valid_csrf_token($request->csrf_token)) {
-            render(config('errors.views.403'), [], 403);
+            throw new Exception('Invalid csrf token');
         }
     }
 }

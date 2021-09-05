@@ -19,8 +19,9 @@ class UserFactory extends Factory
         return [
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->email(),
-            'password' => $this->faker->word(),
+            'password' => hash_pwd('password'),
             'verified' => 1,
+            'role' => User::ROLE_USER
         ];
     }
 }

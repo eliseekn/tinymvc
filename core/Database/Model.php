@@ -139,6 +139,14 @@ class Model
 
         return self::find($id);
     }
+
+    /**
+     * Delete all rows
+     */
+    public static function truncate()
+    {
+        (new Repository(static::$table))->delete()->execute();
+    }
     
     /**
      * Get relationship of the model 
@@ -237,7 +245,13 @@ class Model
 
     public function toArray()
     {
-        return (array) $this;
+        $data = (array) $this;
+
+        if (is_null($this->id)) {
+            unset($data['id']);
+        }
+
+        return $data;
     }
 
     protected function getColumnFromTable(string $table)

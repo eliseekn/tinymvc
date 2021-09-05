@@ -47,13 +47,11 @@ class Validator
     {
         $errors = [];
 
-        if (!$this->fails()) {
-            return $errors;
-        }
+        if (!$this->fails()) return $errors;
 
         foreach (static::$errors as $error) {
             foreach (static::$inputs as $key => $value) {
-                if (strpos(strtolower($error), $key)) {
+                if (strpos(strtolower($error), strval($key))) {
                     $errors = array_merge($errors, [$key => $error]);
                 }
             }

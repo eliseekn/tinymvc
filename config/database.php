@@ -11,7 +11,6 @@
  */
 
 return [
-    'dsn' => 'mysql:host=' . env('DB_HOST', 'localhost') . ';dbname=' . env('DB_NAME', 'tinymvc'),
     'host' => env('DB_HOST', 'localhost'),
     'name' => env('DB_NAME', 'tinymvc'),
     'username' => env('DB_USERNAME', 'root'),

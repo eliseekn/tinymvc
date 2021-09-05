@@ -12,7 +12,7 @@
     stopOnFailure = "false">
 
     <testsuites>
-        <testsuite name="Project Tests Suite">
+        <testsuite name="Project test suite">
             <directory>tests</directory>
         </testsuite>
     </testsuites>
