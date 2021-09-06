@@ -21,16 +21,14 @@ class Router
 {
     private static function match(Request $request, string $method, string $route, &$params)
     {
-        if (!preg_match('/' . strtoupper($method) . '/', strtoupper($request->method()))) {
+        if (
+            !preg_match('/' . strtoupper($method) . '/', strtoupper($request->method())) ||
+            !preg_match('#^' . $route . '$#', $request->uri(), $params)
+        ) {
             return false;
         }
-
-        if (preg_match('#^' . $route . '$#', $request->uri(), $params)) {
-            array_shift($params);
-            return true;
-        }
-
-        return false;
+            
+        return true;
     }
     
     /**
@@ -55,7 +53,7 @@ class Router
     private static function executeHandler($handler, array $params)
     {
         if ($handler instanceof Closure) {
-            call_user_func_array($handler, array_values($params));
+            (new DependencyInjection())->resolveClosure($handler, $params);
         } 
         
         if (is_array($handler)) {
@@ -89,8 +87,10 @@ class Router
             $request->method($request_method);
 
             if (self::match($request, $method, $route, $params)) {
+                array_shift($params);
+
                 if (!isset($options['handler'])) {
-                    throw new Exception("No handler defined for route $route");
+                    throw new Exception("No handler defined for route {$route}");
                 }
 
                 if (!$request->uriContains('api')) {

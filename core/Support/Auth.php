@@ -38,7 +38,7 @@ class Auth
                 Cookies::create('user', $user->email, 3600 * 24 * 365);
             }
             
-            self::redirectIfLogged();   
+            self::redirectIfLogged($request);   
         }
 
         if (config('security.auth.max_attempts') > 0 && self::getAttempts() >= config('security.auth.max_attempts')) {
@@ -74,7 +74,7 @@ class Auth
     {
         $token = Token::findBy('token', $token);
         $user = User::findBy('email', $token->email);
-
+        
         return $user !== false;
     }
     
@@ -95,9 +95,21 @@ class Auth
         return Encryption::encrypt($token->token);
     }
 
-    public static function check()
+    public static function check(Request $request)
     {
-        return Session::has('user');
+        $result = Session::has('user');
+
+        if (!$result) {
+            if (empty($request->getHttpAuth())) {
+                return false;
+            }
+
+            list($method, $token) = $request->getHttpAuth();
+
+            $result = trim($method) === 'Bearer' && self::checkToken(Encryption::decrypt($token), $user);            
+        }
+
+        return $result;
     }
 
     public static function remember()
@@ -114,9 +126,9 @@ class Auth
         return $user->{$key};
     }
 
-    public static function forget()
+    public static function forget(Request $request)
     {
-        if (!self::check()) {
+        if (!self::check($request)) {
             Alert::default(__('not_logged'))->error();
             redirect()->to('login')->go();
         }
@@ -128,17 +140,17 @@ class Auth
         }
     }
     
-    public static function forgetAndRedirect(string $redirect = '/')
+    public static function forgetAndRedirect(Request $request, string $redirect = '/')
     {
-        self::forget();
+        self::forget($request);
 
         Alert::toast(__('logged_out'))->success();
         redirect()->to($redirect)->go();
     }
     
-    public static function redirectIfLogged(string $redirect = '/')
+    public static function redirectIfLogged(Request $request, string $redirect = '/')
     {
-        if (!self::check()) {
+        if (!self::check($request)) {
             Alert::toast(__('not_logged'))->error();
             redirect()->to('login')->go();
         }

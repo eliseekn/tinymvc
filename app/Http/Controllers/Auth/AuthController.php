@@ -14,22 +14,22 @@ use App\Http\Validators\RegisterUser;
  */
 class AuthController
 { 
-    public function login()
+    public function login(Request $request)
     {
-        if (!Auth::check()) {
+        if (!Auth::check($request)) {
             render('auth.login');
         }
 
-        Auth::redirectIfLogged();
+        Auth::redirectIfLogged($request, );
     }
 
-    public function signup()
+    public function signup(Request $request)
     {
-        if (!Auth::check()) {
+        if (!Auth::check($request)) {
             render('auth.signup');
         }
 
-        Auth::redirectIfLogged();
+        Auth::redirectIfLogged($request, );
     }
 
 	public function authenticate(Request $request)
@@ -53,8 +53,8 @@ class AuthController
         (new EmailVerificationController())->notify($request);
     }
 	
-	public function logout(string $redirect = '/')
+	public function logout(Request $request, string $redirect = '/')
 	{
-		Auth::forgetAndRedirect($redirect);
+		Auth::forgetAndRedirect($request, $redirect);
 	}
 }

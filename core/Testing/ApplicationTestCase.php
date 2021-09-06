@@ -8,10 +8,11 @@
 
 namespace Core\Testing;
 
-use Core\Database\Repository;
-use Core\Http\Client;
-use PHPUnit\Framework\TestCase;
 use Faker\Factory;
+use Core\Http\Client;
+use Core\Database\Repository;
+use Core\Support\Auth;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Manage application tests
@@ -21,12 +22,15 @@ class ApplicationTestCase extends TestCase
     /**
      * @var \Core\Http\Client
      */
-    public $client;
+    private $client;
 
     /**
      * @var \Faker\Generator
      */
-    public $faker;
+    private $faker;
+
+    private $headers = [];
+    private $token = '';
 
     protected function setUp(): void
     {
@@ -37,6 +41,8 @@ class ApplicationTestCase extends TestCase
         }
 
         $this->faker = Factory::create(config('app.lang'));
+        $this->token = '';
+        $this->headers = [];
     }
 
     protected function url(string $uri)
@@ -56,11 +62,9 @@ class ApplicationTestCase extends TestCase
 
     protected function getHeaders(?string $key = null)
     {
-        if (is_null($key)) {
-            return $this->client->getHeaders()[0];
-        }
+        $headers = $this->client->getHeaders()[0];
 
-        return $this->client->getHeaders()[0][$key][0];
+        return is_null($key) ? $headers : $headers[$key][0];
     }
 
     protected function getSession()
@@ -72,51 +76,67 @@ class ApplicationTestCase extends TestCase
         return [];
     }
 
+    protected function setHeaders(array $headers)
+    {
+        return array_merge($this->headers, $headers);
+    }
+
+    /**
+     * @param \Core\Database\Model|\App\Database\Models\User $user
+     */
+    public function actingAs($user)
+    {
+        $this->token = Auth::createToken($user->email);
+        $this->headers = ['Authorization' => "Bearer {$this->token}"];
+
+        return $this;
+    }
+
     public function get(string $uri, array $headers = [])
     {
-        $this->client = Client::get($this->url($uri), [], [], $headers);
+        $this->client = Client::get($this->url($uri), $this->setHeaders($headers));
         return $this;
     }
 
     public function post(string $uri, array $data = [], array $headers = [])
     {
-        $this->client = Client::post($this->url($uri), $headers, $data);
+        $this->client = Client::post($this->url($uri), $data, $this->setHeaders($headers));
         return $this;
     }
 
     public function patch(string $uri, array $data = [], array $headers = [])
     {
-        $this->client = Client::patch($this->url($uri), $headers, $data);
+        $this->client = Client::patch($this->url($uri), $data, $this->setHeaders($headers));
         return $this;
     }
 
     public function put(string $uri, array $data = [], array $headers = [])
     {
-        $this->client = Client::put($this->url($uri), $headers, $data);
+        $this->client = Client::put($this->url($uri), $data, $this->setHeaders($headers));
         return $this;
     }
 
     public function delete(string $uri, array $headers = [])
     {
-        $this->client = Client::delete($this->url($uri), $headers, [],);
+        $this->client = Client::delete($this->url($uri), $this->setHeaders($headers));
         return $this;
     }
 
     public function postJson(string $uri, array $data = [], array $headers = [])
     {
-        $this->client = Client::post($this->url($uri), $data, $headers, true);
+        $this->client = Client::post($this->url($uri), $data, $this->setHeaders($headers), true);
         return $this;
     }
 
     public function patchJson(string $uri, array $data = [], array $headers = [])
     {
-        $this->client = Client::patch($this->url($uri), $data, $headers, true);
+        $this->client = Client::patch($this->url($uri), $data, $this->setHeaders($headers), true);
         return $this;
     }
 
     public function putJson(string $uri, array $data = [], array $headers = [])
     {
-        $this->client = Client::put($this->url($uri), $headers, $data, true);
+        $this->client = Client::put($this->url($uri), $this->setHeaders($headers), $data, true);
         return $this;
     }
 

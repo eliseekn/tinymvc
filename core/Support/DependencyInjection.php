@@ -8,7 +8,11 @@
 
 namespace Core\Support;
 
+use Closure;
+use Reflection;
 use ReflectionClass;
+use ReflectionFunction;
+use ReflectionObject;
 
 /**
  * Automatic dependancy injection class
@@ -47,6 +51,18 @@ class DependencyInjection
 
         call_user_func_array([$class, $method], array_merge($dependencies, $params));
 	}
+
+    /**
+ 	* Execute closure with dependecies and methods dependencies
+ 	*/
+    public function resolveClosure(Closure $closure, array $params = [])
+    {
+        $reflector = new ReflectionFunction($closure);
+        $parameters = $reflector->getParameters();
+        $dependencies = $this->getDependencies($parameters);
+
+        call_user_func_array($closure, array_merge($dependencies, $params));
+    }
 
 	/**
 	 * Generate new instance of dependencies

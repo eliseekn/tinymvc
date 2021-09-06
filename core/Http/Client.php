@@ -27,7 +27,7 @@ class Client
      * 
      * @throws Exception
      */
-    public static function send(string $method, $urls, array $headers = [], ?array $data = null, bool $json = false)
+    public static function send(string $method, $urls, array $data = [], array $headers = [], bool $json = false)
     {
         $response_headers = [];
         $response = [];
@@ -58,10 +58,10 @@ class Client
             }
             
             //set data
-            if (!is_null($data)) {
+            if (!empty($data)) {
                 if ($json) {
                     $data = json_encode($data);
-                    $headers[] = 'Content-Type: application/json';
+                    $headers = array_merge($headers, ['Content-Type' => 'application/json']);
                 }
         
                 curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
@@ -69,7 +69,13 @@ class Client
 
             //set headers
             if (!empty($headers)) {
-                curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+                $_headers = [];
+
+                foreach ($headers as $_key => $value) {
+                    $_headers[] = "{$_key}:{$value}";
+                }
+
+                curl_setopt($curl, CURLOPT_HTTPHEADER, $_headers);
             }
             
             //retrieves response headers 
@@ -113,32 +119,32 @@ class Client
 
     public static function get($urls, array $headers = []): self 
     {
-        return self::send('GET', $urls, $headers);
+        return self::send('GET', $urls, [], $headers);
     }
     
-    public static function post($urls, array $headers = [], ?array $data = null, bool $json = false): self 
+    public static function post($urls, array $headers = [], array $data = [], bool $json = false): self 
     {
-        return self::send('POST', $urls, $headers, $data, $json);
+        return self::send('POST', $urls, $data, $headers, $json);
     }
 
-    public static function put($urls, array $headers = [], ?array $data = null, bool $json = false): self 
+    public static function put($urls, array $headers = [], array $data = [], bool $json = false): self 
     {
-        return self::send('PUT', $urls, $headers, $data, $json);
+        return self::send('PUT', $urls, $data, $headers, $json);
     }
 
-    public static function delete($urls, array $headers = [], ?array $data = null, bool $json = false): self 
+    public static function delete($urls, array $headers = []): self 
     {
-        return self::send('DELETE', $urls, $headers, $data, $json);
+        return self::send('DELETE', $urls, [], $headers);
     }
 
-    public static function options($urls, array $headers = [], ?array $data = null, bool $json = false): self 
+    public static function options($urls, array $headers = [], array $data = [], bool $json = false): self 
     {
-        return self::send('OPTIONS', $urls, $headers, $data, $json);
+        return self::send('OPTIONS', $urls, $data, $headers, $json);
     }
 
-    public static function patch($urls, array $headers = [], ?array $data = null, bool $json = false): self 
+    public static function patch($urls, array $headers = [], array $data = [], bool $json = false): self 
     {
-        return self::send('PATCH', $urls, $headers, $data, $json);
+        return self::send('PATCH', $urls, $data, $headers, $json);
     }
 
     public function getHeaders()

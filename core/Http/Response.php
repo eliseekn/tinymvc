@@ -24,12 +24,12 @@ class Response
         http_response_code($code);
 
         if (!is_array($name)) {
-            header($name . ': ' . $value);
+            header($name . ':' . $value);
             return;
         }
 
         foreach ($name as $k => $v) {
-            header($k . ': ' . $v);
+            header($k . ':' . $v);
         }
     }
     

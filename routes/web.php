@@ -6,6 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
+use Core\Http\Request;
 use Core\Routing\Route;
 
 /**
@@ -13,3 +14,7 @@ use Core\Routing\Route;
  */
 
 Route::view('/', 'index')->register();
+
+Route::get('test', function (Request $request) {
+    response()->json(['hello']);
+})->middlewares('auth')->register();
