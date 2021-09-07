@@ -205,11 +205,7 @@ class Model
     
     public function update(array $data)
     {
-        if (!(new Repository(static::$table))->updateIfExists($this->id, $data)) {
-            return false;
-        }
-
-        return $this;
+        return !(new Repository(static::$table))->updateIfExists($this->id, $data) ? false : $this;
     }
 
     public function delete()

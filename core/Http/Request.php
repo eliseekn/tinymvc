@@ -58,6 +58,9 @@ class Request
 
     private function getSingleFile(string $input, array $allowed_extensions = [])
     {
+        if (!isset($_FILES[$input]) || empty($_FILES[$input])) {
+            return null;
+        }
         return new Uploader([
             'name' => $_FILES[$input]['name'],
             'tmp_name' => $_FILES[$input]['tmp_name'],
