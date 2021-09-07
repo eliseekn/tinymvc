@@ -8,6 +8,7 @@
 
 namespace Core\Console\Database\Migrations;
 
+use Core\Database\Connection;
 use Core\Support\Storage;
 use Core\Database\QueryBuilder;
 use Symfony\Component\Console\Command\Command;
@@ -64,7 +65,7 @@ class Delete extends Command
 
     protected function isMigrated(string $table): bool
     {
-        if (!QueryBuilder::tableExists('migrations')) {
+        if (!Connection::getInstance()->tableExists('migrations')) {
             return false;
         }
 

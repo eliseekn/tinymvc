@@ -28,9 +28,11 @@ class EncryptionKey extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $config = [
+            'APP_ENV' => config('app.env') . PHP_EOL,
             'APP_NAME' => config('app.name') . PHP_EOL,
             'APP_URL' => config('app.url') . PHP_EOL,
             'APP_LANG' => config('app.lang') . PHP_EOL,
+            'DB_DRIVER' => config('database.driver') . PHP_EOL,
             'DB_HOST' => config('database.host') . PHP_EOL,
             'DB_NAME' => config('database.name') . PHP_EOL,
             'DB_USERNAME' => config('database.username') . PHP_EOL,

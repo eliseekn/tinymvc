@@ -71,6 +71,18 @@ class Migration
         QueryBuilder::setQuery('SET foreign_key_checks = 1')->execute();
     }
 
+    public function addReal(string $name): self 
+    {
+        self::$qb->column($name, "REAL");
+        return $this;
+    }
+
+    public function addInteger(string $name): self 
+    {
+        self::$qb->column($name, "INTEGER");
+        return $this;
+    }
+
     public function addInt(string $name, int $size = 11, bool $unsigned = false): self 
     {
         self::$qb->column($name, "INT($size)" . ($unsigned ? ' UNSIGNED' : ''));
@@ -228,7 +240,7 @@ class Migration
         $this->addTinyInt($name, 1);
         return $this;
     }
-    
+
 	public function addForeignKey(string $column, ?string $name = null): self
 	{
         $key = 'fk_';
@@ -282,13 +294,14 @@ class Migration
     
     public function addPrimaryKey(string $column, bool $auto_increment = true): self
     {
-        $pk = $this->addBigInt($column);
+        $pk = config('database.driver') === 'mysql' ? $this->addBigInt($column) : $this->addInteger($column);
+        $pk->primaryKey();
 
         if ($auto_increment) {
             $pk->autoIncrement();
         }
 
-        return $pk->primaryKey();
+        return $pk;
     }
     
     public function nullable(): self

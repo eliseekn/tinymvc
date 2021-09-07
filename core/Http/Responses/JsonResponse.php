@@ -11,7 +11,7 @@ namespace Core\Http\Responses;
 /**
  * Send response with JSON data
  */
-class JsonResponse extends BasicResponse
+class JsonResponse extends BaseResponse implements ResponseInterface
 {
     public function send($body, array $headers = [], int $code = 200)
     {

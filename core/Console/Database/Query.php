@@ -8,7 +8,7 @@
 
 namespace Core\Console\Database;
 
-use Core\Database\Database;
+use Core\Database\Connection;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -30,7 +30,7 @@ class Query extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $stmt = Database::connection()->executeQuery($input->getArgument('query'));
+        $stmt = Connection::getInstance()->executeQuery($input->getArgument('query'));
         $output->writeln('<info>Query executed</info>');
         $output->writeln('');
 

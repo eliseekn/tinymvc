@@ -29,5 +29,6 @@ return [
     'mails' => absolute_path('app.Mails'),
     'helpers' => absolute_path('app.Helpers'),
     'tests' => absolute_path('tests'),
-    'commands' => absolute_path('app.Commands')
+    'commands' => absolute_path('app.Commands'),
+    'sqlite' => absolute_path('storage.sqlite')
 ];

@@ -10,7 +10,7 @@ namespace Core\Http;
 
 use Core\Http\Responses\DownloadResponse;
 use Core\Http\Responses\JsonResponse;
-use Core\Http\Responses\BasicResponse;
+use Core\Http\Responses\BaseResponse;
 
 /**
  * Send HTTP response
@@ -22,12 +22,12 @@ class Response
      */
     public function headers($name, string $value = null, int $code = 200)
     {
-        (new BasicResponse())->headers($name, $value, $code);
+        (new BaseResponse())->headers($name, $value, $code);
     }
     
     public function send(string $body, array $headers = [], int $code = 200)
     {
-        (new BasicResponse())->send($body, $headers, $code);
+        (new BaseResponse())->send($body, $headers, $code);
     }
     
     public function json(array $body, array $headers = [], int $code = 200)
@@ -35,8 +35,8 @@ class Response
         (new JsonResponse())->send($body, $headers, $code);
     }
         
-    public function download(string $filename)
+    public function download(string $filename, array $headers = [], int $code = 200)
     {
-        (new DownloadResponse())->send($filename);
+        (new DownloadResponse())->send($filename, $headers, $code);
     }
 }

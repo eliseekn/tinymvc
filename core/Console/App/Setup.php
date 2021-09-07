@@ -63,6 +63,14 @@ class Setup extends Command
                 continue;
             }
 
+            $output->write('<info>Database driver (eg: mysql):</info> ');
+            $config['DB_DRIVER'] = fgets(STDIN);
+
+            if (strlen($config['DB_DRIVER']) <= 1) {
+                $output->writeln('<error>This parameter is required</error>');
+                continue;
+            }
+
             $output->write('<info>Database host (eg: localhost):</info> ');
             $config['DB_HOST'] = fgets(STDIN);
 

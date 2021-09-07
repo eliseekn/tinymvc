@@ -13,7 +13,7 @@ use Exception;
 /**
  * Send download file response
  */
-class DownloadResponse extends BasicResponse
+class DownloadResponse extends BaseResponse implements ResponseInterface
 {
     public function send($filename, array $headers = [], int $code = 200)
     {
@@ -21,14 +21,14 @@ class DownloadResponse extends BasicResponse
             throw new Exception("File $filename does not exists");
         }
 
-        $this->headers([
+        $this->headers(array_merge($headers, [
             'Content-Type' => mime_content_type($filename),
             'Content-Length' => filesize($filename),
 			'Content-Disposition' => 'attachment; filename="' . basename($filename) . '"',
 			'Cache-Control' => 'no-cache',
 			'Pragma' => 'no-cache',
             'Expires' => '0'
-        ], null, $code);
+        ]), null, $code);
 
         ob_clean();
         flush();

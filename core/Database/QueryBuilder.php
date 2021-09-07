@@ -22,13 +22,17 @@ class QueryBuilder
 
     protected static function getTable(string $name)
     {
+        if (config('database.driver') === 'sqlite') {
+            return config('database.table_prefix') . $name;
+        }
+
         return static::$db . '.' . config('database.table_prefix') . $name;
     }
 
     /**
      * Set database connection name
      */
-    public static function setConnection(?string $db = null)
+    public static function setDB(?string $db = null)
     {
         static::$db = is_null($db) ? config('database.name') : $db;
         return new self();
@@ -39,7 +43,7 @@ class QueryBuilder
      */
     public static function table(string $name): self
     {
-        self::setConnection();
+        self::setDB();
 
         static::$table = self::getTable($name);
         return new self();
@@ -47,7 +51,7 @@ class QueryBuilder
 
     public static function createTable(string $name): self
     {
-        self::setConnection();
+        self::setDB();
 
         self::$query = "CREATE TABLE " . self::getTable($name) . " (";
         return new self();
@@ -55,7 +59,7 @@ class QueryBuilder
 	
 	public static function dropTable(string $name): self
 	{
-		self::setConnection();
+		self::setDB();
 
         self::$query = "DROP TABLE IF EXISTS " . self::getTable($name);
 		return new self();
@@ -63,7 +67,7 @@ class QueryBuilder
     
     public static function alter(string $table): self
     {
-        self::setConnection();
+        self::setDB();
 
         self::$query = "ALTER TABLE " . self::getTable($table);
 		return new self();
@@ -102,12 +106,6 @@ class QueryBuilder
         self::alter($table);
         self::$query .= " DROP COLUMN $column";
         return new self();
-    }
-    
-    public static function tableExists(string $table)
-    {
-        return self::setQuery('SELECT * FROM information_schema.tables WHERE table_schema = "' . config('database.name') .'" 
-            AND table_name = "' . $table . '" LIMIT 1')->exists();
     }
     
 	public function select(string ...$columns): self
@@ -217,7 +215,7 @@ class QueryBuilder
     public function autoIncrement(): self
     {
         self::$query = rtrim(self::$query, ', ');
-        self::$query .= ' AUTO_INCREMENT, ';
+        self::$query .= config('database.driver') === 'mysql' ? ' AUTO_INCREMENT, ' : ' AUTOINCREMENT, ';
         return $this;
     }
     
@@ -292,14 +290,20 @@ class QueryBuilder
     public function migrate()
     {
         if (config('database.timestamps')) {
-            self::$query .= " created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)";
+            if (config('database.driver') === 'mysql') {
+                self::$query .= " created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)";
+            } else {
+                self::$query .= " created_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')), updated_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')))";
+            }
         }
 
         if (self::$query[-1] !== ')') {
             self::$query .= ')';
         }
 
-        self::$query .= " ENGINE='" . config('database.engine') . "'";
+        if (config('database.driver') === 'mysql') {
+            self::$query .= " ENGINE='" . config('database.mysql.engine') . "'";
+        }
 
 		$this->execute();
     }
@@ -573,7 +577,7 @@ class QueryBuilder
 	public function execute()
 	{
         $this->trimQuery();
-        $stmt = Database::connection()->executeQuery(self::$query, self::$args);
+        $stmt = Connection::getInstance()->executeQuery(self::$query, self::$args);
 		self::setQuery('');
 		return $stmt;
     }
@@ -590,7 +594,7 @@ class QueryBuilder
         
     public static function lastInsertedId(): int
     {
-        return self::setQuery('SELECT LAST_INSERT_ID()')->execute()->fetchColumn();
+        return Connection::getInstance()->getPDO()->lastInsertId();
     }
     
     private function trimQuery()

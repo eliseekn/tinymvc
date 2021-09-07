@@ -8,7 +8,7 @@
 
 namespace Core\Console\Database;
 
-use Core\Database\Database;
+use Core\Database\Connection;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -36,10 +36,10 @@ class Create extends Command
         }
 
         foreach ($databases as $database) {
-            if (Database::connection()->schemaExists($database)) {
+            if (Connection::getInstance()->schemaExists($database)) {
                 $output->writeln('<fg=yellow>Database "' . $database . '" already exists</>');
             } else {
-                Database::connection()->executeStatement("CREATE DATABASE $database CHARACTER SET " . config('database.charset') . " COLLATE " . config('database.collation'));
+                Connection::getInstance()->createSchema($database);
                 $output->writeln('<info>Database "' . $database . '" has been created</info>');
             }
         }

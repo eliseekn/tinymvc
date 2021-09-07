@@ -11,13 +11,21 @@
  */
 
 return [
-    'host' => env('DB_HOST', 'localhost'),
-    'name' => env('DB_NAME', 'tinymvc'),
-    'username' => env('DB_USERNAME', 'root'),
-    'password' => env('DB_PASSWORD', 'root'),
+    'driver' => env('DB_DRIVER', 'mysql'),
     'table_prefix' => '',
-    'charset' => 'utf8',
-    'collation' => 'utf8_unicode_ci',
+    'name' => env('DB_NAME', 'tinymvc'),
     'timestamps' => true,
-    'engine' => 'InnoDB'
+
+    'mysql' => [
+        'host' => env('DB_HOST', 'localhost'),
+        'username' => env('DB_USERNAME', 'root'),
+        'password' => env('DB_PASSWORD', 'root'),
+        'charset' => 'utf8',
+        'collation' => 'utf8_unicode_ci',
+        'engine' => 'InnoDB'
+    ],
+
+    'sqlite' => [
+        'memory' => false,
+    ]
 ];

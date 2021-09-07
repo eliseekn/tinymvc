@@ -8,6 +8,7 @@
 
 namespace Core\Console\Database\Migrations;
 
+use Core\Database\Connection;
 use Core\Support\Storage;
 use Core\Database\Migration;
 use Core\Database\QueryBuilder;
@@ -36,7 +37,7 @@ class Run extends Command
     {
         $tables = $input->getArgument('table');
 
-        if (!QueryBuilder::tableExists('migrations')) {
+        if (!Connection::getInstance()->tableExists('migrations')) {
             Migration::createTable('migrations')
                 ->addprimaryKey('id')
                 ->addString('name')
@@ -83,7 +84,7 @@ class Run extends Command
 
     protected function isMigrated(string $table): bool
     {
-        if (!QueryBuilder::tableExists('migrations')) {
+        if (!Connection::getInstance()->tableExists('migrations')) {
             return false;
         }
 

@@ -8,7 +8,8 @@
 
 namespace Core\Console\Database;
 
-use Core\Database\Database;
+use Core\Database\Connection;
+use Core\Support\Storage;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -29,10 +30,21 @@ class Show extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $rows = [];
-        $databases = Database::connection()->executeQuery("SHOW DATABASES")->fetchAll();
 
-        foreach ($databases as $db) {
-            $rows[] = [$db->Database];
+        if (config('database.driver') === 'mysql') {
+            $databases = Connection::getInstance()->executeQuery("SHOW DATABASES")->fetchAll();
+
+            foreach ($databases as $db) {
+                $rows[] = [$db->Database];
+            }
+        }
+
+        else {
+            $databases = Storage::path(config('storage.sqlite'))->getFiles();
+
+            foreach ($databases as $db) {
+                $rows[] = [basename($db)];
+            }
         }
 
         $table = new Table($output);

@@ -11,7 +11,7 @@ namespace Core\Http\Responses;
 /**
  * Send HTTP response
  */
-class BasicResponse
+class BaseResponse implements ResponseInterface
 {
     public function headers($name, string $value = null, int $code = 200)
     {
