@@ -8,6 +8,8 @@
 
 namespace Core\Testing\Traits;
 
+use Symfony\Component\Process\Process;
+
 /**
  * Automatically refresh database
  */
@@ -15,6 +17,9 @@ trait RefreshDatabase
 {
     public function refreshDatabase()
     {
-        shell_exec('php console migrations:reset -q');
+        $process = new Process(['php', 'console', 'migrations:reset']);
+        $process->setTimeout(null);
+        $process->disableOutput();
+        $process->run();
     }
 }

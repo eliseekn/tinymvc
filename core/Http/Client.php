@@ -122,12 +122,12 @@ class Client
         return self::send('GET', $urls, [], $headers);
     }
     
-    public static function post($urls, array $headers = [], array $data = [], bool $json = false): self 
+    public static function post($urls, array $data = [], array $headers = [], bool $json = false): self 
     {
         return self::send('POST', $urls, $data, $headers, $json);
     }
 
-    public static function put($urls, array $headers = [], array $data = [], bool $json = false): self 
+    public static function put($urls, array $data = [], array $headers = [], bool $json = false): self 
     {
         return self::send('PUT', $urls, $data, $headers, $json);
     }
@@ -137,12 +137,12 @@ class Client
         return self::send('DELETE', $urls, [], $headers);
     }
 
-    public static function options($urls, array $headers = [], array $data = [], bool $json = false): self 
+    public static function options($urls, array $data = [], array $headers = [], bool $json = false): self 
     {
         return self::send('OPTIONS', $urls, $data, $headers, $json);
     }
 
-    public static function patch($urls, array $headers = [], array $data = [], bool $json = false): self 
+    public static function patch($urls, array $data = [], array $headers = [], bool $json = false): self 
     {
         return self::send('PATCH', $urls, $data, $headers, $json);
     }

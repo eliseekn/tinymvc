@@ -34,13 +34,13 @@ class AuthController
 
 	public function authenticate(Request $request)
 	{
-        AuthRequest::validate($request->except('csrf_token'))->redirectOnFail();
+        AuthRequest::validate($request->except('csrf_token'))->redirectBackOnFail();
         Auth::attempt($request);
     }
     
     public function register(Request $request)
     {
-        RegisterUser::register()->validate($request->except('csrf_token'))->redirectOnFail();
+        RegisterUser::register()->validate($request->except('csrf_token'))->redirectBackOnFail();
         $user = Auth::create($request);
 
         if (!config('security.auth.email_verification')) {

@@ -8,38 +8,18 @@ class AuthenticationTest extends ApplicationTestCase
 {
     use RefreshDatabase;
 
-    public function testCanNotAuthenticateWithoutCredentials()
-    {
-        $response = $this->post('authenticate', []);
-        $response->assertSessionHasErrors();
-    }
-
     public function testCanNotAuthenticateWithUnregisteredUserCredentials()
     {
-        $data['email'] = $this->faker->unique()->email();
-        $data['password'] = 'password';
-  
-        $response = $this->post('authenticate', $data);
-        $response->assertSessionHasErrors();
-    }
+        $user = User::factory()->make();
 
-    public function testCanNotAuthenticateWithBadCredentials()
-    {
-        $user = User::factory()->make([
-            'email' => 'test@test.com',
-            'password' => hash_pwd('password')
-        ]);
-
-        $response = $this->post('authenticate', $user->toArray());
+        $response = $this->post('authenticate', ['email' => $user->email, 'password' => 'password']);
         $response->assertSessionHasErrors();
+        $response->assertRedirectedToUrl(url('login'));
     }
 
     public function testCanAuthenticateWithRegisteredUserCredentials()
     {
-        $user = User::factory()->create([
-            'email' => 'test@test.com',
-            'password' => hash_pwd('password')
-        ]);
+        $user = User::factory()->create();
 
         $response = $this->post('authenticate', ['email' => $user->email, 'password' => 'password']);
         $response->assertSessionDoesNotHaveErrors();

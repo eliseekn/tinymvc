@@ -239,12 +239,24 @@ class Model
         $this->{$column} = $this->{$column} - $value;
     }
 
-    public function toArray()
+    public function toArray(string ...$attributes)
     {
         $data = (array) $this;
 
-        if (is_null($this->id)) {
-            unset($data['id']);
+        if (is_null($this->id)) unset($data['id']);
+
+        if (!empty($attributes)) {
+            $d = [];
+
+            foreach ($attributes as $attribute) {
+                if ($this->has($attribute)) {
+                    $d = array_merge($d, [
+                        $attribute => $this->{$attribute}
+                    ]);
+                }
+            }
+
+            $data = $d;
         }
 
         return $data;

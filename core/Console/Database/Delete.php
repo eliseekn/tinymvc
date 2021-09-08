@@ -31,6 +31,10 @@ class Delete extends Command
     {
         $databases = $input->getArgument('database');
 
+        if (is_null($databases) || empty($databases)) {
+            $databases = [config('database.name')];
+        }
+
         foreach ($databases as $database) {
             if (!Connection::getInstance()->schemaExists($database)) {
                 $output->writeln('<fg=yellow>Database "' . $database . '" does not exists</>');

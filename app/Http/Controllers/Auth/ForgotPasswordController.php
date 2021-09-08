@@ -57,7 +57,7 @@ class ForgotPasswordController
 	
 	public function update(Request $request)
 	{
-		AuthRequest::validate($request->except('csrf_token'))->redirectOnFail();
+		AuthRequest::validate($request->except('csrf_token'))->redirectBackOnFail();
         $user = User::findBy('email', $request->email);
 
         if (!$user) {

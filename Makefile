@@ -4,6 +4,7 @@ SHELL := /bin/bash
 
 tests: export APP_ENV=test
 tests:
-	php console db:setup
-	php console migrations:reset --seed
+	php console db:delete
+	php console db:create
+	php console migrations:run
 	php console tests:run

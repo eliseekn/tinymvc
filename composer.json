@@ -29,12 +29,14 @@
         "nesbot/carbon": "^2.41",
         "twig/twig": "^3.0",
         "symfony/console": "^5.2",
-        "dflydev/dot-access-data": "^3.0"
+        "dflydev/dot-access-data": "^3.0",
+        "symfony/process": "^5.3"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.5",
+        "phpunit/phpunit": "^9.5",
         "symfony/var-dumper": "^5.2",
         "filp/whoops": "^2.12",
-        "fakerphp/faker": "^1.15"
+        "fakerphp/faker": "^1.15",
+        "brianium/paratest": "^6.3"
     }
 }

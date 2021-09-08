@@ -8,7 +8,6 @@
 
 namespace Core\Testing;
 
-use Faker\Factory;
 use Core\Http\Client;
 use Core\Database\Repository;
 use Core\Support\Auth;
@@ -24,30 +23,30 @@ class ApplicationTestCase extends TestCase
      */
     private $client;
 
-    /**
-     * @var \Faker\Generator
-     */
-    private $faker;
-
     private $headers = [];
     private $token = '';
 
     protected function setUp(): void
     {
+        parent::setUp();
+
         $uses = array_flip(class_uses_recursive(static::class));
 
         if (isset($uses[\Core\Testing\Traits\RefreshDatabase::class])) {
             $this->refreshDatabase();
         }
 
-        $this->faker = Factory::create(config('app.lang'));
+        if (isset($uses[\Core\Testing\Traits\LoadFaker::class])) {
+            $this->loadFaker();
+        }
+
         $this->token = '';
         $this->headers = [];
     }
 
     protected function url(string $uri)
     {
-        return config('app.url') . $uri;
+        return config('testing.host') . ':' . config('testing.port') . '/' . ltrim($uri, '/');
     }
 
     protected function getBody()
@@ -79,6 +78,11 @@ class ApplicationTestCase extends TestCase
     protected function setHeaders(array $headers)
     {
         return array_merge($this->headers, $headers);
+    }
+
+    protected function sessionKey(string $name)
+    {
+        return strtolower(config('app.name')) . '_' . $name;
     }
 
     /**
@@ -199,32 +203,32 @@ class ApplicationTestCase extends TestCase
 
     public function assertSessionExists(string $expected)
     {
-        $this->assertTrue(array_key_exists(strtolower(config('app.name')) . '_' . $expected, $this->getSession()));
+        $this->assertTrue(array_key_exists($this->sessionKey($expected), $this->getSession()));
     }
 
     public function assertSessionDoesNotExists(string $expected)
     {
-        $this->assertFalse(array_key_exists(strtolower(config('app.name')) . '_' . $expected, $this->getSession()));
+        $this->assertFalse(array_key_exists($this->sessionKey($expected), $this->getSession()));
     }
 
     public function assertSessionHas(string $key, $value)
     {
-        $this->assertEquals($value, $this->getSession()[strtolower(config('app.name')) . '_' . $key]);
+        $this->assertEquals($value, $this->getSession()[$this->sessionKey($key)]);
     }
 
     public function assertSessionDoesNotHave(string $key, $value)
     {
-        $this->assertNotEquals($value, $this->getSession()[strtolower(config('app.name')) . '_' . $key]);
+        $this->assertNotEquals($value, $this->getSession()[$this->sessionKey($key)]);
     }
 
     public function assertSessionHasErrors()
     {
-        $this->assertSessionExists('errors');
+        $this->assertFalse(empty($this->getSession()[$this->sessionKey('errors')]));
     }
 
     public function assertSessionDoesNotHaveErrors()
     {
-        $this->assertSessionDoesNotExists('errors');
+        $this->assertTrue(empty($this->getSession()[$this->sessionKey('errors')]));
     }
 
     public function dump()

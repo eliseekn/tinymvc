@@ -65,7 +65,7 @@ class Validator
         return static::$inputs;
     }
     
-    public function redirectOnFail()
+    public function redirectBackOnFail()
     {
         return !$this->fails() ? $this 
             : redirect()->back()->withErrors($this->errors())->withInputs($this->inputs())->go();
