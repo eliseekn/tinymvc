@@ -24,7 +24,7 @@ class MySQLConnection implements ConnectionInterface
 	public function __construct()
 	{
 		try {
-            $this->pdo = new PDO('mysql:host=' . config('database.mysql.host'), config('database.mysql.username'), config('database.mysql.password'));
+            $this->pdo = new PDO('mysql:host=' . config('database.mysql.host') . ';port=' . config('database.mysql.port'), config('database.mysql.username'), config('database.mysql.password'));
             $this->pdo->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, 'SET NAMES ' . config('database.mysql.charset') . ' COLLATE ' . config('database.mysql.collation'));
             $this->pdo->setAttribute(PDO::MYSQL_ATTR_FOUND_ROWS, true);
 			$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

@@ -33,10 +33,11 @@ class EncryptionKey extends Command
             'APP_URL' => config('app.url') . PHP_EOL,
             'APP_LANG' => config('app.lang') . PHP_EOL,
             'DB_DRIVER' => config('database.driver') . PHP_EOL,
-            'DB_HOST' => config('database.host') . PHP_EOL,
+            'DB_HOST' => config('database.mysql.host') . PHP_EOL,
+            'DB_PORT' => config('database.mysql.port') . PHP_EOL,
             'DB_NAME' => config('database.name') . PHP_EOL,
-            'DB_USERNAME' => config('database.username') . PHP_EOL,
-            'DB_PASSWORD' => config('database.password') . PHP_EOL,
+            'DB_USERNAME' => config('database.mysql.username') . PHP_EOL,
+            'DB_PASSWORD' => config('database.mysql.password') . PHP_EOL,
             'ENCRYPTION_KEY' => generate_token()
         ];
 

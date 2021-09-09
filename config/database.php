@@ -26,6 +26,6 @@ return [
     ],
 
     'sqlite' => [
-        'memory' => false,
+        'memory' => true,
     ]
 ];

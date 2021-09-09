@@ -79,6 +79,14 @@ class Setup extends Command
                 continue;
             }
 
+            $output->write('<info>Database port (eg: 3306):</info> ');
+            $config['DB_PORT'] = fgets(STDIN);
+
+            if (strlen($config['DB_PORT']) <= 1) {
+                $output->writeln('<error>This parameter is required</error>');
+                continue;
+            }
+
             $output->write('<info>Database name (eg: tinymvc):</info> ');
             $config['DB_NAME'] = fgets(STDIN);
 

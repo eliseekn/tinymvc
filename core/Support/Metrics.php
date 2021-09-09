@@ -23,6 +23,7 @@ class Metrics
     public const SUM = 'SUM';
     public const MAX = 'MAX';
     public const MIN = 'MIN';
+    
     public const TODAY = 'today';
     public const DAY = 'day';
     public const WEEKDAY = 'weekday';
