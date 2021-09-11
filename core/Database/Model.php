@@ -47,9 +47,7 @@ class Model
     {
         $data = (new Repository(static::$table))->findWhere($column, $operator, $value);
 
-        if (!$data) {
-            return false;
-        }
+        if (!$data) return false;
 
         return new self(static::$table, $data);
     }
@@ -133,9 +131,7 @@ class Model
     {
         $id = (new Repository(static::$table))->insertGetId($data);
 
-        if (is_null($id)) {
-            return false;
-        }
+        if (is_null($id)) return false;
 
         return self::find($id);
     }

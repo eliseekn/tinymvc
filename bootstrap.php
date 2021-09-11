@@ -32,6 +32,12 @@ if (config('errors.display') === true) {
 
 //errors logging
 if (config('errors.log') === true) {
+    $logs_dir = Storage::path(config('storage.logs'));
+
+    if (!$logs_dir->isDir()) {
+        $logs_dir->createDir();
+    }
+
     ini_set('log_errors', 1);
     ini_set('error_log', Storage::path(config('storage.logs'))->file('tinymvc_' . date('m_d_y') . '.log'));
 } else {
@@ -52,7 +58,7 @@ set_time_limit(0);
 
 //load .env file
 if (!Storage::path()->isFile('.env') && !empty((new Request())->uri())) {
-    throw new Exception('Run "php console app:setup" console command to setup application or create ".env" file from ".env.example"');
+    throw new Exception('Run "php console app:setup" console command to setup application or copy ".env.example" file to ".env"');
 }
 
 Config::loadEnv();

@@ -18,7 +18,7 @@ class DownloadResponse extends BaseResponse implements ResponseInterface
     public function send($filename, array $headers = [], int $code = 200)
     {
         if (!file_exists($filename)) {
-            throw new Exception("File $filename does not exists");
+            throw new Exception("File {$filename} does not exists");
         }
 
         $this->headers(array_merge($headers, [

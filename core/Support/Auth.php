@@ -31,7 +31,7 @@ class Auth
         Session::push('auth_attempts', 1, 0);
 
         if (self::checkCredentials($request->email, $request->password, $user)) {
-            Session::flush('auth_attempts', 'auth_attempts_timeout');
+            Session::forget('auth_attempts', 'auth_attempts_timeout');
             Session::create('user', $user);
                 
             if ($request->has('remember')) {
@@ -133,7 +133,7 @@ class Auth
             redirect()->to('login')->go();
         }
 
-        Session::flush('user', 'history', 'csrf_token');
+        Session::forget('user', 'history', 'csrf_token');
 
         if (self::remember()) {
             Cookies::delete('user');

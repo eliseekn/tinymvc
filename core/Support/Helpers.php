@@ -89,10 +89,10 @@ if (!function_exists('session_has')) {
 	}
 }
 
-if (!function_exists('session_flush')) {
-	function session_flush(string ...$names)
+if (!function_exists('session_forget')) {
+	function session_forget(string ...$names)
 	{
-		Session::flush(...$names);
+		Session::forget(...$names);
 	}
 }
 
@@ -506,9 +506,10 @@ if (!function_exists('env')) {
 }
 
 /**
- * Laravel helpers form \Illuminate\Support\helpers.php
+ * Laravel helpers from \Illuminate\Support\helpers.php
  */
-if (! function_exists('trait_uses_recursive')) {
+
+if (!function_exists('trait_uses_recursive')) {
     /**
      * Returns all traits used by a trait and its traits.
      *
@@ -527,7 +528,7 @@ if (! function_exists('trait_uses_recursive')) {
     }
 }
 
-if (! function_exists('class_uses_recursive')) {
+if (!function_exists('class_uses_recursive')) {
     /**
      * Returns all traits used by a class, its parent classes and trait of their traits.
      *

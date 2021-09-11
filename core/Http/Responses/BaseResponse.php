@@ -13,7 +13,7 @@ namespace Core\Http\Responses;
  */
 class BaseResponse implements ResponseInterface
 {
-    public function headers($name, string $value = null, int $code = 200)
+    public function headers($name, ?string $value = null, int $code = 200)
     {
         if (config('app.env') === 'test') {
             header('Session:' . json_encode($_SESSION));
@@ -31,16 +31,16 @@ class BaseResponse implements ResponseInterface
         }
     }
     
-    public function send($body, array $headers = [], int $code = 200)
+    public function send($data, array $headers = [], int $code = 200)
     {
-        if (!isset($body) or empty($body)) {
+        if (!isset($data) or empty($data)) {
             return;
         }
 
         $this->headers(array_merge($headers, [
-            'Content-Length' => strlen($body)
+            'Content-Length' => strlen($data)
         ]), null, $code);
 
-        exit($body);
+        exit($data);
     }
 }

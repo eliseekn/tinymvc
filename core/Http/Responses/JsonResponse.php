@@ -13,19 +13,19 @@ namespace Core\Http\Responses;
  */
 class JsonResponse extends BaseResponse implements ResponseInterface
 {
-    public function send($body, array $headers = [], int $code = 200)
+    public function send($data, array $headers = [], int $code = 200)
     {
-        if (!isset($body) or empty($body)) {
+        if (!isset($data) or empty($data)) {
             return;
         }
 
-        $body = json_encode($body);
+        $data = json_encode($data);
 
         $this->headers(array_merge($headers, [
             'Content-Type' => 'application/json',
-            'Content-Length' => strlen($body),
+            'Content-Length' => strlen($data),
         ]), null, $code);
 
-        exit($body);
+        exit($data);
     }
 }

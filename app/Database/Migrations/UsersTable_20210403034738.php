@@ -16,7 +16,7 @@ class UsersTable_20210403034738
             ->addString('name')
             ->addString('email')->unique()
             ->addString('password')
-            ->addBoolean('verified')->default(0)
+            ->addBoolean('verified')->default(true)
             ->addString('role')->default(User::ROLE_USER)
             ->migrate();
     }

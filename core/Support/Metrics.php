@@ -26,10 +26,34 @@ class Metrics
     
     public const TODAY = 'today';
     public const DAY = 'day';
-    public const WEEKDAY = 'weekday';
     public const WEEK = 'week';
     public const MONTH = 'month';
     public const YEAR = 'year';
+
+    private const DAYS = [
+        'sunday',
+        'monday',
+        'tuesday',
+        'wednesday',
+        'thursday',
+        'friday',
+        'saturday'
+    ];
+
+    private const MONTHS = [
+        'december',
+        'january',
+        'february',
+        'march',
+        'april',
+        'may',
+        'june',
+        'july',
+        'august',
+        'september',
+        'october',
+        'november',
+    ];
     
     public function __construct(string $table)
     {
@@ -49,94 +73,150 @@ class Metrics
 
         switch ($period) {
             case self::TODAY:
-                $qb->select($type . '(' . $column . ') AS value', 'DAYNAME(created_at) AS day');
-
-                return $qb->where('DATE(created_at)', Carbon::now()->toDateString())
+                $data = $qb->select($type . '(' . $column . ') AS data', $this->getPeriod(self::DAY))
+                    ->where('date(created_at)', Carbon::now()->toDateString())
                     ->subQuery(function ($q) use ($query) {
                         if (!is_null($query) && !empty($query)) {
                             $q->rawQuery($query[0], $query[1]);
                         }
                     })
-                    ->groupBy('DAYNAME(created_at)')
+                    ->groupBy(self::DAY)
+                    ->orderBy(self::DAY, 'asc')
                     ->fetchAll();
+
+                return $this->formatDate($data, self::DAY);
 
             case self::DAY:
-                $qb->select($type . '(' . $column . ') AS value', 'DAYNAME(created_at) AS day');
+                $qb->select($type . '(' . $column . ') AS data', $this->getPeriod(self::DAY));
 
                 $interval > 0
-                    ? $qb->where('DATE(created_at)', '>=', Carbon::now()->subDays($interval)->toDateString())
-                    : $qb->where('YEAR(created_at)', $year)->and('MONTH(created_at)', $month)->and('WEEK(created_at)', $week);
+                    ? $qb->where('date(created_at)', '>=', Carbon::now()->subDays($interval)->toDateString())
+                    : $qb->whereColumn($this->formatPeriod(self::YEAR))->like($year)
+                        ->andColumn($this->formatPeriod(self::MONTH))->like($month)
+                        ->andColumn($this->formatPeriod(self::WEEK))->like($week);
 
-                return $qb->subQuery(function ($q) use ($query) {
-                    if (!is_null($query) && !empty($query)) {
-                        $q->rawQuery($query[0], $query[1]);
-                    }
-                })
-                    ->groupBy('DAYNAME(created_at)')
-                    ->fetchAll();
-
-            case self::WEEKDAY:
-                $qb->select($type . '(' . $column . ') AS value', 'WEEKDAY(created_at) AS weekday');
-
-                $interval > 0
-                    ? $qb->where('DATE(created_at)', '>', Carbon::now()->subWeeks($interval)->toDateString())
-                    : $qb->where('MONTH(created_at)', $month)->and('YEAR(created_at)', $year);
-
-                return $qb->subQuery(function ($q) use ($query) {
-                    if (!is_null($query) && !empty($query)) {
-                        $q->rawQuery($query[0], $query[1]);
-                    }
-                })
-                    ->groupBy('WEEKDAY(created_at)')
-                    ->fetchAll();
-
-            case self::WEEK:
-                $qb->select($type . '(' . $column . ') AS value', 'WEEK(created_at) AS week');
-
-                $interval > 0
-                    ? $qb->where('DATE(created_at)', '>', Carbon::now()->subWeeks($interval)->toDateString())
-                    : $qb->where('MONTH(created_at)', $month)->and('YEAR(created_at)', $year);
-
-                return $qb->subQuery(function ($q) use ($query) {
-                    if (!is_null($query) && !empty($query)) {
-                        $q->rawQuery($query[0], $query[1]);
-                    }
-                })
-                    ->groupBy('WEEK(created_at)')
-                    ->fetchAll();
-    
-            case self::MONTH:
-                $qb->select($type . '(' . $column . ') AS value', 'MONTHNAME(created_at) AS month');
-
-                $interval > 0
-                    ? $qb->where('MONTH(created_at)', '>', Carbon::now()->subMonths($interval)->month)
-                    : $qb->where('YEAR(created_at)', $year);
-            
-                return $qb->subQuery(function ($q) use ($query) {
-                    if (!is_null($query) && !empty($query)) {
-                        $q->rawQuery($query[0], $query[1]);
-                    }
-                })
-                    ->groupBy('MONTHNAME(created_at)')
-                    ->fetchAll();
-    
-            case self::YEAR:
-                $qb->select($type . '(' . $column . ') AS value', 'YEAR(created_at) AS year');
-
-                if ($interval > 0) {
-                    $qb->where('YEAR(created_at)', '>', Carbon::now()->subYears($interval)->year);
-                }
-                    
-                return $qb->subQuery(function ($q) use ($query) {
+                $data = $qb->subQuery(function ($q) use ($query) {
                         if (!is_null($query) && !empty($query)) {
                             $q->rawQuery($query[0], $query[1]);
                         }
                     })
-                    ->groupBy('YEAR(created_at)')
+                    ->groupBy(self::DAY)
+                    ->orderBy(self::DAY, 'asc')
                     ->fetchAll();
+
+                return $this->formatDate($data, self::DAY);
                     
-            default:
-                return [];
+            case self::WEEK:
+                $qb->select($type . '(' . $column . ') AS data', $this->getPeriod(self::WEEK));
+
+                $interval > 0
+                    ? $qb->where('date(created_at)', '>', Carbon::now()->subWeeks($interval)->toDateString())
+                    : $qb->whereColumn($this->formatPeriod(self::YEAR))->like($year)
+                        ->andColumn($this->formatPeriod(self::MONTH))->like($month);
+
+                $data = $qb->subQuery(function ($q) use ($query) {
+                        if (!is_null($query) && !empty($query)) {
+                            $q->rawQuery($query[0], $query[1]);
+                        }
+                    })
+                    ->groupBy(self::WEEK)
+                    ->orderBy(self::WEEK, 'asc')
+                    ->fetchAll();
+
+                return $this->formatDate($data, self::WEEK);
+    
+            case self::MONTH:
+                $qb->select($type . '(' . $column . ') AS data', $this->getPeriod(self::MONTH));
+
+                $interval > 0
+                    ? $qb->where($this->formatPeriod(self::MONTH), '>', Carbon::now()->subMonths($interval)->month)
+                    : $qb->where($this->formatPeriod(self::YEAR), $year);
+            
+                $data = $qb->subQuery(function ($q) use ($query) {
+                        if (!is_null($query) && !empty($query)) {
+                            $q->rawQuery($query[0], $query[1]);
+                        }
+                    })
+                    ->groupBy(self::MONTH)
+                    ->orderBy(self::MONTH, 'asc')
+                    ->fetchAll();
+
+                return $this->formatDate($data, self::MONTH);
+    
+            case self::YEAR:
+                $qb->select($type . '(' . $column . ') AS data', $this->getPeriod(self::YEAR));
+
+                if ($interval > 0) {
+                    $qb->where($this->formatPeriod(self::YEAR), '>', Carbon::now()->subYears($interval)->year);
+                }
+                    
+                $data = $qb->subQuery(function ($q) use ($query) {
+                        if (!is_null($query) && !empty($query)) {
+                            $q->rawQuery($query[0], $query[1]);
+                        }
+                    })
+                    ->groupBy(self::YEAR)
+                    ->orderBy(self::YEAR, 'asc')
+                    ->fetchAll();
+
+                return $this->formatDate($data, self::YEAR);
+                    
+            default: return [];
         }
+    }
+
+    private function getPeriod(string $period)
+    {
+        return $this->formatPeriod($period) . ' AS ' . $period;
+    }
+
+    private function formatPeriod(string $period)
+    {
+        switch ($period) {
+            case self::DAY:
+                return config('database.driver') === 'mysql'
+                    ? 'weekday(created_at)'
+                    : "strftime('%w', created_at)";
+
+            case self::WEEK:
+                return config('database.driver') === 'mysql'
+                    ? 'week(created_at)'
+                    : "strftime('%W', created_at)";
+
+            case self::MONTH:
+                return config('database.driver') === 'mysql'
+                    ? 'month(created_at)'
+                    : "strftime('%m', created_at)";
+
+            case self::YEAR:
+                return config('database.driver') === 'mysql'
+                    ? 'year(created_at)'
+                    : "strftime('%Y', created_at)";
+
+            default: return '';
+        } 
+    }
+
+    private function formatDate(array $data, string $period)
+    {
+        $data = array_map(function ($data) use ($period) {
+            $data->data = intval($data->data);
+
+            if ($period === self::MONTH) {
+                $data->$period = self::MONTHS[intval($data->$period)];
+            } else if ($period === self::DAY || $period === self::TODAY) {
+                $data->$period = config('database.driver') === 'mysql' 
+                    ? self::DAYS[intval($data->$period) + 1]
+                    : self::DAYS[intval($data->$period)];
+            } else if ($period === self::WEEK) {
+                $data->$period = __('week') . ' ' . $data->$period;
+            } else {
+                $data->$period = intval($data->$period);
+            }
+
+            return $data;
+        }, $data);
+
+        return $data;
     }
 }

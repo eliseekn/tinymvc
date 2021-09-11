@@ -40,7 +40,7 @@ class Session
 		return isset($_SESSION[strtolower(config('app.name')) . '_' . $name]);
     }
     
-    public static function flush(string ...$names)
+    public static function forget(string ...$names)
     {
         self::start();
         
@@ -55,7 +55,7 @@ class Session
     public static function pull(string $name)
     {
         $data = self::get($name);
-        self::flush($name);
+        self::forget($name);
         return $data;
     }
     

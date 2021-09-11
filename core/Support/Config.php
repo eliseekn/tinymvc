@@ -17,9 +17,7 @@ class Config
 {
     public static function saveEnv(array $config)
     {
-        if (empty($config)) {
-            return;
-        }
+        if (empty($config)) return;
 
         $data = '';
 
@@ -33,16 +31,12 @@ class Config
 
     public static function loadEnv()
     {
-        if (!Storage::path()->isFile('.env')) {
-            return;
-        }
+        if (!Storage::path()->isFile('.env')) return;
 
         $lines = file(Storage::path()->file('.env'), FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
         foreach ($lines as $line) {
-            if (strpos(trim($line), '#')) {
-                continue;
-            }
+            if (strpos(trim($line), '#')) continue;
 
             list($key, $value) = explode('=', trim($line), 2);
             putenv("$key=$value");

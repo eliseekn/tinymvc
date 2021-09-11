@@ -20,7 +20,7 @@ class UserFactory extends Factory
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->email(),
             'password' => hash_pwd('password'),
-            'verified' => 1,
+            'verified' => true,
             'role' => User::ROLE_USER
         ];
     }

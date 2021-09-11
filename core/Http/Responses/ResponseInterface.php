@@ -10,5 +10,5 @@ namespace Core\Http\Responses;
 
 interface ResponseInterface
 {
-    public function send($body, array $headers, int $code);
+    public function send($data, array $headers, int $code);
 }
