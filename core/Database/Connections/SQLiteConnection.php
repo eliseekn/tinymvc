@@ -30,6 +30,8 @@ class SQLiteConnection implements ConnectionInterface
 			$this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 			$this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
 			$this->pdo->setAttribute(PDO::ATTR_ORACLE_NULLS, PDO::NULL_EMPTY_STRING);
+
+            if (config('database.sqlite.memory')) $this->pdo->setAttribute(PDO::ATTR_PERSISTENT, true);
 		} catch (PDOException $e) {
             throw new PDOException($e->getMessage());
 		}
@@ -37,15 +39,8 @@ class SQLiteConnection implements ConnectionInterface
 
     private function getDB()
     {
-        if (!config('database.sqlite.memory')) {
-            $sqlite = Storage::path(config('storage.sqlite'));
-
-            if (!$sqlite->isDir()) $sqlite->createDir();
-
-            return config('storage.sqlite') . config('database.name') . '.db';
-        }
-
-        return ':memory:';
+        return config('database.sqlite.memory') ? ':memory:'
+            : config('storage.sqlite') . config('database.name') . '.db';
     }
 
     public function getPDO()
@@ -84,6 +79,7 @@ class SQLiteConnection implements ConnectionInterface
 
     public function schemaExists(string $name)
     {
+        if (config('database.sqlite.memory')) return true;
         return Storage::path(config('storage.sqlite'))->isFile($name);
     }
 
@@ -96,11 +92,13 @@ class SQLiteConnection implements ConnectionInterface
 
     public function createSchema(string $name)
     {
+        if (config('database.sqlite.memory')) return;
         Storage::path(config('storage.sqlite'))->writeFile($name . '.db', '');
     }
 
     public function deleteSchema(string $name)
     {
+        if (config('database.sqlite.memory')) return;
         Storage::path(config('storage.sqlite'))->deleteFile($name . '.db');
     }
 }

@@ -28,6 +28,12 @@ class Application
         foreach ($routes as $route) {
             require_once config('storage.routes') . $route;
         }
+
+        //setup storages
+        if (!Storage::path(config('storage.logs'))->isDir()) Storage::path(config('storage.logs'))->createDir();
+        if (!Storage::path(config('storage.cache'))->isDir()) Storage::path(config('storage.cache'))->createDir();
+        if (!Storage::path(config('storage.uploads'))->isDir()) Storage::path(config('storage.uploads'))->createDir();
+        if (!Storage::path(config('storage.sqlite'))->isDir()) Storage::path(config('storage.sqlite'))->createDir();
     }
     
     public function run()

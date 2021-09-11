@@ -15,9 +15,4 @@ class User extends Model
     {
         parent::__construct(static::$table);
     }
-
-    public function isRoleAdmin()
-    {
-        return $this->role === self::ROLE_ADMIN;
-    }
 }
