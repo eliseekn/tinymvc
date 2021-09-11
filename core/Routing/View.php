@@ -37,6 +37,10 @@ class View
 
         $loader = new FilesystemLoader($path->getPath());
 
+        $cache_dir = Storage::path(config('storage.cache'));
+
+        if (!$cache_dir->isDir()) $cache_dir->createDir();
+
         $twig = new Environment($loader, [
             'cache' => config('twig.disable_cache') ? false : config('storage.cache'),
             'debug' => config('twig.debug')

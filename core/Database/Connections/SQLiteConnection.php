@@ -37,8 +37,15 @@ class SQLiteConnection implements ConnectionInterface
 
     private function getDB()
     {
-        return config('database.sqlite.memory') ? ':memory:' 
-            : config('storage.sqlite') . config('database.name') . '.db'; 
+        if (!config('database.sqlite.memory')) {
+            $sqlite = Storage::path(config('storage.sqlite'));
+
+            if (!$sqlite->isDir()) $sqlite->createDir();
+
+            return config('storage.sqlite') . config('database.name') . '.db';
+        }
+
+        return ':memory:';
     }
 
     public function getPDO()
