@@ -16,7 +16,7 @@ class WelcomeMail
             ->from(config('mailer.sender.email'), config('mailer.sender.name'))
             ->reply(config('mailer.sender.email'), config('mailer.sender.name'))
 			->subject('Welcome')
-            ->html(View::getContent('emails.welcome', compact('username')))
+            ->body(View::getContent('emails.welcome', compact('username')))
 			->send();
     }
 }

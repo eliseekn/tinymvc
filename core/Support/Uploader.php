@@ -47,7 +47,8 @@ class Uploader
     
     public function isAllowed(): bool
     {
-        return empty($this->allowed_extensions) ? true : in_array(strtolower($this->getFileExtension()), $this->allowed_extensions);
+        return empty($this->allowed_extensions) ? true 
+            : in_array(strtolower($this->getFileExtension()), $this->allowed_extensions);
     }
     
     public function isUploaded(): bool
@@ -67,13 +68,13 @@ class Uploader
     
     public function fileSizeToString()
     {
-        if ($this->getFileSize() <= 0) {
-            return '0 KB';
-        }
+        if ($this->getFileSize() <= 0) return '0 KB';
 
         $bytes = $this->getFileSize() / 1024;
 
-        return $bytes > 1024 ? number_format($bytes/1024, 1) . ' MB' : number_format($bytes, 1) . ' KB';
+        return $bytes > 1024 
+            ? number_format($bytes/1024, 1) . ' MB' 
+            : number_format($bytes, 1) . ' KB';
     }
     
     public function getError()

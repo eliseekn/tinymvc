@@ -16,7 +16,7 @@ class VerificationMail
             ->from(config('mailer.sender.email'), config('mailer.sender.name'))
             ->reply(config('mailer.sender.email'), config('mailer.sender.name'))
 			->subject('Email verification')
-            ->html(View::getContent('emails.verification', compact('email', 'token')))
+            ->body(View::getContent('emails.verification', compact('email', 'token')))
 			->send();
     }
 }

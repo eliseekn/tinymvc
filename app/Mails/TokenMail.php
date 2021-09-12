@@ -16,7 +16,7 @@ class TokenMail
             ->from(config('mailer.sender.email'), config('mailer.sender.name'))
             ->reply(config('mailer.sender.email'), config('mailer.sender.name'))
 			->subject('Password reset')
-            ->html(View::getContent('emails.token', compact('email', 'token')))
+            ->body(View::getContent('emails.token', compact('email', 'token')))
 			->send();
     }
 }

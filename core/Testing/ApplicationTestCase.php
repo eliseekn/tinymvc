@@ -68,11 +68,8 @@ class ApplicationTestCase extends TestCase
 
     protected function getSession()
     {
-        if (array_key_exists('session', $this->getHeaders())) {
-            return json_decode($this->getHeaders('session'), true);
-        }
-
-        return [];
+        return !array_key_exists('session', $this->getHeaders()) ? []
+            : json_decode($this->getHeaders('session'), true);
     }
 
     protected function setHeaders(array $headers)
@@ -80,7 +77,7 @@ class ApplicationTestCase extends TestCase
         return array_merge($this->headers, $headers);
     }
 
-    protected function sessionKey(string $name)
+    protected function getSessionKey(string $name)
     {
         return strtolower(config('app.name')) . '_' . $name;
     }
@@ -203,32 +200,32 @@ class ApplicationTestCase extends TestCase
 
     public function assertSessionExists(string $expected)
     {
-        $this->assertTrue(array_key_exists($this->sessionKey($expected), $this->getSession()));
+        $this->assertTrue(array_key_exists($this->getSessionKey($expected), $this->getSession()));
     }
 
     public function assertSessionDoesNotExists(string $expected)
     {
-        $this->assertFalse(array_key_exists($this->sessionKey($expected), $this->getSession()));
+        $this->assertFalse(array_key_exists($this->getSessionKey($expected), $this->getSession()));
     }
 
     public function assertSessionHas(string $key, $value)
     {
-        $this->assertEquals($value, $this->getSession()[$this->sessionKey($key)]);
+        $this->assertEquals($value, $this->getSession()[$this->getSessionKey($key)]);
     }
 
     public function assertSessionDoesNotHave(string $key, $value)
     {
-        $this->assertNotEquals($value, $this->getSession()[$this->sessionKey($key)]);
+        $this->assertNotEquals($value, $this->getSession()[$this->getSessionKey($key)]);
     }
 
     public function assertSessionHasErrors()
     {
-        $this->assertFalse(empty($this->getSession()[$this->sessionKey('errors')]));
+        $this->assertFalse(empty($this->getSession()[$this->getSessionKey('errors')]));
     }
 
     public function assertSessionDoesNotHaveErrors()
     {
-        $this->assertTrue(empty($this->getSession()[$this->sessionKey('errors')]));
+        $this->assertTrue(empty($this->getSession()[$this->getSessionKey('errors')]));
     }
 
     public function dump()
