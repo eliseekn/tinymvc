@@ -10,11 +10,12 @@ namespace Core\Http;
 
 use Core\Support\Cookies;
 use Core\Support\Session;
+use Core\Http\Response\Response;
 
 /**
  * Handle HTTP redirections
  */
-class Redirect
+class Redirect extends Response
 {
     public $uri = '';
 
@@ -49,7 +50,9 @@ class Redirect
 
     public function go(int $code = 302)
     {
-        exit((new Response())->headers('Location', url($this->uri), $code));
+        exit($this->headers('Location', url($this->uri), $code));
+
+        //exit((new Response())->headers('Location', url($this->uri), $code));
     }
     
     public function with(string $key, $data): self

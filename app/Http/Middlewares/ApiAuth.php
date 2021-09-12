@@ -1,9 +1,16 @@
 <?php
 
+/**
+ * @copyright 2021 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @license MIT (https://opensource.org/licenses/MIT)
+ * @link https://github.com/eliseekn/tinymvc
+ */
+
 namespace App\Http\Middlewares;
 
 use Core\Support\Auth;
 use Core\Http\Request;
+use Core\Http\Response\JsonResponse;
 use Core\Support\Encryption;
 
 /**
@@ -11,20 +18,20 @@ use Core\Support\Encryption;
  */
 class ApiAuth
 {   
-    public function handle(Request $request)
+    public function handle(Request $request, JsonResponse $response)
     {
         if (empty($request->getHttpAuth)) {
-            response()->json([__('auth_required')], [], 401);
+            $response->send(__('auth_required'), [], 401);
         }
 
         list($method, $token) = $request->getHttpAuth();
 
         if (trim($method) !== 'Bearer') {
-            response()->json([__('invalid_auth_method')], [], 401);
+            $response->send(__('invalid_auth_method'), [], 401);
         }
 
         if (!Auth::checkToken(Encryption::decrypt($token), $user)) {
-            response()->json([__('invalid_credentials')], [], 401);
+            $response->send(__('invalid_credentials'), [], 401);
         }
     }
 }

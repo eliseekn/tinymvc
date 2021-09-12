@@ -8,7 +8,7 @@
 
 namespace Core\Console\Database;
 
-use Core\Database\Connection;
+use Core\Database\Connection\Connection;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

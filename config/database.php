@@ -11,13 +11,13 @@
  */
 
 return [
-    'driver' => env('DB_DRIVER', 'mysql'),
+    'driver' => env('DB_DRIVER', 'sqlite'),
     'table_prefix' => '',
     'name' => env('DB_NAME', 'tinymvc'),
     'timestamps' => true,
 
     'mysql' => [
-        'host' => env('DB_HOST', 'localhost'),
+        'host' => env('DB_HOST', '127.0.0.1'),
         'username' => env('DB_USERNAME', 'root'),
         'password' => env('DB_PASSWORD', 'root'),
         'charset' => 'utf8',

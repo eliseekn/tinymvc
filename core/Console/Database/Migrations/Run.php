@@ -8,7 +8,7 @@
 
 namespace Core\Console\Database\Migrations;
 
-use Core\Database\Connection;
+use Core\Database\Connection\Connection;
 use Core\Support\Storage;
 use Core\Database\Migration;
 use Core\Database\QueryBuilder;

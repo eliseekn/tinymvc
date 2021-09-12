@@ -8,7 +8,7 @@
 
 namespace Core\Console\Database;
 
-use Core\Database\Connection;
+use Core\Database\Connection\Connection;
 use Core\Support\Storage;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Command\Command;

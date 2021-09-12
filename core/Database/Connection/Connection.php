@@ -6,9 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Core\Database;
-
-use Core\Database\Connections\BaseConnection;
+namespace Core\Database\Connection;
 
 /**
  * Manage database connection
@@ -24,7 +22,7 @@ class Connection
 
 	private function __construct()
 	{
-        $this->db = new BaseConnection(config('database.driver'));
+        $this->db = config('database.driver') === 'mysql' ? new MySQLConnection() : new SQLiteConnection();
     }
 
 	public static function getInstance(): self
@@ -38,36 +36,36 @@ class Connection
 
     public function executeStatement(string $query)
     {
-        return $this->db->getConnection()->executeStatement($query);
+        return $this->db->executeStatement($query);
     }
 
 	public function executeQuery(string $query, ?array $args = null)
 	{
-        return $this->db->getConnection()->executeQuery($query, $args);
+        return $this->db->executeQuery($query, $args);
 	}
 
     public function schemaExists(string $name)
     {
-        return $this->db->getConnection()->schemaExists($name);
+        return $this->db->schemaExists($name);
     }
 
     public function tableExists(string $name)
     {
-        return $this->db->getConnection()->tableExists($name);
+        return $this->db->tableExists($name);
     }
 
     public function createSchema(string $name)
     {
-        $this->db->getConnection()->createSchema($name);
+        $this->db->createSchema($name);
     }
 
     public function deleteSchema(string $name)
     {
-        $this->db->getConnection()->deleteSchema($name);
+        $this->db->deleteSchema($name);
     }
 
     public function getPDO()
     {
-        return $this->db->getConnection()->getPDO();
+        return $this->db->getPDO();
     }
 }

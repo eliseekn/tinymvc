@@ -117,9 +117,7 @@ class Request
         $uri = filter_var($uri, FILTER_SANITIZE_URL) === false ? $uri : filter_var($uri, FILTER_SANITIZE_URL);
         $uri = str_replace('//', '/', $uri);
  
-        if ($uri !== '/') {
-            $uri = rtrim($uri, '/');
-        }
+        if ($uri !== '/') $uri = rtrim($uri, '/');
 
         return $uri;
     }
@@ -183,9 +181,7 @@ class Request
     {
         $result = $this->has(...$items);
 
-        if (!$result) {
-            return false;
-        } 
+        if (!$result) return false;
 
         foreach ($items as $item) {
             $result = !empty($this->{$item}) && !is_null($this->{$item});
@@ -207,13 +203,8 @@ class Request
      */
     public function set(string $item, $value)
     {
-        if (isset($_POST[$item])) {
-            $_POST[$item] = $value;
-        }
-
-        if (isset($_GET[$item])) {
-            $_GET[$item] = $value;
-        }
+        if (isset($_POST[$item])) $_POST[$item] = $value;
+        if (isset($_GET[$item])) $_GET[$item] = $value;
 
         $this->{$item} = $value;
     }
@@ -237,9 +228,7 @@ class Request
     {
         $result = [];
 
-        if (empty($this->all())) {
-            return $result;
-        }
+        if (empty($this->all())) return $result;
 
         foreach ($items as $item) {
             foreach ($this->all() as $key => $input) {
@@ -271,14 +260,8 @@ class Request
 
     public function validate(array $inputs = [], array $rules = [], array $messages = [])
     {
-        if (empty($inputs)) {
-            $inputs = $this->inputs();
-        }
+        if (empty($inputs)) $inputs = $this->inputs();
 
-        $validator = Validator::validate($inputs, $rules, $messages);
-
-        if ($validator->fails()) {
-            redirect()->back()->withInputs($inputs)->withErrors($validator->errors())->go();
-        }
+        return Validator::validate($inputs, $rules, $messages)->redirectBackOnFail();
     }
 }

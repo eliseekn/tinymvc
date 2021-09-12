@@ -11,7 +11,7 @@
  */
 
 return [
-    'default' => 'smtp',
+    'transport' => env('MAILER_TRANSPORT', 'smtp'),
 
     'sender' => [
         'name' => config('app.name'),
@@ -19,14 +19,12 @@ return [
     ],
 
     'smtp' => [
-        'host' => 'localhost',
-        'port' => 1025,
+        'host' => env('MAILER_HOST', '127.0.0.1'),
+        'port' => env('MAILER_PORT', 1025),
         'auth' => false,
         'secure' => false,
         'tls' => false,
-        'username' => '',
-        'password' => ''
-    ],
-
-    'sendmail' => []
+        'username' => env('MAILER_USERNAME', ''),
+        'password' => env('MAILER_PASSWORD', '')
+    ]
 ];

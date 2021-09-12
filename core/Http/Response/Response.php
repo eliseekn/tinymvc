@@ -6,12 +6,14 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Core\Http\Responses;
+namespace Core\Http\Response;
+
+use Core\Http\Redirect;
 
 /**
  * Send HTTP response
  */
-class BaseResponse implements ResponseInterface
+class Response implements ResponseInterface
 {
     public function headers($name, ?string $value = null, int $code = 200)
     {
@@ -31,16 +33,22 @@ class BaseResponse implements ResponseInterface
         }
     }
     
+    /**
+     * @param string $data
+     */
     public function send($data, array $headers = [], int $code = 200)
     {
-        if (!isset($data) or empty($data)) {
-            return;
-        }
+        if (empty($data)) return;
 
         $this->headers(array_merge($headers, [
             'Content-Length' => strlen($data)
         ]), null, $code);
 
         exit($data);
+    }
+
+    public function redirect()
+    {
+        return new Redirect();
     }
 }

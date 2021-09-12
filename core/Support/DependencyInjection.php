@@ -9,10 +9,8 @@
 namespace Core\Support;
 
 use Closure;
-use Reflection;
 use ReflectionClass;
 use ReflectionFunction;
-use ReflectionObject;
 
 /**
  * Automatic dependancy injection class

@@ -9,11 +9,12 @@
 namespace Core\Http;
 
 use GUMP;
+use Core\Http\Response\Response;
 
 /**
  * Request fields validator
  */
-class Validator
+class Validator extends Response
 {
     protected static $rules = [];
     protected static $messages = [];
@@ -68,6 +69,6 @@ class Validator
     public function redirectBackOnFail()
     {
         return !$this->fails() ? $this 
-            : redirect()->back()->withErrors($this->errors())->withInputs($this->inputs())->go();
+            : $this->redirect()->back()->withErrors($this->errors())->withInputs($this->inputs())->go();
     }
 }

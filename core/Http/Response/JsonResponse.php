@@ -6,17 +6,32 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Core\Http\Responses;
+namespace Core\Http\Response;
+
+use Exception;
 
 /**
  * Send response with JSON data
+ * 
+ * @throws Exception
  */
-class JsonResponse extends BaseResponse implements ResponseInterface
+class JsonResponse extends Response implements ResponseInterface
 {
+    /**
+     * @param array|string $data
+     */
     public function send($data, array $headers = [], int $code = 200)
     {
-        if (!isset($data) or empty($data)) {
-            return;
+        if (is_null($data)) {
+            throw new Exception('Invalid data');
+        }
+
+        if (!is_array($data)) {
+            if (is_string($data)) {
+                $data = [$data];
+            }
+
+            throw new Exception('Invalid data');
         }
 
         $data = json_encode($data);

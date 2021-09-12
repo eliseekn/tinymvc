@@ -6,22 +6,21 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Core\Support;
+namespace Core\Support\Mailer;
 
 use Exception;
-use Core\Support\Mailer\MailerInterface;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\PHPMailer;
 
 /**
  * Send emails using PHPMailer
  */
-class BaseMailer implements MailerInterface
+class Mailer implements MailerInterface
 {
     /**
      * @var \PHPMailer\PHPMailer\PHPMailer|null
      */
-    protected $mailer = null;
+    private $mailer = null;
 
     public function __construct()
     {
@@ -29,7 +28,7 @@ class BaseMailer implements MailerInterface
         $this->mailer->Debugoutput = 'error_log';
         $this->mailer->CharSet = PHPMailer::CHARSET_UTF8;
 
-        if (config('mailer.default') === 'smtp') {
+        if (config('mailer.transport') === 'smtp') {
             $this->mailer->SMTPDebug = SMTP::DEBUG_SERVER;
             $this->mailer->isSMTP();
             $this->mailer->Host = config('mailer.smtp.host');
@@ -55,7 +54,7 @@ class BaseMailer implements MailerInterface
     public function to(string $address, string $name = ''): self
     {
         $this->mailer->addAddress($address, $name);
-        return new self();
+        return $this;
     }
 
     public function from(string $address, string $name = ''): self

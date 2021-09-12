@@ -9,8 +9,6 @@
 use Carbon\Carbon;
 use Core\Http\Request;
 use Core\Routing\View;
-use Core\Http\Redirect;
-use Core\Http\Response;
 use Core\Routing\Route;
 use Core\Support\Config;
 use Core\Support\Cookies;
@@ -219,7 +217,11 @@ if (!function_exists('url')) {
 	 */
 	function url(string $uri, $params = null)
 	{
-        $url = config('app.url') . ltrim($uri, '/');
+        $url = config('app.url');
+
+        if ($url[-1] !== '/') $url .= '/'; 
+
+        $url .= ltrim($uri, '/');
         $params = is_array($params) ? (empty($params) ? '' : implode('/', $params)) : $params;
 
 		return is_null($params) ? $url : $url . '/' . $params;
@@ -342,26 +344,6 @@ if (!function_exists('url_contains')) {
 	{
         return preg_match('/' . $str . '/', explode('//', current_url())[1]);
 	}
-}
-
-if (!function_exists('response')) {
-    /**
-     * Response helper function
-     */
-    function response(): \Core\Http\Response
-    {
-        return new Response();
-    }
-}
-
-if (!function_exists('redirect')) {
-    /**
-     * Redirect helper function
-     */
-    function redirect(): \Core\Http\Redirect
-    {
-        return new Redirect();
-    }
 }
 
 if (!function_exists('render')) {

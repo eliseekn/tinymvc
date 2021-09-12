@@ -1,11 +1,20 @@
 <?php
 
+/**
+ * @copyright 2021 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @license MIT (https://opensource.org/licenses/MIT)
+ * @link https://github.com/eliseekn/tinymvc
+ */
+
 namespace NAMESPACE;
+
+use Core\Http\Request;
+use Core\Http\Response\Response;
 
 class CLASSNAME
 {
-    public function index()
+    public function index(Request $request, Response $response)
 	{
-        //
+        $response->send('Hello from CLASSNAME');
 	}
 }

@@ -8,7 +8,6 @@
 
 namespace Core\Support;
 
-use Carbon\Carbon;
 use Core\Http\Request;
 use Core\Support\Cookies;
 use Core\Support\Session;
@@ -21,32 +20,30 @@ use App\Database\Models\Token;
  */
 class Auth
 {
-    private static function getAttempts()
+    /**
+     * URI to redirect when logged in
+     * 
+     * @var string
+     */
+    public const HOME = '/';
+
+    public static function getAttempts()
     {
         return Session::get('auth_attempts', 0);
     }
 
-    public static function attempt(Request $request)
+    public static function attempt(array $credentials, bool $remember = false)
     {
         Session::push('auth_attempts', 1, 0);
 
-        if (self::checkCredentials($request->email, $request->password, $user)) {
-            Session::forget('auth_attempts', 'auth_attempts_timeout');
-            Session::create('user', $user);
-                
-            if ($request->has('remember')) {
-                Cookies::create('user', $user->email, 3600 * 24 * 365);
-            }
-            
-            self::redirectIfLogged($request);   
-        }
+        if (!self::checkCredentials($credentials['email'], $credentials['password'], $user)) return false;
 
-        if (config('security.auth.max_attempts') > 0 && self::getAttempts() >= config('security.auth.max_attempts')) {
-            redirect()->back()->with('auth_attempts_timeout', Carbon::now()->addMinutes(config('security.auth.unlock_timeout'))->toDateTimeString())->go();
-        }
-         
-        Alert::default(__('login_failed'))->error();
-        redirect()->to('login')->withInputs($request->only('email', 'password'))->withErrors([__('login_failed')])->go();
+        Session::forget('auth_attempts', 'auth_attempts_timeout');
+        Session::create('user', $user);
+            
+        if ($remember) Cookies::create('user', $user->email, 3600 * 24 * 365);
+        
+        return true;
     }
     
     public static function checkCredentials(string $email, string $password, &$user)
@@ -78,11 +75,11 @@ class Auth
         return $user !== false;
     }
     
-    public static function create(Request $request)
+    public static function create(array $data)
     {
-        $request->set('password', hash_pwd($request->password));
+        $data['password'] = hash_pwd($data['password']);
 
-        return User::create($request->except('csrf_token'));
+        return User::create($data);
     }
     
     public static function createToken(string $email): string
@@ -126,38 +123,10 @@ class Auth
         return $user->{$key};
     }
 
-    public static function forget(Request $request)
+    public static function forget()
     {
-        if (!self::check($request)) {
-            Alert::default(__('not_logged'))->error();
-            redirect()->to('login')->go();
-        }
-
         Session::forget('user', 'history', 'csrf_token');
 
-        if (self::remember()) {
-            Cookies::delete('user');
-        }
-    }
-    
-    public static function forgetAndRedirect(Request $request, string $redirect = '/')
-    {
-        self::forget($request);
-
-        Alert::toast(__('logged_out'))->success();
-        redirect()->to($redirect)->go();
-    }
-    
-    public static function redirectIfLogged(Request $request, string $redirect = '/')
-    {
-        if (!self::check($request)) {
-            Alert::toast(__('not_logged'))->error();
-            redirect()->to('login')->go();
-        }
-
-        $url = !Session::has('intended') ? $redirect : Session::pull('intended');
-
-        Alert::toast(__('welcome', ['name' => Auth::get('name')]))->success();
-        redirect()->to($url)->go();
+        if (self::remember()) Cookies::delete('user');
     }
 }

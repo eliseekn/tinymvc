@@ -6,12 +6,13 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Core\Database\Connections;
+namespace Core\Database\Connection;
 
+use Core\Support\Storage;
 use PDO;
 use PDOException;
 
-class MySQLConnection implements ConnectionInterface
+class SQLiteConnection implements ConnectionInterface
 {
 	/**
 	 * @var PDO
@@ -24,16 +25,22 @@ class MySQLConnection implements ConnectionInterface
 	public function __construct()
 	{
 		try {
-            $this->pdo = new PDO('mysql:host=' . config('database.mysql.host') . ';port=' . config('database.mysql.port'), config('database.mysql.username'), config('database.mysql.password'));
-            $this->pdo->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, 'SET NAMES ' . config('database.mysql.charset') . ' COLLATE ' . config('database.mysql.collation'));
-            $this->pdo->setAttribute(PDO::MYSQL_ATTR_FOUND_ROWS, true);
+            $this->pdo = new PDO('sqlite:' . $this->getDB());
 			$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 			$this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
 			$this->pdo->setAttribute(PDO::ATTR_ORACLE_NULLS, PDO::NULL_EMPTY_STRING);
+
+            if (config('database.sqlite.memory')) $this->pdo->setAttribute(PDO::ATTR_PERSISTENT, true);
 		} catch (PDOException $e) {
             throw new PDOException($e->getMessage());
 		}
+    }
+
+    private function getDB()
+    {
+        return config('database.sqlite.memory') ? ':memory:'
+            : config('storage.sqlite') . config('database.name') . '.db';
     }
 
     public function getPDO()
@@ -72,33 +79,26 @@ class MySQLConnection implements ConnectionInterface
 
     public function schemaExists(string $name)
     {
-        $stmt = $this->executeQuery('
-            SELECT schema_name FROM information_schema.schemata WHERE schema_name = "' . $name .'"
-        ');
-
-        return !($stmt->fetch() === false);
+        if (config('database.sqlite.memory')) return true;
+        return Storage::path(config('storage.sqlite'))->isFile($name);
     }
 
     public function tableExists(string $name)
     {
-        $stmt = $this->executeQuery('
-            SELECT * FROM information_schema.tables WHERE table_schema = "' . config('database.name') .'" 
-            AND table_name = "' . $name . '" LIMIT 1
-        ');
+        $stmt = $this->executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='" . $name . "'");
 
         return !($stmt->fetch() === false);
     }
 
     public function createSchema(string $name)
     {
-        $this->executeStatement('
-            CREATE DATABASE ' . $name . ' CHARACTER SET ' . config('database.mysql.charset') . 
-            ' COLLATE ' . config('database.mysql.collation')
-        );
+        if (config('database.sqlite.memory')) return;
+        Storage::path(config('storage.sqlite'))->writeFile($name . '.db', '');
     }
 
     public function deleteSchema(string $name)
     {
-        $this->executeStatement("DROP DATABASE IF EXISTS $name");
+        if (config('database.sqlite.memory')) return;
+        Storage::path(config('storage.sqlite'))->deleteFile($name . '.db');
     }
 }

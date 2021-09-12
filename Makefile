@@ -2,7 +2,6 @@ SHELL := /bin/bash
 
 .PHONY: tests
 
-tests: export APP_ENV=test
 tests:
 	php console db:delete
 	php console db:create

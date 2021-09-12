@@ -6,7 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Core\Http\Responses;
+namespace Core\Http\Response;
 
 interface ResponseInterface
 {

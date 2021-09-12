@@ -6,7 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Core\Database\Connections;
+namespace Core\Database\Connection;
 
 interface ConnectionInterface
 {

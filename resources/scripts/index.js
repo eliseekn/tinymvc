@@ -1,4 +1,4 @@
-import './components/loading-button'
+import './components/spinner-button'
 import './components/password-toggler'
 import AlertToast from './components/alert-toast'
 

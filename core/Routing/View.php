@@ -8,6 +8,7 @@
 
 namespace Core\Routing;
 
+use Core\Http\Response\Response;
 use Exception;
 use Twig\Environment;
 use Core\Support\Session;
@@ -60,6 +61,6 @@ class View
      */
     public static function render(string $view, array $data = [], int $code = 200)
     {
-        response()->send(self::getContent($view, $data), [], $code);
+        (new Response())->send(self::getContent($view, $data), [], $code);
     }
 }

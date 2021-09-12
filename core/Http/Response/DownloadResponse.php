@@ -6,15 +6,18 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Core\Http\Responses;
+namespace Core\Http\Response;
 
 use Exception;
 
 /**
  * Send download file response
  */
-class DownloadResponse extends BaseResponse implements ResponseInterface
+class DownloadResponse extends Response implements ResponseInterface
 {
+    /**
+     * @param string $filename
+     */
     public function send($filename, array $headers = [], int $code = 200)
     {
         if (!file_exists($filename)) {

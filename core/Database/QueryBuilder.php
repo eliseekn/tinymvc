@@ -9,6 +9,7 @@
 namespace Core\Database;
 
 use Carbon\Carbon;
+use Core\Database\Connection\Connection;
 
 /**
  * Database query builder

@@ -1,11 +1,21 @@
 <?php
 
+/**
+ * @copyright 2021 - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @license MIT (https://opensource.org/licenses/MIT)
+ * @link https://github.com/eliseekn/tinymvc
+ */
+
 namespace App\Http\Controllers\Auth;
 
+use Carbon\Carbon;
 use Core\Http\Request;
 use Core\Support\Auth;
 use Core\Support\Alert;
+use Core\Support\Session;
 use App\Mails\WelcomeMail;
+use Core\Support\Mailer\Mailer;
+use Core\Http\Response\Response;
 use App\Http\Validators\AuthRequest;
 use App\Http\Validators\RegisterUser;
 
@@ -14,47 +24,61 @@ use App\Http\Validators\RegisterUser;
  */
 class AuthController
 { 
-    public function login(Request $request)
+    public function login(Request $request, Response $response)
     {
-        if (!Auth::check($request)) {
-            render('auth.login');
-        }
+        if (!Auth::check($request)) render('auth.login');
 
-        Auth::redirectIfLogged($request, );
+        $uri = !Session::has('intended') ? Auth::HOME : Session::pull('intended');
+        $response->redirect()->to($uri)->go();
     }
 
-    public function signup(Request $request)
+    public function signup(Request $request, Response $response)
     {
-        if (!Auth::check($request)) {
-            render('auth.signup');
-        }
+        if (!Auth::check($request)) render('auth.signup');
 
-        Auth::redirectIfLogged($request, );
+        $uri = !Session::has('intended') ? Auth::HOME : Session::pull('intended');
+        $response->redirect()->to($uri)->go();
     }
 
-	public function authenticate(Request $request)
+	public function authenticate(Request $request, Response $response)
 	{
         AuthRequest::validate($request->except('csrf_token'))->redirectBackOnFail();
-        Auth::attempt($request);
-    }
-    
-    public function register(Request $request)
-    {
-        RegisterUser::register()->validate($request->except('csrf_token'))->redirectBackOnFail();
-        $user = Auth::create($request);
 
-        if (!config('security.auth.email_verification')) {
-            WelcomeMail::send($user->email, $user->name);
+        if (Auth::attempt($request->only('email', 'password'), $request->has('remember'))) {
+            $uri = !Session::has('intended') ? Auth::HOME : Session::pull('intended');
 
-            Alert::default(__('account_created'))->success();
-            redirect()->to('login')->go();
+            Alert::toast(__('welcome', ['name' => Auth::get('name')]))->success();
+            $response->redirect()->to($uri)->go();
         }
 
-        (new EmailVerificationController())->notify($request);
+        if (config('security.auth.max_attempts') > 0 && Auth::getAttempts() >= config('security.auth.max_attempts')) {
+            $response->redirect()->back()->with('auth_attempts_timeout', Carbon::now()->addMinutes(config('security.auth.unlock_timeout'))->toDateTimeString())->go();
+        }
+        
+        Alert::default(__('login_failed'))->error();
+        $response->redirect()->to('login')->withInputs($request->only('email', 'password'))->withErrors([__('login_failed')])->go();
+    }
+    
+    public function register(Request $request, Mailer $mailer, Response $response)
+    {
+        RegisterUser::register()->validate($request->except('csrf_token'))->redirectBackOnFail();
+        $user = Auth::create($request->except('csrf_token'));
+
+        if (!config('security.auth.email_verification')) {
+            WelcomeMail::send($mailer, $user->email, $user->name);
+
+            Alert::default(__('account_created'))->success();
+            $response->redirect()->to('login')->go();
+        }
+
+        (new EmailVerificationController())->notify($request, $response, $mailer);
     }
 	
-	public function logout(Request $request, string $redirect = '/')
+	public function logout(Response $response)
 	{
-		Auth::forgetAndRedirect($request, $redirect);
+        Auth::forget();
+
+        Alert::toast(__('logged_out'))->success();
+        $response->redirect()->to(Auth::HOME)->go();
 	}
 }
