@@ -127,6 +127,11 @@ class Model
         return (new Repository(static::$table))->metrics($column, $type, $period, $interval, $query);
     }
 
+    public static function trends(string $column, string $type, string $period, int $interval = 0, ?array $query = null)
+    {
+        return (new Repository(static::$table))->trends($column, $type, $period, $interval, $query);
+    }
+
     public static function create(array $data)
     {
         $id = (new Repository(static::$table))->insertGetId($data);
@@ -167,7 +172,7 @@ class Model
      * @param  string|null $column
      * @return \Core\Database\Repository
      */
-    public function for(string $table, ?string $column = null)
+    public function belongsTo(string $table, ?string $column = null)
     {
         if (is_null($column)) {
             $column = $this->getColumnFromTable($table);

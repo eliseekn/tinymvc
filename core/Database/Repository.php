@@ -250,7 +250,12 @@ class Repository
     
     public function metrics(string $column, string $type, string $period, int $interval = 0, ?array $query = null)
     {
-        return (new Metrics($this->table))->trends($column, $type, $period, $interval, $query);
+        return (new Metrics($this->table))->get($column, $type, $period, $interval, $query);
+    }
+
+    public function trends(string $column, string $type, string $period, int $interval = 0, ?array $query = null)
+    {
+        return (new Metrics($this->table))->getTrends($column, $type, $period, $interval, $query);
     }
     
     public function where(string $column, $operator = null, $value = null): self

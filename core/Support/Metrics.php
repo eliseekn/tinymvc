@@ -64,7 +64,7 @@ class Metrics
      * @link   https://www.tutsmake.com/mysql-get-data-of-current-date-week-month-year/
      *         https://www.tutsmake.com/query-for-get-data-of-last-day-week-month-year-mysql/
      */
-    public function trends(string $column, string $type, string $period, int $interval = 0, array $query = null)
+    public function getTrends(string $column, string $type, string $period, int $interval = 0, array $query = null)
     {
         $qb = QueryBuilder::table($this->table);
         $year = Carbon::now()->year;
@@ -160,6 +160,87 @@ class Metrics
                     ->fetchAll();
 
                 return $this->formatDate($data, self::YEAR);
+                    
+            default: return [];
+        }
+    }
+
+    public function get(string $column, string $type, string $period, int $interval = 0, array $query = null)
+    {
+        $qb = QueryBuilder::table($this->table);
+        $year = Carbon::now()->year;
+        $month = Carbon::now()->month;
+        $week = Carbon::now()->weekOfYear;
+
+        switch ($period) {
+            case self::TODAY:
+                return $qb->select($type . '(' . $column . ') AS data')
+                    ->where('date(created_at)', Carbon::now()->toDateString())
+                    ->subQuery(function ($q) use ($query) {
+                        if (!is_null($query) && !empty($query)) {
+                            $q->rawQuery($query[0], $query[1]);
+                        }
+                    })
+                    ->fetch();
+
+            case self::DAY:
+                $qb->select($type . '(' . $column . ') AS data');
+
+                $interval > 0
+                    ? $qb->where('date(created_at)', '>=', Carbon::now()->subDays($interval)->toDateString())
+                    : $qb->whereColumn($this->formatPeriod(self::YEAR))->like($year)
+                        ->andColumn($this->formatPeriod(self::MONTH))->like($month)
+                        ->andColumn($this->formatPeriod(self::WEEK))->like($week);
+
+                return $qb->subQuery(function ($q) use ($query) {
+                        if (!is_null($query) && !empty($query)) {
+                            $q->rawQuery($query[0], $query[1]);
+                        }
+                    })
+                    ->fetch();
+
+            case self::WEEK:
+                $qb->select($type . '(' . $column . ') AS data');
+
+                $interval > 0
+                    ? $qb->where('date(created_at)', '>', Carbon::now()->subWeeks($interval)->toDateString())
+                    : $qb->whereColumn($this->formatPeriod(self::YEAR))->like($year)
+                        ->andColumn($this->formatPeriod(self::MONTH))->like($month);
+
+                return $qb->subQuery(function ($q) use ($query) {
+                        if (!is_null($query) && !empty($query)) {
+                            $q->rawQuery($query[0], $query[1]);
+                        }
+                    })
+                    ->fetch();
+    
+            case self::MONTH:
+                $qb->select($type . '(' . $column . ') AS data');
+
+                $interval > 0
+                    ? $qb->where($this->formatPeriod(self::MONTH), '>', Carbon::now()->subMonths($interval)->month)
+                    : $qb->where($this->formatPeriod(self::YEAR), $year);
+            
+                return $qb->subQuery(function ($q) use ($query) {
+                        if (!is_null($query) && !empty($query)) {
+                            $q->rawQuery($query[0], $query[1]);
+                        }
+                    })
+                    ->fetch();
+    
+            case self::YEAR:
+                $qb->select($type . '(' . $column . ') AS data');
+
+                if ($interval > 0) {
+                    $qb->where($this->formatPeriod(self::YEAR), '>', Carbon::now()->subYears($interval)->year);
+                }
+                    
+                return $qb->subQuery(function ($q) use ($query) {
+                        if (!is_null($query) && !empty($query)) {
+                            $q->rawQuery($query[0], $query[1]);
+                        }
+                    })
+                    ->fetch();
                     
             default: return [];
         }
