@@ -12,7 +12,7 @@ yarn
 
 ## Installation
 
-1\. Download a TinyMVC framework copy [here](https://github.com/eliseekn/tinymvc/archive/master.zip)
+1\. On your terminal run ***composer create-project eliseekn/tinymvc project-name***
 
 2\. Setup your web server configuration
 
@@ -46,8 +46,8 @@ server {
 
 On your terminal:
 ```
-cd ./tinymvc
-composer install && yarn
+cd ./project-name
+yarn && yarn build
 ```
 
 ## Your first application
