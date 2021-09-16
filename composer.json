@@ -1,6 +1,6 @@
 {
     "name": "eliseekn/tinymvc",
-    "description": "PHP framework based on MVC architecture",
+    "description": "TinyMVC is a PHP framework based on MVC architecture that helps you build easly and quickly powerful web applications and RESTful API.",
     "type": "project",
     "license": "MIT",
     "keywords": ["php", "framework", "mvc"],
@@ -12,6 +12,7 @@
             "role": "Developer"
         }
     ],
+    "minimum-stability": "dev",
     "autoload": {
         "files": [
             "app/Functions.php",
