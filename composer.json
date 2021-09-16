@@ -3,12 +3,18 @@
     "description": "PHP framework based on MVC architecture",
     "type": "project",
     "license": "MIT",
+    "keywords": [
+        "php",
+        "framework",
+        "mvc"
+    ],
     "authors": [
         {
             "name": "N'Guessan Kouadio Elisée",
             "email": "eliseekn@gmail.com"
         }
     ],
+    "minimum-stability": "stable",
     "autoload": {
         "files": [
             "app/Functions.php",
@@ -23,7 +29,7 @@
         "optimize-autoloader": true
     },
     "require": {
-        "php": "^7.2",
+        "php": ">=^7.2",
         "wixel/gump": "^1.11",
         "phpmailer/phpmailer": "^6.1",
         "nesbot/carbon": "^2.41",
