@@ -3,15 +3,13 @@
     "description": "PHP framework based on MVC architecture",
     "type": "project",
     "license": "MIT",
-    "keywords": [
-        "php",
-        "framework",
-        "mvc"
-    ],
+    "keywords": ["php", "framework", "mvc"],
     "authors": [
         {
             "name": "N'Guessan Kouadio Elisée",
-            "email": "eliseekn@gmail.com"
+            "email": "eliseekn@gmail.com",
+            "homepage": "https://eliseekn.netlify.app",
+            "role": "Developer"
         }
     ],
     "minimum-stability": "stable",
