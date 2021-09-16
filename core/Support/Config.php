@@ -37,6 +37,7 @@ class Config
 
         foreach ($lines as $line) {
             if (strpos(trim($line), '#')) continue;
+            if (trim($line) === '') continue;
 
             list($key, $value) = explode('=', trim($line), 2);
             putenv("$key=$value");

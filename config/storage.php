@@ -19,6 +19,7 @@ return [
     'seeds' => absolute_path('app.Database.Seeds'),
     'factories' => absolute_path('app.Database.Factories'),
     'stubs' => absolute_path('resources.stubs'),
+    'lang' => absolute_path('resources.lang'),
     'controllers' => absolute_path('app.Http.Controllers'),
     'repositories' => absolute_path('app.Database.Repositories'),
     'models' => absolute_path('app.Database.Models'),

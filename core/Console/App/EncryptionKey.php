@@ -31,18 +31,18 @@ class EncryptionKey extends Command
             'APP_ENV' => config('app.env') . PHP_EOL,
             'APP_NAME' => config('app.name') . PHP_EOL,
             'APP_URL' => config('app.url') . PHP_EOL,
-            'APP_LANG' => config('app.lang') . PHP_EOL,
+            'APP_LANG' => config('app.lang') . PHP_EOL . PHP_EOL,
             'DB_DRIVER' => config('database.driver') . PHP_EOL,
             'DB_NAME' => config('database.name') . PHP_EOL,
             'DB_HOST' => config('database.' . config('database.driver') . '.host') . PHP_EOL,
             'DB_PORT' => config('database.' . config('database.driver') . '.port') . PHP_EOL,
             'DB_USERNAME' => config('database.' . config('database.driver') . '.username') . PHP_EOL,
-            'DB_PASSWORD' => config('database.' . config('database.driver') . '.password') . PHP_EOL,
+            'DB_PASSWORD' => config('database.' . config('database.driver') . '.password') . PHP_EOL . PHP_EOL,
             'MAILER_TRANSPORT' => config('mailer.transport') . PHP_EOL,
             'MAILER_HOST' => config('mailer.' . config('mailer.transport') . '.host') . PHP_EOL,
             'MAILER_PORT' => config('mailer.' . config('mailer.transport') . '.port') . PHP_EOL,
             'MAILER_USERNAME' => config('mailer.' . config('mailer.transport') . '.username') . PHP_EOL,
-            'MAILER_PASSWORD' => config('mailer.' . config('mailer.transport') . '.password') . PHP_EOL,
+            'MAILER_PASSWORD' => config('mailer.' . config('mailer.transport') . '.password') . PHP_EOL . PHP_EOL,
             'ENCRYPTION_KEY' => generate_token()
         ];
 

@@ -30,10 +30,10 @@ class Application
         }
 
         //setup storages
-        if (!Storage::path(config('storage.logs'))->isDir()) Storage::path(config('storage.logs'))->createDir();
-        if (!Storage::path(config('storage.cache'))->isDir()) Storage::path(config('storage.cache'))->createDir();
-        if (!Storage::path(config('storage.uploads'))->isDir()) Storage::path(config('storage.uploads'))->createDir();
-        if (!Storage::path(config('storage.sqlite'))->isDir()) Storage::path(config('storage.sqlite'))->createDir();
+        if (!Storage::path(config('storage.logs'))->isDir()) Storage::path(config('storage.logs'))->createDir('', true);
+        if (!Storage::path(config('storage.cache'))->isDir()) Storage::path(config('storage.cache'))->createDir('', true);
+        if (!Storage::path(config('storage.uploads'))->isDir()) Storage::path(config('storage.uploads'))->createDir('', true);
+        if (!Storage::path(config('storage.sqlite'))->isDir()) Storage::path(config('storage.sqlite'))->createDir('', true);
     }
     
     public function run()
