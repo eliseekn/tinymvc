@@ -12,7 +12,6 @@
             "role": "Developer"
         }
     ],
-    "minimum-stability": "stable",
     "autoload": {
         "files": [
             "app/Functions.php",
