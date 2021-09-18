@@ -8,24 +8,15 @@ class AlertToast extends HTMLElement {
     constructor() {
         super()
         this.icon = this.icon.bind(this)
-        this.message = this.message.bind(this)
     }
 
     icon() {
         switch(this.getAttribute('type')) {
-            case 'primary':
-                return '<i class="fa fa-info-circle text-primary"></i>'
-            case 'danger':
-                return '<i class="fa fa-times-circle text-danger"></i>'
-            case 'warning':
-                return '<i class="fa fa-exclamation-triangle text-warning"></i>'
-            default:
-                return '<i class="fa fa-check-circle text-success"></i>'
+            case 'primary': return '<i class="fa fs-4 fa-info-circle text-primary"></i>'
+            case 'danger': return '<i class="fa fs-4 fa-times-circle text-danger"></i>'
+            case 'warning': return '<i class="fa fs-4 fa-exclamation-triangle text-warning"></i>'
+            default: return '<i class="fa fs-4 fa-check-circle text-success"></i>'
         }
-    }
-
-    message() {
-        return this.getAttribute('message')
     }
 
     connectedCallback() {
@@ -39,12 +30,10 @@ class AlertToast extends HTMLElement {
                         ${this.icon()}
 
                         <div class="d-flex flex-column px-2">
-                            <p class="modal-title mb-0">${this.message()}</p>
+                            <p class="modal-title mb-0">${this.getAttribute('message')}</p>
                         </div>
 
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                 </div>
             </div>
@@ -52,21 +41,22 @@ class AlertToast extends HTMLElement {
 
         document.body.appendChild(element)
 
-        $('#alert-toast').modal({
+        let alert = new bootstrap.Modal(element, {
             backdrop: false,
             keyboard: false,
-            show: true
         })
 
-        $('#alert-toast').on('shown.bs.modal', function () {
-            window.setTimeout(function () {
-                $('#alert-toast').modal('hide');
-            }, 4000)
+        element.addEventListener('shown.bs.modal', () => {
+            window.setTimeout(() => {
+                alert.hide()
+            }, 3500)
         })
 
-        $('#alert-toast').on('hidden.bs.modal', function () {
+        element.addEventListener('hidden.bs.modal', () => {
             document.body.removeChild(element)
         })
+          
+        alert.show()
     }
 }
 
