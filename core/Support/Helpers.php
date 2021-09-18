@@ -8,18 +8,15 @@
 
 use Carbon\Carbon;
 use Core\Http\Request;
-use Core\Routing\View;
 use Core\Routing\Route;
 use Core\Support\Config;
 use Core\Support\Cookies;
 use Core\Support\Session;
-use Core\Support\Storage;
 use Core\Support\Encryption;
 
 /**
  * Cookies management
  */
-
 if (!function_exists('create_cookie')) {
     function create_cookie(string $name, string $value, int $expire = 3600, bool $secure = false, string $domain = '') 
     {
@@ -51,7 +48,6 @@ if (!function_exists('delete_cookie')) {
 /**
  * Sessions management
  */
-
 if (!function_exists('create_session')) {
 	function create_session(string $name, $data)
 	{
@@ -97,16 +93,12 @@ if (!function_exists('session_forget')) {
 if (!function_exists('auth_attempts_exceeded')) {
     function auth_attempts_exceeded()
     {
-        if (!config('security.auth.max_attempts')) {
-            return false;
-        }
+        if (!config('security.auth.max_attempts')) return false;
 
         $unlock_timeout = session_get('auth_attempts_timeout');
         $attempts = session_get('auth_attempts');
 
-        if (is_null($attempts) || is_null($unlock_timeout)) {
-            return false;
-        }
+        if (is_null($attempts) || is_null($unlock_timeout)) return false;
 
         return $attempts >= config('security.auth.max_attempts') && Carbon::parse($unlock_timeout)->gte(Carbon::now());
     }
@@ -120,9 +112,7 @@ if (!function_exists('auth')) {
 	{
         $user = session_get('user');
 
-        if (is_null($user)) {
-            return false;
-        }
+        if (is_null($user)) return false;
 
 		return $user->{$key};
 	}
@@ -131,7 +121,6 @@ if (!function_exists('auth')) {
 /**
  * Security utils
  */
-
 if (!function_exists('hash_pwd')) {    
     /**
      * Hash password
@@ -210,7 +199,6 @@ if (!function_exists('valid_csrf_token')) {
 /**
  * Miscellaneous URL utils
  */
-
 if (!function_exists('url')) {
 	/**
 	 * Generate abosulte url
@@ -284,9 +272,7 @@ if (!function_exists('route_uri')) {
 
         $uri = str_replace('//', '/', $uri);
         
-        if ($uri !== '/') {
-            $uri = rtrim($uri, '/');
-        }
+        if ($uri !== '/') $uri = rtrim($uri, '/');
 
         return $uri;
     }
@@ -346,20 +332,9 @@ if (!function_exists('url_contains')) {
 	}
 }
 
-if (!function_exists('render')) {
-    /**
-     * Render view template helper
-     */
-    function render(string $view, array $data = [], int $code = 200)
-    {
-        View::render($view, $data, $code);
-    }
-}
-
 /**
  * Miscellaneous utils
  */
-
 if (!function_exists('real_path')) {    
     /**
      * Replace '.' by OS's directory separator
@@ -420,9 +395,7 @@ if (!function_exists('config')) {
 	 */
 	function config(string $data, $default = null)
 	{
-        if (strpos($data, '.') === false) {
-            return null;
-        }
+        if (strpos($data, '.') === false) return null;
 
         $file = substr($data, 0, strpos($data, '.'));
         $data = substr($data, strpos($data, '.') + 1, strlen($data));
@@ -445,9 +418,7 @@ if (!function_exists('__')) {
 if (!function_exists('get_file_extension')) {	
 	function get_file_extension(string $file)
 	{
-		if (empty($file) || strpos($file, '.') === false) {
-            return '';
-		}
+		if (empty($file) || strpos($file, '.') === false) return '';
 		
 		$file_ext = explode('.', $file);
 		return $file_ext === false ? '' : end($file_ext);
@@ -457,9 +428,7 @@ if (!function_exists('get_file_extension')) {
 if (!function_exists('get_file_name')) {	
 	function get_file_name(string $file)
 	{
-		if (empty($file) || strpos($file, '.') === false) {
-            return '';
-		}
+		if (empty($file) || strpos($file, '.') === false) return '';
 		
 		$filename = explode('.', $file);
 		return $filename === false ? '' : $filename[0];
@@ -469,10 +438,6 @@ if (!function_exists('get_file_name')) {
 if (!function_exists('save_log')) {
 	function save_log(string $message)
 	{
-        if (!Storage::path(config('storage.logs'))->isDir()) {
-            Storage::path(config('storage.logs'))->createDir();
-        }
-
         error_log($message);
     }
 }
@@ -490,7 +455,6 @@ if (!function_exists('env')) {
 /**
  * Laravel helpers from \Illuminate\Support\helpers.php
  */
-
 if (!function_exists('trait_uses_recursive')) {
     /**
      * Returns all traits used by a trait and its traits.

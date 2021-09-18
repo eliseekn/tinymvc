@@ -99,9 +99,7 @@ class Uploader
 
         //create destination directory if not exists
         if (!Storage::path($destination)->isDir()) {
-            if (!Storage::path($destination)->createDir('', true)) {
-                return false;
-            }
+            if (!Storage::path($destination)->createDir('', true)) return false;
         }
 
         return move_uploaded_file($this->getTempFilename(), Storage::path($destination)->file($this->filename));

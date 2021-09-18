@@ -297,9 +297,7 @@ class Migration
         $pk = config('database.driver') === 'mysql' ? $this->addBigInt($column) : $this->addInteger($column);
         $pk->primaryKey();
 
-        if ($auto_increment) {
-            $pk->autoIncrement();
-        }
+        if ($auto_increment) $pk->autoIncrement();
 
         return $pk;
     }

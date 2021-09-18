@@ -41,6 +41,7 @@
     'auth_required' => 'Authorization Required',
     'invalid_auth_method' => 'Invalid authentication method',
     'invalid_credentials' => 'Invalid credentials',
+    'bad_request' => 'Bad Request',
     'all_rights_reserved' => 'All rights reserved',
     'sunday' => 'Sunday',
     'monday' => 'Monday',

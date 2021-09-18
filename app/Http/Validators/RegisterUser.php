@@ -8,8 +8,7 @@
 
 namespace App\Http\Validators;
 
-use GUMP;
-use Core\Http\Validator;
+use Core\Http\Validator\GUMPValidator as Validator;
 use Core\Database\Repository;
 
 class RegisterUser extends Validator
@@ -29,17 +28,17 @@ class RegisterUser extends Validator
     protected static $messages = [
         //
     ];
-    
+
     /**
-     * Register custom validators
+     * Make validator
      */
-    public static function register(): self
+    public static function make(array $inputs)
     {
-        GUMP::add_validator('unique', function($field, array $input, array $params, $value) {
+        self::addRule('unique', function($field, array $input, array $params, $value) {
             $data = (new Repository($params[0]))->select('*')->where($field, $value);
             return !$data->exists();
-        }, "Value of {field} field already exists");
+        }, 'This {field} is already used by another user');
 
-        return new self();
+        return self::validate($inputs, static::$rules, static::$messages);
     }
 }

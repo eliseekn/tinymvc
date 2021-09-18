@@ -8,7 +8,7 @@
 
 namespace App\Http\Validators;
 
-use Core\Http\Validator;
+use Core\Http\Validator\GUMPValidator as Validator;
 
 class AuthRequest extends Validator
 {
@@ -26,4 +26,12 @@ class AuthRequest extends Validator
     protected static $messages = [
         //
     ];
+
+    /**
+     * Make validator
+     */
+    public static function make(array $inputs)
+    {
+        return self::validate($inputs, static::$rules, static::$messages);
+    }
 }

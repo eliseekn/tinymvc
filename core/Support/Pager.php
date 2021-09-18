@@ -18,10 +18,8 @@ class Pager
     protected $pagination = [];
     protected $items = [];
 
-    public function __construct(int $total_items, int $items_per_page)
+    public function __construct(int $total_items, int $items_per_page, int $page = 1)
     {
-        $page = (new Request())->queries('page', 1);
-
         $this->pagination = [
 			'page' => $page,
             'first_item' => ($page - 1) * $items_per_page,
@@ -64,13 +62,8 @@ class Pager
     
     public function currentPage()
     {
-        if ($this->pagination['page'] < 1) {
-            return 1;
-        }
-        
-        if ($this->pagination['page'] > $this->totalPages()) {
-            return $this->totalPages();
-        }
+        if ($this->pagination['page'] < 1) return 1;
+        if ($this->pagination['page'] > $this->totalPages()) return $this->totalPages();
 
         return $this->pagination['page'];
     }

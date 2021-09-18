@@ -9,6 +9,7 @@
 namespace Core\Http\Response;
 
 use Core\Http\Redirect;
+use Core\Routing\View;
 
 /**
  * Send HTTP response
@@ -40,9 +41,7 @@ class Response implements ResponseInterface
     {
         if (empty($data)) return;
 
-        $this->headers(array_merge($headers, [
-            'Content-Length' => strlen($data)
-        ]), null, $code);
+        $this->headers(array_merge($headers, ['Content-Length' => strlen($data)]), null, $code);
 
         exit($data);
     }
@@ -50,5 +49,10 @@ class Response implements ResponseInterface
     public function redirect()
     {
         return new Redirect();
+    }
+
+    public function view(string $view, array $data = [], int $code = 200)
+    {
+        $this->send(View::getContent($view, $data), [], $code);
     }
 }

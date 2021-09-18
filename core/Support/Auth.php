@@ -32,6 +32,11 @@ class Auth
         return Session::get('auth_attempts', 0);
     }
 
+    public static function attemptsExceeded()
+    {
+        return config('security.auth.max_attempts') > 0 && Auth::getAttempts() >= config('security.auth.max_attempts');
+    }
+
     public static function attempt(array $credentials, bool $remember = false)
     {
         Session::push('auth_attempts', 1, 0);

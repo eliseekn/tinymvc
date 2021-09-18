@@ -11,6 +11,7 @@ namespace Core\Routing;
 use Closure;
 use Exception;
 use Core\Http\Request;
+use Core\Http\Response\Response;
 use Core\Support\Session;
 use Core\Support\DependencyInjection;
 
@@ -72,7 +73,7 @@ class Router
     /**
      * @throws Exception
      */
-    public static function dispatch(Request $request)
+    public static function dispatch(Request $request, Response $response)
     {   
         $routes = Route::$routes;
 
@@ -105,6 +106,6 @@ class Router
             }
         }
 
-        render(config('errors.views.404'), [], 404);
+        $response->view(config('errors.views.404'), [], 404);
     }
 }

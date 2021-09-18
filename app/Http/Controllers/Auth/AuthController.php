@@ -26,7 +26,7 @@ class AuthController
 { 
     public function login(Request $request, Response $response)
     {
-        if (!Auth::check($request)) render('auth.login');
+        if (!Auth::check($request)) $response->view('auth.login');
 
         $uri = !Session::has('intended') ? Auth::HOME : Session::pull('intended');
         $response->redirect()->to($uri)->go();
@@ -34,7 +34,7 @@ class AuthController
 
     public function signup(Request $request, Response $response)
     {
-        if (!Auth::check($request)) render('auth.signup');
+        if (!Auth::check($request)) $response->view('auth.signup');
 
         $uri = !Session::has('intended') ? Auth::HOME : Session::pull('intended');
         $response->redirect()->to($uri)->go();
@@ -42,7 +42,7 @@ class AuthController
 
 	public function authenticate(Request $request, Response $response)
 	{
-        AuthRequest::validate($request->except('csrf_token'))->redirectBackOnFail();
+        AuthRequest::make($request->except('csrf_token'))->redirectBackOnFail($response);
 
         if (Auth::attempt($request->only('email', 'password'), $request->has('remember'))) {
             $uri = !Session::has('intended') ? Auth::HOME : Session::pull('intended');
@@ -51,7 +51,7 @@ class AuthController
             $response->redirect()->to($uri)->go();
         }
 
-        if (config('security.auth.max_attempts') > 0 && Auth::getAttempts() >= config('security.auth.max_attempts')) {
+        if (Auth::attemptsExceeded()) {
             $response->redirect()->back()->with('auth_attempts_timeout', Carbon::now()->addMinutes(config('security.auth.unlock_timeout'))->toDateTimeString())->go();
         }
         
@@ -61,7 +61,7 @@ class AuthController
     
     public function register(Request $request, Mailer $mailer, Response $response)
     {
-        RegisterUser::register()->validate($request->except('csrf_token'))->redirectBackOnFail();
+        RegisterUser::make($request->except('csrf_token'))->redirectBackOnFail($response);
         $user = Auth::create($request->except('csrf_token'));
 
         if (!config('security.auth.email_verification')) {

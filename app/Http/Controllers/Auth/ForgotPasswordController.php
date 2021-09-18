@@ -45,7 +45,7 @@ class ForgotPasswordController
 	public function reset(Request $request, Response $response)
 	{
         if (!$request->has('email', 'token')) {
-            $response->send('Bad Request', [], 400);
+            $response->send(__('bad_request'), [], 400);
         }
 
         $token = Token::findBy('email', $request->email);
@@ -60,12 +60,12 @@ class ForgotPasswordController
 
         $token->delete();
 
-		render('auth.password.new', ['email' => $request->email]);
+		$response->view('auth.password.new', $request->only('email'));
 	}
 	
 	public function update(Request $request, Response $response)
 	{
-		AuthRequest::validate($request->except('csrf_token'))->redirectBackOnFail();
+		AuthRequest::make($request->except('csrf_token'))->redirectBackOnFail($response);
         $user = User::findBy('email', $request->email);
 
         if (!$user) {

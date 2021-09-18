@@ -13,12 +13,16 @@ use Core\Routing\Router;
 use Core\Support\Whoops;
 use Core\Support\Storage;
 use Core\Support\Exception;
+use Core\Http\Response\Response;
 
 /**
  * Main application
  */
 class Application
 {
+    private $response;
+    private $request;
+
     public function __construct()
     {
         Whoops::register();
@@ -34,12 +38,15 @@ class Application
         if (!Storage::path(config('storage.cache'))->isDir()) Storage::path(config('storage.cache'))->createDir('', true);
         if (!Storage::path(config('storage.uploads'))->isDir()) Storage::path(config('storage.uploads'))->createDir('', true);
         if (!Storage::path(config('storage.sqlite'))->isDir()) Storage::path(config('storage.sqlite'))->createDir('', true);
+
+        $this->request = new Request();
+        $this->response = new Response();
     }
     
     public function run()
     {
         try {
-            Router::dispatch(new Request());
+            Router::dispatch($this->request, $this->response);
         } 
         
         catch (Exception $e) {
@@ -51,7 +58,7 @@ class Application
                 die($e);
             }
         
-            render(config('errors.views.500'), [], 500);
+            $this->response->view(config('errors.views.500'), [], 500);
         }
     }
 }

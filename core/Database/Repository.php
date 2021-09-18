@@ -180,9 +180,7 @@ class Repository
 
     public function updateWhere(array $data, array $items)
     {
-        if (!isset($data[2])) {
-            $data[2] = null;
-        }
+        if (!isset($data[2])) $data[2] = null;
 
         if (!$this->select('*')->where($data[0], $data[1], $data[2])->exists()) {
             return false;
@@ -624,12 +622,12 @@ class Repository
         return $this->range(0, $count);
     }
 
-    public function paginate(int $items_per_page): Pager
+    public function paginate(int $items_per_page, int $page = 1): Pager
     {
         list($query, $args) = $this->qb->toSQL();
 
         $total_items = count(QueryBuilder::setQuery($query, $args)->fetchAll());
-        $pager = new Pager($total_items, $items_per_page);
+        $pager = new Pager($total_items, $items_per_page, $page);
         
         $items = $items_per_page > 0 
             ? QueryBuilder::setQuery($query, $args)->limit($pager->getFirstItem(), $items_per_page)->fetchAll() 

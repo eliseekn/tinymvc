@@ -21,6 +21,15 @@ class QueryBuilder
     protected static $table;
     protected static $db;
 
+    /**
+     * Set database connection name
+     */
+    protected static function setDB(?string $db = null)
+    {
+        static::$db = is_null($db) ? config('database.name') : $db;
+        return new self();
+    }
+
     protected static function getTable(string $name)
     {
         if (config('database.driver') === 'sqlite') {
@@ -28,15 +37,6 @@ class QueryBuilder
         }
 
         return static::$db . '.' . config('database.table_prefix') . $name;
-    }
-
-    /**
-     * Set database connection name
-     */
-    public static function setDB(?string $db = null)
-    {
-        static::$db = is_null($db) ? config('database.name') : $db;
-        return new self();
     }
 
     /**
@@ -164,9 +164,7 @@ class QueryBuilder
 		self::$query = "UPDATE " . static::$table . " SET ";
 
 		if (config('database.timestamps')) {
-            $items = array_merge($items, [
-                'updated_at' => Carbon::now()->toDateTimeString()
-            ]);
+            $items = array_merge($items, ['updated_at' => Carbon::now()->toDateTimeString()]);
         }
 
 		foreach ($items as $key => $value) {
@@ -298,9 +296,7 @@ class QueryBuilder
             }
         }
 
-        if (self::$query[-1] !== ')') {
-            self::$query .= ')';
-        }
+        if (self::$query[-1] !== ')') self::$query .= ')';
 
         if (config('database.driver') === 'mysql') {
             self::$query .= " ENGINE='" . config('database.mysql.engine') . "'";
@@ -495,9 +491,7 @@ class QueryBuilder
 	{
 		self::$query .= " LIMIT $limit";
 
-		if (!is_null($offset)) {
-			self::$query .= ", $offset";
-		}
+		if (!is_null($offset)) self::$query .= ", $offset";
 
 		return $this;
 	}

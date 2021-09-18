@@ -8,6 +8,8 @@
 
 namespace Core\Routing;
 
+use Core\Http\Response\Response;
+
 /**
  * Manage routes
  */
@@ -66,8 +68,8 @@ class Route
 
     public static function view(string $uri, string $view, array $params = []): self
     {
-        return self::get($uri, function () use ($view, $params) {
-            render($view, $params);
+        return self::get($uri, function (Response $response) use ($view, $params) {
+            $response->view($view, $params);
         });
     }
 
@@ -123,9 +125,7 @@ class Route
 
     public function register()
     {
-        if (empty(static::$tmp_routes)) {
-            return;
-        }
+        if (empty(static::$tmp_routes)) return;
 
         static::$routes += static::$tmp_routes;
         static::$tmp_routes = [];
@@ -133,9 +133,7 @@ class Route
     
     private static function addPrefix(string $prefix, string $route)
     {
-        if ($prefix[-1] === '/') {
-            $prefix = rtrim($prefix, '/');
-        }
+        if ($prefix[-1] === '/') $prefix = rtrim($prefix, '/');
 
         list($method, $uri) = explode(' ', $route, 2);
 
@@ -146,9 +144,7 @@ class Route
     {
         list($method, $uri) = explode(' ', $route, 2);
 
-        if (empty($uri)) {
-            $uri = '/';
-        }
+        if (empty($uri)) $uri = '/';
 
         if (strlen($uri) > 1) {
             if ($uri[0] !== '/') {

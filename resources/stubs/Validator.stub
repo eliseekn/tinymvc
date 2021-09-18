@@ -8,8 +8,7 @@
 
 namespace App\Http\Validators;
 
-use GUMP;
-use Core\Http\Validator;
+use Core\Http\Validator\GUMPValidator as Validator;
 
 class CLASSNAME extends Validator
 {
@@ -28,14 +27,14 @@ class CLASSNAME extends Validator
     ];
 
     /**
-     * Register customs validators
+     * Make validator
      */
-    public static function register(): self
+    public static function make(array $inputs)
     {
-        GUMP::add_validator('name', function($field, array $input, array $params, $value) {
+        self::addRule('name', function($field, array $input, array $params, $value) {
             return true;
-        }, '');
+        }, '{field}');
 
-        return new self();
+        return self::validate($inputs, static::$rules, static::$messages);
     }
 }

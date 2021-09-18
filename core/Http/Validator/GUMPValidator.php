@@ -6,20 +6,31 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Core\Http;
+namespace Core\Http\Validator;
 
 use GUMP;
 use Core\Http\Response\Response;
+use Core\Http\Validator\ValidatorInterface;
 
 /**
  * Request fields validator
  */
-class Validator extends Response
+class GUMPValidator implements ValidatorInterface
 {
     protected static $rules = [];
     protected static $messages = [];
+
+    /**
+     * @var bool|array
+     */
     protected static $errors;
+
     protected static $inputs = [];
+
+    public static function addRule(string $rule, callable $callback, string $error_message)
+    {
+        GUMP::add_validator($rule, $callback, $error_message);
+    }
 
     public static function validate(array $inputs, array $rules = [], array $messages = []): self
     {
@@ -66,9 +77,9 @@ class Validator extends Response
         return static::$inputs;
     }
     
-    public function redirectBackOnFail()
+    public function redirectBackOnFail(Response $response)
     {
         return !$this->fails() ? $this 
-            : $this->redirect()->back()->withErrors($this->errors())->withInputs($this->inputs())->go();
+            : $response->redirect()->back()->withErrors($this->errors())->withInputs($this->inputs())->go();
     }
 }

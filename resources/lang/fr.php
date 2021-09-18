@@ -41,6 +41,7 @@
     'auth_required' => 'Autorisation Requise',
     'invalid_auth_method' => "Méthode d'autentification invalide",
     'invalid_credentials' => 'Accès invalides',
+    'bad_request' => 'Requête invalide',
     'all_rights_reserved' => 'Tous droits réservés',
     'sunday' => 'Dimanche',
     'monday' => 'Lundi',

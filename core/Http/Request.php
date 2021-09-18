@@ -9,6 +9,7 @@
 namespace Core\Http;
 
 use Core\Support\Uploader;
+use Core\Http\Validator\GUMPValidator as Validator;
 
 /**
  * Handle HTTP requests
@@ -58,9 +59,8 @@ class Request
 
     private function getSingleFile(string $input, array $allowed_extensions = [])
     {
-        if (!isset($_FILES[$input]) || empty($_FILES[$input])) {
-            return null;
-        }
+        if (!isset($_FILES[$input]) || empty($_FILES[$input])) return null;
+        
         return new Uploader([
             'name' => $_FILES[$input]['name'],
             'tmp_name' => $_FILES[$input]['tmp_name'],
@@ -74,9 +74,7 @@ class Request
     {
         $files = [];
 
-        if (!isset($_FILES[$input]) || empty($_FILES[$input])) {
-            return $files;
-        }
+        if (!isset($_FILES[$input]) || empty($_FILES[$input])) return $files;
 
         $count = is_array($_FILES[$input]['tmp_name']) ? count($_FILES[$input]['tmp_name']) : 1;
 
@@ -258,10 +256,14 @@ class Request
         return $all;
     }
 
-    public function validate(array $inputs = [], array $rules = [], array $messages = [])
+    public function validate(array $rules = [], array $messages = [], array $inputs = [])
     {
-        if (empty($inputs)) $inputs = $this->inputs();
+        if (empty($inputs)) {
+            $inputs = $this->inputs();
+        } else {
+            $inputs = $this->only(...$inputs);
+        }
 
-        return Validator::validate($inputs, $rules, $messages)->redirectBackOnFail();
+        return Validator::validate($inputs, $rules, $messages);
     }
 }

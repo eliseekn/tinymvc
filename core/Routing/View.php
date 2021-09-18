@@ -8,7 +8,6 @@
 
 namespace Core\Routing;
 
-use Core\Http\Response\Response;
 use Exception;
 use Twig\Environment;
 use Core\Support\Session;
@@ -33,7 +32,7 @@ class View
         $view = real_path($view) . '.html.twig';
 
         if (!$path->isFile($view)) {
-            throw new Exception('File "' . $path->file($view) . ' not found.');
+            throw new Exception('View template "' . $path->file($view) . ' not found.');
         }
 
         $loader = new FilesystemLoader($path->getPath());
@@ -45,22 +44,12 @@ class View
 
         $twig->addExtension(new TwigExtensions());
         
-        if (config('twig.debug')) {
-            $twig->addExtension(new DebugExtension());
-        }
+        if (config('twig.debug')) $twig->addExtension(new DebugExtension());
 
         return $twig->render($view, array_merge($data, [
             'inputs' => (object) Session::pull('inputs'), 
             'errors' => (object) Session::pull('errors'), 
             'alert' => Session::pull('alert')
         ]));
-    }
-
-    /**
-     * Render view template
-     */
-    public static function render(string $view, array $data = [], int $code = 200)
-    {
-        (new Response())->send(self::getContent($view, $data), [], $code);
     }
 }

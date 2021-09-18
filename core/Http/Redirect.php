@@ -51,8 +51,6 @@ class Redirect extends Response
     public function go(int $code = 302)
     {
         exit($this->headers('Location', url($this->uri), $code));
-
-        //exit((new Response())->headers('Location', url($this->uri), $code));
     }
     
     public function with(string $key, $data): self
