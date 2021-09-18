@@ -7,13 +7,13 @@
 {% block body %}
 	<div class="card shadow p-4">
 		<form method="post" action="{{ url('password/update') }}">
-			<div class="form-group">
-				<label for="email">{{ __('email') }}</label>
+			<div class="mb-3">
+				<label for="email" class="form-label">{{ __('email') }}</label>
 				<input type="email" id="email" name="email" class="form-control" value="{{ email }}" autofocus>
 			</div>
 
-			<div class="form-group">
-				<label for="password">{{ __('new_password') }}</label>
+			<div class="mb-3">
+				<label for="password" class="form-label">{{ __('new_password') }}</label>
 
 				<div class="d-flex align-items-center">
 					<input type="password" id="password" name="password" class="form-control">
@@ -24,9 +24,11 @@
 				</div>
 			</div>
 
-			<button type="submit" class="btn btn-block btn-primary spinner">
-				{{ __('submit') }}
-			</button>
+			<div class="d-grid gap-2">
+			    <button type="submit" class="btn btn-primary spinner">
+                    {{ __('submit') }}
+                </button>
+            </div>
 		</form>
 	</div>
 {% endblock %}

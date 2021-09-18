@@ -20,19 +20,19 @@
 		<form method="post" action="{{ url('authenticate') }}">
 			{{ csrf_token_input()|raw }}
 
-			<div class="form-group">
-				<label for="email">{{ __('email') }}</label>
+			<div class="mb-3">
+				<label for="email" class="form-label">{{ __('email') }}</label>
 				<input type="text" id="email" name="email" class="form-control {{ errors.email ? 'is-invalid' }}" value="{{ inputs.email ?: '' }}" aria-describedby="email-error" maxlength="50" autofocus>
 
 				{% if errors.email is not empty %}
-					<div id="email-error" class="invalid-feedback">
-						{{ errors.email|raw }}
-					</div>
+                <div id="email-error" class="invalid-feedback">
+                    {{ errors.email|raw }}
+                </div>
 				{% endif %}
 			</div>
 
-			<div class="form-group">
-				<label for="password">{{ __('password') }}</label>
+			<div class="mb-3">
+				<label for="password" class="form-label">{{ __('password') }}</label>
 
 				<div class="d-flex align-items-center">
 					<input type="password" id="password" name="password" class="form-control {{ errors.password ? 'is-invalid' }}" value="{{ inputs.password ?: '' }}" aria-describedby="password-error" maxlength="50">
@@ -43,16 +43,16 @@
 				</div>
 
 				{% if errors.password is not empty %}
-					<div id="password-error" class="invalid-feedback d-block">
-						{{ errors.password|raw }}
-					</div>
+                <div id="password-error" class="invalid-feedback d-block">
+                    {{ errors.password|raw }}
+                </div>
 				{% endif %}
 			</div>
 
 			<div class="d-flex flex-column flex-lg-row justify-content-lg-between justify-content-center mb-3 mb-lg-0 mx-auto">
-				<div class="form-group custom-control custom-switch">
-					<input type="checkbox" class="custom-control-input" id="remember" name="remember">
-					<label class="custom-control-label" for="remember">{{ __('remember') }}</label>
+				<div class="mb-3 form-check form-switch">
+					<input type="checkbox" class="form-check-input" id="remember" name="remember">
+					<label class="form-check-label" for="remember">{{ __('remember') }}</label>
 				</div>
 
 				<a href="{{ url('password/forgot') }}">
@@ -60,9 +60,11 @@
 				</a>
 			</div>
 
-			<button type="submit" class="btn btn-block btn-primary spinner" {{ auth_attempts_exceeded() ? 'disabled' }}>
-				{{ __('submit') }}
-			</button>
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary spinner" {{ auth_attempts_exceeded() ? 'disabled' }}>
+                    {{ __('submit') }}
+                </button>
+            </div>
 		</form>
 
 		<p class="mt-4 text-center">

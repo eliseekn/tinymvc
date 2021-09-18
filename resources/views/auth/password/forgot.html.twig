@@ -15,12 +15,16 @@
 
 	<div class="card shadow p-4">
 		<form method="post" action="{{ url('password/notify') }}">
-			<div class="form-group">
-				<label for="email">{{ __('email') }}</label>
+			<div class="mb-3">
+				<label for="email" class="form-label">{{ __('email') }}</label>
 				<input type="email" id="email" name="email" class="form-control" required autofocus>
 			</div>
 
-			<button type="submit" class="btn btn-block btn-primary spinner">{{ __('submit') }}</button>
+            <div class="d-grid gap-2">
+			    <button type="submit" class="btn btn-primary spinner">
+                    {{ __('submit') }}
+                </button>
+            </div>
 		</form>
 	</div>
 {% endblock %}
