@@ -97,9 +97,7 @@ class Client
 
         $i = null;
 
-        do {
-            curl_multi_exec($curl_multi, $i);
-        } while ($i);
+        do { curl_multi_exec($curl_multi, $i); } while ($i);
 
         //retrieves response
         foreach ($curl_array as $key => $curl) {

@@ -25,6 +25,9 @@ class Application
 
     public function __construct()
     {
+        $this->request = new Request();
+        $this->response = new Response();
+
         Whoops::register();
 
         $routes = Storage::path(config('storage.routes'))->getFiles();
@@ -32,15 +35,6 @@ class Application
         foreach ($routes as $route) {
             require_once config('storage.routes') . $route;
         }
-
-        //setup storages
-        if (!Storage::path(config('storage.logs'))->isDir()) Storage::path(config('storage.logs'))->createDir('', true);
-        if (!Storage::path(config('storage.cache'))->isDir()) Storage::path(config('storage.cache'))->createDir('', true);
-        if (!Storage::path(config('storage.uploads'))->isDir()) Storage::path(config('storage.uploads'))->createDir('', true);
-        if (!Storage::path(config('storage.sqlite'))->isDir()) Storage::path(config('storage.sqlite'))->createDir('', true);
-
-        $this->request = new Request();
-        $this->response = new Response();
     }
     
     public function run()
@@ -50,13 +44,8 @@ class Application
         } 
         
         catch (Exception $e) {
-            if (config('errors.log')) {
-                save_log('Exception: ' . $e);
-            }
-
-            if (config('errors.display')) {
-                die($e);
-            }
+            if (config('errors.log')) save_log('Exception: ' . $e);
+            if (config('errors.display')) die($e);
         
             $this->response->view(config('errors.views.500'), [], 500);
         }

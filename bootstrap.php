@@ -22,6 +22,14 @@ define('APP_ROOT', __DIR__  . DS);
 //register whoops error handler
 Whoops::register();
 
+//setup storages
+$storage = Storage::path(absolute_path('storage'));
+
+if (!$storage->isDir()) $storage->createDir();
+if (!$storage->path(config('storage.logs'))->isDir()) $storage->createDir();
+if (!$storage->path(config('storage.cache'))->isDir()) $storage->createDir();
+if (!$storage->path(config('storage.sqlite'))->isDir()) $storage->createDir();
+
 //errors display
 if (config('errors.display') === true) {
     ini_set('display_errors', 1);

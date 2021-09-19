@@ -93,8 +93,9 @@ class Uploader
         }
     }
 
-    public function save(string $destination, ?string $filename = null): bool
+    public function save(?string $destination = null, ?string $filename = null): bool
     {
+        $destination = $destination ?? config('storage.uploads');
         $this->filename = $filename ?? $this->getOriginalFilename();
 
         //create destination directory if not exists

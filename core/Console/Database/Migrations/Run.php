@@ -39,7 +39,7 @@ class Run extends Command
 
         if (!Connection::getInstance()->tableExists('migrations')) {
             Migration::createTable('migrations')
-                ->addprimaryKey('id')
+                ->addPrimaryKey('id')
                 ->addString('name')
                 ->migrate();
 
@@ -84,9 +84,7 @@ class Run extends Command
 
     protected function isMigrated(string $table): bool
     {
-        if (!Connection::getInstance()->tableExists('migrations')) {
-            return false;
-        }
+        if (!Connection::getInstance()->tableExists('migrations')) return false;
 
         return QueryBuilder::table('migrations')
             ->select('*')

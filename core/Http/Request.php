@@ -52,6 +52,12 @@ class Request
         return empty($input) || is_null($input) ? $default : $input;
     }
 
+    public function files(?string $key = null, $default = null)
+    {
+        $files = is_null($key) ? $_FILES : ($_FILES[$key] ?? '');
+        return empty($files) || is_null($files) ? $default : $files;
+    }
+
     public function rawData()
     {
         return file_get_contents('php://input');
@@ -91,10 +97,9 @@ class Request
         return $files;
     }
     
-    public function files(string $input, bool $multiple = false, array $allowed_extensions = [])
+    public function getFiles(string $input, bool $multiple = false, array $allowed_extensions = [])
     {
-        return $multiple 
-            ? $this->getMultipleFiles($input, $allowed_extensions) 
+        return $multiple ? $this->getMultipleFiles($input, $allowed_extensions) 
             : $this->getSingleFile($input, $allowed_extensions);
     }
 
@@ -153,7 +158,7 @@ class Request
         return $result;
     }
     
-    public function hasQuerie(string ...$items)
+    public function hasQuery(string ...$items)
     {
         $result = false;
 
@@ -213,9 +218,7 @@ class Request
 
         foreach ($items as $item) {
             if ($this->has($item)) {
-                $result = array_merge($result, [
-                    $item => $this->{$item}
-                ]);
+                $result = array_merge($result, [$item => $this->{$item}]);
             }
         }
 
@@ -231,9 +234,7 @@ class Request
         foreach ($items as $item) {
             foreach ($this->all() as $key => $input) {
                 if ($item !== $key) {
-                    $result = array_merge($result, [
-                        $key => $input
-                    ]);
+                    $result = array_merge($result, [$key => $input]);
                 }
             }
         }
@@ -251,6 +252,10 @@ class Request
 
         if (!is_null($this->queries())) {
             $all = array_merge($all, $this->queries());
+        }
+
+        if (!is_null($this->files())) {
+            $all = array_merge($all, $this->files());
         }
 
         return $all;

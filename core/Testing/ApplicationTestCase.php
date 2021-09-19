@@ -93,6 +93,12 @@ class ApplicationTestCase extends TestCase
         return $this;
     }
 
+    public function createFileUpload(string $filename, ?string $mime_type = null, ?string $name = null) 
+    {
+        $this->headers = ['Content-Type' => 'multipart/form-data'];
+        return curl_file_create($filename, $mime_type, $name);
+    }
+
     public function get(string $uri, array $headers = [])
     {
         $this->client = Client::get($this->url($uri), $this->setHeaders($headers));

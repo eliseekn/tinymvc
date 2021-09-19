@@ -83,7 +83,7 @@ class Setup extends Command
             $config['MAILER_HOST'] = fgets(STDIN);
             if (strlen($config['MAILER_HOST']) <= 1) $config['MAILER_HOST'] = '127.0.0.1' . PHP_EOL;
 
-            $output->write('<info>Mailer host (default: 1025):</info> ');
+            $output->write('<info>Mailer port (default: 1025):</info> ');
             $config['MAILER_PORT'] = fgets(STDIN);
             if (strlen($config['MAILER_PORT']) <= 1) $config['MAILER_PORT'] = '1025' . PHP_EOL;
 
@@ -100,7 +100,7 @@ class Setup extends Command
 
         Config::saveEnv($config);
 
-        if (Storage::path(config('storage.lang'))->isFile(config('app.lang'))) {
+        if (!Storage::path(config('storage.lang'))->isFile(config('app.lang'))) {
             Storage::path(config('storage.lang'))->copyFile('en.php', config('app.lang') . '.php');
         }
 
