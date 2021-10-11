@@ -8,6 +8,7 @@
 
 namespace Core\Routing;
 
+use Core\Support\Storage;
 use Core\Http\Response\Response;
 
 /**
@@ -108,21 +109,6 @@ class Route
         return new self();
     }
     
-    public static function group(array $groups, $callback): self
-    {
-        $route = new self();
-
-        if (array_key_exists('prefix', $groups)) {
-            $route->groupPrefix($groups['prefix'], $callback);
-        }
-
-        if (array_key_exists('middlewares', $groups)) {
-            $route->groupMiddlewares($groups['middlewares'], $callback);
-        }
-
-        return $route;
-    }
-
     public function register()
     {
         if (empty(static::$tmp_routes)) return;
@@ -174,5 +160,14 @@ class Route
         $new_array = array_combine($array_keys, static::$tmp_routes);
 
         return $new_array;
+    }
+
+    public static function load()
+    {
+        $routes = Storage::path(config('storage.routes'))->getFiles();
+
+        foreach ($routes as $route) {
+            require_once config('storage.routes') . $route;
+        }
     }
 }

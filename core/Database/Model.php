@@ -34,13 +34,9 @@ class Model
      * 
      * @return \Core\Database\Factory
      */
-    public static function factory(int $count = 1)
+    public static function factory(string $factory, int $count = 1)
     {
-        foreach (Storage::path(config('storage.factories'))->getFiles() as $file) {
-            $factory = '\App\Database\Factories\\' . get_file_name($file);
-
-            return new $factory($count);
-        }
+        return new $factory($count);
     }
 
     public static function findBy(string $column, $operator = null, $value = null)
@@ -235,6 +231,7 @@ class Model
     {
         if (is_null($value)) {
             $this->{$column}--;
+            return;
         }
 
         $this->{$column} = $this->{$column} - $value;
@@ -250,7 +247,7 @@ class Model
             $d = [];
 
             foreach ($attributes as $attribute) {
-                if ($this->has($attribute)) {
+                if (isset($attribute)) {
                     $d = array_merge($d, [
                         $attribute => $this->{$attribute}
                     ]);

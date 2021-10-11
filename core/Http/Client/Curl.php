@@ -6,20 +6,19 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Core\Http;
+namespace Core\Http\Client;
 
+use Core\Http\Client\ClientInterface;
 use Exception;
 
 /**
- * Send HTTP requests
+ * Send asynchronous HTTP requests using curl
  */
-class Client
+class Curl implements ClientInterface
 {
     protected static $response = [];
 
     /**
-     * Send asynchronous HTTP requests using curl
-     *
      * @link   https://niraeth.com/php-quick-function-for-asynchronous-multi-curl/
      *         https://stackoverflow.com/questions/9183178/can-php-curl-retrieve-response-headers-and-body-in-a-single-request
      *         https://www.codexworld.com/post-receive-json-data-using-php-curl/
@@ -27,7 +26,7 @@ class Client
      * 
      * @throws Exception
      */
-    public static function send(string $method, $urls, array $data = [], array $headers = [], bool $json = false)
+    public static function send(string $method, $url, array $data = [], array $headers = [], bool $json = false)
     {
         $response_headers = [];
         $response = [];
@@ -35,15 +34,15 @@ class Client
         $curl_array = [];
         $curl_multi = curl_multi_init();
         
-        if (!is_array($urls)) {
-            if (!is_string($urls)) {
-                throw new Exception('Invalid url format.');
+        if (!is_array($url)) {
+            if (!is_string($url)) {
+                throw new Exception('Invalid url format');
             }
 
-            $urls = [$urls];
+            $url = [$url];
         }
 
-        foreach ($urls as $key => $url) {
+        foreach ($url as $key => $url) {
             $curl_array[$key] = curl_init();
             $curl = $curl_array[$key];
 
@@ -115,34 +114,34 @@ class Client
         return new self();
     }
 
-    public static function get($urls, array $headers = []): self 
+    public static function get($url, array $headers = []): self 
     {
-        return self::send('GET', $urls, [], $headers);
+        return self::send('GET', $url, [], $headers);
     }
     
-    public static function post($urls, array $data = [], array $headers = [], bool $json = false): self 
+    public static function post($url, array $data = [], array $headers = [], bool $json = false): self 
     {
-        return self::send('POST', $urls, $data, $headers, $json);
+        return self::send('POST', $url, $data, $headers, $json);
     }
 
-    public static function put($urls, array $data = [], array $headers = [], bool $json = false): self 
+    public static function put($url, array $data = [], array $headers = [], bool $json = false): self 
     {
-        return self::send('PUT', $urls, $data, $headers, $json);
+        return self::send('PUT', $url, $data, $headers, $json);
     }
 
-    public static function delete($urls, array $headers = []): self 
+    public static function delete($url, array $headers = []): self 
     {
-        return self::send('DELETE', $urls, [], $headers);
+        return self::send('DELETE', $url, [], $headers);
     }
 
-    public static function options($urls, array $data = [], array $headers = [], bool $json = false): self 
+    public static function options($url, array $data = [], array $headers = [], bool $json = false): self 
     {
-        return self::send('OPTIONS', $urls, $data, $headers, $json);
+        return self::send('OPTIONS', $url, $data, $headers, $json);
     }
 
-    public static function patch($urls, array $data = [], array $headers = [], bool $json = false): self 
+    public static function patch($url, array $data = [], array $headers = [], bool $json = false): self 
     {
-        return self::send('PATCH', $urls, $data, $headers, $json);
+        return self::send('PATCH', $url, $data, $headers, $json);
     }
 
     public function getHeaders()

@@ -6,9 +6,10 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
+use App\Database\Factories\UserFactory;
 use App\Database\Models\User;
 use Core\Testing\ApplicationTestCase;
-use Core\Testing\Traits\RefreshDatabase;
+use Core\Testing\Concerns\RefreshDatabase;
 
 class AuthenticationTest extends ApplicationTestCase
 {
@@ -16,16 +17,14 @@ class AuthenticationTest extends ApplicationTestCase
 
     public function testCanNotAuthenticateWithUnregisteredUserCredentials()
     {
-        $user = User::factory()->make();
-
-        $response = $this->post('authenticate', ['email' => $user->email, 'password' => 'password']);
+        $response = $this->post('authenticate', ['email' => 'a@b.c', 'password' => 'password']);
         $response->assertSessionHasErrors();
         $response->assertRedirectedToUrl(url('login'));
     }
 
     public function testCanAuthenticateWithRegisteredUserCredentials()
     {
-        $user = User::factory()->create();
+        $user = User::factory(UserFactory::class)->create();
 
         $response = $this->post('authenticate', ['email' => $user->email, 'password' => 'password']);
         $response->assertSessionDoesNotHaveErrors();
@@ -34,12 +33,23 @@ class AuthenticationTest extends ApplicationTestCase
 
     public function testCanRegisterUser()
     {
-        $user = User::factory()->make(['password' => 'password']);
+        $user = User::factory(UserFactory::class)->make(['password' => 'password']);
 
         $response = $this->post('register', $user->toArray());
         $response->assertSessionDoesNotHaveErrors();
         $response->assertRedirectedToUrl(url('login'));
 
-        $this->assertDatabaseHas('users', ['email' => $user->email]);
+        $this->assertDatabaseHas('users', $user->toArray('name', 'email'));
+    }
+
+    public function testCanNotRegisterSameUserTwice()
+    {
+        $user = User::factory(UserFactory::class)->make(['password' => 'password']);
+
+        $this->post('register', $user->toArray());
+
+        $response = $this->post('register', $user->toArray());
+        $response->assertSessionHasErrors();
+        //$response->assertRedirectedToUrl(url('login'));
     }
 }

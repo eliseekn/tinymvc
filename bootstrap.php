@@ -6,23 +6,20 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-use Core\Http\Request;
+use Core\Routing\Route;
 use Core\Support\Config;
 use Core\Support\Whoops;
 use Core\Support\Storage;
 
 /**
- * Define application environnement
+ * Setup application
  */
 
-//application root path
 define('DS', DIRECTORY_SEPARATOR);
 define('APP_ROOT', __DIR__  . DS);
 
-//register whoops error handler
 Whoops::register();
 
-//setup storages
 $storage = Storage::path(absolute_path('storage'));
 
 if (!$storage->isDir()) $storage->createDir();
@@ -30,7 +27,6 @@ if (!$storage->path(config('storage.logs'))->isDir()) $storage->createDir();
 if (!$storage->path(config('storage.cache'))->isDir()) $storage->createDir();
 if (!$storage->path(config('storage.sqlite'))->isDir()) $storage->createDir();
 
-//errors display
 if (config('errors.display') === true) {
     ini_set('display_errors', 1);
     ini_set('error_reporting', E_ALL);
@@ -38,7 +34,6 @@ if (config('errors.display') === true) {
     ini_set('display_errors', 0);
 }
 
-//errors logging
 if (config('errors.log') === true) {
     ini_set('log_errors', 1);
     ini_set('error_log', Storage::path(config('storage.logs'))->file('tinymvc_' . date('m_d_y') . '.log'));
@@ -46,21 +41,17 @@ if (config('errors.log') === true) {
     ini_set('log_errors', 0);
 }
 
-//handle exceptions
 function handleExceptions($e)
 {
     throw new ErrorException($e->getMessage(), $e->getCode(), 1, $e->getFile(), $e->getLine(), $e->getPrevious());
 }
 
-//set exceptions and errors handlers
 set_exception_handler('handleExceptions');
 
-//remove PHP maximum execution time 
 set_time_limit(0);
 
-//load .env file
-if (!Storage::path()->isFile('.env') && !empty((new Request())->uri())) {
-    throw new Exception('Run "php console app:setup" console command to setup application or copy ".env.example" file to ".env"');
-}
+Route::load();
 
-Config::loadEnv();
+if (Storage::path()->isFile('.env')) Config::loadEnv();
+
+throw new Exception('Copy ".env.example" file to ".env" then edit or run "php console app:setup" console command to setup application');

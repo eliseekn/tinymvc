@@ -6,6 +6,9 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-require_once 'bootstrap.php';
+namespace Core\Http\Client;
 
-session_start();
+interface ClientInterface
+{
+    public static function send(string $method, $url, array $data = [], array $headers = [], bool $json = false);
+}

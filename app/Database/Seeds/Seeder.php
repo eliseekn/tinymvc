@@ -8,6 +8,7 @@
 
 namespace App\Database\Seeds;
 
+use App\Database\Factories\UserFactory;
 use App\Database\Models\User;
 
 /**
@@ -17,6 +18,6 @@ class Seeder
 {
     public static function run()
     {
-        User::factory(5)->create();
+        User::factory(UserFactory::class, 5)->create();
     }
 }

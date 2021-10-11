@@ -102,13 +102,11 @@ class Auth
         $result = Session::has('user');
 
         if (!$result) {
-            if (empty($request->getHttpAuth())) {
-                return false;
-            }
+            if (empty($request->getHttpAuth())) return false;
 
             list($method, $token) = $request->getHttpAuth();
 
-            $result = trim($method) === 'Bearer' && self::checkToken(Encryption::decrypt($token), $user);            
+            $result = trim($method) === 'Bearer' && self::checkToken(Encryption::decrypt($token), $user);
         }
 
         return $result;

@@ -11,7 +11,6 @@ namespace Core;
 use Core\Http\Request;
 use Core\Routing\Router;
 use Core\Support\Whoops;
-use Core\Support\Storage;
 use Core\Support\Exception;
 use Core\Http\Response\Response;
 
@@ -20,34 +19,22 @@ use Core\Http\Response\Response;
  */
 class Application
 {
-    private $response;
-    private $request;
-
     public function __construct()
     {
-        $this->request = new Request();
-        $this->response = new Response();
-
         Whoops::register();
-
-        $routes = Storage::path(config('storage.routes'))->getFiles();
-
-        foreach ($routes as $route) {
-            require_once config('storage.routes') . $route;
-        }
     }
     
-    public function run()
+    public function execute()
     {
-        try {
-            Router::dispatch($this->request, $this->response);
-        } 
+        $response = new Response();
+
+        try { Router::dispatch(new Request(), $response); } 
         
         catch (Exception $e) {
             if (config('errors.log')) save_log('Exception: ' . $e);
             if (config('errors.display')) die($e);
         
-            $this->response->view(config('errors.views.500'), [], 500);
+            $response->view(config('errors.views.500'), [], 500);
         }
     }
 }

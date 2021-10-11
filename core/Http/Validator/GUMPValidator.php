@@ -17,15 +17,12 @@ use Core\Http\Validator\ValidatorInterface;
  */
 class GUMPValidator implements ValidatorInterface
 {
-    protected static $rules = [];
-    protected static $messages = [];
+    protected static array $rules = [];
+    protected static array $messages = [];
 
-    /**
-     * @var bool|array
-     */
+    /** @var bool|array */
     protected static $errors;
-
-    protected static $inputs = [];
+    protected static array $inputs = [];
 
     public static function addRule(string $rule, callable $callback, string $error_message)
     {

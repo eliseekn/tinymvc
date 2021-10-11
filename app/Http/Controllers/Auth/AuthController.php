@@ -26,7 +26,9 @@ class AuthController
 { 
     public function login(Request $request, Response $response)
     {
-        if (!Auth::check($request)) $response->view('auth.login');
+        if (!Auth::check($request)) { 
+            $response->view('auth.login'); 
+        }
 
         $uri = !Session::has('intended') ? Auth::HOME : Session::pull('intended');
         $response->redirect()->to($uri)->go();
@@ -34,7 +36,9 @@ class AuthController
 
     public function signup(Request $request, Response $response)
     {
-        if (!Auth::check($request)) $response->view('auth.signup');
+        if (!Auth::check($request)) { 
+            $response->view('auth.signup'); 
+        }
 
         $uri = !Session::has('intended') ? Auth::HOME : Session::pull('intended');
         $response->redirect()->to($uri)->go();

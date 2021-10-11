@@ -35,7 +35,7 @@ class Tests extends Command
         $server_process->setTimeout(null);
         $server_process->start();
 
-        $process = new Process(['php', 'vendor/bin/paratest', '-p' . config('testing.process')]);
+        $process = new Process(['php', 'vendor/bin/phpunit']);
         $process->setTimeout(null);
         $process->start();
 

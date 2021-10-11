@@ -16,4 +16,4 @@ require 'vendor/autoload.php';
 require_once 'bootstrap.php';
 
 $app = new Application();
-$app->run();
+$app->execute();

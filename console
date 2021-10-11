@@ -43,6 +43,7 @@ $console->add(new \Core\Console\Make\Test());
 
 $console->add(new \Core\Console\App\Setup());
 $console->add(new \Core\Console\App\EncryptionKey());
+$console->add(new \Core\Console\App\Environnement());
 
 $console->add(new \Core\Console\Cache());
 $console->add(new \Core\Console\Server());

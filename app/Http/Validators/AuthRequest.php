@@ -8,9 +8,9 @@
 
 namespace App\Http\Validators;
 
-use Core\Http\Validator\GUMPValidator as Validator;
+use Core\Http\Validator\GUMPValidator;
 
-class AuthRequest extends Validator
+class AuthRequest extends GUMPValidator
 {
     /**
      * Validation rules

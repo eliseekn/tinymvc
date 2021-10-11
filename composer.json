@@ -40,7 +40,6 @@
         "phpunit/phpunit": "^9.5",
         "symfony/var-dumper": "^5.2",
         "filp/whoops": "^2.12",
-        "fakerphp/faker": "^1.15",
-        "brianium/paratest": "^6.3"
+        "fakerphp/faker": "^1.15"
     }
 }

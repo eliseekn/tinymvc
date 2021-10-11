@@ -8,36 +8,35 @@
 
 namespace Core\Testing;
 
-use Core\Http\Client;
-use Core\Database\Repository;
 use Core\Support\Auth;
+use Core\Database\Repository;
 use PHPUnit\Framework\TestCase;
+use Core\Http\Client\Curl as Client;
 
 /**
  * Manage application tests
  */
 class ApplicationTestCase extends TestCase
 {
-    /**
-     * @var \Core\Http\Client
-     */
-    private $client;
-
-    private $headers = [];
-    private $token = '';
+    private Client $client;
+    private array $headers;
+    private string $token;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $uses = array_flip(class_uses_recursive(static::class));
 
+        if (isset($uses[\Core\Testing\Traits\LoadFaker::class])) {
+            $this->loadFaker();
+        }
+    }
+
+    protected function tearDown(): void
+    {
         $uses = array_flip(class_uses_recursive(static::class));
 
         if (isset($uses[\Core\Testing\Traits\RefreshDatabase::class])) {
             $this->refreshDatabase();
-        }
-
-        if (isset($uses[\Core\Testing\Traits\LoadFaker::class])) {
-            $this->loadFaker();
         }
 
         $this->token = '';

@@ -10,19 +10,21 @@ namespace Core\Console\App;
 
 use Core\Support\Config;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Generate application encryption key
+ * Define application environnement
  */
-class EncryptionKey extends Command
+class Environnement extends Command
 {
-    protected static $defaultName = 'app:key';
+    protected static $defaultName = 'app:env';
 
     protected function configure()
     {
-        $this->setDescription('Generate application encryption key');
+        $this->setDescription('Define application environnement');
+        $this->addArgument('env', InputArgument::REQUIRED, 'Specify application environnement (test, local or prod');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -30,6 +32,7 @@ class EncryptionKey extends Command
         Config::loadEnv();
 
         Config::saveEnv([
+            'APP_ENV' => $input->getArgument('env') . PHP_EOL,
             'APP_ENV' => env('APP_ENV') . PHP_EOL,
             'APP_NAME' => env('APP_NAME') . PHP_EOL,
             'APP_URL' => env('APP_URL') . PHP_EOL,
@@ -45,10 +48,10 @@ class EncryptionKey extends Command
             'MAILER_PORT' => env('MAILER_PORT') . PHP_EOL,
             'MAILER_USERNAME' => env('MAILER_USERNAME') . PHP_EOL,
             'MAILER_PASSWORD' => env('MAILER_PASSWORD') . PHP_EOL . PHP_EOL,
-            'ENCRYPTION_KEY' => generate_token()
+            'ENCRYPTION_KEY' => env('ENCRYPTION_KEY')
         ]);
 
-        $output->writeln('<info>Application encryption key has been generated</info>');
+        $output->writeln('<info>Application environnement has been defined</info>');
 
         return Command::SUCCESS;
     }

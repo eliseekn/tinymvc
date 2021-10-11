@@ -48,6 +48,8 @@ class Request
 
     public function inputs(?string $key = null, $default = null)
     {
+        $_POST = array_merge($_POST, $this->rawData());
+
         $input = is_null($key) ? $_POST : ($_POST[$key] ?? '');
         return empty($input) || is_null($input) ? $default : $input;
     }
@@ -60,7 +62,10 @@ class Request
 
     public function rawData()
     {
-        return file_get_contents('php://input');
+        $data = [];
+        parse_raw_http_request($data);
+
+        return $data;
     }
 
     private function getSingleFile(string $input, array $allowed_extensions = [])

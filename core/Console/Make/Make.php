@@ -52,28 +52,23 @@ class Make
     {
         $name = ucfirst(strtolower($base_name));
 
-        if (!$singular) {
-            $name = self::fixPluralTypo($name);
-        }
-
-        if ($force_singlular) {
-            $name = self::fixPluralTypo($name, true);
-        }
+        if (!$singular) $name = self::fixPluralTypo($name);
+        if ($force_singlular) $name = self::fixPluralTypo($name, true);
 
         if (strpos($name, '_')) {
-            list($f, $s) = explode('_', $name);
-            $name = ucfirst($f) . ucfirst($s);
+            $words = explode('_', $name);
+            $name = '';
+
+            foreach ($words as $word) {
+                $name .= ucfirst($word);
+            }
         }
 
-        if ($suffix === 'migration') {
-            $suffix = 'table';
-        }
+        if ($suffix === 'migration') $suffix = 'table';
 
         $class = $name . ucfirst($suffix);
 
-        if (strpos($class, 'Table')) {
-            $class .= date('_YmdHis');
-        }
+        if (strpos($class, 'Table')) $class .= date('_YmdHis');
 
         return [lcfirst($name), $class];
     }

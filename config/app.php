@@ -11,7 +11,7 @@
  */
 
 return [
-    'env' => env('APP_ENV', 'test'),
+    'env' => env('APP_ENV', 'local'),
     'name' => env('APP_NAME', 'TinyMVC'),
     'url' => env('APP_URL', 'http://127.0.0.1:8080/'),
     'lang' => env('APP_LANG', 'en'),

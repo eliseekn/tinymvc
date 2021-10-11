@@ -28,6 +28,8 @@ class Router
         ) {
             return false;
         }
+
+        array_shift($params);
             
         return true;
     }
@@ -88,8 +90,6 @@ class Router
             $request->method($request_method);
 
             if (self::match($request, $method, $route, $params)) {
-                array_shift($params);
-
                 if (!isset($options['handler'])) {
                     throw new Exception("No handler defined for route {$route}");
                 }
