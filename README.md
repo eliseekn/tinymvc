@@ -56,6 +56,7 @@ yarn && yarn build
 
 On your terminal:
 ```
+cp .env.example .env
 php console app:setup
 ```
 2\. Setup database
