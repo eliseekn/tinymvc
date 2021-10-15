@@ -16,16 +16,16 @@ class RegisterUser extends GUMPValidator
     /**
      * Validation rules
      */
-    protected static $rules = [
-        'name' => 'required|min_len,2',
-        'email' => 'required|valid_email|min_len,5|unique,users',
-        'password' => 'required|min_len,5'
+    protected static array $rules = [
+        'name' => 'required|max_len,255',
+        'email' => 'required|valid_email|max_len,255|unique,users',
+        'password' => 'required|max_len,255'
     ];
 
     /**
      * Custom errors messages
      */
-    protected static $messages = [
+    protected static array $messages = [
         //
     ];
 

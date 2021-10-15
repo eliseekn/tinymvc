@@ -15,15 +15,15 @@ class AuthRequest extends GUMPValidator
     /**
      * Validation rules
      */
-    protected static $rules = [
-        'email' => 'required|min_len,5',
-        'password' => 'required|min_len,5'
+    protected static array $rules = [
+        'email' => 'required|max_len,255',
+        'password' => 'required|max_len,525'
     ];
 
     /**
      * Custom errors messages
      */
-    protected static $messages = [
+    protected static array $messages = [
         //
     ];
 

@@ -19,11 +19,11 @@ class HttpAuth
 {    
     public function handle(Request $request, JsonResponse $response)
     {
-        if (empty($request->getHttpAuth)) {
+        if (empty($request->getHttpAuth())) {
             $response->send(__('auth_required'), [], 401);
         }
 
-        list($method, $credentials) = $request->getHttpAuth;
+        list($method, $credentials) = $request->getHttpAuth();
 
         if (trim($method) !== 'Basic') {
             $response->send(__('invalid_auth_method'), [], 401);

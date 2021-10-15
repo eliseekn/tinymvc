@@ -20,7 +20,7 @@ class ApiAuth
 {   
     public function handle(Request $request, JsonResponse $response)
     {
-        if (empty($request->getHttpAuth)) {
+        if (empty($request->getHttpAuth())) {
             $response->send(__('auth_required'), [], 401);
         }
 

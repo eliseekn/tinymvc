@@ -17,7 +17,7 @@ class SanitizeInputs
 {
     public function handle(Request $request)
     {
-        foreach ($request->except('csrf_token') as $field => $value) {
+        foreach ($request->inputs() as $field => $value) {
             $request->set($field, sanitize($value));
         }
     }

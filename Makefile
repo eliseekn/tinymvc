@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-.PHONY: tests, docker
+.PHONY: tests docker
 
 tests:
 	php console db:delete
@@ -9,4 +9,4 @@ tests:
 	php console tests:run
 
 docker:
-	docker-compose up --build
+	docker-compose up

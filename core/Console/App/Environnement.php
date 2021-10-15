@@ -24,7 +24,7 @@ class Environnement extends Command
     protected function configure()
     {
         $this->setDescription('Define application environnement');
-        $this->addArgument('env', InputArgument::REQUIRED, 'Specify application environnement (test, local or prod');
+        $this->addArgument('name', InputArgument::REQUIRED, 'Specify application environnement (test, local or prod');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -32,8 +32,7 @@ class Environnement extends Command
         Config::loadEnv();
 
         Config::saveEnv([
-            'APP_ENV' => $input->getArgument('env') . PHP_EOL,
-            'APP_ENV' => env('APP_ENV') . PHP_EOL,
+            'APP_ENV' => $input->getArgument('name') . PHP_EOL,
             'APP_NAME' => env('APP_NAME') . PHP_EOL,
             'APP_URL' => env('APP_URL') . PHP_EOL,
             'APP_LANG' => env('APP_LANG') . PHP_EOL . PHP_EOL,

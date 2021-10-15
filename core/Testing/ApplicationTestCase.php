@@ -26,21 +26,21 @@ class ApplicationTestCase extends TestCase
     {
         $uses = array_flip(class_uses_recursive(static::class));
 
-        if (isset($uses[\Core\Testing\Traits\LoadFaker::class])) {
+        if (isset($uses[\Core\Testing\Concerns\LoadFaker::class])) {
             $this->loadFaker();
         }
+
+        $this->token = '';
+        $this->headers = [];
     }
 
     protected function tearDown(): void
     {
         $uses = array_flip(class_uses_recursive(static::class));
 
-        if (isset($uses[\Core\Testing\Traits\RefreshDatabase::class])) {
+        if (isset($uses[\Core\Testing\Concerns\RefreshDatabase::class])) {
             $this->refreshDatabase();
         }
-
-        $this->token = '';
-        $this->headers = [];
     }
 
     protected function url(string $uri)
@@ -231,6 +231,16 @@ class ApplicationTestCase extends TestCase
     public function assertSessionDoesNotHaveErrors()
     {
         $this->assertTrue(empty($this->getSession()[$this->getSessionKey('errors')]));
+    }
+
+    public function assertSessionHasInputs()
+    {
+        $this->assertFalse(empty($this->getSession()[$this->getSessionKey('inputs')]));
+    }
+
+    public function assertSessionDoesNotHaveInputs()
+    {
+        $this->assertTrue(empty($this->getSession()[$this->getSessionKey('inputs')]));
     }
 
     public function dump()

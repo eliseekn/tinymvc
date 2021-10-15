@@ -50,10 +50,9 @@ set_exception_handler('handleExceptions');
 
 set_time_limit(0);
 
-Route::load();
-
 if (!Storage::path()->isFile('.env')) {
     throw new Exception('Copy ".env.example" file to ".env" then edit or run "php console app:setup" console command to setup application');
 }
 
 Config::loadEnv();
+Route::load();

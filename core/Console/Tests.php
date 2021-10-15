@@ -22,7 +22,7 @@ class Tests extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         if (config('app.env') !== 'test') {
-            $output->writeln('<fg=yellow>You must to set APP_ENV to test in application configuration</>');
+            $output->writeln('<fg=yellow>You must set APP_ENV to test in application configuration</>');
             return Command::FAILURE;
         }
 

@@ -15,41 +15,38 @@ class AuthenticationTest extends ApplicationTestCase
 {
     use RefreshDatabase;
 
-    public function testCanNotAuthenticateWithUnregisteredUserCredentials()
+    public function test_can_not_authenticate_with_unregistered_user_credentials()
     {
-        $response = $this->post('authenticate', ['email' => 'a@b.c', 'password' => 'password']);
-        $response->assertSessionHasErrors();
-        $response->assertRedirectedToUrl(url('login'));
+        $client = $this->post('authenticate', ['email' => 'a@b.c', 'password' => 'password']);
+        $client->assertSessionHasErrors();
+        $client->assertRedirectedToUrl(url('login'));
     }
 
-    public function testCanAuthenticateWithRegisteredUserCredentials()
+    public function test_can_authenticate_with_registered_user_credentials()
     {
         $user = User::factory(UserFactory::class)->create();
 
-        $response = $this->post('authenticate', ['email' => $user->email, 'password' => 'password']);
-        $response->assertSessionDoesNotHaveErrors();
-        $response->assertSessionHas('user', $user->toArray());
+        $client = $this->post('authenticate', ['email' => $user->email, 'password' => 'password']);
+        $client->assertSessionDoesNotHaveErrors();
+        $client->assertSessionHas('user', $user->toArray());
     }
 
-    public function testCanRegisterUser()
+    public function test_can_register_user()
     {
         $user = User::factory(UserFactory::class)->make(['password' => 'password']);
 
-        $response = $this->post('register', $user->toArray());
-        $response->assertSessionDoesNotHaveErrors();
-        $response->assertRedirectedToUrl(url('login'));
+        $client = $this->post('register', $user->toArray());
+        $client->assertSessionDoesNotHaveErrors();
+        $client->assertRedirectedToUrl(url('login'));
 
         $this->assertDatabaseHas('users', $user->toArray('name', 'email'));
     }
 
-    public function testCanNotRegisterSameUserTwice()
+    public function test_can_not_register_same_user_twice()
     {
-        $user = User::factory(UserFactory::class)->make(['password' => 'password']);
+        $user = User::factory(UserFactory::class)->create();
 
-        $this->post('register', $user->toArray());
-
-        $response = $this->post('register', $user->toArray());
-        $response->assertSessionHasErrors();
-        //$response->assertRedirectedToUrl(url('login'));
+        $client = $this->post('register', $user->toArray());
+        $client->assertSessionHasErrors();
     }
 }

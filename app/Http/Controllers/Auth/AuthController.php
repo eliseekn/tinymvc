@@ -26,9 +26,7 @@ class AuthController
 { 
     public function login(Request $request, Response $response)
     {
-        if (!Auth::check($request)) { 
-            $response->view('auth.login'); 
-        }
+        if (!Auth::check($request)) $response->view('auth.login'); 
 
         $uri = !Session::has('intended') ? Auth::HOME : Session::pull('intended');
         $response->redirect()->to($uri)->go();
@@ -36,9 +34,7 @@ class AuthController
 
     public function signup(Request $request, Response $response)
     {
-        if (!Auth::check($request)) { 
-            $response->view('auth.signup'); 
-        }
+        if (!Auth::check($request)) $response->view('auth.signup'); 
 
         $uri = !Session::has('intended') ? Auth::HOME : Session::pull('intended');
         $response->redirect()->to($uri)->go();
@@ -46,7 +42,7 @@ class AuthController
 
 	public function authenticate(Request $request, Response $response)
 	{
-        AuthRequest::make($request->except('csrf_token'))->redirectBackOnFail($response);
+        AuthRequest::make($request->inputs())->redirectBackOnFail($response);
 
         if (Auth::attempt($request->only('email', 'password'), $request->has('remember'))) {
             $uri = !Session::has('intended') ? Auth::HOME : Session::pull('intended');
@@ -65,8 +61,8 @@ class AuthController
     
     public function register(Request $request, Mailer $mailer, Response $response)
     {
-        RegisterUser::make($request->except('csrf_token'))->redirectBackOnFail($response);
-        $user = Auth::create($request->except('csrf_token'));
+        RegisterUser::make($request->inputs())->redirectBackOnFail($response);
+        $user = Auth::create($request->inputs());
 
         if (!config('security.auth.email_verification')) {
             WelcomeMail::send($mailer, $user->email, $user->name);

@@ -29,61 +29,56 @@ class Setup extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $config = [];
-        $finish_setup = false;
 
-        $config['APP_ENV'] = 'development' . PHP_EOL;
+        $config['APP_ENV'] = 'local' . PHP_EOL;
 
-        while (!$finish_setup) {
-            $output->write('<info>Application name (default: TinyMVC):</info> ');
-            $config['APP_NAME'] = $this->getInput('TinyMVC');
+        $output->write('<info>Application name (default: TinyMVC):</info> ');
+        $config['APP_NAME'] = $this->getInput('TinyMVC');
 
-            $output->write('<info>Application url (default: http://127.0.0.1:8080/):</info> ');
-            $app_url = trim($this->getInput('http://127.0.0.1:8080/'));
-            
-            if (!empty($app_url) && $app_url[-1] !== '/') {
-                $app_url = $app_url . '/';
-            }
-
-            $config['APP_URL'] = $app_url . PHP_EOL;
-
-            $output->write('<info>Application language (default: en):</info> ');
-            $config['APP_LANG'] = $this->getInput('en') . PHP_EOL;
-
-            $output->write('<info>Database driver [mysql (default), sqlite]:</info> ');
-            $config['DB_DRIVER'] = $this->getInput('mysql', ['mysql', 'sqlite']);
-
-            $output->write('<info>Database host (default: 127.0.0.1):</info> ');
-            $config['DB_HOST'] = $this->getInput('127.0.0.1');
-
-            $output->write('<info>Database port (default: 3306):</info> ');
-            $config['DB_PORT'] = $this->getInput('3306');
-
-            $output->write('<info>Database name (default: tinymvc):</info> ');
-            $config['DB_NAME'] = $this->getInput('tinymvc');
-
-            $output->write('<info>Database username:</info> ');
-            $config['DB_USERNAME'] = $this->getInput('');
-
-            $output->write('<info>Database password:</info> ');
-            $config['DB_PASSWORD'] = $this->getInput('') . PHP_EOL;
-
-            $output->write('<info>Mailer transport [smtp (default), sendmail]:</info> ');
-            $config['MAILER_TRANSPORT'] = $this->getInput('smtp', ['smtp', 'sendmail']);
-
-            $output->write('<info>Mailer host (default: 127.0.0.1):</info> ');
-            $config['MAILER_HOST'] = $this->getInput('127.0.0.1');
-
-            $output->write('<info>Mailer port (default: 1025):</info> ');
-            $config['MAILER_PORT'] = $this->getInput('1025');
-
-            $output->write('<info>Mailer username:</info> ');
-            $config['MAILER_USERNAME'] = $this->getInput('');
-
-            $output->write('<info>Mailer password:</info> ');
-            $config['MAILER_PASSWORD'] = $this->getInput('') . PHP_EOL;
-
-            $finish_setup = true;
+        $output->write('<info>Application url (default: http://127.0.0.1:8080/):</info> ');
+        $app_url = trim($this->getInput('http://127.0.0.1:8080/'));
+        
+        if (!empty($app_url) && $app_url[-1] !== '/') {
+            $app_url = $app_url . '/';
         }
+
+        $config['APP_URL'] = $app_url . PHP_EOL;
+
+        $output->write('<info>Application language (default: en):</info> ');
+        $config['APP_LANG'] = $this->getInput('en') . PHP_EOL;
+
+        $output->write('<info>Database driver [mysql (default), sqlite]:</info> ');
+        $config['DB_DRIVER'] = $this->getInput('mysql', ['mysql', 'sqlite']);
+
+        $output->write('<info>Database host (default: 127.0.0.1):</info> ');
+        $config['DB_HOST'] = $this->getInput('127.0.0.1');
+
+        $output->write('<info>Database port (default: 3306):</info> ');
+        $config['DB_PORT'] = $this->getInput('3306');
+
+        $output->write('<info>Database name (default: tinymvc):</info> ');
+        $config['DB_NAME'] = $this->getInput('tinymvc');
+
+        $output->write('<info>Database username (default: root):</info> ');
+        $config['DB_USERNAME'] = $this->getInput('root');
+
+        $output->write('<info>Database password:</info> ');
+        $config['DB_PASSWORD'] = $this->getInput('') . PHP_EOL;
+
+        $output->write('<info>Mailer transport [smtp (default), sendmail]:</info> ');
+        $config['MAILER_TRANSPORT'] = $this->getInput('smtp', ['smtp', 'sendmail']);
+
+        $output->write('<info>Mailer host (default: 127.0.0.1):</info> ');
+        $config['MAILER_HOST'] = $this->getInput('127.0.0.1');
+
+        $output->write('<info>Mailer port (default: 1025):</info> ');
+        $config['MAILER_PORT'] = $this->getInput('1025');
+
+        $output->write('<info>Mailer username:</info> ');
+        $config['MAILER_USERNAME'] = $this->getInput('');
+
+        $output->write('<info>Mailer password:</info> ');
+        $config['MAILER_PASSWORD'] = $this->getInput('') . PHP_EOL;
 
         $config['ENCRYPTION_KEY'] = generate_token();
 
