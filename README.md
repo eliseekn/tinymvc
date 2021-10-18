@@ -15,7 +15,10 @@ yarn
 
 ## Installation
 
-1\. On your terminal run ***composer create-project eliseekn/tinymvc project-name***
+1\. On your terminal run:
+```
+composer create-project eliseekn/tinymvc project-name
+```
 
 2\. Setup your web server configuration
 
