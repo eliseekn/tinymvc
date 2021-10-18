@@ -12,8 +12,8 @@ use Carbon\Carbon;
 use Core\Http\Request;
 use Core\Support\Alert;
 use App\Mails\TokenMail;
-use App\Database\Models\User;
 use App\Database\Models\Token;
+use App\Http\Actions\UserActions;
 use App\Http\Validators\AuthRequest;
 use Core\Http\Response\Response;
 use Core\Support\Mailer\Mailer;
@@ -44,7 +44,7 @@ class ForgotPasswordController
 	
 	public function reset(Request $request, Response $response)
 	{
-        if (!$request->has('email', 'token')) {
+        if (!$request->hasQuery('email', 'token')) {
             $response->send(__('bad_request'), [], 400);
         }
 
@@ -54,26 +54,23 @@ class ForgotPasswordController
 			$response->send(__('invalid_password_reset_link'), [], 400);
 		}
 
-		if (Carbon::parse($token->expire)->gt(Carbon::now())) {
+		if (Carbon::parse($token->expire)->lt(Carbon::now())) {
 			$response->send(__('expired_password_reset_link'), [], 400);
 		}
 
         $token->delete();
-		$response->view('auth.password.new', $request->only('email'));
+        $response->redirect()->to("password/new?email={$request->email}")->go();
 	}
 	
 	public function update(Request $request, Response $response)
 	{
 		AuthRequest::make($request->inputs())->redirectBackOnFail($response);
-        $user = User::findBy('email', $request->email);
+        $user = UserActions::update(['password' => $request->password], $request->email);
 
         if (!$user) {
             Alert::default(__('password_not_reset'))->error();
             $response->redirect()->back()->go();
         }
-
-        $user->password = hash_pwd($request->password);
-        $user->save();
 
         Alert::default(__('password_reset'))->success();
         $response->redirect()->to('login')->go();

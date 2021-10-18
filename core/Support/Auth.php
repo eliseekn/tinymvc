@@ -80,13 +80,6 @@ class Auth
         return $user !== false;
     }
     
-    public static function create(array $data)
-    {
-        $data['password'] = hash_pwd($data['password']);
-
-        return User::create($data);
-    }
-    
     public static function createToken(string $email): string
     {
         $token = Token::create([

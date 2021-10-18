@@ -24,7 +24,7 @@ class GUMPValidator implements ValidatorInterface
     protected static $errors;
     protected static array $inputs = [];
 
-    public static function addRule(string $rule, callable $callback, string $error_message)
+    public static function add(string $rule, callable $callback, string $error_message)
     {
         GUMP::add_validator($rule, $callback, $error_message);
     }

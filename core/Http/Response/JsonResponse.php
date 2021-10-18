@@ -27,9 +27,11 @@ class JsonResponse extends Response implements ResponseInterface
         }
 
         if (!is_array($data)) {
-            if (is_string($data)) $data = [$data];
+            if (!is_string($data)) {
+                throw new Exception('Invalid data');
+            }
 
-            throw new Exception('Invalid data');
+            $data = [$data];
         }
 
         $data = json_encode($data);

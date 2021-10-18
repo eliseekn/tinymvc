@@ -15,14 +15,14 @@ class CLASSNAME extends GUMPValidator
     /**
      * Validation rules
      */
-    protected static $rules = [
+    protected static array $rules = [
         //
     ];
 
     /**
      * Custom errors messages
      */
-    protected static $messages = [
+    protected static array $messages = [
         //
     ];
 
@@ -31,7 +31,7 @@ class CLASSNAME extends GUMPValidator
      */
     public static function make(array $inputs)
     {
-        self::addRule('name', function($field, array $input, array $params, $value) {
+        self::add('name', function($field, array $input, array $params, $value) {
             return true;
         }, '{field}');
 

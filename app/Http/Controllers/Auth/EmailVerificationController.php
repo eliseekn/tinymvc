@@ -11,12 +11,12 @@ namespace App\Http\Controllers\Auth;
 use Carbon\Carbon;
 use Core\Http\Request;
 use Core\Support\Alert;
-use Core\Support\Mailer\Mailer;
 use App\Mails\WelcomeMail;
-use App\Database\Models\User;
 use App\Database\Models\Token;
 use App\Mails\VerificationMail;
+use Core\Support\Mailer\Mailer;
 use Core\Http\Response\Response;
+use App\Http\Actions\UserActions;
 
 /**
  * Manage email verification link
@@ -39,24 +39,37 @@ class EmailVerificationController
         }
         
         Alert::default(__('email_verification_link_not_sent'))->error();
-        $response->redirect()->back()->go();
+        $response->redirect()->to('signup')->go();
     }
 
 	public function verify(Request $request, Response $response, Mailer $mailer)
 	{
-        $user = User::findBy('email', $request->queries('email'));
+        if (!$request->hasQuery('email', 'token')) {
+            $response->send(__('bad_request'), [], 400);
+        }
+
+        $token = Token::findBy('email', $request->email);
+
+        if (!$token || $token->token !== $request->token) {
+			$response->send(__('invalid_password_reset_link'), [], 400);
+		}
+
+		if (Carbon::parse($token->expire)->lt(Carbon::now())) {
+			$response->send(__('expired_password_reset_link'), [], 400);
+		}
+
+        $token->delete();
+
+        $user = UserActions::update(['verified' => true], $request->queries('email'));
 
 		if (!$user) {
             Alert::default(__('account_not_found'))->error();
             $response->redirect()->to('signup')->go();
         }
 
-        $user->verified = 1;
-        $user = $user->save();
-
         WelcomeMail::send($mailer, $user->email, $user->name);
 
-        Alert::default(__('verified'))->success();
+        Alert::default(__('email_verified'))->success();
         $response->redirect()->to('login')->go();
     }
 }

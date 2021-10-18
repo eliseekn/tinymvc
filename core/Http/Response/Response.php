@@ -46,13 +46,13 @@ class Response implements ResponseInterface
         exit($data);
     }
 
+    public function view(string $view, array $data = [], array $headers = [], int $code = 200)
+    {
+        $this->send(View::getContent($view, $data), $headers, $code);
+    }
+
     public function redirect()
     {
         return new Redirect();
-    }
-
-    public function view(string $view, array $data = [], int $code = 200)
-    {
-        $this->send(View::getContent($view, $data), [], $code);
     }
 }

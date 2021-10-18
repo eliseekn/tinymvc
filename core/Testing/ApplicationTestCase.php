@@ -215,11 +215,21 @@ class ApplicationTestCase extends TestCase
 
     public function assertSessionHas(string $key, $value)
     {
+        if (!isset($this->getSession()[$this->getSessionKey($key)])) {
+            $this->assertFalse(false);
+            return;
+        }
+
         $this->assertEquals($value, $this->getSession()[$this->getSessionKey($key)]);
     }
 
     public function assertSessionDoesNotHave(string $key, $value)
     {
+        if (!isset($this->getSession()[$this->getSessionKey($key)])) {
+            $this->assertFalse(false);
+            return;
+        }
+
         $this->assertNotEquals($value, $this->getSession()[$this->getSessionKey($key)]);
     }
 
@@ -231,16 +241,6 @@ class ApplicationTestCase extends TestCase
     public function assertSessionDoesNotHaveErrors()
     {
         $this->assertTrue(empty($this->getSession()[$this->getSessionKey('errors')]));
-    }
-
-    public function assertSessionHasInputs()
-    {
-        $this->assertFalse(empty($this->getSession()[$this->getSessionKey('inputs')]));
-    }
-
-    public function assertSessionDoesNotHaveInputs()
-    {
-        $this->assertTrue(empty($this->getSession()[$this->getSessionKey('inputs')]));
     }
 
     public function dump()

@@ -10,6 +10,8 @@ use Core\Routing\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\EmailVerificationController;
+use Core\Http\Request;
+use Core\Http\Response\Response;
 
 /**
  * Authentication routes
@@ -25,11 +27,19 @@ Route::groupMiddlewares(['csrf'], function () {
     Route::post('register', [AuthController::class, 'register']);
 })->register();
 
-Route::get('logout', [AuthController::class, 'logout'])->register();
+Route::post('logout', [AuthController::class, 'logout'])
+    ->middlewares('auth')
+    ->register();
 
 Route::view('password/forgot', 'auth.password.forgot')->register();
+
+Route::get('password/new', function (Request $request, Response $response) {
+	$response->view('auth.password.new', ['email' => $request->queries('email')]);
+})->register();
+
 Route::get('password/reset', [ForgotPasswordController::class, 'reset'])->register();
 Route::post('password/notify', [ForgotPasswordController::class, 'notify'])->register();
 Route::post('password/update', [ForgotPasswordController::class, 'update'])->register();
 
 Route::get('email/verify', [EmailVerificationController::class, 'verify'])->register();
+Route::get('email/notify', [EmailVerificationController::class, 'notify'])->register();

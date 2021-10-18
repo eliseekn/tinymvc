@@ -17,10 +17,7 @@ use PHPMailer\PHPMailer\PHPMailer;
  */
 class Mailer implements MailerInterface
 {
-    /**
-     * @var \PHPMailer\PHPMailer\PHPMailer|null
-     */
-    private $mailer = null;
+    private PHPMailer $mailer;
 
     public function __construct()
     {

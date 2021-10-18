@@ -34,7 +34,7 @@ class RegisterUser extends GUMPValidator
      */
     public static function make(array $inputs)
     {
-        self::addRule('unique', function($field, array $input, array $params, $value) {
+        self::add('unique', function($field, array $input, array $params, $value) {
             $data = (new Repository($params[0]))->select('*')->where($field, $value);
             return !$data->exists();
         }, 'This {field} is already used by another user');

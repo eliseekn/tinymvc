@@ -10,7 +10,7 @@ namespace Core\Http\Validator;
 
 interface ValidatorInterface
 {
-    public static function addRule(string $rule, callable $callback, string $error_message);
+    public static function add(string $rule, callable $callback, string $error_message);
 
     public static function validate(array $inputs, array $rules = [], array $messages = []);
     

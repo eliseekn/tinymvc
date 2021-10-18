@@ -23,6 +23,20 @@ class Make
         return Storage::path(config('storage.stubs'));
     }
 
+    private static function removeUnderscore(string $word)
+    {
+        if (strpos($word, '_')) {
+            $words = explode('_', $word);
+            $word = '';
+
+            foreach ($words as $w) {
+                $word .= ucfirst($w);
+            }
+        }
+
+        return $word;
+    }
+
     public static function fixPluralTypo(string $word, bool $remove = false)
     {
         if (!$remove) {
@@ -55,16 +69,11 @@ class Make
         if (!$singular) $name = self::fixPluralTypo($name);
         if ($force_singlular) $name = self::fixPluralTypo($name, true);
 
-        if (strpos($name, '_')) {
-            $words = explode('_', $name);
-            $name = '';
-
-            foreach ($words as $word) {
-                $name .= ucfirst($word);
-            }
-        }
+        $name = self::removeUnderscore($name);
 
         if ($suffix === 'migration') $suffix = 'table';
+
+        $suffix = self::removeUnderscore($suffix);
 
         $class = $name . ucfirst($suffix);
 
@@ -75,7 +84,7 @@ class Make
     
     public static function createController(string $controller, ?string $namespace = null)
     {
-        list($name, $class) = self::generateClass($controller, 'controller');
+        list($name, $class) = self::generateClass($controller, 'controller', true, true);
 
         $data = self::stubs()->readFile('Controller.stub');
         
@@ -273,6 +282,22 @@ class Make
         $data = str_replace('COMMANDDESCPTION', $description, $data);
 
         if (!Storage::path(config('storage.commands'))->writeFile($class . '.php', $data)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function createActions(string $model)
+    {
+        list($name, $class) = self::generateClass($model, 'actions', true, true);
+        
+        $data = self::stubs()->readFile('Actions.stub');
+        $data = str_replace('CLASSNAME', $class, $data);
+        $data = str_replace('$MODELNAME', '$' . self::fixPluralTypo($name, true), $data);
+        $data = str_replace('MODELNAME', self::fixPluralTypo(ucfirst($name), true), $data);
+
+        if (!Storage::path(config('storage.actions'))->writeFile($class . '.php', $data)) {
             return false;
         }
 

@@ -517,6 +517,12 @@ if (!function_exists('parse_raw_http_request')) {
         // read incoming data
         $input = file_get_contents('php://input');
 
+        if (!isset($_SERVER['CONTENT_TYPE'])) {
+            // we expect regular puts to containt a query string containing data
+            parse_str(urldecode($input), $a_data);
+            return $a_data;
+        }
+
         // grab multipart boundary from content type header
         preg_match('/boundary=(.*)$/', $_SERVER['CONTENT_TYPE'], $matches);
 

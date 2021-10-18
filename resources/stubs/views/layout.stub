@@ -24,8 +24,7 @@
         {% block body %}{% endblock %}
 
         <script defer src="{{ resources('vendor/fontawesome-5.13-all.js') }}"></script>
-        <script defer src="{{ resources('vendor/jquery-3.5.1.slim.min.js') }}"></script>
-        <script defer src="{{ resources('vendor/bootstrap-4.5.3-dist/js/bootstrap.bundle.min.js') }}"></script>
+        <script defer src="{{ resources('vendor/bootstrap-5.1.1-dist/bootstrap.bundle.min.js') }}"></script>
         <script defer src="{{ assets('js/index.js') }}"></script>
 
         {% block scripts %}{% endblock %}

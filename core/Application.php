@@ -34,7 +34,7 @@ class Application
             if (config('errors.log')) save_log('Exception: ' . $e);
             if (config('errors.display')) die($e);
         
-            $response->view(config('errors.views.500'), [], 500);
+            $response->view(config('errors.views.500'), [], [], 500);
         }
     }
 }

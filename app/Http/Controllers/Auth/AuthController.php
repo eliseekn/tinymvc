@@ -16,6 +16,7 @@ use Core\Support\Session;
 use App\Mails\WelcomeMail;
 use Core\Support\Mailer\Mailer;
 use Core\Http\Response\Response;
+use App\Http\Actions\UserActions;
 use App\Http\Validators\AuthRequest;
 use App\Http\Validators\RegisterUser;
 
@@ -62,7 +63,7 @@ class AuthController
     public function register(Request $request, Mailer $mailer, Response $response)
     {
         RegisterUser::make($request->inputs())->redirectBackOnFail($response);
-        $user = Auth::create($request->inputs());
+        $user = UserActions::create($request->inputs());
 
         if (!config('security.auth.email_verification')) {
             WelcomeMail::send($mailer, $user->email, $user->name);
@@ -71,7 +72,7 @@ class AuthController
             $response->redirect()->to('login')->go();
         }
 
-        (new EmailVerificationController())->notify($request, $response, $mailer);
+        $response->redirect()->to('email/notify')->go();
     }
 	
 	public function logout(Response $response)

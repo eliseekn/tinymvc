@@ -42,6 +42,18 @@ class AuthenticationTest extends ApplicationTestCase
         $this->assertDatabaseHas('users', $user->toArray('name', 'email'));
     }
 
+    public function test_can_logout()
+    {
+        $user = User::factory(UserFactory::class)->create();
+
+        $this->post('authenticate', ['email' => $user->email, 'password' => 'password']);
+
+        $client = $this->actingAs($user)->post('logout');
+        $client->assertRedirectedToUrl(url('/'));
+
+        $client->assertSessionDoesNotHave('user', $user->toArray());
+    }
+
     public function test_can_not_register_same_user_twice()
     {
         $user = User::factory(UserFactory::class)->create();

@@ -31,5 +31,6 @@ return [
     'helpers' => absolute_path('app.Helpers'),
     'tests' => absolute_path('tests'),
     'commands' => absolute_path('app.Commands'),
-    'sqlite' => absolute_path('storage.sqlite')
+    'sqlite' => absolute_path('storage.sqlite'),
+    'actions' => absolute_path('app.Http.Actions')
 ];

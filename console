@@ -40,6 +40,7 @@ $console->add(new \Core\Console\Make\Cmd());
 $console->add(new \Core\Console\Make\Password());
 $console->add(new \Core\Console\Make\Helper());
 $console->add(new \Core\Console\Make\Test());
+$console->add(new \Core\Console\Make\Actions());
 
 $console->add(new \Core\Console\App\Setup());
 $console->add(new \Core\Console\App\EncryptionKey());

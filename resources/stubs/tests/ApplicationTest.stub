@@ -7,10 +7,13 @@
  */
 
 use Core\Testing\ApplicationTestCase;
+use Core\Testing\Concerns\RefreshDatabase;
 
 class CLASSNAME extends ApplicationTestCase
 {
-    public function testExampleTestName()
+    use RefreshDatabase;
+
+    public function test_example_test_name()
     {
         //
     }

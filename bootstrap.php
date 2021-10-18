@@ -18,6 +18,8 @@ use Core\Support\Storage;
 define('DS', DIRECTORY_SEPARATOR);
 define('APP_ROOT', __DIR__  . DS);
 
+set_time_limit(0);
+
 Whoops::register();
 
 $storage = Storage::path(absolute_path('storage'));
@@ -27,14 +29,14 @@ if (!$storage->path(config('storage.logs'))->isDir()) $storage->createDir();
 if (!$storage->path(config('storage.cache'))->isDir()) $storage->createDir();
 if (!$storage->path(config('storage.sqlite'))->isDir()) $storage->createDir();
 
-if (config('errors.display') === true) {
+if (config('errors.display')) {
     ini_set('display_errors', 1);
     ini_set('error_reporting', E_ALL);
 } else {
     ini_set('display_errors', 0);
 }
 
-if (config('errors.log') === true) {
+if (config('errors.log')) {
     ini_set('log_errors', 1);
     ini_set('error_log', Storage::path(config('storage.logs'))->file('tinymvc_' . date('m_d_y') . '.log'));
 } else {
@@ -48,10 +50,8 @@ function handleExceptions($e)
 
 set_exception_handler('handleExceptions');
 
-set_time_limit(0);
-
 if (!Storage::path()->isFile('.env')) {
-    throw new Exception('Copy ".env.example" file to ".env" then edit or run "php console app:setup" console command to setup application');
+    throw new Exception('Copy ".env.example" file to ".env" then edit it or run "php console app:setup" console command to setup application');
 }
 
 Config::loadEnv();
