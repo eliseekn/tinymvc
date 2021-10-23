@@ -14,7 +14,7 @@ use Core\Support\Alert;
 use App\Mails\TokenMail;
 use App\Database\Models\Token;
 use App\Http\Actions\UserActions;
-use App\Http\Validators\AuthRequest;
+use App\Http\Validators\Auth\LoginValidator;
 use Core\Http\Response\Response;
 use Core\Support\Mailer\Mailer;
 
@@ -64,7 +64,7 @@ class ForgotPasswordController
 	
 	public function update(Request $request, Response $response)
 	{
-		AuthRequest::make($request->inputs())->redirectBackOnFail($response);
+		LoginValidator::make($request->inputs())->redirectBackOnFail($response);
         $user = UserActions::update(['password' => $request->password], $request->email);
 
         if (!$user) {

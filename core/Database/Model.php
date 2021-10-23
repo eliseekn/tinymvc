@@ -8,8 +8,6 @@
 
 namespace Core\Database;
 
-use Core\Support\Storage;
-
 /**
  * Manage database models
  */
@@ -142,7 +140,7 @@ class Model
      */
     public static function truncate()
     {
-        (new Repository(static::$table))->delete()->execute();
+        return (new Repository(static::$table))->delete()->execute();
     }
     
     /**

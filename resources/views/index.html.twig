@@ -26,7 +26,7 @@
 
 			<hr class="my-5 mx-auto w-25">
 
-			<span>
+			<span class="d-flex align-items-center justify-content-center">
 				<a href="https://github.com/eliseekn/tinymvc" class="btn btn-dark" target="_blank">
 					<i class="fab fa-github"></i> Github
 				</a>
@@ -36,9 +36,11 @@
 					<i class="fa fa-user"></i> Log in
 				</a>
                 {% else %}
-                <a href="{{ url('logout') }}" class="ms-3 btn btn-danger">
-					<i class="fa fa-user"></i> Log out
-				</a>
+                <form action="{{ url('logout') }}" method="post">
+                    <button type="submit" class="ms-3 btn btn-danger">
+                        <i class="fa fa-user"></i> Log out
+                    </button>
+                </form>
                 {% endif %}
 			</span>
 		</div>

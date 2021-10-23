@@ -65,15 +65,13 @@ class Router
             if (class_exists($controller) && method_exists($controller, $action)) {
                 (new DependencyInjection())->resolve($controller, $action, $params);
             }
-                
+            
             throw new Exception("Controller $controller/$action not found");
         }
 
         if (is_string($handler)) {
             if (class_exists($handler)) {
-                $controller = new $handler();
-
-                (new DependencyInjection())->resolveClosure($controller, $params);
+                (new DependencyInjection())->resolve($handler, '__invoke', $params);
             }
 
             throw new Exception("Controller $handler not found");

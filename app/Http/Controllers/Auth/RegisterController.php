@@ -31,7 +31,7 @@ class RegisterController
     public function register(Request $request, Mailer $mailer, Response $response)
     {
         RegisterValidator::make($request->inputs())->redirectBackOnFail($response);
-        $user = UserActions::create($request->inputs());
+        $user = UserActions::create($request->except('csrf_token'));
 
         if (!config('security.auth.email_verification')) {
             WelcomeMail::send($mailer, $user->email, $user->name);

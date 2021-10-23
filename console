@@ -16,39 +16,5 @@ require 'vendor/autoload.php';
 require_once 'bootstrap.php';
 
 $console = new \Symfony\Component\Console\Application();
-
-$console->add(new \Core\Console\Database\Create());
-$console->add(new \Core\Console\Database\Delete());
-$console->add(new \Core\Console\Database\Show());
-$console->add(new \Core\Console\Database\Query());
-$console->add(new \Core\Console\Database\Migrations\Delete());
-$console->add(new \Core\Console\Database\Migrations\Status());
-$console->add(new \Core\Console\Database\Migrations\Run());
-$console->add(new \Core\Console\Database\Migrations\Reset());
-$console->add(new \Core\Console\Database\Seeds());
-
-$console->add(new \Core\Console\Make\Migration());
-$console->add(new \Core\Console\Make\Model());
-$console->add(new \Core\Console\Make\Controller());
-$console->add(new \Core\Console\Make\Validator());
-$console->add(new \Core\Console\Make\Seed());
-$console->add(new \Core\Console\Make\Factory());
-$console->add(new \Core\Console\Make\View());
-$console->add(new \Core\Console\Make\Mail());
-$console->add(new \Core\Console\Make\Middleware());
-$console->add(new \Core\Console\Make\Cmd());
-$console->add(new \Core\Console\Make\Password());
-$console->add(new \Core\Console\Make\Helper());
-$console->add(new \Core\Console\Make\Test());
-$console->add(new \Core\Console\Make\Actions());
-
-$console->add(new \Core\Console\App\Setup());
-$console->add(new \Core\Console\App\EncryptionKey());
-$console->add(new \Core\Console\App\Environnement());
-
-$console->add(new \Core\Console\Cache());
-$console->add(new \Core\Console\Server());
-$console->add(new \Core\Console\Tests());
-$console->add(new \Core\Console\Logs());
-
+$console->addCommands(array_merge(config('console.core'), config('console.app')));
 $console->run();

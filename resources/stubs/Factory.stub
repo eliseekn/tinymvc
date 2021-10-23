@@ -6,7 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace App\Database\Factories;
+namespace NAMESPACE;
 
 use App\Database\Models\MODELNAME;
 use Core\Database\Factory;

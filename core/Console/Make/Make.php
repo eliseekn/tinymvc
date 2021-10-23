@@ -99,7 +99,7 @@ class Make
         $storage = Storage::path(config('storage.controllers'));
 
         if (!is_null($namespace)) {
-            $storage->addPath(str_replace('\\', '/', $namespace));
+            $storage = $storage->addPath(str_replace('\\', '/', $namespace));
         }
 
         if (!$storage->writeFile($class . '.php', $data)) {
@@ -121,7 +121,7 @@ class Make
         $storage = Storage::path(config('storage.models'));
 
         if (!is_null($namespace)) {
-            $storage->addPath(str_replace('\\', '/', $namespace));
+            $storage = $storage->addPath(str_replace('\\', '/', $namespace));
         }
 
         if (!$storage->writeFile(self::fixPluralTypo($class, true) . '.php', $data)) {
@@ -161,16 +161,23 @@ class Make
         return true;
     }
     
-    public static function createFactory(string $factory)
+    public static function createFactory(string $factory, ?string $namespace = null)
     {
         list($name, $class) = self::generateClass($factory, 'factory', true, true);
 
         $data = self::stubs()->readFile('Factory.stub');
+        $data = self::addNamespace($data, 'App\Database\Factories', $namespace);
         $data = str_replace('CLASSNAME', self::fixPluralTypo($class, true), $data);
         $data = str_replace('TABLENAME', self::fixPluralTypo($name), $data);
         $data = str_replace('MODELNAME', self::fixPluralTypo(ucfirst($name), true), $data);
 
-        if (!Storage::path(config('storage.factories'))->writeFile(self::fixPluralTypo($class, true) . '.php', $data)) {
+        $storage = Storage::path(config('storage.factories'));
+
+        if (!is_null($namespace)) {
+            $storage = $storage->addPath(str_replace('\\', '/', $namespace));
+        }
+
+        if (!$storage->writeFile(self::fixPluralTypo($class, true) . '.php', $data)) {
             return false;
         }
         
@@ -191,17 +198,23 @@ class Make
         return true;
     }
     
-    public static function createTest(string $test, bool $unit_test)
+    public static function createTest(string $test, bool $unit_test, ?string $namespace = null)
     {
         list($name, $class) = self::generateClass($test, 'test', true);
 
-        $data = $unit_test 
-            ? self::stubs()->addPath('tests')->readFile('UnitTest.stub')
-            : self::stubs()->addPath('tests')->readFile('ApplicationTest.stub');
+        $storage = Storage::path(config('storage.tests'));
+
+        if ($unit_test) {
+            $data = self::stubs()->addPath('tests')->readFile('UnitTest.stub');
+            $storage = $storage->addPath('Unit')->addPath(str_replace('\\', '/', $namespace));
+        } else {
+            $data = self::stubs()->addPath('tests')->readFile('ApplicationTest.stub');
+            $storage = $storage->addPath('Application')->addPath(str_replace('\\', '/', $namespace));
+        }
 
         $data = str_replace('CLASSNAME', $class, $data);
 
-        if (!Storage::path(config('storage.tests'))->addPath($unit_test ? 'Unit' : 'Application')->writeFile($class . '.php', $data)) {
+        if (!$storage->writeFile($class . '.php', $data)) {
             return false;
         }
         
@@ -219,7 +232,7 @@ class Make
         $storage = Storage::path(config('storage.validators'));
 
         if (!is_null($namespace)) {
-            $storage->addPath(str_replace('\\', '/', $namespace));
+            $storage = $storage->addPath(str_replace('\\', '/', $namespace));
         }
 
         if (!$storage->writeFile($class . '.php', $data)) {
@@ -288,20 +301,20 @@ class Make
         return true;
     }
     
-    public static function createCommand(string $cmd, string $name, string $description, ?string $namespace = null)
+    public static function createConsole(string $console, string $command, string $description, ?string $namespace = null)
     {
-        list($_name, $class) = self::generateClass($cmd, '', true);
+        list($_name, $class) = self::generateClass($console, '', true);
 
-        $data = self::stubs()->readFile('Command.stub');
-        $data = self::addNamespace($data, 'App\Commands', $namespace);
+        $data = self::stubs()->readFile('Console.stub');
+        $data = self::addNamespace($data, 'App\Console', $namespace);
         $data = str_replace('CLASSNAME', $class, $data);
-        $data = str_replace('COMMANDNAME', $name, $data);
+        $data = str_replace('COMMANDNAME', $command, $data);
         $data = str_replace('COMMANDDESCPTION', $description, $data);
 
-        $storage = Storage::path(config('storage.commands'));
+        $storage = Storage::path(config('storage.console'));
 
         if (!is_null($namespace)) {
-            $storage->addPath(str_replace('\\', '/', $namespace));
+            $storage = $storage->addPath(str_replace('\\', '/', $namespace));
         }
 
         if (!$storage->writeFile($class . '.php', $data)) {
@@ -324,7 +337,7 @@ class Make
         $storage = Storage::path(config('storage.actions'));
 
         if (!is_null($namespace)) {
-            $storage->addPath(str_replace('\\', '/', $namespace));
+            $storage = $storage->addPath(str_replace('\\', '/', $namespace));
         }
 
         if (!$storage->writeFile($class . '.php', $data)) {

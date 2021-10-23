@@ -17,24 +17,24 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Create new console command 
  */
-class Cmd extends Command
+class Console extends Command
 {
-    protected static $defaultName = 'make:cmd';
+    protected static $defaultName = 'make:console';
 
     protected function configure()
     {
         $this->setDescription('Create new console command');
-        $this->addArgument('cmd', InputArgument::REQUIRED, 'The command class name');
-        $this->addOption('name', null, InputOption::VALUE_REQUIRED, 'The command name');
-        $this->addOption('description', null, InputOption::VALUE_REQUIRED, 'The command description (inside "")');
-        $this->addOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Specify namespace (base: App\Commands)');
+        $this->addArgument('console', InputArgument::REQUIRED, 'The console class name');
+        $this->addOption('command', null, InputOption::VALUE_REQUIRED, 'The console name');
+        $this->addOption('description', null, InputOption::VALUE_REQUIRED, 'The console description (inside "")');
+        $this->addOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Specify namespace (base: App\Console)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        list($name, $class) = Make::generateClass($input->getArgument('cmd'), '', true);
+        list($name, $class) = Make::generateClass($input->getArgument('console'), '', true);
 
-        if (!Make::createCommand($input->getArgument('cmd'), $input->getOption('name'), $input->getOption('description'), $input->getOption('namespace'))) {
+        if (!Make::createConsole($input->getArgument('console'), $input->getOption('command'), $input->getOption('description'), $input->getOption('namespace'))) {
             $output->writeln('<fg=yellow>Failed to create command "' . $class . '"</fg>');
         }
 

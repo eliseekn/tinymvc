@@ -30,7 +30,7 @@ return [
     'mails' => absolute_path('app.Mails'),
     'helpers' => absolute_path('app.Helpers'),
     'tests' => absolute_path('tests'),
-    'commands' => absolute_path('app.Commands'),
+    'console' => absolute_path('app.Console'),
     'sqlite' => absolute_path('storage.sqlite'),
     'actions' => absolute_path('app.Http.Actions')
 ];

@@ -50,7 +50,6 @@ class AuthenticationTest extends ApplicationTestCase
 
         $client = $this->actingAs($user)->post('logout');
         $client->assertRedirectedToUrl(url('/'));
-
         $client->assertSessionDoesNotHave('user', $user->toArray());
     }
 

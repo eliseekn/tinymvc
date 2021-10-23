@@ -8,8 +8,9 @@
 
 namespace App\Database\Factories;
 
-use App\Database\Models\User;
+use Carbon\Carbon;
 use Core\Database\Factory;
+use App\Database\Models\User;
 
 class UserFactory extends Factory
 {
@@ -26,7 +27,7 @@ class UserFactory extends Factory
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->email(),
             'password' => hash_pwd('password'),
-            'verified' => true,
+            'email_verified' => Carbon::now(),
             'role' => User::ROLE_USER
         ];
     }
