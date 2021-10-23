@@ -25,7 +25,7 @@ class Controller extends Command
     {
         $this->setDescription('Create new controller');
         $this->addArgument('controller', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of controller (separated by space if many)');
-        $this->addOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Specify controller namespace');
+        $this->addOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Specify namespace (base: App\Http\Controllers)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

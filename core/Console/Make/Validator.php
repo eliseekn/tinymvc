@@ -9,6 +9,7 @@
 namespace Core\Console\Make;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -24,6 +25,7 @@ class Validator extends Command
     {
         $this->setDescription('Create new request validator');
         $this->addArgument('validator', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of validator (separated by space if many)');
+        $this->addOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Specify namespace (base: App\Http\Validators)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -31,9 +33,9 @@ class Validator extends Command
         $validators = $input->getArgument('validator');
 
         foreach ($validators as $validator) {
-            list($name, $class) = Make::generateClass($validator, '', true);
+            list($name, $class) = Make::generateClass($validator, 'validator', true);
 
-            if (!Make::createValidator($validator)) {
+            if (!Make::createValidator($validator, $input->getOption('namespace'))) {
                 $output->writeln('<fg=yellow>Failed to create request validator "' . $class . '"</fg>');
             }
 

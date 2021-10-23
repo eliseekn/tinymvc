@@ -27,13 +27,14 @@ class Cmd extends Command
         $this->addArgument('cmd', InputArgument::REQUIRED, 'The command class name');
         $this->addOption('name', null, InputOption::VALUE_REQUIRED, 'The command name');
         $this->addOption('description', null, InputOption::VALUE_REQUIRED, 'The command description (inside "")');
+        $this->addOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Specify namespace (base: App\Commands)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         list($name, $class) = Make::generateClass($input->getArgument('cmd'), '', true);
 
-        if (!Make::createCommand($input->getArgument('cmd'), $input->getOption('name'), $input->getOption('description'))) {
+        if (!Make::createCommand($input->getArgument('cmd'), $input->getOption('name'), $input->getOption('description'), $input->getOption('namespace'))) {
             $output->writeln('<fg=yellow>Failed to create command "' . $class . '"</fg>');
         }
 

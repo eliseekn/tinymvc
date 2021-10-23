@@ -37,6 +37,12 @@ class Make
         return $word;
     }
 
+    private static function addNamespace(string $data, string $base, ?string $namespace = null)
+    {
+        return is_null($namespace) ? str_replace('NAMESPACE', $base, $data) 
+            : str_replace('NAMESPACE', "{$base}\\{$namespace}", $data);
+    }
+
     public static function fixPluralTypo(string $word, bool $remove = false)
     {
         if (!$remove) {
@@ -87,35 +93,38 @@ class Make
         list($name, $class) = self::generateClass($controller, 'controller', true, true);
 
         $data = self::stubs()->readFile('Controller.stub');
-        
-        $data = is_null($namespace) 
-            ? str_replace('NAMESPACE', 'App\Http\Controllers', $data) 
-            : str_replace('NAMESPACE', 'App\Http\Controllers\\' . ucfirst($namespace), $data);
-        
+        $data = self::addNamespace($data, 'App\Http\Controllers', $namespace);
         $data = str_replace('CLASSNAME', $class, $data);
 
-        $path = Storage::path(config('storage.controllers'));
+        $storage = Storage::path(config('storage.controllers'));
 
         if (!is_null($namespace)) {
-            $path->addPath(ucfirst($namespace));
+            $storage->addPath(str_replace('\\', '/', $namespace));
         }
 
-        if (!$path->writeFile($class . '.php', $data)) {
+        if (!$storage->writeFile($class . '.php', $data)) {
             return false;
         }
         
         return true;
     }
 
-    public static function createModel(string $model)
+    public static function createModel(string $model, ?string $namespace = null)
     {
         list($name, $class) = self::generateClass($model, '');
 
         $data = self::stubs()->readFile('Model.stub');
+        $data = self::addNamespace($data, 'App\Database\Models', $namespace);
         $data = str_replace('CLASSNAME', self::fixPluralTypo($class, true), $data);
         $data = str_replace('TABLENAME', $name, $data);
 
-        if (!Storage::path(config('storage.models'))->writeFile(self::fixPluralTypo($class, true) . '.php', $data)) {
+        $storage = Storage::path(config('storage.models'));
+
+        if (!is_null($namespace)) {
+            $storage->addPath(str_replace('\\', '/', $namespace));
+        }
+
+        if (!$storage->writeFile(self::fixPluralTypo($class, true) . '.php', $data)) {
             return false;
         }
         
@@ -199,14 +208,21 @@ class Make
         return true;
     }
     
-    public static function createValidator(string $validator)
+    public static function createValidator(string $validator, ?string $namespace = null)
     {
-        list($name, $class) = self::generateClass($validator, '', true);
+        list($name, $class) = self::generateClass($validator, 'validator', true);
 
         $data = self::stubs()->readFile('Validator.stub');
+        $data = self::addNamespace($data, 'App\Http\Validators', $namespace);
         $data = str_replace('CLASSNAME', $class, $data);
 
-        if (!Storage::path(config('storage.validators'))->writeFile($class . '.php', $data)) {
+        $storage = Storage::path(config('storage.validators'));
+
+        if (!is_null($namespace)) {
+            $storage->addPath(str_replace('\\', '/', $namespace));
+        }
+
+        if (!$storage->writeFile($class . '.php', $data)) {
             return false;
         }
 
@@ -272,32 +288,46 @@ class Make
         return true;
     }
     
-    public static function createCommand(string $cmd, string $name, string $description)
+    public static function createCommand(string $cmd, string $name, string $description, ?string $namespace = null)
     {
         list($_name, $class) = self::generateClass($cmd, '', true);
 
         $data = self::stubs()->readFile('Command.stub');
+        $data = self::addNamespace($data, 'App\Commands', $namespace);
         $data = str_replace('CLASSNAME', $class, $data);
         $data = str_replace('COMMANDNAME', $name, $data);
         $data = str_replace('COMMANDDESCPTION', $description, $data);
 
-        if (!Storage::path(config('storage.commands'))->writeFile($class . '.php', $data)) {
+        $storage = Storage::path(config('storage.commands'));
+
+        if (!is_null($namespace)) {
+            $storage->addPath(str_replace('\\', '/', $namespace));
+        }
+
+        if (!$storage->writeFile($class . '.php', $data)) {
             return false;
         }
 
         return true;
     }
 
-    public static function createActions(string $model)
+    public static function createActions(string $model, ?string $namespace = null)
     {
         list($name, $class) = self::generateClass($model, 'actions', true, true);
         
         $data = self::stubs()->readFile('Actions.stub');
+        $data = self::addNamespace($data, 'App\Http\Actions', $namespace);
         $data = str_replace('CLASSNAME', $class, $data);
         $data = str_replace('$MODELNAME', '$' . self::fixPluralTypo($name, true), $data);
         $data = str_replace('MODELNAME', self::fixPluralTypo(ucfirst($name), true), $data);
 
-        if (!Storage::path(config('storage.actions'))->writeFile($class . '.php', $data)) {
+        $storage = Storage::path(config('storage.actions'));
+
+        if (!is_null($namespace)) {
+            $storage->addPath(str_replace('\\', '/', $namespace));
+        }
+
+        if (!$storage->writeFile($class . '.php', $data)) {
             return false;
         }
 

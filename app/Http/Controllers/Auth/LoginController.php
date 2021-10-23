@@ -13,19 +13,12 @@ use Core\Http\Request;
 use Core\Support\Auth;
 use Core\Support\Alert;
 use Core\Support\Session;
-use App\Mails\WelcomeMail;
-use Core\Support\Mailer\Mailer;
 use Core\Http\Response\Response;
-use App\Http\Actions\UserActions;
-use App\Http\Validators\AuthRequest;
-use App\Http\Validators\RegisterUser;
+use App\Http\Validators\Auth\LoginValidator;
 
-/**
- * Manage user authentication
- */
-class AuthController
+class LoginController
 { 
-    public function login(Request $request, Response $response)
+    public function index(Request $request, Response $response)
     {
         if (!Auth::check($request)) $response->view('auth.login'); 
 
@@ -33,17 +26,9 @@ class AuthController
         $response->redirect()->to($uri)->go();
     }
 
-    public function signup(Request $request, Response $response)
-    {
-        if (!Auth::check($request)) $response->view('auth.signup'); 
-
-        $uri = !Session::has('intended') ? Auth::HOME : Session::pull('intended');
-        $response->redirect()->to($uri)->go();
-    }
-
 	public function authenticate(Request $request, Response $response)
 	{
-        AuthRequest::make($request->inputs())->redirectBackOnFail($response);
+        LoginValidator::make($request->inputs())->redirectBackOnFail($response);
 
         if (Auth::attempt($request->only('email', 'password'), $request->has('remember'))) {
             $uri = !Session::has('intended') ? Auth::HOME : Session::pull('intended');
@@ -59,27 +44,4 @@ class AuthController
         Alert::default(__('login_failed'))->error();
         $response->redirect()->to('login')->withInputs($request->only('email', 'password'))->withErrors([__('login_failed')])->go();
     }
-    
-    public function register(Request $request, Mailer $mailer, Response $response)
-    {
-        RegisterUser::make($request->inputs())->redirectBackOnFail($response);
-        $user = UserActions::create($request->inputs());
-
-        if (!config('security.auth.email_verification')) {
-            WelcomeMail::send($mailer, $user->email, $user->name);
-
-            Alert::default(__('account_created'))->success();
-            $response->redirect()->to('login')->go();
-        }
-
-        $response->redirect()->to('email/notify')->go();
-    }
-	
-	public function logout(Response $response)
-	{
-        Auth::forget();
-
-        Alert::toast(__('logged_out'))->success();
-        $response->redirect()->to(Auth::HOME)->go();
-	}
 }

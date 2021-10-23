@@ -9,6 +9,7 @@
 namespace Core\Console\Make;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -24,6 +25,7 @@ class Actions extends Command
     {
         $this->setDescription('Create new actions');
         $this->addArgument('model', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of model (separated by space if many)');
+        $this->addOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Specify namespace (base: App\Http\Actions)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -33,7 +35,7 @@ class Actions extends Command
         foreach ($models as $model) {
             list($name, $class) = Make::generateClass($model, 'actions', true, true);
 
-            if (!Make::createActions($model)) {
+            if (!Make::createActions($model, $input->getOption('namespace'))) {
                 $output->writeln('<fg=yellow>Failed to create actions "' . $class . '"</fg>');
             }
 
