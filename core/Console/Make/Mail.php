@@ -31,7 +31,7 @@ class Mail extends Command
         $mails = $input->getArgument('mail');
 
         foreach ($mails as $mail) {
-            list($name, $class) = Make::generateClass($mail, 'mail');
+            list(, $class) = Make::generateClass($mail, 'mail');
 
             if (!Make::createMail($mail)) {
                 $output->writeln('<fg=yellow>Failed to create mail template "' . $class . '"</fg>');

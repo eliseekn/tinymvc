@@ -32,7 +32,10 @@ class Delete extends Command
         $databases = $input->getArgument('database');
 
         if (is_null($databases) || empty($databases)) {
-            $databases = [config('database.name')];
+            $db = config('app.env') !== 'test' ? config('database.name') : 
+               config('database.name') . config('testing.database.suffix') ;
+
+            $databases = [$db];
         }
 
         foreach ($databases as $database) {

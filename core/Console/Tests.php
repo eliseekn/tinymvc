@@ -25,25 +25,17 @@ class Tests extends Command
             $output->writeln('<fg=yellow>You must set APP_ENV to test in application configuration</>');
             return Command::FAILURE;
         }
+        
+        $server = new Process(['php', '-S', config('testing.host') . ':' . config('testing.port')]);
+        $server->setTimeout(null);
+        $server->start();
 
-        if (config('database.driver') === 'sqlite' && config('database.sqlite.memory')) {
-            $output->writeln('<fg=yellow>You must set SQLite memory to false in database configuration</>');
-            return Command::FAILURE;
-        }
+        $phpunit = new Process(['php', 'vendor/bin/phpunit']);
+        $phpunit->setTimeout(null);
+        $phpunit->start();
+        $phpunit->wait(function ($type, $buffer) { echo $buffer; });
 
-        $server_process = new Process(['php', '-S', config('testing.host') . ':' . config('testing.port')]);
-        $server_process->setTimeout(null);
-        $server_process->start();
-
-        $process = new Process(['php', 'vendor/bin/phpunit']);
-        $process->setTimeout(null);
-        $process->start();
-
-        $process->wait(function ($type, $buffer) use ($output) {
-            $output->write($buffer);
-        });
-
-        $server_process->stop();
+        $server->stop();
 
         return Command::SUCCESS;
     }

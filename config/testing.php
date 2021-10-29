@@ -11,7 +11,11 @@
  */
 
 return [
+    'database' => [
+        'driver' => 'sqlite',
+        'suffix' => '_test'
+    ],
+
     'host' => '127.0.0.1',
     'port' => 8889,
-    'process' => 4 //phpunit process number
 ];

@@ -33,7 +33,7 @@ class Migration extends Command
         $migrations = $input->getArgument('migration');
 
         foreach ($migrations as $migration) {
-            list($name, $class) = Make::generateClass($migration, 'migration');
+            list(, $class) = Make::generateClass($migration, 'migration');
 
             if (!Make::createMigration($migration)) {
                 $output->writeln('<fg=yellow>Failed to create migration "' . $class . '"</fg>');
@@ -44,7 +44,7 @@ class Migration extends Command
 
         if ($input->getOption('seed')) {
             foreach ($migrations as $migration) {
-                list($name, $class) = Make::generateClass($migration, 'seed');
+                list(, $class) = Make::generateClass($migration, 'seed');
             
                 if (!Make::createSeed($migration)) {
                     $output->writeln('<fg=yellow>Failed to create seed "' . $class . '"</fg>');

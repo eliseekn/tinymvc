@@ -34,7 +34,7 @@ class Test extends Command
         $tests = $input->getArgument('test');
 
         foreach ($tests as $test) {
-            list($name, $class) = Make::generateClass($test, 'test', true);
+            list(, $class) = Make::generateClass($test, 'test', true);
 
             if (!Make::createTest($test, $input->getOption('unit'), $input->getOption('subdir'))) {
                 $output->writeln('<fg=yellow>Failed to create test "' . $class . '"</fg>');

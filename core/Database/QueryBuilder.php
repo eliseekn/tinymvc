@@ -19,58 +19,40 @@ class QueryBuilder
 	protected static $query = '';
     protected static $args = [];
     protected static $table;
-    protected static $db;
 
-    /**
-     * Set database connection name
-     */
-    protected static function setDB(?string $db = null)
-    {
-        static::$db = is_null($db) ? config('database.name') : $db;
-        return new self();
-    }
-
-    protected static function getTable(string $name)
+    protected static function setTable(string $name)
     {
         if (config('database.driver') === 'sqlite') {
             return config('database.table_prefix') . $name;
         }
 
-        return static::$db . '.' . config('database.table_prefix') . $name;
+        $db = config('app.env') !== 'test' ? config('database.name') 
+            : config('database.name') . config('testing.database.suffix');
+
+        return $db . '.' . config('database.table_prefix') . $name;
     }
 
-    /**
-     * Set table name
-     */
     public static function table(string $name): self
     {
-        self::setDB();
-
-        static::$table = self::getTable($name);
+        static::$table = self::setTable($name);
         return new self();
     }
 
     public static function createTable(string $name): self
     {
-        self::setDB();
-
-        self::$query = "CREATE TABLE " . self::getTable($name) . " (";
+        self::$query = "CREATE TABLE " . self::setTable($name) . " (";
         return new self();
 	}
 	
 	public static function dropTable(string $name): self
 	{
-		self::setDB();
-
-        self::$query = "DROP TABLE IF EXISTS " . self::getTable($name);
+        self::$query = "DROP TABLE IF EXISTS " . self::setTable($name);
 		return new self();
 	}
     
     public static function alter(string $table): self
     {
-        self::setDB();
-
-        self::$query = "ALTER TABLE " . self::getTable($table);
+        self::$query = "ALTER TABLE " . self::setTable($table);
 		return new self();
     }
 	
@@ -253,7 +235,7 @@ class QueryBuilder
 	
 	public function references(string $table, string $column): self
 	{
-		self::$query .= " REFERENCES " . self::getTable($table) . "({$column})";
+		self::$query .= " REFERENCES " . self::setTable($table) . "({$column})";
         return $this;
 	}
 	
@@ -498,31 +480,31 @@ class QueryBuilder
 
 	public function innerJoin(string $table, string $first_column, string $operator, string $second_column): self
 	{
-		self::$query .= " INNER JOIN " . self::getTable($table) . " ON $first_column $operator $second_column";
+		self::$query .= " INNER JOIN " . self::setTable($table) . " ON $first_column $operator $second_column";
 		return $this;
 	}
 
 	public function leftJoin(string $table, string $first_column, string $operator, string $second_column): self
 	{
-		self::$query .= " LEFT JOIN " . self::getTable($table) . " ON $first_column $operator $second_column";
+		self::$query .= " LEFT JOIN " . self::setTable($table) . " ON $first_column $operator $second_column";
 		return $this;
 	}
 
 	public function rightJoin(string $table, string $first_column, string $operator, string $second_column): self
 	{
-		self::$query .= " RIGHT JOIN " . self::getTable($table) . " ON $first_column $operator $second_column";
+		self::$query .= " RIGHT JOIN " . self::setTable($table) . " ON $first_column $operator $second_column";
 		return $this;
 	}
 
 	public function fullJoin(string $table, string $first_column, string $operator, string $second_column): self
 	{
-		self::$query .= " FULL JOIN " . self::getTable($table) . " ON $first_column $operator $second_column";
+		self::$query .= " FULL JOIN " . self::setTable($table) . " ON $first_column $operator $second_column";
 		return $this;
 	}
 
 	public function outerJoin(string $table, string $first_column, string $operator, string $second_column): self
 	{
-		self::$query .= " FULL OUTER JOIN " . self::getTable($table) . " ON $first_column $operator $second_column";
+		self::$query .= " FULL OUTER JOIN " . self::setTable($table) . " ON $first_column $operator $second_column";
 		return $this;
 	}
 

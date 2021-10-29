@@ -15,9 +15,7 @@ use Faker\Factory;
  */
 trait LoadFaker
 {
-    /**
-     * @var \Faker\Generator
-     */
+    /** @var \Faker\Generator $faker */
     public $faker;
 
     public function loadFaker()

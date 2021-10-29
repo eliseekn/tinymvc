@@ -15,42 +15,16 @@ yarn
 
 ## Installation
 
-1\. On your terminal run:
+1\. Create new composer project
+
+On your console :
 ```
 composer create-project eliseekn/tinymvc project-name
 ```
 
-2\. Setup your web server configuration
+2\. Install packages dependencies
 
-For ***Apache*** server, edit your ```.htaccess``` with the following lines: 
-
-```
-<IfModule mod_rewrite.c>
-    RewriteEngine on
-
-    # Handle Authorization Header
-    RewriteCond %{HTTP:Authorization} .
-    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-
-    # Redirect request to main controller
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-l
-    RewriteRule ^(.*)$ index.php
-</IfModule>
-```
-
-For ***Nginx*** server, add the following to your server declaration
-
-```
-server {
-    location / {
-        try_files $uri $uri/ /index.php;
-    }
-}
-```
-3\. Install packages dependencies
-
-On your terminal:
+On your console :
 ```
 cd ./project-name
 yarn && yarn build
@@ -60,25 +34,25 @@ yarn && yarn build
 
 1\. Setup application
 
-On your terminal:
+On your console :
 ```
 cp .env.example .env
 php console app:setup
 ```
 2\. Setup database
 
-On your terminal:
+On your console :
 ```
 php console db:create
 php console migrations:run --seed
 ```
 3\. Start a local server development
 
-On your terminal:
+On your console :
 ```
 php console server:start
 ```
-For more console commands:
+For more console commands :
 ```
 php console list
 ```

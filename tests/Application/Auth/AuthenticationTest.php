@@ -17,7 +17,9 @@ class AuthenticationTest extends ApplicationTestCase
 
     public function test_can_not_authenticate_with_unregistered_user_credentials()
     {
-        $client = $this->post('authenticate', ['email' => 'a@b.c', 'password' => 'password']);
+        $user = User::factory(UserFactory::class)->make(['password' => 'password']);
+
+        $client = $this->post('authenticate', $user->toArray('email', 'password'));
         $client->assertSessionHasErrors();
         $client->assertRedirectedToUrl(url('login'));
     }

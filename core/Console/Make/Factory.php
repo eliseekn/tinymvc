@@ -33,7 +33,7 @@ class Factory extends Command
         $factorys = $input->getArgument('factory');
 
         foreach ($factorys as $factory) {
-            list($name, $class) = Make::generateClass($factory, 'factory', true, true);
+            list(, $class) = Make::generateClass($factory, 'factory', true, true);
 
             if (!Make::createFactory($factory, $input->getOption('namespace'))) {
                 $output->writeln('<fg=yellow>Failed to create factory "' . Make::fixPluralTypo($class, true) . '"</fg>');

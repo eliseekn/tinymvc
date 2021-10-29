@@ -294,7 +294,9 @@ class Migration
     
     public function addPrimaryKey(string $column, bool $auto_increment = true): self
     {
-        $pk = config('database.driver') === 'mysql' ? $this->addBigInt($column) : $this->addInteger($column);
+        $driver = config('app.env') === 'test' ? $driver = config('testing.database.driver') : config('database.driver');
+
+        $pk = $driver === 'mysql' ? $this->addBigInt($column) : $this->addInteger($column);
         $pk->primaryKey();
 
         if ($auto_increment) $pk->autoIncrement();

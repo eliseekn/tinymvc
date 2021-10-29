@@ -90,7 +90,7 @@ class Make
     
     public static function createController(string $controller, ?string $namespace = null)
     {
-        list($name, $class) = self::generateClass($controller, 'controller', true, true);
+        list(, $class) = self::generateClass($controller, 'controller', true, true);
 
         $data = self::stubs()->readFile('Controller.stub');
         $data = self::addNamespace($data, 'App\Http\Controllers', $namespace);
@@ -186,7 +186,7 @@ class Make
     
     public static function createHelper(string $helper)
     {
-        list($name, $class) = self::generateClass($helper, 'helper', true);
+        list(, $class) = self::generateClass($helper, 'helper', true);
 
         $data = self::stubs()->readFile('Helper.stub');
         $data = str_replace('CLASSNAME', $class, $data);
@@ -200,7 +200,7 @@ class Make
     
     public static function createTest(string $test, bool $unit_test, ?string $namespace = null)
     {
-        list($name, $class) = self::generateClass($test, 'test', true);
+        list(, $class) = self::generateClass($test, 'test', true);
 
         $storage = Storage::path(config('storage.tests'));
 
@@ -223,7 +223,7 @@ class Make
     
     public static function createValidator(string $validator, ?string $namespace = null)
     {
-        list($name, $class) = self::generateClass($validator, 'validator', true);
+        list(, $class) = self::generateClass($validator, 'validator', true);
 
         $data = self::stubs()->readFile('Validator.stub');
         $data = self::addNamespace($data, 'App\Http\Validators', $namespace);
@@ -244,7 +244,7 @@ class Make
     
     public static function createMiddleware(string $middleware)
     {
-        list($name, $class) = self::generateClass($middleware, '', true);
+        list(, $class) = self::generateClass($middleware, '', true);
         
         $data = self::stubs()->readFile('Middleware.stub');
         $data = str_replace('CLASSNAME', $class, $data);
@@ -303,7 +303,7 @@ class Make
     
     public static function createConsole(string $console, string $command, string $description, ?string $namespace = null)
     {
-        list($_name, $class) = self::generateClass($console, '', true);
+        list(, $class) = self::generateClass($console, '', true);
 
         $data = self::stubs()->readFile('Console.stub');
         $data = self::addNamespace($data, 'App\Console', $namespace);

@@ -31,7 +31,7 @@ class Seed extends Command
         $seeds = $input->getArgument('seed');
 
         foreach ($seeds as $seed) {
-            list($name, $class) = Make::generateClass($seed, 'seed', true, true);
+            list(, $class) = Make::generateClass($seed, 'seed', true, true);
 
             if (!Make::createSeed($seed)) {
                 $output->writeln('<fg=yellow>Failed to create seed "' . Make::fixPluralTypo($class, true) . '"</fg>');

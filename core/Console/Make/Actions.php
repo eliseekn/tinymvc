@@ -33,7 +33,7 @@ class Actions extends Command
         $models = $input->getArgument('model');
 
         foreach ($models as $model) {
-            list($name, $class) = Make::generateClass($model, 'actions', true, true);
+            list(, $class) = Make::generateClass($model, 'actions', true, true);
 
             if (!Make::createActions($model, $input->getOption('namespace'))) {
                 $output->writeln('<fg=yellow>Failed to create actions "' . $class . '"</fg>');

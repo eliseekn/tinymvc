@@ -22,7 +22,9 @@ class Connection
 
 	private function __construct()
 	{
-        $this->db = config('database.driver') === 'mysql' ? new MySQLConnection() : new SQLiteConnection();
+        $driver = config('app.env') === 'test' ? $driver = config('testing.database.driver') : config('database.driver');
+
+        $this->db = $driver === 'mysql' ? new MySQLConnection() : new SQLiteConnection();
     }
 
 	public static function getInstance(): self

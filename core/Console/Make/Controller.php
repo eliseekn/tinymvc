@@ -33,7 +33,7 @@ class Controller extends Command
         $controllers = $input->getArgument('controller');
 
         foreach ($controllers as $controller) {
-            list($name, $class) = Make::generateClass($controller, 'controller', true, true);
+            list(, $class) = Make::generateClass($controller, 'controller', true, true);
 
             if (!Make::createController($controller, $input->getOption('namespace'))) {
                 $output->writeln('<fg=yellow>Failed to create controller "' . $class . '"</fg>');

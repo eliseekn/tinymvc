@@ -18,9 +18,7 @@ class Factory
     protected static $model;
     protected $class;
 
-    /**
-     * \Faker\Factory
-     */
+    /** @var \Faker\Generator $faker */
     public $faker;
 
     public function __construct(int $count = 1)
