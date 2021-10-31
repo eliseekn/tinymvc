@@ -202,17 +202,21 @@ class Make
     {
         list(, $class) = self::generateClass($test, 'test', true);
 
-        $storage = Storage::path(config('storage.tests'));
-
         if ($unit_test) {
             $data = self::stubs()->addPath('tests')->readFile('UnitTest.stub');
-            $storage = $storage->addPath('Unit')->addPath(str_replace('\\', '/', $namespace));
         } else {
             $data = self::stubs()->addPath('tests')->readFile('ApplicationTest.stub');
-            $storage = $storage->addPath('Application')->addPath(str_replace('\\', '/', $namespace));
         }
 
         $data = str_replace('CLASSNAME', $class, $data);
+
+        $storage = Storage::path(config('storage.tests'));
+
+        if ($unit_test) {
+            $storage = $storage->addPath('Unit')->addPath(str_replace('\\', '/', $namespace));
+        } else {
+            $storage = $storage->addPath('Application')->addPath(str_replace('\\', '/', $namespace));
+        }
 
         if (!$storage->writeFile($class . '.php', $data)) {
             return false;
