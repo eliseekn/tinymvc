@@ -22,14 +22,19 @@ class QueryBuilder
 
     protected static function setTable(string $name)
     {
+        if (config('app.env') === 'test') {
+            if (config('testing.database.driver') === 'sqlite') {
+                return config('database.table_prefix') . $name;
+            }
+
+            return config('database.name') .config('testing.database.suffix') . '.' . config('database.table_prefix') . $name;
+        }
+
         if (config('database.driver') === 'sqlite') {
             return config('database.table_prefix') . $name;
         }
 
-        $db = config('app.env') !== 'test' ? config('database.name') 
-            : config('database.name') . config('testing.database.suffix');
-
-        return $db . '.' . config('database.table_prefix') . $name;
+        return config('database.name') . '.' . config('database.table_prefix') . $name;
     }
 
     public static function table(string $name): self
@@ -195,8 +200,10 @@ class QueryBuilder
     
     public function autoIncrement(): self
     {
+        $driver = config('app.env') === 'test' ? $driver = config('testing.database.driver') : config('database.driver');
+
         self::$query = rtrim(self::$query, ', ');
-        self::$query .= config('database.driver') === 'mysql' ? ' AUTO_INCREMENT, ' : ' AUTOINCREMENT, ';
+        self::$query .= $driver === 'mysql' ? ' AUTO_INCREMENT, ' : ' AUTOINCREMENT, ';
         return $this;
     }
     
@@ -270,8 +277,10 @@ class QueryBuilder
      */
     public function migrate()
     {
+        $driver = config('app.env') === 'test' ? $driver = config('testing.database.driver') : config('database.driver');
+
         if (config('database.timestamps')) {
-            if (config('database.driver') === 'mysql') {
+            if ($driver === 'mysql') {
                 self::$query .= " created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)";
             } else {
                 self::$query .= " created_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')), updated_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')))";
@@ -280,7 +289,7 @@ class QueryBuilder
 
         if (self::$query[-1] !== ')') self::$query .= ')';
 
-        if (config('database.driver') === 'mysql') {
+        if ($driver === 'mysql') {
             self::$query .= " ENGINE='" . config('database.mysql.engine') . "'";
         }
 
