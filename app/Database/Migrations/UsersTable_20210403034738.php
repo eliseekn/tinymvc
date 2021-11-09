@@ -22,7 +22,7 @@ class UsersTable_20210403034738
             ->addString('name')
             ->addString('email')->unique()
             ->addString('password')
-            ->addBoolean('email_verified')->nullable()
+            ->addDateTime('email_verified')->nullable()
             ->addString('role')->default(User::ROLE_USER)
             ->migrate();
     }

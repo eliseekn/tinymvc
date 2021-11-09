@@ -6,7 +6,6 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-use Carbon\Carbon;
 use App\Database\Models\User;
 use App\Database\Models\Token;
 use Core\Testing\ApplicationTestCase;
@@ -27,9 +26,5 @@ class EmailVerificationTest extends ApplicationTestCase
         $client->assertRedirectedToUrl(url('login'));
 
         $this->assertDatabaseDoesNotHave('tokens', $token->toArray());
-        $this->assertDatabaseHas('users', [
-            'email' => $user->email,
-            'email_verified' => Carbon::now()
-        ]);
     }
 }

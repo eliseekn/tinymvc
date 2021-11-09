@@ -27,7 +27,7 @@ class UserFactory extends Factory
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->email(),
             'password' => hash_pwd('password'),
-            'email_verified' => Carbon::now(),
+            'email_verified' => Carbon::now()->toDateTimeString(),
             'role' => User::ROLE_USER
         ];
     }

@@ -20,51 +20,51 @@ class Route
     public static $routes = [];
     protected static $tmp_routes = [];
 
-    private static function add(string $route, $callback): self
+    private static function add(string $route, $handler): self
     {
         static::$route = self::format($route);
-        static::$tmp_routes[static::$route] = ['handler' => $callback];
+        static::$tmp_routes[static::$route] = ['handler' => $handler];
         return new self();
     }
 
-    public static function get(string $uri, $callback): self
+    public static function get(string $uri, $handler): self
     {
-        return self::add('GET ' . $uri, $callback);
+        return self::add('GET ' . $uri, $handler);
     }
 
-    public static function post(string $uri, $callback): self
+    public static function post(string $uri, $handler): self
     {
-        return self::add('POST ' . $uri, $callback);
+        return self::add('POST ' . $uri, $handler);
     }
     
-    public static function delete(string $uri, $callback): self
+    public static function delete(string $uri, $handler): self
     {
-        return self::add('DELETE ' . $uri, $callback);
+        return self::add('DELETE ' . $uri, $handler);
     }
     
-    public static function options(string $uri, $callback): self
+    public static function options(string $uri, $handler): self
     {
-        return self::add('OPTIONS ' . $uri, $callback);
+        return self::add('OPTIONS ' . $uri, $handler);
     }
     
-    public static function patch(string $uri, $callback): self
+    public static function patch(string $uri, $handler): self
     {
-        return self::add('PATCH ' . $uri, $callback);
+        return self::add('PATCH ' . $uri, $handler);
     }
     
-    public static function put(string $uri, $callback): self
+    public static function put(string $uri, $handler): self
     {
-        return self::add('PUT ' . $uri, $callback);
+        return self::add('PUT ' . $uri, $handler);
     }
     
-    public static function any(string $uri, $callback): self
+    public static function any(string $uri, $handler): self
     {
-        return self::add('GET|POST|DELETE|PUT|OPTIONS|PATCH ' . $uri, $callback);
+        return self::add('GET|POST|DELETE|PUT|OPTIONS|PATCH ' . $uri, $handler);
     }
     
-    public static function match(string $methods, string $uri, $callback): self
+    public static function match(string $methods, string $uri, $handler): self
     {
-        return self::add($methods . ' ' . $uri, $callback);
+        return self::add($methods . ' ' . $uri, $handler);
     }
 
     public static function view(string $uri, string $view, array $params = []): self

@@ -13,7 +13,7 @@ use Core\Http\Response\Response;
 
 class CLASSNAME
 {
-    public function index(Request $request, Response $response)
+    public function __invoke(Request $request, Response $response)
 	{
         $response->send('Hello from CLASSNAME');
 	}

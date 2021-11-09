@@ -60,7 +60,7 @@ class EmailVerificationController
 
         $token->delete();
 
-        $user = UserActions::update(['email_verified' => Carbon::now()], $request->queries('email'));
+        $user = UserActions::update(['email_verified' => Carbon::now()->toDateTimeString()], $request->queries('email'));
 
 		if (!$user) {
             Alert::default(__('account_not_found'))->error();
