@@ -12,20 +12,19 @@ use Core\Database\Migration;
 
 class TokensTable_20210403034738
 {         
-    protected $table = 'tokens';
-
     public function create()
     {
-        Migration::createTable($this->table)
+        Migration::createTable('tokens')
             ->addPrimaryKey('id')
             ->addString('email')
             ->addString('token')->unique()
             ->addTimestamp('expire')->nullable()
+            ->addCurrentTimestamp()
             ->migrate();
     }
     
     public function drop()
     {
-        Migration::dropTable($this->table);
+        Migration::dropTable('tokens');
     }
 }

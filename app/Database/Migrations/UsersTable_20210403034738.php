@@ -13,22 +13,21 @@ use Core\Database\Migration;
 
 class UsersTable_20210403034738
 {         
-    protected $table = 'users';
-
     public function create()
     {
-        Migration::createTable($this->table)
+        Migration::createTable('users')
             ->addPrimaryKey('id')
             ->addString('name')
             ->addString('email')->unique()
             ->addString('password')
             ->addDateTime('email_verified')->nullable()
             ->addString('role')->default(User::ROLE_USER)
+            ->addCurrentTimestamp()
             ->migrate();
     }
     
     public function drop()
     {
-        Migration::dropTable($this->table);
+        Migration::dropTable('users');
     }
 }

@@ -272,22 +272,24 @@ class QueryBuilder
         return $this;
 	}
     
-    /**
-     * Create migration table
-     */
+    public function addCurrentTimestamp(string $created_at = 'created_at', string $updated_at = 'updated_at')
+    {
+        $driver = config('app.env') === 'test' ? $driver = config('testing.database.driver') : config('database.driver');
+
+        if ($driver === 'mysql') {
+            self::$query .= " {$created_at} TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, {$updated_at} TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, ";
+        } else {
+            self::$query .= " {$created_at} TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')), {$updated_at} TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')), ";
+        }
+
+        return $this;
+    }
+    
     public function migrate()
     {
         $driver = config('app.env') === 'test' ? $driver = config('testing.database.driver') : config('database.driver');
 
-        if (config('database.timestamps')) {
-            if ($driver === 'mysql') {
-                self::$query .= " created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)";
-            } else {
-                self::$query .= " created_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')), updated_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')))";
-            }
-        }
-
-        if (self::$query[-1] !== ')') self::$query .= ')';
+        self::$query = rtrim(self::$query, ', ') . ')';
 
         if ($driver === 'mysql') {
             self::$query .= " ENGINE='" . config('database.mysql.engine') . "'";

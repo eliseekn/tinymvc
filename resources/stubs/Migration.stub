@@ -12,17 +12,16 @@ use Core\Database\Migration;
 
 class CLASSNAME
 {         
-    protected $table = 'TABLENAME';
-
     public function create()
     {
-        Migration::createTable($this->table)
+        Migration::createTable('TABLENAME')
             ->addPrimaryKey('id')
+            ->addCurrentTimestamp()
             ->migrate();
     }
     
     public function drop()
     {
-        Migration::dropTable($this->table);
+        Migration::dropTable('TABLENAME');
     }
 }

@@ -56,19 +56,25 @@ class Migration
         QueryBuilder::dropTable($table)->execute();
     }
 
-    public static function dropForeign(string $table, string $key)
+    public static function dropForeign(string $table, string $name)
     {
-        QueryBuilder::dropForeign($table, 'fk_' . $key)->execute();
+        QueryBuilder::dropForeign($table, 'fk_' . $name)->execute();
     }
 
     public static function disableForeignKeyCheck()
     {
-        QueryBuilder::setQuery('SET foreign_key_checks = 0')->execute();
+        $driver = config('app.env') === 'test' ? $driver = config('testing.database.driver') : config('database.driver');
+        $query = $driver === 'mysql' ? 'SET foreign_key_checks = 0' : 'PRAGMA foreign_keys = OFF';
+
+        QueryBuilder::setQuery($query)->execute();
     }
 
     public static function enableForeignKeyCheck()
     {
-        QueryBuilder::setQuery('SET foreign_key_checks = 1')->execute();
+        $driver = config('app.env') === 'test' ? $driver = config('testing.database.driver') : config('database.driver');
+        $query = $driver === 'mysql' ? 'SET foreign_key_checks = 1' : 'PRAGMA foreign_keys = ON';
+
+        QueryBuilder::setQuery($query)->execute();
     }
 
     public function addReal(string $name): self 
@@ -241,12 +247,9 @@ class Migration
         return $this;
     }
 
-	public function addForeignKey(string $column, ?string $name = null): self
+	public function addForeignKey(string $column, string $name): self
 	{
-        $key = 'fk_';
-        $key .= is_null($name) ? $column : $name;
-
-		self::$qb->foreignKey($key, $column);
+		self::$qb->foreignKey('fk_' . $name, $column);
         return $this;
 	}
 	
@@ -302,6 +305,12 @@ class Migration
         if ($auto_increment) $pk->autoIncrement();
 
         return $pk;
+    }
+    
+    public function addCurrentTimestamp(string $created_at = 'created_at', string $updated_at = 'updated_at')
+    {
+        self::$qb->addCurrentTimestamp($created_at, $updated_at);
+        return $this;
     }
     
     public function nullable(): self

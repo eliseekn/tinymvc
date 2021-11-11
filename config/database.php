@@ -14,7 +14,6 @@ return [
     'driver' => env('DB_DRIVER', 'sqlite'),
     'table_prefix' => '',
     'name' => env('DB_NAME', 'tinymvc'),
-    'timestamps' => true,
 
     'mysql' => [
         'host' => env('DB_HOST', '127.0.0.1'),
