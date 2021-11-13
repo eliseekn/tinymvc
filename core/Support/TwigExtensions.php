@@ -74,6 +74,7 @@ class TwigExtensions extends \Twig\Extension\AbstractExtension implements \Twig\
             new \Twig\TwigFunction('__', '__'),
             new \Twig\TwigFunction('env', 'env'),
             new \Twig\TwigFunction('date', 'date'),
+            new \Twig\TwigFunction('method_input', 'method_input'),
         ];
     }
 }

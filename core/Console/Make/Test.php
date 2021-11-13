@@ -26,7 +26,7 @@ class Test extends Command
         $this->setDescription('Create new PHPUnit test case');
         $this->addArgument('test', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of test (separated by space if many)');
         $this->addOption('unit', 'u', InputOption::VALUE_NONE, 'Setup for unit test');
-        $this->addOption('subdir', null, InputOption::VALUE_OPTIONAL, 'Specify subdirectory');
+        $this->addOption('path', null, InputOption::VALUE_OPTIONAL, 'Specify subdirectory path');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -36,7 +36,7 @@ class Test extends Command
         foreach ($tests as $test) {
             list(, $class) = Make::generateClass($test, 'test', true);
 
-            if (!Make::createTest($test, $input->getOption('unit'), $input->getOption('subdir'))) {
+            if (!Make::createTest($test, $input->getOption('unit'), $input->getOption('path'))) {
                 $output->writeln('<fg=yellow>Failed to create test "' . $class . '"</fg>');
             }
 

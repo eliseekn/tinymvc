@@ -198,7 +198,7 @@ class Make
         return true;
     }
     
-    public static function createTest(string $test, bool $unit_test, ?string $namespace = null)
+    public static function createTest(string $test, bool $unit_test, ?string $path = null)
     {
         list(, $class) = self::generateClass($test, 'test', true);
 
@@ -213,9 +213,9 @@ class Make
         $storage = Storage::path(config('storage.tests'));
 
         if ($unit_test) {
-            $storage = $storage->addPath('Unit')->addPath(str_replace('\\', '/', $namespace));
+            $storage = $storage->addPath('Unit')->addPath($path ?? '');
         } else {
-            $storage = $storage->addPath('Application')->addPath(str_replace('\\', '/', $namespace));
+            $storage = $storage->addPath('Application')->addPath($path ?? '');
         }
 
         if (!$storage->writeFile($class . '.php', $data)) {
@@ -281,7 +281,7 @@ class Make
         return true;
     }
     
-    public static function createView(?string $view, ?string $layout)
+    public static function createView(?string $view, ?string $layout, ?string $path = null)
     {
         $data = is_null($view) && !is_null($layout)
             ? self::stubs()->addPath('views')->readFile('layout.stub')
@@ -290,15 +290,17 @@ class Make
         $data = str_replace('LAYOUTNAME', '{% extends "layouts/' . $layout . '.html.twig" %}', $data);
         $data = is_null($view) ? $data : str_replace('RESOURCENAME', $view, $data);
         
-        $path = Storage::path(config('storage.views'));
+        $storage = Storage::path(config('storage.views'));
 
         if (is_null($view) && !is_null($layout)) {
-            $path->addPath('layouts');
+            $storage = $storage->addPath('layouts');
+        } else {
+            $storage = $storage->addPath($path ?? '');
         }
         
         $view = is_null($view) && !is_null($layout) ? $layout : $view;
 
-        if (!$path->writeFile($view . '.html.twig', $data)) {
+        if (!$storage->writeFile($view . '.html.twig', $data)) {
             return false;
         }
         

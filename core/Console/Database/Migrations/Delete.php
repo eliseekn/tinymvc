@@ -31,6 +31,10 @@ class Delete extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        if (config('app.env') === 'test') {
+            $output->writeln('<fg=yellow>WARNING: You are running migrations on APP_ENV=test</>');
+        }
+        
         $tables = $input->getArgument('table');
 
         if (empty($tables)) {
