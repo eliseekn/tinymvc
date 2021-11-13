@@ -30,9 +30,9 @@ class Factory extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $factorys = $input->getArgument('factory');
+        $factories = $input->getArgument('factory');
 
-        foreach ($factorys as $factory) {
+        foreach ($factories as $factory) {
             list(, $class) = Make::generateClass($factory, 'factory', true, true);
 
             if (!Make::createFactory($factory, $input->getOption('namespace'))) {

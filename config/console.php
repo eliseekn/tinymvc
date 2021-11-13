@@ -28,6 +28,7 @@
         new \Core\Console\Make\Validator(),
         new \Core\Console\Make\Seed(),
         new \Core\Console\Make\Factory(),
+        new \Core\Console\Make\Repository(),
         new \Core\Console\Make\View(),
         new \Core\Console\Make\Mail(),
         new \Core\Console\Make\Middleware(),

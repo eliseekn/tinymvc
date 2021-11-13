@@ -66,24 +66,24 @@ class Model
         return self::select('*')->last();
     }
 
-    public static function take(int $count, $callback = null)
+    public static function take(int $count, $subquery = null)
     {
-        return self::select('*')->subQuery($callback)->take($count);
+        return self::select('*')->subQuery($subquery)->take($count);
     }
 
-    public static function oldest(string $column = 'created_at', $callback = null)
+    public static function oldest(string $column = 'created_at', $subquery = null)
     {
-        return self::select('*')->subQuery($callback)->oldest($column)->getAll();
+        return self::select('*')->subQuery($subquery)->oldest($column)->getAll();
     }
 
-    public static function newest(string $column = 'created_at', $callback = null)
+    public static function newest(string $column = 'created_at', $subquery = null)
     {
-        return self::select('*')->subQuery($callback)->newest($column)->getAll();
+        return self::select('*')->subQuery($subquery)->newest($column)->getAll();
     }
 
-    public static function latest(string $column = 'id', $callback = null)
+    public static function latest(string $column = 'id', $subquery = null)
     {
-        return self::select('*')->subQuery($callback)->latest($column)->getAll();
+        return self::select('*')->subQuery($subquery)->latest($column)->getAll();
     }
 
     public static function select(string ...$columns)
@@ -96,24 +96,24 @@ class Model
         return self::select('*')->where($column, $operator, $value);
     }
 
-    public static function count(string $column = 'id', $callback = null)
+    public static function count(string $column = 'id', $subquery = null)
     {
-        return (new Repository(static::$table))->count($column)->subQuery($callback)->get()->value;
+        return (new Repository(static::$table))->count($column)->subQuery($subquery)->get()->value;
     }
 
-    public static function sum(string $column, $callback = null)
+    public static function sum(string $column, $subquery = null)
     {
-        return (new Repository(static::$table))->sum($column)->subQuery($callback)->get()->value;
+        return (new Repository(static::$table))->sum($column)->subQuery($subquery)->get()->value;
     }
 
-    public static function max(string $column, $callback = null)
+    public static function max(string $column, $subquery = null)
     {
-        return (new Repository(static::$table))->max($column)->subQuery($callback)->get()->value;
+        return (new Repository(static::$table))->max($column)->subQuery($subquery)->get()->value;
     }
 
-    public static function min(string $column, $callback = null)
+    public static function min(string $column, $subquery = null)
     {
-        return (new Repository(static::$table))->min($column)->subQuery($callback)->get()->value;
+        return (new Repository(static::$table))->min($column)->subQuery($subquery)->get()->value;
     }
 
     public static function metrics(string $column, string $type, string $period, int $interval = 0, ?array $query = null)

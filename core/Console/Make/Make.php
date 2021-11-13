@@ -168,10 +168,31 @@ class Make
         $data = self::stubs()->readFile('Factory.stub');
         $data = self::addNamespace($data, 'App\Database\Factories', $namespace);
         $data = str_replace('CLASSNAME', self::fixPluralTypo($class, true), $data);
-        $data = str_replace('TABLENAME', self::fixPluralTypo($name), $data);
         $data = str_replace('MODELNAME', self::fixPluralTypo(ucfirst($name), true), $data);
 
         $storage = Storage::path(config('storage.factories'));
+
+        if (!is_null($namespace)) {
+            $storage = $storage->addPath(str_replace('\\', '/', $namespace));
+        }
+
+        if (!$storage->writeFile(self::fixPluralTypo($class, true) . '.php', $data)) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    public static function createRepository(string $repository, ?string $namespace = null)
+    {
+        list($name, $class) = self::generateClass($repository, 'repository', true, true);
+
+        $data = self::stubs()->readFile('Repository.stub');
+        $data = self::addNamespace($data, 'App\Database\Repositories', $namespace);
+        $data = str_replace('CLASSNAME', self::fixPluralTypo($class, true), $data);
+        $data = str_replace('MODELNAME', self::fixPluralTypo(ucfirst($name), true), $data);
+
+        $storage = Storage::path(config('storage.repositories'));
 
         if (!is_null($namespace)) {
             $storage = $storage->addPath(str_replace('\\', '/', $namespace));
