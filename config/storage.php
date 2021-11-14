@@ -14,7 +14,7 @@ return [
     'uploads' => absolute_path('storage.uploads'),
     'public' => absolute_path('public'),
     'routes' => absolute_path('routes'),
-    'views' => absolute_path('resources.views'),
+    'views' => absolute_path('views'),
     'migrations' => absolute_path('app.Database.Migrations'),
     'seeds' => absolute_path('app.Database.Seeds'),
     'factories' => absolute_path('app.Database.Factories'),
