@@ -12,7 +12,7 @@ use Carbon\Carbon;
 use Core\Database\QueryBuilder;
 
 /**
- * Metrics generator
+ * Metrics and trends generator
  */
 class Metrics
 {
@@ -89,8 +89,7 @@ class Metrics
             case self::DAY:
                 $qb->select($type . '(' . $column . ') AS data', $this->getPeriod(self::DAY));
 
-                $interval > 0
-                    ? $qb->where('date(created_at)', '>=', Carbon::now()->subDays($interval)->toDateString())
+                $interval > 0 ? $qb->where('date(created_at)', '>=', Carbon::now()->subDays($interval)->toDateString())
                     : $qb->whereColumn($this->formatPeriod(self::YEAR))->like($year)
                         ->andColumn($this->formatPeriod(self::MONTH))->like($month)
                         ->andColumn($this->formatPeriod(self::WEEK))->like($week);
@@ -109,8 +108,7 @@ class Metrics
             case self::WEEK:
                 $qb->select($type . '(' . $column . ') AS data', $this->getPeriod(self::WEEK));
 
-                $interval > 0
-                    ? $qb->where('date(created_at)', '>', Carbon::now()->subWeeks($interval)->toDateString())
+                $interval > 0 ? $qb->where('date(created_at)', '>', Carbon::now()->subWeeks($interval)->toDateString())
                     : $qb->whereColumn($this->formatPeriod(self::YEAR))->like($year)
                         ->andColumn($this->formatPeriod(self::MONTH))->like($month);
 
@@ -128,8 +126,7 @@ class Metrics
             case self::MONTH:
                 $qb->select($type . '(' . $column . ') AS data', $this->getPeriod(self::MONTH));
 
-                $interval > 0
-                    ? $qb->where($this->formatPeriod(self::MONTH), '>', Carbon::now()->subMonths($interval)->month)
+                $interval > 0 ? $qb->where($this->formatPeriod(self::MONTH), '>', Carbon::now()->subMonths($interval)->month)
                     : $qb->where($this->formatPeriod(self::YEAR), $year);
             
                 $data = $qb->subQuery(function ($q) use ($query) {
@@ -186,8 +183,7 @@ class Metrics
             case self::DAY:
                 $qb->select($type . '(' . $column . ') AS data');
 
-                $interval > 0
-                    ? $qb->where('date(created_at)', '>=', Carbon::now()->subDays($interval)->toDateString())
+                $interval > 0 ? $qb->where('date(created_at)', '>=', Carbon::now()->subDays($interval)->toDateString())
                     : $qb->whereColumn($this->formatPeriod(self::YEAR))->like($year)
                         ->andColumn($this->formatPeriod(self::MONTH))->like($month)
                         ->andColumn($this->formatPeriod(self::WEEK))->like($week);
@@ -202,8 +198,7 @@ class Metrics
             case self::WEEK:
                 $qb->select($type . '(' . $column . ') AS data');
 
-                $interval > 0
-                    ? $qb->where('date(created_at)', '>', Carbon::now()->subWeeks($interval)->toDateString())
+                $interval > 0 ? $qb->where('date(created_at)', '>', Carbon::now()->subWeeks($interval)->toDateString())
                     : $qb->whereColumn($this->formatPeriod(self::YEAR))->like($year)
                         ->andColumn($this->formatPeriod(self::MONTH))->like($month);
 
@@ -217,8 +212,7 @@ class Metrics
             case self::MONTH:
                 $qb->select($type . '(' . $column . ') AS data');
 
-                $interval > 0
-                    ? $qb->where($this->formatPeriod(self::MONTH), '>', Carbon::now()->subMonths($interval)->month)
+                $interval > 0 ? $qb->where($this->formatPeriod(self::MONTH), '>', Carbon::now()->subMonths($interval)->month)
                     : $qb->where($this->formatPeriod(self::YEAR), $year);
             
                 return $qb->subQuery(function ($q) use ($query) {
@@ -255,23 +249,19 @@ class Metrics
     {
         switch ($period) {
             case self::DAY:
-                return config('database.driver') === 'mysql'
-                    ? 'weekday(created_at)'
+                return config('database.driver') === 'mysql' ? 'weekday(created_at)'
                     : "strftime('%w', created_at)";
 
             case self::WEEK:
-                return config('database.driver') === 'mysql'
-                    ? 'week(created_at)'
+                return config('database.driver') === 'mysql' ? 'week(created_at)'
                     : "strftime('%W', created_at)";
 
             case self::MONTH:
-                return config('database.driver') === 'mysql'
-                    ? 'month(created_at)'
+                return config('database.driver') === 'mysql' ? 'month(created_at)'
                     : "strftime('%m', created_at)";
 
             case self::YEAR:
-                return config('database.driver') === 'mysql'
-                    ? 'year(created_at)'
+                return config('database.driver') === 'mysql' ? 'year(created_at)'
                     : "strftime('%Y', created_at)";
 
             default: return '';
@@ -286,8 +276,7 @@ class Metrics
             if ($period === self::MONTH) {
                 $data->$period = self::MONTHS[intval($data->$period)];
             } else if ($period === self::DAY || $period === self::TODAY) {
-                $data->$period = config('database.driver') === 'mysql' 
-                    ? self::DAYS[intval($data->$period) + 1]
+                $data->$period = config('database.driver') === 'mysql' ? self::DAYS[intval($data->$period) + 1]
                     : self::DAYS[intval($data->$period)];
             } else if ($period === self::WEEK) {
                 $data->$period = __('week') . ' ' . $data->$period;

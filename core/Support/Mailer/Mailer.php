@@ -38,8 +38,7 @@ class Mailer implements MailerInterface
             }
 
             if (config('mailer.smtp.secure')) {
-                $this->mailer->SMTPSecure = config('mailer.smtp.tls') 
-                    ? PHPMailer::ENCRYPTION_STARTTLS 
+                $this->mailer->SMTPSecure = config('mailer.smtp.tls') ? PHPMailer::ENCRYPTION_STARTTLS 
                     : PHPMailer::ENCRYPTION_SMTPS;
             } else {
                 $this->mailer->SMTPAutoTLS = false;

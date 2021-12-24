@@ -28,9 +28,9 @@ class Application
     {
         $response = new Response();
 
-        try { Router::dispatch(new Request(), $response); } 
-        
-        catch (Exception $e) {
+        try { 
+            Router::dispatch(new Request(), $response); 
+        } catch (Exception $e) {
             if (config('errors.log')) save_log('Exception: ' . $e);
             if (config('errors.display')) die($e);
         
