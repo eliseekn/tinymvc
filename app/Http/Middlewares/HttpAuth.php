@@ -20,20 +20,20 @@ class HttpAuth
     public function handle(Request $request, JsonResponse $response)
     {
         if (empty($request->getHttpAuth())) {
-            $response->send(__('auth_required'), [], 401);
+            $response->send(data: __('auth_required'), code: 401);
         }
 
         list($method, $credentials) = $request->getHttpAuth();
 
         if (trim($method) !== 'Basic') {
-            $response->send(__('invalid_auth_method'), [], 401);
+            $response->send(data: __('invalid_auth_method'), code: 401);
         }
 
         $credentials = base64_decode($credentials);
         list($email, $password) = explode(':', $credentials);
 
         if (!Auth::checkCredentials($email, $password, $user)) {
-            $response->send(__('invalid_credentials'), [], 401);
+            $response->send(data: __('invalid_credentials'), code: 401);
         }
     }
 }

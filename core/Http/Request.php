@@ -9,7 +9,6 @@
 namespace Core\Http;
 
 use Core\Support\Uploader;
-use Core\Http\Validator\ValidatorInterface;
 
 /**
  * Handle HTTP requests
@@ -266,10 +265,5 @@ class Request
         }
 
         return $all;
-    }
-
-    public function validate(ValidatorInterface $validatorInterface)
-    {
-        return $validatorInterface->validate($this->inputs);
     }
 }

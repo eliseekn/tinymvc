@@ -6,6 +6,8 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
+use Core\Http\Response\JsonResponse;
+use Core\Http\Response\Response;
 use Core\Routing\Route;
 
 /**

@@ -16,22 +16,14 @@ use Core\Support\Mail\Mailer;
  */
 class WelcomeMail extends Mailer
 {
-    private string $email;
-    private string $username;
-
-    public function __construct(string $email, string $username)
+    public function __construct(string $email, string $username) 
     {
-        $this->email = $email;
-        $this->username = $username;
-    }
+        parent::__construct();
 
-    public function send(): bool
-    {
-        return $this->to($this->email)
+        $this->to($email)
             ->from(config('mailer.sender.email'), config('mailer.sender.name'))
             ->reply(config('mailer.sender.email'), config('mailer.sender.name'))
 			->subject('Welcome')
-            ->body(View::getContent('emails.welcome', ['username' => $this->username]))
-			->send();
+            ->body(View::getContent('emails.welcome', compact('username')));
     }
 }

@@ -28,12 +28,10 @@ class RegisterController
         $response->redirect()->to($uri)->go();
     }
 
-    public function register(Request $request, Response $response)
+    public function register(Request $request, Response $response, RegisterValidator $registerValidator)
     {
-        $validator = $request->validate(RegisterValidator::make())->redirectBackOnFail($response);
-
-        dd($validator->validated());
-        $user = UserActions::create($validator->validated());
+        $data = $registerValidator->validate($request->inputs())->validated();
+        $user = UserActions::create($data);
 
         if (!config('security.auth.email_verification')) {
             Mail::send(new WelcomeMail($user->email, $user->name));

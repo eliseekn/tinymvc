@@ -13,30 +13,32 @@ use Core\Database\Repository;
 
 class RegisterValidator extends Validator
 {
+    public function __construct()
+    {
+        return $this
+            ->addCustomRule('unique', function($field, array $input, array $params, $value) {
+                $data = (new Repository($params[0]))->select('*')->where($field, $value);
+                return !$data->exists();
+            }, 'This {field} is already used by another user');
+    }
+
     /**
      * Validation rules
      */
-    protected static array $rules = [
-        'name' => 'required|max_len,255',
-        'email' => 'required|valid_email|max_len,255|unique,users',
-        'password' => 'required|max_len,255'
-    ];
+    public function rules(): array
+    {
+        return [
+            'name' => 'required|max_len,255',
+            'email' => 'required|valid_email|max_len,255|unique,users',
+            'password' => 'required|max_len,255'
+        ];
+    }
 
     /**
      * Custom errors messages
      */
-    protected static array $messages = [
-        //
-    ];
-
-    /**
-     * Make validator
-     */
-    public static function make(): self
+    public function messages(): array
     {
-        return self::add('unique', function($field, array $input, array $params, $value) {
-            $data = (new Repository($params[0]))->select('*')->where($field, $value);
-            return !$data->exists();
-        }, 'This {field} is already used by another user');
+        return [];
     }
 }

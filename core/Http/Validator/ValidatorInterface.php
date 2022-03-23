@@ -8,11 +8,9 @@
 
 namespace Core\Http\Validator;
 
-use Core\Http\Response\Response;
-
 interface ValidatorInterface
 {
-    public static function add(string $rule, callable $callback, string $error_message): self;
+    public function addCustomRule(string $rule, callable $callback, string $error_message): self;
 
     public function validate(array $inputs): self;
     
@@ -22,7 +20,7 @@ interface ValidatorInterface
     
     public function validated(): array;
 
-    public function inputs(): array;
+    public function rules(): array;
 
-    public function redirectBackOnFail(Response $response);
+    public function messages(): array;
 }

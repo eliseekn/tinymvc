@@ -21,17 +21,17 @@ class ApiAuth
     public function handle(Request $request, JsonResponse $response)
     {
         if (empty($request->getHttpAuth())) {
-            $response->send(__('auth_required'), [], 401);
+            $response->send(data: __('auth_required'), code: 401);
         }
 
         list($method, $token) = $request->getHttpAuth();
 
         if (trim($method) !== 'Bearer') {
-            $response->send(__('invalid_auth_method'), [], 401);
+            $response->send(data: __('invalid_auth_method'), code: 401);
         }
 
         if (!Auth::checkToken(Encryption::decrypt($token), $user)) {
-            $response->send(__('invalid_credentials'), [], 401);
+            $response->send(data: __('invalid_credentials'), code: 401);
         }
     }
 }

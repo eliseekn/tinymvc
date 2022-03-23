@@ -15,15 +15,9 @@ use Core\Support\Storage;
  */
 class Uploader
 {    
-    private $file = [];
     public $filename = '';
-    private $allowed_extensions = [];
 
-    public function __construct(array $file, array $allowed_extensions)
-    {
-        $this->file = $file;
-        $this->allowed_extensions = $allowed_extensions;
-    }
+    public function __construct(private readonly array $file = [], private readonly array $allowed_extensions = []) {}
     
     public function getOriginalFilename()
     {

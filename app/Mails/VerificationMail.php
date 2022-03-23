@@ -16,22 +16,14 @@ use Core\Support\Mail\Mailer;
  */
 class VerificationMail extends Mailer
 {
-    private string $email;
-    private string $token;
-
-    public function __construct(string $email, string $token)
+    public function __construct(string $email, string $token) 
     {
-        $this->email = $email;
-        $this->token = $token;
-    }
+        parent::__construct();
 
-    public function send(): bool
-    {
-        return $this->to($this->email)
+        $this->to($email)
             ->from(config('mailer.sender.email'), config('mailer.sender.name'))
             ->reply(config('mailer.sender.email'), config('mailer.sender.name'))
 			->subject('Email verification')
-            ->body(View::getContent('emails.verification', ['email' => $this->email, 'token' => $this->token]))
-			->send();
+            ->body(View::getContent('emails.verification', compact('email', 'token')));
     }
 }

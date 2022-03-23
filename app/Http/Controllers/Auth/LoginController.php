@@ -26,9 +26,9 @@ class LoginController
         $response->redirect()->to($uri)->go();
     }
 
-	public function authenticate(Request $request, Response $response)
+	public function authenticate(Request $request, Response $response, LoginValidator $loginValidator)
 	{
-        $request->validate(LoginValidator::make())->redirectBackOnFail($response);
+        $loginValidator->validate($request->inputs());
 
         if (Auth::attempt($request->only('email', 'password'), $request->has('remember'))) {
             $uri = !Session::has('intended') ? config('app.home') : Session::pull('intended');

@@ -13,7 +13,6 @@ namespace Core\Database;
  */
 class Model
 {
-    public $id;
     public static $table = '';
 
     public function __construct(string $table, $data = null)

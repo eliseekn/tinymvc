@@ -16,8 +16,6 @@ use Core\Database\QueryBuilder;
  */
 class Metrics
 {
-    private $table;
-
     public const COUNT = 'COUNT';
     public const AVERAGE = 'AVG';
     public const SUM = 'SUM';
@@ -55,10 +53,7 @@ class Metrics
         'november',
     ];
     
-    public function __construct(string $table)
-    {
-        $this->table = $table;
-    }
+    public function __construct(public readonly string $table) {}
     
     /**
      * @link   https://www.tutsmake.com/mysql-get-data-of-current-date-week-month-year/

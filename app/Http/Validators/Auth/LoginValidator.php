@@ -15,23 +15,19 @@ class LoginValidator extends Validator
     /**
      * Validation rules
      */
-    protected static array $rules = [
-        'email' => 'required|max_len,255',
-        'password' => 'required|max_len,525'
-    ];
+    public function rules(): array
+    {
+        return [
+            'email' => 'required|max_len,255',
+            'password' => 'required|max_len,525'
+        ];
+    }
 
     /**
      * Custom errors messages
      */
-    protected static array $messages = [
-        //
-    ];
-
-    /**
-     * Make validator
-     */
-    public static function make(): self
+    public function messages(): array
     {
-        return new self();
+        return [];
     }
 }

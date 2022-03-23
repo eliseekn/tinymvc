@@ -16,22 +16,13 @@ use Core\Support\Mail\Mailer;
  */
 class TokenMail extends Mailer
 {
-    private string $email;
-    private string $token;
-
-    public function __construct(string $email, string $token)
-    {
-        $this->email = $email;
-        $this->token = $token;
-    }
-
-    public function send(): bool
-    {
-        return $this->to($this->email)
+    public function __construct(string $email, string $token) {
+        parent::__construct();
+        
+        $this->to($email)
             ->from(config('mailer.sender.email'), config('mailer.sender.name'))
             ->reply(config('mailer.sender.email'), config('mailer.sender.name'))
-			->subject('Password reset')
-            ->body(View::getContent('emails.token', ['email' => $this->email, 'token' => $this->token]))
-			->send();
+            ->subject('Password reset')
+            ->body(View::getContent('emails.verification', compact('email', 'token')));
     }
 }

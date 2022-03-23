@@ -16,17 +16,12 @@ use Core\Support\Metrics;
  */
 class Repository
 {
-    private $table;
-
     /**
      * @var \Core\Database\QueryBuilder
      */
     protected $qb;
     
-    public function __construct(string $table)
-    {
-        $this->table = $table;
-    }
+    public function __construct(private readonly string $table) {}
 
     public function select(string ...$columns): self
     {

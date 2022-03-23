@@ -107,6 +107,6 @@ class Router
             }
         }
 
-        $response->view(config('errors.views.404'), [], [], 404);
+        $response->view(view: config('errors.views.404'), code: 404);
     }
 }

@@ -15,22 +15,16 @@ class CLASSNAME extends Validator
     /**
      * Validation rules
      */
-    protected static array $rules = [
-        //
-    ];
+    public function rules(): array
+    {
+        return [];
+    }
 
     /**
      * Custom errors messages
      */
-    protected static array $messages = [
-        //
-    ];
-
-    /**
-     * Make validator
-     */
-    public static function make(): self
+    public function messages(): array
     {
-        return new self();
+        return [];
     }
 }
