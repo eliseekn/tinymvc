@@ -7,7 +7,7 @@ TinyMVC is a PHP framework based on MVC architecture that helps you build easly 
 
 ## Requirements
 ```
-PHP >= 7.2
+PHP 8.x
 MySQL or SQLite
 composer
 yarn
@@ -61,4 +61,4 @@ php console list
 [MIT](https://opensource.org/licenses/MIT)
 
 ## Copyright
-2021 © N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+2019 - 2022 © N'Guessan Kouadio Elisée (eliseekn@gmail.com)
