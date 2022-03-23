@@ -8,8 +8,9 @@
 
 namespace App\Http\Middlewares;
 
-use Exception;
 use Core\Http\Request;
+use Core\Exceptions\InvalidCsrfTokenException;
+use Core\Exceptions\MissingCsrfTokenException;
 
 /**
  * CSRF token validator
@@ -23,12 +24,12 @@ class CsrfProtection
     {
         if (config('app.env') === 'test') return;
 
-        if (!$request->filled('csrf_token')) {
-            throw new Exception('Missing csrf token');
+        if (!$request->filled('_csrf_token')) {
+            throw new MissingCsrfTokenException();
         }
 
-        if (!valid_csrf_token($request->csrf_token)) {
-            throw new Exception('Invalid csrf token');
+        if (!valid_csrf_token($request->_csrf_token)) {
+            throw new InvalidCsrfTokenException();
         }
     }
 }

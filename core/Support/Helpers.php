@@ -165,7 +165,7 @@ if (!function_exists('csrf_token_input')) {
      */
     function csrf_token_input()
     {
-        return '<input type="hidden" name="csrf_token" id="csrf_token" value="' . generate_csrf_token() . '">';
+        return '<input type="hidden" name="_csrf_token" id="csrf_token" value="' . generate_csrf_token() . '">';
     }
 }
 

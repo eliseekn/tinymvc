@@ -22,16 +22,16 @@ class LoginController
     {
         if (!Auth::check($request)) $response->view('auth.login'); 
 
-        $uri = !Session::has('intended') ? Auth::HOME : Session::pull('intended');
+        $uri = !Session::has('intended') ? config('app.home') : Session::pull('intended');
         $response->redirect()->to($uri)->go();
     }
 
 	public function authenticate(Request $request, Response $response)
 	{
-        LoginValidator::make($request->inputs())->redirectBackOnFail($response);
+        $request->validate(LoginValidator::make())->redirectBackOnFail($response);
 
         if (Auth::attempt($request->only('email', 'password'), $request->has('remember'))) {
-            $uri = !Session::has('intended') ? Auth::HOME : Session::pull('intended');
+            $uri = !Session::has('intended') ? config('app.home') : Session::pull('intended');
 
             Alert::toast(__('welcome', ['name' => Auth::get('name')]))->success();
             $response->redirect()->to($uri)->go();

@@ -30,8 +30,8 @@ class LoginValidator extends Validator
     /**
      * Make validator
      */
-    public static function make(array $inputs)
+    public static function make(): self
     {
-        return self::validate($inputs, static::$rules, static::$messages);
+        return new self();
     }
 }

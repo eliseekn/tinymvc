@@ -53,15 +53,15 @@ class Redirect extends Response
         exit($this->headers('Location', url($this->uri), $code));
     }
     
-    public function with(string $key, $data): self
-    {
-        Session::create($key, $data);
-        return $this;
-    }
-    
     public function withCookie(string $name, string $value, int $expire = 3600, bool $secure = false, string $domain = ''): self
     {
         Cookies::create($name, $value, $expire, $secure, $domain);
+        return $this;
+    }
+    
+    public function with(string $key, $data): self
+    {
+        Session::create($key, $data);
         return $this;
     }
     

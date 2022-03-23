@@ -24,22 +24,22 @@ class Validator implements ValidatorInterface
     protected static $errors;
     protected static array $inputs = [];
 
-    public static function add(string $rule, callable $callback, string $error_message)
+    public static function add(string $rule, callable $callback, string $error_message): self
     {
         GUMP::add_validator($rule, $callback, $error_message);
-    }
-
-    public static function validate(array $inputs, array $rules = [], array $messages = []): self
-    {
-        $rules = empty($rules) ? static::$rules : $rules;
-        $messages = empty($messages) ? static::$messages : $messages;
-        static::$inputs = $inputs;
-        static::$errors = GUMP::is_valid(static::$inputs, $rules, $messages);
 
         return new self();
     }
+
+    public function validate(array $inputs): self
+    {
+        static::$inputs = $inputs;
+        static::$errors = GUMP::is_valid(static::$inputs, static::$rules, static::$messages);
+
+        return $this;
+    }
     
-    public function fails()
+    public function fails(): bool
     {
         return is_array(static::$errors);
     }
@@ -49,10 +49,8 @@ class Validator implements ValidatorInterface
      * 
      * To work properly on custom errors messages you must explicitly define the
      * input field name as {field} in your error message string
-     *
-     * @return array
      */
-    public function errors()
+    public function errors(): array
     {
         $errors = [];
 
@@ -68,10 +66,26 @@ class Validator implements ValidatorInterface
 
         return $errors;
     }
-    
-    public function inputs()
+
+    public function inputs(): array
     {
         return static::$inputs;
+    }
+    
+    public function validated(): array
+    {
+        $validated = [];
+        $inputs = array_keys(static::$rules);
+
+        foreach ($inputs as $input) {
+            foreach (static::$inputs as $key => $value) {
+                if ($input === $key) {
+                    $validated = array_merge($validated, [$key => $value]);
+                }
+            }
+        }
+
+        return $validated;
     }
     
     public function redirectBackOnFail(Response $response)

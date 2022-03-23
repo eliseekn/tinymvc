@@ -9,7 +9,7 @@
 namespace Core\Http;
 
 use Core\Support\Uploader;
-use Core\Http\Validator\Validator as Validator;
+use Core\Http\Validator\ValidatorInterface;
 
 /**
  * Handle HTTP requests
@@ -48,7 +48,7 @@ class Request
 
     public function inputs(?string $key = null, $default = null)
     {
-        $_POST = array_merge($_POST, $this->rawData());
+        $_POST = array_merge($_POST, $this->raw());
 
         $input = is_null($key) ? $_POST : ($_POST[$key] ?? '');
         return empty($input) || is_null($input) ? $default : $input;
@@ -60,7 +60,7 @@ class Request
         return empty($files) || is_null($files) ? $default : $files;
     }
 
-    public function rawData()
+    public function raw()
     {
         $data = [];
         parse_raw_http_request($data);
@@ -110,7 +110,9 @@ class Request
 
     public function method(?string $value = null)
     {
-        return is_null($value) ? $this->headers('REQUEST_METHOD', '') : $_SERVER['REQUEST_METHOD'] = $value;
+        if (is_null($value)) return $this->headers('REQUEST_METHOD', '');
+
+        $_SERVER['REQUEST_METHOD'] = $value;
     }
     
     public function is(string $method)
@@ -266,14 +268,8 @@ class Request
         return $all;
     }
 
-    public function validate(array $rules = [], array $messages = [], array $inputs = [])
+    public function validate(ValidatorInterface $validatorInterface)
     {
-        if (empty($inputs)) {
-            $inputs = $this->inputs();
-        } else {
-            $inputs = $this->only(...$inputs);
-        }
-
-        return Validator::validate($inputs, $rules, $messages);
+        return $validatorInterface->validate($this->inputs);
     }
 }

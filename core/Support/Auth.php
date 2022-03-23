@@ -20,13 +20,6 @@ use App\Database\Models\Token;
  */
 class Auth
 {
-    /**
-     * URI to redirect when logged in
-     * 
-     * @var string
-     */
-    public const HOME = '/';
-
     public static function getAttempts()
     {
         return Session::get('auth_attempts', 0);

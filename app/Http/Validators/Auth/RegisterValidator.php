@@ -32,13 +32,11 @@ class RegisterValidator extends Validator
     /**
      * Make validator
      */
-    public static function make(array $inputs)
+    public static function make(): self
     {
-        self::add('unique', function($field, array $input, array $params, $value) {
+        return self::add('unique', function($field, array $input, array $params, $value) {
             $data = (new Repository($params[0]))->select('*')->where($field, $value);
             return !$data->exists();
         }, 'This {field} is already used by another user');
-
-        return self::validate($inputs, static::$rules, static::$messages);
     }
 }

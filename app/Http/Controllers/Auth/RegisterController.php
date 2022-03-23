@@ -24,19 +24,21 @@ class RegisterController
     {
         if (!Auth::check($request)) $response->view('auth.signup'); 
 
-        $uri = !Session::has('intended') ? Auth::HOME : Session::pull('intended');
+        $uri = !Session::has('intended') ? config('app.home') : Session::pull('intended');
         $response->redirect()->to($uri)->go();
     }
 
     public function register(Request $request, Response $response)
     {
-        RegisterValidator::make($request->inputs())->redirectBackOnFail($response);
-        $user = UserActions::create($request->except('csrf_token'));
+        $validator = $request->validate(RegisterValidator::make())->redirectBackOnFail($response);
+
+        dd($validator->validated());
+        $user = UserActions::create($validator->validated());
 
         if (!config('security.auth.email_verification')) {
             Mail::send(new WelcomeMail($user->email, $user->name));
-
             Alert::default(__('account_created'))->success();
+            
             $response->redirect()->to('login')->go();
         }
 

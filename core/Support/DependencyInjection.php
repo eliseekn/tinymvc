@@ -69,8 +69,11 @@ class DependencyInjection
 	{
 		$dependencies = [];
 
+        /**
+         * @var \ReflectionParameter $parameter
+         */
 		foreach($parameters as $parameter) {
-			$dependency = $parameter->getClass();
+			$dependency = $parameter->getDeclaringClass();
 
             if (!is_null($dependency)) {
                 $class = $dependency->getName();
