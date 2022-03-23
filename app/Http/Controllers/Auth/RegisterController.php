@@ -28,7 +28,7 @@ class RegisterController
         $response->redirect()->to($uri)->go();
     }
 
-    public function register(Request $request, Mailer $mailer, Response $response)
+    public function register(Request $request, Response $response, Mailer $mailer)
     {
         RegisterValidator::make($request->inputs())->redirectBackOnFail($response);
         $user = UserActions::create($request->except('csrf_token'));

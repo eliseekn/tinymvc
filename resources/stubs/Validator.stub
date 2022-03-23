@@ -31,10 +31,6 @@ class CLASSNAME extends GUMPValidator
      */
     public static function make(array $inputs)
     {
-        self::add('name', function($field, array $input, array $params, $value) {
-            return true;
-        }, '{field}');
-
         return self::validate($inputs, static::$rules, static::$messages);
     }
 }

@@ -8,7 +8,6 @@
 
 namespace Core\Database;
 
-use Exception;
 use Core\Support\Pager;
 use Core\Support\Metrics;
 
@@ -92,30 +91,11 @@ class Repository
         return $result;
     }
     
-    /**
-     * Retrieves data or throw exception if not found
-     * 
-     * @throws Exception
-     */
-    public function findOrFail(string $column, $operator = null, $value = null)
-    {
-        $result = $this->findWhere($column, $operator, $value);
-
-        if ($result === false) {
-            throw new Exception('Records not found in database.');
-        }
-
-        return $result;
-    }
-    
-    /**
-     * Insert data if item not found
-     */
     public function findOrCreate(int $id, array $items)
     {
-        try {
-            $result = $this->findOrFail('id', $id);
-        } catch (Exception $e) {
+        $result = $this->findWhere('id', $id);
+
+        if ($result === false) {
             $result = $this->insert($items);
         }
 
@@ -196,14 +176,14 @@ class Repository
     
     public function updateOrCreate(int $id, array $items)
     {
-        try {
-            $this->findOrFail('id', $id);
-            $result = $this->updateIfExists($id, $items);
-        } catch (Exception $e) {
+        $result = $this->findWhere('id', $id);
+
+        if ($result === false) {
             $result = $this->insert($items);
+            return $result;
         }
 
-        return $result;
+        return $this->updateIfExists($id, $items);
     }
     
     public function delete(): self

@@ -8,12 +8,10 @@
 
 namespace Core\Http\Response;
 
-use Exception;
+use Core\Exceptions\InvalidJsonDataException;
 
 /**
  * Send response with JSON data
- * 
- * @throws Exception
  */
 class JsonResponse extends Response implements ResponseInterface
 {
@@ -22,14 +20,10 @@ class JsonResponse extends Response implements ResponseInterface
      */
     public function send($data, array $headers = [], int $code = 200)
     {
-        if (is_null($data)) {
-            throw new Exception('Invalid data');
-        }
+        if (is_null($data)) throw new InvalidJsonDataException();
 
         if (!is_array($data)) {
-            if (!is_string($data)) {
-                throw new Exception('Invalid data');
-            }
+            if (!is_string($data)) throw new InvalidJsonDataException();
 
             $data = [$data];
         }

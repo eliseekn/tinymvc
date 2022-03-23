@@ -11,11 +11,11 @@ namespace App\Mails;
 use Core\Routing\View;
 use Core\Support\Mailer\MailerInterface;
 
+/**
+ * Send welcome email notification
+ */
 class WelcomeMail
 {
-    /**
-     * Send welcome email notification
-     */
     public static function send(MailerInterface $mailer, string $email, string $username)
     {
         return $mailer->to($email, '')

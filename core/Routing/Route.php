@@ -162,7 +162,7 @@ class Route
         return $new_array;
     }
 
-    public static function loadFiles()
+    public static function load()
     {
         $routes = Storage::path(config('storage.routes'))->getFiles();
 

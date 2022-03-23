@@ -12,7 +12,7 @@ use App\Database\Factories\UserFactory;
 use App\Database\Models\User;
 
 /**
- * Manage database seeds
+ * Run seeders
  */
 class Seeder
 {

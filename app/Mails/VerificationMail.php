@@ -11,11 +11,11 @@ namespace App\Mails;
 use Core\Routing\View;
 use Core\Support\Mailer\MailerInterface;
 
+/**
+ * Send email verification notification
+ */
 class VerificationMail
 {
-    /**
-     * Send email verification notification
-     */
     public static function send(MailerInterface $mailer, string $email, string $token)
     {
         return $mailer->to($email, '')

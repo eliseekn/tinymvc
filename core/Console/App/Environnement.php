@@ -24,7 +24,7 @@ class Environnement extends Command
     protected function configure()
     {
         $this->setDescription('Define application environnement');
-        $this->addArgument('name', InputArgument::REQUIRED, 'Specify application environnement (test, local or prod');
+        $this->addArgument('name', InputArgument::REQUIRED, 'Specify application environnement (test, local or prod)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

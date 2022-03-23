@@ -19,7 +19,6 @@ services:
             - MYSQL_DATABASE=${DB_NAME}
         volumes:
             - dbdata:/var/lib/mysql
-        container_name: mysql
 
     pma:
         image: phpmyadmin
@@ -27,7 +26,6 @@ services:
             - 8889:80
         environment:
             - PMA_ARBITRARY=1
-        container_name: phpmyadmin
 
 volumes:
     dbdata:

@@ -101,10 +101,10 @@ class Setup extends Command
             if ($input === "\n") {
                 return $default . PHP_EOL;
             }
-        } else {
-            if (!in_array(trim($input), $expected)) {
-                return $default . PHP_EOL;
-            }
+        }
+
+        if (!in_array(trim($input), $expected)) {
+            return $default . PHP_EOL;
         }
 
         return $input;

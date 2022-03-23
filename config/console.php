@@ -49,6 +49,9 @@
         new \Core\Console\Routes(),
     ],
 
+    /**
+     * Write your customs console commands here
+     */
     'app' => [
         //
     ]

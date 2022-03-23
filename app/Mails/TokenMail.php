@@ -11,11 +11,11 @@ namespace App\Mails;
 use Core\Routing\View;
 use Core\Support\Mailer\MailerInterface;
 
+/**
+ * Send password reset token link notification
+ */
 class TokenMail
 {
-    /**
-     * Send password reset token link notification
-     */
     public static function send(MailerInterface $mailer, string $email, string $token)
     {
         return $mailer->to($email, '')

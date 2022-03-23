@@ -9,11 +9,15 @@
 namespace Core\Routing;
 
 use Closure;
-use Exception;
 use Core\Http\Request;
-use Core\Http\Response\Response;
 use Core\Support\Session;
+use Core\Http\Response\Response;
 use Core\Support\DependencyInjection;
+use Core\Exceptions\RoutesNotDefinedException;
+use Core\Exceptions\ControllerNotFoundException;
+use Core\Exceptions\MiddlewareNotFoundException;
+use Core\Exceptions\InvalidRouteHandlerException;
+use Core\Exceptions\RouteHandlerNotDefinedException;
 
 /**
  * Routing system
@@ -34,25 +38,19 @@ class Router
         return true;
     }
     
-    /**
-     * @throws Exception
-     */
     private static function executeMiddlewares(array $middlewares)
     {
         foreach ($middlewares as $middleware) {
             $middleware = config('middlewares.' . $middleware);
 
             if (!class_exists($middleware) || !method_exists($middleware, 'handle')) {
-                throw new Exception("Middleware $middleware not found");
+                throw new MiddlewareNotFoundException($middleware);
             }
 
             (new DependencyInjection())->resolve($middleware, 'handle');
         }
     }
     
-    /**
-     * @throws Exception
-     */
     private static function executeHandler($handler, array $params)
     {
         if ($handler instanceof Closure) {
@@ -66,7 +64,7 @@ class Router
                 (new DependencyInjection())->resolve($controller, $action, $params);
             }
             
-            throw new Exception("Controller $controller/$action not found");
+            throw new ControllerNotFoundException("$controller/$action");
         }
 
         if (is_string($handler)) {
@@ -74,22 +72,17 @@ class Router
                 (new DependencyInjection())->resolve($handler, '__invoke', $params);
             }
 
-            throw new Exception("Controller $handler not found");
+            throw new ControllerNotFoundException($handler);
         }
 
-        throw new Exception('Invalid route handler');
+        throw new InvalidRouteHandlerException();
     }
     
-    /**
-     * @throws Exception
-     */
     public static function dispatch(Request $request, Response $response)
     {   
         $routes = Route::$routes;
 
-        if (empty($routes)) {
-            throw new Exception('No route defined');
-        }
+        if (empty($routes)) throw new RoutesNotDefinedException();
 
         foreach ($routes as $route => $options) {
             list($method, $route) = explode(' ', $route, 2);
@@ -99,7 +92,7 @@ class Router
 
             if (self::match($request, $method, $route, $params)) {
                 if (!isset($options['handler'])) {
-                    throw new Exception("No handler defined for route {$route}");
+                    throw new RouteHandlerNotDefinedException($route);
                 }
 
                 if (!$request->uriContains('api')) {

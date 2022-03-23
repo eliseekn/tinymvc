@@ -8,13 +8,13 @@
 
 namespace Core\Routing;
 
-use Exception;
 use Twig\Environment;
 use Core\Support\Session;
 use Core\Support\Storage;
-use Twig\Loader\FilesystemLoader;
 use Core\Support\TwigExtensions;
+use Twig\Loader\FilesystemLoader;
 use Twig\Extension\DebugExtension;
+use Core\Exceptions\ViewNotFoundException;
 
 /**
  * Manage views templates
@@ -23,8 +23,6 @@ class View
 {
     /**
      * Retrieves view template content
-     * 
-     * @throws Exception
      */
     public static function getContent(string $view, array $data = [])
     {
@@ -32,7 +30,7 @@ class View
         $view = real_path($view) . '.html.twig';
 
         if (!$path->isFile($view)) {
-            throw new Exception('View template "' . $path->file($view) . ' not found.');
+            throw new ViewNotFoundException($path->file($view));
         }
 
         $loader = new FilesystemLoader($path->getPath());

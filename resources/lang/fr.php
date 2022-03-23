@@ -50,7 +50,7 @@
     'thursday' => 'Jeudi',
     'friday' => 'Vendredi',
     'saturday' => 'Samedi',
-    'december' => 'Décember',
+    'december' => 'Décembre',
     'january' => 'Janvier',
     'february' => 'Février',
     'march' => 'Mars',

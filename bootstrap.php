@@ -55,4 +55,4 @@ if (!Storage::path()->isFile('.env')) {
 }
 
 Config::loadEnv();
-Route::loadFiles();
+Route::load();

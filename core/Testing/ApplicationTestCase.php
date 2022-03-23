@@ -84,7 +84,7 @@ class ApplicationTestCase extends TestCase
     /**
      * @param \Core\Database\Model|\App\Database\Models\User $user
      */
-    public function actingAs($user)
+    public function auth($user)
     {
         $this->token = Auth::createToken($user->email);
         $this->headers = ['Authorization' => "Bearer {$this->token}"];

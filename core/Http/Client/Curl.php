@@ -8,8 +8,8 @@
 
 namespace Core\Http\Client;
 
+use Core\Exceptions\InvalidUrlFormatException;
 use Core\Http\Client\ClientInterface;
-use Exception;
 
 /**
  * Send asynchronous HTTP requests using curl
@@ -23,8 +23,6 @@ class Curl implements ClientInterface
      *         https://stackoverflow.com/questions/9183178/can-php-curl-retrieve-response-headers-and-body-in-a-single-request
      *         https://www.codexworld.com/post-receive-json-data-using-php-curl/
      *         https://stackoverflow.com/questions/13420952/php-curl-delete-request
-     * 
-     * @throws Exception
      */
     public static function send(string $method, $url, array $data = [], array $headers = [], bool $json = false)
     {
@@ -35,9 +33,7 @@ class Curl implements ClientInterface
         $curl_multi = curl_multi_init();
         
         if (!is_array($url)) {
-            if (!is_string($url)) {
-                throw new Exception('Invalid url format');
-            }
+            if (!is_string($url)) throw new InvalidUrlFormatException();
 
             $url = [$url];
         }
