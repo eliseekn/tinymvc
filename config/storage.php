@@ -29,6 +29,7 @@ return [
     'cache' => absolute_path('storage.cache'),
     'mails' => absolute_path('app.Mails'),
     'helpers' => absolute_path('app.Helpers'),
+    'exceptions' => absolute_path('app.Exceptions'),
     'tests' => absolute_path('tests'),
     'console' => absolute_path('app.Console'),
     'sqlite' => absolute_path('storage.sqlite'),

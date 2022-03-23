@@ -219,6 +219,21 @@ class Make
         return true;
     }
     
+    public static function createException(string $exception, string $message)
+    {
+        list(, $class) = self::generateClass($exception, 'exception', true);
+
+        $data = self::stubs()->readFile('Exception.stub');
+        $data = str_replace('CLASSNAME', $class, $data);
+        $data = str_replace('MESSAGE', $message, $data);
+
+        if (!Storage::path(config('storage.exceptions'))->writeFile($class . '.php', $data)) {
+            return false;
+        }
+
+        return true;
+    }
+    
     public static function createTest(string $test, bool $unit_test, ?string $path = null)
     {
         list(, $class) = self::generateClass($test, 'test', true);
