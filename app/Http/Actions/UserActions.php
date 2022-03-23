@@ -34,4 +34,9 @@ class UserActions
 
         return $user;
 	}
+
+    public static function updatPassword(string $password, string $email)
+    {
+        return self::update(['password' => $password], $email);
+    }
 }

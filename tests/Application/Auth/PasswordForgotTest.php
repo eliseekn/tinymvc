@@ -6,12 +6,12 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-use App\Database\Factories\TokenFactory;
-use App\Database\Factories\UserFactory;
-use App\Database\Models\Token;
-use App\Database\Models\User;
 use Core\Support\Encryption;
+use App\Database\Models\User;
+use App\Database\Models\Token;
 use Core\Testing\ApplicationTestCase;
+use App\Database\Factories\UserFactory;
+use App\Database\Factories\TokenFactory;
 use Core\Testing\Concerns\RefreshDatabase;
 
 class PasswordForgotTest extends ApplicationTestCase

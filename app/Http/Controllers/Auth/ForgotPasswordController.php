@@ -62,10 +62,10 @@ class ForgotPasswordController
         $response->redirect()->to("password/new?email={$request->email}")->go();
 	}
 	
-	public function update(Request $request, Response $response)
+	public function update(Request $request, Response $response, LoginValidator $loginValidator)
 	{
-		LoginValidator::make($request->inputs())->redirectBackOnFail($response);
-        $user = UserActions::update(['password' => $request->password], $request->email);
+        $loginValidator->validate($request->inputs());
+        $user = UserActions::updatPassword($request->password, $request->email);
 
         if (!$user) {
             Alert::default(__('password_not_reset'))->error();
