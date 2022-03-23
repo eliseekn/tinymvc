@@ -27,7 +27,7 @@
         "optimize-autoloader": true
     },
     "require": {
-        "php": ">=7.2",
+        "php": ">=8.0.0",
         "wixel/gump": "^1.11",
         "phpmailer/phpmailer": "^6.1",
         "nesbot/carbon": "^2.41",
