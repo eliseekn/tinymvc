@@ -9,7 +9,7 @@
 namespace Core\Http;
 
 use Core\Support\Uploader;
-use Core\Http\Validator\GUMPValidator as Validator;
+use Core\Http\Validator\Validator as Validator;
 
 /**
  * Handle HTTP requests

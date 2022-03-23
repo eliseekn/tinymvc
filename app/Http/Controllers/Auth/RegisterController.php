@@ -13,7 +13,7 @@ use Core\Support\Auth;
 use Core\Support\Alert;
 use Core\Support\Session;
 use App\Mails\WelcomeMail;
-use Core\Support\Mailer\Mailer;
+use Core\Support\Mail\Mail;
 use Core\Http\Response\Response;
 use App\Http\Actions\UserActions;
 use App\Http\Validators\Auth\RegisterValidator;
@@ -28,13 +28,13 @@ class RegisterController
         $response->redirect()->to($uri)->go();
     }
 
-    public function register(Request $request, Response $response, Mailer $mailer)
+    public function register(Request $request, Response $response)
     {
         RegisterValidator::make($request->inputs())->redirectBackOnFail($response);
         $user = UserActions::create($request->except('csrf_token'));
 
         if (!config('security.auth.email_verification')) {
-            WelcomeMail::send($mailer, $user->email, $user->name);
+            Mail::send(new WelcomeMail($user->email, $user->name));
 
             Alert::default(__('account_created'))->success();
             $response->redirect()->to('login')->go();

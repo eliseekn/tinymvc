@@ -6,12 +6,12 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Core\Support\Mailer;
+namespace Core\Support\Mail;
 
 /**
  * Send emails
  */
-interface MailerInterface
+interface MailInterface
 {
     public function to(string $address, string $name);
 

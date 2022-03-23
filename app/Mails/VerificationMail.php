@@ -9,20 +9,29 @@
 namespace App\Mails;
 
 use Core\Routing\View;
-use Core\Support\Mailer\MailerInterface;
+use Core\Support\Mail\Mailer;
 
 /**
  * Send email verification notification
  */
-class VerificationMail
+class VerificationMail extends Mailer
 {
-    public static function send(MailerInterface $mailer, string $email, string $token)
+    private string $email;
+    private string $token;
+
+    public function __construct(string $email, string $token)
     {
-        return $mailer->to($email, '')
+        $this->email = $email;
+        $this->token = $token;
+    }
+
+    public function send(): bool
+    {
+        return $this->to($this->email)
             ->from(config('mailer.sender.email'), config('mailer.sender.name'))
             ->reply(config('mailer.sender.email'), config('mailer.sender.name'))
 			->subject('Email verification')
-            ->body(View::getContent('emails.verification', compact('email', 'token')))
+            ->body(View::getContent('emails.verification', ['email' => $this->email, 'token' => $this->token]))
 			->send();
     }
 }

@@ -8,9 +8,9 @@
 
 namespace NAMESPACE;
 
-use Core\Http\Validator\GUMPValidator;
+use Core\Http\Validator\Validator;
 
-class CLASSNAME extends GUMPValidator
+class CLASSNAME extends Validator
 {
     /**
      * Validation rules

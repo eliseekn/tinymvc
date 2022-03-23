@@ -9,13 +9,20 @@
 namespace App\Mails;
 
 use Core\Routing\View;
-use Core\Support\Mailer\MailerInterface;
+use Core\Support\Mail\Mailer;
 
-class CLASSNAME
+class CLASSNAME extends Mailer
 {
-    public static function send(MailerInterface $mailer, string $email)
+    private string $email;
+
+    public function __construct(string $email)
     {
-        return $mailer->to($email, '')
+        $this->email = $email;
+    }
+
+    public function send(): bool
+    {
+        return $this->to($this->email)
             ->from(config('mailer.sender.email'), config('mailer.sender.name'))
             ->reply(config('mailer.sender.email'), config('mailer.sender.name'))
 			->subject('Subject')

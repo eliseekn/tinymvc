@@ -15,7 +15,7 @@ use Core\Http\Validator\ValidatorInterface;
 /**
  * Request fields validator
  */
-class GUMPValidator implements ValidatorInterface
+class Validator implements ValidatorInterface
 {
     protected static array $rules = [];
     protected static array $messages = [];

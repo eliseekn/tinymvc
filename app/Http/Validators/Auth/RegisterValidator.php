@@ -8,10 +8,10 @@
 
 namespace App\Http\Validators\Auth;
 
-use Core\Http\Validator\GUMPValidator;
+use Core\Http\Validator\Validator;
 use Core\Database\Repository;
 
-class RegisterValidator extends GUMPValidator
+class RegisterValidator extends Validator
 {
     /**
      * Validation rules

@@ -9,20 +9,29 @@
 namespace App\Mails;
 
 use Core\Routing\View;
-use Core\Support\Mailer\MailerInterface;
+use Core\Support\Mail\Mailer;
 
 /**
  * Send welcome email notification
  */
-class WelcomeMail
+class WelcomeMail extends Mailer
 {
-    public static function send(MailerInterface $mailer, string $email, string $username)
+    private string $email;
+    private string $username;
+
+    public function __construct(string $email, string $username)
     {
-        return $mailer->to($email, '')
+        $this->email = $email;
+        $this->username = $username;
+    }
+
+    public function send(): bool
+    {
+        return $this->to($this->email)
             ->from(config('mailer.sender.email'), config('mailer.sender.name'))
             ->reply(config('mailer.sender.email'), config('mailer.sender.name'))
 			->subject('Welcome')
-            ->body(View::getContent('emails.welcome', compact('username')))
+            ->body(View::getContent('emails.welcome', ['username' => $this->username]))
 			->send();
     }
 }

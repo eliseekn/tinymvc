@@ -12,22 +12,22 @@ use Carbon\Carbon;
 use Core\Http\Request;
 use Core\Support\Alert;
 use App\Mails\TokenMail;
+use Core\Support\Mail\Mail;
 use App\Database\Models\Token;
+use Core\Http\Response\Response;
 use App\Http\Actions\UserActions;
 use App\Http\Validators\Auth\LoginValidator;
-use Core\Http\Response\Response;
-use Core\Support\Mailer\Mailer;
 
 /**
  * Manage password forgot
  */
 class ForgotPasswordController
 {
-	public function notify(Request $request, Response $response, Mailer $mailer)
+	public function notify(Request $request, Response $response)
 	{
 		$token = generate_token();
 
-		if (TokenMail::send($mailer, $request->email, $token)) {
+        if (Mail::send(new TokenMail($request->email, $token))) {
             Token::create([
                 'email'=> $request->email,
                 'token' => $token,

@@ -12,9 +12,9 @@ use Carbon\Carbon;
 use Core\Http\Request;
 use Core\Support\Alert;
 use App\Mails\WelcomeMail;
+use Core\Support\Mail\Mail;
 use App\Database\Models\Token;
 use App\Mails\VerificationMail;
-use Core\Support\Mailer\Mailer;
 use Core\Http\Response\Response;
 use App\Http\Actions\UserActions;
 
@@ -23,11 +23,11 @@ use App\Http\Actions\UserActions;
  */
 class EmailVerificationController
 {
-    public function notify(Request $request, Response $response, Mailer $mailer)
+    public function notify(Request $request, Response $response)
     {
         $token = generate_token();
 
-        if (VerificationMail::send($mailer, $request->email, $token)) {
+        if (Mail::send(new VerificationMail($request->email, $token))) {
             Token::create([
                 'email'=> $request->email,
                 'token' => $token,
@@ -42,7 +42,7 @@ class EmailVerificationController
         $response->redirect()->to('signup')->go();
     }
 
-	public function verify(Request $request, Response $response, Mailer $mailer)
+	public function verify(Request $request, Response $response)
 	{
         if (!$request->hasQuery('email', 'token')) {
             $response->send(__('bad_request'), [], 400);
@@ -67,7 +67,7 @@ class EmailVerificationController
             $response->redirect()->to('signup')->go();
         }
 
-        WelcomeMail::send($mailer, $user->email, $user->name);
+        Mail::send(new WelcomeMail($user->email, $user->name));
 
         Alert::default(__('email_verified'))->success();
         $response->redirect()->to('login')->go();
