@@ -18,7 +18,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Logs extends Command
 {
-    protected static $defaultName = 'logs:clear';
+    protected static $defaultName = 'clear:logs';
 
     protected function configure()
     {

@@ -19,27 +19,33 @@ use App\Http\Controllers\Auth\EmailVerificationController;
  * Authentication routes
  */
 
-Route::groupMiddlewares(['remember'], function () {
-    Route::get('login', [LoginController::class, 'index']);
-    Route::get('signup', [RegisterController::class, 'index']);
-})->register();
+Route::group(function () {
+    Route::get('/login', [LoginController::class, 'index']);
+    Route::get('/signup', [RegisterController::class, 'index']);
+})->byMiddleware('remember')->register();
 
-Route::groupMiddlewares(['csrf'], function () {
-    Route::post('authenticate', [LoginController::class, 'authenticate']);
-    Route::post('register', [RegisterController::class, 'register']);
-})->register();
+Route::group(function () {
+    Route::post('/authenticate', [LoginController::class, 'authenticate']);
+    Route::post('/register', [RegisterController::class, 'register']);
+})->byMiddleware('csrf')->register();
 
-Route::post('logout', LogoutController::class)->middlewares('auth')->register();
+Route::group(function () {
+    Route::view('/forgot', 'auth.password.forgot');
 
-Route::view('password/forgot', 'auth.password.forgot')->register();
+    Route::get('/new', function (Request $request, Response $response) {
+        $response->view('auth.password.new', ['email' => $request->queries('email')]);
+    });
+})->byPrefix('password')->register();
 
-Route::get('password/new', function (Request $request, Response $response) {
-	$response->view('auth.password.new', ['email' => $request->queries('email')]);
-})->register();
+Route::group(function () {
+    Route::get('/reset', 'reset');
+    Route::post('/notify', 'notify');
+    Route::post('/update', 'update');
+})->byPrefix('password')->byController(ForgotPasswordController::class)->register();
 
-Route::get('password/reset', [ForgotPasswordController::class, 'reset'])->register();
-Route::post('password/notify', [ForgotPasswordController::class, 'notify'])->register();
-Route::post('password/update', [ForgotPasswordController::class, 'update'])->register();
+Route::group(function () {
+    Route::get('/verify', 'verify');
+    Route::get('/notify', 'notify');
+})->byPrefix('email')->byController(EmailVerificationController::class)->register();
 
-Route::get('email/verify', [EmailVerificationController::class, 'verify'])->register();
-Route::get('email/notify', [EmailVerificationController::class, 'notify'])->register();
+Route::post('/logout', LogoutController::class)->middleware('auth')->register();

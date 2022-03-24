@@ -13,7 +13,7 @@ use Symfony\Component\Process\Process;
  */
 class Server extends Command
 {
-    protected static $defaultName = 'server:start';
+    protected static $defaultName = 'serve';
 
     protected function configure()
     {

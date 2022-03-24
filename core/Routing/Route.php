@@ -22,91 +22,128 @@ class Route
 
     private static function add(string $route, $handler): self
     {
-        static::$route = self::format($route);
+        static::$route = static::format($route);
         static::$tmp_routes[static::$route] = ['handler' => $handler];
-        return new self();
+        return new static();
     }
 
     public static function get(string $uri, $handler): self
     {
-        return self::add('GET ' . $uri, $handler);
+        return static::add('GET ' . $uri, $handler);
     }
 
     public static function post(string $uri, $handler): self
     {
-        return self::add('POST ' . $uri, $handler);
+        return static::add('POST ' . $uri, $handler);
     }
     
     public static function delete(string $uri, $handler): self
     {
-        return self::add('DELETE ' . $uri, $handler);
+        return static::add('DELETE ' . $uri, $handler);
     }
     
     public static function options(string $uri, $handler): self
     {
-        return self::add('OPTIONS ' . $uri, $handler);
+        return static::add('OPTIONS ' . $uri, $handler);
     }
     
     public static function patch(string $uri, $handler): self
     {
-        return self::add('PATCH ' . $uri, $handler);
+        return static::add('PATCH ' . $uri, $handler);
     }
     
     public static function put(string $uri, $handler): self
     {
-        return self::add('PUT ' . $uri, $handler);
+        return static::add('PUT ' . $uri, $handler);
     }
     
     public static function any(string $uri, $handler): self
     {
-        return self::add('GET|POST|DELETE|PUT|OPTIONS|PATCH ' . $uri, $handler);
+        return static::add('GET|POST|DELETE|PUT|OPTIONS|PATCH ' . $uri, $handler);
     }
     
     public static function match(string $methods, string $uri, $handler): self
     {
-        return self::add($methods . ' ' . $uri, $handler);
+        return static::add($methods . ' ' . $uri, $handler);
     }
 
     public static function view(string $uri, string $view, array $params = []): self
     {
-        return self::get($uri, function (Response $response) use ($view, $params) {
+        return static::get($uri, function (Response $response) use ($view, $params) {
             $response->view($view, $params);
         });
     }
 
     public function name(string $name): self
     {
-        static::$tmp_routes[static::$route] += ['name' => $name];
+        static::$tmp_routes[static::$route]['name'] = $name;
+        return $this;
+    }
+
+    public static function group($callback): self
+    {
+        call_user_func($callback);
+        return new static();
+    }
+    
+    public function middleware(string ...$middlewares): self
+    {
+        static::$tmp_routes[static::$route]['middlewares'] = $middlewares;
         return $this;
     }
     
-    public function middlewares(string ...$middlewares): self
+    public function byMiddleware(string ...$middlewares): self
     {
-        static::$tmp_routes[static::$route] += ['middlewares' => $middlewares];
+        foreach (static::$tmp_routes as $route => $options) {
+            if (isset($options['middlewares'])) {
+                static::$tmp_routes[$route]['middlewares'] = array_merge($middlewares, $options['middlewares']);
+            } else {
+                static::$tmp_routes[$route]['middlewares'] = $middlewares;
+            }
+        }
+
         return $this;
     }
     
-    public static function groupMiddlewares(array $middlewares, $callback): self
+    public function byPrefix(string $prefix): self
     {
-        call_user_func($callback);
+        if ($prefix[-1] === '/') $prefix = rtrim($prefix, '/');
 
         foreach (static::$tmp_routes as $route => $options) {
-            static::$tmp_routes[$route] += ['middlewares' => $middlewares];
+            list($method, $uri) = explode(' ', $route, 2);
+            $_route = implode(' ', [$method, $prefix . $uri]);
+
+            $_route = static::format($_route);
+            static::$tmp_routes = static::update($route, $_route);
         }
 
-        return new self();
+        return $this;
     }
     
-    public static function groupPrefix(string $prefix, $callback): self
+    public function byName(string $name): self
     {
-        call_user_func($callback);
-        
         foreach (static::$tmp_routes as $route => $options) {
-            $_route = self::format(self::addPrefix($prefix, $route));
-            static::$tmp_routes = self::update($route, $_route);
+            if (isset($options['name'])) {
+                static::$tmp_routes[$route]['name'] = $name . '.' . $options['name'];
+            } else {
+                static::$tmp_routes[$route]['name'] = $name;
+            }
         }
 
-        return new self();
+        return $this;
+    }
+
+    public function byController(string $controller): self
+    {
+        foreach (static::$tmp_routes as $route => $options) {
+            if (isset($options['handler'])) {
+                static::$tmp_routes[$route]['handler'] = [$controller, $options['handler']];
+            } else {
+                static::$tmp_routes[$route]['handler'] = $controller;
+            }
+        }
+
+        return $this;
     }
     
     public function register()
@@ -115,15 +152,6 @@ class Route
 
         static::$routes += static::$tmp_routes;
         static::$tmp_routes = [];
-    }
-    
-    private static function addPrefix(string $prefix, string $route)
-    {
-        if ($prefix[-1] === '/') $prefix = rtrim($prefix, '/');
-
-        list($method, $uri) = explode(' ', $route, 2);
-
-        return implode(' ', [$method, $prefix . $uri]);
     }
     
     private static function format(string $route)
@@ -168,6 +196,17 @@ class Route
 
         foreach ($routes as $route) {
             require_once config('storage.routes') . $route;
+        }
+
+        $paths = config('routes.paths');
+
+        foreach ($paths as $path) {
+            $storage = Storage::path(config('storage.routes'))->addPath($path);
+            $custom_routes = $storage->getFiles();
+
+            foreach ($custom_routes as $custom_route) {
+                require_once $storage->file($custom_route);
+            }
         }
     }
 }

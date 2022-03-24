@@ -6,10 +6,10 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-use Core\Routing\Route;
-
 /**
- * Web routes
+ * Custom routes paths configuration
  */
 
-Route::view('/', 'index')->register();
+return [
+    'paths' => [],
+];

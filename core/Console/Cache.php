@@ -18,7 +18,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Cache extends Command
 {
-    protected static $defaultName = 'twig:clear';
+    protected static $defaultName = 'clear:twig';
 
     protected function configure()
     {

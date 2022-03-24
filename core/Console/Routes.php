@@ -14,7 +14,7 @@ use Symfony\Component\Console\Helper\Table;
  */
 class Routes extends Command
 {
-    protected static $defaultName = 'routes:list';
+    protected static $defaultName = 'routes';
 
     protected function configure()
     {
@@ -24,7 +24,6 @@ class Routes extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $rows = [];
-
         $routes = Route::$routes;
 
         foreach ($routes as $route => $options) {
@@ -43,7 +42,7 @@ class Routes extends Command
             }
 
             if (!empty($middlewares)) {
-                $middlewares = json_encode($middlewares);
+                $middlewares = implode(', ', $middlewares);
             }
 
             $rows[] = [$method, $uri, $handler, $middlewares, $name];

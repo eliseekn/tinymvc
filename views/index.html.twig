@@ -32,8 +32,12 @@
 				</a>
 
 				{% if auth('id') is empty %}
-                <a href="{{ url('login') }}" class="ms-3 btn btn-success">
+                <a href="{{ url('login') }}" class="ms-3 btn btn-primary">
 					<i class="fa fa-user"></i> Log in
+				</a>
+
+                <a href="{{ url('signup') }}" class="ms-3 btn btn-primary">
+					<i class="fa fa-sign-in-alt"></i> Sign up
 				</a>
                 {% else %}
                 <form action="{{ url('logout') }}" method="post">

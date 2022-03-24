@@ -8,6 +8,8 @@
 
 namespace Core\Support;
 
+use ErrorException;
+
 /**
  * Manage files and folders
  */
@@ -119,16 +121,14 @@ class Storage
 
         return false;
     }
-    
+
     public function getFiles()
     {
         $results = [];
-        $objects = scandir(self::$path);
+        $objects = $this->getFilesAndFolders();
 
         foreach ($objects as $object) {
-            if ($object != '.' && $object != '..' && $this->isFile($object)) {
-                $results[] = basename($object);
-            }
+            if ($this->isFile($object)) $results[] = basename($object);
         }
 
         return $results;
@@ -137,11 +137,28 @@ class Storage
     public function getFolders()
     {
         $results = [];
-        $objects = scandir(self::$path);
+        $objects = $this->getFilesAndFolders();
 
         foreach ($objects as $object) {
-            if ($object != '.' && $object != '..' && $this->isDir($object)) {
-                $results[] = basename($object);
+            if ($this->isDir($object)) $results[] = basename($object);
+        }
+
+        return $results;
+    }
+
+    public function getFilesAndFolders()
+    {
+        $results = [];
+
+        try {
+            $objects = scandir(self::$path);
+        } catch(ErrorException $e) {
+            return $results;
+        }
+
+        foreach ($objects as $object) {
+            if ($object != '.' && $object != '..') {
+                $results[] = $object;
             }
         }
 
