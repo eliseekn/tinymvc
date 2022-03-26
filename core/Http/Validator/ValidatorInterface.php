@@ -8,11 +8,13 @@
 
 namespace Core\Http\Validator;
 
+use Core\Http\Response\Response;
+
 interface ValidatorInterface
 {
     public function addCustomRule(string $rule, callable $callback, string $error_message): self;
 
-    public function validate(array $inputs): self;
+    public function validate(array $inputs, Response $response): self;
     
     public function fails(): bool;
         

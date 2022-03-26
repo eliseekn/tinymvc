@@ -24,7 +24,7 @@ class Application
         Whoops::register();
     }
     
-    public function execute()
+    public function run()
     {
         $response = new Response();
 

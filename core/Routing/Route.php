@@ -8,6 +8,7 @@
 
 namespace Core\Routing;
 
+use Core\Exceptions\RoutesPathsNotDefinedException;
 use Core\Support\Storage;
 use Core\Http\Response\Response;
 
@@ -60,6 +61,18 @@ class Route
     public static function any(string $uri, $handler): self
     {
         return static::add('GET|POST|DELETE|PUT|OPTIONS|PATCH ' . $uri, $handler);
+    }
+    
+    public static function all(string $name, string $controller): self
+    {
+        return self::group(function() use ($name, $controller) {
+            self::get('/' . $name, 'index')->name('index');
+            self::post('/' . $name, 'store')->name('store');
+            self::match('PATCH|PUT', '/' . $name . '/{id:num}', 'update')->name('update');
+            self::get('/' . $name . '/{id:num}', 'show')->name('show');
+            self::get('/' . $name . '/{id:num}/edit', 'edit')->name('edit');
+            self::delete('/' . $name . '/{id:num}', 'delete')->name('delete');
+        })->byController($controller)->byName($name);
     }
     
     public static function match(string $methods, string $uri, $handler): self
@@ -192,20 +205,20 @@ class Route
 
     public static function load()
     {
-        $routes = Storage::path(config('storage.routes'))->getFiles();
-
-        foreach ($routes as $route) {
-            require_once config('storage.routes') . $route;
+        if (empty(config('routes.paths'))) {
+            throw new RoutesPathsNotDefinedException();
         }
 
-        $paths = config('routes.paths');
+        $paths = array_map(function ($path) {
+            $path = Storage::path(config('storage.routes'))->addPath($path, '')->getPath();
+            return str_replace(['//', '//"'], ['/', '/"'], $path);
+        }, config('routes.paths'));
 
         foreach ($paths as $path) {
-            $storage = Storage::path(config('storage.routes'))->addPath($path);
-            $custom_routes = $storage->getFiles();
+            $routes = Storage::path($path)->getFiles();
 
-            foreach ($custom_routes as $custom_route) {
-                require_once $storage->file($custom_route);
+            foreach ($routes as $route) {
+                require_once config('storage.routes') . $route;
             }
         }
     }

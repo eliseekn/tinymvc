@@ -14,4 +14,4 @@ COPY . ./
 
 EXPOSE 8080
 
-CMD php console server:start --host=0.0.0.0 --port=8080
+CMD php console serve --host=0.0.0.0 --port=8080

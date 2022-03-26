@@ -15,5 +15,4 @@ use Core\Application;
 require 'vendor/autoload.php';
 require_once 'bootstrap.php';
 
-$app = new Application();
-$app->execute();
+(new Application())->run();

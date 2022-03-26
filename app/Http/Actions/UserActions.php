@@ -30,9 +30,8 @@ class UserActions
         }
 
         $user->fill($data);
-        $user = $user->save();
-
-        return $user;
+        
+        return $user->save();
 	}
 
     public static function updatPassword(string $password, string $email)

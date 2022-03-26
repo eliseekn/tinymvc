@@ -7,9 +7,9 @@
  */
 
 /**
- * Custom routes paths configuration
+ * Routes paths configuration
  */
 
 return [
-    'paths' => [],
+    'paths' => ['/'],
 ];

@@ -45,17 +45,17 @@ class EmailVerificationController
 	public function verify(Request $request, Response $response)
 	{
         if (!$request->hasQuery('email', 'token')) {
-            $response->send(__('bad_request'), [], 400);
+            $response->send(data: __('bad_request'), code: 400);
         }
 
         $token = Token::findBy('email', $request->email);
 
         if (!$token || $token->token !== $request->token) {
-			$response->send(__('invalid_password_reset_link'), [], 400);
+			$response->send(data: __('invalid_password_reset_link'), code: 400);
 		}
 
 		if (Carbon::parse($token->expire)->lt(Carbon::now())) {
-			$response->send(__('expired_password_reset_link'), [], 400);
+			$response->send(data: __('expired_password_reset_link'), code: 400);
 		}
 
         $token->delete();

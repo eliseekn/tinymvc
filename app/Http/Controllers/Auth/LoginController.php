@@ -8,7 +8,6 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Carbon\Carbon;
 use Core\Http\Request;
 use Core\Support\Auth;
 use Core\Support\Alert;
@@ -28,19 +27,15 @@ class LoginController
 
 	public function authenticate(Request $request, Response $response, LoginValidator $loginValidator)
 	{
-        $loginValidator->validate($request->inputs());
+        $loginValidator->validate($request->inputs(), $response);
 
-        if (Auth::attempt($request->only('email', 'password'), $request->has('remember'))) {
+        if (Auth::attempt($response, $request->only('email', 'password'), $request->has('remember'))) {
             $uri = !Session::has('intended') ? config('app.home') : Session::pull('intended');
 
             Alert::toast(__('welcome', ['name' => Auth::get('name')]))->success();
             $response->redirect()->to($uri)->go();
         }
 
-        if (Auth::attemptsExceeded()) {
-            $response->redirect()->back()->with('auth_attempts_timeout', Carbon::now()->addMinutes(config('security.auth.unlock_timeout'))->toDateTimeString())->go();
-        }
-        
         Alert::default(__('login_failed'))->error();
         $response->redirect()->to('login')->withInputs($request->only('email', 'password'))->withErrors([__('login_failed')])->go();
     }

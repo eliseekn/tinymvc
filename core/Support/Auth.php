@@ -8,12 +8,14 @@
 
 namespace Core\Support;
 
+use Carbon\Carbon;
 use Core\Http\Request;
 use Core\Support\Cookies;
 use Core\Support\Session;
 use Core\Support\Encryption;
 use App\Database\Models\User;
 use App\Database\Models\Token;
+use Core\Http\Response\Response;
 
 /**
  * Manage authentications
@@ -25,16 +27,17 @@ class Auth
         return Session::get('auth_attempts', 0);
     }
 
-    public static function attemptsExceeded()
-    {
-        return config('security.auth.max_attempts') > 0 && Auth::getAttempts() >= config('security.auth.max_attempts');
-    }
-
-    public static function attempt(array $credentials, bool $remember = false)
+    public static function attempt(Response $response, array $credentials, bool $remember = false)
     {
         Session::push('auth_attempts', 1, 0);
 
-        if (!self::checkCredentials($credentials['email'], $credentials['password'], $user)) return false;
+        if (!self::checkCredentials($credentials['email'], $credentials['password'], $user)) {
+            if (config('security.auth.max_attempts') > 0 && Auth::getAttempts() >= config('security.auth.max_attempts')) {
+                $response->redirect()->back()->with('auth_attempts_timeout', Carbon::now()->addMinutes(config('security.auth.unlock_timeout'))->toDateTimeString())->go();
+            }
+
+            return false;
+        }
 
         Session::forget('auth_attempts', 'auth_attempts_timeout');
         Session::create('user', $user);

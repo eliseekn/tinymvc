@@ -31,9 +31,9 @@ class Storage
         return self::$path;
     }
 
-    public function addPath(string $path): self
+    public function addPath(string $path, string $trailling_slash = DS): self
     {
-        self::$path .= real_path($path) . DS;
+        self::$path .= real_path($path) . $trailling_slash;
         return $this;
     }
 
@@ -50,7 +50,7 @@ class Storage
     public function writeFile(string $filename, $content, bool $append = false)
     {
         if (!$this->isDir()) {
-            if (!$this->createDir('', true)) return false;
+            if (!$this->createDir(recursive: true)) return false;
         }
 
         $flag = $append ? FILE_APPEND | LOCK_EX : 0;
@@ -105,10 +105,7 @@ class Storage
 
             foreach ($objects as $object) {
                 if ($object != '.' && $object != '..') {
-                    if (
-                        $this->isDir($pathname . $object) &&
-                        !is_link(self::$path . $pathname . $object)
-                    ) {
+                    if ($this->isDir($pathname . $object) && !is_link(self::$path . $pathname . $object)) {
                         $this->deleteDir($pathname . $object);
                     } else {
                         $this->deleteFile($pathname . $object);

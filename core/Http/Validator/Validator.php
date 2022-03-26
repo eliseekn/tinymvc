@@ -21,12 +21,12 @@ class Validator implements ValidatorInterface
     protected $errors;
     protected array $inputs = [];
 
-    public function validate(array $inputs): self
+    public function validate(array $inputs, Response $response): self
     {
         $this->inputs = $inputs;
         $this->errors = GUMP::is_valid($this->inputs, $this->rules(), $this->messages());
 
-        if ($this->fails()) (new Response())->redirect()->back()->withErrors($this->errors())->withInputs($this->inputs)->go();
+        if ($this->fails()) $response->redirect()->back()->withErrors($this->errors())->withInputs($this->inputs)->go();
         return $this;
     }
 

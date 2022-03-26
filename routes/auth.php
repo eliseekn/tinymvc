@@ -33,7 +33,7 @@ Route::group(function () {
     Route::view('/forgot', 'auth.password.forgot');
 
     Route::get('/new', function (Request $request, Response $response) {
-        $response->view('auth.password.new', ['email' => $request->queries('email')]);
+        $response->view('auth.password.new', $request->only('email'));
     });
 })->byPrefix('password')->register();
 
