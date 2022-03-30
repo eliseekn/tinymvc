@@ -10,7 +10,7 @@ namespace Core\Routing;
 
 use Core\Exceptions\RoutesPathsNotDefinedException;
 use Core\Support\Storage;
-use Core\Http\Response\Response;
+use Core\Http\Response;
 
 /**
  * Manage routes
@@ -63,15 +63,15 @@ class Route
         return static::add('GET|POST|DELETE|PUT|OPTIONS|PATCH ' . $uri, $handler);
     }
     
-    public static function all(string $name, string $controller): self
+    public static function all(string $name, string $controller, array $excepts = []): self
     {
-        return self::group(function() use ($name, $controller) {
-            self::get('/' . $name, 'index')->name('index');
-            self::post('/' . $name, 'store')->name('store');
-            self::match('PATCH|PUT', '/' . $name . '/{id:num}', 'update')->name('update');
-            self::get('/' . $name . '/{id:num}', 'show')->name('show');
-            self::get('/' . $name . '/{id:num}/edit', 'edit')->name('edit');
-            self::delete('/' . $name . '/{id:num}', 'delete')->name('delete');
+        return self::group(function() use ($name, $excepts) {
+            if (!in_array('index', $excepts)) self::get('/' . $name, 'index')->name('index');
+            if (!in_array('store', $excepts)) self::post('/' . $name, 'store')->name('store');
+            if (!in_array('update', $excepts)) self::match('PATCH|PUT', '/' . $name . '/{id:num}', 'update')->name('update');
+            if (!in_array('show', $excepts)) self::get('/' . $name . '/{id:num}', 'show')->name('show');
+            if (!in_array('edit', $excepts)) self::get('/' . $name . '/{id:num}/edit', 'edit')->name('edit');
+            if (!in_array('delete', $excepts)) self::delete('/' . $name . '/{id:num}', 'delete')->name('delete');
         })->byController($controller)->byName($name);
     }
     
@@ -83,7 +83,7 @@ class Route
     public static function view(string $uri, string $view, array $params = []): self
     {
         return static::get($uri, function (Response $response) use ($view, $params) {
-            $response->view($view, $params);
+            $response->view($view, $params)->send();
         });
     }
 

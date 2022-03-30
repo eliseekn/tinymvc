@@ -9,7 +9,7 @@
 namespace Core\Http\Validator;
 
 use GUMP;
-use Core\Http\Response\Response;
+use Core\Http\Response;
 use Core\Http\Validator\ValidatorInterface;
 
 /**
@@ -17,16 +17,27 @@ use Core\Http\Validator\ValidatorInterface;
  */
 class Validator implements ValidatorInterface
 {
-    /** @var bool|array */
-    protected $errors;
-    protected array $inputs = [];
+    /**
+     * @param bool|array|null $errors
+     */
+    public function __construct(
+        protected array $rules = [],
+        protected array $messages = [],
+        protected array $inputs = [],
+        protected $errors = null,
+    ) {}
 
-    public function validate(array $inputs, Response $response): self
+    public function validate(array $inputs, ?Response $response = null): self
     {
         $this->inputs = $inputs;
-        $this->errors = GUMP::is_valid($this->inputs, $this->rules(), $this->messages());
+        $this->rules = empty($this->rules) ? $this->rules() : $this->rules;
+        $this->messages = empty($this->messages) ? $this->messages() : $this->messages;
+        $this->errors = GUMP::is_valid($this->inputs, $this->rules, $this->messages);
 
-        if ($this->fails()) $response->redirect()->back()->withErrors($this->errors())->withInputs($this->inputs)->go();
+        if ($this->fails() && !is_null($response)) {
+            $response->redirectBack()->withErrors($this->errors())->withInputs($this->inputs)->send(302);
+        }
+        
         return $this;
     }
 

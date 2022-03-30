@@ -8,7 +8,7 @@
 
 use Core\Http\Request;
 use Core\Routing\Route;
-use Core\Http\Response\Response;
+use Core\Http\Response;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -33,7 +33,7 @@ Route::group(function () {
     Route::view('/forgot', 'auth.password.forgot');
 
     Route::get('/new', function (Request $request, Response $response) {
-        $response->view('auth.password.new', $request->only('email'));
+        $response->view('auth.password.new', $request->only('email'))->send();
     });
 })->byPrefix('password')->register();
 

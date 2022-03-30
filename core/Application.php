@@ -12,7 +12,7 @@ use Core\Http\Request;
 use Core\Routing\Router;
 use Core\Support\Whoops;
 use Core\Support\Exception;
-use Core\Http\Response\Response;
+use Core\Http\Response;
 
 /**
  * Main application
@@ -34,7 +34,7 @@ class Application
             if (config('errors.log')) save_log('Exception: ' . $e);
             if (config('errors.display')) die($e);
         
-            $response->view(view: config('errors.views.500'), code: 500);
+            $response->view(config('errors.views.500'))->send(500);
         }
     }
 }

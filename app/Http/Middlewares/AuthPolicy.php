@@ -10,7 +10,7 @@ namespace App\Http\Middlewares;
 
 use Core\Support\Auth;
 use Core\Http\Request;
-use Core\Http\Response\Response;
+use Core\Http\Response;
 use Core\Support\Alert;
 
 /**
@@ -22,7 +22,7 @@ class AuthPolicy
     {
         if (!Auth::check($request)) {
             Alert::default(__('not_logged'))->error();
-            $response->redirect()->to('login')->intended($request->fullUri())->withErrors([__('not_logged')])->go();
+            $response->redirectUrl('login')->intended($request->fullUri())->withErrors([__('not_logged')])->send(302);
         }
     }
 }

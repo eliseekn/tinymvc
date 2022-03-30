@@ -9,7 +9,7 @@
 namespace App\Http\Middlewares;
 
 use Core\Http\Request;
-use Core\Http\Response\Response;
+use Core\Http\Response;
 use Core\Support\Auth;
 use Core\Support\Alert;
 
@@ -23,7 +23,7 @@ class AccountPolicy
         if (config('security.auth.email_verification')) {
             if (is_null(Auth::get('email_verified'))) {
                 Alert::default(__('email_not_verifed'))->error();
-                $response->redirect()->to('login')->intended($request->fullUri())->go();
+                $response->redirectUrl('/login')->intended($request->fullUri())->send(302);
             }
         }
     }

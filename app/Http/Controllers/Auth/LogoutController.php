@@ -10,15 +10,15 @@ namespace App\Http\Controllers\Auth;
 
 use Core\Support\Auth;
 use Core\Support\Alert;
-use Core\Http\Response\Response;
+use Core\Http\Response;
 
 class LogoutController
 {
 	public function __invoke(Response $response)
 	{
         Auth::forget();
-
         Alert::toast(__('logged_out'))->success();
-        $response->redirect()->to(config('app.home'))->go();
+
+        $response->redirectUrl(config('app.home'))->send(302);
 	}
 }

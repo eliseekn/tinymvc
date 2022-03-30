@@ -140,9 +140,7 @@ class Repository
     
     public function insertGetId(array $items)
     {
-        if (!$this->insert($items)) {
-            return null;
-        }
+        if (!$this->insert($items)) return null;
 
         return QueryBuilder::lastInsertedId();
     }

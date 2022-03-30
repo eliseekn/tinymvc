@@ -18,8 +18,8 @@ class LoginValidator extends Validator
     public function rules(): array
     {
         return [
-            'email' => 'required|max_len,255',
-            'password' => 'required|max_len,525'
+            'email' => 'required|valid_email|max_len,255',
+            'password' => 'required|max_len,255'
         ];
     }
 

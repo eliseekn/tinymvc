@@ -14,7 +14,7 @@ use Core\Support\Alert;
 use Core\Support\Session;
 use App\Mails\WelcomeMail;
 use Core\Support\Mail\Mail;
-use Core\Http\Response\Response;
+use Core\Http\Response;
 use App\Http\Actions\UserActions;
 use App\Http\Validators\Auth\RegisterValidator;
 
@@ -22,10 +22,10 @@ class RegisterController
 {
     public function index(Request $request, Response $response)
     {
-        if (!Auth::check($request)) $response->view('auth.signup'); 
+        if (!Auth::check($request)) $response->view('auth.signup')->send(); 
 
         $uri = !Session::has('intended') ? config('app.home') : Session::pull('intended');
-        $response->redirect()->to($uri)->go();
+        $response->redirectUrl($uri)->send(302);
     }
 
     public function register(Request $request, Response $response, RegisterValidator $registerValidator)
@@ -34,12 +34,12 @@ class RegisterController
         $user = UserActions::create($validator->validated());
 
         if (config('security.auth.email_verification')) {
-            $response->redirect()->to('email/notify')->go();
+            $response->redirectUrl('/email/notify')->send(302);
         }
 
         Mail::send(new WelcomeMail($user->email, $user->name));
         Alert::default(__('account_created'))->success();
         
-        $response->redirect()->to('login')->go();
+        $response->redirectUrl('/login')->send(302);
     }
 }

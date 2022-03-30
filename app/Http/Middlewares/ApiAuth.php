@@ -10,7 +10,7 @@ namespace App\Http\Middlewares;
 
 use Core\Support\Auth;
 use Core\Http\Request;
-use Core\Http\Response\JsonResponse;
+use Core\Http\Response;
 use Core\Support\Encryption;
 
 /**
@@ -18,20 +18,20 @@ use Core\Support\Encryption;
  */
 class ApiAuth
 {   
-    public function handle(Request $request, JsonResponse $response)
+    public function handle(Request $request, Response $response)
     {
         if (empty($request->getHttpAuth())) {
-            $response->send(data: __('auth_required'), code: 401);
+            $response->json([__('auth_required')])->send(401);
         }
 
         list($method, $token) = $request->getHttpAuth();
 
         if (trim($method) !== 'Bearer') {
-            $response->send(data: __('invalid_auth_method'), code: 401);
+            $response->json([__('invalid_auth_method')])->send(401);
         }
 
         if (!Auth::checkToken(Encryption::decrypt($token), $user)) {
-            $response->send(data: __('invalid_credentials'), code: 401);
+            $response->json([__('invalid_credentials')])->send(401);
         }
     }
 }

@@ -9,12 +9,12 @@
 namespace NAMESPACE;
 
 use Core\Http\Request;
-use Core\Http\Response\Response;
+use Core\Http\Response;
 
 class CLASSNAME
 {
     public function __invoke(Request $request, Response $response)
 	{
-        $response->send('Hello from CLASSNAME');
+        $response->data('Hello from CLASSNAME')->send();
 	}
 }

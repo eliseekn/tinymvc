@@ -8,7 +8,7 @@
 
 namespace Core\Http\Validator;
 
-use Core\Http\Response\Response;
+use Core\Http\Response;
 
 interface ValidatorInterface
 {

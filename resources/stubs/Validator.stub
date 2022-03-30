@@ -12,6 +12,11 @@ use Core\Http\Validator\Validator;
 
 class CLASSNAME extends Validator
 {
+    public function __construct()
+    {
+        //
+    }
+
     /**
      * Validation rules
      */

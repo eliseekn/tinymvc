@@ -15,7 +15,7 @@ use Core\Support\Session;
 use Core\Support\Encryption;
 use App\Database\Models\User;
 use App\Database\Models\Token;
-use Core\Http\Response\Response;
+use Core\Http\Response;
 
 /**
  * Manage authentications
@@ -33,7 +33,7 @@ class Auth
 
         if (!self::checkCredentials($credentials['email'], $credentials['password'], $user)) {
             if (config('security.auth.max_attempts') > 0 && Auth::getAttempts() >= config('security.auth.max_attempts')) {
-                $response->redirect()->back()->with('auth_attempts_timeout', Carbon::now()->addMinutes(config('security.auth.unlock_timeout'))->toDateTimeString())->go();
+                $response->redirectBack()->with('auth_attempts_timeout', Carbon::now()->addMinutes(config('security.auth.unlock_timeout'))->toDateTimeString())->send(302);
             }
 
             return false;

@@ -12,17 +12,17 @@ use Core\Http\Request;
 use Core\Support\Auth;
 use Core\Support\Alert;
 use Core\Support\Session;
-use Core\Http\Response\Response;
+use Core\Http\Response;
 use App\Http\Validators\Auth\LoginValidator;
 
 class LoginController
 { 
     public function index(Request $request, Response $response)
     {
-        if (!Auth::check($request)) $response->view('auth.login'); 
+        if (!Auth::check($request)) $response->view('auth.login')->send(); 
 
         $uri = !Session::has('intended') ? config('app.home') : Session::pull('intended');
-        $response->redirect()->to($uri)->go();
+        $response->redirectUrl($uri)->send(302);
     }
 
 	public function authenticate(Request $request, Response $response, LoginValidator $loginValidator)
@@ -33,10 +33,10 @@ class LoginController
             $uri = !Session::has('intended') ? config('app.home') : Session::pull('intended');
 
             Alert::toast(__('welcome', ['name' => Auth::get('name')]))->success();
-            $response->redirect()->to($uri)->go();
+            $response->redirectUrl($uri)->send(302);
         }
 
         Alert::default(__('login_failed'))->error();
-        $response->redirect()->to('login')->withInputs($request->only('email', 'password'))->withErrors([__('login_failed')])->go();
+        $response->redirectUrl('/login')->withInputs($request->only('email', 'password'))->withErrors([__('login_failed')])->send(302);
     }
 }

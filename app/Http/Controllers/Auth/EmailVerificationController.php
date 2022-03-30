@@ -15,7 +15,7 @@ use App\Mails\WelcomeMail;
 use Core\Support\Mail\Mail;
 use App\Database\Models\Token;
 use App\Mails\VerificationMail;
-use Core\Http\Response\Response;
+use Core\Http\Response;
 use App\Http\Actions\UserActions;
 
 /**
@@ -35,27 +35,27 @@ class EmailVerificationController
             ]);
 
             Alert::default(__('email_verification_link_sent'))->success();
-            $response->redirect()->to('login')->go();
+            $response->redirectUrl('login')->send(302);
         }
         
         Alert::default(__('email_verification_link_not_sent'))->error();
-        $response->redirect()->to('signup')->go();
+        $response->redirectUrl('signup')->send(302);
     }
 
 	public function verify(Request $request, Response $response)
 	{
         if (!$request->hasQuery('email', 'token')) {
-            $response->send(data: __('bad_request'), code: 400);
+            $response->data(__('bad_request'))->send(400);
         }
 
         $token = Token::findBy('email', $request->email);
 
         if (!$token || $token->token !== $request->token) {
-			$response->send(data: __('invalid_password_reset_link'), code: 400);
+			$response->data(__('invalid_password_reset_link'))->send(400);
 		}
 
 		if (Carbon::parse($token->expire)->lt(Carbon::now())) {
-			$response->send(data: __('expired_password_reset_link'), code: 400);
+			$response->data(__('expired_password_reset_link'))->send(400);
 		}
 
         $token->delete();
@@ -64,12 +64,12 @@ class EmailVerificationController
 
 		if (!$user) {
             Alert::default(__('account_not_found'))->error();
-            $response->redirect()->to('signup')->go();
+            $response->redirectUrl('signup')->send(400);
         }
 
         Mail::send(new WelcomeMail($user->email, $user->name));
 
         Alert::default(__('email_verified'))->success();
-        $response->redirect()->to('login')->go();
+        $response->redirectUrl('login')->send(400);
     }
 }

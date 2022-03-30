@@ -8,6 +8,7 @@
 
 namespace Core\Http;
 
+use Core\Http\Validator\Validator;
 use Core\Support\Uploader;
 
 /**
@@ -265,5 +266,12 @@ class Request
         }
 
         return $all;
+    }
+
+    public function validate(array $rules, array $messages = [], array $inputs = []): Validator
+    {
+        $inputs = empty($inputs) ? $this->inputs() : $inputs;
+
+        return (new Validator($rules, $messages))->validate($inputs);
     }
 }

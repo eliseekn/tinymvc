@@ -32,6 +32,8 @@ class ApplicationTestCase extends TestCase
 
         $this->token = '';
         $this->headers = [];
+
+        parent::setUp();
     }
 
     protected function tearDown(): void
@@ -87,14 +89,14 @@ class ApplicationTestCase extends TestCase
     public function auth($user)
     {
         $this->token = Auth::createToken($user->email);
-        $this->headers = ['Authorization' => "Bearer {$this->token}"];
+        $this->headers = array_merge($this->headers, ['Authorization' => "Bearer $this->token"]);
 
         return $this;
     }
 
     public function createFileUpload(string $filename, ?string $mime_type = null, ?string $name = null) 
     {
-        $this->headers = ['Content-Type' => 'multipart/form-data'];
+        $this->headers = array_merge($this->headers, ['Content-Type' => 'multipart/form-data']);
         return curl_file_create($filename, $mime_type, $name);
     }
 
@@ -216,8 +218,7 @@ class ApplicationTestCase extends TestCase
     public function assertSessionHas(string $key, $value)
     {
         if (!isset($this->getSession()[$this->getSessionKey($key)])) {
-            $this->assertFalse(false);
-            return;
+            return $this->assertFalse(false);
         }
 
         $this->assertEquals($value, $this->getSession()[$this->getSessionKey($key)]);
@@ -226,8 +227,7 @@ class ApplicationTestCase extends TestCase
     public function assertSessionDoesNotHave(string $key, $value)
     {
         if (!isset($this->getSession()[$this->getSessionKey($key)])) {
-            $this->assertFalse(false);
-            return;
+            return $this->assertFalse(false);
         }
 
         $this->assertNotEquals($value, $this->getSession()[$this->getSessionKey($key)]);

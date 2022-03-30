@@ -14,7 +14,7 @@ use Core\Support\Alert;
 use App\Mails\TokenMail;
 use Core\Support\Mail\Mail;
 use App\Database\Models\Token;
-use Core\Http\Response\Response;
+use Core\Http\Response;
 use App\Http\Actions\UserActions;
 use App\Http\Validators\Auth\LoginValidator;
 
@@ -35,31 +35,31 @@ class ForgotPasswordController
             ]);
 
             Alert::default(__('password_reset_link_sent'))->success();
-			$response->redirect()->back()->go();
+			$response->redirectBack()->send(302);
 		}
         
         Alert::default(__('password_reset_link_not_sent'))->error();
-        $response->redirect()->back()->go();
+        $response->redirectBack()->send(302);
 	}
 	
 	public function reset(Request $request, Response $response)
 	{
         if (!$request->hasQuery('email', 'token')) {
-            $response->send(data: __('bad_request'), code: 400);
+            $response->data(__('bad_request'))->send(400);
         }
 
         $token = Token::findBy('email', $request->email);
 
         if (!$token || $token->token !== $request->token) {
-			$response->send(data: __('invalid_password_reset_link'), code: 400);
+			$response->data(__('invalid_password_reset_link'))->send(400);
 		}
 
 		if (Carbon::parse($token->expire)->lt(Carbon::now())) {
-			$response->send(data: __('expired_password_reset_link'), code: 400);
+			$response->data(__('expired_password_reset_link'))->send(400);
 		}
 
         $token->delete();
-        $response->redirect()->to("password/new?email={$request->email}")->go();
+        $response->redirectUrl("/password/new?email={$request->email}")->send(302);
 	}
 	
 	public function update(Request $request, Response $response, LoginValidator $loginValidator)
@@ -69,10 +69,10 @@ class ForgotPasswordController
 
         if (!$user) {
             Alert::default(__('password_not_reset'))->error();
-            $response->redirect()->back()->go();
+            $response->redirectBack()->send(302);
         }
 
         Alert::default(__('password_reset'))->success();
-        $response->redirect()->to('login')->go();
+        $response->redirectUrl('/login')->send(302);
 	}
 }

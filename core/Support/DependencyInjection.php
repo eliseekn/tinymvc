@@ -47,7 +47,7 @@ class DependencyInjection
 
         $dependencies = $this->getDependencies($parameters);
 
-        call_user_func_array([$class, $method], array_merge($dependencies, $params));
+        return call_user_func_array([$class, $method], array_merge($dependencies, $params));
 	}
 
     /**
@@ -59,13 +59,13 @@ class DependencyInjection
         $parameters = $reflector->getParameters();
         $dependencies = $this->getDependencies($parameters);
 
-        call_user_func_array($closure, array_merge($dependencies, $params));
+        return call_user_func_array($closure, array_merge($dependencies, $params));
     }
 
 	/**
 	 * Generate new instance of dependencies
 	 */
-	public function getDependencies(array $parameters)
+	public function getDependencies(array $parameters): array
 	{
 		$dependencies = [];
 

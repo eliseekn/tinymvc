@@ -11,7 +11,7 @@ namespace Core\Routing;
 use Closure;
 use Core\Http\Request;
 use Core\Support\Session;
-use Core\Http\Response\Response;
+use Core\Http\Response;
 use Core\Support\DependencyInjection;
 use Core\Exceptions\RoutesNotDefinedException;
 use Core\Exceptions\ControllerNotFoundException;
@@ -54,14 +54,14 @@ class Router
     private static function executeHandler($handler, array $params)
     {
         if ($handler instanceof Closure) {
-            (new DependencyInjection())->resolveClosure($handler, $params);
+            return (new DependencyInjection())->resolveClosure($handler, $params);
         } 
         
         if (is_array($handler)) {
             list($controller, $action) = $handler;
 
             if (class_exists($controller) && method_exists($controller, $action)) {
-                (new DependencyInjection())->resolve($controller, $action, $params);
+                return (new DependencyInjection())->resolve($controller, $action, $params);
             }
             
             throw new ControllerNotFoundException("$controller/$action");
@@ -69,7 +69,7 @@ class Router
 
         if (is_string($handler)) {
             if (class_exists($handler)) {
-                (new DependencyInjection())->resolve($handler, '__invoke', $params);
+                return (new DependencyInjection())->resolve($handler, '__invoke', $params);
             }
 
             throw new ControllerNotFoundException($handler);
@@ -107,6 +107,6 @@ class Router
             }
         }
 
-        $response->view(view: config('errors.views.404'), code: 404);
+        $response->view(view: config('errors.views.404'))->send(404);
     }
 }

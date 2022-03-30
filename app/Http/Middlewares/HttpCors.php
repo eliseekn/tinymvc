@@ -8,7 +8,7 @@
 
 namespace App\Http\Middlewares;
 
-use Core\Http\Response\Response;
+use Core\Http\Response;
 
 /**
  * Manage HTTP CORS

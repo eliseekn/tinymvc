@@ -8,32 +8,32 @@
 
 namespace App\Http\Middlewares;
 
-use Core\Support\Auth;
 use Core\Http\Request;
-use Core\Http\Response\JsonResponse;
+use Core\Support\Auth;
+use Core\Http\Response;
 
 /**
  * Authenticate user by http
  */
 class HttpAuth
 {    
-    public function handle(Request $request, JsonResponse $response)
+    public function handle(Request $request, Response $response)
     {
         if (empty($request->getHttpAuth())) {
-            $response->send(data: __('auth_required'), code: 401);
+            $response->json([__('auth_required')])->send(401);
         }
 
         list($method, $credentials) = $request->getHttpAuth();
 
         if (trim($method) !== 'Basic') {
-            $response->send(data: __('invalid_auth_method'), code: 401);
+            $response->json([__('invalid_auth_method')])->send(401);
         }
 
         $credentials = base64_decode($credentials);
         list($email, $password) = explode(':', $credentials);
 
         if (!Auth::checkCredentials($email, $password, $user)) {
-            $response->send(data: __('invalid_credentials'), code: 401);
+            $response->json([__('invalid_credentials')])->send(401);
         }
     }
 }

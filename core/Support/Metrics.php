@@ -53,7 +53,10 @@ class Metrics
         'november',
     ];
     
-    public function __construct(public readonly string $table) {}
+    public function __construct(public readonly string $table, private string $driver = '') 
+    {
+        $this->driver = config('app.env') === 'test' ? $driver = config('testing.database.driver') : config('database.driver');
+    }
     
     /**
      * @link   https://www.tutsmake.com/mysql-get-data-of-current-date-week-month-year/
@@ -243,22 +246,10 @@ class Metrics
     private function formatPeriod(string $period)
     {
         switch ($period) {
-            case self::DAY:
-                return config('database.driver') === 'mysql' ? 'weekday(created_at)'
-                    : "strftime('%w', created_at)";
-
-            case self::WEEK:
-                return config('database.driver') === 'mysql' ? 'week(created_at)'
-                    : "strftime('%W', created_at)";
-
-            case self::MONTH:
-                return config('database.driver') === 'mysql' ? 'month(created_at)'
-                    : "strftime('%m', created_at)";
-
-            case self::YEAR:
-                return config('database.driver') === 'mysql' ? 'year(created_at)'
-                    : "strftime('%Y', created_at)";
-
+            case self::DAY: return $this->driver === 'mysql' ? 'weekday(created_at)' : "strftime('%w', created_at)";
+            case self::WEEK: return $this->driver === 'mysql' ? 'week(created_at)' : "strftime('%W', created_at)";
+            case self::MONTH: return $this->driver === 'mysql' ? 'month(created_at)' : "strftime('%m', created_at)";
+            case self::YEAR: return $this->driver === 'mysql' ? 'year(created_at)' : "strftime('%Y', created_at)";
             default: return '';
         } 
     }
@@ -271,7 +262,7 @@ class Metrics
             if ($period === self::MONTH) {
                 $data->$period = self::MONTHS[intval($data->$period)];
             } else if ($period === self::DAY || $period === self::TODAY) {
-                $data->$period = config('database.driver') === 'mysql' ? self::DAYS[intval($data->$period) + 1]
+                $data->$period = $this->driver === 'mysql' ? self::DAYS[intval($data->$period) + 1]
                     : self::DAYS[intval($data->$period)];
             } else if ($period === self::WEEK) {
                 $data->$period = __('week') . ' ' . $data->$period;
