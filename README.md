@@ -50,7 +50,7 @@ php console migrations:run --seed
 
 On your console :
 ```
-php console server:start
+php console serve
 ```
 For more console commands :
 ```
