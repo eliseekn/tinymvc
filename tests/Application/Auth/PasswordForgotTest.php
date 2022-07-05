@@ -6,12 +6,10 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
+use App\Database\Models\Token;
 use Core\Support\Encryption;
 use App\Database\Models\User;
-use App\Database\Models\Token;
 use Core\Testing\ApplicationTestCase;
-use App\Database\Factories\UserFactory;
-use App\Database\Factories\TokenFactory;
 use Core\Testing\Concerns\RefreshDatabase;
 
 class PasswordForgotTest extends ApplicationTestCase
@@ -20,21 +18,22 @@ class PasswordForgotTest extends ApplicationTestCase
 
     public function test_can_reset_password()
     {
-        $user = User::factory(UserFactory::class)->create();
-        $token = Token::factory(TokenFactory::class)->create(['email' => $user->email]);
+        $user = User::factory()->create();
+        $token = Token::factory()->create(['email' => $user->email]);
 
-        $client = $this->get("password/reset?email={$token->email}&token={$token->token}");
-        $client->assertRedirectedToUrl(url("password/new?email={$token->email}"));
-
-        $this->assertDatabaseDoesNotHave('tokens', $token->toArray());
+        $this
+            ->get("password/reset?email={$token->email}&token={$token->token}")
+            ->assertRedirectedToUrl(url("password/new?email={$token->email}"))
+            ->assertDatabaseDoesNotHave('tokens', $token->toArray());
     }
 
     public function test_can_update_password()
     {
-        $user = User::factory(UserFactory::class)->create();
+        $user = User::factory()->create();
 
-        $client = $this->post('password/update', ['email' => $user->email, 'password' => 'new_password']);
-        $client->assertRedirectedToUrl(url('login'));
+        $this
+            ->post('password/update', ['email' => $user->email, 'password' => 'new_password'])
+            ->assertRedirectedToUrl(url('login'));
 
         $user = User::find($user->id);
 

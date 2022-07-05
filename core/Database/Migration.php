@@ -13,10 +13,7 @@ namespace Core\Database;
  */
 class Migration
 {
-    /**
-	 * @var \Core\Database\QueryBuilder
-	 */
-    protected static $qb;
+    protected static QueryBuilder $qb;
     
     public static function createTable(string $name): self
     {
@@ -297,7 +294,9 @@ class Migration
     
     public function addPrimaryKey(string $column, bool $auto_increment = true): self
     {
-        $driver = config('app.env') === 'test' ? $driver = config('testing.database.driver') : config('database.driver');
+        $driver = config('app.env') === 'test'
+            ? config('testing.database.driver')
+            : config('database.driver');
 
         $pk = $driver === 'mysql' ? $this->addBigInt($column) : $this->addInteger($column);
         $pk->primaryKey();
@@ -307,7 +306,7 @@ class Migration
         return $pk;
     }
     
-    public function addCurrentTimestamp(string $created_at = 'created_at', string $updated_at = 'updated_at')
+    public function addCurrentTimestamp(string $created_at = 'created_at', string $updated_at = 'updated_at'): self
     {
         self::$qb->addCurrentTimestamp($created_at, $updated_at);
         return $this;

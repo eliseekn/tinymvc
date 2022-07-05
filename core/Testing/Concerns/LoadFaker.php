@@ -9,14 +9,14 @@
 namespace Core\Testing\Concerns;
 
 use Faker\Factory;
+use Faker\Generator;
 
 /**
  * Load faker library
  */
 trait LoadFaker
 {
-    /** @var \Faker\Generator $faker */
-    public $faker;
+    public Generator $faker;
 
     public function loadFaker()
     {

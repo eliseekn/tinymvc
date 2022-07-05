@@ -25,21 +25,21 @@ if (!function_exists('create_cookie')) {
 }
 
 if (!function_exists('get_cookie')) {
-	function get_cookie(string $name)
+	function cookie_get(string $name)
 	{
         return Cookies::get($name);
 	}
 }
 
 if (!function_exists('cookie_has')) {
-	function cookie_has(string $name)
+	function cookie_has(string $name): bool
 	{
 		return Cookies::has($name);
 	}
 }
 
 if (!function_exists('delete_cookie')) {
-	function delete_cookie(string $name)
+	function cookie_delete(string $name): bool
 	{
 		return Cookies::delete($name);
 	}
@@ -48,8 +48,8 @@ if (!function_exists('delete_cookie')) {
 /**
  * Sessions management
  */
-if (!function_exists('create_session')) {
-	function create_session(string $name, $data)
+if (!function_exists('session_create')) {
+	function session_create(string $name, $data)
 	{
 		Session::create($name, $data);
 	}
@@ -77,7 +77,7 @@ if (!function_exists('session_put')) {
 }
 
 if (!function_exists('session_has')) {
-	function session_has(string $name)
+	function session_has(string $name): bool
 	{
 		return Session::has($name);
 	}
@@ -91,7 +91,7 @@ if (!function_exists('session_forget')) {
 }
 
 if (!function_exists('auth_attempts_exceeded')) {
-    function auth_attempts_exceeded()
+    function auth_attempts_exceeded(): bool
     {
         if (!config('security.auth.max_attempts')) return false;
 
@@ -135,24 +135,23 @@ if (!function_exists('sanitize')) {
 	/**
      * Sanitize html and others scripting languages
      */
-    function sanitize(string $str)
+    function sanitize(string $str): string
     {
         $str = stripslashes($str);
         $str = htmlspecialchars($str);
-        $str = strip_tags($str);
 
-        return $str;
+        return strip_tags($str);
     }
 }
 
 if (!function_exists('generate_csrf_token')) {
-    function generate_csrf_token()
+    function generate_csrf_token(): string
     {
         if (session_has('csrf_token')) {
             $csrf_token = session_get('csrf_token');
         } else {
             $csrf_token = generate_token();
-            create_session('csrf_token', $csrf_token);
+            session_create('csrf_token', $csrf_token);
         }
 
         return $csrf_token;
@@ -163,7 +162,7 @@ if (!function_exists('csrf_token_input')) {
     /**
      * Generate crsf token html input tag
      */
-    function csrf_token_input()
+    function csrf_token_input(): string
     {
         return '<input type="hidden" name="_csrf_token" id="csrf_token" value="' . generate_csrf_token() . '">';
     }
@@ -173,7 +172,7 @@ if (!function_exists('csrf_token_meta')) {
     /**
      * Generate crsf token html meta tag
      */
-    function csrf_token_meta()
+    function csrf_token_meta(): string
     {
         return '<meta name="csrf_token" content="' . generate_csrf_token() . '">';
     }
@@ -183,14 +182,14 @@ if (!function_exists('method_input')) {
     /**
      * Set custom request method with html input tag
      */
-    function method_input(string $method)
+    function method_input(string $method): string
     {
         return '<input type="hidden" name="_method" value="' . $method . '">';
     }
 }
 
 if (!function_exists('valid_csrf_token')) {
-    function valid_csrf_token(string $csrf_token)
+    function valid_csrf_token(string $csrf_token): bool
     {
         return hash_equals(session_get('csrf_token'), $csrf_token);
     }
@@ -203,7 +202,7 @@ if (!function_exists('url')) {
 	/**
 	 * Generate abosulte url
 	 */
-	function url(string $uri, $params = null)
+	function url(string $uri, $params = null): string
 	{
         $url = config('app.url');
 

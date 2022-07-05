@@ -35,11 +35,11 @@ class EmailVerificationController
             ]);
 
             Alert::default(__('email_verification_link_sent'))->success();
-            $response->redirectUrl('login')->send(302);
+            $response->redirect('login')->send(302);
         }
         
         Alert::default(__('email_verification_link_not_sent'))->error();
-        $response->redirectUrl('signup')->send(302);
+        $response->redirect('signup')->send(302);
     }
 
 	public function verify(Request $request, Response $response)
@@ -64,12 +64,12 @@ class EmailVerificationController
 
 		if (!$user) {
             Alert::default(__('account_not_found'))->error();
-            $response->redirectUrl('signup')->send(400);
+            $response->redirect('signup')->send(400);
         }
 
         Mail::send(new WelcomeMail($user->email, $user->name));
 
         Alert::default(__('email_verified'))->success();
-        $response->redirectUrl('login')->send(400);
+        $response->redirect('login')->send(400);
     }
 }

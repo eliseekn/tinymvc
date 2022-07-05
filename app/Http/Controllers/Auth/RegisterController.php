@@ -22,10 +22,10 @@ class RegisterController
 {
     public function index(Request $request, Response $response)
     {
-        if (!Auth::check($request)) $response->view('auth.signup')->send(); 
+        if (!Auth::check($request)) $response->view('auth.signup')->send();
 
         $uri = !Session::has('intended') ? config('app.home') : Session::pull('intended');
-        $response->redirectUrl($uri)->send(302);
+        $response->redirect($uri)->send(302);
     }
 
     public function register(Request $request, Response $response, RegisterValidator $registerValidator)
@@ -34,12 +34,12 @@ class RegisterController
         $user = UserActions::create($validator->validated());
 
         if (config('security.auth.email_verification')) {
-            $response->redirectUrl('/email/notify')->send(302);
+            $response->redirect('/email/notify')->send(302);
         }
 
         Mail::send(new WelcomeMail($user->email, $user->name));
         Alert::default(__('account_created'))->success();
         
-        $response->redirectUrl('/login')->send(302);
+        $response->redirect('/login')->send(302);
     }
 }

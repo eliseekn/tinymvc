@@ -59,13 +59,13 @@ class ForgotPasswordController
 		}
 
         $token->delete();
-        $response->redirectUrl("/password/new?email={$request->email}")->send(302);
+        $response->redirect("/password/new?email={$request->email}")->send(302);
 	}
 	
 	public function update(Request $request, Response $response, LoginValidator $loginValidator)
 	{
         $loginValidator->validate($request->inputs(), $response);
-        $user = UserActions::updatPassword($request->password, $request->email);
+        $user = UserActions::updatePassword($request->password, $request->email);
 
         if (!$user) {
             Alert::default(__('password_not_reset'))->error();
@@ -73,6 +73,6 @@ class ForgotPasswordController
         }
 
         Alert::default(__('password_reset'))->success();
-        $response->redirectUrl('/login')->send(302);
+        $response->redirect('/login')->send(302);
 	}
 }

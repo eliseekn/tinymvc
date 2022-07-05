@@ -9,10 +9,13 @@
 namespace NAMESPACE;
 
 use Core\Database\Model;
+use Core\Database\Concerns\HasFactory;
 
 class CLASSNAME extends Model
 {
-    public static $table = 'TABLENAME';
+    use HasFactory;
+
+    public static string $table = 'TABLENAME';
 
     public function __construct()
     {

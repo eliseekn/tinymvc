@@ -16,12 +16,9 @@ use Core\Support\Metrics;
  */
 class Repository
 {
-    /**
-     * @var \Core\Database\QueryBuilder
-     */
-    protected $qb;
+    protected QueryBuilder $qb;
     
-    public function __construct(private readonly string $table) {}
+    public function __construct(private string $table) {}
 
     public function select(string ...$columns): self
     {
@@ -232,55 +229,23 @@ class Repository
     public function where(string $column, $operator = null, $value = null): self
 	{
         if (!is_null($operator) && is_null($value)) {
-            switch(strtolower($operator)) {
-                case 'null':
-                    $this->qb->whereColumn($column)->isNull();
-                    break;
-
-                case '!null':
-                    $this->qb->whereColumn($column)->notNull();
-                    break;
-
-                default:
-                    $this->qb->where($column, $operator);
-                    break;
-            }
+            match (strtolower($operator)) {
+                'null' => $this->qb->whereColumn($column)->isNull(),
+                '!null' => $this->qb->whereColumn($column)->notNull(),
+                default => $this->qb->where($column, $operator)
+            };
         }
 
         elseif (!is_null($operator) && !is_null($value)) {
-            switch(strtolower($operator)) {
-                case 'in':
-                    $this->qb->whereColumn($column)->in($value);
-                    break;
-
-                case '!in':
-                    $this->qb->whereColumn($column)->notIn($value);
-                    break;
-
-                case 'like':
-                    $this->qb->whereColumn($column)->like($value);
-                    break;
-
-                case '!like':
-                    $this->qb->whereColumn($column)->notLike($value);
-                    break;
-
-                case 'between':
-                    if (is_array($value)) {
-                        $this->qb->whereColumn($column)->between($value[0], $value[1]);
-                    }
-                    break;
-
-                case '!between':
-                    if (is_array($value)) {
-                        $this->qb->whereColumn($column)->notBetween($value[0], $value[1]);
-                    }
-                    break;
-
-                default:
-                    $this->qb->where($column, $operator, $value);
-                    break;
-            }
+            match(strtolower($operator)) {
+                'in' => $this->qb->whereColumn($column)->in($value),
+                '!in' => $this->qb->whereColumn($column)->notIn($value),
+                'like' => $this->qb->whereColumn($column)->like($value),
+                '!like' => $this->qb->whereColumn($column)->notLike($value),
+                'between' && is_array($value) => $this->qb->whereColumn($column)->between($value[0], $value[1]),
+                '!between' && is_array($value) => $this->qb->whereColumn($column)->notBetween($value[0], $value[1]),
+                default => $this->qb->where($column, $operator, $value),
+            };
         }
         
 		return $this;
@@ -289,55 +254,23 @@ class Repository
     public function and(string $column, $operator = null, $value = null): self
     {
         if (!is_null($operator) && is_null($value)) {
-            switch(strtolower($operator)) {
-                case 'null':
-                    $this->qb->andColumn($column)->isNull();
-                    break;
-
-                case '!null':
-                    $this->qb->andColumn($column)->notNull();
-                    break;
-
-                default:
-                    $this->qb->and($column, $operator);
-                    break;
-            }
+            match (strtolower($operator)) {
+                'null' => $this->qb->andColumn($column)->isNull(),
+                '!null' => $this->qb->andColumn($column)->notNull(),
+                default => $this->qb->and($column, $operator)
+            };
         }
 
         elseif (!is_null($operator) && !is_null($value)) {
-            switch(strtolower($operator)) {
-                case 'in':
-                    $this->qb->andColumn($column)->in($value);
-                    break;
-
-                case '!in':
-                    $this->qb->andColumn($column)->notIn($value);
-                    break;
-
-                case 'like':
-                    $this->qb->andColumn($column)->like($value);
-                    break;
-
-                case '!like':
-                    $this->qb->andColumn($column)->notLike($value);
-                    break;
-
-                case 'between':
-                    if (is_array($value)) {
-                        $this->qb->whereColumn($column)->between($value[0], $value[1]);
-                    }
-                    break;
-
-                case '!between':
-                    if (is_array($value)) {
-                        $this->qb->whereColumn($column)->notBetween($value[0], $value[1]);
-                    }
-                    break;
-
-                default:
-                    $this->qb->and($column, $operator, $value);
-                    break;
-            }
+            match(strtolower($operator)) {
+                'in' => $this->qb->andColumn($column)->in($value),
+                '!in' => $this->qb->andColumn($column)->notIn($value),
+                'like' => $this->qb->andColumn($column)->like($value),
+                '!like' => $this->qb->andColumn($column)->notLike($value),
+                'between' && is_array($value) => $this->qb->andColumn($column)->between($value[0], $value[1]),
+                '!between' && is_array($value) => $this->qb->andColumn($column)->notBetween($value[0], $value[1]),
+                default => $this->qb->and($column, $operator, $value),
+            };
         }
 
 		return $this;
@@ -346,55 +279,23 @@ class Repository
     public function or(string $column, $operator = null, $value = null): self
     {
         if (!is_null($operator) && is_null($value)) {
-            switch(strtolower($operator)) {
-                case 'null':
-                    $this->qb->orColumn($column)->isNull();
-                    break;
-
-                case '!null':
-                    $this->qb->orColumn($column)->notNull();
-                    break;
-
-                default:
-                    $this->qb->or($column, $operator);
-                    break;
-            }
+            match (strtolower($operator)) {
+                'null' => $this->qb->orColumn($column)->isNull(),
+                '!null' => $this->qb->orColumn($column)->notNull(),
+                default => $this->qb->or($column, $operator)
+            };
         }
 
         elseif (!is_null($operator) && !is_null($value)) {
-            switch(strtolower($operator)) {
-                case 'in':
-                    $this->qb->orColumn($column)->in($value);
-                    break;
-
-                case '!in':
-                    $this->qb->orColumn($column)->notIn($value);
-                    break;
-
-                case 'like':
-                    $this->qb->orColumn($column)->like($value);
-                    break;
-
-                case '!like':
-                    $this->qb->orColumn($column)->notLike($value);
-                    break;
-
-                case 'between':
-                    if (is_array($value)) {
-                        $this->qb->whereColumn($column)->between($value[0], $value[1]);
-                    }
-                    break;
-
-                case '!between':
-                    if (is_array($value)) {
-                        $this->qb->whereColumn($column)->notBetween($value[0], $value[1]);
-                    }
-                    break;
-
-                default:
-                    $this->qb->or($column, $operator, $value);
-                    break;
-            }
+            match(strtolower($operator)) {
+                'in' => $this->qb->orColumn($column)->in($value),
+                '!in' => $this->qb->orColumn($column)->notIn($value),
+                'like' => $this->qb->orColumn($column)->like($value),
+                '!like' => $this->qb->orColumn($column)->notLike($value),
+                'between' && is_array($value) => $this->qb->orColumn($column)->between($value[0], $value[1]),
+                '!between' && is_array($value) => $this->qb->orColumn($column)->notBetween($value[0], $value[1]),
+                default => $this->qb->or($column, $operator, $value),
+            };
         }
 
 		return $this;

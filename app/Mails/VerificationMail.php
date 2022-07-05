@@ -20,7 +20,8 @@ class VerificationMail extends Mailer
     {
         parent::__construct();
 
-        $this->to($email)
+        $this
+            ->to($email)
             ->from(config('mailer.sender.email'), config('mailer.sender.name'))
             ->reply(config('mailer.sender.email'), config('mailer.sender.name'))
 			->subject('Email verification')

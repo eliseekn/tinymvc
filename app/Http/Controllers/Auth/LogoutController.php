@@ -19,6 +19,6 @@ class LogoutController
         Auth::forget();
         Alert::toast(__('logged_out'))->success();
 
-        $response->redirectUrl(config('app.home'))->send(302);
+        $response->redirect(config('app.home'))->send(302);
 	}
 }

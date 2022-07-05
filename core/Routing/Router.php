@@ -9,6 +9,7 @@
 namespace Core\Routing;
 
 use Closure;
+use Core\Exceptions\ViewNotFoundException;
 use Core\Http\Request;
 use Core\Support\Session;
 use Core\Http\Response;
@@ -24,7 +25,7 @@ use Core\Exceptions\RouteHandlerNotDefinedException;
  */
 class Router
 {
-    private static function match(Request $request, string $method, string $route, &$params)
+    private static function match(Request $request, string $method, string $route, &$params): bool
     {
         if (
             !preg_match('/' . strtoupper($method) . '/', strtoupper($request->method())) ||
@@ -37,7 +38,10 @@ class Router
             
         return true;
     }
-    
+
+    /**
+     * @throws MiddlewareNotFoundException
+     */
     private static function executeMiddlewares(array $middlewares)
     {
         foreach ($middlewares as $middleware) {
@@ -50,7 +54,11 @@ class Router
             (new DependencyInjection())->resolve($middleware, 'handle');
         }
     }
-    
+
+    /**
+     * @throws InvalidRouteHandlerException
+     * @throws ControllerNotFoundException
+     */
     private static function executeHandler($handler, array $params)
     {
         if ($handler instanceof Closure) {
@@ -77,7 +85,28 @@ class Router
 
         throw new InvalidRouteHandlerException();
     }
-    
+
+    public static function dispatchRoute(string $route, array $options, array $params)
+    {
+        if (!isset($options['handler'])) {
+            throw new RouteHandlerNotDefinedException($route);
+        }
+
+        if (isset($options['middlewares'])) {
+            self::executeMiddlewares($options['middlewares']);
+        }
+
+        self::executeHandler($options['handler'], $params);
+    }
+
+    /**
+     * @throws ViewNotFoundException
+     * @throws MiddlewareNotFoundException
+     * @throws RoutesNotDefinedException
+     * @throws InvalidRouteHandlerException
+     * @throws RouteHandlerNotDefinedException
+     * @throws ControllerNotFoundException
+     */
     public static function dispatch(Request $request, Response $response)
     {   
         $routes = Route::$routes;
@@ -87,26 +116,17 @@ class Router
         foreach ($routes as $route => $options) {
             list($method, $route) = explode(' ', $route, 2);
 
-            $request_method = $request->inputs('_method', $request->method());
-            $request->method($request_method);
+            $request->method($request->inputs('_method'));
 
             if (self::match($request, $method, $route, $params)) {
-                if (!isset($options['handler'])) {
-                    throw new RouteHandlerNotDefinedException($route);
-                }
-
                 if (!$request->uriContains('api')) {
                     Session::push('history', [$request->uri()]);
                 }
 
-                if (isset($options['middlewares'])) {
-                    self::executeMiddlewares($options['middlewares']);
-                }
-
-                self::executeHandler($options['handler'], $params);
+                self::dispatchRoute($route, $options, $params);
             }
         }
 
-        $response->view(view: config('errors.views.404'))->send(404);
+        $response->view(config('errors.views.404'))->send(404);
     }
 }

@@ -8,11 +8,14 @@
 
 namespace App\Database\Models;
 
+use Core\Database\Concerns\HasFactory;
 use Core\Database\Model;
 
 class User extends Model
 {
-    public static $table = 'users';
+    use HasFactory;
+
+    public static string $table = 'users';
 
     public const ROLE_USER = 'user';
     public const ROLE_ADMIN = 'admin';

@@ -8,10 +8,12 @@
 
 namespace Core\Testing;
 
+use App\Database\Models\User;
+use Core\Database\Model;
 use Core\Support\Auth;
 use Core\Database\Repository;
 use PHPUnit\Framework\TestCase;
-use Core\Http\Client\Curl as Client;
+use Core\Http\Client\Client;
 
 /**
  * Manage application tests
@@ -83,10 +85,7 @@ class ApplicationTestCase extends TestCase
         return strtolower(config('app.name')) . '_' . $name;
     }
 
-    /**
-     * @param \Core\Database\Model|\App\Database\Models\User $user
-     */
-    public function auth($user)
+    public function auth(Model|User $user): self
     {
         $this->token = Auth::createToken($user->email);
         $this->headers = array_merge($this->headers, ['Authorization' => "Bearer $this->token"]);
@@ -100,147 +99,166 @@ class ApplicationTestCase extends TestCase
         return curl_file_create($filename, $mime_type, $name);
     }
 
-    public function get(string $uri, array $headers = [])
+    public function get(string $uri, array $headers = []): self
     {
         $this->client = Client::get($this->url($uri), $this->setHeaders($headers));
         return $this;
     }
 
-    public function post(string $uri, array $data = [], array $headers = [])
+    public function post(string $uri, array $data = [], array $headers = []): self
     {
         $this->client = Client::post($this->url($uri), $data, $this->setHeaders($headers));
         return $this;
     }
 
-    public function patch(string $uri, array $data = [], array $headers = [])
+    public function patch(string $uri, array $data = [], array $headers = []): self
     {
         $this->client = Client::patch($this->url($uri), $data, $this->setHeaders($headers));
         return $this;
     }
 
-    public function put(string $uri, array $data = [], array $headers = [])
+    public function put(string $uri, array $data = [], array $headers = []): self
     {
         $this->client = Client::put($this->url($uri), $data, $this->setHeaders($headers));
         return $this;
     }
 
-    public function delete(string $uri, array $headers = [])
+    public function delete(string $uri, array $headers = []): self
     {
         $this->client = Client::delete($this->url($uri), $this->setHeaders($headers));
         return $this;
     }
 
-    public function postJson(string $uri, array $data = [], array $headers = [])
+    public function postJson(string $uri, array $data = [], array $headers = []): self
     {
         $this->client = Client::post($this->url($uri), $data, $this->setHeaders($headers), true);
         return $this;
     }
 
-    public function patchJson(string $uri, array $data = [], array $headers = [])
+    public function patchJson(string $uri, array $data = [], array $headers = []): self
     {
         $this->client = Client::patch($this->url($uri), $data, $this->setHeaders($headers), true);
         return $this;
     }
 
-    public function putJson(string $uri, array $data = [], array $headers = [])
+    public function putJson(string $uri, array $data = [], array $headers = []): self
     {
         $this->client = Client::put($this->url($uri), $this->setHeaders($headers), $data, true);
         return $this;
     }
 
-    public function assertStatusOk()
+    public function assertStatusOk(): self
     {
         $this->assertStatusEquals(200);
+        return $this;
     }
 
-    public function assertStatusEquals(int $expected)
+    public function assertStatusEquals(int $expected): self
     {
         $this->assertEquals($expected, $this->getStatusCode());
+        return $this;
     }
 
-    public function assertStatusDoesNotEquals(int $expected)
+    public function assertStatusDoesNotEquals(int $expected): self
     {
         $this->assertNotEquals($expected, $this->getStatusCode());
+        return $this;
     }
 
-    public function assertResponseHasJson(array $expected)
+    public function assertResponseHasJson(array $expected): self
     {
         $this->assertJsonStringEqualsJsonString(json_encode($expected), $this->getBody());
+        return $this;
     }
 
-    public function assertResponseDoesNotHaveJson(array $expected)
+    public function assertResponseDoesNotHaveJson(array $expected): self
     {
         $this->assertJsonStringNotEqualsJsonString(json_encode($expected), $this->getBody());
+        return $this;
     }
 
-    public function assertRedirected(int $expected = 302)
+    public function assertRedirected(int $expected = 302): self
     {
         $this->assertStatusEquals($expected);
+        return $this;
     }
 
-    public function assertNotRedirected(int $expected = 302)
+    public function assertNotRedirected(int $expected = 302): self
     {
         $this->assertStatusDoesNotEquals($expected);
+        return $this;
     }
 
-    public function assertRedirectedToUrl(string $expected)
+    public function assertRedirectedToUrl(string $expected): self
     {
         $this->assertEquals($expected, $this->getHeaders('location'));
+        return $this;
     }
 
-    public function assertNotRedirectedToUrl(string $expected)
+    public function assertNotRedirectedToUrl(string $expected): self
     {
         $this->assertNotEquals($expected, $this->getHeaders('location'));
+        return $this;
     }
 
-    public function assertDatabaseHas(string $table, array $expected)
+    public function assertDatabaseHas(string $table, array $expected): self
     {
         $result = (new Repository($table))->findMany($expected, 'and')->exists();
         $this->assertTrue($result);
+        return $this;
     }
 
-    public function assertDatabaseDoesNotHave(string $table, array $expected)
+    public function assertDatabaseDoesNotHave(string $table, array $expected): self
     {
         $result = (new Repository($table))->findMany($expected, 'and')->exists();
         $this->assertFalse($result);
+        return $this;
     }
 
-    public function assertSessionExists(string $expected)
+    public function assertSessionExists(string $expected): self
     {
-        $this->assertTrue(array_key_exists($this->getSessionKey($expected), $this->getSession()));
+        $this->assertArrayHasKey($this->getSessionKey($expected), $this->getSession());
+        return $this;
     }
 
-    public function assertSessionDoesNotExists(string $expected)
+    public function assertSessionDoesNotExists(string $expected): self
     {
-        $this->assertFalse(array_key_exists($this->getSessionKey($expected), $this->getSession()));
+        $this->assertArrayNotHasKey($this->getSessionKey($expected), $this->getSession());
+        return $this;
     }
 
-    public function assertSessionHas(string $key, $value)
+    public function assertSessionHas(string $key, $value): self
     {
         if (!isset($this->getSession()[$this->getSessionKey($key)])) {
-            return $this->assertFalse(false);
+            $this->assertFalse(false);
+            return $this;
         }
 
         $this->assertEquals($value, $this->getSession()[$this->getSessionKey($key)]);
+        return $this;
     }
 
-    public function assertSessionDoesNotHave(string $key, $value)
+    public function assertSessionDoesNotHave(string $key, $value): self
     {
         if (!isset($this->getSession()[$this->getSessionKey($key)])) {
-            return $this->assertFalse(false);
+            $this->assertFalse(false);
+            return $this;
         }
 
         $this->assertNotEquals($value, $this->getSession()[$this->getSessionKey($key)]);
+        return $this;
     }
 
-    public function assertSessionHasErrors()
+    public function assertSessionHasErrors(): self
     {
         $this->assertFalse(empty($this->getSession()[$this->getSessionKey('errors')]));
+        return $this;
     }
 
-    public function assertSessionDoesNotHaveErrors()
+    public function assertSessionDoesNotHaveErrors(): self
     {
         $this->assertTrue(empty($this->getSession()[$this->getSessionKey('errors')]));
+        return $this;
     }
 
     public function dump()

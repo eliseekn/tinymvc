@@ -14,4 +14,6 @@ use Core\Routing\Route;
 
 Route::group(function () {
     //
-})->byPrefix('api')->register();
+})
+    ->byPrefix('api')
+    ->register();

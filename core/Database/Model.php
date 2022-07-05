@@ -14,7 +14,7 @@ namespace Core\Database;
 class Model
 {
     public $id;
-    public static $table = '';
+    public static string $table = '';
 
     public function __construct(string $table, $data = null)
     {
@@ -27,17 +27,7 @@ class Model
         }
     }
 
-    /**
-     * Generate model factory
-     * 
-     * @return \Core\Database\Factory
-     */
-    public static function factory(string $factory, int $count = 1)
-    {
-        return new $factory($count);
-    }
-
-    public static function findBy(string $column, $operator = null, $value = null)
+    public static function findBy(string $column, $operator = null, $value = null): self|bool
     {
         $data = (new Repository(static::$table))->findWhere($column, $operator, $value);
 
@@ -46,12 +36,12 @@ class Model
         return new self(static::$table, $data);
     }
 
-    public static function find(int $id)
+    public static function find(int $id): self
     {
         return self::findBy('id', $id);
     }
 
-    public static function all()
+    public static function all(): array|bool
     {
         return (new Repository(static::$table))->selectAll('*');
     }
@@ -126,7 +116,7 @@ class Model
         return (new Repository(static::$table))->trends($column, $type, $period, $interval, $query);
     }
 
-    public static function create(array $data)
+    public static function create(array $data): self|bool
     {
         $id = (new Repository(static::$table))->insertGetId($data);
 
@@ -145,12 +135,8 @@ class Model
     
     /**
      * Get relationship of the model 
-     *
-     * @param  string $table
-     * @param  string|null $column
-     * @return \Core\Database\Repository
      */
-    public function has(string $table, ?string $column = null)
+    public function has(string $table, ?string $column = null): Repository
     {
         if (is_null($column)) {
             $column = $this->getColumnFromTable(static::$table);
@@ -161,12 +147,8 @@ class Model
     
     /**
      * Get relationship belongs to the model
-     *
-     * @param  string $table
-     * @param  string|null $column
-     * @return \Core\Database\Repository
      */
-    public function belongsTo(string $table, ?string $column = null)
+    public function belongsTo(string $table, ?string $column = null): Repository
     {
         if (is_null($column)) {
             $column = $this->getColumnFromTable($table);
@@ -187,9 +169,6 @@ class Model
     
     /**
      * Fill model attributes with custom data
-     *
-     * @param  array $data
-     * @return void
      */
     public function fill(array $data)
     {
@@ -198,17 +177,17 @@ class Model
         }
     }
     
-    public function update(array $data)
+    public function update(array $data): bool|self
     {
         return !(new Repository(static::$table))->updateIfExists($this->id, $data) ? false : $this;
     }
 
-    public function delete()
+    public function delete(): bool
     {
         return (new Repository(static::$table))->deleteIfExists($this->id);
     }
 
-    public function save()
+    public function save(): bool|self
     {
         return is_null($this->id)
             ? self::create((array) $this)
@@ -235,7 +214,7 @@ class Model
         $this->{$column} = $this->{$column} - $value;
     }
 
-    public function toArray(string ...$attributes)
+    public function toArray(string ...$attributes): array
     {
         $data = (array) $this;
 
@@ -258,7 +237,7 @@ class Model
         return $data;
     }
 
-    protected function getColumnFromTable(string $table)
+    protected function getColumnFromTable(string $table): string
     {
         if ($table[-3] === 'ies') {
             $table = rtrim($table, 'ies');

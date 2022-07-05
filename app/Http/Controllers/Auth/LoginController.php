@@ -22,7 +22,7 @@ class LoginController
         if (!Auth::check($request)) $response->view('auth.login')->send(); 
 
         $uri = !Session::has('intended') ? config('app.home') : Session::pull('intended');
-        $response->redirectUrl($uri)->send(302);
+        $response->redirect($uri)->send(302);
     }
 
 	public function authenticate(Request $request, Response $response, LoginValidator $loginValidator)
@@ -33,10 +33,15 @@ class LoginController
             $uri = !Session::has('intended') ? config('app.home') : Session::pull('intended');
 
             Alert::toast(__('welcome', ['name' => Auth::get('name')]))->success();
-            $response->redirectUrl($uri)->send(302);
+            $response->redirect($uri)->send(302);
         }
 
         Alert::default(__('login_failed'))->error();
-        $response->redirectUrl('/login')->withInputs($request->only('email', 'password'))->withErrors([__('login_failed')])->send(302);
+
+        $response
+            ->redirect('/login')
+            ->withInputs($request->only('email', 'password'))
+            ->withErrors([__('login_failed')])
+            ->send(302);
     }
 }

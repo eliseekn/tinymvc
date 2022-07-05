@@ -8,12 +8,17 @@
 
 namespace Core\Http;
 
+use Core\Exceptions\RouteHandlerNotDefinedException;
+use Core\Exceptions\ViewNotFoundException;
+use Core\Routing\Route;
+use Core\Routing\Router;
 use Core\Routing\View;
 use Core\Support\Cookies;
 use Core\Support\Session;
 use Core\Exceptions\FileNotFoundException;
 use Core\Exceptions\InvalidJsonDataException;
 use Core\Exceptions\InvalidResponseDataException;
+use Exception;
 
 /**
  * Send HTTP response
@@ -26,12 +31,15 @@ class Response
         public array $headers = []
     ) {}
 
-    public function addHeaders(array $headers)
+    public function addHeaders(array $headers): self
     {
         $this->headers = array_merge($this->headers, $headers);
         return $this;
     }
 
+    /**
+     * @throws InvalidResponseDataException
+     */
     public function data(string $data): self
     {
         if (empty($data)) throw new InvalidResponseDataException();
@@ -42,34 +50,56 @@ class Response
         return $this;
     }
 
+    /**
+     * @throws ViewNotFoundException
+     */
     public function view(string $view, array $data = []): self
     {
         $this->data = View::getContent($view, $data);
         return $this;
     }
 
-    public function redirectUrl(string $uri): self
+    public function redirect(string $uri): self
     {
         $this->uri = $uri;
         $this->addHeaders(['Location' => url($this->uri)]);
 
         return $this;
     }
-    
+
+    /**
+     * @throws Exception
+     */
     public function redirectRoute(string $route, $params = null): self
     {
-        return $this->redirectUrl(route_uri($route, $params));
+        return $this->redirect(route_uri($route, $params));
     }
 
     public function redirectBack(): self
     {
         $history = Session::get('history');
 
-        if(empty($history)) return $this->redirectUrl('/');
+        if(empty($history)) return $this->redirect('/');
 
         end($history);
 
-        return $this->redirectUrl(prev($history));
+        return $this->redirect(prev($history));
+    }
+
+    /**
+     * @throws RouteHandlerNotDefinedException
+     */
+    public function redirectController(array $handler, array $params = [])
+    {
+        $routes = Route::$routes;
+
+        foreach ($routes as $route => $options) {
+            if ($options['handler'] === $handler) {
+                list(, $uri) = explode(' ', $route, 2);
+
+                Router::dispatchRoute($route, $options, $params);
+            }
+        }
     }
     
     public function intended(string $uri): self
@@ -101,6 +131,15 @@ class Response
         return $this;
     }
 
+    public function withoutCookie(string $name): self
+    {
+        Cookies::delete($name);
+        return $this;
+    }
+
+    /**
+     * @throws FileNotFoundException
+     */
     public function download(string $filename): self
     {
         if (!file_exists($filename)) {
@@ -124,6 +163,9 @@ class Response
         return $this;
     }
 
+    /**
+     * @throws InvalidJsonDataException
+     */
     public function json(array $data): self
     {
         if (empty($data)) throw new InvalidJsonDataException();

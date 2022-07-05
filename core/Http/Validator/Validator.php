@@ -8,9 +8,9 @@
 
 namespace Core\Http\Validator;
 
+use Exception;
 use GUMP;
 use Core\Http\Response;
-use Core\Http\Validator\ValidatorInterface;
 
 /**
  * Request fields validator
@@ -27,6 +27,9 @@ class Validator implements ValidatorInterface
         protected $errors = null,
     ) {}
 
+    /**
+     * @throws Exception
+     */
     public function validate(array $inputs, ?Response $response = null): self
     {
         $this->inputs = $inputs;
@@ -50,7 +53,10 @@ class Validator implements ValidatorInterface
     {
         return [];
     }
-    
+
+    /**
+     * @throws Exception
+     */
     public function addCustomRule(string $rule, callable $callback, string $error_message): self
     {
         GUMP::add_validator($rule, $callback, $error_message);

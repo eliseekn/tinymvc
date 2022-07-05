@@ -14,7 +14,7 @@ use App\Database\Models\User;
 
 class UserFactory extends Factory
 {
-    public static $model = User::class;
+    public static string $model = User::class;
 
     public function __construct(int $count = 1)
     {

@@ -13,14 +13,14 @@ use Core\Database\Factory;
 
 class CLASSNAME extends Factory
 {
-    public static $model = MODELNAME::class;
+    public static string $model = MODELNAME::class;
 
     public function __construct(int $count = 1)
     {
         parent::__construct($count);
     }
 
-    public function data()
+    public function data(): array
     {
         return [
             //

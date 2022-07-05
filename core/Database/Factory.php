@@ -9,17 +9,16 @@
 namespace Core\Database;
 
 use Faker\Factory as FakerFactory;
+use Faker\Generator;
 
 /**
  * Manage models factories
  */
 class Factory
 {
-    protected static $model;
-    protected $class;
-
-    /** @var \Faker\Generator $faker */
-    public $faker;
+    protected static string $model;
+    protected array|Model $class;
+    public Generator $faker;
 
     public function __construct(int $count = 1)
     {
@@ -34,15 +33,24 @@ class Factory
         }
     }
 
+    public static function fromModel(string $model, int $count = 1, ?string $namespace = null)
+    {
+        $model = explode('\\', $model);
+        $model = end($model);
+
+        $factory = !$namespace
+            ? '\App\Database\Factories\\' . $model . 'Factory'
+            : '\App\Database\Factories\\' . $namespace . '\\' . $model . 'Factory';
+
+        return new $factory($count);
+    }
+
     public function data()
     {
         return [];
     }
 
-    /**
-     * @return array|\Core\Database\Model
-     */
-    public function make(array $data = [])
+    public function make(array $data = []): array|Model
     {
         if (!is_array($this->class)) {
             $this->class->fill(array_merge($this->data(), $data));
@@ -56,7 +64,7 @@ class Factory
         return $this->class;
     }
 
-    public function create(array $data = [])
+    public function create(array $data = []): array|Model
     {
         $class = $this->make($data);
 

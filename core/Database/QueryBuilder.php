@@ -16,11 +16,11 @@ use Core\Database\Connection\Connection;
  */
 class QueryBuilder
 {
-	protected static $query = '';
-    protected static $args = [];
-    protected static $table;
+	protected static string $query = '';
+    protected static array $args = [];
+    protected static string $table;
 
-    protected static function setTable(string $name)
+    protected static function setTable(string $name): string
     {
         if (config('app.env') === 'test') {
             if (config('testing.database.driver') === 'sqlite') {

@@ -27,7 +27,7 @@ class Auth
         return Session::get('auth_attempts', 0);
     }
 
-    public static function attempt(Response $response, array $credentials, bool $remember = false)
+    public static function attempt(Response $response, array $credentials, bool $remember = false): bool
     {
         Session::push('auth_attempts', 1, 0);
 
@@ -47,7 +47,7 @@ class Auth
         return true;
     }
     
-    public static function checkCredentials(string $email, string $password, &$user)
+    public static function checkCredentials(string $email, string $password, &$user): bool
     {
         if (filter_var($email, FILTER_VALIDATE_EMAIL) !== false) {
             $user = User::findBy('email', $email);
@@ -68,7 +68,7 @@ class Auth
         return false;
     }
     
-    public static function checkToken(string $token, &$user)
+    public static function checkToken(string $token, &$user): bool
     {
         $token = Token::findBy('token', $token);
         $user = User::findBy('email', $token->email);
@@ -86,7 +86,7 @@ class Auth
         return Encryption::encrypt($token->token);
     }
 
-    public static function check(Request $request)
+    public static function check(Request $request): bool
     {
         $result = Session::has('user');
 
@@ -101,7 +101,7 @@ class Auth
         return $result;
     }
 
-    public static function remember()
+    public static function remember(): bool
     {
         return Cookies::has('user');
     }

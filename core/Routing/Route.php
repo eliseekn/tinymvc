@@ -17,9 +17,9 @@ use Core\Http\Response;
  */
 class Route
 {
-    protected static $route;
-    public static $routes = [];
-    protected static $tmp_routes = [];
+    protected static string $route;
+    public static array $routes = [];
+    protected static array $tmp_routes = [];
 
     private static function add(string $route, $handler): self
     {
@@ -124,8 +124,8 @@ class Route
 
         foreach (static::$tmp_routes as $route => $options) {
             list($method, $uri) = explode(' ', $route, 2);
-            $_route = implode(' ', [$method, $prefix . $uri]);
 
+            $_route = implode(' ', [$method, $prefix . $uri]);
             $_route = static::format($_route);
             static::$tmp_routes = static::update($route, $_route);
         }
@@ -189,20 +189,22 @@ class Route
     }
 
     /**
-     * Update formated route
+     * Update formatted route
      * 
      * @link   https://thisinterestsme.com/php-replace-array-key/
      */
-    private static function update(string $old, string $new)
+    private static function update(string $old, string $new): array
     {
         $array_keys = array_keys(static::$tmp_routes);
         $old_key_index = array_search($old, $array_keys);
         $array_keys[$old_key_index] = $new;
-        $new_array = array_combine($array_keys, static::$tmp_routes);
 
-        return $new_array;
+        return array_combine($array_keys, static::$tmp_routes);
     }
 
+    /**
+     * @throws RoutesPathsNotDefinedException
+     */
     public static function load()
     {
         if (empty(config('routes.paths'))) {

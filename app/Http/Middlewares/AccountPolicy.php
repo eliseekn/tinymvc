@@ -23,7 +23,11 @@ class AccountPolicy
         if (config('security.auth.email_verification')) {
             if (is_null(Auth::get('email_verified'))) {
                 Alert::default(__('email_not_verifed'))->error();
-                $response->redirectUrl('/login')->intended($request->fullUri())->send(302);
+
+                $response
+                    ->redirect('/login')
+                    ->intended($request->fullUri())
+                    ->send(302);
             }
         }
     }

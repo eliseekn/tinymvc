@@ -31,7 +31,7 @@ class Status extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         if (config('app.env') === 'test') {
-            $output->writeln('<fg=yellow>WARNING: You are running migrations on APP_ENV=test</>');
+            $output->writeln('<fg=yellow>WARNING: You are running commands in test environnement</>');
         }
         
         $rows = [];

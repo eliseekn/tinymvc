@@ -8,11 +8,14 @@
 
 namespace App\Database\Models;
 
+use Core\Database\Concerns\HasFactory;
 use Core\Database\Model;
 
 class Token extends Model
 {
-    public static $table = 'tokens';
+    use HasFactory;
+
+    public static string $table = 'tokens';
 
     public function __construct()
     {

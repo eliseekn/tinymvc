@@ -14,9 +14,9 @@ use Core\Http\Client\ClientInterface;
 /**
  * Send asynchronous HTTP requests using curl
  */
-class Curl implements ClientInterface
+class Client implements ClientInterface
 {
-    protected static $response = [];
+    protected static array $response = [];
 
     /**
      * @link   https://niraeth.com/php-quick-function-for-asynchronous-multi-curl/

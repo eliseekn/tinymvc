@@ -23,8 +23,10 @@ class View
 {
     /**
      * Retrieves view template content
+     *
+     * @throws ViewNotFoundException
      */
-    public static function getContent(string $view, array $data = [])
+    public static function getContent(string $view, array $data = []): string
     {
         $path = Storage::path(config('storage.views'));
         $view = real_path($view) . '.html.twig';

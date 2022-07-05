@@ -19,7 +19,8 @@ class TokenMail extends Mailer
     public function __construct(string $email, string $token) {
         parent::__construct();
         
-        $this->to($email)
+        $this
+            ->to($email)
             ->from(config('mailer.sender.email'), config('mailer.sender.name'))
             ->reply(config('mailer.sender.email'), config('mailer.sender.name'))
             ->subject('Password reset')
