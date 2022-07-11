@@ -16,7 +16,8 @@ use Core\Support\Mail\Mailer;
  */
 class TokenMail extends Mailer
 {
-    public function __construct(string $email, string $token) {
+    public function __construct(string $email, string $token)
+    {
         parent::__construct();
         
         $this

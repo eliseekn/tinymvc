@@ -30,8 +30,8 @@ class RegisterController
 
     public function register(Request $request, Response $response, RegisterValidator $registerValidator)
     {
-        $validator = $registerValidator->validate($request->inputs(), $response);
-        $user = UserActions::create($validator->validated());
+        $data = $registerValidator->validate($request->inputs(), $response);
+        $user = UserActions::create($data->validated());
 
         if (config('security.auth.email_verification')) {
             $response->redirect('/email/notify')->send(302);

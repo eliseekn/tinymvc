@@ -25,7 +25,7 @@ class Cookies
 		return config('security.encryption.cookies') ? Encryption::decrypt($value) : $value;
     }
     
-    public static function has(string $name)
+    public static function has(string $name): bool
     {
         return isset($_COOKIE[config('app.name') . '_' . $name]);
     }

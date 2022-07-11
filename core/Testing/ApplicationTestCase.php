@@ -47,7 +47,7 @@ class ApplicationTestCase extends TestCase
         }
     }
 
-    protected function url(string $uri)
+    protected function url(string $uri): string
     {
         return config('testing.host') . ':' . config('testing.port') . '/' . ltrim($uri, '/');
     }
@@ -75,12 +75,12 @@ class ApplicationTestCase extends TestCase
             : json_decode($this->getHeaders('session'), true);
     }
 
-    protected function setHeaders(array $headers)
+    protected function setHeaders(array $headers): array
     {
         return array_merge($this->headers, $headers);
     }
 
-    protected function getSessionKey(string $name)
+    protected function getSessionKey(string $name): string
     {
         return strtolower(config('app.name')) . '_' . $name;
     }

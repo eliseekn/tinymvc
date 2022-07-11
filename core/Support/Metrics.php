@@ -53,7 +53,7 @@ class Metrics
         'november',
     ];
     
-    public function __construct(public readonly string $table, private string $driver = '') 
+    public function __construct(public string $table, private string $driver = '')
     {
         $this->driver = config('app.env') === 'test' ? $driver = config('testing.database.driver') : config('database.driver');
     }
@@ -74,7 +74,7 @@ class Metrics
                 $data = $qb->select($type . '(' . $column . ') AS data', $this->getPeriod(self::DAY))
                     ->where('date(created_at)', Carbon::now()->toDateString())
                     ->subQuery(function ($q) use ($query) {
-                        if (!is_null($query) && !empty($query)) {
+                        if ($query) {
                             $q->rawQuery($query[0], $query[1]);
                         }
                     })
@@ -93,7 +93,7 @@ class Metrics
                         ->andColumn($this->formatPeriod(self::WEEK))->like($week);
 
                 $data = $qb->subQuery(function ($q) use ($query) {
-                        if (!is_null($query) && !empty($query)) {
+                        if ($query) {
                             $q->rawQuery($query[0], $query[1]);
                         }
                     })
@@ -111,7 +111,7 @@ class Metrics
                         ->andColumn($this->formatPeriod(self::MONTH))->like($month);
 
                 $data = $qb->subQuery(function ($q) use ($query) {
-                        if (!is_null($query) && !empty($query)) {
+                        if ($query) {
                             $q->rawQuery($query[0], $query[1]);
                         }
                     })
@@ -128,7 +128,7 @@ class Metrics
                     : $qb->where($this->formatPeriod(self::YEAR), $year);
             
                 $data = $qb->subQuery(function ($q) use ($query) {
-                        if (!is_null($query) && !empty($query)) {
+                        if ($query) {
                             $q->rawQuery($query[0], $query[1]);
                         }
                     })
@@ -146,7 +146,7 @@ class Metrics
                 }
                     
                 $data = $qb->subQuery(function ($q) use ($query) {
-                        if (!is_null($query) && !empty($query)) {
+                        if ($query) {
                             $q->rawQuery($query[0], $query[1]);
                         }
                     })
@@ -172,7 +172,7 @@ class Metrics
                 return $qb->select($type . '(' . $column . ') AS data')
                     ->where('date(created_at)', Carbon::now()->toDateString())
                     ->subQuery(function ($q) use ($query) {
-                        if (!is_null($query) && !empty($query)) {
+                        if ($query) {
                             $q->rawQuery($query[0], $query[1]);
                         }
                     })
@@ -187,7 +187,7 @@ class Metrics
                         ->andColumn($this->formatPeriod(self::WEEK))->like($week);
 
                 return $qb->subQuery(function ($q) use ($query) {
-                        if (!is_null($query) && !empty($query)) {
+                        if ($query) {
                             $q->rawQuery($query[0], $query[1]);
                         }
                     })
@@ -201,7 +201,7 @@ class Metrics
                         ->andColumn($this->formatPeriod(self::MONTH))->like($month);
 
                 return $qb->subQuery(function ($q) use ($query) {
-                        if (!is_null($query) && !empty($query)) {
+                        if ($query) {
                             $q->rawQuery($query[0], $query[1]);
                         }
                     })
@@ -214,7 +214,7 @@ class Metrics
                     : $qb->where($this->formatPeriod(self::YEAR), $year);
             
                 return $qb->subQuery(function ($q) use ($query) {
-                        if (!is_null($query) && !empty($query)) {
+                        if ($query) {
                             $q->rawQuery($query[0], $query[1]);
                         }
                     })
@@ -228,7 +228,7 @@ class Metrics
                 }
                     
                 return $qb->subQuery(function ($q) use ($query) {
-                        if (!is_null($query) && !empty($query)) {
+                        if ($query) {
                             $q->rawQuery($query[0], $query[1]);
                         }
                     })

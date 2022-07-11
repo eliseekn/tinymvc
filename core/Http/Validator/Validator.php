@@ -8,7 +8,6 @@
 
 namespace Core\Http\Validator;
 
-use Exception;
 use GUMP;
 use Core\Http\Response;
 
@@ -17,9 +16,6 @@ use Core\Http\Response;
  */
 class Validator implements ValidatorInterface
 {
-    /**
-     * @param bool|array|null $errors
-     */
     public function __construct(
         protected array $rules = [],
         protected array $messages = [],
@@ -27,9 +23,6 @@ class Validator implements ValidatorInterface
         protected $errors = null,
     ) {}
 
-    /**
-     * @throws Exception
-     */
     public function validate(array $inputs, ?Response $response = null): self
     {
         $this->inputs = $inputs;
@@ -37,8 +30,12 @@ class Validator implements ValidatorInterface
         $this->messages = empty($this->messages) ? $this->messages() : $this->messages;
         $this->errors = GUMP::is_valid($this->inputs, $this->rules, $this->messages);
 
-        if ($this->fails() && !is_null($response)) {
-            $response->redirectBack()->withErrors($this->errors())->withInputs($this->inputs)->send(302);
+        if ($this->fails() && $response) {
+            $response
+                ->redirectBack()
+                ->withErrors($this->errors())
+                ->withInputs($this->inputs)
+                ->send(302);
         }
         
         return $this;
@@ -54,9 +51,6 @@ class Validator implements ValidatorInterface
         return [];
     }
 
-    /**
-     * @throws Exception
-     */
     public function addCustomRule(string $rule, callable $callback, string $error_message): self
     {
         GUMP::add_validator($rule, $callback, $error_message);

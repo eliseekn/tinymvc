@@ -8,8 +8,6 @@
 
 namespace Core\Http;
 
-use Core\Exceptions\RouteHandlerNotDefinedException;
-use Core\Exceptions\ViewNotFoundException;
 use Core\Routing\Route;
 use Core\Routing\Router;
 use Core\Routing\View;
@@ -18,7 +16,6 @@ use Core\Support\Session;
 use Core\Exceptions\FileNotFoundException;
 use Core\Exceptions\InvalidJsonDataException;
 use Core\Exceptions\InvalidResponseDataException;
-use Exception;
 
 /**
  * Send HTTP response
@@ -37,9 +34,6 @@ class Response
         return $this;
     }
 
-    /**
-     * @throws InvalidResponseDataException
-     */
     public function data(string $data): self
     {
         if (empty($data)) throw new InvalidResponseDataException();
@@ -50,9 +44,6 @@ class Response
         return $this;
     }
 
-    /**
-     * @throws ViewNotFoundException
-     */
     public function view(string $view, array $data = []): self
     {
         $this->data = View::getContent($view, $data);
@@ -67,9 +58,6 @@ class Response
         return $this;
     }
 
-    /**
-     * @throws Exception
-     */
     public function redirectRoute(string $route, $params = null): self
     {
         return $this->redirect(route_uri($route, $params));
@@ -79,16 +67,13 @@ class Response
     {
         $history = Session::get('history');
 
-        if(empty($history)) return $this->redirect('/');
+        if(!$history) return $this->redirect('/');
 
         end($history);
 
         return $this->redirect(prev($history));
     }
 
-    /**
-     * @throws RouteHandlerNotDefinedException
-     */
     public function redirectController(array $handler, array $params = [])
     {
         $routes = Route::$routes;
@@ -97,7 +82,7 @@ class Response
             if ($options['handler'] === $handler) {
                 list(, $uri) = explode(' ', $route, 2);
 
-                Router::dispatchRoute($route, $options, $params);
+                Router::dispatchRoute($uri, $options, $params);
             }
         }
     }
@@ -137,9 +122,6 @@ class Response
         return $this;
     }
 
-    /**
-     * @throws FileNotFoundException
-     */
     public function download(string $filename): self
     {
         if (!file_exists($filename)) {
@@ -163,9 +145,6 @@ class Response
         return $this;
     }
 
-    /**
-     * @throws InvalidJsonDataException
-     */
     public function json(array $data): self
     {
         if (empty($data)) throw new InvalidJsonDataException();

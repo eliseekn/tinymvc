@@ -27,9 +27,9 @@ class EmailVerificationController
     {
         $token = generate_token();
 
-        if (Mail::send(new VerificationMail($request->email, $token))) {
+        if (Mail::send(new VerificationMail($request->input('email'), $token))) {
             Token::create([
-                'email'=> $request->email,
+                'email'=> $request->input('email'),
                 'token' => $token,
                 'expire' => Carbon::now()->addDay()->toDateTimeString()
             ]);
@@ -48,9 +48,9 @@ class EmailVerificationController
             $response->data(__('bad_request'))->send(400);
         }
 
-        $token = Token::findBy('email', $request->email);
+        $token = Token::findBy('email', $request->query('email'));
 
-        if (!$token || $token->token !== $request->token) {
+        if (!$token || $token->token !== $request->query('token')) {
 			$response->data(__('invalid_password_reset_link'))->send(400);
 		}
 
@@ -60,7 +60,7 @@ class EmailVerificationController
 
         $token->delete();
 
-        $user = UserActions::update(['email_verified' => Carbon::now()->toDateTimeString()], $request->queries('email'));
+        $user = UserActions::update(['email_verified' => Carbon::now()->toDateTimeString()], $request->query('email'));
 
 		if (!$user) {
             Alert::default(__('account_not_found'))->error();

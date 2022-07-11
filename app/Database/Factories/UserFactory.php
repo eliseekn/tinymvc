@@ -21,7 +21,7 @@ class UserFactory extends Factory
         parent::__construct($count);
     }
 
-    public function data()
+    public function data(): array
     {
         return [
             'name' => $this->faker->name(),

@@ -29,7 +29,7 @@ class LoginController
 	{
         $loginValidator->validate($request->inputs(), $response);
 
-        if (Auth::attempt($response, $request->only('email', 'password'), $request->has('remember'))) {
+        if (Auth::attempt($response, $request->only('email', 'password'), $request->hasInput('remember'))) {
             $uri = !Session::has('intended') ? config('app.home') : Session::pull('intended');
 
             Alert::toast(__('welcome', ['name' => Auth::get('name')]))->success();

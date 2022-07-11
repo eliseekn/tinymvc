@@ -167,7 +167,7 @@ class Route
         static::$tmp_routes = [];
     }
     
-    private static function format(string $route)
+    private static function format(string $route): string
     {
         list($method, $uri) = explode(' ', $route, 2);
 
@@ -202,9 +202,6 @@ class Route
         return array_combine($array_keys, static::$tmp_routes);
     }
 
-    /**
-     * @throws RoutesPathsNotDefinedException
-     */
     public static function load()
     {
         if (empty(config('routes.paths'))) {
@@ -212,7 +209,10 @@ class Route
         }
 
         $paths = array_map(function ($path) {
-            $path = Storage::path(config('storage.routes'))->addPath($path, '')->getPath();
+            $path = Storage::path(config('storage.routes'))
+                ->addPath($path, '')
+                ->getPath();
+
             return str_replace(['//', '//"'], ['/', '/"'], $path);
         }, config('routes.paths'));
 

@@ -15,8 +15,8 @@ use Core\Http\Request;
  */
 class Pager
 {
-    protected $pagination = [];
-    protected $items = [];
+    protected array $pagination = [];
+    protected array $items = [];
 
     public function __construct(int $total_items, int $items_per_page, int $page = 1)
     {
@@ -50,7 +50,7 @@ class Pager
         return $this->pagination['total_items'];
     }
     
-    public function getPageTotalItems()
+    public function getPageTotalItems(): int
     {
         return count($this->items);
     }
@@ -78,18 +78,12 @@ class Pager
         return $this->currentPage() + 1;
     }
     
-    /**
-     * Check if pagination has less pages
-     */
-    public function hasLess()
+    public function hasLess(): bool
     {
         return $this->currentPage() > 1;
     }
     
-    /**
-     * Check if pagination has more pages
-     */
-    public function hasMore()
+    public function hasMore(): bool
     {
         return $this->currentPage() < $this->totalPages();
     }
@@ -99,27 +93,27 @@ class Pager
         return $this->pagination['total_pages'];
     }
 
-    public function firstPageUrl()
+    public function firstPageUrl(): string
     {
         return url($this->generateUri(1));
     }
 
-    public function previousPageUrl()
+    public function previousPageUrl(): string
     {
         return url($this->generateUri($this->previousPage()));
     }
     
-    public function nextPageUrl()
+    public function nextPageUrl(): string
     {
         return url($this->generateUri($this->nextPage()));
     }
 
-    public function lastPageUrl()
+    public function lastPageUrl(): string
     {
         return url($this->generateUri($this->totalPages()));
     }
     
-    public function pageUrl(int $page)
+    public function pageUrl(int $page): string
     {
         return url($this->generateUri($page));
     }
@@ -127,7 +121,7 @@ class Pager
     /**
      * Generate uri with queries or not
      */
-    private function generateUri(int $page)
+    private function generateUri(int $page): string
     {
         $request = new Request();
         $uri = $request->fullUri();

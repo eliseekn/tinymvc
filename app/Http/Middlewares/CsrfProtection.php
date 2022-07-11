@@ -28,7 +28,7 @@ class CsrfProtection
             throw new MissingCsrfTokenException();
         }
 
-        if (!valid_csrf_token($request->_csrf_token)) {
+        if (!valid_csrf_token($request->input('_csrf_token'))) {
             throw new InvalidCsrfTokenException();
         }
     }

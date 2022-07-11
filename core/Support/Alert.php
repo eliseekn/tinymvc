@@ -15,7 +15,7 @@ use Core\Support\Session;
  */
 class Alert
 {
-    protected static $alert = [];
+    protected static array $alert = [];
 
     public static function default($message, bool $dismiss = true): self
     {

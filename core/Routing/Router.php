@@ -39,9 +39,6 @@ class Router
         return true;
     }
 
-    /**
-     * @throws MiddlewareNotFoundException
-     */
     private static function executeMiddlewares(array $middlewares)
     {
         foreach ($middlewares as $middleware) {
@@ -55,10 +52,6 @@ class Router
         }
     }
 
-    /**
-     * @throws InvalidRouteHandlerException
-     * @throws ControllerNotFoundException
-     */
     private static function executeHandler($handler, array $params)
     {
         if ($handler instanceof Closure) {
@@ -99,14 +92,6 @@ class Router
         self::executeHandler($options['handler'], $params);
     }
 
-    /**
-     * @throws ViewNotFoundException
-     * @throws MiddlewareNotFoundException
-     * @throws RoutesNotDefinedException
-     * @throws InvalidRouteHandlerException
-     * @throws RouteHandlerNotDefinedException
-     * @throws ControllerNotFoundException
-     */
     public static function dispatch(Request $request, Response $response)
     {   
         $routes = Route::$routes;
@@ -116,7 +101,7 @@ class Router
         foreach ($routes as $route => $options) {
             list($method, $route) = explode(' ', $route, 2);
 
-            $request->method($request->inputs('_method'));
+            $request->method($request->input('_method'));
 
             if (self::match($request, $method, $route, $params)) {
                 if (!$request->uriContains('api')) {
@@ -127,6 +112,8 @@ class Router
             }
         }
 
-        $response->view(config('errors.views.404'))->send(404);
+        $response
+            ->view(config('errors.views.404'))
+            ->send(404);
     }
 }

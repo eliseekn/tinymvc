@@ -18,7 +18,7 @@ use Twig\Extension\AbstractExtension;
  */
 class TwigExtensions extends AbstractExtension implements GlobalsInterface
 {    
-    public function getCustomFunctions()
+    public function getCustomFunctions(): array
     {
         $functions = [];
 
@@ -29,7 +29,7 @@ class TwigExtensions extends AbstractExtension implements GlobalsInterface
         return $functions;
     }
 
-    public function getCustomFilters()
+    public function getCustomFilters(): array
     {
         $filters = [];
 
@@ -40,7 +40,7 @@ class TwigExtensions extends AbstractExtension implements GlobalsInterface
         return $filters;
     }
 
-    public function getCustomGlobals()
+    public function getCustomGlobals(): array
     {
         $globals = [];
 
@@ -56,12 +56,12 @@ class TwigExtensions extends AbstractExtension implements GlobalsInterface
         return $this->getCustomGlobals();
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return $this->getCustomFilters();
     }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return $this->getCustomFunctions() + [
             new TwigFunction('auth_attempts_exceeded', 'auth_attempts_exceeded'),

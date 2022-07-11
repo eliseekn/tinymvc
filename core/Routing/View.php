@@ -23,8 +23,6 @@ class View
 {
     /**
      * Retrieves view template content
-     *
-     * @throws ViewNotFoundException
      */
     public static function getContent(string $view, array $data = []): string
     {

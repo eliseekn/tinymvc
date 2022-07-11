@@ -48,10 +48,7 @@ class Session
             unset($_SESSION[strtolower(config('app.name')) . '_' . $name]);
         }
     }
-    
-    /**
-     * Get session data and close it
-     */
+
     public static function pull(string $name)
     {
         $data = self::get($name);

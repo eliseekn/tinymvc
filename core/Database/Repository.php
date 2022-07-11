@@ -94,6 +94,17 @@ class Repository
         return $result;
     }
 
+    public function findOr(int $id, callable $callback)
+    {
+        $result = $this->findWhere('id', $id);
+
+        if ($result === false) {
+            call_user_func($callback);
+        }
+
+        return $result;
+    }
+
     public function findBetween(string $column, $start = null, $end = null): self
     {
         return $this->select('*')->whereBetween($column, $start, $end)->get();

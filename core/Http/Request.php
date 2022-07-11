@@ -16,23 +16,18 @@ use Core\Support\Uploader;
  */
 class Request
 {    
-    public function __construct()
-    {
-        foreach ($this->all() as $key => $value) {
-            $this->{$key} = $value;
-        }
-    }
+    public function __construct() {}
 
     public function headers(?string $key = null, $default = null)
     {
-        $header = is_null($key) ? $_SERVER : ($_SERVER[$key] ?? '');
-        return empty($header) || is_null($header) ? $default : $header;
+        $header = !$key ? $_SERVER : ($_SERVER[$key] ?? '');
+        return !$header ? $default : $header;
     }
     
-    public function getHttpAuth()
+    public function getHttpAuth(): array
     {
         $header = $this->headers('HTTP_AUTHORIZATION', '');
-        return empty($header) ? [] : explode(' ', $header);
+        return explode(' ', $header);
     }
     
     public function host()
@@ -40,27 +35,40 @@ class Request
         return $this->headers('HTTP_HOST', '');
     }
     
-    public function queries(?string $key = null, $default = null)
+    public function query(string $key, $default = null)
     {
-        $query = is_null($key) ? $_GET : ($_GET[$key] ?? '');
-        return empty($query) || is_null($query) ? $default : $query;
+        $query = $this->queries()[$key];
+        return !$query ? $default : $query;
     }
 
-    public function inputs(?string $key = null, $default = null)
+    public function input(string $key, $default = null)
     {
-        $_POST = array_merge($_POST, $this->raw());
-
-        $input = is_null($key) ? $_POST : ($_POST[$key] ?? '');
-        return empty($input) || is_null($input) ? $default : $input;
+        $input = $this->inputs()[$key];
+        return !$input ? $default : $input;
     }
 
-    public function files(?string $key = null, $default = null)
+    public function file(string $key, $default = null)
     {
-        $files = is_null($key) ? $_FILES : ($_FILES[$key] ?? '');
-        return empty($files) || is_null($files) ? $default : $files;
+        $file = $_FILES[$key];
+        return !$file ? $default : $file;
     }
 
-    public function raw()
+    public function queries(): array
+    {
+        return $_GET;
+    }
+
+    public function inputs(): array
+    {
+        return array_merge($_POST, $this->raw());
+    }
+
+    public function files(): array
+    {
+        return $_FILES;
+    }
+
+    public function raw(): array
     {
         $data = [];
         parse_raw_http_request($data);
@@ -68,9 +76,9 @@ class Request
         return $data;
     }
 
-    private function getSingleFile(string $input, array $allowed_extensions = [])
+    private function getSingleFile(string $input, array $allowed_ext = []): null|Uploader
     {
-        if (!isset($_FILES[$input]) || empty($_FILES[$input])) return null;
+        if (!$_FILES[$input]) return null;
         
         return new Uploader([
             'name' => $_FILES[$input]['name'],
@@ -78,14 +86,17 @@ class Request
             'size' => $_FILES[$input]['size'],
             'type' => $_FILES[$input]['type'],
             'error' => $_FILES[$input]['error']
-        ], $allowed_extensions);
+        ], $allowed_ext);
     }
 
-    private function getMultipleFiles(string $input, array $allowed_extensions = [])
+    /**
+     * @return array<int, Uploader>
+     */
+    private function getMultipleFiles(string $input, array $allowed_ext = []): array
     {
         $files = [];
 
-        if (!isset($_FILES[$input]) || empty($_FILES[$input])) return $files;
+        if (!$_FILES[$input]) return $files;
 
         $count = is_array($_FILES[$input]['tmp_name']) ? count($_FILES[$input]['tmp_name']) : 1;
 
@@ -96,31 +107,33 @@ class Request
                 'size' => $_FILES[$input]['size'][$i],
                 'type' => $_FILES[$input]['type'][$i],
                 'error' => $_FILES[$input]['error'][$i]
-            ], $allowed_extensions);
+            ], $allowed_ext);
         }
         
         return $files;
     }
     
-    public function getFiles(string $input, bool $multiple = false, array $allowed_extensions = [])
+    public function getFiles(string $input, bool $multiple = false, array $allowed_ext = []): Uploader|array
     {
-        return $multiple ? $this->getMultipleFiles($input, $allowed_extensions) 
-            : $this->getSingleFile($input, $allowed_extensions);
+        return $multiple ? $this->getMultipleFiles($input, $allowed_ext)
+            : $this->getSingleFile($input, $allowed_ext);
     }
 
     public function method(?string $value = null)
     {
-        if (is_null($value)) return $this->headers('REQUEST_METHOD', '');
+        if (!$value) {
+            return $this->headers('REQUEST_METHOD', '');
+        }
 
         $_SERVER['REQUEST_METHOD'] = $value;
     }
     
-    public function is(string $method)
+    public function is(string $method): bool
     {
         return $this->method() === strtoupper($method);
     }
 
-    public function fullUri()
+    public function fullUri(): string
     {
         $uri = $this->headers('REQUEST_URI', '');
         $uri = urldecode($uri);
@@ -132,7 +145,7 @@ class Request
         return $uri;
     }
 
-    public function uri()
+    public function uri(): string
     {
         $uri = $this->fullUri();
 
@@ -144,7 +157,7 @@ class Request
         return $uri;        
     }
 
-    public function uriContains(string $uri)
+    public function uriContains(string $uri): string
     {
         return url_contains($uri);
     }
@@ -153,78 +166,56 @@ class Request
     {
         return $this->headers('REMOTE_ADDR', '');
     }
-    
-    public function has(string ...$items)
+
+    public function hasQuery(string ...$items): bool
     {
         $result = false;
 
         foreach ($items as $item) {
-            $result = isset($this->{$item});
+            $result = !is_null($this->query($item));
         }
 
         return $result;
     }
     
-    public function hasQuery(string ...$items)
+    public function hasInput(string ...$items): bool
     {
         $result = false;
 
         foreach ($items as $item) {
-            $result = !is_null($this->queries($item));
+            $result = !is_null($this->input($item));
         }
 
         return $result;
     }
-    
-    public function hasInput(string ...$items)
+
+    public function setInput(string $key, $value)
+    {
+        $_POST[$key] = $value;
+    }
+
+    public function setQuery(string $key, $value)
+    {
+        $_GET[$key] = $value;
+    }
+
+    public function filled(string ...$items): bool
     {
         $result = false;
 
         foreach ($items as $item) {
-            $result = !is_null($this->inputs($item));
-        }
-
-        return $result;
-    }
-    
-    public function filled(string ...$items)
-    {
-        $result = $this->has(...$items);
-
-        if (!$result) return false;
-
-        foreach ($items as $item) {
-            $result = !empty($this->{$item}) && !is_null($this->{$item});
+            $result = $this->hasInput($item) && !empty($item);
         }
 
         return $result;
     }
 
-    /**
-     * Retrieves POST/GET item value
-     */
-    public function get(string $item, $default = null)
-    {
-        return $this->filled($item) ? $this->{$item} : $default;
-    }
-
-    /**
-     * Set POST/GET item value
-     */
-    public function set(string $item, $value)
-    {
-        if (isset($_POST[$item])) $_POST[$item] = $value;
-        if (isset($_GET[$item])) $_GET[$item] = $value;
-
-        $this->{$item} = $value;
-    }
-    
-    public function only(string ...$items)
+    public function only(string ...$items): array
     {
         $result = [];
 
         foreach ($items as $item) {
-            if ($this->has($item)) {
+            if ($this->hasInput($item)) {
                 $result = array_merge($result, [$item => $this->{$item}]);
             }
         }
@@ -232,11 +223,11 @@ class Request
         return $result;
     }
     
-    public function except(string ...$items)
+    public function except(string ...$items): array
     {
         $result = [];
 
-        if (empty($this->all())) return $result;
+        if (!$this->all()) return $result;
 
         foreach ($items as $item) {
             foreach ($this->all() as $key => $input) {
@@ -249,23 +240,15 @@ class Request
         return $result;
     }
     
-    public function all()
+    public function all(): array
     {
-        $all = [];
+        $data = [];
 
-        if (!is_null($this->inputs())) {
-            $all = array_merge($all, $this->inputs());
-        }
+        if ($this->inputs()) $data[] = $this->inputs();
+        if ($this->queries()) $data[] = $this->queries();
+        if ($this->files()) $data[] = $this->files();
 
-        if (!is_null($this->queries())) {
-            $all = array_merge($all, $this->queries());
-        }
-
-        if (!is_null($this->files())) {
-            $all = array_merge($all, $this->files());
-        }
-
-        return $all;
+        return $data;
     }
 
     public function validate(array $rules, array $messages = [], array $inputs = []): Validator

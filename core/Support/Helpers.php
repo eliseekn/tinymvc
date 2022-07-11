@@ -18,7 +18,7 @@ use Core\Support\Encryption;
  * Cookies management
  */
 if (!function_exists('create_cookie')) {
-    function create_cookie(string $name, string $value, int $expire = 3600, bool $secure = false, string $domain = '') 
+    function create_cookie(string $name, string $value, int $expire = 3600, bool $secure = false, string $domain = '')
     {
         return Cookies::create($name, $value, $expire, $secure, $domain);
 	}
@@ -112,7 +112,7 @@ if (!function_exists('auth')) {
 	{
         $user = session_get('user');
 
-        if (is_null($user)) return false;
+        if ($user) return false;
 
 		return $user->{$key};
 	}
@@ -125,7 +125,7 @@ if (!function_exists('hash_pwd')) {
     /**
      * Hash password
      */
-    function hash_pwd(string $password)
+    function hash_pwd(string $password): string
     {
         return Encryption::hash($password);
     }
@@ -216,7 +216,7 @@ if (!function_exists('url')) {
 }
 
 if (!function_exists('route_uri')) {
-    function route_uri(string $name, $params = null)
+    function route_uri(string $name, $params = null): string
     {
         $uri = '';
         $patterns = ['([a-zA-Z-_]+)', '(\d+)', '([^/]+)'];
@@ -281,7 +281,7 @@ if (!function_exists('route')) {
     /**
      * Get route absolute url
      */
-    function route(string $name, $params = null)
+    function route(string $name, $params = null): string
     {
         return url(route_uri($name, $params));
     }
@@ -291,7 +291,7 @@ if (!function_exists('assets')) {
     /**
      * Generate assets url from public path
      */
-    function assets(string $asset, $params = null)
+    function assets(string $asset, $params = null): string
     {
         return url('public/' . $asset, $params);
     }
@@ -301,7 +301,7 @@ if (!function_exists('storage')) {
     /**
      * Generate storage path url
      */
-    function storage(string $path, $params = null)
+    function storage(string $path, $params = null): string
     {
         return url('storage/' . $path, $params);
     }
@@ -311,14 +311,14 @@ if (!function_exists('resources')) {
     /**
      * Generate resources path url
      */
-    function resources(string $path, $params = null)
+    function resources(string $path, $params = null): string
     {
         return url('resources/' . $path, $params);
     }
 }
 
 if (!function_exists('current_url')) {
-	function current_url()
+	function current_url(): string
 	{
 		return url((new Request())->fullUri());
 	}
@@ -338,7 +338,7 @@ if (!function_exists('real_path')) {
     /**
      * Replace '.' by OS's directory separator
      */
-    function real_path(string $path)
+    function real_path(string $path): string
     {
         return str_replace('.', DS, $path);
     }
@@ -348,7 +348,7 @@ if (!function_exists('absolute_path')) {
     /**
      * Generate absolute path
      */
-    function absolute_path(string $path)
+    function absolute_path(string $path): string
     {
         return APP_ROOT . real_path($path) . DS;
     }
@@ -358,7 +358,7 @@ if (!function_exists('slugify')) {
 	/**
 	 * @link   https://ourcodeworld.com/articles/read/253/creating-url-slugs-properly-in-php-including-transliteration-support-for-utf-8
 	 */
-	function slugify(string $str, string $separator = '-')
+	function slugify(string $str, string $separator = '-'): string
 	{
 		return strtolower(
 			trim(
@@ -382,7 +382,7 @@ if (!function_exists('slugify')) {
 }
 
 if (!function_exists('generate_token')) {
-	function generate_token(int $length = 32)
+	function generate_token(int $length = 32): string
 	{
 		return bin2hex(random_bytes($length));
 	}
@@ -394,7 +394,7 @@ if (!function_exists('config')) {
 	 */
 	function config(string $data, $default = null)
 	{
-        if (strpos($data, '.') === false) return null;
+        if (!str_contains($data, '.')) return null;
 
         $file = substr($data, 0, strpos($data, '.'));
         $data = substr($data, strpos($data, '.') + 1, strlen($data));
@@ -408,14 +408,14 @@ if (!function_exists('__')) {
     /**
      * Translate words and expressions
      */
-    function __(string $expr, array $data = [])
+    function __(string $expr, array $data = []): string
     {
         return Config::readTranslations($expr, $data);
     }
 }
 
 if (!function_exists('get_file_extension')) {	
-	function get_file_extension(string $file)
+	function get_file_extension(string $file): string
 	{
 		if (empty($file) || strpos($file, '.') === false) return '';
 		
@@ -425,7 +425,7 @@ if (!function_exists('get_file_extension')) {
 }
 
 if (!function_exists('get_file_name')) {	
-	function get_file_name(string $file)
+	function get_file_name(string $file): string
 	{
 		if (empty($file) || strpos($file, '.') === false) return '';
 		
@@ -435,9 +435,9 @@ if (!function_exists('get_file_name')) {
 }
 
 if (!function_exists('save_log')) {
-	function save_log(string $message)
+	function save_log(string $message): bool
 	{
-        error_log($message);
+        return error_log($message);
     }
 }
 

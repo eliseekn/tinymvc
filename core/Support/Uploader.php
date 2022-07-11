@@ -15,9 +15,9 @@ use Core\Support\Storage;
  */
 class Uploader
 {    
-    public $filename = '';
+    public string $filename = '';
 
-    public function __construct(private readonly array $file = [], private readonly array $allowed_extensions = []) {}
+    public function __construct(private array $file = [], private array $allowed_extensions = []) {}
     
     public function getOriginalFilename()
     {
@@ -41,8 +41,7 @@ class Uploader
     
     public function isAllowed(): bool
     {
-        return empty($this->allowed_extensions) ? true 
-            : in_array(strtolower($this->getFileExtension()), $this->allowed_extensions);
+        return empty($this->allowed_extensions) || in_array(strtolower($this->getFileExtension()), $this->allowed_extensions);
     }
     
     public function isUploaded(): bool
@@ -60,7 +59,7 @@ class Uploader
         return $this->file['size'] ?? 0;
     }
     
-    public function fileSizeToString()
+    public function fileSizeToString(): string
     {
         if ($this->getFileSize() <= 0) return '0 KB';
 
@@ -70,20 +69,22 @@ class Uploader
             : number_format($bytes, 1) . ' KB';
     }
     
-    public function getError()
+    public function getError(): string
     {
-        if ($this->file['error'] != UPLOAD_ERR_OK) {
-            switch($this->file['error']) {
-                case UPLOAD_ERR_INI_SIZE: return 'Uploaded file exceeds the upload_max_filesize directive in php.ini';
-                case UPLOAD_ERR_FORM_SIZE: return 'Uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form';
-                case UPLOAD_ERR_PARTIAL: return 'Uploaded file was only partially uploaded.';
-                case UPLOAD_ERR_NO_FILE: return 'No file was uploaded';
-                case UPLOAD_ERR_NO_TMP_DIR: return 'Missing a temporary folder';
-                case UPLOAD_ERR_CANT_WRITE: return 'Failed to write file to disk';
-                case 8: return 'File upload stopped by extension';
-                default: return 'Unknow error';
-            }
+        if ($this->file['error'] == UPLOAD_ERR_OK) {
+            return '';
         }
+
+        return match ($this->file['error']) {
+            UPLOAD_ERR_INI_SIZE => 'Uploaded file exceeds the upload_max_filesize directive in php.ini',
+            UPLOAD_ERR_FORM_SIZE => 'Uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
+            UPLOAD_ERR_PARTIAL => 'Uploaded file was only partially uploaded.',
+            UPLOAD_ERR_NO_FILE => 'No file was uploaded',
+            UPLOAD_ERR_NO_TMP_DIR => 'Missing a temporary folder',
+            UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk',
+            8 => 'File upload stopped by extension',
+            default => 'Unknown error',
+        };
     }
 
     public function save(?string $destination = null, ?string $filename = null): bool

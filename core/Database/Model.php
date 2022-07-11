@@ -16,24 +16,14 @@ class Model
     public $id;
     public static string $table = '';
 
-    public function __construct(string $table, $data = null)
+    public function __construct(string $table)
     {
         static::$table = $table;
-
-        if (!is_null($data)) {
-            foreach ($data as $key => $value) {
-                $this->{$key} = $value;
-            }
-        }
     }
 
-    public static function findBy(string $column, $operator = null, $value = null): self|bool
+    public static function findBy(string $column, $operator = null, $value = null)
     {
-        $data = (new Repository(static::$table))->findWhere($column, $operator, $value);
-
-        if (!$data) return false;
-
-        return new self(static::$table, $data);
+        return (new Repository(static::$table))->findWhere($column, $operator, $value);
     }
 
     public static function find(int $id): self
@@ -132,9 +122,9 @@ class Model
     {
         return (new Repository(static::$table))->delete()->execute();
     }
-    
+
     /**
-     * Get relationship of the model 
+     * Get relationship of the model
      */
     public function has(string $table, ?string $column = null): Repository
     {
@@ -144,7 +134,7 @@ class Model
 
         return (new Repository($table))->select('*')->where($column, $this->id);
     }
-    
+
     /**
      * Get relationship belongs to the model
      */
@@ -166,7 +156,7 @@ class Model
     {
         return $this->{$key};
     }
-    
+
     /**
      * Fill model attributes with custom data
      */
@@ -176,7 +166,7 @@ class Model
             $this->{$key} = $value;
         }
     }
-    
+
     public function update(array $data): bool|self
     {
         return !(new Repository(static::$table))->updateIfExists($this->id, $data) ? false : $this;
@@ -200,7 +190,7 @@ class Model
             $this->{$column}++;
             return;
         }
-            
+
         $this->{$column} = $this->{$column} + $value;
     }
 
@@ -243,7 +233,7 @@ class Model
             $table = rtrim($table, 'ies');
             $table .= 'y';
         }
-    
+
         if ($table[-1] === 's') {
             $table = rtrim($table, 's');
         }
@@ -251,4 +241,3 @@ class Model
         return $table .= '_id';
     }
 }
-

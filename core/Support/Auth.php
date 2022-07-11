@@ -78,10 +78,11 @@ class Auth
     
     public static function createToken(string $email): string
     {
-        $token = Token::create([
-            'email' => $email,
-            'token' => generate_token(),
-        ]);
+        $token = Token::factory()
+            ->create([
+                'email' => $email,
+                'token' => generate_token(),
+            ]);
 
         return Encryption::encrypt($token->token);
     }
@@ -110,7 +111,7 @@ class Auth
     {
         $user = Session::get('user');
 
-        if (is_null($key)) return $user;
+        if (!$key) return $user;
 
         return $user->{$key};
     }
