@@ -14,7 +14,7 @@ use Core\Support\Mail\Mailer;
 /**
  * Send welcome email notification
  */
-class WelcomeMail extends Mailer
+final class WelcomeMail extends Mailer
 {
     public function __construct(string $email, string $username) 
     {

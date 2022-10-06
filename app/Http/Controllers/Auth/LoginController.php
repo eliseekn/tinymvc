@@ -15,9 +15,9 @@ use Core\Support\Session;
 use Core\Http\Response;
 use App\Http\Validators\Auth\LoginValidator;
 
-class LoginController
+final class LoginController
 { 
-    public function index(Request $request, Response $response)
+    public function index(Request $request, Response $response): void
     {
         if (!Auth::check($request)) $response->view('auth.login')->send(); 
 
@@ -25,7 +25,7 @@ class LoginController
         $response->redirect($uri)->send(302);
     }
 
-	public function authenticate(Request $request, Response $response, LoginValidator $loginValidator)
+	public function authenticate(Request $request, Response $response, LoginValidator $loginValidator): void
 	{
         $loginValidator->validate($request->inputs(), $response);
 

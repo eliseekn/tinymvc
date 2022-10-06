@@ -16,7 +16,7 @@ use Core\Support\Alert;
 /**
  * Check if email has been verified
  */
-class AccountPolicy
+final class AccountPolicy
 {    
     public function handle(Request $request, Response $response)
     {

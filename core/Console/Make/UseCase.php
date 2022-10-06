@@ -17,15 +17,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Create new actions 
  */
-class Actions extends Command
+class UseCase extends Command
 {
-    protected static $defaultName = 'make:actions';
+    protected static $defaultName = 'make:use-case';
 
     protected function configure()
     {
-        $this->setDescription('Create new actions');
+        $this->setDescription('Create new use cases');
         $this->addArgument('model', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of model (separated by space if many)');
-        $this->addOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Specify namespace (base: App\Http\Actions)');
+        $this->addOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Specify namespace (base: App\Http\UseCases)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -33,13 +33,11 @@ class Actions extends Command
         $models = $input->getArgument('model');
 
         foreach ($models as $model) {
-            list(, $class) = Make::generateClass($model, 'actions', true, true);
-
-            if (!Make::createActions($model, $input->getOption('namespace'))) {
-                $output->writeln('<fg=yellow>Failed to create actions "' . $class . '"</fg>');
+            if (!Make::createUseCases($model, $input->getOption('namespace'))) {
+                $output->writeln('<fg=yellow>Failed to create "' . $model . ' use cases"</fg>');
             }
 
-            $output->writeln('<info>Actions "' . $class . '" has been created</info>');
+            $output->writeln('<info>"' . $model . ' use cases" have been created</info>');
         }
 
         return Command::SUCCESS;

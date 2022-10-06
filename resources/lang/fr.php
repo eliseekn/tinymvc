@@ -34,6 +34,8 @@
     'password_reset_link_not_sent' => "Echec de l'envoie du lien de réinitiatlisation de mot de passe",
     'invalid_password_reset_link' => 'Lien de réinitialisation de mot de passe invalide',
     'expired_password_reset_link' => 'Lien de réinitialisation de mot de passe expiré',
+    'invalid_email_verification_link' => 'Lien de vérification par email invalide',
+    'expired_email_verification_link' => 'Lien de vérification par email expiré',
     'email_verified' => 'Votre adresse email a été vérifiée',
     'password_reset' => 'Votre mot de passe a été réinitialisé',
     'login_failed' => 'Mot de passe ou adresse email incorrecte',

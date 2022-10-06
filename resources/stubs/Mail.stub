@@ -11,7 +11,7 @@ namespace App\Mails;
 use Core\Routing\View;
 use Core\Support\Mail\Mailer;
 
-class CLASSNAME extends Mailer
+final class CLASSNAME extends Mailer
 {
     public function __construct(string $email) 
     {

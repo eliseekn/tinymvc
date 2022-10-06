@@ -13,7 +13,7 @@ use Core\Http\Request;
 /**
  * Sanitize form fields
  */
-class SanitizeInputs
+final class SanitizeInputs
 {
     public function handle(Request $request)
     {

@@ -16,7 +16,7 @@ use Core\Support\Alert;
 /**
  * Check if user has been authenticated
  */
-class AuthPolicy
+final class AuthPolicy
 {    
     public function handle(Request $request, Response $response)
     {

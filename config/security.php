@@ -19,7 +19,7 @@ return [
     'auth' => [
         'max_attempts' => false,
         'unlock_timeout' => 1, //in minute
-        'email_verification' => false,
+        'email_verification' => true,
     ],
 
     'session' => [

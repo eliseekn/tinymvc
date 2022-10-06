@@ -10,7 +10,7 @@ namespace App\Http\Validators\Auth;
 
 use Core\Http\Validator\Validator;
 
-class LoginValidator extends Validator
+final class LoginValidator extends Validator
 {
     /**
      * Validation rules

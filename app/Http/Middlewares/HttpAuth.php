@@ -15,7 +15,7 @@ use Core\Http\Response;
 /**
  * Authenticate user by http
  */
-class HttpAuth
+final class HttpAuth
 {    
     public function handle(Request $request, Response $response)
     {

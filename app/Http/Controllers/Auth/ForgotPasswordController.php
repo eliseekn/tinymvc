@@ -15,15 +15,15 @@ use App\Mails\TokenMail;
 use Core\Support\Mail\Mail;
 use App\Database\Models\Token;
 use Core\Http\Response;
-use App\Http\Actions\UserActions;
+use App\Http\UseCases\User\UpdateUseCase;
 use App\Http\Validators\Auth\LoginValidator;
 
 /**
  * Manage password forgot
  */
-class ForgotPasswordController
+final class ForgotPasswordController
 {
-	public function notify(Request $request, Response $response)
+	public function notify(Request $request, Response $response): void
 	{
 		$token = generate_token();
 
@@ -42,7 +42,7 @@ class ForgotPasswordController
         $response->redirectBack()->send(302);
 	}
 	
-	public function reset(Request $request, Response $response)
+	public function reset(Request $request, Response $response): void
 	{
         if (!$request->hasQuery('email', 'token')) {
             $response->data(__('bad_request'))->send(400);
@@ -55,17 +55,22 @@ class ForgotPasswordController
 		}
 
 		if (Carbon::parse($token->expire)->lt(Carbon::now())) {
-			$response->data(__('expired_password_reset_link'))->send(400);
+            $token->delete();
+            $response->data(__('expired_password_reset_link'))->send(400);
 		}
 
         $token->delete();
         $response->redirect("/password/new?email={$request->query('email')}")->send(302);
 	}
 	
-	public function update(Request $request, Response $response, LoginValidator $loginValidator)
+	public function update(
+        Request $request,
+        Response $response,
+        UpdateUseCase $useCase,
+        LoginValidator $loginValidator): void
 	{
         $loginValidator->validate($request->inputs(), $response);
-        $user = UserActions::updatePassword($request->input('password'), $request->input('email'));
+        $user = $useCase->handleByEmail(['password' => $request->input('password')], $request->input('email'));
 
         if (!$user) {
             Alert::default(__('password_not_reset'))->error();

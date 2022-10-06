@@ -13,7 +13,7 @@ use Core\Http\Response;
 /**
  * Manage HTTP CORS
  */
-class HttpCors
+final class HttpCors
 {    
     public function handle(Response $response)
     {

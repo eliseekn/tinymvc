@@ -36,8 +36,8 @@
         new \Core\Console\Make\Password(),
         new \Core\Console\Make\Helper(),
         new \Core\Console\Make\Test(),
-        new \Core\Console\Make\Actions(),
         new \Core\Console\Make\Exception(),
+        new \Core\Console\Make\UseCase(),
         
         new \Core\Console\App\Setup(),
         new \Core\Console\App\EncryptionKey(),

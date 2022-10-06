@@ -10,7 +10,7 @@ namespace NAMESPACE;
 
 use Core\Http\Validator\Validator;
 
-class CLASSNAME extends Validator
+final class CLASSNAME extends Validator
 {
     public function __construct()
     {

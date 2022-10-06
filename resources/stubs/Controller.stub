@@ -11,7 +11,7 @@ namespace NAMESPACE;
 use Core\Http\Request;
 use Core\Http\Response;
 
-class CLASSNAME
+final class CLASSNAME
 {
     public function __invoke(Request $request, Response $response)
 	{

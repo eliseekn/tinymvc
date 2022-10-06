@@ -14,7 +14,7 @@ use Core\Support\Mail\Mailer;
 /**
  * Send email verification notification
  */
-class VerificationMail extends Mailer
+final class VerificationMail extends Mailer
 {
     public function __construct(string $email, string $token) 
     {

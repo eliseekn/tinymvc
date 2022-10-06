@@ -11,7 +11,7 @@ namespace NAMESPACE;
 use App\Database\Models\MODELNAME;
 use Core\Database\Factory;
 
-class CLASSNAME extends Factory
+final class CLASSNAME extends Factory
 {
     public static string $model = MODELNAME::class;
 

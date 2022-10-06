@@ -14,7 +14,7 @@ use Core\Support\Mail\Mailer;
 /**
  * Send password reset token link notification
  */
-class TokenMail extends Mailer
+final class TokenMail extends Mailer
 {
     public function __construct(string $email, string $token)
     {

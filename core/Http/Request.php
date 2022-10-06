@@ -27,7 +27,7 @@ class Request
     public function getHttpAuth(): array
     {
         $header = $this->headers('HTTP_AUTHORIZATION', '');
-        return explode(' ', $header);
+        return !$header ? [] : explode(' ', $header);
     }
     
     public function host()
@@ -37,20 +37,17 @@ class Request
     
     public function query(string $key, $default = null)
     {
-        $query = $this->queries()[$key];
-        return !$query ? $default : $query;
+        return $this->queries()[$key] ?? $default;
     }
 
     public function input(string $key, $default = null)
     {
-        $input = $this->inputs()[$key];
-        return !$input ? $default : $input;
+        return $this->inputs()[$key] ?? $default;
     }
 
     public function file(string $key, $default = null)
     {
-        $file = $_FILES[$key];
-        return !$file ? $default : $file;
+        return $this->files()[$key] ?? $default;
     }
 
     public function queries(): array
@@ -78,14 +75,14 @@ class Request
 
     private function getSingleFile(string $input, array $allowed_ext = []): null|Uploader
     {
-        if (!$_FILES[$input]) return null;
+        if (!$this->file($input)) return null;
         
         return new Uploader([
-            'name' => $_FILES[$input]['name'],
-            'tmp_name' => $_FILES[$input]['tmp_name'],
-            'size' => $_FILES[$input]['size'],
-            'type' => $_FILES[$input]['type'],
-            'error' => $_FILES[$input]['error']
+            'name' => $this->file($input)['name'],
+            'tmp_name' => $this->file($input)['tmp_name'],
+            'size' => $this->file($input)['size'],
+            'type' => $this->file($input)['type'],
+            'error' => $this->file($input)['error']
         ], $allowed_ext);
     }
 
@@ -96,17 +93,17 @@ class Request
     {
         $files = [];
 
-        if (!$_FILES[$input]) return $files;
+        if (!$this->file($input)) return $files;
 
-        $count = is_array($_FILES[$input]['tmp_name']) ? count($_FILES[$input]['tmp_name']) : 1;
+        $count = is_array($this->file($input)['tmp_name']) ? count($this->file($input)['tmp_name']) : 1;
 
         for ($i = 0; $i < $count; $i++) {
             $files[] = new Uploader([
-                'name' => $_FILES[$input]['name'][$i],
-                'tmp_name' => $_FILES[$input]['tmp_name'][$i],
-                'size' => $_FILES[$input]['size'][$i],
-                'type' => $_FILES[$input]['type'][$i],
-                'error' => $_FILES[$input]['error'][$i]
+                'name' => $this->file($input)['name'][$i],
+                'tmp_name' => $this->file($input)['tmp_name'][$i],
+                'size' => $this->file($input)['size'][$i],
+                'type' => $this->file($input)['type'][$i],
+                'error' => $this->file($input)['error'][$i]
             ], $allowed_ext);
         }
         

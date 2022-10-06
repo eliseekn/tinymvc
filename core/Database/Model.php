@@ -26,7 +26,7 @@ class Model
         return (new Repository(static::$table))->findWhere($column, $operator, $value);
     }
 
-    public static function find(int $id): self
+    public static function find(int $id)
     {
         return self::findBy('id', $id);
     }
@@ -106,7 +106,7 @@ class Model
         return (new Repository(static::$table))->trends($column, $type, $period, $interval, $query);
     }
 
-    public static function create(array $data): self|bool
+    public static function create(array $data)
     {
         $id = (new Repository(static::$table))->insertGetId($data);
 
@@ -177,14 +177,14 @@ class Model
         return (new Repository(static::$table))->deleteIfExists($this->id);
     }
 
-    public function save(): bool|self
+    public function save()
     {
         return is_null($this->id)
             ? self::create((array) $this)
             : $this->update((array) $this);
     }
 
-    public function increment(string $column, $value = null)
+    public function increment(string $column, $value = null): void
     {
         if (is_null($value)) {
             $this->{$column}++;
@@ -194,7 +194,7 @@ class Model
         $this->{$column} = $this->{$column} + $value;
     }
 
-    public function decrement(string $column, $value = null)
+    public function decrement(string $column, $value = null): void
     {
         if (is_null($value)) {
             $this->{$column}--;

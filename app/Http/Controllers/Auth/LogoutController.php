@@ -12,9 +12,9 @@ use Core\Support\Auth;
 use Core\Support\Alert;
 use Core\Http\Response;
 
-class LogoutController
+final class LogoutController
 {
-	public function __invoke(Response $response)
+	public function __invoke(Response $response): void
 	{
         Auth::forget();
         Alert::toast(__('logged_out'))->success();

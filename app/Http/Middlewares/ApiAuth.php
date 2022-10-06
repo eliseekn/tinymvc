@@ -16,7 +16,7 @@ use Core\Support\Encryption;
 /**
  * Authenticate user by api token
  */
-class ApiAuth
+final class ApiAuth
 {   
     public function handle(Request $request, Response $response)
     {

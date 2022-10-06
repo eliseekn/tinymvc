@@ -15,7 +15,7 @@ use App\Database\Models\User;
 /**
  * Check for stored user cookie
  */
-class RememberUser
+final class RememberUser
 {    
     public function handle()
     {

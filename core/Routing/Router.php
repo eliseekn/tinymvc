@@ -101,7 +101,7 @@ class Router
         foreach ($routes as $route => $options) {
             list($method, $route) = explode(' ', $route, 2);
 
-            $request->method($request->input('_method'));
+            $request->method($request->input('_method', $method));
 
             if (self::match($request, $method, $route, $params)) {
                 if (!$request->uriContains('api')) {

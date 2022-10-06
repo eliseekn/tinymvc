@@ -9,6 +9,7 @@
 use Carbon\Carbon;
 use Core\Http\Request;
 use Core\Routing\Route;
+use Core\Support\Auth;
 use Core\Support\Config;
 use Core\Support\Cookies;
 use Core\Support\Session;
@@ -110,11 +111,7 @@ if (!function_exists('auth')) {
 	 */
 	function auth(string $key)
 	{
-        $user = session_get('user');
-
-        if ($user) return false;
-
-		return $user->{$key};
+        return Auth::get($key) ?? null;
 	}
 }
 

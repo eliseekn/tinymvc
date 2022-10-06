@@ -10,9 +10,6 @@ namespace Core\Support;
 
 use Carbon\Carbon;
 use Core\Http\Request;
-use Core\Support\Cookies;
-use Core\Support\Session;
-use Core\Support\Encryption;
 use App\Database\Models\User;
 use App\Database\Models\Token;
 use Core\Http\Response;
@@ -113,13 +110,15 @@ class Auth
 
         if (!$key) return $user;
 
-        return $user->{$key};
+        return $user ? $user->{$key} : null;
     }
 
-    public static function forget()
+    public static function forget(): void
     {
         Session::forget('user', 'history', 'csrf_token');
 
-        if (self::remember()) Cookies::delete('user');
+        if (self::remember()) {
+            Cookies::delete('user');
+        };
     }
 }

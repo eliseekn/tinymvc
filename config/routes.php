@@ -7,7 +7,7 @@
  */
 
 /**
- * Routes paths configuration
+ * Routes folder configuration
  */
 
 return [

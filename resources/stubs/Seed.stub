@@ -10,7 +10,7 @@ namespace App\Database\Seeds;
 
 use Core\Database\QueryBuilder;
 
-class CLASSNAME
+final class CLASSNAME
 {     
     public static function insert()
     {

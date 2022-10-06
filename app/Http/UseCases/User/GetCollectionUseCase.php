@@ -6,12 +6,14 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace App\Http\Middlewares;
+namespace App\Http\UseCases\User;
 
-final class CLASSNAME
-{    
-    public function handle()
-    {
-       //
-    }
+use App\Database\Models\User;
+
+final class GetCollectionUseCase
+{
+    public function handle(): array
+	{
+        return User::all();
+	}
 }

@@ -15,11 +15,8 @@ use Core\Exceptions\MissingCsrfTokenException;
 /**
  * CSRF token validator
  */
-class CsrfProtection
-{    
-    /**
-     * @throws Exception
-     */
+final class CsrfProtection
+{
     public function handle(Request $request)
     {
         if (config('app.env') === 'test') return;

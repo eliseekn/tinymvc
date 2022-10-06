@@ -10,7 +10,7 @@ namespace App\Database\Migrations;
 
 use Core\Database\Migration;
 
-class CLASSNAME
+final class CLASSNAME
 {         
     public function create()
     {

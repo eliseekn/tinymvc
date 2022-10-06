@@ -11,7 +11,7 @@ namespace NAMESPACE;
 use Core\Database\Model;
 use Core\Database\Concerns\HasFactory;
 
-class CLASSNAME extends Model
+final class CLASSNAME extends Model
 {
     use HasFactory;
 

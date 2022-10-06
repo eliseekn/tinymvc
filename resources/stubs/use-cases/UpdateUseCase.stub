@@ -6,14 +6,17 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace NAMESPACE;
+namespace NAMESPACE\MODELNAME;
 
 use App\Database\Models\MODELNAME;
 
-final class CLASSNAME
+final class UpdateUseCase
 {
-    public static function findAllByColumn(string $column)
-    {
-        return MODELNAME::findBy('column', $column)->latest()->getAll();
-    }
+    public function handle(array $data, int $id): bool
+	{
+        $MODELNAME = MODELNAME::find($id);
+        $MODELNAME->fill($data);
+
+        return $MODELNAME->save();
+	}
 }

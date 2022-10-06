@@ -23,7 +23,7 @@ class Make
         return Storage::path(config('storage.stubs'));
     }
 
-    private static function removeUnderscore(string $word)
+    private static function removeUnderscore(string $word): string
     {
         if (strpos($word, '_')) {
             $words = explode('_', $word);
@@ -37,13 +37,13 @@ class Make
         return $word;
     }
 
-    private static function addNamespace(string $data, string $base, ?string $namespace = null)
+    private static function addNamespace(string $data, string $base, ?string $namespace = null): string
     {
         return is_null($namespace) ? str_replace('NAMESPACE', $base, $data) 
             : str_replace('NAMESPACE', "{$base}\\{$namespace}", $data);
     }
 
-    public static function fixPluralTypo(string $word, bool $remove = false)
+    public static function fixPluralTypo(string $word, bool $remove = false): string
     {
         if (!$remove) {
             if ($word[-1] === 'y') {
@@ -68,7 +68,11 @@ class Make
         return $word;
     }
     
-    public static function generateClass(string $base_name, string $suffix = '', bool $singular = false, bool $force_singlular = false)
+    public static function generateClass(
+        string $base_name,
+        string $suffix = '',
+        bool $singular = false,
+        bool $force_singlular = false): array
     {
         $name = ucfirst(strtolower($base_name));
 
@@ -83,12 +87,14 @@ class Make
 
         $class = $name . ucfirst($suffix);
 
-        if (strpos($class, 'Table')) $class .= date('_YmdHis');
+        if (str_contains($class, 'Table')) {
+            $class .= date('_YmdHis');
+        }
 
         return [lcfirst($name), $class];
     }
     
-    public static function createController(string $controller, ?string $namespace = null)
+    public static function createController(string $controller, ?string $namespace = null): bool
     {
         list(, $class) = self::generateClass($controller, 'controller', true, true);
 
@@ -109,7 +115,7 @@ class Make
         return true;
     }
 
-    public static function createModel(string $model, ?string $namespace = null)
+    public static function createModel(string $model, ?string $namespace = null): bool
     {
         list($name, $class) = self::generateClass($model, '');
 
@@ -131,7 +137,7 @@ class Make
         return true;
     }
  
-    public static function createMigration(string $migration)
+    public static function createMigration(string $migration): bool
     {
         list($name, $class) = self::generateClass($migration, 'migration');
 
@@ -146,7 +152,7 @@ class Make
         return true;
     }
 
-    public static function createSeed(string $seed)
+    public static function createSeed(string $seed): bool
     {
         list($name, $class) = self::generateClass($seed, 'seed', true, true);
 
@@ -161,7 +167,7 @@ class Make
         return true;
     }
     
-    public static function createFactory(string $factory, ?string $namespace = null)
+    public static function createFactory(string $factory, ?string $namespace = null): bool
     {
         list($name, $class) = self::generateClass($factory, 'factory', true, true);
 
@@ -183,7 +189,7 @@ class Make
         return true;
     }
     
-    public static function createRepository(string $repository, ?string $namespace = null)
+    public static function createRepository(string $repository, ?string $namespace = null): bool
     {
         list($name, $class) = self::generateClass($repository, 'repository', true, true);
 
@@ -205,7 +211,7 @@ class Make
         return true;
     }
     
-    public static function createHelper(string $helper)
+    public static function createHelper(string $helper): bool
     {
         list(, $class) = self::generateClass($helper, 'helper', true);
 
@@ -219,7 +225,7 @@ class Make
         return true;
     }
     
-    public static function createException(string $exception, string $message)
+    public static function createException(string $exception, string $message): bool
     {
         list(, $class) = self::generateClass($exception, 'exception', true);
 
@@ -234,7 +240,7 @@ class Make
         return true;
     }
     
-    public static function createTest(string $test, bool $unit_test, ?string $path = null)
+    public static function createTest(string $test, bool $unit_test, ?string $path = null): bool
     {
         list(, $class) = self::generateClass($test, 'test', true);
 
@@ -261,7 +267,7 @@ class Make
         return true;
     }
     
-    public static function createValidator(string $validator, ?string $namespace = null)
+    public static function createValidator(string $validator, ?string $namespace = null): bool
     {
         list(, $class) = self::generateClass($validator, 'validator', true);
 
@@ -282,7 +288,7 @@ class Make
         return true;
     }
     
-    public static function createMiddleware(string $middleware)
+    public static function createMiddleware(string $middleware): bool
     {
         list(, $class) = self::generateClass($middleware, '', true);
         
@@ -296,7 +302,7 @@ class Make
         return true;
     }
     
-    public static function createMail(string $mail)
+    public static function createMail(string $mail): bool
     {
         list($name, $class) = self::generateClass($mail, 'mail');
 
@@ -317,7 +323,7 @@ class Make
         return true;
     }
     
-    public static function createView(?string $view, ?string $layout, ?string $path = null)
+    public static function createView(?string $view, ?string $layout, ?string $path = null): bool
     {
         $data = is_null($view) && !is_null($layout)
             ? self::stubs()->addPath('views')->readFile('layout.stub')
@@ -343,7 +349,7 @@ class Make
         return true;
     }
     
-    public static function createConsole(string $console, string $command, string $description, ?string $namespace = null)
+    public static function createConsole(string $console, string $command, string $description, ?string $namespace = null): bool
     {
         list(, $class) = self::generateClass($console, '', true);
 
@@ -366,24 +372,28 @@ class Make
         return true;
     }
 
-    public static function createActions(string $model, ?string $namespace = null)
+    public static function createUseCases(string $model, ?string $namespace = null): bool
     {
-        list($name, $class) = self::generateClass($model, 'actions', true, true);
-        
-        $data = self::stubs()->readFile('Actions.stub');
-        $data = self::addNamespace($data, 'App\Http\Actions', $namespace);
-        $data = str_replace('CLASSNAME', $class, $data);
-        $data = str_replace('$MODELNAME', '$' . self::fixPluralTypo($name, true), $data);
-        $data = str_replace('MODELNAME', self::fixPluralTypo(ucfirst($name), true), $data);
+        list($name, ) = self::generateClass($model);
 
-        $storage = Storage::path(config('storage.actions'));
+        $files = self::stubs()->addPath('use-cases')->getFiles();
 
-        if (!is_null($namespace)) {
-            $storage = $storage->addPath(str_replace('\\', '/', $namespace));
-        }
+        foreach ($files as $file) {
+            $data = self::stubs()->addPath('use-cases')->readFile($file);
+            $data = self::addNamespace($data, 'App\Http\UseCases', $namespace);
+            $data = str_replace('$MODELNAME', '$' . self::fixPluralTypo($name, true), $data);
+            $data = str_replace('MODELNAME', self::fixPluralTypo(ucfirst($name), true), $data);
+            $storage = Storage::path(config('storage.use-cases'));
 
-        if (!$storage->writeFile($class . '.php', $data)) {
-            return false;
+            if (!is_null($namespace)) {
+                $storage = $storage->addPath(str_replace('\\', '/', $namespace));
+            }
+
+            $storage->addPath($model);
+
+            if (!$storage->writeFile(rtrim($file, '.stub.php') . '.php', $data)) {
+                return false;
+            }
         }
 
         return true;

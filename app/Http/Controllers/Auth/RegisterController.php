@@ -15,12 +15,12 @@ use Core\Support\Session;
 use App\Mails\WelcomeMail;
 use Core\Support\Mail\Mail;
 use Core\Http\Response;
-use App\Http\Actions\UserActions;
+use App\Http\UseCases\User\StoreUseCase;
 use App\Http\Validators\Auth\RegisterValidator;
 
-class RegisterController
+final class RegisterController
 {
-    public function index(Request $request, Response $response)
+    public function index(Request $request, Response $response): void
     {
         if (!Auth::check($request)) $response->view('auth.signup')->send();
 
@@ -28,13 +28,17 @@ class RegisterController
         $response->redirect($uri)->send(302);
     }
 
-    public function register(Request $request, Response $response, RegisterValidator $registerValidator)
+    public function register(
+        Request $request,
+        Response $response,
+        StoreUseCase $useCase,
+        RegisterValidator $registerValidator): void
     {
         $data = $registerValidator->validate($request->inputs(), $response);
-        $user = UserActions::create($data->validated());
+        $user = $useCase->handle($data->validated());
 
         if (config('security.auth.email_verification')) {
-            $response->redirect('/email/notify')->send(302);
+            $response->redirect('/email/notify?email=' . $user->email)->send(302);
         }
 
         Mail::send(new WelcomeMail($user->email, $user->name));

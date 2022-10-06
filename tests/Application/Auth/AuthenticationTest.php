@@ -50,7 +50,8 @@ class AuthenticationTest extends ApplicationTestCase
         $user = User::factory()->create();
 
         $this
-            ->auth($user)->post('logout')
+            ->auth($user)
+            ->post('logout')
             ->assertRedirectedToUrl(url('/'))
             ->assertSessionDoesNotHave('user', $user->toArray());
     }

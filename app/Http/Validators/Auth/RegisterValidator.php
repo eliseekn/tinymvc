@@ -11,7 +11,7 @@ namespace App\Http\Validators\Auth;
 use Core\Http\Validator\Validator;
 use Core\Database\Repository;
 
-class RegisterValidator extends Validator
+final class RegisterValidator extends Validator
 {
     public function __construct()
     {
