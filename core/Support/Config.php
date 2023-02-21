@@ -47,7 +47,7 @@ class Config
     public static function readEnv(string $key, $default = null)
     {
         $data = getenv($key, true);
-        return $data === false || empty($data) ? $default : $data;
+        return $data === false ? $default : $data;
     }
     
     public static function readFile(string $config, string $path, $default = null)
