@@ -16,11 +16,8 @@ use Core\Support\Metrics;
  */
 class Repository
 {
-    /**
-     * @var \Core\Database\QueryBuilder
-     */
-    protected $qb;
-    
+    protected QueryBuilder $qb;
+
     public function __construct(private string $table) {}
 
     public function select(string ...$columns): self
@@ -169,11 +166,8 @@ class Repository
     
     public function updateOrCreate(int $id, array $items)
     {
-        $result = $this->findWhere('id', $id);
-
-        if ($result === false) {
-            $result = $this->insert($items);
-            return $result;
+        if ($this->findWhere('id', $id) === false) {
+            return $this->insert($items);
         }
 
         return $this->updateIfExists($id, $items);
@@ -440,7 +434,7 @@ class Repository
     {
         return $this->or($column, '<=', $value);
     }
-    
+
     public function whereRaw(string $query, array $args = []): self
     {
         $this->qb->whereRaw($query, $args);

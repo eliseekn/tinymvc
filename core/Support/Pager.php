@@ -15,8 +15,8 @@ use Core\Http\Request;
  */
 class Pager
 {
-    protected $pagination = [];
-    protected $items = [];
+    protected array $pagination = [];
+    protected array $items = [];
 
     public function __construct(int $total_items, int $items_per_page, int $page = 1)
     {

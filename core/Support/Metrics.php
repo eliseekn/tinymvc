@@ -53,7 +53,7 @@ class Metrics
         'november',
     ];
     
-    public function __construct(public readonly string $table, private string $driver = '') 
+    public function __construct(public string $table, private string $driver = '')
     {
         $this->driver = config('app.env') === 'test' ? $driver = config('testing.database.driver') : config('database.driver');
     }

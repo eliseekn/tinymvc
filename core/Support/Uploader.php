@@ -15,7 +15,7 @@ use Core\Support\Storage;
  */
 class Uploader
 {    
-    public $filename = '';
+    public string $filename = '';
 
     public function __construct(private array $file = [], private array $allowed_extensions = []) {}
     
