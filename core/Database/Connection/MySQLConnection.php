@@ -13,10 +13,7 @@ use PDOException;
 
 class MySQLConnection implements ConnectionInterface
 {
-	/**
-	 * @var PDO
-	 */
-	protected $pdo;
+	protected PDO $pdo;
 
     /**
      * @throws PDOException
@@ -82,7 +79,7 @@ class MySQLConnection implements ConnectionInterface
     public function tableExists(string $name)
     {
         $stmt = $this->executeQuery('
-            SELECT * FROM information_schema.tables WHERE table_schema = "' . config('database.name') .'" 
+            SELECT * FROM information_schema.tables WHERE table_schema = "' . $this->getDB() .'" 
             AND table_name = "' . $name . '" LIMIT 1
         ');
 
@@ -100,5 +97,12 @@ class MySQLConnection implements ConnectionInterface
     public function deleteSchema(string $name)
     {
         $this->executeStatement("DROP DATABASE IF EXISTS $name");
+    }
+
+    private function getDB()
+    {
+        return config('app.env') === 'test'
+            ? config('testing.database.suffix')
+            : config('database.name') . '.db';
     }
 }

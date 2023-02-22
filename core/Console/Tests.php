@@ -2,6 +2,7 @@
 
 namespace Core\Console;
 
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -28,6 +29,10 @@ class Tests extends Command
             $output->writeln('<fg=yellow>You must set APP_ENV to test in application configuration</>');
             return Command::FAILURE;
         }
+
+        $this->getApplication()->find('db:create')->run(new ArrayInput([]), $output);
+        $this->getApplication()->find('migrations:reset')->run(new ArrayInput([]), $output);
+        $this->getApplication()->find('db:seed')->run(new ArrayInput([]), $output);
 
         $server = new Process(['php', '-S', config('testing.host') . ':' . config('testing.port')]);
         $server->setTimeout(null);
