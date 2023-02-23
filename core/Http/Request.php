@@ -110,7 +110,9 @@ class Request
 
     public function method(?string $value = null)
     {
-        if (is_null($value)) return $this->headers('REQUEST_METHOD', '');
+        if (is_null($value)) {
+            return $this->headers('REQUEST_METHOD', '');
+        }
 
         $_SERVER['REQUEST_METHOD'] = $value;
     }

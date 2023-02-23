@@ -198,9 +198,8 @@ class Route
         $array_keys = array_keys(static::$tmp_routes);
         $old_key_index = array_search($old, $array_keys);
         $array_keys[$old_key_index] = $new;
-        $new_array = array_combine($array_keys, static::$tmp_routes);
 
-        return $new_array;
+        return array_combine($array_keys, static::$tmp_routes);
     }
 
     public static function load()

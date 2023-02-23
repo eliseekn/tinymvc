@@ -19,27 +19,36 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Actions extends Command
 {
-    protected static $defaultName = 'make:actions';
+    protected static $defaultName = 'make:action';
 
     protected function configure()
     {
-        $this->setDescription('Create new actions');
-        $this->addArgument('model', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of model (separated by space if many)');
+        $this->setDescription('Create new action');
+        $this->addArgument('model', InputArgument::REQUIRED, 'The name of model');
+        $this->addOption('type', null, InputOption::VALUE_OPTIONAL|InputOption::VALUE_IS_ARRAY, 'Specify action type (index, show, store, update or destroy)');
         $this->addOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Specify namespace (base: App\Http\Actions)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $models = $input->getArgument('model');
+        $types = $input->getOption('type');
 
-        foreach ($models as $model) {
-            list(, $class) = Make::generateClass($model, 'actions', true, true);
+        if (empty($types)) {
+            $types = ['index', 'show', 'store', 'update', 'destroy'];
+        }
 
-            if (!Make::createActions($model, $input->getOption('namespace'))) {
-                $output->writeln('<fg=yellow>Failed to create actions "' . $class . '"</fg>');
+        $types = array_map(fn ($type) => strtolower($type), $types);
+
+        foreach ($types as $type) {
+            list(, $class) = Make::generateClass($type, 'action', true, true);
+
+            $class = str_replace(['Index', 'Show'], ['GetCollection', 'GetItem'], $class);
+
+            if (!Make::createAction($input->getArgument('model'), $type, $input->getOption('namespace'))) {
+                $output->writeln('<fg=yellow>Failed to create action "' . $class . '"</fg>');
+            } else {
+                $output->writeln('<info>Action "' . $class . '" has been created</info>');
             }
-
-            $output->writeln('<info>Actions "' . $class . '" has been created</info>');
         }
 
         return Command::SUCCESS;

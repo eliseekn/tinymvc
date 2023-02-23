@@ -15,7 +15,7 @@ use Core\Support\Session;
 use App\Mails\WelcomeMail;
 use Core\Support\Mail\Mail;
 use Core\Http\Response;
-use App\Http\Actions\UserActions;
+use App\Http\Actions\User\StoreAction;
 use App\Http\Validators\Auth\RegisterValidator;
 
 class RegisterController
@@ -28,10 +28,10 @@ class RegisterController
         $response->redirectUrl($uri)->send(302);
     }
 
-    public function register(Request $request, Response $response, RegisterValidator $registerValidator)
+    public function register(Request $request, Response $response, RegisterValidator $registerValidator, StoreAction $storeAction)
     {
         $validator = $registerValidator->validate($request->inputs(), $response);
-        $user = UserActions::create($validator->validated());
+        $user = $storeAction->handle($validator->validated());
 
         if (config('security.auth.email_verification')) {
             $response->redirectUrl('/email/notify')->send(302);

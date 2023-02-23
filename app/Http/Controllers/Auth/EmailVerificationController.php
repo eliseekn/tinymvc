@@ -16,7 +16,7 @@ use Core\Support\Mail\Mail;
 use App\Database\Models\Token;
 use App\Mails\VerificationMail;
 use Core\Http\Response;
-use App\Http\Actions\UserActions;
+use App\Http\Actions\User\UpdateAction;
 
 /**
  * Manage email verification link
@@ -42,7 +42,7 @@ class EmailVerificationController
         $response->redirectUrl('signup')->send(302);
     }
 
-	public function verify(Request $request, Response $response)
+	public function verify(Request $request, Response $response, UpdateAction $updateAction)
 	{
         if (!$request->hasQuery('email', 'token')) {
             $response->data(__('bad_request'))->send(400);
@@ -60,7 +60,7 @@ class EmailVerificationController
 
         $token->delete();
 
-        $user = UserActions::update(['email_verified' => Carbon::now()->toDateTimeString()], $request->queries('email'));
+        $user = $updateAction->handle(['email_verified' => Carbon::now()->toDateTimeString()], $request->queries('email'));
 
 		if (!$user) {
             Alert::default(__('account_not_found'))->error();

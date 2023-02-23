@@ -15,7 +15,7 @@ use App\Mails\TokenMail;
 use Core\Support\Mail\Mail;
 use App\Database\Models\Token;
 use Core\Http\Response;
-use App\Http\Actions\UserActions;
+use App\Http\Actions\User\UpdateAction;
 use App\Http\Validators\Auth\LoginValidator;
 
 /**
@@ -62,10 +62,10 @@ class ForgotPasswordController
         $response->redirectUrl("/password/new?email={$request->email}")->send(302);
 	}
 	
-	public function update(Request $request, Response $response, LoginValidator $loginValidator)
+	public function update(Request $request, Response $response, LoginValidator $loginValidator, UpdateAction $updateAction)
 	{
         $loginValidator->validate($request->inputs(), $response);
-        $user = UserActions::updatPassword($request->password, $request->email);
+        $user = $updateAction->handle(['password' => $request->password], $request->email);
 
         if (!$user) {
             Alert::default(__('password_not_reset'))->error();

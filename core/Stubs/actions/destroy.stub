@@ -12,23 +12,14 @@ use App\Database\Models\MODELNAME;
 
 class CLASSNAME
 {
-    public static function create(array $data)
-	{
-        return MODELNAME::create($data);
-	}
-
-    public static function update(array $data, int $id)
+    public function handle(int $id)
 	{
         $MODELNAME = MODELNAME::find($id);
-        $MODELNAME->fill($data);
-        $MODELNAME = $MODELNAME->save();
 
-        return $MODELNAME;
-	}
+        if ($MODELNAME === false) {
+            return false;
+        }
 
-    public static function delete(int $id)
-	{
-        $MODELNAME = MODELNAME::find($id);
         return $MODELNAME->delete();
 	}
 }
