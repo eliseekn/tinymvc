@@ -102,7 +102,7 @@ class MySQLConnection implements ConnectionInterface
     private function getDB()
     {
         return config('app.env') === 'test'
-            ? config('testing.database.suffix')
+            ? config('tests.database.suffix')
             : config('database.name') . '.db';
     }
 }

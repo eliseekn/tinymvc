@@ -34,7 +34,7 @@ class Tests extends Command
         $this->getApplication()->find('migrations:reset')->run(new ArrayInput([]), $output);
         $this->getApplication()->find('db:seed')->run(new ArrayInput([]), $output);
 
-        $server = new Process(['php', '-S', config('testing.host') . ':' . config('testing.port')]);
+        $server = new Process(['php', '-S', config('tests.host') . ':' . config('tests.port')]);
         $server->setTimeout(null);
         $server->start();
 

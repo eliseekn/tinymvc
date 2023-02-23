@@ -40,7 +40,7 @@ class SQLiteConnection implements ConnectionInterface
     private function getDB()
     {
         if (config('app.env') === 'test') {
-            return config('storage.sqlite') . config('database.name') . config('testing.database.suffix') . '.db';
+            return config('storage.sqlite') . config('database.name') . config('tests.database.suffix') . '.db';
         }
 
         return config('database.sqlite.memory') ? ':memory:'

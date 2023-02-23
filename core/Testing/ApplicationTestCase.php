@@ -47,7 +47,7 @@ class ApplicationTestCase extends TestCase
 
     protected function url(string $uri)
     {
-        return config('testing.host') . ':' . config('testing.port') . '/' . ltrim($uri, '/');
+        return config('tests.host') . ':' . config('tests.port') . '/' . ltrim($uri, '/');
     }
 
     protected function getBody()

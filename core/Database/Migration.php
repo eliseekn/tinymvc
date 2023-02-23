@@ -63,7 +63,7 @@ class Migration
 
     public static function disableForeignKeyCheck()
     {
-        $driver = config('app.env') === 'test' ? $driver = config('testing.database.driver') : config('database.driver');
+        $driver = config('app.env') === 'test' ? $driver = config('tests.database.driver') : config('database.driver');
         $query = $driver === 'mysql' ? 'SET foreign_key_checks = 0' : 'PRAGMA foreign_keys = OFF';
 
         QueryBuilder::setQuery($query)->execute();
@@ -71,7 +71,7 @@ class Migration
 
     public static function enableForeignKeyCheck()
     {
-        $driver = config('app.env') === 'test' ? $driver = config('testing.database.driver') : config('database.driver');
+        $driver = config('app.env') === 'test' ? $driver = config('tests.database.driver') : config('database.driver');
         $query = $driver === 'mysql' ? 'SET foreign_key_checks = 1' : 'PRAGMA foreign_keys = ON';
 
         QueryBuilder::setQuery($query)->execute();
@@ -297,7 +297,7 @@ class Migration
     
     public function addPrimaryKey(string $column, bool $auto_increment = true): self
     {
-        $driver = config('app.env') === 'test' ? $driver = config('testing.database.driver') : config('database.driver');
+        $driver = config('app.env') === 'test' ? $driver = config('tests.database.driver') : config('database.driver');
 
         $pk = $driver === 'mysql' ? $this->addBigInt($column) : $this->addInteger($column);
         $pk->primaryKey();

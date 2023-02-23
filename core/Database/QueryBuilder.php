@@ -23,11 +23,11 @@ class QueryBuilder
     protected static function setTable(string $name)
     {
         if (config('app.env') === 'test') {
-            if (config('testing.database.driver') === 'sqlite') {
+            if (config('tests.database.driver') === 'sqlite') {
                 return config('database.table_prefix') . $name;
             }
 
-            return config('database.name') .config('testing.database.suffix') . '.' . config('database.table_prefix') . $name;
+            return config('database.name') .config('tests.database.suffix') . '.' . config('database.table_prefix') . $name;
         }
 
         if (config('database.driver') === 'sqlite') {
@@ -200,7 +200,7 @@ class QueryBuilder
     
     public function autoIncrement(): self
     {
-        $driver = config('app.env') === 'test' ? $driver = config('testing.database.driver') : config('database.driver');
+        $driver = config('app.env') === 'test' ? $driver = config('tests.database.driver') : config('database.driver');
 
         self::$query = rtrim(self::$query, ', ');
         self::$query .= $driver === 'mysql' ? ' AUTO_INCREMENT, ' : ' AUTOINCREMENT, ';
@@ -274,7 +274,7 @@ class QueryBuilder
     
     public function addCurrentTimestamp(string $created_at = 'created_at', string $updated_at = 'updated_at')
     {
-        $driver = config('app.env') === 'test' ? $driver = config('testing.database.driver') : config('database.driver');
+        $driver = config('app.env') === 'test' ? $driver = config('tests.database.driver') : config('database.driver');
 
         if ($driver === 'mysql') {
             self::$query .= " {$created_at} TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, {$updated_at} TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, ";
@@ -287,7 +287,7 @@ class QueryBuilder
     
     public function migrate()
     {
-        $driver = config('app.env') === 'test' ? $driver = config('testing.database.driver') : config('database.driver');
+        $driver = config('app.env') === 'test' ? $driver = config('tests.database.driver') : config('database.driver');
 
         self::$query = rtrim(self::$query, ', ') . ')';
 

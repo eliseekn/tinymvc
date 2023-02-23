@@ -37,7 +37,7 @@ class Create extends Command
 
         if (is_null($databases) || empty($databases)) {
             $db = config('app.env') !== 'test' ? config('database.name') : 
-               config('database.name') . config('testing.database.suffix') ;
+               config('database.name') . config('tests.database.suffix') ;
 
             $databases = [$db];
         }
