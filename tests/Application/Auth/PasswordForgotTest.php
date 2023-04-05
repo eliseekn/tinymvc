@@ -20,8 +20,8 @@ class PasswordForgotTest extends ApplicationTestCase
 
     public function test_can_reset_password()
     {
-        $user = User::factory(UserFactory::class)->create();
-        $token = Token::factory(TokenFactory::class)->create(['email' => $user->email]);
+        $user = (new UserFactory())->create();
+        $token = (new TokenFactory())->create(['email' => $user->email]);
 
         $client = $this->get("password/reset?email={$token->email}&token={$token->token}");
         $client->assertRedirectedToUrl(url("password/new?email={$token->email}"));
@@ -31,7 +31,7 @@ class PasswordForgotTest extends ApplicationTestCase
 
     public function test_can_update_password()
     {
-        $user = User::factory(UserFactory::class)->create();
+        $user = (new UserFactory())->create();
 
         $client = $this->post('password/update', ['email' => $user->email, 'password' => 'new_password']);
         $client->assertRedirectedToUrl(url('login'));

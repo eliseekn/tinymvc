@@ -19,8 +19,8 @@ class EmailVerificationTest extends ApplicationTestCase
 
     public function test_can_verify_email()
     {
-        $user = User::factory(UserFactory::class)->create(['email_verified' => null]);
-        $token = Token::factory(TokenFactory::class)->create(['email' => $user->email]);
+        $user = (new UserFactory())->create(['email_verified' => null]);
+        $token = (new TokenFactory())->create(['email' => $user->email]);
 
         $client = $this->get("email/verify?email={$token->email}&token={$token->token}");
         $client->assertRedirectedToUrl(url('login'));
