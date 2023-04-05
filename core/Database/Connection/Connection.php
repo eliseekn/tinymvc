@@ -14,7 +14,7 @@ namespace Core\Database\Connection;
 class Connection
 {
 	/**
-	 * @var \Core\Database\Database
+	 * @var \Core\Database\Connection\Connection
 	 */
 	protected static $instance = null;
 
@@ -22,7 +22,9 @@ class Connection
 
 	private function __construct()
 	{
-        $driver = config('app.env') === 'test' ? config('tests.database.driver') : config('database.driver');
+        $driver = config('app.env') === 'test'
+            ? config('tests.database.driver')
+            : config('database.driver');
 
         $this->db = $driver === 'mysql' ? new MySQLConnection() : new SQLiteConnection();
     }

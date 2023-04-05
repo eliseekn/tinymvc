@@ -9,15 +9,14 @@
 namespace App\Database\Seeds;
 
 use App\Database\Factories\UserFactory;
-use App\Database\Models\User;
 
 /**
  * Run seeders
  */
 class Seeder
 {
-    public static function run()
+    public static function run(): void
     {
-        User::factory(UserFactory::class, 5)->create();
+        (new UserFactory(5))->create();
     }
 }

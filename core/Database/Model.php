@@ -27,16 +27,6 @@ class Model
         }
     }
 
-    /**
-     * Generate model factory
-     * 
-     * @return \Core\Database\Factory
-     */
-    public static function factory(string $factory, int $count = 1)
-    {
-        return new $factory($count);
-    }
-
     public static function findBy(string $column, $operator = null, $value = null)
     {
         $data = (new Repository(static::$table))->findWhere($column, $operator, $value);

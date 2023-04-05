@@ -9,6 +9,7 @@
 namespace Core\Database;
 
 use Faker\Factory as FakerFactory;
+use Faker\Generator;
 
 /**
  * Manage models factories
@@ -16,12 +17,11 @@ use Faker\Factory as FakerFactory;
 class Factory
 {
     protected static $model;
-    protected $class;
+    protected mixed $class;
 
-    /** @var \Faker\Generator $faker */
-    public $faker;
+    public Generator $faker;
 
-    public function __construct(int $count = 1)
+    public function __construct(int $count)
     {
         $this->faker = FakerFactory::create(config('app.lang'));
 
