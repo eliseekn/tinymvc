@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -20,12 +20,12 @@ class Cache extends Command
 {
     protected static $defaultName = 'clear:twig';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Clear twig templates cache');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         Storage::path(config('storage.cache'))->deleteDir();
         $output->writeln('<info>Twig templates cache has been cleared</info>');

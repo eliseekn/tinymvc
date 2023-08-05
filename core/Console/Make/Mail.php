@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -20,13 +20,13 @@ class Mail extends Command
 {
     protected static $defaultName = 'make:mail';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Create new mail template');
         $this->addArgument('mail', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of mail template (separated by space if many)');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $mails = $input->getArgument('mail');
 

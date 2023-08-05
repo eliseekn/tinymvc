@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -19,7 +19,7 @@ return [
     'auth' => [
         'max_attempts' => false,
         'unlock_timeout' => 1, //in minute
-        'email_verification' => false,
+        'email_verification' => true,
     ],
 
     'session' => [

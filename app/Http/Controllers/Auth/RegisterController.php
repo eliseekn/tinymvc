@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -20,26 +20,28 @@ use App\Http\Validators\Auth\RegisterValidator;
 
 class RegisterController
 {
-    public function index(Request $request, Response $response)
+    public function index(Request $request, Response $response): void
     {
-        if (!Auth::check($request)) $response->view('auth.signup')->send(); 
+        if (!Auth::check($request)) {
+            $response->view('auth.signup')->send();
+        }
 
         $uri = !Session::has('intended') ? config('app.home') : Session::pull('intended');
-        $response->redirectUrl($uri)->send(302);
+        $response->url($uri)->send(302);
     }
 
-    public function register(Request $request, Response $response, RegisterValidator $registerValidator, StoreAction $storeAction)
+    public function register(Request $request, Response $response, RegisterValidator $registerValidator, StoreAction $storeAction): void
     {
         $validator = $registerValidator->validate($request->inputs(), $response);
         $user = $storeAction->handle($validator->validated());
 
         if (config('security.auth.email_verification')) {
-            $response->redirectUrl('/email/notify')->send(302);
+            $response->url('/email/notify?email=' . $user->email)->send(302);
         }
 
         Mail::send(new WelcomeMail($user->email, $user->name));
         Alert::default(__('account_created'))->success();
         
-        $response->redirectUrl('/login')->send(302);
+        $response->url('/login')->send(302);
     }
 }

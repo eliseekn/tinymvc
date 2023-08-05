@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -20,13 +20,13 @@ class Helper extends Command
 {
     protected static $defaultName = 'make:helper';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Create new helper');
         $this->addArgument('helper', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of helper (separated by space if many)');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $helpers = $input->getArgument('helper');
 

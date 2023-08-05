@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -21,13 +21,13 @@ class Password extends Command
 {
     protected static $defaultName = 'make:password';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Generate hashed password');
         $this->addArgument('password', InputArgument::REQUIRED, 'The password to hash');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln('<info>' . $input->getArgument('password') . '</info> => <info>' . hash_pwd($input->getArgument('password')) . '</info>');
         return Command::SUCCESS;

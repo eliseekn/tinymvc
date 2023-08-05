@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -20,9 +20,11 @@ class CsrfProtection
     /**
      * @throws Exception
      */
-    public function handle(Request $request)
+    public function handle(Request $request): void
     {
-        if (config('app.env') === 'test') return;
+        if (config('app.env') === 'test') {
+            return;
+        }
 
         if (!$request->filled('_csrf_token')) {
             throw new MissingCsrfTokenException();

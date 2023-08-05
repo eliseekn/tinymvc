@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -55,14 +55,14 @@ class Metrics
     
     public function __construct(public string $table, private string $driver = '')
     {
-        $this->driver = config('app.env') === 'test' ? $driver = config('tests.database.driver') : config('database.driver');
+        $this->driver = config('app.env') === 'test' ? config('tests.database.driver') : config('database.driver');
     }
     
     /**
      * @link   https://www.tutsmake.com/mysql-get-data-of-current-date-week-month-year/
      *         https://www.tutsmake.com/query-for-get-data-of-last-day-week-month-year-mysql/
      */
-    public function getTrends(string $column, string $type, string $period, int $interval = 0, array $query = null)
+    public function getTrends(string $column, string $type, string $period, int $interval = 0, array $query = null): array
     {
         $qb = QueryBuilder::table($this->table);
         $year = Carbon::now()->year;
@@ -74,7 +74,7 @@ class Metrics
                 $data = $qb->select($type . '(' . $column . ') AS data', $this->getPeriod(self::DAY))
                     ->where('date(created_at)', Carbon::now()->toDateString())
                     ->subQuery(function ($q) use ($query) {
-                        if (!is_null($query) && !empty($query)) {
+                        if (!empty($query)) {
                             $q->rawQuery($query[0], $query[1]);
                         }
                     })
@@ -93,7 +93,7 @@ class Metrics
                         ->andColumn($this->formatPeriod(self::WEEK))->like($week);
 
                 $data = $qb->subQuery(function ($q) use ($query) {
-                        if (!is_null($query) && !empty($query)) {
+                        if (!empty($query)) {
                             $q->rawQuery($query[0], $query[1]);
                         }
                     })
@@ -111,7 +111,7 @@ class Metrics
                         ->andColumn($this->formatPeriod(self::MONTH))->like($month);
 
                 $data = $qb->subQuery(function ($q) use ($query) {
-                        if (!is_null($query) && !empty($query)) {
+                        if (!empty($query)) {
                             $q->rawQuery($query[0], $query[1]);
                         }
                     })
@@ -128,7 +128,7 @@ class Metrics
                     : $qb->where($this->formatPeriod(self::YEAR), $year);
             
                 $data = $qb->subQuery(function ($q) use ($query) {
-                        if (!is_null($query) && !empty($query)) {
+                        if (!empty($query)) {
                             $q->rawQuery($query[0], $query[1]);
                         }
                     })
@@ -146,7 +146,7 @@ class Metrics
                 }
                     
                 $data = $qb->subQuery(function ($q) use ($query) {
-                        if (!is_null($query) && !empty($query)) {
+                        if (!empty($query)) {
                             $q->rawQuery($query[0], $query[1]);
                         }
                     })
@@ -160,7 +160,7 @@ class Metrics
         }
     }
 
-    public function get(string $column, string $type, string $period, int $interval = 0, array $query = null)
+    public function get(string $column, string $type, string $period, int $interval = 0, array $query = null): mixed
     {
         $qb = QueryBuilder::table($this->table);
         $year = Carbon::now()->year;
@@ -172,7 +172,7 @@ class Metrics
                 return $qb->select($type . '(' . $column . ') AS data')
                     ->where('date(created_at)', Carbon::now()->toDateString())
                     ->subQuery(function ($q) use ($query) {
-                        if (!is_null($query) && !empty($query)) {
+                        if (!empty($query)) {
                             $q->rawQuery($query[0], $query[1]);
                         }
                     })
@@ -187,7 +187,7 @@ class Metrics
                         ->andColumn($this->formatPeriod(self::WEEK))->like($week);
 
                 return $qb->subQuery(function ($q) use ($query) {
-                        if (!is_null($query) && !empty($query)) {
+                        if (!empty($query)) {
                             $q->rawQuery($query[0], $query[1]);
                         }
                     })
@@ -201,7 +201,7 @@ class Metrics
                         ->andColumn($this->formatPeriod(self::MONTH))->like($month);
 
                 return $qb->subQuery(function ($q) use ($query) {
-                        if (!is_null($query) && !empty($query)) {
+                        if (!empty($query)) {
                             $q->rawQuery($query[0], $query[1]);
                         }
                     })
@@ -214,7 +214,7 @@ class Metrics
                     : $qb->where($this->formatPeriod(self::YEAR), $year);
             
                 return $qb->subQuery(function ($q) use ($query) {
-                        if (!is_null($query) && !empty($query)) {
+                        if (!empty($query)) {
                             $q->rawQuery($query[0], $query[1]);
                         }
                     })
@@ -228,7 +228,7 @@ class Metrics
                 }
                     
                 return $qb->subQuery(function ($q) use ($query) {
-                        if (!is_null($query) && !empty($query)) {
+                        if (!empty($query)) {
                             $q->rawQuery($query[0], $query[1]);
                         }
                     })
@@ -238,12 +238,12 @@ class Metrics
         }
     }
 
-    private function getPeriod(string $period)
+    private function getPeriod(string $period): string
     {
         return $this->formatPeriod($period) . ' AS ' . $period;
     }
 
-    private function formatPeriod(string $period)
+    private function formatPeriod(string $period): string
     {
         switch ($period) {
             case self::DAY: return $this->driver === 'mysql' ? 'weekday(created_at)' : "strftime('%w', created_at)";
@@ -254,7 +254,7 @@ class Metrics
         } 
     }
 
-    private function formatDate(array $data, string $period)
+    private function formatDate(array $data, string $period): array
     {
         $data = array_map(function ($data) use ($period) {
             $data->data = intval($data->data);

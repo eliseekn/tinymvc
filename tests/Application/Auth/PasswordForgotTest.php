@@ -1,10 +1,12 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
+
+namespace Tests\Application\Auth;
 
 use Core\Support\Encryption;
 use App\Database\Models\User;
@@ -18,7 +20,7 @@ class PasswordForgotTest extends ApplicationTestCase
 {
     use RefreshDatabase;
 
-    public function test_can_reset_password()
+    public function test_can_reset_password(): void
     {
         $user = (new UserFactory())->create();
         $token = (new TokenFactory())->create(['email' => $user->email]);
@@ -29,7 +31,7 @@ class PasswordForgotTest extends ApplicationTestCase
         $this->assertDatabaseDoesNotHave('tokens', $token->toArray());
     }
 
-    public function test_can_update_password()
+    public function test_can_update_password(): void
     {
         $user = (new UserFactory())->create();
 

@@ -1,10 +1,12 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
+
+namespace Tests\Application\Auth;
 
 use App\Database\Models\User;
 use App\Database\Models\Token;
@@ -17,7 +19,7 @@ class EmailVerificationTest extends ApplicationTestCase
 {
     use RefreshDatabase;
 
-    public function test_can_verify_email()
+    public function test_can_verify_email(): void
     {
         $user = (new UserFactory())->create(['email_verified' => null]);
         $token = (new TokenFactory())->create(['email' => $user->email]);

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -18,7 +18,7 @@ trait LoadFaker
 {
     public Faker $faker;
 
-    public function loadFaker()
+    public function loadFaker(): void
     {
         $this->faker = Factory::create(config('app.lang'));
     }

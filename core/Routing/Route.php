@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -17,9 +17,9 @@ use Core\Http\Response;
  */
 class Route
 {
-    protected static $route;
-    public static $routes = [];
-    protected static $tmp_routes = [];
+    protected static string $route;
+    public static array $routes = [];
+    protected static array $tmp_routes = [];
 
     private static function add(string $route, $handler): self
     {
@@ -159,7 +159,7 @@ class Route
         return $this;
     }
     
-    public function register()
+    public function register(): void
     {
         if (empty(static::$tmp_routes)) return;
 
@@ -167,7 +167,7 @@ class Route
         static::$tmp_routes = [];
     }
     
-    private static function format(string $route)
+    private static function format(string $route): string
     {
         list($method, $uri) = explode(' ', $route, 2);
 
@@ -193,7 +193,7 @@ class Route
      * 
      * @link   https://thisinterestsme.com/php-replace-array-key/
      */
-    private static function update(string $old, string $new)
+    private static function update(string $old, string $new): array
     {
         $array_keys = array_keys(static::$tmp_routes);
         $old_key_index = array_search($old, $array_keys);
@@ -202,7 +202,7 @@ class Route
         return array_combine($array_keys, static::$tmp_routes);
     }
 
-    public static function load()
+    public static function load(): void
     {
         if (empty(config('routes.paths'))) {
             throw new RoutesPathsNotDefinedException();

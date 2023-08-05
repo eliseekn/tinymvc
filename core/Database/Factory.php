@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -34,7 +34,7 @@ class Factory
         }
     }
 
-    public function data()
+    public function data(): array
     {
         return [];
     }
@@ -42,7 +42,7 @@ class Factory
     /**
      * @return array|\Core\Database\Model
      */
-    public function make(array $data = [])
+    public function make(array $data = []): array
     {
         if (!is_array($this->class)) {
             $this->class->fill(array_merge($this->data(), $data));
@@ -56,7 +56,7 @@ class Factory
         return $this->class;
     }
 
-    public function create(array $data = [])
+    public function create(array $data = []): array|Model|false
     {
         $class = $this->make($data);
 

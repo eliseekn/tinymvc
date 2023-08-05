@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -21,7 +21,7 @@ class Actions extends Command
 {
     protected static $defaultName = 'make:action';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Create new action');
         $this->addArgument('model', InputArgument::REQUIRED, 'The name of model');
@@ -29,7 +29,7 @@ class Actions extends Command
         $this->addOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Specify namespace (base: App\Http\Actions)');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $types = $input->getOption('type');
 

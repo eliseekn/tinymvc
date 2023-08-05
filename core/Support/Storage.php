@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -15,7 +15,7 @@ use ErrorException;
  */
 class Storage
 {
-    protected static $path = '';
+    protected static string $path = '';
     
     /**
      * Set storage path
@@ -26,7 +26,7 @@ class Storage
         return new self();
     }
     
-    public function getPath()
+    public function getPath(): string
     {
         return self::$path;
     }
@@ -37,17 +37,17 @@ class Storage
         return $this;
     }
 
-    public function file(string $filename)
+    public function file(string $filename): string
     {
         return self::$path .= $filename;
     }
 
-    public function createDir(string $pathname = '', bool $recursive = false, int $mode = 0777)
+    public function createDir(string $pathname = '', bool $recursive = false, int $mode = 0777): bool
     {
         return mkdir(self::$path . $pathname, $mode, $recursive);
     }
     
-    public function writeFile(string $filename, $content, bool $append = false)
+    public function writeFile(string $filename, $content, bool $append = false): bool
     {
         if (!$this->isDir()) {
             if (!$this->createDir(recursive: true)) return false;
@@ -55,41 +55,41 @@ class Storage
 
         $flag = $append ? FILE_APPEND | LOCK_EX : 0;
         $success = file_put_contents(self::$path . $filename, $content, $flag);
-        return $success === false ? false : true;
+        return !($success === false);
     }
     
-    public function readFile(string $filename)
+    public function readFile(string $filename): string
     {
         $data = file_get_contents(self::$path . $filename);
         return $data === false ? '' : $data;
     }
     
-    public function copyFile(string $filename, string $destination)
+    public function copyFile(string $filename, string $destination): bool
     {
         return copy(self::$path . $filename, self::$path . $destination);
     } 
     
-    public function renameFile(string $oldname, string $newname)
+    public function renameFile(string $oldname, string $newname): bool
     {
         return rename(self::$path . $oldname, self::$path . $newname);
     } 
     
-    public function moveFile(string $filename, string $destination)
+    public function moveFile(string $filename, string $destination): bool
     {
         return $this->renameFile($filename, $destination);
     }
     
-    public function isFile(string $filename)
+    public function isFile(string $filename): bool
     {
         return is_file(self::$path . $filename);
     }
 
-    public function isDir(string $pathname = '')
+    public function isDir(string $pathname = ''): bool
     {
         return is_dir(self::$path . $pathname);
     }
     
-    public function deleteFile(string $filename)
+    public function deleteFile(string $filename): bool
     {
         return unlink(self::$path . $filename);
     }
@@ -97,7 +97,7 @@ class Storage
     /**
      * @link https://stackoverflow.com/questions/3338123/how-do-i-recursively-delete-a-directory-and-its-entire-contents-files-sub-dir
      */
-    public function deleteDir(string $pathname = '')
+    public function deleteDir(string $pathname = ''): bool
     {
         if ($this->isDir($pathname)) {
             $objects = scandir(self::$path . $pathname);
@@ -119,7 +119,7 @@ class Storage
         return false;
     }
 
-    public function getFiles()
+    public function getFiles(): array
     {
         $results = [];
         $objects = $this->getFilesAndFolders();
@@ -131,7 +131,7 @@ class Storage
         return $results;
     }
 
-    public function getFolders()
+    public function getFolders(): array
     {
         $results = [];
         $objects = $this->getFilesAndFolders();
@@ -143,7 +143,7 @@ class Storage
         return $results;
     }
 
-    public function getFilesAndFolders()
+    public function getFilesAndFolders(): array
     {
         $results = [];
 

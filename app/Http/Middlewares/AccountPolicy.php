@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -18,12 +18,12 @@ use Core\Support\Alert;
  */
 class AccountPolicy
 {    
-    public function handle(Request $request, Response $response)
+    public function handle(Request $request, Response $response): void
     {
         if (config('security.auth.email_verification')) {
             if (is_null(Auth::get('email_verified'))) {
                 Alert::default(__('email_not_verifed'))->error();
-                $response->redirectUrl('/login')->intended($request->fullUri())->send(302);
+                $response->url('/login')->intended($request->fullUri())->send(302);
             }
         }
     }

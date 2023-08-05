@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -22,14 +22,14 @@ class Reset extends Command
 {
     protected static $defaultName = 'migrations:reset';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Reset migrations tables');
         $this->addArgument('table', InputArgument::OPTIONAL|InputArgument::IS_ARRAY, 'The name of migrations tables (separated by space if many)');
         $this->addOption('seed', null, InputOption::VALUE_NONE, 'Insert all seeds');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $tables = $input->getArgument('table');
 

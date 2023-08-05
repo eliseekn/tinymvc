@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -23,26 +23,37 @@ use App\Http\Validators\Auth\LoginValidator;
  */
 class ForgotPasswordController
 {
-	public function notify(Request $request, Response $response)
+	public function notify(Request $request, Response $response): void
 	{
 		$token = generate_token();
 
         if (Mail::send(new TokenMail($request->email, $token))) {
-            Token::create([
-                'email'=> $request->email,
-                'token' => $token,
-                'expire' => Carbon::now()->addHour()->toDateTimeString()
-            ]);
+            if (
+                !Token::where('email', $request->email)
+                    ->and('description', Token::PASSWORD_RESET_TOKEN)
+                    ->exists()
+            ) {
+                Token::create([
+                    'email'=> $request->email,
+                    'value' => $token,
+                    'expire' => Carbon::now()->addHour()->toDateTimeString(),
+                    'description' => Token::PASSWORD_RESET_TOKEN
+                ]);
+            } else {
+                Token::where('email', $request->email)
+                    ->and('description', Token::PASSWORD_RESET_TOKEN)
+                    ->update(['value' => $token]);
+            }
 
             Alert::default(__('password_reset_link_sent'))->success();
-			$response->redirectBack()->send(302);
+			$response->back()->send(302);
 		}
         
         Alert::default(__('password_reset_link_not_sent'))->error();
-        $response->redirectBack()->send(302);
+        $response->back()->send(302);
 	}
 	
-	public function reset(Request $request, Response $response)
+	public function reset(Request $request, Response $response): void
 	{
         if (!$request->hasQuery('email', 'token')) {
             $response->data(__('bad_request'))->send(400);
@@ -50,7 +61,7 @@ class ForgotPasswordController
 
         $token = Token::findBy('email', $request->email);
 
-        if (!$token || $token->token !== $request->token) {
+        if (!$token || $token->value !== $request->token) {
 			$response->data(__('invalid_password_reset_link'))->send(400);
 		}
 
@@ -59,20 +70,20 @@ class ForgotPasswordController
 		}
 
         $token->delete();
-        $response->redirectUrl("/password/new?email={$request->email}")->send(302);
+        $response->url("/password/new?email={$request->email}")->send(302);
 	}
 	
-	public function update(Request $request, Response $response, LoginValidator $loginValidator, UpdateAction $updateAction)
+	public function update(Request $request, Response $response, LoginValidator $loginValidator, UpdateAction $updateAction): void
 	{
         $loginValidator->validate($request->inputs(), $response);
         $user = $updateAction->handle(['password' => $request->password], $request->email);
 
         if (!$user) {
             Alert::default(__('password_not_reset'))->error();
-            $response->redirectBack()->send(302);
+            $response->back()->send(302);
         }
 
         Alert::default(__('password_reset'))->success();
-        $response->redirectUrl('/login')->send(302);
+        $response->url('/login')->send(302);
 	}
 }

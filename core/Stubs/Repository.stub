@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -12,7 +12,7 @@ use App\Database\Models\MODELNAME;
 
 class CLASSNAME
 {
-    public static function findAllByColumn(string $column)
+    public static function findAllByColumn(string $column): array|false
     {
         return MODELNAME::findBy('column', $column)->latest()->getAll();
     }

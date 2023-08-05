@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -24,7 +24,7 @@ class View
     /**
      * Retrieves view template content
      */
-    public static function getContent(string $view, array $data = [])
+    public static function getContent(string $view, array $data = []): string
     {
         $path = Storage::path(config('storage.views'));
         $view = real_path($view) . '.html.twig';

@@ -16,12 +16,12 @@ class Routes extends Command
 {
     protected static $defaultName = 'routes';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Display registered routes list');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $rows = [];
         $routes = Route::$routes;

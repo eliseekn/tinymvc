@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -23,13 +23,13 @@ class Delete extends Command
 {
     protected static $defaultName = 'migrations:delete';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Delete migrations tables');
         $this->addArgument('table', InputArgument::OPTIONAL|InputArgument::IS_ARRAY, 'The name of migrations tables (separated by space if many)');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (config('app.env') === 'test') {
             $output->writeln('<fg=yellow>WARNING: You are running migrations on APP_ENV=test</>');
@@ -52,7 +52,7 @@ class Delete extends Command
         return Command::SUCCESS;
     }
 
-    protected function delete(OutputInterface $output, string $table)
+    protected function delete(OutputInterface $output, string $table): void
     {
         if (!$this->isMigrated($table)) {
             $output->writeln('<fg=yellow>Table "' . $table . '" has not been migrated</>');
@@ -62,14 +62,18 @@ class Delete extends Command
         $migration = '\App\Database\Migrations\\' . $table;
         (new $migration())->drop();
         
-        QueryBuilder::table('migrations')->deleteWhere('name', $table)->execute();
+        QueryBuilder::table('migrations')
+            ->deleteWhere('name', $table)
+            ->execute();
 
         $output->writeln('<info>Table "' . $table . '" has been deleted</info>');
     }
 
     protected function isMigrated(string $table): bool
     {
-        if (!Connection::getInstance()->tableExists('migrations')) return false;
+        if (!Connection::getInstance()->tableExists('migrations')) {
+            return false;
+        }
 
         return QueryBuilder::table('migrations')
             ->select('*')

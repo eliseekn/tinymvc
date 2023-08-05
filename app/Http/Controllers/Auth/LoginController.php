@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -17,15 +17,17 @@ use App\Http\Validators\Auth\LoginValidator;
 
 class LoginController
 { 
-    public function index(Request $request, Response $response)
+    public function index(Request $request, Response $response): void
     {
-        if (!Auth::check($request)) $response->view('auth.login')->send(); 
+        if (!Auth::check($request)) {
+            $response->view('auth.login')->send();
+        }
 
         $uri = !Session::has('intended') ? config('app.home') : Session::pull('intended');
-        $response->redirectUrl($uri)->send(302);
+        $response->url($uri)->send(302);
     }
 
-	public function authenticate(Request $request, Response $response, LoginValidator $loginValidator)
+	public function authenticate(Request $request, Response $response, LoginValidator $loginValidator): void
 	{
         $loginValidator->validate($request->inputs(), $response);
 
@@ -33,10 +35,10 @@ class LoginController
             $uri = !Session::has('intended') ? config('app.home') : Session::pull('intended');
 
             Alert::toast(__('welcome', ['name' => Auth::get('name')]))->success();
-            $response->redirectUrl($uri)->send(302);
+            $response->url($uri)->send(302);
         }
 
         Alert::default(__('login_failed'))->error();
-        $response->redirectUrl('/login')->withInputs($request->only('email', 'password'))->withErrors([__('login_failed')])->send(302);
+        $response->url('/login')->withInputs($request->only('email', 'password'))->withErrors([__('login_failed')])->send(302);
     }
 }

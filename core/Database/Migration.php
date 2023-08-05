@@ -1,12 +1,14 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
 
 namespace Core\Database;
+
+use PDOStatement;
 
 /**
  * Manage migrations tables
@@ -51,30 +53,30 @@ class Migration
         return new self();
     }
 
-    public static function dropTable(string $table)
+    public static function dropTable(string $table): false|PDOStatement
     {
-        QueryBuilder::dropTable($table)->execute();
+        return QueryBuilder::dropTable($table)->execute();
     }
 
-    public static function dropForeign(string $table, string $name)
+    public static function dropForeign(string $table, string $name): false|PDOStatement
     {
-        QueryBuilder::dropForeign($table, 'fk_' . $name)->execute();
+        return QueryBuilder::dropForeign($table, 'fk_' . $name)->execute();
     }
 
-    public static function disableForeignKeyCheck()
+    public static function disableForeignKeyCheck(): false|PDOStatement
     {
-        $driver = config('app.env') === 'test' ? $driver = config('tests.database.driver') : config('database.driver');
+        $driver = config('app.env') === 'test' ? config('tests.database.driver') : config('database.driver');
         $query = $driver === 'mysql' ? 'SET foreign_key_checks = 0' : 'PRAGMA foreign_keys = OFF';
 
-        QueryBuilder::setQuery($query)->execute();
+        return QueryBuilder::setQuery($query)->execute();
     }
 
-    public static function enableForeignKeyCheck()
+    public static function enableForeignKeyCheck(): false|PDOStatement
     {
-        $driver = config('app.env') === 'test' ? $driver = config('tests.database.driver') : config('database.driver');
+        $driver = config('app.env') === 'test' ? config('tests.database.driver') : config('database.driver');
         $query = $driver === 'mysql' ? 'SET foreign_key_checks = 1' : 'PRAGMA foreign_keys = ON';
 
-        QueryBuilder::setQuery($query)->execute();
+        return QueryBuilder::setQuery($query)->execute();
     }
 
     public function addReal(string $name): self 
@@ -307,7 +309,7 @@ class Migration
         return $pk;
     }
     
-    public function addCurrentTimestamp(string $created_at = 'created_at', string $updated_at = 'updated_at')
+    public function addCurrentTimestamp(string $created_at = 'created_at', string $updated_at = 'updated_at'): self
     {
         self::$qb->addCurrentTimestamp($created_at, $updated_at);
         return $this;
@@ -338,6 +340,6 @@ class Migration
             return;
         }
             
-        self::$qb->flush()->execute();
+        return self::$qb->flush()->execute();
     }
 }

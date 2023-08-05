@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -12,18 +12,19 @@ use Core\Database\Migration;
 
 class TokensTable_20210403034738
 {         
-    public function create()
+    public function create(): void
     {
         Migration::createTable('tokens')
             ->addPrimaryKey('id')
             ->addString('email')
-            ->addString('token')->unique()
+            ->addString('value')->unique()
             ->addTimestamp('expire')->nullable()
+            ->addString('description')
             ->addCurrentTimestamp()
             ->migrate();
     }
     
-    public function drop()
+    public function drop(): void
     {
         Migration::dropTable('tokens');
     }

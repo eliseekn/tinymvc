@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -21,14 +21,14 @@ class Migration extends Command
 {
     protected static $defaultName = 'make:migration';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Create new migration');
         $this->addArgument('migration', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of migration table (separated by space if many)');
         $this->addOption('seed', null, InputOption::VALUE_NONE, 'Create new seed');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $migrations = $input->getArgument('migration');
 

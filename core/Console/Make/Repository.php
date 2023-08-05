@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -21,14 +21,14 @@ class Repository extends Command
 {
     protected static $defaultName = 'make:repository';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Create new model repository');
         $this->addArgument('repository', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of model repository table (separated by space if many)');
         $this->addOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Specify namespace (base: App\Database\Repositories)');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $repositories = $input->getArgument('repository');
 

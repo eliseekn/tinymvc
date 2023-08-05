@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -21,14 +21,14 @@ class Exception extends Command
 {
     protected static $defaultName = 'make:exception';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Create new custom exception');
         $this->addArgument('exception', InputArgument::REQUIRED, 'The name of exception');
         $this->addOption('message', 'm', InputOption::VALUE_REQUIRED, 'The exception message');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $exception = $input->getArgument('exception');
         $message = $input->getOption('message');

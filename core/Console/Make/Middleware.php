@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -20,13 +20,13 @@ class Middleware extends Command
 {
     protected static $defaultName = 'make:middleware';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Create new middleware');
         $this->addArgument('middleware', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of middleware (separated by space if many)');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $middlewares = $input->getArgument('middleware');
 

@@ -1,10 +1,12 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
+
+namespace Tests\Application\Auth;
 
 use App\Database\Factories\UserFactory;
 use Core\Testing\ApplicationTestCase;
@@ -14,7 +16,7 @@ class AuthenticationTest extends ApplicationTestCase
 {
     use RefreshDatabase;
 
-    public function test_can_not_authenticate_with_unregistered_user_credentials()
+    public function test_can_not_authenticate_with_unregistered_user_credentials(): void
     {
         $user = (new UserFactory())->make(['password' => 'password']);
 
@@ -23,7 +25,7 @@ class AuthenticationTest extends ApplicationTestCase
         $client->assertRedirectedToUrl(url('login'));
     }
 
-    public function test_can_authenticate_with_registered_user_credentials()
+    public function test_can_authenticate_with_registered_user_credentials(): void
     {
         $user = (new UserFactory())->create();
 
@@ -32,7 +34,7 @@ class AuthenticationTest extends ApplicationTestCase
         $client->assertSessionHas('user', $user->toArray());
     }
 
-    public function test_can_register_user()
+    public function test_can_register_user(): void
     {
         $user = (new UserFactory())->make(['password' => 'password']);
 
@@ -43,7 +45,7 @@ class AuthenticationTest extends ApplicationTestCase
         $this->assertDatabaseHas('users', $user->toArray('name', 'email'));
     }
 
-    public function test_can_logout()
+    public function test_can_logout(): void
     {
         $user = (new UserFactory())->create();
 
@@ -54,7 +56,7 @@ class AuthenticationTest extends ApplicationTestCase
         $client->assertSessionDoesNotHave('user', $user->toArray());
     }
 
-    public function test_can_not_register_same_user_twice()
+    public function test_can_not_register_same_user_twice(): void
     {
         $user = (new UserFactory())->create();
 

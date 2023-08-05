@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -21,14 +21,14 @@ class Factory extends Command
 {
     protected static $defaultName = 'make:factory';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Create new model factory');
         $this->addArgument('factory', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of model factory table (separated by space if many)');
         $this->addOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Specify namespace (base: App\Database\Factories)');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $factories = $input->getArgument('factory');
 

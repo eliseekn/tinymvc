@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -21,7 +21,7 @@ class Console extends Command
 {
     protected static $defaultName = 'make:console';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Create new console command');
         $this->addArgument('console', InputArgument::REQUIRED, 'The console class name');
@@ -30,7 +30,7 @@ class Console extends Command
         $this->addOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Specify namespace (base: App\Console)');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         list(, $class) = Make::generateClass($input->getArgument('console'), '', true);
 

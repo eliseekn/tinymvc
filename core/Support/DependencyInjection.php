@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -23,7 +23,7 @@ class DependencyInjection
     /**
  	* Execute class with dependecies and methods dependencies
  	*/
-	public function resolve(string $class, string $method, array $params = [])
+	public function resolve(string $class, string $method, array $params = []): mixed
 	{
         $reflector = new ReflectionClass($class);
         $constructor = $reflector->getConstructor();
@@ -46,14 +46,13 @@ class DependencyInjection
         }
 
         $dependencies = $this->getDependencies($parameters);
-
         return call_user_func_array([$class, $method], array_merge($dependencies, $params));
 	}
 
     /**
  	* Execute closure with dependecies and methods dependencies
  	*/
-    public function resolveClosure(Closure $closure, array $params = [])
+    public function resolveClosure(Closure $closure, array $params = []): mixed
     {
         $reflector = new ReflectionFunction($closure);
         $parameters = $reflector->getParameters();

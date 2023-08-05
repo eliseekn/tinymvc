@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -21,12 +21,12 @@ class Setup extends Command
 {
     protected static $defaultName = 'app:setup';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Setup application');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $config = [];
 
@@ -89,11 +89,10 @@ class Setup extends Command
         }
 
         $output->writeln('<info>Application has been setted up. You need to restart server to apply changes.</info>');
-
         return Command::SUCCESS;
     }
 
-    private function getInput(string $default, ?array $expected = null)
+    private function getInput(string $default, ?array $expected = null): string
     {
         $input = fgets(STDIN);
 

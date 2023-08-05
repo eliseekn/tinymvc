@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -24,7 +24,7 @@ use Core\Exceptions\RouteHandlerNotDefinedException;
  */
 class Router
 {
-    private static function match(Request $request, string $method, string $route, &$params)
+    private static function match(Request $request, string $method, string $route, &$params): bool
     {
         if (
             !preg_match('/' . strtoupper($method) . '/', strtoupper($request->method())) ||
@@ -38,7 +38,7 @@ class Router
         return true;
     }
     
-    private static function executeMiddlewares(array $middlewares)
+    private static function executeMiddlewares(array $middlewares): void
     {
         foreach ($middlewares as $middleware) {
             $middleware = config('middlewares.' . $middleware);
@@ -51,7 +51,7 @@ class Router
         }
     }
     
-    private static function executeHandler($handler, array $params)
+    private static function executeHandler($handler, array $params): mixed
     {
         if ($handler instanceof Closure) {
             return (new DependencyInjection())->resolveClosure($handler, $params);
@@ -78,11 +78,13 @@ class Router
         throw new InvalidRouteHandlerException();
     }
     
-    public static function dispatch(Request $request, Response $response)
+    public static function dispatch(Request $request, Response $response): void
     {   
         $routes = Route::$routes;
 
-        if (empty($routes)) throw new RoutesNotDefinedException();
+        if (empty($routes)) {
+            throw new RoutesNotDefinedException();
+        }
 
         foreach ($routes as $route => $options) {
             list($method, $route) = explode(' ', $route, 2);

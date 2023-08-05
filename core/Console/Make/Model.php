@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -22,7 +22,7 @@ class Model extends Command
 {
     protected static $defaultName = 'make:model';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Create new model');
         $this->addArgument('model', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of model (separated by space if many)');
@@ -34,12 +34,12 @@ class Model extends Command
         $this->addOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Specify namespace (base: App\Database\Models)');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $models = $input->getArgument('model');
 
         foreach ($models as $model) {
-            list($name, $class) = Make::generateClass($model, '');
+            list($name, $class) = Make::generateClass($model);
 
             if (!Make::createModel($name, $input->getOption('namespace'))) {
                 $output->writeln('<fg=yellow>Failed to create model "' . Make::fixPluralTypo($class, true) . '"</fg>');

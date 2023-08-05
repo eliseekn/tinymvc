@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -15,9 +15,9 @@ use Core\Http\Response;
  */
 class HttpCors
 {    
-    public function handle(Response $response)
+    public function handle(Response $response): void
     {
-        $response->headers([
+        $response->addHeaders([
             'Access-Control-Allow-Origin' => '*',
             'Access-Control-Allow-Headers' => '*',
             'Access-Control-Allow-Methods' => '*',

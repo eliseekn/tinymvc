@@ -16,14 +16,14 @@ class Tests extends Command
 {
     protected static $defaultName = 'test';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Run tests cases');
         $this->addArgument('filename', InputArgument::OPTIONAL, 'Specify test filename');
         $this->addArgument('filter', InputArgument::OPTIONAL, 'Specify test case');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (config('app.env') !== 'test') {
             $output->writeln('<fg=yellow>You must set APP_ENV to test in application configuration</>');

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -15,9 +15,11 @@ use Dflydev\DotAccessData\Data;
  */
 class Config
 {
-    public static function saveEnv(array $config)
+    public static function saveEnv(array $config): bool
     {
-        if (empty($config)) return;
+        if (empty($config)) {
+            return false;
+        }
 
         $data = '';
 
@@ -26,12 +28,14 @@ class Config
             putenv($data);
         }
 
-        Storage::path()->writeFile('.env', $data);
+        return Storage::path()->writeFile('.env', $data);
     }
 
-    public static function loadEnv()
+    public static function loadEnv(): void
     {
-        if (!Storage::path()->isFile('.env')) return;
+        if (!Storage::path()->isFile('.env')) {
+            return;
+        }
 
         $lines = file(Storage::path()->file('.env'), FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
@@ -44,13 +48,13 @@ class Config
         }
     }
 
-    public static function readEnv(string $key, $default = null)
+    public static function readEnv(string $key, $default = null): mixed
     {
         $data = getenv($key, true);
         return $data === false ? $default : $data;
     }
     
-    public static function readFile(string $config, string $path, $default = null)
+    public static function readFile(string $config, string $path, $default = null): mixed
     {
         $config = require $config;
         $data = new Data($config);

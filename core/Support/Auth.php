@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -22,18 +22,21 @@ use Core\Http\Response;
  */
 class Auth
 {
-    public static function getAttempts()
+    public static function getAttempts(): mixed
     {
         return Session::get('auth_attempts', 0);
     }
 
-    public static function attempt(Response $response, array $credentials, bool $remember = false)
+    public static function attempt(Response $response, array $credentials, bool $remember = false): bool
     {
         Session::push('auth_attempts', 1, 0);
 
         if (!self::checkCredentials($credentials['email'], $credentials['password'], $user)) {
             if (config('security.auth.max_attempts') > 0 && Auth::getAttempts() >= config('security.auth.max_attempts')) {
-                $response->redirectBack()->with('auth_attempts_timeout', Carbon::now()->addMinutes(config('security.auth.unlock_timeout'))->toDateTimeString())->send(302);
+                $response
+                    ->back()
+                    ->with('auth_attempts_timeout', Carbon::now()->addMinutes(config('security.auth.unlock_timeout'))->toDateTimeString())
+                    ->send(302);
             }
 
             return false;
@@ -42,12 +45,14 @@ class Auth
         Session::forget('auth_attempts', 'auth_attempts_timeout');
         Session::create('user', $user);
             
-        if ($remember) Cookies::create('user', $user->email, 3600 * 24 * 365);
+        if ($remember) {
+            Cookies::create('user', $user->email, 3600 * 24 * 365);
+        }
         
         return true;
     }
     
-    public static function checkCredentials(string $email, string $password, &$user)
+    public static function checkCredentials(string $email, string $password, &$user): bool
     {
         if (filter_var($email, FILTER_VALIDATE_EMAIL) !== false) {
             $user = User::findBy('email', $email);
@@ -56,7 +61,9 @@ class Auth
 
         $users = User::where('email', 'like', $email)->getAll();
 
-        if (!$users) return false;
+        if (!$users) {
+            return false;
+        }
 
         foreach ($users as $u) {
             if (Encryption::check($password, $u->password)) {
@@ -68,9 +75,9 @@ class Auth
         return false;
     }
     
-    public static function checkToken(string $token, &$user)
+    public static function checkToken(string $token, &$user): bool
     {
-        $token = Token::findBy('token', $token);
+        $token = Token::findBy('value', $token);
         $user = User::findBy('email', $token->email);
         
         return $user !== false;
@@ -80,45 +87,50 @@ class Auth
     {
         $token = Token::create([
             'email' => $email,
-            'token' => generate_token(),
+            'value' => generate_token(),
         ]);
 
-        return Encryption::encrypt($token->token);
+        return Encryption::encrypt($token->value);
     }
 
-    public static function check(Request $request)
+    public static function check(Request $request): bool
     {
         $result = Session::has('user');
 
         if (!$result) {
-            if (empty($request->getHttpAuth())) return false;
+            if (empty($request->getHttpAuth())) {
+                return false;
+            }
 
             list($method, $token) = $request->getHttpAuth();
-
             $result = trim($method) === 'Bearer' && self::checkToken(Encryption::decrypt($token), $user);
         }
 
         return $result;
     }
 
-    public static function remember()
+    public static function remember(): bool
     {
         return Cookies::has('user');
     }
     
-    public static function get(?string $key = null)
+    public static function get(?string $key = null): mixed
     {
         $user = Session::get('user');
 
-        if (is_null($key)) return $user;
+        if (is_null($key)) {
+            return $user;
+        }
 
         return $user->{$key};
     }
 
-    public static function forget()
+    public static function forget(): void
     {
         Session::forget('user', 'history', 'csrf_token');
 
-        if (self::remember()) Cookies::delete('user');
+        if (self::remember()) {
+            Cookies::delete('user');
+        }
     }
 }

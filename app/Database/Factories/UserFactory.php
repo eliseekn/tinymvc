@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -21,7 +21,7 @@ class UserFactory extends Factory
         parent::__construct($count);
     }
 
-    public function data()
+    public function data(): array
     {
         return [
             'name' => $this->faker->name(),

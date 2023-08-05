@@ -11,6 +11,7 @@
     'login' => 'Connexion',
     'email' => 'Adresse email',
     'password' => 'Mot de passe',
+    'new_password' => 'Nouveau mot de passe',
     'remember' => 'Se souvenir de moi',
     'forgot_password' => 'Mot de passe oublié?',
     'reset_password' => 'Réinitialiser le mot de passe',

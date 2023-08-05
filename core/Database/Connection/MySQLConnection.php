@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -10,6 +10,7 @@ namespace Core\Database\Connection;
 
 use PDO;
 use PDOException;
+use PDOStatement;
 
 class MySQLConnection implements ConnectionInterface
 {
@@ -33,7 +34,7 @@ class MySQLConnection implements ConnectionInterface
 		}
     }
 
-    public function getPDO()
+    public function getPDO(): PDO
     {
         return $this->pdo;
     }
@@ -41,7 +42,7 @@ class MySQLConnection implements ConnectionInterface
     /**
      * @throws PDOException
 	 */
-    public function executeStatement(string $query)
+    public function executeStatement(string $query): false|int
     {
         try {
             return $this->pdo->exec($query);
@@ -53,10 +54,8 @@ class MySQLConnection implements ConnectionInterface
 	/**
      * @throws PDOException
 	 */
-	public function executeQuery(string $query, ?array $args = null)
+	public function executeQuery(string $query, ?array $args = null): false|PDOStatement
 	{
-		$stmt = null;
-
 		try {
 			$stmt = $this->pdo->prepare(trim($query));
 			$stmt->execute($args);
@@ -67,26 +66,26 @@ class MySQLConnection implements ConnectionInterface
 		return $stmt;
 	}
 
-    public function schemaExists(string $name)
+    public function schemaExists(string $name): bool
     {
         $stmt = $this->executeQuery('
-            SELECT schema_name FROM information_schema.schemata WHERE schema_name = "' . $name .'"
+            SELECT schema_name FROM information_schema.schemata WHERE schema_name = "' . $name . '"
         ');
 
-        return !($stmt->fetch() === false);
+        return $stmt->fetch() !== false;
     }
 
-    public function tableExists(string $name)
+    public function tableExists(string $name): bool
     {
         $stmt = $this->executeQuery('
-            SELECT * FROM information_schema.tables WHERE table_schema = "' . $this->getDB() .'" 
+            SELECT * FROM information_schema.tables WHERE table_schema = "' . $this->getDB() . '" 
             AND table_name = "' . $name . '" LIMIT 1
         ');
 
-        return !($stmt->fetch() === false);
+        return $stmt->fetch() !== false;
     }
 
-    public function createSchema(string $name)
+    public function createSchema(string $name): void
     {
         $this->executeStatement('
             CREATE DATABASE ' . $name . ' CHARACTER SET ' . config('database.mysql.charset') . 
@@ -94,15 +93,15 @@ class MySQLConnection implements ConnectionInterface
         );
     }
 
-    public function deleteSchema(string $name)
+    public function deleteSchema(string $name): void
     {
         $this->executeStatement("DROP DATABASE IF EXISTS $name");
     }
 
-    private function getDB()
+    private function getDB(): string
     {
         return config('app.env') === 'test'
             ? config('tests.database.suffix')
-            : config('database.name') . '.db';
+            : config('database.name');
     }
 }

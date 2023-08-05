@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -21,13 +21,13 @@ class Environnement extends Command
 {
     protected static $defaultName = 'app:env';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Define application environnement');
         $this->addArgument('name', InputArgument::REQUIRED, 'Specify application environnement (test, local or prod)');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         Config::loadEnv();
 
@@ -51,7 +51,6 @@ class Environnement extends Command
         ]);
 
         $output->writeln('<info>Application environnement has been defined</info>');
-
         return Command::SUCCESS;
     }
 }

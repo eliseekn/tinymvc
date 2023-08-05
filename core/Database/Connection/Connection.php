@@ -1,12 +1,15 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
 
 namespace Core\Database\Connection;
+
+use PDO;
+use PDOStatement;
 
 /**
  * Manage database connection
@@ -38,37 +41,37 @@ class Connection
         return self::$instance;
     }
 
-    public function executeStatement(string $query)
+    public function executeStatement(string $query): false|int
     {
         return $this->db->executeStatement($query);
     }
 
-	public function executeQuery(string $query, ?array $args = null)
+	public function executeQuery(string $query, ?array $args = null): false|PDOStatement
 	{
         return $this->db->executeQuery($query, $args);
 	}
 
-    public function schemaExists(string $name)
+    public function schemaExists(string $name): bool
     {
         return $this->db->schemaExists($name);
     }
 
-    public function tableExists(string $name)
+    public function tableExists(string $name): bool
     {
         return $this->db->tableExists($name);
     }
 
-    public function createSchema(string $name)
+    public function createSchema(string $name): void
     {
         $this->db->createSchema($name);
     }
 
-    public function deleteSchema(string $name)
+    public function deleteSchema(string $name): void
     {
         $this->db->deleteSchema($name);
     }
 
-    public function getPDO()
+    public function getPDO(): PDO
     {
         return $this->db->getPDO();
     }

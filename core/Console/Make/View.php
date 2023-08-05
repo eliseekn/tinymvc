@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -21,7 +21,7 @@ class View extends Command
 {
     protected static $defaultName = 'make:view';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Create new view template');
         $this->addArgument('view', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of view or layout (separated by space if many)');
@@ -29,7 +29,7 @@ class View extends Command
         $this->addOption('path', null, InputOption::VALUE_OPTIONAL, 'Specify subdirectory path');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $views = $input->getArgument('view');
 

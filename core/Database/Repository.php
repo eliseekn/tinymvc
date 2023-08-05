@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -10,6 +10,7 @@ namespace Core\Database;
 
 use Core\Support\Pager;
 use Core\Support\Metrics;
+use PDOStatement;
 
 /**
  * Manage database repositories
@@ -26,12 +27,12 @@ class Repository
         return $this;
     }
     
-    public function selectOne(string ...$columns)
+    public function selectOne(string ...$columns): mixed
     {
         return $this->select(...$columns)->get();
     }
     
-    public function selectAll(string ...$columns)
+    public function selectAll(string ...$columns): array|false
     {
         return $this->select(...$columns)->getAll();
     }
@@ -42,22 +43,22 @@ class Repository
         return $this;
     }
     
-    public function findWhere(string $column, $operator = null, $value = null)
+    public function findWhere(string $column, $operator = null, $value = null): mixed
 	{
         return $this->select('*')->where($column, $operator, $value)->get();
 	}
     
-    public function find($operator = null, $value = null)
+    public function find($operator = null, $value = null): mixed
 	{
         return $this->findWhere('id', $operator, $value);
 	}
     
-    public function findAllWhere(string $column, $operator = null, $value = null)
+    public function findAllWhere(string $column, $operator = null, $value = null): array|false
 	{
         return $this->select('*')->where($column, $operator, $value)->getAll();
 	}
     
-    public function findAll($operator = null, $value = null)
+    public function findAll($operator = null, $value = null): array|false
 	{
         return $this->findAllWhere('id', $operator, $value);
 	}
@@ -83,7 +84,7 @@ class Repository
         return $result;
     }
     
-    public function findOrCreate(int $id, array $items)
+    public function findOrCreate(int $id, array $items): mixed
     {
         $result = $this->findWhere('id', $id);
 
@@ -94,22 +95,22 @@ class Repository
         return $result;
     }
 
-    public function findBetween(string $column, $start = null, $end = null): self
+    public function findBetween(string $column, $start = null, $end = null): mixed
     {
         return $this->select('*')->whereBetween($column, $start, $end)->get();
     }
     
-    public function findAllBetween(string $column, $start = null, $end = null)
+    public function findAllBetween(string $column, $start = null, $end = null): array|false
     {
         return $this->select('*')->whereBetween($column, $start, $end)->getAll();
     }
     
-    public function findNotBetween(string $column, $start = null, $end = null): self
+    public function findNotBetween(string $column, $start = null, $end = null): mixed
     {
         return $this->select('*')->whereNotBetween($column, $start, $end)->get();
     }
     
-    public function findAllNotBetween(string $column, $start = null, $end = null)
+    public function findAllNotBetween(string $column, $start = null, $end = null): array|false
     {
         return $this->select('*')->whereNotBetween($column, $start, $end)->getAll();
     }
@@ -130,14 +131,16 @@ class Repository
         return $result;
     }
     
-    public function insert(array $items)
+    public function insert(array $items): bool
     {
         return QueryBuilder::table($this->table)->insert($items)->execute()->rowCount() > 0;
     }
     
-    public function insertGetId(array $items)
+    public function insertGetId(array $items): int|null
     {
-        if (!$this->insert($items)) return null;
+        if (!$this->insert($items)) {
+            return null;
+        }
 
         return QueryBuilder::lastInsertedId();
     }
@@ -148,9 +151,11 @@ class Repository
         return $this;
     }
 
-    public function updateWhere(array $data, array $items)
+    public function updateWhere(array $data, array $items): bool
     {
-        if (!isset($data[2])) $data[2] = null;
+        if (!isset($data[2])) {
+            $data[2] = null;
+        }
 
         if (!$this->select('*')->where($data[0], $data[1], $data[2])->exists()) {
             return false;
@@ -159,12 +164,12 @@ class Repository
         return $this->update($items)->where($data[0], $data[1], $data[2])->execute()->rowCount() > 0;
     }
     
-    public function updateIfExists(int $id, array $items)
+    public function updateIfExists(int $id, array $items):bool
     {
         return $this->updateWhere(['id', $id], $items);
     }
     
-    public function updateOrCreate(int $id, array $items)
+    public function updateOrCreate(int $id, array $items): bool
     {
         if ($this->findWhere('id', $id) === false) {
             return $this->insert($items);
@@ -179,7 +184,7 @@ class Repository
         return $this;
     }
     
-    public function deleteWhere(string $column, $operator = null, $value = null)
+    public function deleteWhere(string $column, $operator = null, $value = null): bool
     {
         if (!$this->select('*')->where($column, $operator, $value)->exists()) {
             return false;
@@ -188,7 +193,7 @@ class Repository
         return $this->delete()->where($column, $operator, $value)->execute()->rowCount() > 0;
     }
     
-    public function deleteIfExists(int $id)
+    public function deleteIfExists(int $id): bool
     {
         return $this->deleteWhere('id', $id);
     }
@@ -213,12 +218,12 @@ class Repository
         return $this->select('MIN(' . $column . ') AS value');
     }
     
-    public function metrics(string $column, string $type, string $period, int $interval = 0, ?array $query = null)
+    public function metrics(string $column, string $type, string $period, int $interval = 0, ?array $query = null): mixed
     {
         return (new Metrics($this->table))->get($column, $type, $period, $interval, $query);
     }
 
-    public function trends(string $column, string $type, string $period, int $interval = 0, ?array $query = null)
+    public function trends(string $column, string $type, string $period, int $interval = 0, ?array $query = null): array
     {
         return (new Metrics($this->table))->getTrends($column, $type, $period, $interval, $query);
     }
@@ -562,29 +567,29 @@ class Repository
         return $this;
     }
 
-    public function exists()
+    public function exists(): bool
     {
         return $this->qb->exists();
     }
     
-    public function first()
+    public function first(): mixed
     {
         return $this->getAll()[0];
     }
     
-    public function last()
+    public function last(): mixed
     {
         $rows = $this->getAll();
         return end($rows);
     }
 
-    public function range(int $start, int $end)
+    public function range(int $start, int $end): array|false
     {
         $this->qb->limit($start, $end);
         return $this->getAll();
     }
     
-    public function take(int $count)
+    public function take(int $count): array|false
     {
         return $this->range(0, $count);
     }
@@ -603,17 +608,17 @@ class Repository
         return $pager->setItems($items);
     }
     
-    public function get()
+    public function get(): mixed
     {
         return $this->execute()->fetch();
     }
     
-    public function getAll()
+    public function getAll(): array|false
     {
         return $this->execute()->fetchAll();
     }
     
-    public function toSQL()
+    public function toSQL(): array
     {
         return $this->qb->toSQL();
     }
@@ -639,7 +644,7 @@ class Repository
         return $this;
     }
     
-    public function execute()
+    public function execute(): false|PDOStatement
     {
         return $this->qb->execute();
     }

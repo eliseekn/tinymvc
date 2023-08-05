@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -23,26 +23,37 @@ use App\Http\Actions\User\UpdateAction;
  */
 class EmailVerificationController
 {
-    public function notify(Request $request, Response $response)
+    public function notify(Request $request, Response $response): void
     {
         $token = generate_token();
 
         if (Mail::send(new VerificationMail($request->email, $token))) {
-            Token::create([
-                'email'=> $request->email,
-                'token' => $token,
-                'expire' => Carbon::now()->addDay()->toDateTimeString()
-            ]);
+            if (
+                !Token::where('email', $request->email)
+                    ->and('description', Token::EMAIL_VERIFICATION_TOKEN)
+                    ->exists()
+            ) {
+                Token::create([
+                    'email'=> $request->email,
+                    'value' => $token,
+                    'expire' => Carbon::now()->addDay()->toDateTimeString(),
+                    'description' => Token::EMAIL_VERIFICATION_TOKEN
+                ]);
+            } else {
+                Token::where('email', $request->email)
+                    ->and('description', Token::EMAIL_VERIFICATION_TOKEN)
+                    ->update(['value' => $token]);
+            }
 
             Alert::default(__('email_verification_link_sent'))->success();
-            $response->redirectUrl('login')->send(302);
+            $response->url('login')->send(302);
         }
         
         Alert::default(__('email_verification_link_not_sent'))->error();
-        $response->redirectUrl('signup')->send(302);
+        $response->url('signup')->send(302);
     }
 
-	public function verify(Request $request, Response $response, UpdateAction $updateAction)
+	public function verify(Request $request, Response $response, UpdateAction $updateAction): void
 	{
         if (!$request->hasQuery('email', 'token')) {
             $response->data(__('bad_request'))->send(400);
@@ -50,7 +61,7 @@ class EmailVerificationController
 
         $token = Token::findBy('email', $request->email);
 
-        if (!$token || $token->token !== $request->token) {
+        if (!$token || $token->value !== $request->token) {
 			$response->data(__('invalid_password_reset_link'))->send(400);
 		}
 
@@ -64,12 +75,12 @@ class EmailVerificationController
 
 		if (!$user) {
             Alert::default(__('account_not_found'))->error();
-            $response->redirectUrl('signup')->send(400);
+            $response->url('signup')->send(400);
         }
 
         Mail::send(new WelcomeMail($user->email, $user->name));
 
         Alert::default(__('email_verified'))->success();
-        $response->redirectUrl('login')->send(400);
+        $response->url('login')->send(400);
     }
 }

@@ -1,12 +1,14 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
 
 namespace Core\Database;
+
+use PDOStatement;
 
 /**
  * Manage database models
@@ -27,100 +29,104 @@ class Model
         }
     }
 
-    public static function findBy(string $column, $operator = null, $value = null)
+    public static function findBy(string $column, $operator = null, $value = null): self|false
     {
         $data = (new Repository(static::$table))->findWhere($column, $operator, $value);
 
-        if (!$data) return false;
+        if (!$data) {
+            return false;
+        }
 
         return new self(static::$table, $data);
     }
 
-    public static function find(int $id)
+    public static function find(int $id): self|false
     {
         return self::findBy('id', $id);
     }
 
-    public static function all()
+    public static function all(): array|false
     {
         return (new Repository(static::$table))->selectAll('*');
     }
 
-    public static function first()
+    public static function first(): mixed
     {
         return self::select('*')->first();
     }
 
-    public static function last()
+    public static function last(): mixed
     {
         return self::select('*')->last();
     }
 
-    public static function take(int $count, $subquery = null)
+    public static function take(int $count, $subquery = null): array|false
     {
         return self::select('*')->subQuery($subquery)->take($count);
     }
 
-    public static function oldest(string $column = 'created_at', $subquery = null)
+    public static function oldest(string $column = 'created_at', $subquery = null): array|false
     {
         return self::select('*')->subQuery($subquery)->oldest($column)->getAll();
     }
 
-    public static function newest(string $column = 'created_at', $subquery = null)
+    public static function newest(string $column = 'created_at', $subquery = null): array|false
     {
         return self::select('*')->subQuery($subquery)->newest($column)->getAll();
     }
 
-    public static function latest(string $column = 'id', $subquery = null)
+    public static function latest(string $column = 'id', $subquery = null): array|false
     {
         return self::select('*')->subQuery($subquery)->latest($column)->getAll();
     }
 
-    public static function select(string ...$columns)
+    public static function select(string ...$columns): Repository
     {
         return (new Repository(static::$table))->select(...$columns);
     }
 
-    public static function where(string $column, $operator = null, $value = null)
+    public static function where(string $column, $operator = null, $value = null): Repository
     {
         return self::select('*')->where($column, $operator, $value);
     }
 
-    public static function count(string $column = 'id', $subquery = null)
+    public static function count(string $column = 'id', $subquery = null): mixed
     {
         return (new Repository(static::$table))->count($column)->subQuery($subquery)->get()->value;
     }
 
-    public static function sum(string $column, $subquery = null)
+    public static function sum(string $column, $subquery = null): mixed
     {
         return (new Repository(static::$table))->sum($column)->subQuery($subquery)->get()->value;
     }
 
-    public static function max(string $column, $subquery = null)
+    public static function max(string $column, $subquery = null): mixed
     {
         return (new Repository(static::$table))->max($column)->subQuery($subquery)->get()->value;
     }
 
-    public static function min(string $column, $subquery = null)
+    public static function min(string $column, $subquery = null): mixed
     {
         return (new Repository(static::$table))->min($column)->subQuery($subquery)->get()->value;
     }
 
-    public static function metrics(string $column, string $type, string $period, int $interval = 0, ?array $query = null)
+    public static function metrics(string $column, string $type, string $period, int $interval = 0, ?array $query = null): mixed
     {
         return (new Repository(static::$table))->metrics($column, $type, $period, $interval, $query);
     }
 
-    public static function trends(string $column, string $type, string $period, int $interval = 0, ?array $query = null)
+    public static function trends(string $column, string $type, string $period, int $interval = 0, ?array $query = null): array
     {
         return (new Repository(static::$table))->trends($column, $type, $period, $interval, $query);
     }
 
-    public static function create(array $data)
+    public static function create(array $data): self|false
     {
         $id = (new Repository(static::$table))->insertGetId($data);
 
-        if (is_null($id)) return false;
+        if (is_null($id)) {
+            return false;
+        }
 
         return self::find($id);
     }
@@ -128,7 +134,7 @@ class Model
     /**
      * Delete all rows
      */
-    public static function truncate()
+    public static function truncate(): false|PDOStatement
     {
         return (new Repository(static::$table))->delete()->execute();
     }
@@ -137,10 +143,10 @@ class Model
      * Get relationship of the model 
      *
      * @param  string $table
-     * @param  string|null $column
+     * @param  mixed $column
      * @return \Core\Database\Repository
      */
-    public function has(string $table, ?string $column = null)
+    public function has(string $table, ?string $column = null): Repository
     {
         if (is_null($column)) {
             $column = $this->getColumnFromTable(static::$table);
@@ -153,10 +159,10 @@ class Model
      * Get relationship belongs to the model
      *
      * @param  string $table
-     * @param  string|null $column
+     * @param  mixed $column
      * @return \Core\Database\Repository
      */
-    public function belongsTo(string $table, ?string $column = null)
+    public function belongsTo(string $table, ?string $column = null): Repository
     {
         if (is_null($column)) {
             $column = $this->getColumnFromTable($table);
@@ -165,12 +171,12 @@ class Model
         return (new Repository($table))->select('*')->where('id', $this->{$column});
     }
 
-    public function set(string $key, $value)
+    public function set(string $key, $value): void
     {
         $this->{$key} = $value;
     }
 
-    public function get(string $key)
+    public function get(string $key): mixed
     {
         return $this->{$key};
     }
@@ -181,31 +187,31 @@ class Model
      * @param  array $data
      * @return void
      */
-    public function fill(array $data)
+    public function fill(array $data): void
     {
         foreach ($data as $key => $value) {
             $this->{$key} = $value;
         }
     }
     
-    public function update(array $data)
+    public function update(array $data): false|self
     {
         return !(new Repository(static::$table))->updateIfExists($this->id, $data) ? false : $this;
     }
 
-    public function delete()
+    public function delete(): bool
     {
         return (new Repository(static::$table))->deleteIfExists($this->id);
     }
 
-    public function save()
+    public function save(): self|false
     {
         return is_null($this->id)
             ? self::create((array) $this)
             : $this->update((array) $this);
     }
 
-    public function increment(string $column, $value = null)
+    public function increment(string $column, $value = null): void
     {
         if (is_null($value)) {
             $this->{$column}++;
@@ -215,7 +221,7 @@ class Model
         $this->{$column} = $this->{$column} + $value;
     }
 
-    public function decrement(string $column, $value = null)
+    public function decrement(string $column, $value = null): void
     {
         if (is_null($value)) {
             $this->{$column}--;
@@ -225,7 +231,7 @@ class Model
         $this->{$column} = $this->{$column} - $value;
     }
 
-    public function toArray(string ...$attributes)
+    public function toArray(string ...$attributes): array
     {
         $data = (array) $this;
 
@@ -248,7 +254,7 @@ class Model
         return $data;
     }
 
-    protected function getColumnFromTable(string $table)
+    protected function getColumnFromTable(string $table): string
     {
         if ($table[-3] === 'ies') {
             $table = rtrim($table, 'ies');
@@ -259,7 +265,7 @@ class Model
             $table = rtrim($table, 's');
         }
 
-        return $table .= '_id';
+        return $table . '_id';
     }
 }
 

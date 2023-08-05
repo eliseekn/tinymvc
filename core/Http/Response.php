@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -26,7 +26,7 @@ class Response
         public array $headers = []
     ) {}
 
-    public function addHeaders(array $headers)
+    public function addHeaders(array $headers): self
     {
         $this->headers = array_merge($this->headers, $headers);
         return $this;
@@ -34,7 +34,9 @@ class Response
 
     public function data(string $data): self
     {
-        if (empty($data)) throw new InvalidResponseDataException();
+        if (empty($data)) {
+            throw new InvalidResponseDataException();
+        }
 
         $this->addHeaders(['Content-Length' => strlen($data)]);
         $this->data = $data;
@@ -48,7 +50,7 @@ class Response
         return $this;
     }
 
-    public function redirectUrl(string $uri): self
+    public function url(string $uri): self
     {
         $this->uri = $uri;
         $this->addHeaders(['Location' => url($this->uri)]);
@@ -56,20 +58,22 @@ class Response
         return $this;
     }
     
-    public function redirectRoute(string $route, $params = null): self
+    public function route(string $route, $params = null): self
     {
-        return $this->redirectUrl(route_uri($route, $params));
+        return $this->url(route_uri($route, $params));
     }
 
-    public function redirectBack(): self
+    public function back(): self
     {
         $history = Session::get('history');
 
-        if(empty($history)) return $this->redirectUrl('/');
+        if(empty($history)) {
+            return $this->url('/');
+        }
 
         end($history);
 
-        return $this->redirectUrl(prev($history));
+        return $this->url(prev($history));
     }
     
     public function intended(string $uri): self
@@ -120,13 +124,14 @@ class Response
         flush();
 
         $this->data = readfile($filename);
-
         return $this;
     }
 
     public function json(array $data): self
     {
-        if (empty($data)) throw new InvalidJsonDataException();
+        if (empty($data)) {
+            throw new InvalidJsonDataException();
+        }
 
         $data = json_encode($data);
 
@@ -136,11 +141,10 @@ class Response
         ]);
 
         $this->data = $data;
-        
         return $this;
     }
 
-    public function send(int $code = 200)
+    public function send(int $code = 200): void
     {
         if (config('app.env') === 'test') {
             header('Session:' . json_encode($_SESSION));
@@ -152,7 +156,9 @@ class Response
             header($key . ':' . $value);
         }
 
-        if (!empty($this->data)) exit($this->data);
+        if (!empty($this->data)) {
+            exit($this->data);
+        }
 
         exit();
     }

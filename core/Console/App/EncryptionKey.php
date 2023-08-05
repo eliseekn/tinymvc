@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -20,12 +20,12 @@ class EncryptionKey extends Command
 {
     protected static $defaultName = 'app:key';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Generate application encryption key');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         Config::loadEnv();
 
@@ -49,7 +49,6 @@ class EncryptionKey extends Command
         ]);
 
         $output->writeln('<info>Application encryption key has been generated</info>');
-
         return Command::SUCCESS;
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -26,10 +26,10 @@ class Request
     public function headers(?string $key = null, $default = null)
     {
         $header = is_null($key) ? $_SERVER : ($_SERVER[$key] ?? '');
-        return empty($header) || is_null($header) ? $default : $header;
+        return empty($header) ? $default : $header;
     }
     
-    public function getHttpAuth()
+    public function getHttpAuth(): array
     {
         $header = $this->headers('HTTP_AUTHORIZATION', '');
         return empty($header) ? [] : explode(' ', $header);
@@ -43,7 +43,7 @@ class Request
     public function queries(?string $key = null, $default = null)
     {
         $query = is_null($key) ? $_GET : ($_GET[$key] ?? '');
-        return empty($query) || is_null($query) ? $default : $query;
+        return empty($query) ? $default : $query;
     }
 
     public function inputs(?string $key = null, $default = null)
@@ -51,16 +51,16 @@ class Request
         $_POST = array_merge($_POST, $this->raw());
 
         $input = is_null($key) ? $_POST : ($_POST[$key] ?? '');
-        return empty($input) || is_null($input) ? $default : $input;
+        return empty($input) ? $default : $input;
     }
 
     public function files(?string $key = null, $default = null)
     {
         $files = is_null($key) ? $_FILES : ($_FILES[$key] ?? '');
-        return empty($files) || is_null($files) ? $default : $files;
+        return empty($files) ? $default : $files;
     }
 
-    public function raw()
+    public function raw(): array
     {
         $data = [];
         parse_raw_http_request($data);
@@ -68,9 +68,11 @@ class Request
         return $data;
     }
 
-    private function getSingleFile(string $input, array $allowed_extensions = [])
+    private function getSingleFile(string $input, array $allowed_extensions = []): Uploader|null
     {
-        if (!isset($_FILES[$input]) || empty($_FILES[$input])) return null;
+        if (empty($_FILES[$input])) {
+            return null;
+        }
         
         return new Uploader([
             'name' => $_FILES[$input]['name'],
@@ -81,11 +83,13 @@ class Request
         ], $allowed_extensions);
     }
 
-    private function getMultipleFiles(string $input, array $allowed_extensions = [])
+    private function getMultipleFiles(string $input, array $allowed_extensions = []): array
     {
         $files = [];
 
-        if (!isset($_FILES[$input]) || empty($_FILES[$input])) return $files;
+        if (empty($_FILES[$input])) {
+            return $files;
+        }
 
         $count = is_array($_FILES[$input]['tmp_name']) ? count($_FILES[$input]['tmp_name']) : 1;
 
@@ -102,7 +106,7 @@ class Request
         return $files;
     }
     
-    public function getFiles(string $input, bool $multiple = false, array $allowed_extensions = [])
+    public function getFiles(string $input, bool $multiple = false, array $allowed_extensions = []): array|Uploader|null
     {
         return $multiple ? $this->getMultipleFiles($input, $allowed_extensions) 
             : $this->getSingleFile($input, $allowed_extensions);
@@ -117,12 +121,12 @@ class Request
         $_SERVER['REQUEST_METHOD'] = $value;
     }
     
-    public function is(string $method)
+    public function is(string $method): bool
     {
         return $this->method() === strtoupper($method);
     }
 
-    public function fullUri()
+    public function fullUri(): string
     {
         $uri = $this->headers('REQUEST_URI', '');
         $uri = urldecode($uri);
@@ -134,7 +138,7 @@ class Request
         return $uri;
     }
 
-    public function uri()
+    public function uri(): string
     {
         $uri = $this->fullUri();
 
@@ -146,17 +150,17 @@ class Request
         return $uri;        
     }
 
-    public function uriContains(string $uri)
+    public function uriContains(string $uri): bool
     {
         return url_contains($uri);
     }
     
-    public function remoteIP()
+    public function remoteIP(): string
     {
         return $this->headers('REMOTE_ADDR', '');
     }
     
-    public function has(string ...$items)
+    public function has(string ...$items): bool
     {
         $result = false;
 
@@ -167,7 +171,7 @@ class Request
         return $result;
     }
     
-    public function hasQuery(string ...$items)
+    public function hasQuery(string ...$items): bool
     {
         $result = false;
 
@@ -178,7 +182,7 @@ class Request
         return $result;
     }
     
-    public function hasInput(string ...$items)
+    public function hasInput(string ...$items): bool
     {
         $result = false;
 
@@ -189,14 +193,14 @@ class Request
         return $result;
     }
     
-    public function filled(string ...$items)
+    public function filled(string ...$items): bool
     {
         $result = $this->has(...$items);
 
         if (!$result) return false;
 
         foreach ($items as $item) {
-            $result = !empty($this->{$item}) && !is_null($this->{$item});
+            $result = !empty($this->{$item});
         }
 
         return $result;
@@ -205,7 +209,7 @@ class Request
     /**
      * Retrieves POST/GET item value
      */
-    public function get(string $item, $default = null)
+    public function get(string $item, $default = null): mixed
     {
         return $this->filled($item) ? $this->{$item} : $default;
     }
@@ -213,7 +217,7 @@ class Request
     /**
      * Set POST/GET item value
      */
-    public function set(string $item, $value)
+    public function set(string $item, $value): void
     {
         if (isset($_POST[$item])) $_POST[$item] = $value;
         if (isset($_GET[$item])) $_GET[$item] = $value;
@@ -221,7 +225,7 @@ class Request
         $this->{$item} = $value;
     }
     
-    public function only(string ...$items)
+    public function only(string ...$items): array
     {
         $result = [];
 
@@ -234,7 +238,7 @@ class Request
         return $result;
     }
     
-    public function except(string ...$items)
+    public function except(string ...$items): array
     {
         $result = [];
 
@@ -251,7 +255,7 @@ class Request
         return $result;
     }
     
-    public function all()
+    public function all(): array
     {
         $all = [];
 

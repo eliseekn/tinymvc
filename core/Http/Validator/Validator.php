@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -24,7 +24,7 @@ class Validator implements ValidatorInterface
         protected array $rules = [],
         protected array $messages = [],
         protected array $inputs = [],
-        protected $errors = null,
+        protected mixed $errors = null,
     ) {}
 
     public function validate(array $inputs, ?Response $response = null): self
@@ -35,7 +35,11 @@ class Validator implements ValidatorInterface
         $this->errors = GUMP::is_valid($this->inputs, $this->rules, $this->messages);
 
         if ($this->fails() && !is_null($response)) {
-            $response->redirectBack()->withErrors($this->errors())->withInputs($this->inputs)->send(302);
+            $response
+                ->back()
+                ->withErrors($this->errors())
+                ->withInputs($this->inputs)
+                ->send(302);
         }
         
         return $this;

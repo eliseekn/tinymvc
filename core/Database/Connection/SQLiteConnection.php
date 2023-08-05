@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -11,6 +11,7 @@ namespace Core\Database\Connection;
 use Core\Support\Storage;
 use PDO;
 use PDOException;
+use PDOStatement;
 
 class SQLiteConnection implements ConnectionInterface
 {
@@ -47,7 +48,7 @@ class SQLiteConnection implements ConnectionInterface
             : config('storage.sqlite') . config('database.name') . '.db';
     }
 
-    public function getPDO()
+    public function getPDO(): PDO
     {
         return $this->pdo;
     }
@@ -55,7 +56,7 @@ class SQLiteConnection implements ConnectionInterface
     /**
      * @throws PDOException
 	 */
-    public function executeStatement(string $query)
+    public function executeStatement(string $query): false|int
     {
         try {
             return $this->pdo->exec($query);
@@ -67,10 +68,8 @@ class SQLiteConnection implements ConnectionInterface
 	/**
      * @throws PDOException
 	 */
-	public function executeQuery(string $query, ?array $args = null)
+	public function executeQuery(string $query, ?array $args = null): false|PDOStatement
 	{
-		$stmt = null;
-
 		try {
 			$stmt = $this->pdo->prepare(trim($query));
 			$stmt->execute($args);
@@ -81,28 +80,34 @@ class SQLiteConnection implements ConnectionInterface
 		return $stmt;
 	}
 
-    public function schemaExists(string $name)
+    public function schemaExists(string $name): bool
     {
-        if (config('database.sqlite.memory')) return true;
+        if (config('database.sqlite.memory')) {
+            return true;
+        }
+
         return Storage::path(config('storage.sqlite'))->isFile($name);
     }
 
-    public function tableExists(string $name)
+    public function tableExists(string $name): bool
     {
         $stmt = $this->executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='" . $name . "'");
-
-        return !($stmt->fetch() === false);
+        return $stmt->fetch() !== false;
     }
 
-    public function createSchema(string $name)
+    public function createSchema(string $name): void
     {
-        if (config('database.sqlite.memory')) return;
+        if (config('database.sqlite.memory')) {
+            return;
+        }
         Storage::path(config('storage.sqlite'))->writeFile($name . '.db', '');
     }
 
-    public function deleteSchema(string $name)
+    public function deleteSchema(string $name): void
     {
-        if (config('database.sqlite.memory')) return;
+        if (config('database.sqlite.memory')) {
+            return;
+        }
         Storage::path(config('storage.sqlite'))->deleteFile($name . '.db');
     }
 }

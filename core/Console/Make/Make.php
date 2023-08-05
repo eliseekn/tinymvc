@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -23,7 +23,7 @@ class Make
         return Storage::path(config('storage.stubs'));
     }
 
-    private static function removeUnderscore(string $word)
+    private static function removeUnderscore(string $word): string
     {
         if (strpos($word, '_')) {
             $words = explode('_', $word);
@@ -37,14 +37,14 @@ class Make
         return $word;
     }
 
-    private static function addNamespace(string $data, string $base, ?string $namespace = null)
+    private static function addNamespace(string $data, string $base, ?string $namespace = null): string
     {
         return is_null($namespace)
             ? str_replace('NAMESPACE', $base, $data)
-            : str_replace('NAMESPACE', "{$base}\\{$namespace}", $data);
+            : str_replace('NAMESPACE', "$base\\$namespace", $data);
     }
 
-    public static function fixPluralTypo(string $word, bool $remove = false)
+    public static function fixPluralTypo(string $word, bool $remove = false): string
     {
         if (!$remove) {
             if ($word[-1] === 'y') {
@@ -69,7 +69,7 @@ class Make
         return $word;
     }
     
-    public static function generateClass(string $base_name, string $suffix = '', bool $singular = false, bool $force_singlular = false)
+    public static function generateClass(string $base_name, string $suffix = '', bool $singular = false, bool $force_singlular = false): array
     {
         $name = ucfirst(strtolower($base_name));
 
@@ -89,7 +89,7 @@ class Make
         return [lcfirst($name), $class];
     }
     
-    public static function createController(string $controller, ?string $namespace = null)
+    public static function createController(string $controller, ?string $namespace = null): bool
     {
         list(, $class) = self::generateClass($controller, 'controller', true, true);
 
@@ -106,9 +106,9 @@ class Make
         return $storage->writeFile($class . '.php', $data);
     }
 
-    public static function createModel(string $model, ?string $namespace = null)
+    public static function createModel(string $model, ?string $namespace = null): bool
     {
-        list($name, $class) = self::generateClass($model, '');
+        list($name, $class) = self::generateClass($model);
 
         $data = self::stubs()->readFile('Model.stub');
         $data = self::addNamespace($data, 'App\Database\Models', $namespace);
@@ -124,7 +124,7 @@ class Make
         return $storage->writeFile(self::fixPluralTypo($class, true) . '.php', $data);
     }
  
-    public static function createMigration(string $migration)
+    public static function createMigration(string $migration): bool
     {
         list($name, $class) = self::generateClass($migration, 'migration');
 
@@ -135,7 +135,7 @@ class Make
         return Storage::path(config('storage.migrations'))->writeFile($class . '.php', $data);
     }
 
-    public static function createSeed(string $seed)
+    public static function createSeed(string $seed): bool
     {
         list($name, $class) = self::generateClass($seed, 'seed', true, true);
 
@@ -146,7 +146,7 @@ class Make
         return Storage::path(config('storage.seeds'))->writeFile(self::fixPluralTypo($class, true) . '.php', $data);
     }
     
-    public static function createFactory(string $factory, ?string $namespace = null)
+    public static function createFactory(string $factory, ?string $namespace = null): bool
     {
         list($name, $class) = self::generateClass($factory, 'factory', true, true);
 
@@ -164,7 +164,7 @@ class Make
         return $storage->writeFile(self::fixPluralTypo($class, true) . '.php', $data);
     }
     
-    public static function createRepository(string $repository, ?string $namespace = null)
+    public static function createRepository(string $repository, ?string $namespace = null): bool
     {
         list($name, $class) = self::generateClass($repository, 'repository', true, true);
 
@@ -182,7 +182,7 @@ class Make
         return $storage->writeFile(self::fixPluralTypo($class, true) . '.php', $data);
     }
     
-    public static function createHelper(string $helper)
+    public static function createHelper(string $helper): bool
     {
         list(, $class) = self::generateClass($helper, 'helper', true);
 
@@ -192,7 +192,7 @@ class Make
         return Storage::path(config('storage.helpers'))->writeFile($class . '.php', $data);
     }
     
-    public static function createException(string $exception, string $message)
+    public static function createException(string $exception, string $message): bool
     {
         list(, $class) = self::generateClass($exception, 'exception', true);
 
@@ -203,7 +203,7 @@ class Make
         return Storage::path(config('storage.exceptions'))->writeFile($class . '.php', $data);
     }
     
-    public static function createTest(string $test, bool $unit_test, ?string $path = null)
+    public static function createTest(string $test, bool $unit_test, ?string $path = null): bool
     {
         list(, $class) = self::generateClass($test, 'test', true);
 
@@ -226,7 +226,7 @@ class Make
         return $storage->writeFile($class . '.php', $data);
     }
     
-    public static function createValidator(string $validator, ?string $namespace = null)
+    public static function createValidator(string $validator, ?string $namespace = null): bool
     {
         list(, $class) = self::generateClass($validator, 'validator', true);
 
@@ -243,7 +243,7 @@ class Make
         return $storage->writeFile($class . '.php', $data);
     }
     
-    public static function createMiddleware(string $middleware)
+    public static function createMiddleware(string $middleware): bool
     {
         list(, $class) = self::generateClass($middleware, '', true);
         
@@ -253,7 +253,7 @@ class Make
         return Storage::path(config('storage.middlewares'))->writeFile($class . '.php', $data);
     }
     
-    public static function createMail(string $mail)
+    public static function createMail(string $mail): bool
     {
         list($name, $class) = self::generateClass($mail, 'mail');
 
@@ -272,7 +272,7 @@ class Make
             ->writeFile($name . '.html.twig', $data);
     }
     
-    public static function createView(?string $view, ?string $layout, ?string $path = null)
+    public static function createView(?string $view, ?string $layout, ?string $path = null): bool
     {
         $data = is_null($view) && !is_null($layout)
             ? self::stubs()->addPath('views')->readFile('layout.stub')
@@ -292,7 +292,7 @@ class Make
         return $storage->writeFile($view . '.html.twig', $data);
     }
     
-    public static function createConsole(string $console, string $command, string $description, ?string $namespace = null)
+    public static function createConsole(string $console, string $command, string $description, ?string $namespace = null): bool
     {
         list(, $class) = self::generateClass($console, '', true);
 
@@ -311,7 +311,7 @@ class Make
         return $storage->writeFile($class . '.php', $data);
     }
 
-    public static function createAction(string $model, string $type, ?string $namespace = null)
+    public static function createAction(string $model, string $type, ?string $namespace = null): bool
     {
         list($name,) = self::generateClass($model, 'action', true, true);
         list($type, $class) = self::generateClass($type, 'action', true, true);

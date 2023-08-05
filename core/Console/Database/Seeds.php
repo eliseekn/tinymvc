@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -21,13 +21,13 @@ class Seeds extends Command
 {
     protected static $defaultName = 'db:seed';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Insert seeds');
         $this->addArgument('seed', InputArgument::OPTIONAL|InputArgument::IS_ARRAY, 'The name of seeds (separated by space if many)');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (config('app.env') === 'test') {
             $output->writeln('<fg=yellow>WARNING: You are running seeds on APP_ENV=test</>');
@@ -49,7 +49,7 @@ class Seeds extends Command
         return Command::SUCCESS;
     }
 
-    protected function seed(OutputInterface $output, string $seed)
+    protected function seed(OutputInterface $output, string $seed): void
     {
         $seed = '\App\Database\Seeds\\' . $seed;
         $seed::insert();

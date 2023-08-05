@@ -15,14 +15,14 @@ class Server extends Command
 {
     protected static $defaultName = 'serve';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Start a local server development');
         $this->addOption('host', null, InputOption::VALUE_OPTIONAL, 'Specify server host');
         $this->addOption('port', null, InputOption::VALUE_OPTIONAL, 'Specify server port');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $host = $input->getOption('host') ?? '127.0.0.1';
         $port = $input->getOption('port') ?? 8080;

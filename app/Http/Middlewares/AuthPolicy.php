@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -18,11 +18,15 @@ use Core\Support\Alert;
  */
 class AuthPolicy
 {    
-    public function handle(Request $request, Response $response)
+    public function handle(Request $request, Response $response): void
     {
         if (!Auth::check($request)) {
             Alert::default(__('not_logged'))->error();
-            $response->redirectUrl('login')->intended($request->fullUri())->withErrors([__('not_logged')])->send(302);
+            $response
+                ->url('login')
+                ->intended($request->fullUri())
+                ->withErrors([__('not_logged')])
+                ->send(302);
         }
     }
 }

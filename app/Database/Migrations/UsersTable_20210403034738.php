@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -13,7 +13,7 @@ use Core\Database\Migration;
 
 class UsersTable_20210403034738
 {         
-    public function create()
+    public function create(): void
     {
         Migration::createTable('users')
             ->addPrimaryKey('id')
@@ -26,7 +26,7 @@ class UsersTable_20210403034738
             ->migrate();
     }
     
-    public function drop()
+    public function drop(): void
     {
         Migration::dropTable('users');
     }

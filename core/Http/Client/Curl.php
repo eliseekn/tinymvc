@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -33,7 +33,9 @@ class Curl implements ClientInterface
         $curl_multi = curl_multi_init();
         
         if (!is_array($url)) {
-            if (!is_string($url)) throw new InvalidUrlFormatException();
+            if (!is_string($url)) {
+                throw new InvalidUrlFormatException();
+            }
 
             $url = [$url];
         }
@@ -67,7 +69,7 @@ class Curl implements ClientInterface
                 $_headers = [];
 
                 foreach ($headers as $_key => $value) {
-                    $_headers[] = "{$_key}:{$value}";
+                    $_headers[] = "$_key:$value";
                 }
 
                 curl_setopt($curl, CURLOPT_HTTPHEADER, $_headers);
@@ -140,17 +142,17 @@ class Curl implements ClientInterface
         return self::send('PATCH', $url, $data, $headers, $json);
     }
 
-    public function getHeaders()
+    public function getHeaders(): mixed
     {
         return self::$response['headers'];
     }
 
-    public function getBody()
+    public function getBody(): mixed
     {
         return self::$response['body'];
     }
 
-    public function getStatusCode()
+    public function getStatusCode(): mixed
     {
         return self::$response['status_code'];
     }

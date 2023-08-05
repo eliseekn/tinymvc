@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -22,12 +22,12 @@ class Show extends Command
 {
     protected static $defaultName = 'db:show';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Display list of databases');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (config('app.env') === 'test') {
             $output->writeln('<fg=yellow>WARNING: You are running migrations on APP_ENV=test</>');

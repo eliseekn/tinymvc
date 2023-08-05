@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -13,7 +13,7 @@ namespace Core\Support;
  */
 class Session
 {
-    private static function start()
+    private static function start(): void
 	{
 		if (session_status() === PHP_SESSION_NONE) {
             ini_set('session.gc_maxlifetime', config('security.session.lifetime'));
@@ -22,13 +22,13 @@ class Session
 		}
 	}
 
-    public static function create(string $name, $data)
+    public static function create(string $name, $data): void
     {
         self::start();
 		$_SESSION[strtolower(config('app.name')) . '_' . $name] = $data;
     }
     
-    public static function get(string $name, $default = null)
+    public static function get(string $name, $default = null): mixed
     {
         self::start();
         return $_SESSION[strtolower(config('app.name')) . '_' . $name] ?? $default;
@@ -40,7 +40,7 @@ class Session
 		return isset($_SESSION[strtolower(config('app.name')) . '_' . $name]);
     }
     
-    public static function forget(string ...$names)
+    public static function forget(string ...$names): void
     {
         self::start();
         
@@ -52,7 +52,7 @@ class Session
     /**
      * Get session data and close it
      */
-    public static function pull(string $name)
+    public static function pull(string $name): mixed
     {
         $data = self::get($name);
         self::forget($name);
@@ -62,7 +62,7 @@ class Session
     /**
      * Add data to session or create if empty
      */
-    public static function push(string $name, $data, $default = null)
+    public static function push(string $name, $data, $default = null): void
     {
         $stored_data = self::get($name, $default);
 

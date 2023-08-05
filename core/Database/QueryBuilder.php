@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -10,6 +10,7 @@ namespace Core\Database;
 
 use Carbon\Carbon;
 use Core\Database\Connection\Connection;
+use PDOStatement;
 
 /**
  * Database query builder
@@ -20,7 +21,7 @@ class QueryBuilder
     protected static $args = [];
     protected static $table;
 
-    protected static function setTable(string $name)
+    protected static function setTable(string $name): string
     {
         if (config('app.env') === 'test') {
             if (config('tests.database.driver') === 'sqlite') {
@@ -200,7 +201,7 @@ class QueryBuilder
     
     public function autoIncrement(): self
     {
-        $driver = config('app.env') === 'test' ? $driver = config('tests.database.driver') : config('database.driver');
+        $driver = config('app.env') === 'test' ? config('tests.database.driver') : config('database.driver');
 
         self::$query = rtrim(self::$query, ', ');
         self::$query .= $driver === 'mysql' ? ' AUTO_INCREMENT, ' : ' AUTOINCREMENT, ';
@@ -272,9 +273,9 @@ class QueryBuilder
         return $this;
 	}
     
-    public function addCurrentTimestamp(string $created_at = 'created_at', string $updated_at = 'updated_at')
+    public function addCurrentTimestamp(string $created_at = 'created_at', string $updated_at = 'updated_at'): self
     {
-        $driver = config('app.env') === 'test' ? $driver = config('tests.database.driver') : config('database.driver');
+        $driver = config('app.env') === 'test' ? config('tests.database.driver') : config('database.driver');
 
         if ($driver === 'mysql') {
             self::$query .= " {$created_at} TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, {$updated_at} TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, ";
@@ -285,9 +286,9 @@ class QueryBuilder
         return $this;
     }
     
-    public function migrate()
+    public function migrate(): false|PDOStatement
     {
-        $driver = config('app.env') === 'test' ? $driver = config('tests.database.driver') : config('database.driver');
+        $driver = config('app.env') === 'test' ? config('tests.database.driver') : config('database.driver');
 
         self::$query = rtrim(self::$query, ', ') . ')';
 
@@ -295,7 +296,7 @@ class QueryBuilder
             self::$query .= " ENGINE='" . config('database.mysql.engine') . "'";
         }
 
-		$this->execute();
+		return $this->execute();
     }
 
 	public function where(string $column, $operator = null, $value = null): self
@@ -530,7 +531,7 @@ class QueryBuilder
 
     public function exists(): bool
     {
-        return !($this->fetch() === false);
+        return $this->fetch() !== false;
     }
 
 	public function toSQL(): array
@@ -562,7 +563,7 @@ class QueryBuilder
         return $this;
     }
 	
-	public function execute()
+	public function execute(): false|PDOStatement
 	{
         $this->trimQuery();
         $stmt = Connection::getInstance()->executeQuery(self::$query, self::$args);
@@ -570,7 +571,7 @@ class QueryBuilder
 		return $stmt;
     }
 
-    public function fetch()
+    public function fetch(): mixed
     {   
         return $this->execute()->fetch();
     }
@@ -585,7 +586,7 @@ class QueryBuilder
         return Connection::getInstance()->getPDO()->lastInsertId();
     }
     
-    private function trimQuery()
+    private function trimQuery(): void
     {
         self::$query = trim(self::$query);
         self::$query = str_replace('  ', ' ', self::$query);

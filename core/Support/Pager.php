@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright (2019 - 2022) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
+ * @copyright (2019 - 2023) - N'Guessan Kouadio Elisée (eliseekn@gmail.com)
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
@@ -40,27 +40,27 @@ class Pager
         return $this;
     }
     
-    public function getFirstItem()
+    public function getFirstItem(): int
     {
         return $this->pagination['first_item'];
     }
     
-    public function getTotalItems()
+    public function getTotalItems(): int
     {
         return $this->pagination['total_items'];
     }
     
-    public function getPageTotalItems()
+    public function getPageTotalItems(): int
     {
         return count($this->items);
     }
     
-    public function getItemsPerPage()
+    public function getItemsPerPage(): int
     {
         return $this->pagination['items_per_page'];
     }
     
-    public function currentPage()
+    public function currentPage(): int
     {
         if ($this->pagination['page'] < 1) return 1;
         if ($this->pagination['page'] > $this->totalPages()) return $this->totalPages();
@@ -68,12 +68,12 @@ class Pager
         return $this->pagination['page'];
     }
     
-    public function previousPage()
+    public function previousPage(): int
     {
         return $this->currentPage() - 1;
     }
     
-    public function nextPage()
+    public function nextPage(): int
     {
         return $this->currentPage() + 1;
     }
@@ -81,7 +81,7 @@ class Pager
     /**
      * Check if pagination has less pages
      */
-    public function hasLess()
+    public function hasLess(): bool
     {
         return $this->currentPage() > 1;
     }
@@ -89,37 +89,37 @@ class Pager
     /**
      * Check if pagination has more pages
      */
-    public function hasMore()
+    public function hasMore(): bool
     {
         return $this->currentPage() < $this->totalPages();
     }
     
-    public function totalPages()
+    public function totalPages(): int
     {
         return $this->pagination['total_pages'];
     }
 
-    public function firstPageUrl()
+    public function firstPageUrl(): string
     {
         return url($this->generateUri(1));
     }
 
-    public function previousPageUrl()
+    public function previousPageUrl(): string
     {
         return url($this->generateUri($this->previousPage()));
     }
     
-    public function nextPageUrl()
+    public function nextPageUrl(): string
     {
         return url($this->generateUri($this->nextPage()));
     }
 
-    public function lastPageUrl()
+    public function lastPageUrl(): string
     {
         return url($this->generateUri($this->totalPages()));
     }
     
-    public function pageUrl(int $page)
+    public function pageUrl(int $page): string
     {
         return url($this->generateUri($page));
     }
@@ -127,7 +127,7 @@ class Pager
     /**
      * Generate uri with queries or not
      */
-    private function generateUri(int $page)
+    private function generateUri(int $page): string
     {
         $request = new Request();
         $uri = $request->fullUri();
