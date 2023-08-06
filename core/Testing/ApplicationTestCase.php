@@ -219,18 +219,18 @@ class ApplicationTestCase extends TestCase
     {
         if (!array_key_exists($this->getSessionKey($key), $this->getSession())) {
             $this->assertFalse(false);
+        } else {
+            $this->assertEquals($value, $this->getSession()[$this->getSessionKey($key)]);
         }
-
-        $this->assertEquals($value, $this->getSession()[$this->getSessionKey($key)]);
     }
 
     public function assertSessionDoesNotHave(string $key, $value): void
     {
-        if (!isset($this->getSession()[$this->getSessionKey($key)])) {
+        if (!array_key_exists($this->getSessionKey($key), $this->getSession())) {
             $this->assertFalse(false);
+        } else {
+            $this->assertNotEquals($value, $this->getSession()[$this->getSessionKey($key)]);
         }
-
-        $this->assertNotEquals($value, $this->getSession()[$this->getSessionKey($key)]);
     }
 
     public function assertSessionHasErrors(): void

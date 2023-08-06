@@ -110,7 +110,7 @@ if (!function_exists('auth')) {
 	/**
 	 * Get authenticated user session data
 	 */
-	function auth(string $key): mixed
+	function auth(?string $key = null): mixed
 	{
         $user = session_get('user');
 
@@ -118,7 +118,7 @@ if (!function_exists('auth')) {
             return false;
         }
 
-		return $user->{$key};
+        return is_null($key) ? $user : $user->{$key};
 	}
 }
 
