@@ -17,9 +17,9 @@ use PDOStatement;
  */
 class QueryBuilder
 {
-	protected static $query = '';
-    protected static $args = [];
-    protected static $table;
+	protected static string $query = '';
+    protected static array $args = [];
+    protected static mixed $table;
 
     protected static function setTable(string $name): string
     {

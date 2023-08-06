@@ -47,11 +47,11 @@ class EmailVerificationController
             }
 
             Alert::default(__('email_verification_link_sent'))->success();
-            $response->url('login')->send(302);
+            $response->url('login')->send();
         }
         
         Alert::default(__('email_verification_link_not_sent'))->error();
-        $response->url('signup')->send(302);
+        $response->url('signup')->send();
     }
 
 	public function verify(Request $request, Response $response, UpdateAction $updateAction): void
@@ -82,6 +82,6 @@ class EmailVerificationController
         Mail::send(new WelcomeMail($user->email, $user->name));
 
         Alert::default(__('email_verified'))->success();
-        $response->url('login')->send(400);
+        $response->url('login')->send();
     }
 }

@@ -8,22 +8,19 @@
 
 namespace Core\Database\Connection;
 
-use PDO;
-use PDOStatement;
-
 interface ConnectionInterface
 {
-    public function getPDO(): PDO;
+    public function getPDO();
 
-    public function executeStatement(string $query): false|int;
+    public function executeStatement(string $query);
 
-	public function executeQuery(string $query, array $args): false|PDOStatement;
+	public function executeQuery(string $query, array $args);
 
-    public function schemaExists(string $name): bool;
+    public function schemaExists(string $name);
 
-    public function tableExists(string $name): bool;
+    public function tableExists(string $name);
 
-    public function createSchema(string $name): void;
+    public function createSchema(string $name);
 
-    public function deleteSchema(string $name): void;
+    public function deleteSchema(string $name);
 }

@@ -47,11 +47,11 @@ class ForgotPasswordController
             }
 
             Alert::default(__('password_reset_link_sent'))->success();
-			$response->back()->send(302);
+			$response->back()->send();
 		}
         
         Alert::default(__('password_reset_link_not_sent'))->error();
-        $response->back()->send(302);
+        $response->back()->send();
 	}
 	
 	public function reset(Request $request, Response $response): void
@@ -71,7 +71,7 @@ class ForgotPasswordController
 		}
 
         $token->delete();
-        $response->url("/password/new?email={$request->email}")->send(302);
+        $response->url("/password/new?email={$request->email}")->send();
 	}
 	
 	public function update(Request $request, Response $response, LoginValidator $loginValidator, UpdateAction $updateAction): void
@@ -81,10 +81,10 @@ class ForgotPasswordController
 
         if (!$user) {
             Alert::default(__('password_not_reset'))->error();
-            $response->back()->send(302);
+            $response->back()->send();
         }
 
         Alert::default(__('password_reset'))->success();
-        $response->url('/login')->send(302);
+        $response->url('/login')->send();
 	}
 }

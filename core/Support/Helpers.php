@@ -17,15 +17,15 @@ use Core\Support\Encryption;
 /**
  * Cookies management
  */
-if (!function_exists('create_cookie')) {
-    function create_cookie(string $name, string $value, int $expire = 3600, bool $secure = false, string $domain = ''): bool
+if (!function_exists('cookie_create')) {
+    function cookie_create(string $name, string $value, int $expire = 3600, bool $secure = false, string $domain = ''): bool
     {
         return Cookies::create($name, $value, $expire, $secure, $domain);
 	}
 }
 
-if (!function_exists('get_cookie')) {
-	function get_cookie(string $name): mixed
+if (!function_exists('cookie_get')) {
+	function cookie_get(string $name): mixed
 	{
         return Cookies::get($name);
 	}
@@ -38,8 +38,8 @@ if (!function_exists('cookie_has')) {
 	}
 }
 
-if (!function_exists('delete_cookie')) {
-	function delete_cookie(string $name): bool
+if (!function_exists('cookie_delete')) {
+	function cookie_delete(string $name): bool
 	{
 		return Cookies::delete($name);
 	}
@@ -48,8 +48,8 @@ if (!function_exists('delete_cookie')) {
 /**
  * Sessions management
  */
-if (!function_exists('create_session')) {
-	function create_session(string $name, $data): void
+if (!function_exists('session_create')) {
+	function session_create(string $name, $data): void
 	{
 		Session::create($name, $data);
 	}
@@ -155,7 +155,7 @@ if (!function_exists('generate_csrf_token')) {
             $csrf_token = session_get('csrf_token');
         } else {
             $csrf_token = generate_token();
-            create_session('csrf_token', $csrf_token);
+            session_create('csrf_token', $csrf_token);
         }
 
         return $csrf_token;

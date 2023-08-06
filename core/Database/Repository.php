@@ -19,7 +19,7 @@ class Repository
 {
     protected QueryBuilder $qb;
 
-    public function __construct(private string $table) {}
+    public function __construct(private readonly string $table) {}
 
     public function select(string ...$columns): self
     {

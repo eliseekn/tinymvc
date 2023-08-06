@@ -10,7 +10,6 @@ namespace Core\Http\Validator;
 
 use GUMP;
 use Core\Http\Response;
-use Core\Http\Validator\ValidatorInterface;
 
 /**
  * Request fields validator

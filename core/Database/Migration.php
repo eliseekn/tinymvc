@@ -18,7 +18,7 @@ class Migration
     /**
 	 * @var \Core\Database\QueryBuilder
 	 */
-    protected static $qb;
+    protected static mixed $qb;
     
     public static function createTable(string $name): self
     {

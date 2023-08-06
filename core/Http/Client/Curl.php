@@ -9,7 +9,6 @@
 namespace Core\Http\Client;
 
 use Core\Exceptions\InvalidUrlFormatException;
-use Core\Http\Client\ClientInterface;
 
 /**
  * Send asynchronous HTTP requests using curl

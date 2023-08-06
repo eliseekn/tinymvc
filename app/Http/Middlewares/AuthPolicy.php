@@ -26,7 +26,7 @@ class AuthPolicy
                 ->url('login')
                 ->intended($request->fullUri())
                 ->withErrors([__('not_logged')])
-                ->send(302);
+                ->send();
         }
     }
 }

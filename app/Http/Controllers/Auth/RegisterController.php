@@ -27,7 +27,7 @@ class RegisterController
         }
 
         $uri = !Session::has('intended') ? config('app.home') : Session::pull('intended');
-        $response->url($uri)->send(302);
+        $response->url($uri)->send();
     }
 
     public function register(Request $request, Response $response, RegisterValidator $registerValidator, StoreAction $storeAction): void
@@ -36,12 +36,12 @@ class RegisterController
         $user = $storeAction->handle($validator->validated());
 
         if (config('security.auth.email_verification')) {
-            $response->url('/email/notify?email=' . $user->email)->send(302);
+            $response->url('/email/notify?email=' . $user->email)->send();
         }
 
         Mail::send(new WelcomeMail($user->email, $user->name));
         Alert::default(__('account_created'))->success();
         
-        $response->url('/login')->send(302);
+        $response->url('/login')->send();
     }
 }

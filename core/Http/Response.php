@@ -144,7 +144,7 @@ class Response
         return $this;
     }
 
-    public function send(int $code = 200): void
+    public function send(int $code = 302): void
     {
         if (config('app.env') === 'test') {
             header('Session:' . json_encode($_SESSION));
