@@ -25,16 +25,6 @@ class Alert
 
         return new self();
     }
-    
-    public static function popup($message): self
-    {
-        self::$alert = [
-            'message' => $message,
-            'display' => 'popup'
-        ];
-
-        return new self();
-    }
 
     public static function toast($message) : self
     {

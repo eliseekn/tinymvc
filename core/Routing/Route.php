@@ -99,14 +99,17 @@ class Route
         return new static();
     }
     
-    public function middleware(string ...$middlewares): self
+    public function middleware(array|string $middlewares): self
     {
+        $middlewares = parse_array($middlewares);
         static::$tmp_routes[static::$route]['middlewares'] = $middlewares;
         return $this;
     }
     
-    public function byMiddleware(string ...$middlewares): self
+    public function byMiddleware(array|string $middlewares): self
     {
+        $middlewares = parse_array($middlewares);
+
         foreach (static::$tmp_routes as $route => $options) {
             if (isset($options['middlewares'])) {
                 static::$tmp_routes[$route]['middlewares'] = array_merge($middlewares, $options['middlewares']);

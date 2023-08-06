@@ -26,7 +26,7 @@ class CsrfProtection
             return;
         }
 
-        if (!$request->filled('_csrf_token')) {
+        if (!$request->filled(['_csrf_token'])) {
             throw new MissingCsrfTokenException();
         }
 

@@ -160,8 +160,9 @@ class Request
         return $this->headers('REMOTE_ADDR', '');
     }
     
-    public function has(string ...$items): bool
+    public function has(array|string $items): bool
     {
+        $items = parse_array($items);
         $result = false;
 
         foreach ($items as $item) {
@@ -171,8 +172,9 @@ class Request
         return $result;
     }
     
-    public function hasQuery(string ...$items): bool
+    public function hasQuery(array|string $items): bool
     {
+        $items = parse_array($items);
         $result = false;
 
         foreach ($items as $item) {
@@ -182,8 +184,9 @@ class Request
         return $result;
     }
     
-    public function hasInput(string ...$items): bool
+    public function hasInput(array|string $items): bool
     {
+        $items = parse_array($items);
         $result = false;
 
         foreach ($items as $item) {
@@ -193,11 +196,14 @@ class Request
         return $result;
     }
     
-    public function filled(string ...$items): bool
+    public function filled(array|string $items): bool
     {
-        $result = $this->has(...$items);
+        $items = parse_array($items);
+        $result = $this->has($items);
 
-        if (!$result) return false;
+        if (!$result) {
+            return false;
+        }
 
         foreach ($items as $item) {
             $result = !empty($this->{$item});
@@ -225,8 +231,9 @@ class Request
         $this->{$item} = $value;
     }
     
-    public function only(string ...$items): array
+    public function only(array|string $items): array
     {
+        $items = parse_array($items);
         $result = [];
 
         foreach ($items as $item) {
@@ -238,11 +245,14 @@ class Request
         return $result;
     }
     
-    public function except(string ...$items): array
+    public function except(array|string $items): array
     {
+        $items = parse_array($items);
         $result = [];
 
-        if (empty($this->all())) return $result;
+        if (empty($this->all())) {
+            return $result;
+        }
 
         foreach ($items as $item) {
             foreach ($this->all() as $key => $input) {

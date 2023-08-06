@@ -35,7 +35,7 @@ class Delete extends Command
         
         $databases = $input->getArgument('database');
 
-        if (is_null($databases) || empty($databases)) {
+        if (empty($databases)) {
             $db = config('app.env') !== 'test' ? config('database.name') : 
                config('database.name') . config('tests.database.suffix') ;
 

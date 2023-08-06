@@ -27,7 +27,7 @@ class Server extends Command
         $host = $input->getOption('host') ?? '127.0.0.1';
         $port = $input->getOption('port') ?? 8080;
 
-        $process = new Process(['php', '-S', "{$host}:{$port}"]);
+        $process = new Process(['php', '-S', "$host:$port"]);
         $process->setTimeout(null);
         $process->start();
 

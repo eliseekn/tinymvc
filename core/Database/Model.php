@@ -80,9 +80,9 @@ class Model
         return self::select('*')->subQuery($subquery)->latest($column)->getAll();
     }
 
-    public static function select(string ...$columns): Repository
+    public static function select(array|string $columns): Repository
     {
-        return (new Repository(static::$table))->select(...$columns);
+        return (new Repository(static::$table))->select($columns);
     }
 
     public static function where(string $column, $operator = null, $value = null): Repository
@@ -231,13 +231,16 @@ class Model
         $this->{$column} = $this->{$column} - $value;
     }
 
-    public function toArray(string ...$attributes): array
+    public function toArray(array|string $attributes = null): array
     {
         $data = (array) $this;
 
-        if (is_null($this->id)) unset($data['id']);
+        if (is_null($this->id)) {
+            unset($data['id']);
+        }
 
-        if (!empty($attributes)) {
+        if (!is_null($attributes)) {
+            $attributes = parse_array($attributes);
             $d = [];
 
             foreach ($attributes as $attribute) {

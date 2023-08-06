@@ -56,7 +56,7 @@ class ForgotPasswordController
 	
 	public function reset(Request $request, Response $response): void
 	{
-        if (!$request->hasQuery('email', 'token')) {
+        if (!$request->hasQuery(['email', 'token'])) {
             $response->data(__('bad_request'))->send(400);
         }
 

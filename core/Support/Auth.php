@@ -36,13 +36,13 @@ class Auth
                 $response
                     ->back()
                     ->with('auth_attempts_timeout', Carbon::now()->addMinutes(config('security.auth.unlock_timeout'))->toDateTimeString())
-                    ->send(302);
+                    ->send();
             }
 
             return false;
         }
 
-        Session::forget('auth_attempts', 'auth_attempts_timeout');
+        Session::forget(['auth_attempts', 'auth_attempts_timeout']);
         Session::create('user', $user);
             
         if ($remember) {
@@ -127,7 +127,7 @@ class Auth
 
     public static function forget(): void
     {
-        Session::forget('user', 'history', 'csrf_token');
+        Session::forget(['user', 'history', 'csrf_token']);
 
         if (self::remember()) {
             Cookies::delete('user');

@@ -31,7 +31,7 @@ class LoginController
 	{
         $loginValidator->validate($request->inputs(), $response);
 
-        if (Auth::attempt($response, $request->only('email', 'password'), $request->has('remember'))) {
+        if (Auth::attempt($response, $request->only(['email', 'password']), $request->has('remember'))) {
             $uri = !Session::has('intended') ? config('app.home') : Session::pull('intended');
 
             Alert::toast(__('welcome', ['name' => Auth::get('name')]))->success();
@@ -39,6 +39,6 @@ class LoginController
         }
 
         Alert::default(__('login_failed'))->error();
-        $response->url('/login')->withInputs($request->only('email', 'password'))->withErrors([__('login_failed')])->send();
+        $response->url('/login')->withInputs($request->only(['email', 'password']))->withErrors([__('login_failed')])->send();
     }
 }

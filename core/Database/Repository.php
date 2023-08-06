@@ -21,20 +21,20 @@ class Repository
 
     public function __construct(private readonly string $table) {}
 
-    public function select(string ...$columns): self
+    public function select(array|string $columns): self
     {
-        $this->qb = QueryBuilder::table($this->table)->select(...$columns);
+        $this->qb = QueryBuilder::table($this->table)->select($columns);
         return $this;
     }
     
-    public function selectOne(string ...$columns): mixed
+    public function selectOne(array|string $columns): mixed
     {
-        return $this->select(...$columns)->get();
+        return $this->select($columns)->get();
     }
     
-    public function selectAll(string ...$columns): array|false
+    public function selectAll(array|string $columns): array|false
     {
-        return $this->select(...$columns)->getAll();
+        return $this->select($columns)->getAll();
     }
 
     public function selectRaw(string $query, array $args = []): self
@@ -561,9 +561,9 @@ class Repository
         return $this->orderDesc($column);
     }
     
-    public function groupBy(string ...$columns): self
+    public function groupBy(array|string $columns): self
     {
-        $this->qb->groupBy(...$columns);
+        $this->qb->groupBy($columns);
         return $this;
     }
 

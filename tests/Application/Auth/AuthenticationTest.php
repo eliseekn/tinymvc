@@ -20,7 +20,7 @@ class AuthenticationTest extends ApplicationTestCase
     {
         $user = (new UserFactory())->make(['password' => 'password']);
 
-        $client = $this->post('authenticate', $user->toArray('email', 'password'));
+        $client = $this->post('authenticate', $user->toArray(['email', 'password']));
         $client->assertSessionHasErrors();
         $client->assertRedirectedToUrl(url('login'));
     }
@@ -47,7 +47,7 @@ class AuthenticationTest extends ApplicationTestCase
             $client->assertRedirectedToUrl(url('email/notify?email=' . $user->email));
         }
 
-        $this->assertDatabaseHas('users', $user->toArray('name', 'email'));
+        $this->assertDatabaseHas('users', $user->toArray(['name', 'email']));
     }
 
     public function test_can_logout(): void

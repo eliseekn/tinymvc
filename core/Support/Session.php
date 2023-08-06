@@ -40,8 +40,9 @@ class Session
 		return isset($_SESSION[strtolower(config('app.name')) . '_' . $name]);
     }
     
-    public static function forget(string ...$names): void
+    public static function forget(array|string $names): void
     {
+        $names = parse_array($names);
         self::start();
         
         foreach ($names as $name) {

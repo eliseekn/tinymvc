@@ -7,7 +7,7 @@
  */
 
 /**
- * Routes paths configuration
+ * Routes paths configuration with base directory '/views'
  */
 
 return [

@@ -33,7 +33,7 @@ class Exception extends Command
         $exception = $input->getArgument('exception');
         $message = $input->getOption('message');
 
-        list(, $class) = Make::generateClass($exception, '');
+        list(, $class) = Make::generateClass($exception);
 
         if (!Make::createException($exception, $message)) {
             $output->writeln('<fg=yellow>Failed to create exception "' . $class . '"</fg>');

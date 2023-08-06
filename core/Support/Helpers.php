@@ -84,9 +84,9 @@ if (!function_exists('session_has')) {
 }
 
 if (!function_exists('session_forget')) {
-	function session_forget(string ...$names): void
+	function session_forget(array|string $names): void
 	{
-		Session::forget(...$names);
+		Session::forget($names);
 	}
 }
 
@@ -458,6 +458,20 @@ if (!function_exists('env')) {
     function env(string $key, $default = null): mixed
     {
         return Config::readEnv($key, $default);
+    }
+}
+
+if (!function_exists('parse_array')) {
+    /**
+     * Convert string to array
+     */
+    function parse_array(array|string $value): array
+    {
+        if (is_array($value)) {
+            return $value;
+        }
+
+        return [$value];
     }
 }
 

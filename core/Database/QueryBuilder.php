@@ -97,12 +97,13 @@ class QueryBuilder
         return new self();
     }
     
-	public function select(string ...$columns): self
+	public function select(array|string $columns): self
 	{
+        $columns = parse_array($columns);
 		self::$query = 'SELECT ';
 
 		foreach ($columns as $column) {
-			self::$query .= "{$column}, ";
+			self::$query .= "$column, ";
 		}
 
 		self::$query = rtrim(self::$query, ', ');
@@ -469,8 +470,9 @@ class QueryBuilder
 		return $this;
 	}
 
-	public function groupBy(string ...$columns): self
+	public function groupBy(array|string $columns): self
 	{
+        $columns = parse_array($columns);
 		self::$query .= ' GROUP BY ';
 
 		foreach ($columns as $column) {

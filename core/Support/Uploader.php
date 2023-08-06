@@ -8,8 +8,6 @@
 
 namespace Core\Support;
 
-use Core\Support\Storage;
-
 /**
  * Manage uploaded files
  */
@@ -17,7 +15,7 @@ class Uploader
 {    
     public string $filename = '';
 
-    public function __construct(private array $file = [], private array $allowed_extensions = []) {}
+    public function __construct(private readonly array $file = [], private readonly array $allowed_extensions = []) {}
     
     public function getOriginalFilename(): string
     {
@@ -80,11 +78,11 @@ class Uploader
                 UPLOAD_ERR_NO_TMP_DIR => 'Missing a temporary folder',
                 UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk',
                 8 => 'File upload stopped by extension',
-                default => 'Unknow error',
+                default => 'Unknown error',
             };
         }
 
-        return 'Unknow error';
+        return 'Unknown error';
     }
 
     public function save(?string $destination = null, ?string $filename = null): bool
