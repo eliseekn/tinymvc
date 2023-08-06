@@ -8,6 +8,7 @@
 
 namespace App\Database\Factories;
 
+use App\Enums\TokenDescription;
 use Carbon\Carbon;
 use Core\Database\Factory;
 use App\Database\Models\Token;
@@ -27,7 +28,7 @@ class TokenFactory extends Factory
             'email' => $this->faker->unique()->email,
             'value' => generate_token(),
             'expire' => Carbon::now()->addHour()->toDateTimeString(),
-            'description' => Token::PASSWORD_RESET_TOKEN
+            'description' => TokenDescription::PASSWORD_RESET_TOKEN->value
         ];
     }
 }

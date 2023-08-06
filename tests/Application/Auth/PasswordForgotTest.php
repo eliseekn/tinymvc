@@ -25,7 +25,7 @@ class PasswordForgotTest extends ApplicationTestCase
         $user = (new UserFactory())->create();
         $token = (new TokenFactory())->create(['email' => $user->email]);
 
-        $client = $this->get("password/reset?email={$token->email}&token={$token->token}");
+        $client = $this->get("password/reset?email={$token->email}&token={$token->value}");
         $client->assertRedirectedToUrl(url("password/new?email={$token->email}"));
 
         $this->assertDatabaseDoesNotHave('tokens', $token->toArray());

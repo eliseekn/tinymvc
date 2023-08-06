@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\TokenDescription;
 use Carbon\Carbon;
 use Core\Http\Request;
 use Core\Support\Alert;
@@ -30,18 +31,18 @@ class EmailVerificationController
         if (Mail::send(new VerificationMail($request->email, $token))) {
             if (
                 !Token::where('email', $request->email)
-                    ->and('description', Token::EMAIL_VERIFICATION_TOKEN)
+                    ->and('description', TokenDescription::EMAIL_VERIFICATION_TOKEN->value)
                     ->exists()
             ) {
                 Token::create([
                     'email'=> $request->email,
                     'value' => $token,
                     'expire' => Carbon::now()->addDay()->toDateTimeString(),
-                    'description' => Token::EMAIL_VERIFICATION_TOKEN
+                    'description' => TokenDescription::EMAIL_VERIFICATION_TOKEN->value
                 ]);
             } else {
                 Token::where('email', $request->email)
-                    ->and('description', Token::EMAIL_VERIFICATION_TOKEN)
+                    ->and('description', TokenDescription::EMAIL_VERIFICATION_TOKEN->value)
                     ->update(['value' => $token]);
             }
 

@@ -40,7 +40,12 @@ class AuthenticationTest extends ApplicationTestCase
 
         $client = $this->post('register', $user->toArray());
         $client->assertSessionDoesNotHaveErrors();
-        $client->assertRedirectedToUrl(url('login'));
+
+        if (!config('security.auth.email_verification')) {
+            $client->assertRedirectedToUrl(url('login'));
+        } else {
+            $client->assertRedirectedToUrl(url('email/notify?email=' . $user->email));
+        }
 
         $this->assertDatabaseHas('users', $user->toArray('name', 'email'));
     }

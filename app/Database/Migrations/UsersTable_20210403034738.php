@@ -8,7 +8,7 @@
 
 namespace App\Database\Migrations;
 
-use App\Database\Models\User;
+use App\Enums\UserRole;
 use Core\Database\Migration;
 
 class UsersTable_20210403034738
@@ -21,7 +21,7 @@ class UsersTable_20210403034738
             ->addString('email')->unique()
             ->addString('password')
             ->addDateTime('email_verified')->nullable()
-            ->addString('role')->default(User::ROLE_USER)
+            ->addString('role')->default(UserRole::USER->value)
             ->addCurrentTimestamp()
             ->migrate();
     }

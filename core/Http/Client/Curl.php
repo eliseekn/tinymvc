@@ -24,7 +24,7 @@ class Curl implements ClientInterface
      *         https://www.codexworld.com/post-receive-json-data-using-php-curl/
      *         https://stackoverflow.com/questions/13420952/php-curl-delete-request
      */
-    public static function send(string $method, $url, array $data = [], array $headers = [], bool $json = false)
+    public static function send(string $method, $url, array $data = [], array $headers = [], bool $json = false): self
     {
         $response_headers = [];
         $response = [];

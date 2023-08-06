@@ -471,7 +471,7 @@ if (!function_exists('trait_uses_recursive')) {
      * @param  string  $trait
      * @return array
      */
-    function trait_uses_recursive(string $trait): string
+    function trait_uses_recursive(string $trait): array
     {
         $traits = class_uses($trait) ?: [];
 

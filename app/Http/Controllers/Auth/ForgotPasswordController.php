@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\TokenDescription;
 use Carbon\Carbon;
 use Core\Http\Request;
 use Core\Support\Alert;
@@ -30,18 +31,18 @@ class ForgotPasswordController
         if (Mail::send(new TokenMail($request->email, $token))) {
             if (
                 !Token::where('email', $request->email)
-                    ->and('description', Token::PASSWORD_RESET_TOKEN)
+                    ->and('description', TokenDescription::PASSWORD_RESET_TOKEN->value)
                     ->exists()
             ) {
                 Token::create([
                     'email'=> $request->email,
                     'value' => $token,
                     'expire' => Carbon::now()->addHour()->toDateTimeString(),
-                    'description' => Token::PASSWORD_RESET_TOKEN
+                    'description' => TokenDescription::PASSWORD_RESET_TOKEN->value
                 ]);
             } else {
                 Token::where('email', $request->email)
-                    ->and('description', Token::PASSWORD_RESET_TOKEN)
+                    ->and('description', TokenDescription::PASSWORD_RESET_TOKEN->value)
                     ->update(['value' => $token]);
             }
 

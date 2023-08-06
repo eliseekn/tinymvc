@@ -14,9 +14,6 @@ class Token extends Model
 {
     public static $table = 'tokens';
 
-    public const PASSWORD_RESET_TOKEN = 'password_reset_token';
-    public const EMAIL_VERIFICATION_TOKEN = 'email_verifications_token';
-
     public function __construct()
     {
         parent::__construct(static::$table);

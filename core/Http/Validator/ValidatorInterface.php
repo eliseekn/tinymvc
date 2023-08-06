@@ -12,17 +12,17 @@ use Core\Http\Response;
 
 interface ValidatorInterface
 {
-    public function addCustomRule(string $rule, callable $callback, string $error_message): self;
+    public function addCustomRule(string $rule, callable $callback, string $error_message);
 
-    public function validate(array $inputs, Response $response): self;
+    public function validate(array $inputs, Response $response);
     
-    public function fails(): bool;
+    public function fails();
         
-    public function errors(): array;
+    public function errors();
     
-    public function validated(): array;
+    public function validated();
 
-    public function rules(): array;
+    public function rules();
 
-    public function messages(): array;
+    public function messages();
 }

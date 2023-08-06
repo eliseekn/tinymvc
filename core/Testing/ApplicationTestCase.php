@@ -61,14 +61,13 @@ class ApplicationTestCase extends TestCase
         return $this->client->getStatusCode()[0];
     }
 
-    protected function getHeaders(?string $key = null): string
+    protected function getHeaders(?string $key = null): mixed
     {
         $headers = $this->client->getHeaders()[0];
-
         return is_null($key) ? $headers : $headers[$key][0];
     }
 
-    protected function getSession(): string
+    protected function getSession(): mixed
     {
         return !array_key_exists('session', $this->getHeaders()) ? []
             : json_decode($this->getHeaders('session'), true);
@@ -218,7 +217,7 @@ class ApplicationTestCase extends TestCase
 
     public function assertSessionHas(string $key, $value): void
     {
-        if (!isset($this->getSession()[$this->getSessionKey($key)])) {
+        if (!array_key_exists($this->getSessionKey($key), $this->getSession())) {
             $this->assertFalse(false);
         }
 

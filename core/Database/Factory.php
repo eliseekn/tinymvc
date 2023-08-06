@@ -42,7 +42,7 @@ class Factory
     /**
      * @return array|\Core\Database\Model
      */
-    public function make(array $data = []): array
+    public function make(array $data = []): mixed
     {
         if (!is_array($this->class)) {
             $this->class->fill(array_merge($this->data(), $data));
@@ -56,7 +56,7 @@ class Factory
         return $this->class;
     }
 
-    public function create(array $data = []): array|Model|false
+    public function create(array $data = []): Model|array|bool
     {
         $class = $this->make($data);
 

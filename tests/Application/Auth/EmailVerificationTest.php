@@ -24,7 +24,7 @@ class EmailVerificationTest extends ApplicationTestCase
         $user = (new UserFactory())->create(['email_verified' => null]);
         $token = (new TokenFactory())->create(['email' => $user->email]);
 
-        $client = $this->get("email/verify?email={$token->email}&token={$token->token}");
+        $client = $this->get("email/verify?email={$token->email}&token={$token->value}");
         $client->assertRedirectedToUrl(url('login'));
 
         $this->assertDatabaseDoesNotHave('tokens', $token->toArray());

@@ -8,6 +8,7 @@
 
 namespace App\Database\Migrations;
 
+use App\Enums\TokenDescription;
 use Core\Database\Migration;
 
 class TokensTable_20210403034738
@@ -19,7 +20,7 @@ class TokensTable_20210403034738
             ->addString('email')
             ->addString('value')->unique()
             ->addTimestamp('expire')->nullable()
-            ->addString('description')
+            ->addString('description')->default(TokenDescription::PASSWORD_RESET_TOKEN->value)
             ->addCurrentTimestamp()
             ->migrate();
     }
