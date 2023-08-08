@@ -97,7 +97,7 @@ class Setup extends Command
         $input = fgets(STDIN);
 
         if (is_null($expected)) {
-            if ($input === "\n") {
+            if ($input === "\n" || $input = "\r\n") {
                 return $default . PHP_EOL;
             }
         }
