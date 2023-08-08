@@ -36,8 +36,9 @@ class Create extends Command
         $databases = $input->getArgument('database');
 
         if (empty($databases)) {
-            $db = config('app.env') !== 'test' ? config('database.name') : 
-               config('database.name') . config('tests.database.suffix') ;
+            $db = config('app.env') !== 'test'
+                ? config('database.name')
+                : config('database.name') . config('tests.database.suffix') ;
 
             $databases = [$db];
         }

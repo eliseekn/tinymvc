@@ -50,10 +50,16 @@ class Response
         return $this;
     }
 
-    public function url(string $uri): self
+    public function url(string $uri, array $queries = []): self
     {
+        $query = '';
+
+        if (!empty($queries)) {
+            $query .= '?' . http_build_query($queries);
+        }
+
         $this->uri = $uri;
-        $this->addHeaders(['Location' => url($this->uri)]);
+        $this->addHeaders(['Location' => url($this->uri . rawurldecode($query))]);
 
         return $this;
     }
@@ -72,7 +78,6 @@ class Response
         }
 
         end($history);
-
         return $this->url(prev($history));
     }
     

@@ -38,7 +38,6 @@ class Seeds extends Command
         if (empty($seeds)) {
             Seeder::run();
             $output->writeln('<info>All seeds have been inserted</info>');
-            
             return Command::SUCCESS;
         }
         

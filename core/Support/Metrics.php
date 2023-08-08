@@ -55,7 +55,9 @@ class Metrics
     
     public function __construct(public string $table, private string $driver = '')
     {
-        $this->driver = config('app.env') === 'test' ? config('tests.database.driver') : config('database.driver');
+        $this->driver = config('app.env') === 'test'
+            ? config('tests.database.driver')
+            : config('database.driver');
     }
     
     /**
@@ -78,7 +80,7 @@ class Metrics
                             $q->rawQuery($query[0], $query[1]);
                         }
                     })
-                    ->groupBy([self::DAY])
+                    ->groupBy(self::DAY)
                     ->orderBy(self::DAY, 'asc')
                     ->fetchAll();
 
@@ -97,7 +99,7 @@ class Metrics
                             $q->rawQuery($query[0], $query[1]);
                         }
                     })
-                    ->groupBy([self::DAY])
+                    ->groupBy(self::DAY)
                     ->orderBy(self::DAY, 'asc')
                     ->fetchAll();
 
@@ -115,7 +117,7 @@ class Metrics
                             $q->rawQuery($query[0], $query[1]);
                         }
                     })
-                    ->groupBy([self::WEEK])
+                    ->groupBy(self::WEEK)
                     ->orderBy(self::WEEK, 'asc')
                     ->fetchAll();
 
@@ -132,7 +134,7 @@ class Metrics
                             $q->rawQuery($query[0], $query[1]);
                         }
                     })
-                    ->groupBy([self::MONTH])
+                    ->groupBy(self::MONTH)
                     ->orderBy(self::MONTH, 'asc')
                     ->fetchAll();
 
@@ -150,7 +152,7 @@ class Metrics
                             $q->rawQuery($query[0], $query[1]);
                         }
                     })
-                    ->groupBy([self::YEAR])
+                    ->groupBy(self::YEAR)
                     ->orderBy(self::YEAR, 'asc')
                     ->fetchAll();
 

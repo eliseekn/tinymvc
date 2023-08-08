@@ -41,7 +41,7 @@ class Tests extends Command
         $args = ['php', 'vendor/bin/phpunit'];
 
         if (!is_null($input->getArgument('filename'))) {
-            $args = array_merge($args, ['tests/' . $input->getArgument('filename')]);
+            $args = array_merge($args, ['tests' . DS . $input->getArgument('filename')]);
         }
 
         if (!is_null($input->getArgument('filter'))) {

@@ -8,13 +8,12 @@
 
 namespace NAMESPACE;
 
-use Core\Http\Request;
-use Core\Http\Response;
+use App\Http\Controllers\Controller;
 
-class CLASSNAME
+class CLASSNAME extends Controller
 {
-    public function __invoke(Request $request, Response $response): void
+    public function __invoke(): void
 	{
-        $response->data('Hello from CLASSNAME')->send();
+        $this->data('Hello from CLASSNAME');
 	}
 }

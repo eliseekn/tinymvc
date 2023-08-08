@@ -23,23 +23,23 @@ class PasswordForgotTest extends ApplicationTestCase
     public function test_can_reset_password(): void
     {
         $user = (new UserFactory())->create();
-        $token = (new TokenFactory())->create(['email' => $user->email]);
+        $token = (new TokenFactory())->create(['email' => $user->attribute('email')]);
 
-        $client = $this->get("password/reset?email={$token->email}&token={$token->value}");
-        $client->assertRedirectedToUrl(url("password/new?email={$token->email}"));
-
+        $client = $this->get('password/reset?email=' . $token->attribute('email') . '&token=' . $token->attribute('value'));
+        $client->assertRedirectedToUrl(url('password/new', ['email' => $token->attribute('email')]));
         $this->assertDatabaseDoesNotHave('tokens', $token->toArray());
     }
 
     public function test_can_update_password(): void
     {
         $user = (new UserFactory())->create();
-
-        $client = $this->post('password/update', ['email' => $user->email, 'password' => 'new_password']);
+        $client = $this->post('password/update', [
+            'email' => $user->attribute('email'),
+            'password' => 'new_password']
+        );
         $client->assertRedirectedToUrl(url('login'));
 
         $user = User::find($user->id);
-
-        $this->assertTrue(Encryption::check('new_password', $user->password));
+        $this->assertTrue(Encryption::check('new_password', $user->attribute('password')));
     }
 }

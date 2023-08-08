@@ -17,16 +17,12 @@ class Model
 {
     public $id;
     public static $table = '';
+    public static $attributes = null;
 
     public function __construct(string $table, $data = null)
     {
         static::$table = $table;
-
-        if (!is_null($data)) {
-            foreach ($data as $key => $value) {
-                $this->{$key} = $value;
-            }
-        }
+        static::$attributes = $data;
     }
 
     public static function findBy(string $column, $operator = null, $value = null): self|false
@@ -168,17 +164,16 @@ class Model
             $column = $this->getColumnFromTable($table);
         }
 
-        return (new Repository($table))->select('*')->where('id', $this->{$column});
+        return (new Repository($table))->select('*')->where('id', static::$attributes[$column]);
     }
 
-    public function set(string $key, $value): void
+    public function attribute(string $key, $value = null): mixed
     {
-        $this->{$key} = $value;
-    }
+        if (!is_null($value)) {
+            static::$attributes[$key] = $value;
+        }
 
-    public function get(string $key): mixed
-    {
-        return $this->{$key};
+        return static::$attributes[$key];
     }
     
     /**
@@ -190,7 +185,7 @@ class Model
     public function fill(array $data): void
     {
         foreach ($data as $key => $value) {
-            $this->{$key} = $value;
+            static::$attributes[$key] = $value;
         }
     }
     
@@ -214,26 +209,26 @@ class Model
     public function increment(string $column, $value = null): void
     {
         if (is_null($value)) {
-            $this->{$column}++;
+            static::$attributes[$column]++;
             return;
         }
             
-        $this->{$column} = $this->{$column} + $value;
+        static::$attributes[$column] = static::$attributes[$column] + $value;
     }
 
     public function decrement(string $column, $value = null): void
     {
         if (is_null($value)) {
-            $this->{$column}--;
+            static::$attributes[$column]--;
             return;
         }
 
-        $this->{$column} = $this->{$column} - $value;
+        static::$attributes[$column] = static::$attributes[$column] - $value;
     }
 
     public function toArray(array|string $attributes = null): array
     {
-        $data = (array) $this;
+        $data = static::$attributes;
 
         if (is_null($this->id)) {
             unset($data['id']);
@@ -246,7 +241,7 @@ class Model
             foreach ($attributes as $attribute) {
                 if (isset($attribute)) {
                     $d = array_merge($d, [
-                        $attribute => $this->{$attribute}
+                        $attribute => static::$attributes[$attribute]
                     ]);
                 }
             }

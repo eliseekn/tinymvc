@@ -226,7 +226,7 @@ if (!function_exists('route_uri')) {
         $patterns = ['([a-zA-Z-_]+)', '(\d+)', '([^/]+)'];
 
         foreach (Route::$routes as $route => $options) {
-            if (isset($options['name']) && !empty($options['name'])) {
+            if (!empty($options['name'])) {
                 if ($name === $options['name']) {
                     $uri = explode(' ', $route, 2)[1];
                 }
@@ -275,7 +275,9 @@ if (!function_exists('route_uri')) {
 
         $uri = str_replace('//', '/', $uri);
         
-        if ($uri !== '/') $uri = rtrim($uri, '/');
+        if ($uri !== '/') {
+            $uri = rtrim($uri, '/');
+        }
 
         return $uri;
     }

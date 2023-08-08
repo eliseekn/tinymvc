@@ -14,7 +14,7 @@ class CLASSNAME extends Validator
 {
     public function __construct()
     {
-        //
+        parent::__construct();
     }
 
     /**

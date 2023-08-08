@@ -10,9 +10,6 @@ namespace Core\Support;
 
 use Carbon\Carbon;
 use Core\Http\Request;
-use Core\Support\Cookies;
-use Core\Support\Session;
-use Core\Support\Encryption;
 use App\Database\Models\User;
 use App\Database\Models\Token;
 use Core\Http\Response;
@@ -46,7 +43,7 @@ class Auth
         Session::create('user', $user);
             
         if ($remember) {
-            Cookies::create('user', $user->email, 3600 * 24 * 365);
+            Cookies::create('user', $user->attribute('email'), 3600 * 24 * 365);
         }
         
         return true;
@@ -56,7 +53,7 @@ class Auth
     {
         if (filter_var($email, FILTER_VALIDATE_EMAIL) !== false) {
             $user = User::findBy('email', $email);
-            return $user !== false && Encryption::check($password, $user->password);
+            return $user !== false && Encryption::check($password, $user->attribute('password'));
         }
 
         $users = User::where('email', 'like', $email)->getAll();
@@ -66,7 +63,7 @@ class Auth
         }
 
         foreach ($users as $u) {
-            if (Encryption::check($password, $u->password)) {
+            if (Encryption::check($password, $u->attribute('password'))) {
                 $user = $u;
                 return true;
             }
@@ -78,7 +75,7 @@ class Auth
     public static function checkToken(string $token, &$user): bool
     {
         $token = Token::findBy('value', $token);
-        $user = User::findBy('email', $token->email);
+        $user = User::findBy('email', $token->attribute('email'));
         
         return $user !== false;
     }
@@ -90,7 +87,7 @@ class Auth
             'value' => generate_token(),
         ]);
 
-        return Encryption::encrypt($token->value);
+        return Encryption::encrypt($token->attribute('value'));
     }
 
     public static function check(Request $request): bool
@@ -122,7 +119,7 @@ class Auth
             return $user;
         }
 
-        return $user->{$key};
+        return $user->attribute($key);
     }
 
     public static function forget(): void

@@ -41,7 +41,6 @@ class Actions extends Command
 
         foreach ($types as $type) {
             list(, $class) = Make::generateClass($type, 'action', true, true);
-
             $class = str_replace(['Index', 'Show'], ['GetCollection', 'GetItem'], $class);
 
             if (!Make::createAction($input->getArgument('model'), $type, $input->getOption('namespace'))) {

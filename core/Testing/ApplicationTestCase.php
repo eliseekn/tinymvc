@@ -90,7 +90,6 @@ class ApplicationTestCase extends TestCase
     {
         $this->token = Auth::createToken($user->email);
         $this->headers = array_merge($this->headers, ['Authorization' => "Bearer $this->token"]);
-
         return $this;
     }
 

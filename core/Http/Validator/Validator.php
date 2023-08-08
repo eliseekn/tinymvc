@@ -38,7 +38,7 @@ class Validator implements ValidatorInterface
                 ->back()
                 ->withErrors($this->errors())
                 ->withInputs($this->inputs)
-                ->send(302);
+                ->send();
         }
         
         return $this;
@@ -75,7 +75,9 @@ class Validator implements ValidatorInterface
     {
         $errors = [];
 
-        if (!$this->fails()) return $errors;
+        if (!$this->fails()) {
+            return $errors;
+        }
 
         foreach ($this->errors as $error) {
             foreach ($this->inputs as $key => $value) {

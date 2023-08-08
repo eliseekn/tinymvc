@@ -23,7 +23,7 @@ class AuthPolicy
         if (!Auth::check($request)) {
             Alert::default(__('not_logged'))->error();
             $response
-                ->url('login')
+                ->url('/login')
                 ->intended($request->fullUri())
                 ->withErrors([__('not_logged')])
                 ->send();

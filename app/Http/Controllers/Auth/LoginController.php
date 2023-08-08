@@ -8,37 +8,40 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Core\Http\Request;
+use App\Http\Controllers\Controller;
 use Core\Support\Auth;
 use Core\Support\Alert;
 use Core\Support\Session;
-use Core\Http\Response;
 use App\Http\Validators\Auth\LoginValidator;
 
-class LoginController
+class LoginController extends Controller
 { 
-    public function index(Request $request, Response $response): void
+    public function index(): void
     {
-        if (!Auth::check($request)) {
-            $response->view('auth.login')->send();
+        if (!Auth::check($this->request)) {
+            $this->render('auth.login');
         }
 
         $uri = !Session::has('intended') ? config('app.home') : Session::pull('intended');
-        $response->url($uri)->send();
+        $this->redirect($uri);
     }
 
-	public function authenticate(Request $request, Response $response, LoginValidator $loginValidator): void
+	public function authenticate(LoginValidator $validator): void
 	{
-        $loginValidator->validate($request->inputs(), $response);
+        $validator->validate($this->request->inputs(), $this->response);
 
-        if (Auth::attempt($response, $request->only(['email', 'password']), $request->has('remember'))) {
-            $uri = !Session::has('intended') ? config('app.home') : Session::pull('intended');
-
+        if (Auth::attempt($this->response, $this->request->only(['email', 'password']), $this->request->hasInput('remember'))) {
             Alert::toast(__('welcome', ['name' => Auth::get('name')]))->success();
-            $response->url($uri)->send();
+            $uri = !Session::has('intended') ? config('app.home') : Session::pull('intended');
+            $this->redirect($uri);
         }
 
         Alert::default(__('login_failed'))->error();
-        $response->url('/login')->withInputs($request->only(['email', 'password']))->withErrors([__('login_failed')])->send();
+        $this
+            ->response
+            ->url('/login')
+            ->withInputs($this->request->only(['email', 'password']))
+            ->withErrors([__('login_failed')])
+            ->send();
     }
 }

@@ -9,82 +9,84 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Enums\TokenDescription;
+use App\Http\Controllers\Controller;
 use Carbon\Carbon;
-use Core\Http\Request;
 use Core\Support\Alert;
 use App\Mails\TokenMail;
 use Core\Support\Mail\Mail;
 use App\Database\Models\Token;
-use Core\Http\Response;
 use App\Http\Actions\User\UpdateAction;
 use App\Http\Validators\Auth\LoginValidator;
 
 /**
  * Manage password forgot
  */
-class ForgotPasswordController
+class ForgotPasswordController extends Controller
 {
-	public function notify(Request $request, Response $response): void
+	public function notify(): void
 	{
 		$token = generate_token();
 
-        if (Mail::send(new TokenMail($request->email, $token))) {
+        if (Mail::send(new TokenMail($this->request->get('email'), $token))) {
             if (
-                !Token::where('email', $request->email)
+                !Token::where('email', $this->request->queries('email'))
                     ->and('description', TokenDescription::PASSWORD_RESET_TOKEN->value)
                     ->exists()
             ) {
                 Token::create([
-                    'email'=> $request->email,
+                    'email'=> $this->request->queries('email'),
                     'value' => $token,
                     'expire' => Carbon::now()->addHour()->toDateTimeString(),
                     'description' => TokenDescription::PASSWORD_RESET_TOKEN->value
                 ]);
             } else {
-                Token::where('email', $request->email)
+                Token::where('email', $this->request->queries('email'))
                     ->and('description', TokenDescription::PASSWORD_RESET_TOKEN->value)
                     ->update(['value' => $token]);
             }
 
             Alert::default(__('password_reset_link_sent'))->success();
-			$response->back()->send();
+			$this->back();
 		}
         
         Alert::default(__('password_reset_link_not_sent'))->error();
-        $response->back()->send();
+        $this->back();
 	}
 	
-	public function reset(Request $request, Response $response): void
+	public function reset(): void
 	{
-        if (!$request->hasQuery(['email', 'token'])) {
-            $response->data(__('bad_request'))->send(400);
+        if (!$this->request->hasQuery(['email', 'token'])) {
+            $this->data(__('bad_request'), 400);
         }
 
-        $token = Token::findBy('email', $request->email);
+        $token = Token::where('email', $this->request->queries('email'))
+            ->and('description', TokenDescription::PASSWORD_RESET_TOKEN->value)
+            ->newest()
+            ->first();
 
-        if (!$token || $token->value !== $request->token) {
-			$response->data(__('invalid_password_reset_link'))->send(400);
+        if (!$token || $token->value !== $this->request->queries('token')) {
+			$this->data(__('invalid_password_reset_link'), 400);
 		}
 
 		if (Carbon::parse($token->expire)->lt(Carbon::now())) {
-			$response->data(__('expired_password_reset_link'))->send(400);
+			$this->data(__('expired_password_reset_link'), 400);
 		}
 
         $token->delete();
-        $response->url("/password/new?email={$request->email}")->send();
+        $this->redirect('/password/new', ['email' => $this->request->queries('email')]);
 	}
 	
-	public function update(Request $request, Response $response, LoginValidator $loginValidator, UpdateAction $updateAction): void
+	public function update(LoginValidator $validator, UpdateAction $action): void
 	{
-        $loginValidator->validate($request->inputs(), $response);
-        $user = $updateAction->handle(['password' => $request->password], $request->email);
+        $validator->validate($this->request->inputs(), $this->response);
+        $user = $action->handle(['password' => $this->request->get('password')], $this->request->get('email'));
 
         if (!$user) {
             Alert::default(__('password_not_reset'))->error();
-            $response->back()->send();
+            $this->back();
         }
 
         Alert::default(__('password_reset'))->success();
-        $response->url('/login')->send();
+        $this->redirect('/login');
 	}
 }

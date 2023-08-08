@@ -22,11 +22,10 @@ class EmailVerificationTest extends ApplicationTestCase
     public function test_can_verify_email(): void
     {
         $user = (new UserFactory())->create(['email_verified' => null]);
-        $token = (new TokenFactory())->create(['email' => $user->email]);
+        $token = (new TokenFactory())->create(['email' => $user->attribute('email')]);
 
-        $client = $this->get("email/verify?email={$token->email}&token={$token->value}");
+        $client = $this->get('email/verify?email=' . $token->attribute('email') . '&token=' . $token->attribute('value'));
         $client->assertRedirectedToUrl(url('login'));
-
         $this->assertDatabaseDoesNotHave('tokens', $token->toArray());
     }
 }

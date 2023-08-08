@@ -8,17 +8,16 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
 use Core\Support\Auth;
 use Core\Support\Alert;
-use Core\Http\Response;
 
-class LogoutController
+class LogoutController extends Controller
 {
-	public function __invoke(Response $response): void
+	public function __invoke(): void
 	{
         Auth::forget();
         Alert::toast(__('logged_out'))->success();
-
-        $response->url(config('app.home'))->send();
+        $this->redirect(config('app.home'));
 	}
 }
