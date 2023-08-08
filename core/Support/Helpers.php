@@ -210,10 +210,14 @@ if (!function_exists('url')) {
 	{
         $url = config('app.url');
 
-        if ($url[-1] !== '/') $url .= '/'; 
+        if ($url[-1] !== '/') {
+            $url .= '/';
+        }
 
         $url .= ltrim($uri, '/');
-        $params = is_array($params) ? (empty($params) ? '' : implode('/', $params)) : $params;
+        $params = is_array($params)
+            ? (empty($params) ? '' : implode('/', $params))
+            : $params;
 
 		return is_null($params) ? $url : $url . '/' . $params;
 	}

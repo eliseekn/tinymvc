@@ -15,7 +15,7 @@ use Core\Database\Factory;
 
 class UserFactory extends Factory
 {
-    public static $model = User::class;
+    protected static $model = User::class;
 
     public function __construct(int $count = 1)
     {

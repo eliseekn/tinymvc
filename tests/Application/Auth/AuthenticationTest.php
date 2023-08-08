@@ -19,7 +19,7 @@ class AuthenticationTest extends ApplicationTestCase
     public function test_can_not_authenticate_with_unregistered_user_credentials(): void
     {
         $user = (new UserFactory())->make(['password' => 'password']);
-        $client = $this->post('authenticate', $user->toArray(['email', 'password']));
+        $client = $this->post('/authenticate', $user->toArray(['email', 'password']));
         $client->assertSessionHasErrors();
         $client->assertRedirectedToUrl(url('login'));
     }
@@ -27,10 +27,11 @@ class AuthenticationTest extends ApplicationTestCase
     public function test_can_authenticate_with_registered_user_credentials(): void
     {
         $user = (new UserFactory())->create();
-        $client = $this->post('authenticate', [
+        $client = $this->post('/authenticate', [
             'email' => $user->attribute('email'),
             'password' => 'password'
         ]);
+        
         $client->assertSessionDoesNotHaveErrors();
         $client->assertSessionHas('user', $user->toArray());
     }
@@ -38,13 +39,13 @@ class AuthenticationTest extends ApplicationTestCase
     public function test_can_register_user(): void
     {
         $user = (new UserFactory())->make(['password' => 'password']);
-        $client = $this->post('register', $user->toArray());
+        $client = $this->post('/register', $user->toArray());
         $client->assertSessionDoesNotHaveErrors();
 
         if (!config('security.auth.email_verification')) {
-            $client->assertRedirectedToUrl(url('login'));
+            $client->assertRedirectedToUrl(url('/login'));
         } else {
-            $client->assertRedirectedToUrl(url('email/notify?email=' . $user->attribute('email')));
+            $client->assertRedirectedToUrl(url('/email/notify?email=' . $user->attribute('email')));
         }
 
         $this->assertDatabaseHas('users', $user->toArray(['name', 'email']));
@@ -53,12 +54,12 @@ class AuthenticationTest extends ApplicationTestCase
     public function test_can_logout(): void
     {
         $user = (new UserFactory())->create();
-        $this->post('authenticate', [
+        $this->post('/authenticate', [
             'email' => $user->attribute('email'),
             'password' => 'password'
         ]);
 
-        $client = $this->auth($user)->post('logout');
+        $client = $this->auth($user)->post('/logout');
         $client->assertRedirectedToUrl(url('/'));
         $client->assertSessionDoesNotHave('user', $user->toArray());
     }
@@ -66,7 +67,7 @@ class AuthenticationTest extends ApplicationTestCase
     public function test_can_not_register_same_user_twice(): void
     {
         $user = (new UserFactory())->create();
-        $client = $this->post('register', $user->toArray());
+        $client = $this->post('/register', $user->toArray());
         $client->assertSessionHasErrors();
     }
 }

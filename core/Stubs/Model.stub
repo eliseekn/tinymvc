@@ -12,10 +12,5 @@ use Core\Database\Model;
 
 class CLASSNAME extends Model
 {
-    public static $table = 'TABLENAME';
-
-    public function __construct()
-    {
-        parent::__construct(static::$table);
-    }
+    protected static $table = 'TABLENAME';
 }

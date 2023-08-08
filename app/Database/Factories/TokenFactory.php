@@ -15,7 +15,7 @@ use App\Database\Models\Token;
 
 class TokenFactory extends Factory
 {
-    public static $model = Token::class;
+    protected static $model = Token::class;
 
     public function __construct(int $count = 1)
     {

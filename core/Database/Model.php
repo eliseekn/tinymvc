@@ -15,14 +15,12 @@ use PDOStatement;
  */
 class Model
 {
-    public $id;
-    public static $table = '';
-    protected static array $attributes = [];
+    protected static $table = '';
+    protected array $attributes = [];
 
-    public function __construct(string $table, $data = [])
+    public function __construct($data = [])
     {
-        static::$table = $table;
-        static::$attributes = $data;
+        $this->attributes = $data;
     }
 
     public static function findBy(string $column, $operator = null, $value = null): self|false
@@ -33,7 +31,7 @@ class Model
             return false;
         }
 
-        return new self(static::$table, (array) $data);
+        return new self((array) $data);
     }
 
     public static function find(int $id): self|false
@@ -134,6 +132,11 @@ class Model
     {
         return (new Repository(static::$table))->delete()->execute();
     }
+
+    public function getId(): int
+    {
+        return (int) $this->attributes['id'];
+    }
     
     /**
      * Get relationship of the model 
@@ -148,7 +151,7 @@ class Model
             $column = $this->getColumnFromTable(static::$table);
         }
 
-        return (new Repository($table))->select('*')->where($column, $this->id);
+        return (new Repository($table))->select('*')->where($column, $this->attributes['id']);
     }
     
     /**
@@ -164,16 +167,16 @@ class Model
             $column = $this->getColumnFromTable($table);
         }
 
-        return (new Repository($table))->select('*')->where('id', static::$attributes[$column]);
+        return (new Repository($table))->select('*')->where('id', $this->attributes[$column]);
     }
 
     public function attribute(string $key, $value = null): mixed
     {
         if (!is_null($value)) {
-            static::$attributes[$key] = $value;
+            $this->attributes[$key] = $value;
         }
 
-        return static::$attributes[$key];
+        return $this->attributes[$key];
     }
     
     /**
@@ -185,71 +188,71 @@ class Model
     public function fill(array $data): void
     {
         foreach ($data as $key => $value) {
-            static::$attributes[$key] = $value;
+            $this->attributes[$key] = $value;
         }
     }
     
     public function update(array $data): false|self
     {
-        return !(new Repository(static::$table))->updateIfExists($this->id, $data) ? false : $this;
+        return !(new Repository(static::$table))->updateIfExists($this->attributes['id'], $data) ? false : $this;
     }
 
     public function delete(): bool
     {
-        return (new Repository(static::$table))->deleteIfExists($this->id);
+        return (new Repository(static::$table))->deleteIfExists($this->attributes['id']);
     }
 
     public function save(): self|false
     {
-        return is_null($this->id)
-            ? self::create(static::$attributes)
-            : $this->update(static::$attributes);
+        return empty($this->attributes['id'])
+            ? self::create($this->attributes)
+            : $this->update($this->attributes);
     }
 
     public function increment(string $column, $value = null): void
     {
         if (is_null($value)) {
-            static::$attributes[$column]++;
+            $this->attributes[$column]++;
             return;
         }
             
-        static::$attributes[$column] = static::$attributes[$column] + $value;
+        $this->attributes[$column] = $this->attributes[$column] + $value;
     }
 
     public function decrement(string $column, $value = null): void
     {
         if (is_null($value)) {
-            static::$attributes[$column]--;
+            $this->attributes[$column]--;
             return;
         }
 
-        static::$attributes[$column] = static::$attributes[$column] - $value;
+        $this->attributes[$column] = $this->attributes[$column] - $value;
     }
 
-    public function toArray(array|string $attributes = null): array
+    public function toArray(array $attributes = null): array
     {
-        $data = static::$attributes;
+        $data = $this->attributes;
 
-        if (is_null($this->id)) {
+        if (empty($this->attributes['id'])) {
             unset($data['id']);
         }
 
-        if (!is_null($attributes)) {
-            $attributes = parse_array($attributes);
-            $d = [];
-
-            foreach ($attributes as $attribute) {
-                if (isset($attribute)) {
-                    $d = array_merge($d, [
-                        $attribute => static::$attributes[$attribute]
-                    ]);
-                }
-            }
-
-            $data = $d;
+        if (is_null($attributes)) {
+            return $this->attributes;
         }
 
-        return $data;
+        $attributes = parse_array($attributes);
+        $result = [];
+
+        foreach ($attributes as $attribute) {
+            if (isset($attribute)) {
+                $result = array_merge($result, [
+                    $attribute => $this->attributes[$attribute]
+                ]);
+            }
+        }
+
+        return $result;
     }
 
     protected function getColumnFromTable(string $table): string

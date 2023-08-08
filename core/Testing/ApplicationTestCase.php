@@ -88,7 +88,7 @@ class ApplicationTestCase extends TestCase
      */
     public function auth(mixed $user): self
     {
-        $this->token = Auth::createToken($user->email);
+        $this->token = Auth::createToken($user->attribute('email'));
         $this->headers = array_merge($this->headers, ['Authorization' => "Bearer $this->token"]);
         return $this;
     }

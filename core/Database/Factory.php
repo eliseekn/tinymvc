@@ -17,8 +17,7 @@ use Faker\Generator;
 class Factory
 {
     protected static $model;
-    protected mixed $class;
-
+    protected array|Model $class;
     public Generator $faker;
 
     public function __construct(int $count)
@@ -39,21 +38,17 @@ class Factory
         return [];
     }
 
-    /**
-     * @return array|\Core\Database\Model
-     */
     public function make(array $data = []): mixed
     {
         if (!is_array($this->class)) {
             $this->class->fill(array_merge($this->data(), $data));
-        } else {
-            $this->class = array_map(function ($model) use ($data) {
-                $model->fill(array_merge($this->data(), $data));
-                return $model;
-            }, $this->class);
+            return $this->class;
         }
 
-        return $this->class;
+        return array_map(function ($model) use ($data) {
+            $model->fill(array_merge($this->data(), $data));
+            return $model;
+        }, $this->class);
     }
 
     public function create(array $data = []): Model|array|bool
@@ -62,13 +57,11 @@ class Factory
 
         if (!is_array($class)) {
             return $class->save();
-        } else {
-            $class = array_map(function ($c) {
-                $c->save();
-                return $c;
-            }, $class);
         }
 
-        return $class;
+        return array_map(function ($c) {
+            $c->save();
+            return $c;
+        }, $class);
     }
 }

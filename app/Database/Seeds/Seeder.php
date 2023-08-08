@@ -19,6 +19,7 @@ class Seeder
     public static function run(): void
     {
         (new UserFactory())->create([
+            'name' => 'Admin',
             'email' => 'admin@tiny.mvc',
             'role' => UserRole::ADMIN->value
         ]);

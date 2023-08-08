@@ -12,7 +12,7 @@ use Core\Database\QueryBuilder;
 
 class CLASSNAME
 {     
-    public static function insert(): void
+    public static function run(): void
     {
         QueryBuilder::table('TABLENAME')->insert([
             //
