@@ -27,7 +27,7 @@ class ApiAuth
         list($method, $token) = $request->getHttpAuth();
 
         if (trim($method) !== 'Bearer') {
-            $response->json([__('invalid_auth_method')])->send(401);
+            $response->json([__('invalid_auth_method')])->send(400);
         }
 
         if (!Auth::checkToken(Encryption::decrypt($token), $user)) {

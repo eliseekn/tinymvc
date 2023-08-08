@@ -39,9 +39,9 @@ if (!function_exists('cookie_has')) {
 }
 
 if (!function_exists('cookie_delete')) {
-	function cookie_delete(string $name): bool
+	function cookie_delete(array|string $names): void
 	{
-		return Cookies::delete($name);
+		Cookies::delete($names);
 	}
 }
 

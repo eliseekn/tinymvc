@@ -8,9 +8,9 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use Core\Support\Auth;
+use Core\Routing\Controller;
 use Core\Support\Alert;
+use Core\Support\Auth;
 
 class LogoutController extends Controller
 {
@@ -18,6 +18,7 @@ class LogoutController extends Controller
 	{
         Auth::forget();
         Alert::toast(__('logged_out'))->success();
-        $this->redirect(config('app.home'));
+
+        $this->redirectUrl(config('app.home'));
 	}
 }

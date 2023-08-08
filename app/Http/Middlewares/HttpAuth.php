@@ -26,7 +26,7 @@ class HttpAuth
         list($method, $credentials) = $request->getHttpAuth();
 
         if (trim($method) !== 'Basic') {
-            $response->json([__('invalid_auth_method')])->send(401);
+            $response->json([__('invalid_auth_method')])->send(400);
         }
 
         $credentials = base64_decode($credentials);

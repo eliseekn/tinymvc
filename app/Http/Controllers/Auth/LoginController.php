@@ -8,11 +8,11 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use Core\Support\Auth;
-use Core\Support\Alert;
-use Core\Support\Session;
 use App\Http\Validators\Auth\LoginValidator;
+use Core\Routing\Controller;
+use Core\Support\Alert;
+use Core\Support\Auth;
+use Core\Support\Session;
 
 class LoginController extends Controller
 { 
@@ -23,20 +23,21 @@ class LoginController extends Controller
         }
 
         $uri = !Session::has('intended') ? config('app.home') : Session::pull('intended');
-        $this->redirect($uri);
+        $this->redirectUrl($uri);
     }
 
-	public function authenticate(LoginValidator $validator): void
+	public function authenticate(): void
 	{
-        $validator->validate($this->request->inputs(), $this->response);
+        $this->validateRequest(new LoginValidator());
 
-        if (Auth::attempt($this->response, $this->request->only(['email', 'password']), $this->request->hasInput('remember'))) {
+        if (Auth::attempt($this->response, $this->request)) {
             Alert::toast(__('welcome', ['name' => Auth::get('name')]))->success();
             $uri = !Session::has('intended') ? config('app.home') : Session::pull('intended');
-            $this->redirect($uri);
+            $this->redirectUrl($uri);
         }
 
         Alert::default(__('login_failed'))->error();
+
         $this
             ->response
             ->url('/login')

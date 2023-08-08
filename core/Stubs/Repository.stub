@@ -12,7 +12,7 @@ use App\Database\Models\MODELNAME;
 
 class CLASSNAME
 {
-    public static function findAllByColumn(string $column): array|false
+    public static function findAllByColumn(string $column): mixed
     {
         return MODELNAME::findBy('column', $column)->latest()->getAll();
     }

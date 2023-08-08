@@ -8,7 +8,7 @@
 
 namespace NAMESPACE;
 
-use App\Http\Controllers\Controller;
+use Core\Routing\Controller;
 
 class CLASSNAME extends Controller
 {

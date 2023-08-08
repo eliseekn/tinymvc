@@ -8,15 +8,15 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Enums\TokenDescription;
-use App\Http\Controllers\Controller;
-use Carbon\Carbon;
-use Core\Support\Alert;
-use App\Mails\TokenMail;
-use Core\Support\Mail\Mail;
 use App\Database\Models\Token;
+use App\Enums\TokenDescription;
 use App\Http\Actions\User\UpdateAction;
 use App\Http\Validators\Auth\LoginValidator;
+use App\Mails\TokenMail;
+use Carbon\Carbon;
+use Core\Routing\Controller;
+use Core\Support\Alert;
+use Core\Support\Mail\Mail;
 
 /**
  * Manage password forgot
@@ -46,17 +46,17 @@ class ForgotPasswordController extends Controller
             }
 
             Alert::default(__('password_reset_link_sent'))->success();
-			$this->back();
+			$this->redirectBack();
 		}
         
         Alert::default(__('password_reset_link_not_sent'))->error();
-        $this->back();
+        $this->redirectBack();
 	}
 	
 	public function reset(): void
 	{
         if (!$this->request->hasQuery(['email', 'token'])) {
-            $this->data(__('bad_request'), 400);
+            $this->response(__('bad_request'), 400);
         }
 
         $token = Token::where('email', $this->request->queries('email'))
@@ -64,29 +64,29 @@ class ForgotPasswordController extends Controller
             ->newest()
             ->first();
 
-        if (!$token || $token->value !== $this->request->queries('token')) {
-			$this->data(__('invalid_password_reset_link'), 400);
+        if (!$token || $token->attribute('value') !== $this->request->queries('token')) {
+			$this->response(__('invalid_password_reset_link'), 400);
 		}
 
-		if (Carbon::parse($token->expire)->lt(Carbon::now())) {
-			$this->data(__('expired_password_reset_link'), 400);
+		if (Carbon::parse($token->attribute('expire'))->lt(Carbon::now())) {
+			$this->response(__('expired_password_reset_link'), 400);
 		}
 
         $token->delete();
-        $this->redirect('/password/new', ['email' => $this->request->queries('email')]);
+        $this->redirectUrl('/password/new', ['email' => $this->request->queries('email')]);
 	}
 	
-	public function update(LoginValidator $validator, UpdateAction $action): void
+	public function update(UpdateAction $action): void
 	{
-        $validator->validate($this->request->inputs(), $this->response);
-        $user = $action->handle(['password' => $this->request->get('password')], $this->request->get('email'));
+        $validated = $this->validateRequest(new LoginValidator());
+        $user = $action->handle(['password' => $validated['password']], $validated['email']);
 
         if (!$user) {
             Alert::default(__('password_not_reset'))->error();
-            $this->back();
+            $this->redirectBack();
         }
 
         Alert::default(__('password_reset'))->success();
-        $this->redirect('/login');
+        $this->redirectUrl('/login');
 	}
 }

@@ -110,6 +110,12 @@ class Response
         return $this;
     }
 
+    public function withoutCookie(array|string $names): self
+    {
+        Cookies::delete($names);
+        return $this;
+    }
+
     public function download(string $filename): self
     {
         if (!file_exists($filename)) {

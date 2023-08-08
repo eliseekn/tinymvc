@@ -30,8 +30,12 @@ class Cookies
         return isset($_COOKIE[config('app.name') . '_' . $name]);
     }
     
-    public static function delete(string $name): bool
+    public static function delete(array|string $names): void
     {
-        return setcookie(config('app.name') . '_' . $name, '', time() - 3600, '/');
+        $names = parse_array($names);
+
+        foreach ($names as $name) {
+            setcookie(config('app.name') . '_' . $name, '', time() - 3600, '/');
+        }
     }
 }

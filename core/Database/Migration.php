@@ -19,6 +19,13 @@ class Migration
 	 * @var \Core\Database\QueryBuilder
 	 */
     protected static mixed $qb;
+
+    public static function driver(): string
+    {
+        return config('app.env') === 'test'
+            ? config('tests.database.driver')
+            : config('database.driver');
+    }
     
     public static function createTable(string $name): self
     {
@@ -65,17 +72,13 @@ class Migration
 
     public static function disableForeignKeyCheck(): false|PDOStatement
     {
-        $driver = config('app.env') === 'test' ? config('tests.database.driver') : config('database.driver');
-        $query = $driver === 'mysql' ? 'SET foreign_key_checks = 0' : 'PRAGMA foreign_keys = OFF';
-
+        $query = self::driver() === 'mysql' ? 'SET foreign_key_checks = 0' : 'PRAGMA foreign_keys = OFF';
         return QueryBuilder::setQuery($query)->execute();
     }
 
     public static function enableForeignKeyCheck(): false|PDOStatement
     {
-        $driver = config('app.env') === 'test' ? config('tests.database.driver') : config('database.driver');
-        $query = $driver === 'mysql' ? 'SET foreign_key_checks = 1' : 'PRAGMA foreign_keys = ON';
-
+        $query = self::driver() === 'mysql' ? 'SET foreign_key_checks = 1' : 'PRAGMA foreign_keys = ON';
         return QueryBuilder::setQuery($query)->execute();
     }
 
@@ -199,20 +202,6 @@ class Migration
         return $this;
     }
 
-    public function addEnum(string $name, array $values): self 
-    {
-        $v = '';
-
-        foreach ($values as $value) {
-            $v .= "'" . $value . "', ";
-        }
-
-        $v = rtrim($v, ', ');
-
-        self::$qb->column($name, "ENUM($v)");
-        return $this;
-    }
-
     public function addDate(string $name): self 
     {
         self::$qb->column($name, 'DATE');
@@ -299,12 +288,12 @@ class Migration
     
     public function addPrimaryKey(string $column, bool $auto_increment = true): self
     {
-        $driver = config('app.env') === 'test' ? $driver = config('tests.database.driver') : config('database.driver');
-
-        $pk = $driver === 'mysql' ? $this->addBigInt($column) : $this->addInteger($column);
+        $pk = self::driver() === 'mysql' ? $this->addBigInt($column) : $this->addInteger($column);
         $pk->primaryKey();
 
-        if ($auto_increment) $pk->autoIncrement();
+        if ($auto_increment) {
+            $pk->autoIncrement();
+        }
 
         return $pk;
     }

@@ -27,7 +27,7 @@
     'account_created' => 'Your account has been created',
     'reset_password_instructions' => 'Enter the email address associated with your account. We will send you a link to this email address to reset your password.',
     'signup_failed' => 'Sign up failed',
-    'email_not_verifed' => 'Your email address has not been verified.',
+    'email_not_verified' => 'Your email address has not been verified.',
     'not_logged' => 'Log in before access this page',
     'email_verification_link_sent' => 'Email verification link sent to your email address',
     'email_verification_link_not_sent' => 'Failed to send email verification link to your email address',

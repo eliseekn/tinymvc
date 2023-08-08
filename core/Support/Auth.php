@@ -24,9 +24,12 @@ class Auth
         return Session::get('auth_attempts', 0);
     }
 
-    public static function attempt(Response $response, array $credentials, bool $remember = false): bool
+    public static function attempt(Response $response, Request $request): bool
     {
         Session::push('auth_attempts', 1, 0);
+
+        $credentials = $request->only(['email', 'password']);
+        $remember = $request->hasInput('remember');
 
         if (!self::checkCredentials($credentials['email'], $credentials['password'], $user)) {
             if (config('security.auth.max_attempts') > 0 && Auth::getAttempts() >= config('security.auth.max_attempts')) {

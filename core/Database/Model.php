@@ -17,9 +17,9 @@ class Model
 {
     public $id;
     public static $table = '';
-    public static $attributes = null;
+    protected static array $attributes = [];
 
-    public function __construct(string $table, $data = null)
+    public function __construct(string $table, $data = [])
     {
         static::$table = $table;
         static::$attributes = $data;
@@ -33,7 +33,7 @@ class Model
             return false;
         }
 
-        return new self(static::$table, $data);
+        return new self(static::$table, (array) $data);
     }
 
     public static function find(int $id): self|false
@@ -202,8 +202,8 @@ class Model
     public function save(): self|false
     {
         return is_null($this->id)
-            ? self::create((array) $this)
-            : $this->update((array) $this);
+            ? self::create(static::$attributes)
+            : $this->update(static::$attributes);
     }
 
     public function increment(string $column, $value = null): void

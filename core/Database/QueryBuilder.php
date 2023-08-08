@@ -38,6 +38,13 @@ class QueryBuilder
         return config('database.name') . '.' . config('database.table_prefix') . $name;
     }
 
+    public function driver(): string
+    {
+        return config('app.env') === 'test'
+            ? config('tests.database.driver')
+            : config('database.driver');
+    }
+
     public static function table(string $name): self
     {
         static::$table = self::setTable($name);
@@ -202,10 +209,8 @@ class QueryBuilder
     
     public function autoIncrement(): self
     {
-        $driver = config('app.env') === 'test' ? config('tests.database.driver') : config('database.driver');
-
         self::$query = rtrim(self::$query, ', ');
-        self::$query .= $driver === 'mysql' ? ' AUTO_INCREMENT, ' : ' AUTOINCREMENT, ';
+        self::$query .= $this->driver() === 'mysql' ? ' AUTO_INCREMENT, ' : ' AUTOINCREMENT, ';
         return $this;
     }
     
@@ -276,9 +281,7 @@ class QueryBuilder
     
     public function addCurrentTimestamp(string $created_at = 'created_at', string $updated_at = 'updated_at'): self
     {
-        $driver = config('app.env') === 'test' ? config('tests.database.driver') : config('database.driver');
-
-        if ($driver === 'mysql') {
+        if ($this->driver() === 'mysql') {
             self::$query .= " {$created_at} TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, {$updated_at} TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, ";
         } else {
             self::$query .= " {$created_at} TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')), {$updated_at} TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')), ";
@@ -289,11 +292,9 @@ class QueryBuilder
     
     public function migrate(): false|PDOStatement
     {
-        $driver = config('app.env') === 'test' ? config('tests.database.driver') : config('database.driver');
-
         self::$query = rtrim(self::$query, ', ') . ')';
 
-        if ($driver === 'mysql') {
+        if ($this->driver() === 'mysql') {
             self::$query .= " ENGINE='" . config('database.mysql.engine') . "'";
         }
 

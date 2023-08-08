@@ -8,14 +8,14 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use Core\Support\Auth;
-use Core\Support\Alert;
-use Core\Support\Session;
-use App\Mails\WelcomeMail;
-use Core\Support\Mail\Mail;
 use App\Http\Actions\User\StoreAction;
 use App\Http\Validators\Auth\RegisterValidator;
+use App\Mails\WelcomeMail;
+use Core\Routing\Controller;
+use Core\Support\Alert;
+use Core\Support\Auth;
+use Core\Support\Mail\Mail;
+use Core\Support\Session;
 
 class RegisterController extends Controller
 {
@@ -26,20 +26,21 @@ class RegisterController extends Controller
         }
 
         $uri = !Session::has('intended') ? config('app.home') : Session::pull('intended');
-        $this->redirect($uri);
+        $this->redirectUrl($uri);
     }
 
-    public function register(RegisterValidator $validator, StoreAction $action): void
+    public function register(StoreAction $action): void
     {
-        $validator = $validator->validate($this->request->inputs(), $this->response);
-        $user = $action->handle($validator->validated());
+        $validated = $this->validateRequest(new RegisterValidator());
+        $user = $action->handle($validated);
 
         if (config('security.auth.email_verification')) {
-            $this->redirect('/email/notify' , ['email' => $user->attribute('email')]);
+            $this->redirectUrl('/email/notify' , ['email' => $user->attribute('email')]);
         }
 
         Mail::send(new WelcomeMail($user->attribute('email'), $user->attribute('name')));
         Alert::default(__('account_created'))->success();
-        $this->redirect('/login');
+
+        $this->redirectUrl('/login');
     }
 }

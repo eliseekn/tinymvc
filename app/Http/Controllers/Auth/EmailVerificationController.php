@@ -8,15 +8,15 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Enums\TokenDescription;
-use App\Http\Controllers\Controller;
-use Carbon\Carbon;
-use Core\Support\Alert;
-use App\Mails\WelcomeMail;
-use Core\Support\Mail\Mail;
 use App\Database\Models\Token;
-use App\Mails\VerificationMail;
+use App\Enums\TokenDescription;
 use App\Http\Actions\User\UpdateAction;
+use App\Mails\VerificationMail;
+use App\Mails\WelcomeMail;
+use Carbon\Carbon;
+use Core\Routing\Controller;
+use Core\Support\Alert;
+use Core\Support\Mail\Mail;
 
 /**
  * Manage email verification link
@@ -56,7 +56,7 @@ class EmailVerificationController extends Controller
 	public function verify(UpdateAction $action): void
 	{
         if (!$this->request->hasQuery(['email', 'token'])) {
-            $this->data(__('bad_request'), 400);
+            $this->response(__('bad_request'), 400);
         }
 
         $token = Token::where('email', $this->request->queries('email'))
@@ -64,12 +64,12 @@ class EmailVerificationController extends Controller
             ->newest()
             ->first();
 
-        if (!$token || $token->value !== $this->request->queries('token')) {
-			$this->data(__('invalid_password_reset_link'), 400);
+        if (!$token || $token->attribute('value') !== $this->request->queries('token')) {
+			$this->response(__('invalid_password_reset_link'), 400);
 		}
 
-		if (Carbon::parse($token->expire)->lt(Carbon::now())) {
-			$this->data(__('expired_password_reset_link'), 400);
+		if (Carbon::parse($token->attribute('expire'))->lt(Carbon::now())) {
+			$this->response(__('expired_password_reset_link'), 400);
 		}
 
         $token->delete();
@@ -77,12 +77,12 @@ class EmailVerificationController extends Controller
 
 		if (!$user) {
             Alert::default(__('account_not_found'))->error();
-            $this->redirect('/signup');
+            $this->redirectUrl('/signup');
         }
 
         Mail::send(new WelcomeMail($user->attribute('email'), $user->attribute('name')));
         Alert::default(__('email_verified'))->success();
 
-        $this->redirect('/login');
+        $this->redirectUrl('/login');
     }
 }

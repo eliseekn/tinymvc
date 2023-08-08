@@ -27,7 +27,7 @@
     'account_created' => 'Votre compte a été créé',
     'reset_password_instructions' => "Veuillez entrer l'adresse email associée à ce compte. Nous y enverrons un lien afin de réinitialiser votre de mote de passe.",
     'signup_failed' => "Echec de l'inscription",
-    'email_not_verifed' => "Votre adresse email n'a pas encore été vérifiée.",
+    'email_not_verified' => "Votre adresse email n'a pas encore été vérifiée.",
     'not_logged' => 'Connectez-vous avant de pouvoir accéder à cette page',
     'email_verification_link_sent' => 'Lien de vérification par email envoyé à votre adresse email',
     'email_verification_link_not_sent' => "Echec de l'envoie du lien de vérification par email à votre adresse email",
