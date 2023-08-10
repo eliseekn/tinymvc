@@ -27,7 +27,7 @@ class Repository
         return $this;
     }
     
-    public function selectOne(array|string $columns): mixed
+    public function selectOne(array|string $columns): Model|false
     {
         return $this->select($columns)->get();
     }
@@ -43,12 +43,12 @@ class Repository
         return $this;
     }
     
-    public function findWhere(string $column, $operator = null, $value = null): mixed
+    public function findWhere(string $column, $operator = null, $value = null): Model|false
 	{
         return $this->select('*')->where($column, $operator, $value)->get();
 	}
     
-    public function find($operator = null, $value = null): mixed
+    public function find($operator = null, $value = null): Model|false
 	{
         return $this->findWhere('id', $operator, $value);
 	}
@@ -84,7 +84,7 @@ class Repository
         return $result;
     }
     
-    public function findOrCreate(int $id, array $items): mixed
+    public function findOrCreate(int $id, array $items): Model|bool
     {
         $result = $this->findWhere('id', $id);
 
@@ -95,7 +95,7 @@ class Repository
         return $result;
     }
 
-    public function findBetween(string $column, $start = null, $end = null): mixed
+    public function findBetween(string $column, $start = null, $end = null): Model|false
     {
         return $this->select('*')->whereBetween($column, $start, $end)->get();
     }
@@ -105,7 +105,7 @@ class Repository
         return $this->select('*')->whereBetween($column, $start, $end)->getAll();
     }
     
-    public function findNotBetween(string $column, $start = null, $end = null): mixed
+    public function findNotBetween(string $column, $start = null, $end = null): Model|false
     {
         return $this->select('*')->whereNotBetween($column, $start, $end)->get();
     }
@@ -230,6 +230,11 @@ class Repository
     
     public function where(string $column, $operator = null, $value = null): self
 	{
+        if (is_null($operator) && is_null($value)) {
+            $this->qb->whereColumn($column)->isNull();
+            return $this;
+        }
+
         if (!is_null($operator) && is_null($value)) {
             switch(strtolower($operator)) {
                 case 'null':
@@ -281,12 +286,17 @@ class Repository
                     break;
             }
         }
-        
+
 		return $this;
 	}
 
     public function and(string $column, $operator = null, $value = null): self
     {
+        if (is_null($operator) && is_null($value)) {
+            $this->qb->whereColumn($column)->isNull();
+            return $this;
+        }
+
         if (!is_null($operator) && is_null($value)) {
             switch(strtolower($operator)) {
                 case 'null':
@@ -344,6 +354,11 @@ class Repository
 
     public function or(string $column, $operator = null, $value = null): self
     {
+        if (is_null($operator) && is_null($value)) {
+            $this->qb->whereColumn($column)->isNull();
+            return $this;
+        }
+
         if (!is_null($operator) && is_null($value)) {
             switch(strtolower($operator)) {
                 case 'null':
@@ -572,15 +587,16 @@ class Repository
         return $this->qb->exists();
     }
     
-    public function first(): mixed
-    {
-        return $this->getAll()[0];
-    }
-    
-    public function last(): mixed
+    public function first(): Model|false
     {
         $rows = $this->getAll();
-        return end($rows);
+        return !$rows ? false : $rows[0];
+    }
+    
+    public function last(): Model|false
+    {
+        $rows = $this->getAll();
+        return !$rows ? false : end($rows);
     }
 
     public function range(int $start, int $end): array|false
@@ -608,14 +624,16 @@ class Repository
         return $pager->setItems($items);
     }
     
-    public function get(): mixed
+    public function get(): Model|false
     {
-        return $this->execute()->fetch();
+        $row = $this->execute()->fetch();
+        return !$row ? false : new Model((array) $row);
     }
     
     public function getAll(): array|false
     {
-        return $this->execute()->fetchAll();
+        $rows = $this->execute()->fetchAll();
+        return !$rows ? false : array_map(fn ($row) => new Model((array) $row), $rows);
     }
     
     public function toSQL(): array
@@ -647,5 +665,10 @@ class Repository
     public function execute(): false|PDOStatement
     {
         return $this->qb->execute();
+    }
+
+    public function dd(): void
+    {
+        dd($this->toSQL());
     }
 }

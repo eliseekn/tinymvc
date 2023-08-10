@@ -27,7 +27,7 @@ class Controller
 
     public function render(string $view, array $data = []): void
     {
-        $this->response->view($view, $data)->send();
+        $this->response->view($view, $data)->send(200);
     }
 
     public function response(string $data, int $code = 200): void

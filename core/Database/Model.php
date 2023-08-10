@@ -25,13 +25,7 @@ class Model
 
     public static function findBy(string $column, $operator = null, $value = null): self|false
     {
-        $data = (new Repository(static::$table))->findWhere($column, $operator, $value);
-
-        if (!$data) {
-            return false;
-        }
-
-        return new self((array) $data);
+        return (new Repository(static::$table))->findWhere($column, $operator, $value);
     }
 
     public static function find(int $id): self|false
@@ -44,12 +38,12 @@ class Model
         return (new Repository(static::$table))->selectAll('*');
     }
 
-    public static function first(): mixed
+    public static function first(): Model|false
     {
         return self::select('*')->first();
     }
 
-    public static function last(): mixed
+    public static function last(): Model|false
     {
         return self::select('*')->last();
     }
@@ -86,22 +80,46 @@ class Model
 
     public static function count(string $column = 'id', $subquery = null): mixed
     {
-        return (new Repository(static::$table))->count($column)->subQuery($subquery)->get()->value;
+        $data = (new Repository(static::$table))->count($column)->subQuery($subquery)->get();
+
+        if (!$data) {
+            return false;
+        }
+
+        return $data->attribute('value');
     }
 
     public static function sum(string $column, $subquery = null): mixed
     {
-        return (new Repository(static::$table))->sum($column)->subQuery($subquery)->get()->value;
+        $data = (new Repository(static::$table))->sum($column)->subQuery($subquery)->get();
+
+        if (!$data) {
+            return false;
+        }
+
+        return $data->attribute('value');
     }
 
     public static function max(string $column, $subquery = null): mixed
     {
-        return (new Repository(static::$table))->max($column)->subQuery($subquery)->get()->value;
+        $data = (new Repository(static::$table))->max($column)->subQuery($subquery)->get();
+
+        if (!$data) {
+            return false;
+        }
+
+        return $data->attribute('value');
     }
 
     public static function min(string $column, $subquery = null): mixed
     {
-        return (new Repository(static::$table))->min($column)->subQuery($subquery)->get()->value;
+        $data = (new Repository(static::$table))->min($column)->subQuery($subquery)->get();
+
+        if (!$data) {
+            return false;
+        }
+
+        return $data->attribute('value');
     }
 
     public static function metrics(string $column, string $type, string $period, int $interval = 0, ?array $query = null): mixed

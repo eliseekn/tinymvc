@@ -7,6 +7,8 @@
 {% block body %}
 	<div class="card shadow p-4">
 		<form method="post" action="{{ url('password/update') }}">
+			{{ csrf_token_input()|raw }}
+
 			<div class="mb-3">
 				<label for="email" class="form-label">{{ __('email') }}</label>
 				<input type="email" id="email" name="email" class="form-control" value="{{ email }}" autofocus>

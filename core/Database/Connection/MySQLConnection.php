@@ -58,7 +58,7 @@ class MySQLConnection implements ConnectionInterface
 	{
 		try {
 			$stmt = $this->pdo->prepare(trim($query));
-			$stmt->execute($args);
+            $stmt->execute($args);
 		} catch (PDOException $e) {
 			throw new PDOException($e->getMessage(), (int) $e->getCode(), $e->getPrevious());
 		}

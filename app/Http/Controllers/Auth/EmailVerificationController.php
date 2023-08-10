@@ -27,30 +27,30 @@ class EmailVerificationController extends Controller
     {
         $token = generate_token();
 
-        if (Mail::send(new VerificationMail($this->request->queries('email'), $token))) {
-            if (
-                !Token::where('email', $this->request->queries('email'))
-                    ->and('description', TokenDescription::EMAIL_VERIFICATION_TOKEN->value)
-                    ->exists()
-            ) {
-                Token::create([
-                    'email'=> $this->request->queries('email'),
-                    'value' => $token,
-                    'expire' => Carbon::now()->addDay()->toDateTimeString(),
-                    'description' => TokenDescription::EMAIL_VERIFICATION_TOKEN->value
-                ]);
-            } else {
-                Token::where('email', $this->request->queries('email'))
-                    ->and('description', TokenDescription::EMAIL_VERIFICATION_TOKEN->value)
-                    ->update(['value' => $token]);
-            }
-
-            Alert::default(__('email_verification_link_sent'))->success();
-            $this->render('login');
+        if (!Mail::send(new VerificationMail($this->request->queries('email'), $token))) {
+            Alert::default(__('email_verification_link_not_sent'))->error();
+            $this->render('auth.signup');
         }
-        
-        Alert::default(__('email_verification_link_not_sent'))->error();
-        $this->render('signup');
+
+        if (
+            !Token::where('email', $this->request->queries('email'))
+                ->and('description', TokenDescription::EMAIL_VERIFICATION_TOKEN->value)
+                ->exists()
+        ) {
+            Token::create([
+                'email'=> $this->request->queries('email'),
+                'value' => $token,
+                'expire' => Carbon::now()->addDay()->toDateTimeString(),
+                'description' => TokenDescription::EMAIL_VERIFICATION_TOKEN->value
+            ]);
+        } else {
+            Token::where('email', $this->request->queries('email'))
+                ->and('description', TokenDescription::EMAIL_VERIFICATION_TOKEN->value)
+                ->update(['value' => $token]);
+        }
+
+        Alert::default(__('email_verification_link_sent'))->success();
+        $this->render('auth.login');
     }
 
 	public function verify(UpdateAction $action): void

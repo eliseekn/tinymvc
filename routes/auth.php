@@ -30,18 +30,14 @@ Route::group(function () {
 })->byMiddleware('csrf')->register();
 
 Route::group(function () {
+    Route::group(function () {
+        Route::get('/reset', 'reset');
+        Route::post('/notify', 'notify')->middleware('csrf');
+        Route::post('/update', 'update')->middleware('csrf');
+    })->byController(ForgotPasswordController::class);
+
     Route::view('/forgot', 'auth.password.forgot');
-
-    Route::get('/new', function (Request $request, Response $response) {
-        $response->view('auth.password.new', $request->only('email'))->send();
-    });
 })->byPrefix('password')->register();
-
-Route::group(function () {
-    Route::get('/reset', 'reset');
-    Route::post('/notify', 'notify');
-    Route::post('/update', 'update');
-})->byPrefix('password')->byController(ForgotPasswordController::class)->register();
 
 Route::group(function () {
     Route::get('/verify', 'verify');

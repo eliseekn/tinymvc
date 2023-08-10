@@ -29,18 +29,18 @@ class ForgotPasswordController extends Controller
 
         if (Mail::send(new TokenMail($this->request->get('email'), $token))) {
             if (
-                !Token::where('email', $this->request->queries('email'))
+                !Token::where('email', $this->request->inputs('email'))
                     ->and('description', TokenDescription::PASSWORD_RESET_TOKEN->value)
                     ->exists()
             ) {
                 Token::create([
-                    'email'=> $this->request->queries('email'),
+                    'email'=> $this->request->inputs('email'),
                     'value' => $token,
                     'expire' => Carbon::now()->addHour()->toDateTimeString(),
                     'description' => TokenDescription::PASSWORD_RESET_TOKEN->value
                 ]);
             } else {
-                Token::where('email', $this->request->queries('email'))
+                Token::where('email', $this->request->inputs('email'))
                     ->and('description', TokenDescription::PASSWORD_RESET_TOKEN->value)
                     ->update(['value' => $token]);
             }
@@ -73,7 +73,7 @@ class ForgotPasswordController extends Controller
 		}
 
         $token->delete();
-        $this->redirectUrl('/password/new', ['email' => $this->request->queries('email')]);
+        $this->render('auth.password.new', ['email' => $this->request->queries('email')]);
 	}
 	
 	public function update(UpdateAction $action): void

@@ -118,7 +118,7 @@ if (!function_exists('auth')) {
             return false;
         }
 
-        return is_null($key) ? $user : $user->{$key};
+        return is_null($key) ? $user : $user->attribute($key);
 	}
 }
 
