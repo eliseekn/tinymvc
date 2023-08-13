@@ -35,7 +35,11 @@ class Show extends Command
         
         $rows = [];
 
-        if (config('database.driver') === 'mysql') {
+        $driver = config('app.env') === 'test'
+            ? config('tests.database.driver')
+            : config('database.driver');
+
+        if ($driver === 'mysql') {
             $databases = Connection::getInstance()->executeQuery("SHOW DATABASES")->fetchAll();
 
             foreach ($databases as $db) {
