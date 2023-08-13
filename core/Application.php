@@ -31,8 +31,13 @@ class Application
         try { 
             Router::dispatch(new Request(), $response); 
         } catch (Exception $e) {
-            if (config('errors.log')) save_log('Exception: ' . $e);
-            if (config('errors.display')) die($e);
+            if (config('errors.log')) {
+                save_log('Exception: ' . $e);
+            }
+
+            if (config('errors.display')) {
+                die($e);
+            }
         
             $response->view(config('errors.views.500'))->send(500);
         }

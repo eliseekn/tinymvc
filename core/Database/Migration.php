@@ -18,7 +18,7 @@ class Migration
     /**
 	 * @var \Core\Database\QueryBuilder
 	 */
-    protected static mixed $qb;
+    protected static QueryBuilder $qb;
 
     public static function driver(): string
     {
@@ -29,19 +29,19 @@ class Migration
     
     public static function createTable(string $name): self
     {
-        self::$qb = QueryBuilder::createTable($name);
+        static::$qb = QueryBuilder::createTable($name);
         return new self();
     }
 
     public static function addColumn(string $table): self
     {
-        self::$qb = QueryBuilder::addColumn($table);
+        static::$qb = QueryBuilder::addColumn($table);
         return new self();
     }
 
     public static function renameColumn(string $table, string $old, string $new): self
     {
-        self::$qb = QueryBuilder::renameColumn($table, $old, $new);
+        static::$qb = QueryBuilder::renameColumn($table, $old, $new);
         return new self();
     }
 
@@ -50,13 +50,13 @@ class Migration
      */
     public static function updateColumn(string $table, string $column): self
     {
-        self::$qb = QueryBuilder::updateColumn($table, $column);
+        static::$qb = QueryBuilder::updateColumn($table, $column);
         return new self();
     }
 
     public static function deleteColumn(string $table, string $column): self
     {
-        self::$qb = QueryBuilder::deleteColumn($table, $column);
+        static::$qb = QueryBuilder::deleteColumn($table, $column);
         return new self();
     }
 
@@ -72,13 +72,13 @@ class Migration
 
     public static function disableForeignKeyCheck(): false|PDOStatement
     {
-        $query = self::driver() === 'mysql' ? 'SET foreign_key_checks = 0' : 'PRAGMA foreign_keys = OFF';
+        $query = static::driver() === 'mysql' ? 'SET foreign_key_checks = 0' : 'PRAGMA foreign_keys = OFF';
         return QueryBuilder::setQuery($query)->execute();
     }
 
     public static function enableForeignKeyCheck(): false|PDOStatement
     {
-        $query = self::driver() === 'mysql' ? 'SET foreign_key_checks = 1' : 'PRAGMA foreign_keys = ON';
+        $query = static::driver() === 'mysql' ? 'SET foreign_key_checks = 1' : 'PRAGMA foreign_keys = ON';
         return QueryBuilder::setQuery($query)->execute();
     }
 
@@ -322,13 +322,8 @@ class Migration
         return $this;
     }
     
-    public function migrate(bool $table = true)
+    public function migrate(bool $table = true): false|PDOStatement
     {
-        if ($table) {
-            self::$qb->migrate();
-            return;
-        }
-            
-        return self::$qb->flush()->execute();
+        return $table ? self::$qb->migrate() : self::$qb->flush()->execute();
     }
 }

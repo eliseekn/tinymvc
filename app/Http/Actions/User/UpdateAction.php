@@ -15,9 +15,9 @@ class UpdateAction
 {
     public function handle(array $data, string $email): Model|false
 	{
-        $user = User::findBy('email', $email);
+        $user = User::findByEmail($email);
 
-        if ($user === false) {
+        if (!$user) {
             return false;
         }
 
@@ -25,7 +25,6 @@ class UpdateAction
             $data['password'] = hash_pwd($data['password']);
         }
 
-        $user->fill($data);
-        return $user->save();
+        return $user->fill($data)->save();
 	}
 }

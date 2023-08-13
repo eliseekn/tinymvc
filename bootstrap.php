@@ -15,8 +15,8 @@ use Core\Support\Storage;
  * Setup application
  */
 
-define('DS', DIRECTORY_SEPARATOR);
-define('APP_ROOT', __DIR__  . DS);
+const DS = DIRECTORY_SEPARATOR;
+const APP_ROOT = __DIR__ . DS;
 
 set_time_limit(0);
 

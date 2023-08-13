@@ -15,11 +15,9 @@ use App\Database\Models\Token;
 
 class TokenFactory extends Factory
 {
-    protected static $model = Token::class;
-
     public function __construct(int $count = 1)
     {
-        parent::__construct($count);
+        parent::__construct(Token::class, $count);
     }
 
     public function data(): array

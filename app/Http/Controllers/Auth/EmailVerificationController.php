@@ -25,28 +25,24 @@ class EmailVerificationController extends Controller
 {
     public function notify(): void
     {
-        $token = generate_token();
+        $tokenValue = generate_token();
 
-        if (!Mail::send(new VerificationMail($this->request->queries('email'), $token))) {
+        if (!Mail::send(new VerificationMail($this->request->queries('email'), $tokenValue))) {
             Alert::default(__('email_verification_link_not_sent'))->error();
             $this->render('auth.signup');
         }
 
-        if (
-            !Token::where('email', $this->request->queries('email'))
-                ->and('description', TokenDescription::EMAIL_VERIFICATION_TOKEN->value)
-                ->exists()
-        ) {
-            Token::create([
+        $token = Token::exists($this->request->queries('email'), TokenDescription::EMAIL_VERIFICATION_TOKEN->value);
+
+        if ($token) {
+            $token->update(['value' => $tokenValue]);
+        } else {
+            $token->fill([
                 'email'=> $this->request->queries('email'),
                 'value' => $token,
                 'expire' => Carbon::now()->addDay()->toDateTimeString(),
                 'description' => TokenDescription::EMAIL_VERIFICATION_TOKEN->value
-            ]);
-        } else {
-            Token::where('email', $this->request->queries('email'))
-                ->and('description', TokenDescription::EMAIL_VERIFICATION_TOKEN->value)
-                ->update(['value' => $token]);
+            ])->save();
         }
 
         Alert::default(__('email_verification_link_sent'))->success();
@@ -59,10 +55,7 @@ class EmailVerificationController extends Controller
             $this->response(__('bad_request'), 400);
         }
 
-        $token = Token::where('email', $this->request->queries('email'))
-            ->and('description', TokenDescription::EMAIL_VERIFICATION_TOKEN->value)
-            ->newest()
-            ->first();
+        $token = Token::findLatest($this->request->queries('email'), TokenDescription::EMAIL_VERIFICATION_TOKEN->value);
 
         if (!$token || $token->attribute('value') !== $this->request->queries('token')) {
 			$this->response(__('invalid_password_reset_link'), 400);

@@ -20,7 +20,7 @@ class RememberUser
     public function handle(): void
     {
         if (Cookies::has('user')) {
-            $user = User::findBy('email', Cookies::get('user'));
+            $user = (new User())->findBy('email', Cookies::get('user'));
 
             if ($user !== false) {
                 Session::create('user', $user);

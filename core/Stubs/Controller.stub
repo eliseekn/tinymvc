@@ -14,6 +14,6 @@ class CLASSNAME extends Controller
 {
     public function __invoke(): void
 	{
-        $this->data('Hello from CLASSNAME');
+        $this->response('Hello from CLASSNAME');
 	}
 }

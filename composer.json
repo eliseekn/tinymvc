@@ -1,9 +1,9 @@
 {
     "name": "eliseekn/tinymvc",
-    "description": "TinyMVC is a PHP framework based on MVC architecture that helps you build easily and quickly powerful web applications and REST API.",
+    "description": "TinyMVC is a PHP framework based on MVC architecture that helps you build easily and quickly powerful web applications and RESTful API.",
     "type": "project",
     "license": "MIT",
-    "keywords": ["php", "framework", "mvc"],
+    "keywords": ["php-framework", "mvc"],
     "authors": [
         {
             "name": "N'Guessan Kouadio Elisée",
@@ -20,7 +20,8 @@
         ],
         "psr-4": {
             "App\\" : "app/",
-            "Core\\" : "core/"
+            "Core\\" : "core/",
+            "Tests\\" : "tests/"
         }
     },
     "config": {

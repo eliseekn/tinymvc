@@ -15,7 +15,7 @@ return [
 
     'sender' => [
         'name' => config('app.name'),
-        'email' => 'tiny@mvc.framework',
+        'email' => 'no-reply@tiny.mvc',
     ],
 
     'smtp' => [

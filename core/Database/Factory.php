@@ -16,20 +16,15 @@ use Faker\Generator;
  */
 class Factory
 {
-    protected static $model;
-    protected array|Model $class;
-    public Generator $faker;
+    protected array $class;
+    protected Generator $faker;
 
-    public function __construct(int $count)
+    public function __construct(string $model, int $count)
     {
         $this->faker = FakerFactory::create(config('app.lang'));
 
-        if ($count === 1) {
-            $this->class = new static::$model();
-        } else {
-            for ($i = 1; $i <= $count; $i++) {
-                $this->class[] = new static::$model();
-            }
+        for ($i = 1; $i <= $count; $i++) {
+            $this->class[] = new $model();
         }
     }
 
@@ -40,9 +35,9 @@ class Factory
 
     public function make(array $data = []): mixed
     {
-        if (!is_array($this->class)) {
-            $this->class->fill(array_merge($this->data(), $data));
-            return $this->class;
+        if (count($this->class) === 1) {
+            $this->class[0]->fill(array_merge($this->data(), $data));
+            return $this->class[0];
         }
 
         return array_map(function ($model) use ($data) {

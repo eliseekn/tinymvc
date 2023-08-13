@@ -15,11 +15,6 @@ class CLASSNAME
     public function handle(int $id): bool
 	{
         $MODELNAME = MODELNAME::find($id);
-
-        if ($MODELNAME === false) {
-            return false;
-        }
-
-        return $MODELNAME->delete();
+        return !$MODELNAME || $MODELNAME->delete();
 	}
 }

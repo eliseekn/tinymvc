@@ -12,5 +12,23 @@ use Core\Database\Model;
 
 class CLASSNAME extends Model
 {
-    protected static $table = 'TABLENAME';
+    public function __construct()
+    {
+        parent::__construct('TABLENAME');
+    }
+
+    public static function findById(string $id): Model|false
+    {
+        return (new self())->find($id);
+    }
+
+    public static function findByColumn(string $column): Model|false
+    {
+        return (new self())->findBy('column', $column);
+    }
+
+    public static function findLatest(): array|false
+    {
+        return (new self())->latest();
+    }
 }

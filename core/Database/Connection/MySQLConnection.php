@@ -39,6 +39,13 @@ class MySQLConnection implements ConnectionInterface
         return $this->pdo;
     }
 
+    private function getDB(): string
+    {
+        return config('app.env') === 'test'
+            ? config('tests.database.suffix')
+            : config('database.name');
+    }
+
     /**
      * @throws PDOException
 	 */
@@ -60,7 +67,7 @@ class MySQLConnection implements ConnectionInterface
 			$stmt = $this->pdo->prepare(trim($query));
             $stmt->execute($args);
 		} catch (PDOException $e) {
-			throw new PDOException($e->getMessage(), (int) $e->getCode(), $e->getPrevious());
+            throw new PDOException($e->getMessage(), (int) $e->getCode(), $e->getPrevious());
 		}
 
 		return $stmt;
@@ -96,12 +103,5 @@ class MySQLConnection implements ConnectionInterface
     public function deleteSchema(string $name): void
     {
         $this->executeStatement("DROP DATABASE IF EXISTS $name");
-    }
-
-    private function getDB(): string
-    {
-        return config('app.env') === 'test'
-            ? config('tests.database.suffix')
-            : config('database.name');
     }
 }

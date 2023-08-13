@@ -19,9 +19,8 @@ class Connection
 	/**
 	 * @var \Core\Database\Connection\Connection
 	 */
-	protected static $instance = null;
-
-    protected $db;
+	protected static ?Connection $instance = null;
+    protected MySQLConnection|SQLiteConnection $db;
 
 	private function __construct()
 	{

@@ -183,17 +183,11 @@ class Request
         return $result;
     }
 
-    /**
-     * Retrieves POST/GET item value
-     */
     public function get(string $item, $default = null): mixed
     {
         return $this->filled($item) ? $this->inputs($item) : $default;
     }
 
-    /**
-     * Set POST/GET item value
-     */
     public function set(string $item, $value): void
     {
         if (isset($_POST[$item])) {

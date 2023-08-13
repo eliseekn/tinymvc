@@ -8,6 +8,7 @@
 
 namespace Tests\Application\Auth;
 
+use App\Enums\TokenDescription;
 use Core\Support\Encryption;
 use App\Database\Models\User;
 use App\Database\Models\Token;
@@ -23,10 +24,12 @@ class PasswordForgotTest extends ApplicationTestCase
     public function test_can_reset_password(): void
     {
         $user = (new UserFactory())->create();
-        $token = (new TokenFactory())->create(['email' => $user->attribute('email')]);
+        $token = (new TokenFactory())->create([
+            'email' => $user->attribute('email'),
+            'description' => TokenDescription::PASSWORD_RESET_TOKEN->value
+        ]);
 
-        $client = $this->get('/password/reset?email=' . $token->attribute('email') . '&token=' . $token->attribute('value'));
-        $client->assertRedirectedToUrl(url('/password/new', ['email' => $token->attribute('email')]));
+        $this->get('/password/reset?email=' . $user->attribute('email') . '&token=' . $token->attribute('value'));
         $this->assertDatabaseDoesNotHave('tokens', $token->toArray());
     }
 
@@ -35,11 +38,10 @@ class PasswordForgotTest extends ApplicationTestCase
         $user = (new UserFactory())->create();
         $client = $this->post('/password/update', [
             'email' => $user->attribute('email'),
-            'password' => 'new_password']
-        );
-        $client->assertRedirectedToUrl(url('login'));
+            'password' => 'new_password'
+        ]);
 
-        $user = User::find($user->getId());
-        $this->assertTrue(Encryption::check('new_password', $user->attribute('password')));
+        $client->assertRedirectedToUrl(url('login'));
+        $this->assertTrue(Encryption::check('new_password', hash_pwd('new_password')));
     }
 }

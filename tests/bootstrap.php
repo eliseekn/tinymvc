@@ -6,6 +6,6 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Tests\Application;
+namespace Tests;
 
 require_once 'bootstrap.php';

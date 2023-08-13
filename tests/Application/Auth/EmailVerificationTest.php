@@ -10,6 +10,7 @@ namespace Tests\Application\Auth;
 
 use App\Database\Models\User;
 use App\Database\Models\Token;
+use App\Enums\TokenDescription;
 use Core\Testing\ApplicationTestCase;
 use App\Database\Factories\UserFactory;
 use App\Database\Factories\TokenFactory;
@@ -22,9 +23,12 @@ class EmailVerificationTest extends ApplicationTestCase
     public function test_can_verify_email(): void
     {
         $user = (new UserFactory())->create(['email_verified' => null]);
-        $token = (new TokenFactory())->create(['email' => $user->attribute('email')]);
+        $token = (new TokenFactory())->create([
+            'email' => $user->attribute('email'),
+            'description' => TokenDescription::EMAIL_VERIFICATION_TOKEN->value
+        ]);
 
-        $client = $this->get('/email/verify?email=' . $token->attribute('email') . '&token=' . $token->attribute('value'));
+        $client = $this->get('/email/verify?email=' . $user->attribute('email') . '&token=' . $token->attribute('value'));
         $client->assertRedirectedToUrl(url('login'));
         $this->assertDatabaseDoesNotHave('tokens', $token->toArray());
     }

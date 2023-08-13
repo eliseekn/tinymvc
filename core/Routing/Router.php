@@ -24,7 +24,7 @@ use Core\Exceptions\RouteHandlerNotDefinedException;
  */
 class Router
 {
-    private static function match(Request $request, string $method, string $route, &$params): bool
+    protected static function match(Request $request, string $method, string $route, &$params): bool
     {
         if (
             !preg_match('/' . strtoupper($method) . '/', strtoupper($request->method())) ||
@@ -38,7 +38,7 @@ class Router
         return true;
     }
     
-    private static function executeMiddlewares(array $middlewares): void
+    protected static function executeMiddlewares(array $middlewares): void
     {
         foreach ($middlewares as $middleware) {
             $middleware = config('middlewares.' . $middleware);
@@ -51,7 +51,7 @@ class Router
         }
     }
     
-    private static function executeHandler($handler, array $params): mixed
+    protected static function executeHandler($handler, array $params): mixed
     {
         if ($handler instanceof Closure) {
             return (new DependencyInjection())->resolveClosure($handler, $params);
@@ -109,6 +109,6 @@ class Router
             }
         }
 
-        $response->view(view: config('errors.views.404'))->send(404);
+        $response->view(config('errors.views.404'))->send(404);
     }
 }

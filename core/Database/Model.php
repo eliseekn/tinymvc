@@ -15,140 +15,111 @@ use PDOStatement;
  */
 class Model
 {
-    protected static $table = '';
-    protected array $attributes = [];
+    protected Repository $repository;
 
-    public function __construct($data = [])
+    public function __construct(protected readonly string $table, protected array $attributes = [])
     {
-        $this->attributes = $data;
+        $this->repository = new Repository($table);
     }
 
-    public static function findBy(string $column, $operator = null, $value = null): self|false
+    public function findBy(string $column, $operator = null, $value = null): self|false
     {
-        return (new Repository(static::$table))->findWhere($column, $operator, $value);
+        return $this->repository->findWhere($column, $operator, $value);
     }
 
-    public static function find(int $id): self|false
+    public function find(int $id): self|false
     {
-        return self::findBy('id', $id);
+        return $this->findBy('id', $id);
     }
 
-    public static function all(): array|false
+    public function getAll(): array|false
     {
-        return (new Repository(static::$table))->selectAll('*');
+        return $this->repository->selectAll('*');
     }
 
-    public static function first(): Model|false
+    public function first(): Model|false
     {
-        return self::select('*')->first();
+        return $this->select('*')->first();
     }
 
-    public static function last(): Model|false
+    public function last(): Model|false
     {
-        return self::select('*')->last();
+        return $this->select('*')->last();
     }
 
-    public static function take(int $count, $subquery = null): array|false
+    public function take(int $count, $subquery = null): array|false
     {
-        return self::select('*')->subQuery($subquery)->take($count);
+        return $this->select('*')->subQuery($subquery)->take($count);
     }
 
-    public static function oldest(string $column = 'created_at', $subquery = null): array|false
+    public function oldest(string $column = 'created_at', $subquery = null): array|false
     {
-        return self::select('*')->subQuery($subquery)->oldest($column)->getAll();
+        return $this->select('*')->subQuery($subquery)->oldest($column)->getAll();
     }
 
-    public static function newest(string $column = 'created_at', $subquery = null): array|false
+    public function newest(string $column = 'created_at', $subquery = null): array|false
     {
-        return self::select('*')->subQuery($subquery)->newest($column)->getAll();
+        return $this->select('*')->subQuery($subquery)->newest($column)->getAll();
     }
 
-    public static function latest(string $column = 'id', $subquery = null): array|false
+    public function latest(string $column = 'id', $subquery = null): array|false
     {
-        return self::select('*')->subQuery($subquery)->latest($column)->getAll();
+        return $this->select('*')->subQuery($subquery)->latest($column)->getAll();
     }
 
-    public static function select(array|string $columns): Repository
+    public function select(array|string $columns): Repository
     {
-        return (new Repository(static::$table))->select($columns);
+        return $this->repository->select($columns);
     }
 
-    public static function where(string $column, $operator = null, $value = null): Repository
+    public function where(string $column, $operator = null, $value = null): Repository
     {
-        return self::select('*')->where($column, $operator, $value);
+        return $this->select('*')->where($column, $operator, $value);
     }
 
-    public static function count(string $column = 'id', $subquery = null): mixed
+    public function count(string $column = 'id', $subquery = null): mixed
     {
-        $data = (new Repository(static::$table))->count($column)->subQuery($subquery)->get();
-
-        if (!$data) {
-            return false;
-        }
-
-        return $data->attribute('value');
+        $data = $this->repository->count($column)->subQuery($subquery)->get();
+        return !$data ? false : $data->attribute('value');
     }
 
-    public static function sum(string $column, $subquery = null): mixed
+    public function sum(string $column, $subquery = null): mixed
     {
-        $data = (new Repository(static::$table))->sum($column)->subQuery($subquery)->get();
-
-        if (!$data) {
-            return false;
-        }
-
-        return $data->attribute('value');
+        $data = $this->repository->sum($column)->subQuery($subquery)->get();
+        return !$data ? false : $data->attribute('value');
     }
 
-    public static function max(string $column, $subquery = null): mixed
+    public function max(string $column, $subquery = null): mixed
     {
-        $data = (new Repository(static::$table))->max($column)->subQuery($subquery)->get();
-
-        if (!$data) {
-            return false;
-        }
-
-        return $data->attribute('value');
+        $data = $this->repository->max($column)->subQuery($subquery)->get();
+        return !$data ? false : $data->attribute('value');
     }
 
-    public static function min(string $column, $subquery = null): mixed
+    public function min(string $column, $subquery = null): mixed
     {
-        $data = (new Repository(static::$table))->min($column)->subQuery($subquery)->get();
-
-        if (!$data) {
-            return false;
-        }
-
-        return $data->attribute('value');
+        $data = $this->repository->min($column)->subQuery($subquery)->get();
+        return !$data ? false : $data->attribute('value');
     }
 
-    public static function metrics(string $column, string $type, string $period, int $interval = 0, ?array $query = null): mixed
+    public function metrics(string $column, string $type, string $period, int $interval = 0, ?array $query = null): mixed
     {
-        return (new Repository(static::$table))->metrics($column, $type, $period, $interval, $query);
+        return $this->repository->metrics($column, $type, $period, $interval, $query);
     }
 
-    public static function trends(string $column, string $type, string $period, int $interval = 0, ?array $query = null): array
+    public function trends(string $column, string $type, string $period, int $interval = 0, ?array $query = null): array
     {
-        return (new Repository(static::$table))->trends($column, $type, $period, $interval, $query);
+        return $this->repository->trends($column, $type, $period, $interval, $query);
     }
 
-    public static function create(array $data): self|false
+    public function create(array $data): self|false
     {
-        $id = (new Repository(static::$table))->insertGetId($data);
-
-        if (is_null($id)) {
-            return false;
-        }
-
-        return self::find($id);
+        $id = $this->repository->insertGetId($data);
+        return is_null($id) ? false : $this->find($id);
     }
 
-    /**
-     * Delete all rows
-     */
-    public static function truncate(): false|PDOStatement
+    public function truncate(): false|PDOStatement
     {
-        return (new Repository(static::$table))->delete()->execute();
+        return $this->repository->delete()->execute();
     }
 
     public function getId(): int
@@ -157,27 +128,19 @@ class Model
     }
     
     /**
-     * Get relationship of the model 
-     *
-     * @param  string $table
-     * @param  mixed $column
-     * @return \Core\Database\Repository
+     * Get relationship of the model
      */
     public function has(string $table, ?string $column = null): Repository
     {
         if (is_null($column)) {
-            $column = $this->getColumnFromTable(static::$table);
+            $column = $this->getColumnFromTable($this->table);
         }
 
         return (new Repository($table))->select('*')->where($column, $this->attributes['id']);
     }
-    
+
     /**
      * Get relationship belongs to the model
-     *
-     * @param  string $table
-     * @param  mixed $column
-     * @return \Core\Database\Repository
      */
     public function belongsTo(string $table, ?string $column = null): Repository
     {
@@ -188,43 +151,41 @@ class Model
         return (new Repository($table))->select('*')->where('id', $this->attributes[$column]);
     }
 
-    public function attribute(string $key, $value = null): mixed
+    public function attribute(string $key): mixed
     {
-        if (!is_null($value)) {
-            $this->attributes[$key] = $value;
-        }
-
         return $this->attributes[$key];
     }
-    
-    /**
-     * Fill model attributes with custom data
-     *
-     * @param  array $data
-     * @return void
-     */
-    public function fill(array $data): void
+
+    public function fill(array $data): self
     {
         foreach ($data as $key => $value) {
             $this->attributes[$key] = $value;
         }
+
+        return $this;
     }
     
-    public function update(array $data): false|self
+    public function update(array $data): bool
     {
-        return !(new Repository(static::$table))->updateIfExists($this->attributes['id'], $data) ? false : $this;
+        return $this->repository->updateIfExists($this->attributes['id'], $data);
     }
 
     public function delete(): bool
     {
-        return (new Repository(static::$table))->deleteIfExists($this->attributes['id']);
+        return $this->repository->deleteIfExists($this->attributes['id']);
     }
 
-    public function save(): self|false
+    public function save(): Model|false
     {
-        return empty($this->attributes['id'])
-            ? self::create($this->attributes)
-            : $this->update($this->attributes);
+        if (empty($this->attributes['id'])) {
+            return $this->create($this->attributes);
+        }
+
+        if ($this->update($this->attributes)) {
+            return $this->find($this->attributes['id']);
+        }
+
+        return false;
     }
 
     public function increment(string $column, $value = null): void

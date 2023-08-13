@@ -66,6 +66,7 @@ class TwigExtensions extends AbstractExtension implements GlobalsInterface
         return $this->getCustomFunctions() + [
             new TwigFunction('auth_attempts_exceeded', 'auth_attempts_exceeded'),
             new TwigFunction('auth', 'auth'),
+            new TwigFunction('method_input', 'method_input'),
             new TwigFunction('csrf_token_input', 'csrf_token_input'),
             new TwigFunction('csrf_token_meta', 'csrf_token_meta'),
             new TwigFunction('url', 'url'),
@@ -79,7 +80,8 @@ class TwigExtensions extends AbstractExtension implements GlobalsInterface
             new TwigFunction('__', '__'),
             new TwigFunction('env', 'env'),
             new TwigFunction('date', 'date'),
-            new TwigFunction('method_input', 'method_input'),
+            new TwigFunction('session_has', 'session_has'),
+            new TwigFunction('cookie_has', 'cookie_has'),
         ];
     }
 }

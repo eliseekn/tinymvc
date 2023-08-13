@@ -163,25 +163,7 @@ class Make
 
         return $storage->writeFile(self::fixPluralTypo($class, true) . '.php', $data);
     }
-    
-    public static function createRepository(string $repository, ?string $namespace = null): bool
-    {
-        list($name, $class) = self::generateClass($repository, 'repository', true, true);
 
-        $data = self::stubs()->readFile('Repository.stub');
-        $data = self::addNamespace($data, 'App\Database\Repositories', $namespace);
-        $data = str_replace('CLASSNAME', self::fixPluralTypo($class, true), $data);
-        $data = str_replace('MODELNAME', self::fixPluralTypo(ucfirst($name), true), $data);
-
-        $storage = Storage::path(config('storage.repositories'));
-
-        if (!is_null($namespace)) {
-            $storage = $storage->addPath(str_replace('\\', '/', $namespace));
-        }
-
-        return $storage->writeFile(self::fixPluralTypo($class, true) . '.php', $data);
-    }
-    
     public static function createHelper(string $helper): bool
     {
         list(, $class) = self::generateClass($helper, 'helper', true);

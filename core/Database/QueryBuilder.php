@@ -17,11 +17,11 @@ use PDOStatement;
  */
 class QueryBuilder
 {
-	protected static string $query = '';
-    protected static array $args = [];
-    protected static mixed $table;
+	protected static string $query;
+    protected static $args;
+    protected static string $table;
 
-    protected static function setTable(string $name): string
+    public static function setTable(string $name): string
     {
         if (config('app.env') === 'test') {
             if (config('tests.database.driver') === 'sqlite') {
@@ -47,7 +47,7 @@ class QueryBuilder
 
     public static function table(string $name): self
     {
-        static::$table = self::setTable($name);
+        self::$table = self::setTable($name);
         return new self();
     }
 
@@ -114,7 +114,7 @@ class QueryBuilder
 		}
 
 		self::$query = rtrim(self::$query, ', ');
-        self::$query .= ' FROM ' . static::$table;
+        self::$query .= ' FROM ' . self::$table;
 
 		return $this;
 	}
@@ -123,7 +123,7 @@ class QueryBuilder
     {
         self::$query = 'SELECT ' . $query;
         self::$args = array_merge(self::$args, $args);
-        self::$query .= ' FROM ' . static::$table;
+        self::$query .= ' FROM ' . self::$table;
 
         return $this;
     }
@@ -135,7 +135,7 @@ class QueryBuilder
 
 	public function insert(array $items): self
 	{
-		self::$query = "INSERT INTO " . static::$table . " (";
+		self::$query = "INSERT INTO " . self::$table . " (";
 
 		foreach ($items as $key => $value) {
 			self::$query .= "{$key}, ";
@@ -157,7 +157,7 @@ class QueryBuilder
 
 	public function update(array $items): self
 	{
-		self::$query = "UPDATE " . static::$table . " SET ";
+		self::$query = "UPDATE " . self::$table . " SET ";
 
 		if (config('database.timestamps')) {
             $items = array_merge($items, ['updated_at' => Carbon::now()->toDateTimeString()]);
@@ -174,7 +174,7 @@ class QueryBuilder
 
 	public function delete(): self
 	{
-		self::$query = "DELETE FROM " . static::$table;
+		self::$query = "DELETE FROM " . self::$table;
 		return $this;
 	}
 
@@ -589,7 +589,7 @@ class QueryBuilder
         return Connection::getInstance()->getPDO()->lastInsertId();
     }
     
-    private function trimQuery(): void
+    public function trimQuery(): void
     {
         self::$query = trim(self::$query);
         self::$query = str_replace('  ', ' ', self::$query);

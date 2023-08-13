@@ -15,7 +15,7 @@ use Core\Exceptions\InvalidUrlFormatException;
  */
 class Curl implements ClientInterface
 {
-    protected static $response = [];
+    protected static array $response = [];
 
     /**
      * @link   https://niraeth.com/php-quick-function-for-asynchronous-multi-curl/

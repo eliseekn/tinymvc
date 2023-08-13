@@ -12,5 +12,18 @@ use Core\Database\Model;
 
 class User extends Model
 {
-    protected static $table = 'users';
+    public function __construct()
+    {
+        parent::__construct('users');
+    }
+
+    public static function findByEmail(string $email): Model|false
+    {
+        return (new self())->findBy('email', $email);
+    }
+
+    public static function findAllWhereEmailLike(string $email): array|false
+    {
+        return (new self())->where('email', 'like', $email)->getAll();
+    }
 }

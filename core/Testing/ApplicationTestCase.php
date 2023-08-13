@@ -8,6 +8,9 @@
 
 namespace Core\Testing;
 
+use App\Database\Models\User;
+use Core\Database\Model;
+use Core\Routing\View;
 use Core\Support\Auth;
 use Core\Database\Repository;
 use CURLFile;
@@ -67,10 +70,14 @@ class ApplicationTestCase extends TestCase
         return is_null($key) ? $headers : $headers[$key][0];
     }
 
-    protected function getSession(): mixed
+    protected function getSession(?string $key = null): mixed
     {
-        return !array_key_exists('session', $this->getHeaders()) ? []
-            : json_decode($this->getHeaders('session'), true);
+        if (!array_key_exists('session', $this->getHeaders())) {
+            return [];
+        }
+
+        $data = json_decode($this->getHeaders('session'), true);
+        return is_null($key) ? $data : $data[$key];
     }
 
     protected function setHeaders(array $headers): array
@@ -78,15 +85,12 @@ class ApplicationTestCase extends TestCase
         return array_merge($this->headers, $headers);
     }
 
-    protected function getSessionKey(string $name): string
+    protected function sessionKey(string $name): string
     {
         return strtolower(config('app.name')) . '_' . $name;
     }
 
-    /**
-     * @param \Core\Database\Model|\App\Database\Models\User $user
-     */
-    public function auth(mixed $user): self
+    public function auth(User|Model $user): self
     {
         $this->token = Auth::createToken($user->attribute('email'));
         $this->headers = array_merge($this->headers, ['Authorization' => "Bearer $this->token"]);
@@ -102,6 +106,7 @@ class ApplicationTestCase extends TestCase
     public function get(string $uri, array $headers = []): self
     {
         $this->client = Client::get($this->url($uri), $this->setHeaders($headers));
+        save_log($this->getBody());
         return $this;
     }
 
@@ -192,6 +197,16 @@ class ApplicationTestCase extends TestCase
         $this->assertNotEquals($expected, $this->getHeaders('location'));
     }
 
+    public function assertView(string $view): void
+    {
+        $this->assertEquals($this->getBody(), View::getContent($view));
+    }
+
+    public function assertNotView(string $view): void
+    {
+        $this->assertNotEquals($this->getBody(), View::getContent($view));
+    }
+
     public function assertDatabaseHas(string $table, array $expected): void
     {
         $result = (new Repository($table))->findMany($expected, 'and')->exists();
@@ -206,40 +221,40 @@ class ApplicationTestCase extends TestCase
 
     public function assertSessionExists(string $expected): void
     {
-        $this->assertTrue(array_key_exists($this->getSessionKey($expected), $this->getSession()));
+        $this->assertTrue(array_key_exists($this->sessionKey($expected), $this->getSession()));
     }
 
     public function assertSessionDoesNotExists(string $expected): void
     {
-        $this->assertFalse(array_key_exists($this->getSessionKey($expected), $this->getSession()));
+        $this->assertFalse(array_key_exists($this->sessionKey($expected), $this->getSession()));
     }
 
     public function assertSessionHas(string $key, $value): void
     {
-        if (!array_key_exists($this->getSessionKey($key), $this->getSession())) {
+        if (!array_key_exists($this->sessionKey($key), $this->getSession())) {
             $this->assertFalse(false);
         } else {
-            $this->assertEquals($value, $this->getSession()[$this->getSessionKey($key)]);
+            $this->assertEquals($value, $this->getSession($this->sessionKey($key)));
         }
     }
 
     public function assertSessionDoesNotHave(string $key, $value): void
     {
-        if (!array_key_exists($this->getSessionKey($key), $this->getSession())) {
+        if (!array_key_exists($this->sessionKey($key), $this->getSession())) {
             $this->assertFalse(false);
         } else {
-            $this->assertNotEquals($value, $this->getSession()[$this->getSessionKey($key)]);
+            $this->assertNotEquals($value, $this->getSession($this->sessionKey($key)));
         }
     }
 
     public function assertSessionHasErrors(): void
     {
-        $this->assertFalse(empty($this->getSession()[$this->getSessionKey('errors')]));
+        $this->assertFalse(empty($this->getSession()[$this->sessionKey('errors')]));
     }
 
     public function assertSessionDoesNotHaveErrors(): void
     {
-        $this->assertTrue(empty($this->getSession()[$this->getSessionKey('errors')]));
+        $this->assertTrue(empty($this->getSession()[$this->sessionKey('errors')]));
     }
 
     public function dump(): void

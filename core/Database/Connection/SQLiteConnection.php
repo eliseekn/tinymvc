@@ -15,10 +15,7 @@ use PDOStatement;
 
 class SQLiteConnection implements ConnectionInterface
 {
-	/**
-	 * @var PDO
-	 */
-	protected $pdo;
+	protected PDO $pdo;
 
     /**
      * @throws PDOException
@@ -38,7 +35,12 @@ class SQLiteConnection implements ConnectionInterface
 		}
     }
 
-    private function getDB()
+    public function getPDO(): PDO
+    {
+        return $this->pdo;
+    }
+
+    private function getDB(): string
     {
         if (config('app.env') === 'test') {
             return config('storage.sqlite') . config('database.name') . config('tests.database.suffix') . '.db';
@@ -46,11 +48,6 @@ class SQLiteConnection implements ConnectionInterface
 
         return config('database.sqlite.memory') ? ':memory:'
             : config('storage.sqlite') . config('database.name') . '.db';
-    }
-
-    public function getPDO(): PDO
-    {
-        return $this->pdo;
     }
 
     /**
@@ -82,11 +79,7 @@ class SQLiteConnection implements ConnectionInterface
 
     public function schemaExists(string $name): bool
     {
-        if (config('database.sqlite.memory')) {
-            return true;
-        }
-
-        return Storage::path(config('storage.sqlite'))->isFile($name);
+        return config('database.sqlite.memory') || Storage::path(config('storage.sqlite'))->isFile($name);
     }
 
     public function tableExists(string $name): bool
@@ -97,17 +90,15 @@ class SQLiteConnection implements ConnectionInterface
 
     public function createSchema(string $name): void
     {
-        if (config('database.sqlite.memory')) {
-            return;
+        if (!config('database.sqlite.memory')) {
+            Storage::path(config('storage.sqlite'))->writeFile($name . '.db', '');
         }
-        Storage::path(config('storage.sqlite'))->writeFile($name . '.db', '');
     }
 
     public function deleteSchema(string $name): void
     {
-        if (config('database.sqlite.memory')) {
-            return;
+        if (!config('database.sqlite.memory')) {
+            Storage::path(config('storage.sqlite'))->deleteFile($name . '.db');
         }
-        Storage::path(config('storage.sqlite'))->deleteFile($name . '.db');
     }
 }

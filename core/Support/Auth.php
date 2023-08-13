@@ -41,7 +41,7 @@ class Auth
         }
 
         Session::forget(['auth_attempts', 'auth_attempts_timeout']);
-        Session::create('user', $user);
+        Session::create('user', $user->toArray());
             
         if ($request->hasInput('remember')) {
             Cookies::create('user', $user->attribute('email'), 3600 * 24 * 365);
@@ -53,20 +53,18 @@ class Auth
     public static function checkCredentials(string $email, string $password, &$user): bool
     {
         if (filter_var($email, FILTER_VALIDATE_EMAIL) !== false) {
-            $user = User::findBy('email', $email);
+            $user = User::findByEmail($email);
             return $user !== false && Encryption::check($password, $user->attribute('password'));
         }
 
-        $users = User::where('email', 'like', $email)->getAll();
+        $users = User::findAllWhereEmailLike($email);
 
-        if (!$users) {
-            return false;
-        }
-
-        foreach ($users as $u) {
-            if (Encryption::check($password, $u->attribute('password'))) {
-                $user = $u;
-                return true;
+        if ($users) {
+            foreach ($users as $u) {
+                if (Encryption::check($password, $u->attribute('password'))) {
+                    $user = $u;
+                    return true;
+                }
             }
         }
 
@@ -75,15 +73,14 @@ class Auth
     
     public static function checkToken(string $token, &$user): bool
     {
-        $token = Token::findBy('value', $token);
-        $user = User::findBy('email', $token->attribute('email'));
-        
+        $token = Token::findByValue($token);
+        $user = User::findByEmail($token->attribute('email'));
         return $user !== false;
     }
     
     public static function createToken(string $email): string
     {
-        $token = Token::create([
+        $token = (new Token())->create([
             'email' => $email,
             'value' => generate_token(),
         ]);

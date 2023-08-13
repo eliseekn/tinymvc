@@ -8,6 +8,7 @@
 
 namespace Core\Database;
 
+use Core\Exceptions\InvalidSQLQueryException;
 use Core\Support\Pager;
 use Core\Support\Metrics;
 use PDOStatement;
@@ -19,7 +20,7 @@ class Repository
 {
     protected QueryBuilder $qb;
 
-    public function __construct(private readonly string $table) {}
+    public function __construct(protected readonly string $table) {}
 
     public function select(array|string $columns): self
     {
@@ -138,11 +139,7 @@ class Repository
     
     public function insertGetId(array $items): int|null
     {
-        if (!$this->insert($items)) {
-            return null;
-        }
-
-        return QueryBuilder::lastInsertedId();
+        return !$this->insert($items) ? null : QueryBuilder::lastInsertedId();
     }
     
     public function update(array $items): self
@@ -231,8 +228,7 @@ class Repository
     public function where(string $column, $operator = null, $value = null): self
 	{
         if (is_null($operator) && is_null($value)) {
-            $this->qb->whereColumn($column)->isNull();
-            return $this;
+            throw new InvalidSQLQueryException();
         }
 
         if (!is_null($operator) && is_null($value)) {
@@ -293,8 +289,7 @@ class Repository
     public function and(string $column, $operator = null, $value = null): self
     {
         if (is_null($operator) && is_null($value)) {
-            $this->qb->whereColumn($column)->isNull();
-            return $this;
+            throw new InvalidSQLQueryException();
         }
 
         if (!is_null($operator) && is_null($value)) {
@@ -355,8 +350,7 @@ class Repository
     public function or(string $column, $operator = null, $value = null): self
     {
         if (is_null($operator) && is_null($value)) {
-            $this->qb->whereColumn($column)->isNull();
-            return $this;
+            throw new InvalidSQLQueryException();
         }
 
         if (!is_null($operator) && is_null($value)) {
@@ -596,7 +590,7 @@ class Repository
     public function last(): Model|false
     {
         $rows = $this->getAll();
-        return !$rows ? false : end($rows);
+        return $rows && end($rows);
     }
 
     public function range(int $start, int $end): array|false
@@ -627,13 +621,13 @@ class Repository
     public function get(): Model|false
     {
         $row = $this->execute()->fetch();
-        return !$row ? false : new Model((array) $row);
+        return !$row ? false : new Model($this->table, (array) $row);
     }
     
     public function getAll(): array|false
     {
         $rows = $this->execute()->fetchAll();
-        return !$rows ? false : array_map(fn ($row) => new Model((array) $row), $rows);
+        return !$rows ? false : array_map(fn ($row) => new Model($this->table, (array) $row), $rows);
     }
     
     public function toSQL(): array

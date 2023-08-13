@@ -25,31 +25,27 @@ class ForgotPasswordController extends Controller
 {
 	public function notify(): void
 	{
-		$token = generate_token();
+        $tokenValue = generate_token();
 
-        if (Mail::send(new TokenMail($this->request->get('email'), $token))) {
-            if (
-                !Token::where('email', $this->request->inputs('email'))
-                    ->and('description', TokenDescription::PASSWORD_RESET_TOKEN->value)
-                    ->exists()
-            ) {
-                Token::create([
-                    'email'=> $this->request->inputs('email'),
-                    'value' => $token,
-                    'expire' => Carbon::now()->addHour()->toDateTimeString(),
-                    'description' => TokenDescription::PASSWORD_RESET_TOKEN->value
-                ]);
-            } else {
-                Token::where('email', $this->request->inputs('email'))
-                    ->and('description', TokenDescription::PASSWORD_RESET_TOKEN->value)
-                    ->update(['value' => $token]);
-            }
+        if (!Mail::send(new TokenMail($this->request->get('email'), $tokenValue))) {
+            Alert::default(__('password_reset_link_not_sent'))->error();
+            $this->redirectBack();
+        }
 
-            Alert::default(__('password_reset_link_sent'))->success();
-			$this->redirectBack();
-		}
-        
-        Alert::default(__('password_reset_link_not_sent'))->error();
+        $token = Token::exists($this->request->queries('email'), TokenDescription::PASSWORD_RESET_TOKEN->value);
+
+        if ($token) {
+            $token->update(['value' => $tokenValue]);
+        } else {
+            $token->fill([
+                'email'=> $this->request->queries('email'),
+                'value' => $token,
+                'expire' => Carbon::now()->addHour()->toDateTimeString(),
+                'description' => TokenDescription::PASSWORD_RESET_TOKEN->value
+            ])->save();
+        }
+
+        Alert::default(__('password_reset_link_sent'))->success();
         $this->redirectBack();
 	}
 	
@@ -59,10 +55,7 @@ class ForgotPasswordController extends Controller
             $this->response(__('bad_request'), 400);
         }
 
-        $token = Token::where('email', $this->request->queries('email'))
-            ->and('description', TokenDescription::PASSWORD_RESET_TOKEN->value)
-            ->newest()
-            ->first();
+        $token = Token::findLatest($this->request->queries('email'), TokenDescription::PASSWORD_RESET_TOKEN->value);
 
         if (!$token || $token->attribute('value') !== $this->request->queries('token')) {
 			$this->response(__('invalid_password_reset_link'), 400);
