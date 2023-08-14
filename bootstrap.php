@@ -6,6 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
+use Core\Events\Event;
 use Core\Routing\Route;
 use Core\Support\Config;
 use Core\Support\Whoops;
@@ -56,3 +57,4 @@ if (!Storage::path()->isFile('.env')) {
 
 Config::loadEnv();
 Route::load();
+Event::loadListeners();

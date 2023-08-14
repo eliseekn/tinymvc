@@ -37,7 +37,9 @@ return [
         new \Core\Console\Make\Test(),
         new \Core\Console\Make\Actions(),
         new \Core\Console\Make\Exception(),
-        
+        new \Core\Console\Make\Event(),
+        new \Core\Console\Make\Listener(),
+
         new \Core\Console\App\Setup(),
         new \Core\Console\App\EncryptionKey(),
         new \Core\Console\App\Environnement(),

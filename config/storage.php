@@ -21,7 +21,6 @@ return [
     'stubs' => absolute_path('core.Stubs'),
     'lang' => absolute_path('resources.lang'),
     'controllers' => absolute_path('app.Http.Controllers'),
-    'repositories' => absolute_path('app.Database.Repositories'),
     'models' => absolute_path('app.Database.Models'),
     'middlewares' => absolute_path('app.Http.Middlewares'),
     'validators' => absolute_path('app.Http.Validators'),
@@ -33,5 +32,6 @@ return [
     'tests' => absolute_path('tests'),
     'console' => absolute_path('app.Console'),
     'sqlite' => absolute_path('storage.sqlite'),
-    'actions' => absolute_path('app.Http.Actions')
+    'actions' => absolute_path('app.Http.Actions'),
+    'events' => absolute_path('app.Events')
 ];

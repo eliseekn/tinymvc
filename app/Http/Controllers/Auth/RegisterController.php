@@ -8,13 +8,12 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\UserRegistered\UserRegisteredEvent;
 use App\Http\Actions\User\StoreAction;
 use App\Http\Validators\Auth\RegisterValidator;
-use App\Mails\WelcomeMail;
 use Core\Routing\Controller;
 use Core\Support\Alert;
 use Core\Support\Auth;
-use Core\Support\Mail\Mail;
 use Core\Support\Session;
 
 class RegisterController extends Controller
@@ -38,9 +37,9 @@ class RegisterController extends Controller
             $this->redirectUrl('/email/notify' , ['email' => $user->attribute('email')]);
         }
 
-        Mail::send(new WelcomeMail($user->attribute('email'), $user->attribute('name')));
-        Alert::default(__('account_created'))->success();
+        UserRegisteredEvent::dispatch([$user]);
 
+        Alert::default(__('account_created'))->success();
         $this->redirectUrl('/login');
     }
 }

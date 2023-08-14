@@ -164,6 +164,36 @@ class Make
         return $storage->writeFile(self::fixPluralTypo($class, true) . '.php', $data);
     }
 
+    public static function createEvent(string $event): bool
+    {
+        list(, $class) = self::generateClass(base_name: $event, singular: true, force_singlular: true);
+        $className = self::fixPluralTypo($class . 'Event', true);
+
+        $data = self::stubs()->addPath('events')->readFile('Event.stub');
+        $data = self::addNamespace($data, "App\Events\\" . self::fixPluralTypo($class, true));
+        $data = str_replace('CLASSNAME', $className, $data);
+
+        $storage = Storage::path(config('storage.events'));
+        $storage = $storage->addPath(self::fixPluralTypo($class, true));
+
+        return $storage->writeFile($className . '.php', $data);
+    }
+
+    public static function createListener(string $listener): bool
+    {
+        list(, $class) = self::generateClass(base_name: $listener, singular: true, force_singlular: true);
+        $className = self::fixPluralTypo($class . 'EventListener', true);
+
+        $data = self::stubs()->addPath('events')->readFile('Listener.stub');
+        $data = self::addNamespace($data, "App\Events\\" . self::fixPluralTypo($class, true));
+        $data = str_replace('CLASSNAME', $className, $data);
+
+        $storage = Storage::path(config('storage.events'));
+        $storage = $storage->addPath(self::fixPluralTypo($class, true));
+
+        return $storage->writeFile($className . '.php', $data);
+    }
+
     public static function createHelper(string $helper): bool
     {
         list(, $class) = self::generateClass($helper, 'helper', true);
