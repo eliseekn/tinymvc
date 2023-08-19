@@ -23,8 +23,7 @@ class RegisterController extends Controller
             $this->render('auth.signup');
         }
 
-        $uri = !$this->session->has('intended') ? config('app.home') : $this->session->pull('intended');
-        $this->redirectUrl($uri);
+        $this->redirectUrl(config('app.home'));
     }
 
     public function register(StoreAction $action): void

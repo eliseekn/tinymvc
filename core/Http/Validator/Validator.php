@@ -10,24 +10,22 @@ namespace Core\Http\Validator;
 
 use GUMP;
 use Core\Http\Response;
+use Spatie\StructureDiscoverer\Discover;
 
 /**
  * Request fields validator
  */
 class Validator implements ValidatorInterface
 {
-    /**
-     * @param bool|array|null $errors
-     */
     public function __construct(
         protected array $rules = [],
         protected array $messages = [],
         protected array $inputs = [],
         protected mixed $errors = null,
     ) {
-        if (!empty(config('validator.rules'))) {
-            $rules = config('validator.rules');
+        $rules = Discover::in(config('storage.rules'))->classes()->get();
 
+        if (!empty($rules)) {
             foreach ($rules as $rule) {
                 GUMP::add_validator(
                     (new $rule())->name,

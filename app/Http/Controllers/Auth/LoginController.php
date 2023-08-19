@@ -21,8 +21,7 @@ class LoginController extends Controller
             $this->render('auth.login');
         }
 
-        $uri = !$this->session->has('intended') ? config('app.home') : $this->session->pull('intended');
-        $this->redirectUrl($uri);
+        $this->redirectUrl(config('app.home'));
     }
 
 	public function authenticate(): void
@@ -31,8 +30,7 @@ class LoginController extends Controller
 
         if (Auth::attempt($this->response, $this->request)) {
             Alert::toast(__('welcome', ['name' => Auth::get('name')]))->success();
-            $uri = !$this->session->has('intended') ? config('app.home') : $this->session->pull('intended');
-            $this->redirectUrl($uri);
+            $this->redirectUrl(config('app.home'));
         }
 
         Alert::default(__('login_failed'))->error();

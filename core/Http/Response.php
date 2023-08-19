@@ -55,7 +55,7 @@ class Response
             $query .= '?' . http_build_query($queries);
         }
 
-        $this->uri = $uri;
+        $this->uri = !session()->has('intended') ? $uri : session()->pull('intended');
         $this->addHeaders(['Location' => url($this->uri . rawurldecode($query))]);
 
         return $this;
