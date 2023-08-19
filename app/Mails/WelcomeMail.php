@@ -8,7 +8,6 @@
 
 namespace App\Mails;
 
-use Core\Routing\View;
 use Core\Support\Mail\Mailer;
 
 /**
@@ -24,6 +23,6 @@ class WelcomeMail extends Mailer
             ->from(config('mailer.sender.email'), config('mailer.sender.name'))
             ->reply(config('mailer.sender.email'), config('mailer.sender.name'))
 			->subject('Welcome')
-            ->body(View::getContent('emails.welcome', compact('name')));
+            ->body(view('emails.welcome', compact('name')));
     }
 }

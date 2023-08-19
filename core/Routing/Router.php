@@ -10,7 +10,6 @@ namespace Core\Routing;
 
 use Closure;
 use Core\Http\Request;
-use Core\Support\Session;
 use Core\Http\Response;
 use Core\Support\DependencyInjection;
 use Core\Exceptions\RoutesNotDefinedException;
@@ -98,7 +97,7 @@ class Router
                 }
 
                 if (!$request->uriContains('api')) {
-                    Session::push('history', [$request->uri()]);
+                    session()->push('history', [$request->uri()]);
                 }
 
                 if (isset($options['middlewares'])) {

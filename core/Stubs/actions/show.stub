@@ -15,6 +15,6 @@ class CLASSNAME
 {
     public function handle(int $id): Model|false
 	{
-        return MODELNAME::find($id);
+        return (new MODELNAME())->find($id);
 	}
 }

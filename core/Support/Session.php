@@ -13,7 +13,12 @@ namespace Core\Support;
  */
 class Session
 {
-    private static function start(): void
+    public function __construct()
+    {
+        $this->start();
+    }
+
+    protected function start(): void
 	{
 		if (session_status() === PHP_SESSION_NONE) {
             ini_set('session.gc_maxlifetime', config('security.session.lifetime'));
@@ -22,29 +27,25 @@ class Session
 		}
 	}
 
-    public static function create(string $name, $data): void
+    public function create(string $name, $data): void
     {
-        self::start();
 		$_SESSION[strtolower(config('app.name')) . '_' . $name] = $data;
     }
     
-    public static function get(string $name, $default = null): mixed
+    public function get(string $name, $default = null): mixed
     {
-        self::start();
         return $_SESSION[strtolower(config('app.name')) . '_' . $name] ?? $default;
     }
     
-    public static function has(string $name): bool
+    public function has(string $name): bool
     {
-        self::start();
 		return isset($_SESSION[strtolower(config('app.name')) . '_' . $name]);
     }
     
-    public static function forget(array|string $names): void
+    public function forget(array|string $names): void
     {
         $names = parse_array($names);
-        self::start();
-        
+
         foreach ($names as $name) {
             unset($_SESSION[strtolower(config('app.name')) . '_' . $name]);
         }
@@ -53,19 +54,19 @@ class Session
     /**
      * Get session data and close it
      */
-    public static function pull(string $name): mixed
+    public function pull(string $name): mixed
     {
-        $data = self::get($name);
-        self::forget($name);
+        $data = $this->get($name);
+        $this->forget($name);
         return $data;
     }
     
     /**
      * Add data to session or create if empty
      */
-    public static function push(string $name, $data, $default = null): void
+    public function push(string $name, $data, $default = null): void
     {
-        $stored_data = self::get($name, $default);
+        $stored_data = $this->get($name, $default);
 
         if (empty($stored_data)) {
             $stored_data = $data;

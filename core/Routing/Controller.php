@@ -5,10 +5,17 @@ namespace Core\Routing;
 use Core\Http\Request;
 use Core\Http\Response;
 use Core\Http\Validator\Validator;
+use Core\Support\Cookies;
+use Core\Support\Session;
 
 class Controller
 {
-    public function __construct(public Request $request, public Response $response) {}
+    public function __construct(
+        public Request $request,
+        public Response $response,
+        public Session $session,
+        public Cookies $cookies
+    ) {}
 
     public function redirectUrl(string $uri, array $queries = []): void
     {
@@ -45,7 +52,7 @@ class Controller
         $this->response->download($filename)->send(200);
     }
 
-    public function validateRequest(Validator $validator): array
+    public function validate(Validator $validator): array
     {
         return $validator
             ->validate($this->request->inputs(), $this->response)

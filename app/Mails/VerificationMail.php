@@ -8,7 +8,6 @@
 
 namespace App\Mails;
 
-use Core\Routing\View;
 use Core\Support\Mail\Mailer;
 
 /**
@@ -24,6 +23,6 @@ class VerificationMail extends Mailer
             ->from(config('mailer.sender.email'), config('mailer.sender.name'))
             ->reply(config('mailer.sender.email'), config('mailer.sender.name'))
 			->subject('Email verification')
-            ->body(View::getContent('emails.verification', compact('email', 'token')));
+            ->body(view('emails.verification', compact('email', 'token')));
     }
 }

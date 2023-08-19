@@ -12,7 +12,6 @@ use App\Http\Validators\Auth\LoginValidator;
 use Core\Routing\Controller;
 use Core\Support\Alert;
 use Core\Support\Auth;
-use Core\Support\Session;
 
 class LoginController extends Controller
 { 
@@ -22,17 +21,17 @@ class LoginController extends Controller
             $this->render('auth.login');
         }
 
-        $uri = !Session::has('intended') ? config('app.home') : Session::pull('intended');
+        $uri = !$this->session->has('intended') ? config('app.home') : $this->session->pull('intended');
         $this->redirectUrl($uri);
     }
 
 	public function authenticate(): void
 	{
-        $this->validateRequest(new LoginValidator());
+        $this->validate(new LoginValidator());
 
         if (Auth::attempt($this->response, $this->request)) {
             Alert::toast(__('welcome', ['name' => Auth::get('name')]))->success();
-            $uri = !Session::has('intended') ? config('app.home') : Session::pull('intended');
+            $uri = !$this->session->has('intended') ? config('app.home') : $this->session->pull('intended');
             $this->redirectUrl($uri);
         }
 

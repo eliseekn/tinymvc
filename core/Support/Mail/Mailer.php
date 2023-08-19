@@ -17,90 +17,90 @@ use PHPMailer\PHPMailer\PHPMailer;
  */
 class Mailer implements MailInterface
 {
-    private PHPMailer $php_mailer;
+    private PHPMailer $phpMailer;
 
     public function __construct()
     {
-        $this->php_mailer = new PHPMailer(true);
-        $this->php_mailer->Debugoutput = 'error_log';
-        $this->php_mailer->CharSet = PHPMailer::CHARSET_UTF8;
+        $this->phpMailer = new PHPMailer(true);
+        $this->phpMailer->Debugoutput = 'error_log';
+        $this->phpMailer->CharSet = PHPMailer::CHARSET_UTF8;
 
         if (config('mailer.transport') === 'smtp') {
-            $this->php_mailer->SMTPDebug = SMTP::DEBUG_SERVER;
-            $this->php_mailer->isSMTP();
-            $this->php_mailer->Host = config('mailer.smtp.host');
-            $this->php_mailer->Port = config('mailer.smtp.port');
-            $this->php_mailer->SMTPAuth = config('mailer.smtp.auth');
+            $this->phpMailer->SMTPDebug = SMTP::DEBUG_SERVER;
+            $this->phpMailer->isSMTP();
+            $this->phpMailer->Host = config('mailer.smtp.host');
+            $this->phpMailer->Port = config('mailer.smtp.port');
+            $this->phpMailer->SMTPAuth = config('mailer.smtp.auth');
 
-            if ($this->php_mailer->SMTPAuth) {
-                $this->php_mailer->Username = config('mailer.smtp.username');
-                $this->php_mailer->Password = config('mailer.smtp.password');
+            if ($this->phpMailer->SMTPAuth) {
+                $this->phpMailer->Username = config('mailer.smtp.username');
+                $this->phpMailer->Password = config('mailer.smtp.password');
             }
 
             if (config('mailer.smtp.secure')) {
-                $this->php_mailer->SMTPSecure = config('mailer.smtp.tls') ? PHPMailer::ENCRYPTION_STARTTLS : PHPMailer::ENCRYPTION_SMTPS;
+                $this->phpMailer->SMTPSecure = config('mailer.smtp.tls') ? PHPMailer::ENCRYPTION_STARTTLS : PHPMailer::ENCRYPTION_SMTPS;
             } else {
-                $this->php_mailer->SMTPAutoTLS = false;
-                $this->php_mailer->SMTPSecure = false;
+                $this->phpMailer->SMTPAutoTLS = false;
+                $this->phpMailer->SMTPSecure = false;
             }
         }
     }
 
     public function to(string $address, string $name = ''): self
     {
-        $this->php_mailer->addAddress($address, $name);
+        $this->phpMailer->addAddress($address, $name);
         return $this;
     }
 
     public function from(string $address, string $name = ''): self
     {
-        $this->php_mailer->setFrom($address, $name);
+        $this->phpMailer->setFrom($address, $name);
         return $this;
     }
 
     public function reply(string $address, string $name = ''): self
     {
-        $this->php_mailer->addReplyTo($address, $name);
+        $this->phpMailer->addReplyTo($address, $name);
         return $this;
     }
     
     public function cc(string $address, string $name = ''): self
     {
-        $this->php_mailer->addCC($address, $name);
+        $this->phpMailer->addCC($address, $name);
         return $this;
     }
     
     public function bcc(string $address, string $name = ''): self
     {
-        $this->php_mailer->addBCC($address, $name);
+        $this->phpMailer->addBCC($address, $name);
         return $this;
     }
 
     public function subject(string $subject): self
     {
-        $this->php_mailer->Subject = $subject;
+        $this->phpMailer->Subject = $subject;
         return $this;
     }
 
     public function body(string $message, bool $html = true): self
     {
-        $this->php_mailer->Body = $message;
+        $this->phpMailer->Body = $message;
 
-        if ($html) $this->php_mailer->isHTML();
+        if ($html) $this->phpMailer->isHTML();
 
         return $this;
     }
 
     public function attachment(string $attachment, string $filename = ''): self
     {
-        $this->php_mailer->addAttachment($attachment, $filename);
+        $this->phpMailer->addAttachment($attachment, $filename);
         return $this;
     }
     
     public function send(): bool
     {
         try {
-            return $this->php_mailer->send();
+            return $this->phpMailer->send();
         } catch (Exception $e) {
             return false;
         }

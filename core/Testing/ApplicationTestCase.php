@@ -10,7 +10,6 @@ namespace Core\Testing;
 
 use App\Database\Models\User;
 use Core\Database\Model;
-use Core\Routing\View;
 use Core\Support\Auth;
 use Core\Database\Repository;
 use CURLFile;
@@ -199,12 +198,12 @@ class ApplicationTestCase extends TestCase
 
     public function assertView(string $view): void
     {
-        $this->assertEquals($this->getBody(), View::getContent($view));
+        $this->assertEquals($this->getBody(), view($view));
     }
 
     public function assertNotView(string $view): void
     {
-        $this->assertNotEquals($this->getBody(), View::getContent($view));
+        $this->assertNotEquals($this->getBody(), view($view));
     }
 
     public function assertDatabaseHas(string $table, array $expected): void

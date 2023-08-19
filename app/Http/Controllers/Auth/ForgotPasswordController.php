@@ -71,7 +71,7 @@ class ForgotPasswordController extends Controller
 	
 	public function update(UpdateAction $action): void
 	{
-        $validated = $this->validateRequest(new LoginValidator());
+        $validated = $this->validate(new LoginValidator());
         $user = $action->handle(['password' => $validated['password']], $validated['email']);
 
         if (!$user) {

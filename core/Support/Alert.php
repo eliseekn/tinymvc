@@ -39,24 +39,24 @@ class Alert
     public function success(): void
     {
         self::$alert += ['type' => 'success'];
-        Session::create('alert', self::$alert);
+        session()->create('alert', self::$alert);
     }
     
     public function error(): void
     {
         self::$alert += ['type' => 'danger'];
-        Session::create('alert', self::$alert);
+        session()->create('alert', self::$alert);
     }
     
     public function info(): void
     {
         self::$alert += ['type' => 'primary',];
-        Session::create('alert', self::$alert);
+        session()->create('alert', self::$alert);
     }
     
     public function warning(): void
     {
         self::$alert += ['type' => 'warning',];
-        Session::create('alert', self::$alert);
+        session()->create('alert', self::$alert);
     }
 }

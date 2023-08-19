@@ -9,7 +9,6 @@
 namespace Core\Routing;
 
 use Twig\Environment;
-use Core\Support\Session;
 use Core\Support\Storage;
 use Core\Support\TwigExtensions;
 use Twig\Loader\FilesystemLoader;
@@ -42,12 +41,14 @@ class View
 
         $twig->addExtension(new TwigExtensions());
         
-        if (config('twig.debug')) $twig->addExtension(new DebugExtension());
+        if (config('twig.debug')) {
+            $twig->addExtension(new DebugExtension());
+        }
 
         return $twig->render($view, array_merge($data, [
-            'inputs' => (object) Session::pull('inputs'), 
-            'errors' => (object) Session::pull('errors'), 
-            'alert' => Session::pull('alert')
+            'inputs' => (object) session()->pull('inputs'),
+            'errors' => (object) session()->pull('errors'),
+            'alert' => session()->pull('alert')
         ]));
     }
 }

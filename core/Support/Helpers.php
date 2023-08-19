@@ -9,84 +9,39 @@
 use Carbon\Carbon;
 use Core\Http\Request;
 use Core\Routing\Route;
+use Core\Routing\View;
 use Core\Support\Config;
 use Core\Support\Cookies;
 use Core\Support\Session;
 use Core\Support\Encryption;
 
 /**
- * Cookies management
+ * Cookie helper
  */
-if (!function_exists('cookie_create')) {
-    function cookie_create(string $name, string $value, int $expire = 3600, bool $secure = false, string $domain = ''): bool
+if (!function_exists('cookies')) {
+    function cookies(): Cookies
     {
-        return Cookies::create($name, $value, $expire, $secure, $domain);
-	}
-}
-
-if (!function_exists('cookie_get')) {
-	function cookie_get(string $name): mixed
-	{
-        return Cookies::get($name);
-	}
-}
-
-if (!function_exists('cookie_has')) {
-	function cookie_has(string $name): bool
-	{
-		return Cookies::has($name);
-	}
-}
-
-if (!function_exists('cookie_delete')) {
-	function cookie_delete(array|string $names): void
-	{
-		Cookies::delete($names);
+        return new Cookies();
 	}
 }
 
 /**
- * Sessions management
+ * Session helper
  */
-if (!function_exists('session_create')) {
-	function session_create(string $name, $data): void
+if (!function_exists('session')) {
+	function session(): Session
 	{
-		Session::create($name, $data);
+		return new Session();
 	}
 }
 
-if (!function_exists('session_get')) {
-	function session_get(string $name, $default = null): mixed
+/**
+ * View get content helper
+ */
+if (!function_exists('view')) {
+	function view(string $view, array $data = []): string
 	{
-		return Session::get($name, $default);
-	}
-}
-
-if (!function_exists('session_pull')) {
-	function session_pull(string $name): mixed
-	{
-		return Session::pull($name);
-	}
-}
-
-if (!function_exists('session_put')) {
-	function session_push(string $name, $data, $default = null): void
-	{
-		Session::push($name, $data, $default);
-	}
-}
-
-if (!function_exists('session_has')) {
-	function session_has(string $name): bool
-	{
-		return Session::has($name);
-	}
-}
-
-if (!function_exists('session_forget')) {
-	function session_forget(array|string $names): void
-	{
-		Session::forget($names);
+		return View::getContent($view, $data);
 	}
 }
 
@@ -95,8 +50,8 @@ if (!function_exists('auth_attempts_exceeded')) {
     {
         if (!config('security.auth.max_attempts')) return false;
 
-        $unlock_timeout = session_get('auth_attempts_timeout');
-        $attempts = session_get('auth_attempts');
+        $unlock_timeout = session()->get('auth_attempts_timeout');
+        $attempts = session()->get('auth_attempts');
 
         if (is_null($attempts) || is_null($unlock_timeout)) {
             return false;
@@ -112,7 +67,7 @@ if (!function_exists('auth')) {
 	 */
 	function auth(?string $key = null): mixed
 	{
-        $user = session_get('user');
+        $user = session()->get('user');
 
         if (is_null($user)) {
             return false;
@@ -143,7 +98,6 @@ if (!function_exists('sanitize')) {
     {
         $str = stripslashes($str);
         $str = htmlspecialchars($str);
-
         return strip_tags($str);
     }
 }
@@ -151,11 +105,11 @@ if (!function_exists('sanitize')) {
 if (!function_exists('generate_csrf_token')) {
     function generate_csrf_token(): string
     {
-        if (session_has('csrf_token')) {
-            $csrf_token = session_get('csrf_token');
+        if (session()->has('csrf_token')) {
+            $csrf_token = session()->get('csrf_token');
         } else {
             $csrf_token = generate_token();
-            session_create('csrf_token', $csrf_token);
+            session()->create('csrf_token', $csrf_token);
         }
 
         return $csrf_token;
@@ -195,7 +149,7 @@ if (!function_exists('method_input')) {
 if (!function_exists('valid_csrf_token')) {
     function valid_csrf_token(string $csrf_token): bool
     {
-        return hash_equals(session_get('csrf_token'), $csrf_token);
+        return hash_equals(session()->get('csrf_token'), $csrf_token);
     }
 }
 

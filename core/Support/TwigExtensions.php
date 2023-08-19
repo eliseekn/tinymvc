@@ -80,8 +80,8 @@ class TwigExtensions extends AbstractExtension implements GlobalsInterface
             new TwigFunction('__', '__'),
             new TwigFunction('env', 'env'),
             new TwigFunction('date', 'date'),
-            new TwigFunction('session_has', 'session_has'),
-            new TwigFunction('cookie_has', 'cookie_has'),
+            new TwigFunction('session', 'session'),
+            new TwigFunction('cookies', 'cookies'),
         ];
     }
 }

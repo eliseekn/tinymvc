@@ -15,6 +15,6 @@ class CLASSNAME
 {
     public function handle(array $data): Model|false
 	{
-        return MODELNAME::create($data);
+        return (new MODELNAME())->create($data);
 	}
 }

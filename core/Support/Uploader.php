@@ -15,7 +15,10 @@ class Uploader
 {    
     public string $filename = '';
 
-    public function __construct(private readonly array $file = [], private readonly array $allowed_extensions = []) {}
+    public function __construct(
+        private readonly array $file = [],
+        private readonly array $allowed_extensions = []
+    ) {}
     
     public function getOriginalFilename(): string
     {

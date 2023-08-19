@@ -8,9 +8,6 @@
 
 namespace Core\Http;
 
-use Core\Routing\View;
-use Core\Support\Cookies;
-use Core\Support\Session;
 use Core\Exceptions\FileNotFoundException;
 use Core\Exceptions\InvalidJsonDataException;
 use Core\Exceptions\InvalidResponseDataException;
@@ -46,7 +43,7 @@ class Response
 
     public function view(string $view, array $data = []): self
     {
-        $this->data = View::getContent($view, $data);
+        $this->data = view($view, $data);
         return $this;
     }
 
@@ -71,7 +68,7 @@ class Response
 
     public function back(): self
     {
-        $history = Session::get('history');
+        $history = session()->get('history');
 
         if(empty($history)) {
             return $this->url('/');
@@ -88,31 +85,31 @@ class Response
 
     public function with(string $key, $data): self
     {
-        Session::create($key, $data);
+        session()->create($key, $data);
         return $this;
     }
     
     public function withErrors(array $errors): self
     {
-        Session::create('errors', $errors);
+        session()->create('errors', $errors);
         return $this;
     }
 
     public function withInputs(array $inputs): self
     {
-        Session::create('inputs', $inputs);
+        session()->create('inputs', $inputs);
         return $this;
     }
     
     public function withCookie(string $name, string $value, int $expire = 3600, bool $secure = false, string $domain = ''): self
     {
-        Cookies::create($name, $value, $expire, $secure, $domain);
+        cookies()->create($name, $value, $expire, $secure, $domain);
         return $this;
     }
 
     public function withoutCookie(array|string $names): self
     {
-        Cookies::delete($names);
+        cookies()->delete($names);
         return $this;
     }
 

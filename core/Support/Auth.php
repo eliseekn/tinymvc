@@ -21,12 +21,12 @@ class Auth
 {
     public static function getAttempts(): mixed
     {
-        return Session::get('auth_attempts', 0);
+        return session()->get('auth_attempts', 0);
     }
 
     public static function attempt(Response $response, Request $request): bool
     {
-        Session::push('auth_attempts', 1, 0);
+        session()->push('auth_attempts', 1, 0);
         $credentials = $request->only(['email', 'password']);
 
         if (!self::checkCredentials($credentials['email'], $credentials['password'], $user)) {
@@ -40,11 +40,11 @@ class Auth
             return false;
         }
 
-        Session::forget(['auth_attempts', 'auth_attempts_timeout']);
-        Session::create('user', $user->toArray());
+        session()->forget(['auth_attempts', 'auth_attempts_timeout']);
+        session()->create('user', $user->toArray());
             
         if ($request->hasInput('remember')) {
-            Cookies::create('user', $user->attribute('email'), 3600 * 24 * 365);
+            cookies()->create('user', $user->attribute('email'), 3600 * 24 * 365);
         }
         
         return true;
@@ -90,7 +90,7 @@ class Auth
 
     public static function check(Request $request): bool
     {
-        $result = Session::has('user');
+        $result = session()->has('user');
 
         if (!$result) {
             if (empty($request->getHttpAuth())) {
@@ -106,12 +106,12 @@ class Auth
 
     public static function remember(): bool
     {
-        return Cookies::has('user');
+        return cookies()->has('user');
     }
     
     public static function get(?string $key = null): mixed
     {
-        $user = Session::get('user');
+        $user = session()->get('user');
 
         if (is_null($key)) {
             return $user;
@@ -122,10 +122,10 @@ class Auth
 
     public static function forget(): void
     {
-        Session::forget(['user', 'history', 'csrf_token']);
+        session()->forget(['user', 'history', 'csrf_token']);
 
         if (self::remember()) {
-            Cookies::delete('user');
+            cookies()->delete('user');
         }
     }
 }

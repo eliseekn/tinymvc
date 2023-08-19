@@ -8,8 +8,6 @@
 
 namespace App\Http\Middlewares;
 
-use Core\Support\Cookies;
-use Core\Support\Session;
 use App\Database\Models\User;
 
 /**
@@ -19,11 +17,11 @@ class RememberUser
 {    
     public function handle(): void
     {
-        if (Cookies::has('user')) {
-            $user = (new User())->findBy('email', Cookies::get('user'));
+        if (cookies()->has('user')) {
+            $user = (new User())->findBy('email', cookies()->get('user'));
 
             if ($user !== false) {
-                Session::create('user', $user);
+                session()->create('user', $user);
             }
         }
     }

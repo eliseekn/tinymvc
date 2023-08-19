@@ -9,12 +9,6 @@ enum TokenDescription: string
 
     public static function values(): array
     {
-        $result = [];
-
-        foreach (self::cases() as $case) {
-            $result[] = $case->value;
-        }
-
-        return $result;
+        return array_column(self::cases(), 'value');
     }
 }

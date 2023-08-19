@@ -15,7 +15,7 @@ class CLASSNAME
 {
     public function handle(array $data, int $id): Model|false
 	{
-        $MODELNAME = MODELNAME::find($id);
+        $MODELNAME = (new MODELNAME())->find($id);
         return !$MODELNAME ? false : $MODELNAME->fill($data)->save();
 	}
 }

@@ -8,7 +8,6 @@
 
 namespace App\Mails;
 
-use Core\Routing\View;
 use Core\Support\Mail\Mailer;
 
 class CLASSNAME extends Mailer
@@ -21,6 +20,6 @@ class CLASSNAME extends Mailer
             ->from(config('mailer.sender.email'), config('mailer.sender.name'))
             ->reply(config('mailer.sender.email'), config('mailer.sender.name'))
 			->subject('Subject')
-            ->body(View::getContent('emails.RESOURCENAME'));
+            ->body(view('emails.RESOURCENAME'));
     }
 }

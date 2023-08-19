@@ -14,7 +14,6 @@ use App\Http\Validators\Auth\RegisterValidator;
 use Core\Routing\Controller;
 use Core\Support\Alert;
 use Core\Support\Auth;
-use Core\Support\Session;
 
 class RegisterController extends Controller
 {
@@ -24,13 +23,13 @@ class RegisterController extends Controller
             $this->render('auth.signup');
         }
 
-        $uri = !Session::has('intended') ? config('app.home') : Session::pull('intended');
+        $uri = !$this->session->has('intended') ? config('app.home') : $this->session->pull('intended');
         $this->redirectUrl($uri);
     }
 
     public function register(StoreAction $action): void
     {
-        $validated = $this->validateRequest(new RegisterValidator());
+        $validated = $this->validate(new RegisterValidator());
         $user = $action->handle($validated);
 
         if (config('security.auth.email_verification')) {

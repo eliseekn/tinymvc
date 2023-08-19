@@ -8,7 +8,6 @@
 
 namespace App\Mails;
 
-use Core\Routing\View;
 use Core\Support\Mail\Mailer;
 
 /**
@@ -23,6 +22,6 @@ class TokenMail extends Mailer
             ->from(config('mailer.sender.email'), config('mailer.sender.name'))
             ->reply(config('mailer.sender.email'), config('mailer.sender.name'))
             ->subject('Password reset')
-            ->body(View::getContent('emails.token', compact('email', 'token')));
+            ->body(view('emails.token', compact('email', 'token')));
     }
 }
