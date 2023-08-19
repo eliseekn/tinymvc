@@ -26,6 +26,7 @@ return [
         new \Core\Console\Make\Model(),
         new \Core\Console\Make\Controller(),
         new \Core\Console\Make\Validator(),
+        new \Core\Console\Make\Rule(),
         new \Core\Console\Make\Seed(),
         new \Core\Console\Make\Factory(),
         new \Core\Console\Make\View(),

@@ -12,8 +12,6 @@ use Core\Http\Response;
 
 interface ValidatorInterface
 {
-    public function addCustomRule(string $rule, callable $callback, string $error_message);
-
     public function validate(array $inputs, Response $response);
     
     public function fails();

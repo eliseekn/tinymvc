@@ -24,6 +24,7 @@ return [
     'models' => absolute_path('app.Database.Models'),
     'middlewares' => absolute_path('app.Http.Middlewares'),
     'validators' => absolute_path('app.Http.Validators'),
+    'rules' => absolute_path('app.Http.Validators.Rules'),
     'logs' => absolute_path('storage.logs'),
     'cache' => absolute_path('storage.cache'),
     'mails' => absolute_path('app.Mails'),

@@ -24,7 +24,19 @@ class Validator implements ValidatorInterface
         protected array $messages = [],
         protected array $inputs = [],
         protected mixed $errors = null,
-    ) {}
+    ) {
+        if (!empty(config('validator.rules'))) {
+            $rules = config('validator.rules');
+
+            foreach ($rules as $rule) {
+                GUMP::add_validator(
+                    (new $rule())->name,
+                    (new $rule())->rule(...),
+                    (new $rule())->message()
+                );
+            }
+        }
+    }
 
     public function validate(array $inputs, ?Response $response = null): self
     {
@@ -53,18 +65,12 @@ class Validator implements ValidatorInterface
     {
         return [];
     }
-    
-    public function addCustomRule(string $rule, callable $callback, string $error_message): self
-    {
-        GUMP::add_validator($rule, $callback, $error_message);
-        return $this;
-    }
 
     public function fails(): bool
     {
         return is_array($this->errors);
     }
-        
+
     /**
      * Generate errors messages array according to input field name
      * 

@@ -78,13 +78,16 @@ class Make
 
         $name = self::removeUnderscore($name);
 
-        if ($suffix === 'migration') $suffix = 'table';
+        if ($suffix === 'migration') {
+            $suffix = 'table';
+        }
 
         $suffix = self::removeUnderscore($suffix);
-
         $class = $name . ucfirst($suffix);
 
-        if (strpos($class, 'Table')) $class .= date('_YmdHis');
+        if (strpos($class, 'Table')) {
+            $class .= date('_YmdHis');
+        }
 
         return [lcfirst($name), $class];
     }
@@ -110,7 +113,7 @@ class Make
     {
         list($name, $class) = self::generateClass($model);
 
-        $data = self::stubs()->readFile('Model.stub');
+        $data = self::stubs()->addPath('database')->readFile('Model.stub');
         $data = self::addNamespace($data, 'App\Database\Models', $namespace);
         $data = str_replace('CLASSNAME', self::fixPluralTypo($class, true), $data);
         $data = str_replace('TABLENAME', $name, $data);
@@ -128,7 +131,7 @@ class Make
     {
         list($name, $class) = self::generateClass($migration, 'migration');
 
-        $data = self::stubs()->readFile('Migration.stub');
+        $data = self::stubs()->addPath('database')->readFile('Migration.stub');
         $data = str_replace('CLASSNAME', $class, $data);
         $data = str_replace('TABLENAME', $name, $data);
 
@@ -139,7 +142,7 @@ class Make
     {
         list($name, $class) = self::generateClass($seed, 'seed', true, true);
 
-        $data = self::stubs()->readFile('Seed.stub');
+        $data = self::stubs()->addPath('database')->readFile('Seed.stub');
         $data = str_replace('CLASSNAME', self::fixPluralTypo($class, true), $data);
         $data = str_replace('TABLENAME', self::fixPluralTypo($name), $data);
 
@@ -150,7 +153,7 @@ class Make
     {
         list($name, $class) = self::generateClass($factory, 'factory', true, true);
 
-        $data = self::stubs()->readFile('Factory.stub');
+        $data = self::stubs()->addPath('database')->readFile('Factory.stub');
         $data = self::addNamespace($data, 'App\Database\Factories', $namespace);
         $data = str_replace('CLASSNAME', self::fixPluralTypo($class, true), $data);
         $data = str_replace('MODELNAME', self::fixPluralTypo(ucfirst($name), true), $data);
@@ -242,7 +245,7 @@ class Make
     {
         list(, $class) = self::generateClass($validator, 'validator', true);
 
-        $data = self::stubs()->readFile('Validator.stub');
+        $data = self::stubs()->addPath('validators')->readFile('Validator.stub');
         $data = self::addNamespace($data, 'App\Http\Validators', $namespace);
         $data = str_replace('CLASSNAME', $class, $data);
 
@@ -254,7 +257,20 @@ class Make
 
         return $storage->writeFile($class . '.php', $data);
     }
-    
+
+    public static function createRule(string $rule): bool
+    {
+        list($name, $class) = self::generateClass(base_name: $rule, singular: true);
+
+        $data = self::stubs()->addPath('validators')->readFile('Rule.stub');
+        $data = self::addNamespace($data, 'App\Http\Validators\Rules');
+        $data = str_replace('CLASSNAME', $class, $data);
+        $data = str_replace('RULENAME', strtolower($name), $data);
+
+        $storage = Storage::path(config('storage.rules'));
+        return $storage->writeFile($class . '.php', $data);
+    }
+
     public static function createMiddleware(string $middleware): bool
     {
         list(, $class) = self::generateClass($middleware, '', true);

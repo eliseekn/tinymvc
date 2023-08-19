@@ -12,6 +12,11 @@ use Core\Http\Validator\Validator;
 
 class LoginValidator extends Validator
 {
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     /**
      * Validation rules
      */

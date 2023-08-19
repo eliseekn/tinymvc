@@ -9,18 +9,12 @@
 namespace App\Http\Validators\Auth;
 
 use Core\Http\Validator\Validator;
-use Core\Database\Repository;
 
 class RegisterValidator extends Validator
 {
     public function __construct()
     {
         parent::__construct();
-
-        $this->addCustomRule('unique', function($field, array $input, array $params, $value) {
-            $model = (new Repository($params[0]))->select(['*'])->where($field, $value);
-            return !$model->exists();
-        }, 'This {field} is already registered');
     }
 
     /**
