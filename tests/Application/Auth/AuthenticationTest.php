@@ -8,9 +8,9 @@
 
 namespace Tests\Application\Auth;
 
-use App\Database\Factories\UserFactory;
+use App\Database\Models\User;
 use Core\Testing\ApplicationTestCase;
-use Core\Testing\Concerns\RefreshDatabase;
+use Core\Testing\RefreshDatabase;
 
 class AuthenticationTest extends ApplicationTestCase
 {
@@ -18,7 +18,7 @@ class AuthenticationTest extends ApplicationTestCase
 
     public function test_can_not_authenticate_with_unregistered_user_credentials(): void
     {
-        $user = (new UserFactory())->make(['password' => 'password']);
+        $user = User::factory()->make(['password' => 'password']);
         $client = $this->post('/authenticate', $user->toArray(['email', 'password']));
         $client->assertSessionHasErrors();
         $client->assertRedirectedToUrl(url('login'));
@@ -26,7 +26,7 @@ class AuthenticationTest extends ApplicationTestCase
 
     public function test_can_authenticate_with_registered_user_credentials(): void
     {
-        $user = (new UserFactory())->create();
+        $user = User::factory()->create();
         $client = $this->post('/authenticate', [
             'email' => $user->attribute('email'),
             'password' => 'password'
@@ -38,7 +38,7 @@ class AuthenticationTest extends ApplicationTestCase
 
     public function test_can_register_user(): void
     {
-        $user = (new UserFactory())->make(['password' => 'password']);
+        $user = User::factory()->make(['password' => 'password']);
         $client = $this->post('/register', $user->toArray());
         $client->assertSessionDoesNotHaveErrors();
 
@@ -53,7 +53,7 @@ class AuthenticationTest extends ApplicationTestCase
 
     public function test_can_logout(): void
     {
-        $user = (new UserFactory())->create();
+        $user = User::factory()->create();
         $this->post('/authenticate', [
             'email' => $user->attribute('email'),
             'password' => 'password'
@@ -66,7 +66,7 @@ class AuthenticationTest extends ApplicationTestCase
 
     public function test_can_not_register_same_user_twice(): void
     {
-        $user = (new UserFactory())->create();
+        $user = User::factory()->create();
         $client = $this->post('/register', $user->toArray());
         $client->assertSessionHasErrors();
     }

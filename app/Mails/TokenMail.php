@@ -10,18 +10,16 @@ namespace App\Mails;
 
 use Core\Support\Mail\Mailer;
 
-/**
- * Send password reset token link notification
- */
-class TokenMail extends Mailer
+class TokenMail
 {
-    public function __construct(string $email, string $token) {
-        parent::__construct();
-        
-        $this->to($email)
+    public static function send(string $email, string $token): bool
+    {
+        return (new Mailer())
+            ->to($email)
             ->from(config('mailer.sender.email'), config('mailer.sender.name'))
             ->reply(config('mailer.sender.email'), config('mailer.sender.name'))
             ->subject('Password reset')
-            ->body(view('emails.token', compact('email', 'token')));
+            ->body(view('emails.token', compact('email', 'token')))
+            ->send();
     }
 }

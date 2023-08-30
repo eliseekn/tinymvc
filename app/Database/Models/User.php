@@ -8,10 +8,13 @@
 
 namespace App\Database\Models;
 
+use Core\Database\Factory\HasFactory;
 use Core\Database\Model;
 
 class User extends Model
 {
+    use HasFactory;
+
     public function __construct()
     {
         parent::__construct('users');

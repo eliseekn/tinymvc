@@ -7,15 +7,18 @@
 
 		<style>
 			.card {
-                padding: 1em;
+                padding: 1.5em;
                 border: 0px solid gray;
                 box-shadow: 0 0 5px gray;
             }
 
             .footer {
                 font-size: 1em;
+				padding-top: 1em;
             }
 		</style>
+
+		<title>{% block title %}TinyMVC{% endblock %}</title>
 	</head>
 
 	<body>
@@ -29,7 +32,7 @@
 							<td class="body" width="100%" cellpadding="0" cellspacing="0">
 								<table align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
 									<tr>
-										<td class="card">{% block body %}{% endblock %}</td>
+										<td class="card">{% block content %}{% endblock %}</td>
 									</tr>
 								</table>
 							</td>

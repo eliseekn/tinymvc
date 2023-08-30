@@ -4,7 +4,11 @@
 	{{ __('reset_password') }}
 {% endblock %}
 
-{% block body %}
+{% block description %}
+	{{ __('reset_password') }}
+{% endblock %}
+
+{% block content %}
 	<div class="card shadow p-4">
 		<form method="post" action="{{ url('password/update') }}">
 			{{ csrf_token_input()|raw }}

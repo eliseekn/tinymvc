@@ -9,7 +9,7 @@
 namespace Tests\Application;
 
 use Core\Testing\ApplicationTestCase;
-use Core\Testing\Concerns\RefreshDatabase;
+use Core\Testing\RefreshDatabase;
 
 class CLASSNAME extends ApplicationTestCase
 {

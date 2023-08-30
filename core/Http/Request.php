@@ -183,11 +183,6 @@ class Request
         return $result;
     }
 
-    public function get(string $item, $default = null): mixed
-    {
-        return $this->filled($item) ? $this->inputs($item) : $default;
-    }
-
     public function set(string $item, $value): void
     {
         if (isset($_POST[$item])) {

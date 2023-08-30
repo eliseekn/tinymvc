@@ -13,10 +13,8 @@ use App\Enums\TokenDescription;
 use App\Http\Actions\User\UpdateAction;
 use App\Http\Validators\Auth\LoginValidator;
 use App\Mails\TokenMail;
-use Carbon\Carbon;
 use Core\Routing\Controller;
 use Core\Support\Alert;
-use Core\Support\Mail\Mail;
 
 /**
  * Manage password forgot
@@ -25,27 +23,26 @@ class ForgotPasswordController extends Controller
 {
 	public function notify(): void
 	{
-        $tokenValue = generate_token();
-
-        if (!Mail::send(new TokenMail($this->request->get('email'), $tokenValue))) {
-            Alert::default(__('password_reset_link_not_sent'))->error();
-            $this->redirectBack();
-        }
-
-        $token = Token::exists($this->request->queries('email'), TokenDescription::PASSWORD_RESET_TOKEN->value);
+        $tokenValue = generate_token(15);
+        $token = Token::findByDescription($this->request->inputs('email'), TokenDescription::PASSWORD_RESET_TOKEN->value);
 
         if ($token) {
             $token->update(['value' => $tokenValue]);
         } else {
-            $token->fill([
-                'email'=> $this->request->queries('email'),
-                'value' => $token,
-                'expire' => Carbon::now()->addHour()->toDateTimeString(),
+            (new Token())->create([
+                'email'=> $this->request->inputs('email'),
+                'value' => $tokenValue,
+                'expire' => carbon()->addHour()->toDateTimeString(),
                 'description' => TokenDescription::PASSWORD_RESET_TOKEN->value
-            ])->save();
+            ]);
         }
 
-        Alert::default(__('password_reset_link_sent'))->success();
+        if (!TokenMail::send($this->request->inputs('email'), $tokenValue)) {
+            Alert::default(__('password_reset_link_not_sent'))->error();
+        } else {
+            Alert::default(__('password_reset_link_sent'))->success();
+        }
+
         $this->redirectBack();
 	}
 	
@@ -55,13 +52,13 @@ class ForgotPasswordController extends Controller
             $this->response(__('bad_request'), 400);
         }
 
-        $token = Token::findLatest($this->request->queries('email'), TokenDescription::PASSWORD_RESET_TOKEN->value);
+        $token = Token::findByDescription($this->request->queries('email'), TokenDescription::PASSWORD_RESET_TOKEN->value);
 
         if (!$token || $token->attribute('value') !== $this->request->queries('token')) {
 			$this->response(__('invalid_password_reset_link'), 400);
 		}
 
-		if (Carbon::parse($token->attribute('expire'))->lt(Carbon::now())) {
+		if (carbon($token->attribute('expire'))->lt(carbon())) {
 			$this->response(__('expired_password_reset_link'), 400);
 		}
 

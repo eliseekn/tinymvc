@@ -27,12 +27,4 @@ class LoginValidator extends Validator
             'password' => 'required|max_len,255'
         ];
     }
-
-    /**
-     * Custom errors messages
-     */
-    public function messages(): array
-    {
-        return [];
-    }
 }

@@ -14,6 +14,7 @@ use Core\Support\Config;
 use Core\Support\Cookies;
 use Core\Support\Session;
 use Core\Support\Encryption;
+use Faker\Factory;
 
 /**
  * Cookie helper
@@ -432,6 +433,20 @@ if (!function_exists('parse_array')) {
         }
 
         return [$value];
+    }
+}
+
+if (!function_exists('carbon')) {
+    function carbon($time = null, $tz = null)
+    {
+        return Carbon::parse($time, $tz);
+    }
+}
+
+if (!function_exists('faker')) {
+    function faker()
+    {
+        return Factory::create(config('app.lang'));
     }
 }
 

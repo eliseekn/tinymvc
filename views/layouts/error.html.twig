@@ -5,17 +5,17 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<meta name="description" content="{% block error_description %}{% endblock %}">
+		<meta name="description" content="{% block description %}{% endblock %}">
         <link rel="stylesheet" href="{{ resources('vendor/bootstrap-5.1.1-dist/bootstrap.min.css') }}">
-		<title>{% block error_title %}{% endblock %}</title>
+		<title>{% block title %}{% endblock %}</title>
 	</head>
 
 	<body>
 		<div class="container mt-5 p-5 text-center">
-			<h1 class="fw-bold display-4">{{ block("error_title") }}</h1>
+			<h1 class="fw-bold display-4">{{ block("title") }}</h1>
 
 			<p class="fs-5 mt-4" style="line-height: 1.8"> 
-                {% block error_message %}{% endblock %}
+                {% block content %}{% endblock %}
 			</p>
 
             <p><a href="{{ url('/') }}">{{ __('back_home') }}</a></p>

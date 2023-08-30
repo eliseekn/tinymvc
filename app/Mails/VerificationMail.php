@@ -10,19 +10,16 @@ namespace App\Mails;
 
 use Core\Support\Mail\Mailer;
 
-/**
- * Send email verification notification
- */
-class VerificationMail extends Mailer
+class VerificationMail
 {
-    public function __construct(string $email, string $token) 
+    public static function send(string $email, string $token): bool
     {
-        parent::__construct();
-
-        $this->to($email)
+        return (new Mailer())
+            ->to($email)
             ->from(config('mailer.sender.email'), config('mailer.sender.name'))
             ->reply(config('mailer.sender.email'), config('mailer.sender.name'))
 			->subject('Email verification')
-            ->body(view('emails.verification', compact('email', 'token')));
+            ->body(view('emails.verification', compact('email', 'token')))
+            ->send();
     }
 }

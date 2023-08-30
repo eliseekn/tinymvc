@@ -13,10 +13,8 @@ use App\Enums\TokenDescription;
 use App\Http\Actions\User\UpdateAction;
 use App\Mails\VerificationMail;
 use App\Mails\WelcomeMail;
-use Carbon\Carbon;
 use Core\Routing\Controller;
 use Core\Support\Alert;
-use Core\Support\Mail\Mail;
 
 /**
  * Manage email verification link
@@ -25,24 +23,23 @@ class EmailVerificationController extends Controller
 {
     public function notify(): void
     {
-        $tokenValue = generate_token();
-
-        if (!Mail::send(new VerificationMail($this->request->queries('email'), $tokenValue))) {
-            Alert::default(__('email_verification_link_not_sent'))->error();
-            $this->render('auth.signup');
-        }
-
-        $token = Token::exists($this->request->queries('email'), TokenDescription::EMAIL_VERIFICATION_TOKEN->value);
+        $tokenValue = generate_token(15);
+        $token = Token::findByDescription($this->request->queries('email'), TokenDescription::EMAIL_VERIFICATION_TOKEN->value);
 
         if ($token) {
             $token->update(['value' => $tokenValue]);
         } else {
-            $token->fill([
+            (new Token())->create([
                 'email'=> $this->request->queries('email'),
-                'value' => $token,
-                'expire' => Carbon::now()->addDay()->toDateTimeString(),
+                'value' => $tokenValue,
+                'expire' => carbon()->addDay()->toDateTimeString(),
                 'description' => TokenDescription::EMAIL_VERIFICATION_TOKEN->value
-            ])->save();
+            ]);
+        }
+
+        if (!VerificationMail::send($this->request->queries('email'), $tokenValue)) {
+            Alert::default(__('email_verification_link_not_sent'))->error();
+            $this->render('auth.signup');
         }
 
         Alert::default(__('email_verification_link_sent'))->success();
@@ -55,25 +52,25 @@ class EmailVerificationController extends Controller
             $this->response(__('bad_request'), 400);
         }
 
-        $token = Token::findLatest($this->request->queries('email'), TokenDescription::EMAIL_VERIFICATION_TOKEN->value);
+        $token = Token::findByDescription($this->request->queries('email'), TokenDescription::EMAIL_VERIFICATION_TOKEN->value);
 
         if (!$token || $token->attribute('value') !== $this->request->queries('token')) {
 			$this->response(__('invalid_password_reset_link'), 400);
 		}
 
-		if (Carbon::parse($token->attribute('expire'))->lt(Carbon::now())) {
+		if (carbon($token->attribute('expire'))->lt(carbon())) {
 			$this->response(__('expired_password_reset_link'), 400);
 		}
 
         $token->delete();
-        $user = $action->handle(['email_verified' => Carbon::now()->toDateTimeString()], $this->request->queries('email'));
+        $user = $action->handle(['email_verified' => carbon()->toDateTimeString()], $this->request->queries('email'));
 
 		if (!$user) {
             Alert::default(__('account_not_found'))->error();
             $this->redirectUrl('/signup');
         }
 
-        Mail::send(new WelcomeMail($user->attribute('email'), $user->attribute('name')));
+        WelcomeMail::send($user->attribute('email'), $user->attribute('name'));
         Alert::default(__('email_verified'))->success();
 
         $this->redirectUrl('/login');

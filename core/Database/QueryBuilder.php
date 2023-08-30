@@ -8,7 +8,7 @@
 
 namespace Core\Database;
 
-use Carbon\Carbon;
+use Closure;
 use Core\Database\Connection\Connection;
 use PDOStatement;
 
@@ -138,7 +138,7 @@ class QueryBuilder
 		self::$query = "INSERT INTO " . self::$table . " (";
 
 		foreach ($items as $key => $value) {
-			self::$query .= "{$key}, ";
+			self::$query .= "$key, ";
 		}
 
 		self::$query = rtrim(self::$query, ', ');
@@ -160,11 +160,11 @@ class QueryBuilder
 		self::$query = "UPDATE " . self::$table . " SET ";
 
 		if (config('database.timestamps')) {
-            $items = array_merge($items, ['updated_at' => Carbon::now()->toDateTimeString()]);
+            $items = array_merge($items, ['updated_at' => carbon()->toDateTimeString()]);
         }
 
 		foreach ($items as $key => $value) {
-			self::$query .= "{$key} = ?, ";
+			self::$query .= "$key = ?, ";
 			self::$args[] = $value;
 		}
 
@@ -203,7 +203,7 @@ class QueryBuilder
 		
 	public function column(string $name, string $type): self
 	{
-		self::$query .= "{$name} $type NOT NULL, ";
+		self::$query .= "$name $type NOT NULL, ";
 		return $this;
 	}
     
@@ -243,13 +243,13 @@ class QueryBuilder
 		
 	public function foreignKey(string $name, string $column): self
 	{
-		self::$query .= " CONSTRAINT $name FOREIGN KEY ({$column})";
+		self::$query .= " CONSTRAINT $name FOREIGN KEY ($column)";
         return $this;
 	}
 	
 	public function references(string $table, string $column): self
 	{
-		self::$query .= " REFERENCES " . self::setTable($table) . "({$column})";
+		self::$query .= " REFERENCES " . self::setTable($table) . "($column)";
         return $this;
 	}
 	
@@ -282,9 +282,9 @@ class QueryBuilder
     public function addCurrentTimestamp(string $created_at = 'created_at', string $updated_at = 'updated_at'): self
     {
         if ($this->driver() === 'mysql') {
-            self::$query .= " {$created_at} TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, {$updated_at} TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, ";
+            self::$query .= " $created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, $updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, ";
         } else {
-            self::$query .= " {$created_at} TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')), {$updated_at} TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')), ";
+            self::$query .= " $created_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')), $updated_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')), ";
         }
 
         return $this;
@@ -477,7 +477,7 @@ class QueryBuilder
 		self::$query .= ' GROUP BY ';
 
 		foreach ($columns as $column) {
-			self::$query .= "{$column}, ";
+			self::$query .= "$column, ";
 		}
 
 		self::$query = rtrim(self::$query, ', ');
@@ -488,7 +488,9 @@ class QueryBuilder
 	{
 		self::$query .= " LIMIT $limit";
 
-		if (!is_null($offset)) self::$query .= ", $offset";
+		if (!is_null($offset)) {
+            self::$query .= ", $offset";
+        }
 
 		return $this;
 	}
@@ -556,17 +558,23 @@ class QueryBuilder
         self::$args = array_merge(self::$args, $args);
         return $this;
     }
-    
-    public function subQuery($callback): self
+
+    public function subQuery(Closure $callback): self
     {
-        if (!is_null($callback)) {
-            call_user_func_array($callback, [$this]);
-        }
-        
+        call_user_func_array($callback, [$this]);
         return $this;
     }
-	
-	public function execute(): false|PDOStatement
+
+    public function subQueryWhen(bool $condition, Closure $callback): self
+    {
+        if ($condition) {
+            call_user_func_array($callback, [$this]);
+        }
+
+        return $this;
+    }
+
+    public function execute(): false|PDOStatement
 	{
         $this->trimQuery();
         $stmt = Connection::getInstance()->executeQuery(self::$query, self::$args);
@@ -593,5 +601,10 @@ class QueryBuilder
     {
         self::$query = trim(self::$query);
         self::$query = str_replace('  ', ' ', self::$query);
+    }
+
+    public function dd(): void
+    {
+        dd($this->toSQL());
     }
 }

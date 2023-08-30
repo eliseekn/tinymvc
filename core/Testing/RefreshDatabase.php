@@ -6,7 +6,7 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Core\Testing\Concerns;
+namespace Core\Testing;
 
 use Symfony\Component\Process\Process;
 

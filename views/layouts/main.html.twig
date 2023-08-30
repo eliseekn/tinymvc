@@ -7,24 +7,16 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="description" content="{% block description %}{% endblock %}">
         <link rel="stylesheet" href="{{ resources('vendor/bootstrap-5.1.1-dist/bootstrap.min.css') }}">
-        <link rel="stylesheet" href="{{ assets('css/style.css') }}"> 
+        <link rel="stylesheet" href="{{ assets('css/style.css') }}">
         <title>{% block title %}{% endblock %}</title>
     </head>
 
     <body>
-        <div class="container py-5" style="width: 430px">
-            <h1 class="pb-3 text-center">{{ block("title") }}</h1>
+        {% if alert is not empty %}
+            {% include "partials/alert.html.twig" with {alert: alert} %}
+        {% endif %}
 
-            {% if alert is not empty %}
-                {% include "partials/alert.html.twig" with {alert: alert} %}
-            {% endif %}
-
-            {% block content %}{% endblock %}
-
-            <div class="mt-4 text-center">
-                <a href="{{ url('/') }}">{{ __('back_home') }}</a>
-            </div>
-        </div>
+        {% block content %}{% endblock %}
 
         <script defer src="{{ resources('vendor/fontawesome-5.13-all.js') }}"></script>
         <script defer src="{{ resources('vendor/bootstrap-5.1.1-dist/bootstrap.bundle.min.js') }}"></script>

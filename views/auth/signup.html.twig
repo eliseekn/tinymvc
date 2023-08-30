@@ -4,7 +4,11 @@
 	{{ __('signup') }}
 {% endblock %}
 
-{% block body %}
+{% block description %}
+	{{ __('signup') }}
+{% endblock %}
+
+{% block content %}
 	<div class="card shadow p-4">
 		<form method="post" action="{{ url('register') }}">
 			{{ csrf_token_input()|raw }}

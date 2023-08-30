@@ -10,11 +10,11 @@ namespace Core\Testing;
 
 use App\Database\Models\User;
 use Core\Database\Model;
-use Core\Support\Auth;
 use Core\Database\Repository;
+use Core\Http\Client\Curl as Client;
+use Core\Support\Auth;
 use CURLFile;
 use PHPUnit\Framework\TestCase;
-use Core\Http\Client\Curl as Client;
 
 /**
  * Manage application tests
@@ -43,7 +43,7 @@ class ApplicationTestCase extends TestCase
     {
         $uses = array_flip(class_uses_recursive(static::class));
 
-        if (isset($uses[\Core\Testing\Concerns\RefreshDatabase::class])) {
+        if (isset($uses[\Core\Testing\RefreshDatabase::class])) {
             $this->refreshDatabase();
         }
     }

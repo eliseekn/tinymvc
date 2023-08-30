@@ -9,7 +9,7 @@
 namespace Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use Core\Testing\Concerns\RefreshDatabase;
+use Core\Testing\RefreshDatabase;
 
 class CLASSNAME extends TestCase
 {

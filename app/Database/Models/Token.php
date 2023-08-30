@@ -8,10 +8,13 @@
 
 namespace App\Database\Models;
 
+use Core\Database\Factory\HasFactory;
 use Core\Database\Model;
 
 class Token extends Model
 {
+    use HasFactory;
+
     public function __construct()
     {
         parent::__construct('tokens');
@@ -22,21 +25,11 @@ class Token extends Model
         return (new self())->findBy('value', $value);
     }
 
-    public static function exists(string $email, string $description): Model|false
-    {
-        $token = (new self())
-            ->where('email', $email)
-            ->and('description', $description);
-
-        return !$token->exists() ? false : $token->first();
-    }
-
-    public static function findLatest(string $email, string $description): Model|false
+    public static function findByDescription(string $email, string $description): Model|false
     {
         return (new self())
             ->where('email', $email)
             ->and('description', $description)
-            ->newest()
             ->first();
     }
 }

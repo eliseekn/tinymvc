@@ -9,7 +9,7 @@
 namespace NAMESPACE;
 
 use App\Database\Models\MODELNAME;
-use Core\Database\Factory;
+use Core\Database\Factory\Factory;
 
 class CLASSNAME extends Factory
 {

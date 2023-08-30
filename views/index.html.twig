@@ -1,57 +1,44 @@
-{% apply spaceless %}
-<!DOCTYPE html>
-<html lang="{{ config('app.lang') }}">
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<meta name="description" content="TinyMVC is a PHP framework based on MVC architecture that helps you build easily and quickly powerful web applications and REST API">
-        <link rel="stylesheet" href="{{ resources('vendor/bootstrap-5.1.1-dist/bootstrap.min.css') }}">
-        <link rel="stylesheet" href="{{ assets('css/style.css') }}"> 
-		<title>TinyMVC | PHP framework based on MVC architecture</title>
-	</head>
+{% extends "layouts/main.html.twig" %}
 
-	<body>
-        {% if alert is not empty %}
-            {% include "partials/alert.html.twig" with {alert: alert} %}
-        {% endif %}
+{% block title %}
+	TinyMVC | PHP framework based on MVC architecture
+{% endblock %}
 
-		<div class="container text-center p-5">
-			<h1 class="fw-bold display-4">TinyMVC</h1>
+{% block description %}
+	TinyMVC is a PHP framework based on MVC architecture that helps you build easily and quickly powerful web applications and REST API
+{% endblock %}
 
-			<p class="mt-4 fs-5" style="line-height: 1.8">
-				Just a PHP framework based on MVC architecture that helps you <br>
-				build easily and quickly powerful web applications and REST API.
-			</p>
+{% block content %}
+	<div class="container text-center p-5">
+		<h1 class="fw-bold display-4">TinyMVC</h1>
 
-			<hr class="my-5 mx-auto w-25">
+		<p class="mt-4 fs-5" style="line-height: 1.8">
+			Just a PHP framework based on MVC architecture that helps you <br>
+			build easily and quickly powerful web applications and REST API.
+		</p>
 
-			<span class="d-flex align-items-center justify-content-center">
-				<a href="https://github.com/eliseekn/tinymvc" class="btn btn-dark" target="_blank">
-					<i class="fab fa-github"></i> Github
-				</a>
+		<hr class="my-5 mx-auto w-25">
 
-				{% if auth('id') is empty %}
-                <a href="{{ url('login') }}" class="ms-3 btn btn-primary">
-					<i class="fa fa-user"></i> Log in
-				</a>
+		<span class="d-flex align-items-center justify-content-center">
+			<a href="https://github.com/eliseekn/tinymvc" class="btn btn-dark" target="_blank">
+				<i class="fab fa-github"></i> Github
+			</a>
 
-                <a href="{{ url('signup') }}" class="ms-3 btn btn-primary">
-					<i class="fa fa-sign-in-alt"></i> Sign up
-				</a>
-                {% else %}
-                <form action="{{ url('logout') }}" method="post">
-                    <button type="submit" class="ms-3 btn btn-danger">
-                        <i class="fa fa-user"></i> Log out
-                    </button>
-                </form>
-                {% endif %}
-			</span>
-		</div>
+			{% if auth('id') is empty %}
+			<a href="{{ url('login') }}" class="ms-3 btn btn-primary">
+				<i class="fa fa-user"></i> Log in
+			</a>
 
-		<script defer src="{{ resources('vendor/fontawesome-5.13-all.js') }}"></script>
-        <script defer src="{{ resources('vendor/bootstrap-5.1.1-dist/bootstrap.bundle.min.js') }}"></script>
-        <script defer src="{{ assets('js/index.js') }}"></script>
-	</body>
-</html>
-{% endapply %}
+			<a href="{{ url('signup') }}" class="ms-3 btn btn-primary">
+				<i class="fa fa-sign-in-alt"></i> Sign up
+			</a>
+			{% else %}
+			<form action="{{ url('logout') }}" method="post">
+				<button type="submit" class="ms-3 btn btn-danger">
+					<i class="fa fa-user"></i> Log out
+				</button>
+			</form>
+			{% endif %}
+		</span>
+	</div>
+{% endblock %}

@@ -8,9 +8,10 @@
 
 namespace Core\Database;
 
+use Closure;
 use Core\Exceptions\InvalidSQLQueryException;
+use Core\Support\Metrics\Metrics;
 use Core\Support\Pager;
-use Core\Support\Metrics;
 use PDOStatement;
 
 /**
@@ -215,16 +216,11 @@ class Repository
         return $this->select('MIN(' . $column . ') AS value');
     }
     
-    public function metrics(string $column, string $type, string $period, int $interval = 0, ?array $query = null): mixed
+    public function metrics(): Metrics
     {
-        return (new Metrics($this->table))->get($column, $type, $period, $interval, $query);
+        return Metrics::table($this->table);
     }
 
-    public function trends(string $column, string $type, string $period, int $interval = 0, ?array $query = null): array
-    {
-        return (new Metrics($this->table))->getTrends($column, $type, $period, $interval, $query);
-    }
-    
     public function where(string $column, $operator = null, $value = null): self
 	{
         if (is_null($operator) && is_null($value)) {
@@ -564,12 +560,7 @@ class Repository
     {
         return $this->orderAsc($column);
     }
-    
-    public function latest(string $column = 'id'): self
-    {
-        return $this->orderDesc($column);
-    }
-    
+
     public function groupBy(array|string $columns): self
     {
         $this->qb->groupBy($columns);
@@ -583,14 +574,14 @@ class Repository
     
     public function first(): Model|false
     {
-        $rows = $this->getAll();
+        $rows = $this->oldest()->take(1);
         return !$rows ? false : $rows[0];
     }
     
     public function last(): Model|false
     {
-        $rows = $this->getAll();
-        return $rows && end($rows);
+        $rows = $this->newest()->take(1);
+        return !$rows ? false : $rows[0];
     }
 
     public function range(int $start, int $end): array|false
@@ -646,16 +637,22 @@ class Repository
         $this->qb = QueryBuilder::setQuery($query, $args);
         return $this;
     }
-    
-    public function subQuery($callback): self
+
+    public function subQuery(Closure $callback): self
     {
-        if (!is_null($callback)) {
+        call_user_func_array($callback, [$this]);
+        return $this;
+    }
+
+    public function subQueryWhen(bool $condition, Closure $callback): self
+    {
+        if ($condition) {
             call_user_func_array($callback, [$this]);
         }
 
         return $this;
     }
-    
+
     public function execute(): false|PDOStatement
     {
         return $this->qb->execute();

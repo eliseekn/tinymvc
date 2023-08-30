@@ -8,14 +8,12 @@
 
 namespace Tests\Application\Auth;
 
+use App\Database\Models\Token;
+use App\Database\Models\User;
 use App\Enums\TokenDescription;
 use Core\Support\Encryption;
-use App\Database\Models\User;
-use App\Database\Models\Token;
 use Core\Testing\ApplicationTestCase;
-use App\Database\Factories\UserFactory;
-use App\Database\Factories\TokenFactory;
-use Core\Testing\Concerns\RefreshDatabase;
+use Core\Testing\RefreshDatabase;
 
 class PasswordForgotTest extends ApplicationTestCase
 {
@@ -23,8 +21,8 @@ class PasswordForgotTest extends ApplicationTestCase
 
     public function test_can_reset_password(): void
     {
-        $user = (new UserFactory())->create();
-        $token = (new TokenFactory())->create([
+        $user = User::factory()->create();
+        $token = Token::factory()->create([
             'email' => $user->attribute('email'),
             'description' => TokenDescription::PASSWORD_RESET_TOKEN->value
         ]);
@@ -35,7 +33,7 @@ class PasswordForgotTest extends ApplicationTestCase
 
     public function test_can_update_password(): void
     {
-        $user = (new UserFactory())->create();
+        $user = User::factory()->create();
         $client = $this->post('/password/update', [
             'email' => $user->attribute('email'),
             'password' => 'new_password'

@@ -8,7 +8,6 @@
 
 namespace Core\Support;
 
-use Carbon\Carbon;
 use Core\Http\Request;
 use App\Database\Models\User;
 use App\Database\Models\Token;
@@ -33,7 +32,7 @@ class Auth
             if (config('security.auth.max_attempts') > 0 && Auth::getAttempts() >= config('security.auth.max_attempts')) {
                 $response
                     ->back()
-                    ->with('auth_attempts_timeout', Carbon::now()->addMinutes(config('security.auth.unlock_timeout'))->toDateTimeString())
+                    ->with('auth_attempts_timeout', carbon()->addMinutes(config('security.auth.unlock_timeout'))->toDateTimeString())
                     ->send();
             }
 

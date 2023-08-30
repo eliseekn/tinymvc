@@ -18,7 +18,7 @@ class RememberUser
     public function handle(): void
     {
         if (cookies()->has('user')) {
-            $user = (new User())->findBy('email', cookies()->get('user'));
+            $user = User::findByEmail(cookies()->get('user'));
 
             if ($user !== false) {
                 session()->create('user', $user);

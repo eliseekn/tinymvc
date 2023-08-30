@@ -8,6 +8,8 @@
 
 namespace Core\Database;
 
+use Closure;
+use Core\Support\Metrics\Metrics;
 use PDOStatement;
 
 /**
@@ -20,6 +22,11 @@ class Model
     public function __construct(protected readonly string $table, protected array $attributes = [])
     {
         $this->repository = new Repository($table);
+    }
+
+    public function getTableName(): string
+    {
+        return $this->table;
     }
 
     public function findBy(string $column, $operator = null, $value = null): self|false
@@ -47,24 +54,27 @@ class Model
         return $this->select('*')->last();
     }
 
-    public function take(int $count, $subquery = null): array|false
+    public function take(int $count, ?Closure $subQuery = null): array|false
     {
-        return $this->select('*')->subQuery($subquery)->take($count);
+        return $this->select('*')
+            ->subQueryWhen(!is_null($subQuery), $subQuery)
+            ->take($count);
     }
 
-    public function oldest(string $column = 'created_at', $subquery = null): array|false
+    public function oldest(string $column = 'created_at', ?Closure $subQuery = null): array|false
     {
-        return $this->select('*')->subQuery($subquery)->oldest($column)->getAll();
+        return $this->select('*')
+            ->subQueryWhen(!is_null($subQuery), $subQuery)
+            ->oldest($column)
+            ->getAll();
     }
 
-    public function newest(string $column = 'created_at', $subquery = null): array|false
+    public function newest(string $column = 'created_at', ?Closure $subQuery = null): array|false
     {
-        return $this->select('*')->subQuery($subquery)->newest($column)->getAll();
-    }
-
-    public function latest(string $column = 'id', $subquery = null): array|false
-    {
-        return $this->select('*')->subQuery($subquery)->latest($column)->getAll();
+        return $this->select('*')
+            ->subQueryWhen(!is_null($subQuery), $subQuery)
+            ->newest($column)
+            ->getAll();
     }
 
     public function select(array|string $columns): Repository
@@ -77,38 +87,49 @@ class Model
         return $this->select('*')->where($column, $operator, $value);
     }
 
-    public function count(string $column = 'id', $subquery = null): mixed
+    public function count(string $column = 'id', ?Closure $subQuery = null): mixed
     {
-        $data = $this->repository->count($column)->subQuery($subquery)->get();
+        $data = $this->repository
+            ->count($column)
+            ->subQueryWhen(!is_null($subQuery), $subQuery)
+            ->get();
+
         return !$data ? false : $data->attribute('value');
     }
 
-    public function sum(string $column, $subquery = null): mixed
+    public function sum(string $column, ?Closure $subQuery = null): mixed
     {
-        $data = $this->repository->sum($column)->subQuery($subquery)->get();
+        $data = $this->repository
+            ->sum($column)
+            ->subQueryWhen(!is_null($subQuery), $subQuery)
+            ->get();
+
         return !$data ? false : $data->attribute('value');
     }
 
-    public function max(string $column, $subquery = null): mixed
+    public function max(string $column, ?Closure $subQuery = null): mixed
     {
-        $data = $this->repository->max($column)->subQuery($subquery)->get();
+        $data = $this->repository
+            ->max($column)
+            ->subQueryWhen(!is_null($subQuery), $subQuery)
+            ->get();
+
         return !$data ? false : $data->attribute('value');
     }
 
-    public function min(string $column, $subquery = null): mixed
+    public function min(string $column, ?Closure $subQuery = null): mixed
     {
-        $data = $this->repository->min($column)->subQuery($subquery)->get();
+        $data = $this->repository
+            ->min($column)
+            ->subQueryWhen(!is_null($subQuery), $subQuery)
+            ->get();
+
         return !$data ? false : $data->attribute('value');
     }
 
-    public function metrics(string $column, string $type, string $period, int $interval = 0, ?array $query = null): mixed
+    public function metrics(): Metrics
     {
-        return $this->repository->metrics($column, $type, $period, $interval, $query);
-    }
-
-    public function trends(string $column, string $type, string $period, int $interval = 0, ?array $query = null): array
-    {
-        return $this->repository->trends($column, $type, $period, $interval, $query);
+        return $this->repository->metrics();
     }
 
     public function create(array $data): self|false
@@ -136,7 +157,7 @@ class Model
             $column = $this->getColumnFromTable($this->table);
         }
 
-        return (new Repository($table))->select('*')->where($column, $this->attributes['id']);
+        return (new Repository($table))->select('*')->where($column, $this->getId());
     }
 
     /**
@@ -167,12 +188,12 @@ class Model
     
     public function update(array $data): bool
     {
-        return $this->repository->updateIfExists($this->attributes['id'], $data);
+        return $this->repository->updateIfExists($this->getId(), $data);
     }
 
     public function delete(): bool
     {
-        return $this->repository->deleteIfExists($this->attributes['id']);
+        return $this->repository->deleteIfExists($this->getId());
     }
 
     public function save(): Model|false
@@ -182,45 +203,28 @@ class Model
         }
 
         if ($this->update($this->attributes)) {
-            return $this->find($this->attributes['id']);
+            return $this->find($this->getId());
         }
 
         return false;
     }
 
-    public function increment(string $column, $value = null): void
+    public function increment(string $column, int $value = 1): void
     {
-        if (is_null($value)) {
-            $this->attributes[$column]++;
-            return;
-        }
-            
-        $this->attributes[$column] = $this->attributes[$column] + $value;
+        $this->attributes[$column] += $value;
     }
 
-    public function decrement(string $column, $value = null): void
+    public function decrement(string $column, int $value = 1): void
     {
-        if (is_null($value)) {
-            $this->attributes[$column]--;
-            return;
-        }
-
-        $this->attributes[$column] = $this->attributes[$column] - $value;
+        $this->attributes[$column] -= $value;
     }
 
-    public function toArray(array $attributes = null): array
+    public function toArray(array $attributes = []): array
     {
-        $data = $this->attributes;
-
-        if (empty($this->attributes['id'])) {
-            unset($data['id']);
-        }
-
-        if (is_null($attributes)) {
+        if (empty($attributes)) {
             return $this->attributes;
         }
 
-        $attributes = parse_array($attributes);
         $result = [];
 
         foreach ($attributes as $attribute) {

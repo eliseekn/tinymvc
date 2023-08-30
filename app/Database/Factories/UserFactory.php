@@ -10,8 +10,7 @@ namespace App\Database\Factories;
 
 use App\Database\Models\User;
 use App\Enums\UserRole;
-use Carbon\Carbon;
-use Core\Database\Factory;
+use Core\Database\Factory\Factory;
 
 class UserFactory extends Factory
 {
@@ -23,11 +22,12 @@ class UserFactory extends Factory
     public function data(): array
     {
         return [
-            'name' => $this->faker->name(),
-            'email' => $this->faker->unique()->email(),
+            'name' => faker()->name(),
+            'email' => faker()->unique()->email(),
             'password' => hash_pwd('password'),
-            'email_verified' => Carbon::now()->toDateTimeString(),
-            'role' => UserRole::USER->value
+            'email_verified' => carbon()->toDateTimeString(),
+            'role' => UserRole::USER->value,
+            'created_at' => carbon(faker()->dateTimeBetween('-12 months'))->toDateTimeString()
         ];
     }
 }

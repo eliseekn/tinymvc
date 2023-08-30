@@ -4,7 +4,11 @@
 	{{ __('login') }}
 {% endblock %}
 
-{% block body %}
+{% block description %}
+	{{ __('login') }}
+{% endblock %}
+
+{% block content %}
 	{% if auth_attempts_exceeded() %}
 		{% include "partials/alert.html.twig" with {
             alert: {

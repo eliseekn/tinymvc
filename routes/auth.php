@@ -34,18 +34,19 @@ Route::group(function () {
     ->register();
 
 Route::group(function () {
-    Route::group(function () {
-        Route::get('/reset', 'reset');
-
-        Route::group(function () {
-            Route::post('/notify', 'notify');
-            Route::post('/update', 'update');
-        })->byMiddleware('csrf');
-    })->byController(ForgotPasswordController::class);
-
+    Route::get('/reset', [ForgotPasswordController::class, 'reset']);
     Route::view('/forgot', 'auth.password.forgot');
 })
     ->byPrefix('password')
+    ->register();
+
+Route::group(function () {
+    Route::post('/notify', 'notify');
+    Route::post('/update', 'update');
+})
+    ->byPrefix('password')
+    ->byController(ForgotPasswordController::class)
+    ->byMiddleware('csrf')
     ->register();
 
 Route::group(function () {

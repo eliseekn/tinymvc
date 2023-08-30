@@ -6,10 +6,9 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Core\Database;
+namespace Core\Database\Factory;
 
-use Faker\Factory as FakerFactory;
-use Faker\Generator;
+use Core\Database\Model;
 
 /**
  * Manage models factories
@@ -17,15 +16,20 @@ use Faker\Generator;
 class Factory
 {
     protected array $class;
-    protected Generator $faker;
+    protected string $model;
 
     public function __construct(string $model, int $count)
     {
-        $this->faker = FakerFactory::create(config('app.lang'));
+        $this->model = $model;
 
         for ($i = 1; $i <= $count; $i++) {
             $this->class[] = new $model();
         }
+    }
+
+    public function getModelName(): string
+    {
+        return $this->model;
     }
 
     public function data(): array
@@ -51,12 +55,11 @@ class Factory
         $class = $this->make($data);
 
         if (!is_array($class)) {
-            return $class->save();
+            return $class->create($class->toArray());
         }
 
         return array_map(function ($c) {
-            $c->save();
-            return $c;
+            return $c->create($c->toArray());
         }, $class);
     }
 }

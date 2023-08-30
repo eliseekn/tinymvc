@@ -8,13 +8,11 @@
 
 namespace Tests\Application\Auth;
 
-use App\Database\Models\User;
 use App\Database\Models\Token;
+use App\Database\Models\User;
 use App\Enums\TokenDescription;
 use Core\Testing\ApplicationTestCase;
-use App\Database\Factories\UserFactory;
-use App\Database\Factories\TokenFactory;
-use Core\Testing\Concerns\RefreshDatabase;
+use Core\Testing\RefreshDatabase;
 
 class EmailVerificationTest extends ApplicationTestCase
 {
@@ -22,8 +20,8 @@ class EmailVerificationTest extends ApplicationTestCase
 
     public function test_can_verify_email(): void
     {
-        $user = (new UserFactory())->create(['email_verified' => null]);
-        $token = (new TokenFactory())->create([
+        $user = User::factory()->create(['email_verified' => null]);
+        $token = Token::factory()->create([
             'email' => $user->attribute('email'),
             'description' => TokenDescription::EMAIL_VERIFICATION_TOKEN->value
         ]);

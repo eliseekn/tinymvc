@@ -10,19 +10,16 @@ namespace App\Mails;
 
 use Core\Support\Mail\Mailer;
 
-/**
- * Send welcome email notification
- */
-class WelcomeMail extends Mailer
+class WelcomeMail
 {
-    public function __construct(string $email, string $name)
+    public static function send(string $email, string $name): bool
     {
-        parent::__construct();
-
-        $this->to($email)
+        return (new Mailer())
+            ->to($email)
             ->from(config('mailer.sender.email'), config('mailer.sender.name'))
             ->reply(config('mailer.sender.email'), config('mailer.sender.name'))
 			->subject('Welcome')
-            ->body(view('emails.welcome', compact('name')));
+            ->body(view('emails.welcome', compact('name')))
+            ->send();
     }
 }

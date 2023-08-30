@@ -9,9 +9,12 @@
 namespace NAMESPACE;
 
 use Core\Database\Model;
+use Core\Database\Factory\HasFactory;
 
 class CLASSNAME extends Model
 {
+    use HasFactory;
+
     public function __construct()
     {
         parent::__construct('TABLENAME');
@@ -27,8 +30,8 @@ class CLASSNAME extends Model
         return (new self())->findBy('column', $column);
     }
 
-    public static function findLatest(): array|false
+    public static function findNewest(): array|false
     {
-        return (new self())->latest();
+        return (new self())->newest();
     }
 }

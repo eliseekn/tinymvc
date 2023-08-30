@@ -8,10 +8,9 @@
 
 namespace App\Database\Factories;
 
-use App\Enums\TokenDescription;
-use Carbon\Carbon;
-use Core\Database\Factory;
 use App\Database\Models\Token;
+use App\Enums\TokenDescription;
+use Core\Database\Factory\Factory;
 
 class TokenFactory extends Factory
 {
@@ -23,9 +22,9 @@ class TokenFactory extends Factory
     public function data(): array
     {
         return [
-            'email' => $this->faker->unique()->email,
+            'email' => faker()->unique()->email,
             'value' => generate_token(),
-            'expire' => Carbon::now()->addHour()->toDateTimeString(),
+            'expire' => carbon()->addHour()->toDateTimeString(),
             'description' => TokenDescription::PASSWORD_RESET_TOKEN->value
         ];
     }

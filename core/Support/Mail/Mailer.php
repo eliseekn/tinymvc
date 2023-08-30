@@ -86,7 +86,9 @@ class Mailer implements MailInterface
     {
         $this->phpMailer->Body = $message;
 
-        if ($html) $this->phpMailer->isHTML();
+        if ($html) {
+            $this->phpMailer->isHTML();
+        }
 
         return $this;
     }

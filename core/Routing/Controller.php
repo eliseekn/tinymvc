@@ -47,9 +47,9 @@ class Controller
         $this->response->json($data)->send($code);
     }
 
-    public function downloadResponse(string $filename): void
+    public function downloadResponse(string $filename, int $code = 200): void
     {
-        $this->response->download($filename)->send(200);
+        $this->response->download($filename)->send($code);
     }
 
     public function validate(Validator $validator): array

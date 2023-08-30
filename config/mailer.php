@@ -14,7 +14,7 @@ return [
     'transport' => env('MAILER_TRANSPORT', 'smtp'),
 
     'sender' => [
-        'name' => config('app.name'),
+        'name' => env('APP_NAME', 'TinyMVC'),
         'email' => 'no-reply@tiny.mvc',
     ],
 
