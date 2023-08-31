@@ -30,8 +30,10 @@ class CLASSNAME extends Model
         return (new self())->findBy('column', $column);
     }
 
-    public static function findNewest(): array|false
+    public static function findAllByColumn(string $column): array|false
     {
-        return (new self())->newest();
+        return (new self())
+            ->where('column', $column)
+            ->getAll();
     }
 }

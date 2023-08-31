@@ -29,7 +29,7 @@ class Password extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln('<info>' . $input->getArgument('password') . '</info> => <info>' . hash_pwd($input->getArgument('password')) . '</info>');
+        $output->writeln('<info>[INFO] ' . $input->getArgument('password') . '</info> => <info>' . hash_pwd($input->getArgument('password')) . '</info>');
         return Command::SUCCESS;
     }
 }

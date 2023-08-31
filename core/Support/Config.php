@@ -34,7 +34,7 @@ class Config
     public static function loadEnv(): void
     {
         if (!Storage::path()->isFile('.env')) {
-            return;
+            throw new Exception('Copy ".env.example" file to ".env" then edit it or run "php console app:setup" console command to setup application');
         }
 
         $lines = file(Storage::path()->file('.env'), FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);

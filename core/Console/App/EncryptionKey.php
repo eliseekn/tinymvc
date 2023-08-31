@@ -48,7 +48,7 @@ class EncryptionKey extends Command
             'ENCRYPTION_KEY' => generate_token()
         ]);
 
-        $output->writeln('<info>Application encryption key has been generated</info>');
+        $output->writeln('<info>[INFO] Application encryption key has been generated</info>');
         return Command::SUCCESS;
     }
 }

@@ -31,13 +31,13 @@ class Mail extends Command
         $mails = $input->getArgument('mail');
 
         foreach ($mails as $mail) {
-            list(, $class) = Make::generateClass($mail, 'mail');
+            list(, $class) = Maker::generateClass($mail, 'mail');
 
-            if (!Make::createMail($mail)) {
-                $output->writeln('<fg=yellow>Failed to create mail template "' . $class . '"</fg>');
+            if (!Maker::createMail($mail)) {
+                $output->writeln('<error>[ERROR] Failed to create mail template "' . $class . '"</error>');
             }
 
-            $output->writeln('<info>Mail template "' . $class . '" has been created</info>');
+            $output->writeln('<info>[INFO] Mail template "' . $class . '" has been created</info>');
         }
 
         return Command::SUCCESS;

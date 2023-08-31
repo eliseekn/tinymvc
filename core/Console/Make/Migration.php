@@ -25,7 +25,7 @@ class Migration extends Command
     {
         $this->setDescription('Create new migration');
         $this->addArgument('migration', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The name of migration table (separated by space if many)');
-        $this->addOption('seed', null, InputOption::VALUE_NONE, 'Create new seed');
+        $this->addOption('seeder', null, InputOption::VALUE_NONE, 'Create seeder');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -33,24 +33,24 @@ class Migration extends Command
         $migrations = $input->getArgument('migration');
 
         foreach ($migrations as $migration) {
-            list(, $class) = Make::generateClass($migration, 'migration');
+            list(, $class) = Maker::generateClass($migration, 'migration');
 
-            if (!Make::createMigration($migration)) {
-                $output->writeln('<fg=yellow>Failed to create migration "' . $class . '"</fg>');
+            if (!Maker::createMigration($migration)) {
+                $output->writeln('<error>[ERROR] Failed to create migration "' . $class . '"</error>');
             }
 
-            $output->writeln('<info>Migration "' . $class . '" has been created</info>');
+            $output->writeln('<info>[INFO] Migration "' . $class . '" has been created</info>');
         }
 
-        if ($input->getOption('seed')) {
+        if ($input->getOption('seeder')) {
             foreach ($migrations as $migration) {
-                list(, $class) = Make::generateClass($migration, 'seed');
+                list(, $class) = Maker::generateClass($migration, 'seeder', true, true);
             
-                if (!Make::createSeed($migration)) {
-                    $output->writeln('<fg=yellow>Failed to create seed "' . $class . '"</fg>');
+                if (!Maker::createSeeder($migration)) {
+                    $output->writeln('<error>[ERROR] Failed to create seeder "' . Maker::fixPluralTypo($class, true) . '"</error>');
                 }
 
-                $output->writeln('<info>Seed "' . $class . '" has been created</info>');
+                $output->writeln('<info>[INFO] Seeder "' . Maker::fixPluralTypo($class, true) . '" has been created</info>');
             }
         }
 

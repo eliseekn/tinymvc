@@ -35,22 +35,22 @@ class View extends Command
 
         if (is_null($input->getOption('extends'))) {
             foreach ($views as $view) {
-                if (!Make::createView(null, $view, $input->getOption('path'))) {
-                    $output->writeln('<fg=yellow>Failed to create view layout "' . $view . '"</fg>');
+                if (!Maker::createView(null, $view, $input->getOption('path'))) {
+                    $output->writeln('<error>[ERROR] Failed to create view layout "' . $view . '"</error>');
                 }
     
-                $output->writeln('<info>View layout "' . $view . '" has been created</info>');
+                $output->writeln('<info>[INFO] View layout "' . $view . '" has been created</info>');
             }
 
             return Command::SUCCESS;
         }
 
         foreach ($views as $view) {
-            if (!Make::createView($view, $input->getOption('extends'), $input->getOption('path'))) {
-                $output->writeln('<fg=yellow>Failed to create view template "' . $view . '"</fg>');
+            if (!Maker::createView($view, $input->getOption('extends'), $input->getOption('path'))) {
+                $output->writeln('<error>[ERROR] Failed to create view template "' . $view . '"</error>');
             }
 
-            $output->writeln('<info>View template "' . $view . '" has been created</info>');
+            $output->writeln('<info>[INFO] View template "' . $view . '" has been created</info>');
         }
 
         return Command::SUCCESS;

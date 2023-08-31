@@ -29,10 +29,6 @@ class Show extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if (config('app.env') === 'test') {
-            $output->writeln('<fg=yellow>WARNING: You are running migrations on APP_ENV=test</>');
-        }
-        
         $rows = [];
 
         $driver = config('app.env') === 'test'

@@ -33,13 +33,13 @@ class Event extends Command
         $events = $input->getArgument('event');
 
         foreach ($events as $event) {
-            list(, $class) = Make::generateClass(base_name: $event, singular: true, force_singlular: true);
+            list(, $class) = Maker::generateClass(base_name: $event, singular: true, force_singlular: true);
 
-            if (!Make::createEvent($event)) {
-                $output->writeln('<fg=yellow>Failed to create event "' . Make::fixPluralTypo($class . 'Event', true) . '"</fg>');
+            if (!Maker::createEvent($event)) {
+                $output->writeln('<error>[ERROR] Failed to create event "' . Maker::fixPluralTypo($class . 'Event', true) . '"</error>');
             }
 
-            $output->writeln('<info>Factory "' . Make::fixPluralTypo($class . 'Event', true) . '" has been created</info>');
+            $output->writeln('<info>[INFO] Factory "' . Maker::fixPluralTypo($class . 'Event', true) . '" has been created</info>');
             $this->getApplication()->find('make:listener')->run(new ArrayInput(['listener' => [$event]]), $output);
         }
 

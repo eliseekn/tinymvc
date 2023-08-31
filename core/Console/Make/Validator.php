@@ -33,13 +33,13 @@ class Validator extends Command
         $validators = $input->getArgument('validator');
 
         foreach ($validators as $validator) {
-            list(, $class) = Make::generateClass($validator, 'validator', true);
+            list(, $class) = Maker::generateClass($validator, 'validator', true);
 
-            if (!Make::createValidator($validator, $input->getOption('namespace'))) {
-                $output->writeln('<fg=yellow>Failed to create request validator "' . $class . '"</fg>');
+            if (!Maker::createValidator($validator, $input->getOption('namespace'))) {
+                $output->writeln('<error>[ERROR] Failed to create request validator "' . $class . '"</error>');
             }
 
-            $output->writeln('<info>Request validator "' . $class . '" has been created</info>');
+            $output->writeln('<info>[INFO] Request validator "' . $class . '" has been created</info>');
         }
 
         return Command::SUCCESS;

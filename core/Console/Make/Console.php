@@ -32,13 +32,13 @@ class Console extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        list(, $class) = Make::generateClass($input->getArgument('console'), '', true);
+        list(, $class) = Maker::generateClass($input->getArgument('console'), '', true);
 
-        if (!Make::createConsole($input->getArgument('console'), $input->getOption('command'), $input->getOption('description'), $input->getOption('namespace'))) {
-            $output->writeln('<fg=yellow>Failed to create command "' . $class . '"</fg>');
+        if (!Maker::createConsole($input->getArgument('console'), $input->getOption('command'), $input->getOption('description'), $input->getOption('namespace'))) {
+            $output->writeln('<error>[ERROR] Failed to create command "' . $class . '"</error>');
         }
 
-        $output->writeln('<info>Command "' . $class . '" has been created</info>');
+        $output->writeln('<info>[INFO] Command "' . $class . '" has been created</info>');
 
         return Command::SUCCESS;
     }

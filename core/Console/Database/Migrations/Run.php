@@ -35,10 +35,6 @@ class Run extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if (config('app.env') === 'test') {
-            $output->writeln('<fg=yellow>WARNING: You are running migrations on APP_ENV=test</>');
-        }
-
         $tables = $input->getArgument('table');
 
         if (!Connection::getInstance()->tableExists('migrations')) {
@@ -47,7 +43,7 @@ class Run extends Command
                 ->addString('name')
                 ->migrate();
 
-            $output->writeln('<info>Migrations tables have been created</info>');
+            $output->writeln('<info>[INFO] Migrations tables have been created</info>');
         }
 
         if (empty($tables)) {
@@ -74,7 +70,7 @@ class Run extends Command
     protected function migrate(OutputInterface $output, string $table): void
     {
         if ($this->isMigrated($table)) {
-            $output->writeln('<fg=yellow>Table "' . $table . '" has already been migrated</>');
+            $output->writeln('<comment>[WARNING] Table "' . $table . '" has already been migrated</>');
             return;
         }
 
@@ -85,7 +81,7 @@ class Run extends Command
             ->insert(['name' => $table])
             ->execute();
 
-        $output->writeln('<info>Table "' . $table . '" has been migrated</info>');
+        $output->writeln('<info>[INFO] Table "' . $table . '" has been migrated</info>');
     }
 
     protected function isMigrated(string $table): bool

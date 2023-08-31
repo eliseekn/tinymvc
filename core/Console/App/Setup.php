@@ -32,10 +32,10 @@ class Setup extends Command
 
         $config['APP_ENV'] = 'local' . PHP_EOL;
 
-        $output->write('<info>Application name (default: TinyMVC):</info> ');
+        $output->write('<question>Application name (default: TinyMVC)</question> ');
         $config['APP_NAME'] = $this->getInput('TinyMVC');
 
-        $output->write('<info>Application url (default: http://127.0.0.1:8080/):</info> ');
+        $output->write('<question>Application url (default: http://127.0.0.1:8080/)</question> ');
         $app_url = trim($this->getInput('http://127.0.0.1:8080/'));
         
         if (!empty($app_url) && $app_url[-1] !== '/') {
@@ -44,40 +44,40 @@ class Setup extends Command
 
         $config['APP_URL'] = $app_url . PHP_EOL;
 
-        $output->write('<info>Application language (default: en):</info> ');
+        $output->write('<question>Application language (default: en)</question> ');
         $config['APP_LANG'] = $this->getInput('en') . PHP_EOL;
 
-        $output->write('<info>Database driver [mysql (default), sqlite]:</info> ');
+        $output->write('<question>Database driver [mysql (default), sqlite]</question> ');
         $config['DB_DRIVER'] = $this->getInput('mysql', ['mysql', 'sqlite']);
 
-        $output->write('<info>Database host (default: 127.0.0.1):</info> ');
+        $output->write('<question>Database host (default: 127.0.0.1)</question> ');
         $config['DB_HOST'] = $this->getInput('127.0.0.1');
 
-        $output->write('<info>Database port (default: 3306):</info> ');
+        $output->write('<question>Database port (default: 3306)</question> ');
         $config['DB_PORT'] = $this->getInput('3306');
 
-        $output->write('<info>Database name (default: tinymvc):</info> ');
+        $output->write('<question>Database name (default: tinymvc)</question> ');
         $config['DB_NAME'] = $this->getInput('tinymvc');
 
-        $output->write('<info>Database username (default: root):</info> ');
+        $output->write('<question>Database username (default: root)</question> ');
         $config['DB_USERNAME'] = $this->getInput('root');
 
-        $output->write('<info>Database password:</info> ');
+        $output->write('<question>Database password</question> ');
         $config['DB_PASSWORD'] = $this->getInput('') . PHP_EOL;
 
-        $output->write('<info>Mailer transport [smtp (default), sendmail]:</info> ');
+        $output->write('<question>Mailer transport [smtp (default), sendmail]</question> ');
         $config['MAILER_TRANSPORT'] = $this->getInput('smtp', ['smtp', 'sendmail']);
 
-        $output->write('<info>Mailer host (default: 127.0.0.1):</info> ');
+        $output->write('<question>Mailer host (default: 127.0.0.1)</question> ');
         $config['MAILER_HOST'] = $this->getInput('127.0.0.1');
 
-        $output->write('<info>Mailer port (default: 1025):</info> ');
+        $output->write('<question>Mailer port (default: 1025)</question> ');
         $config['MAILER_PORT'] = $this->getInput('1025');
 
-        $output->write('<info>Mailer username:</info> ');
+        $output->write('<question>Mailer username</question> ');
         $config['MAILER_USERNAME'] = $this->getInput('');
 
-        $output->write('<info>Mailer password:</info> ');
+        $output->write('<question>Mailer password</question> ');
         $config['MAILER_PASSWORD'] = $this->getInput('') . PHP_EOL;
 
         $config['ENCRYPTION_KEY'] = generate_token();
@@ -88,7 +88,7 @@ class Setup extends Command
             Storage::path(config('storage.lang'))->copyFile('en.php', config('app.lang') . '.php');
         }
 
-        $output->writeln('<info>Application has been setted up. You need to restart server to apply changes.</info>');
+        $output->writeln('<question>[INFO] Application has been setted up. You need to restart server to apply changes.</question>');
         return Command::SUCCESS;
     }
 

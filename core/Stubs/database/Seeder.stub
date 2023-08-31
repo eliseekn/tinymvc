@@ -6,16 +6,14 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace App\Database\Seeds;
+namespace App\Database\Seeders;
 
-use Core\Database\QueryBuilder;
+use App\Database\Models\MODELNAME;
 
 class CLASSNAME
 {     
     public static function run(): void
     {
-        QueryBuilder::table('TABLENAME')->insert([
-            //
-        ])->execute();
+        MODELNAME::factory(50)->create();
     }
 }

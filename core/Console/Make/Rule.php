@@ -32,13 +32,13 @@ class Rule extends Command
         $rules = $input->getArgument('rule');
 
         foreach ($rules as $rule) {
-            list(, $class) = Make::generateClass(base_name: $rule, singular: true);
+            list(, $class) = Maker::generateClass(base_name: $rule, singular: true);
 
-            if (!Make::createRule($rule)) {
-                $output->writeln('<fg=yellow>Failed to create request rule "' . $class . '"</fg>');
+            if (!Maker::createRule($rule)) {
+                $output->writeln('<error>[ERROR] Failed to create request rule "' . $class . '"</error>');
             }
 
-            $output->writeln('<info>Request rule "' . $class . '" has been created</info>');
+            $output->writeln('<info>[INFO] Request rule "' . $class . '" has been created</info>');
         }
 
         return Command::SUCCESS;

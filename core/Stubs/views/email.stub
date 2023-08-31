@@ -1,5 +1,5 @@
 {% extends "layouts/email.html.twig" %}
 
-{% block body %}
+{% block content %}
     <p>This is a HTML email sample.</p>
 {% endblock %}

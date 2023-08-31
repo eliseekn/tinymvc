@@ -39,13 +39,13 @@ class Model extends Command
         $models = $input->getArgument('model');
 
         foreach ($models as $model) {
-            list($name, $class) = Make::generateClass($model);
+            list($name, $class) = Maker::generateClass($model);
 
-            if (!Make::createModel($name, $input->getOption('namespace'))) {
-                $output->writeln('<fg=yellow>Failed to create model "' . Make::fixPluralTypo($class, true) . '"</fg>');
+            if (!Maker::createModel($name, $input->getOption('namespace'))) {
+                $output->writeln('<error>[ERROR] Failed to create model "' . Maker::fixPluralTypo($class, true) . '"</error>');
             }
 
-            $output->writeln('<info>Model "' . Make::fixPluralTypo($class, true) . '" has been created</info>');
+            $output->writeln('<info>[INFO] Model "' . Maker::fixPluralTypo($class, true) . '" has been created</info>');
 
             if ($input->getOption('migration')) {
                 $this->getApplication()->find('make:migration')->run(new ArrayInput(['migration' => [$model]]), $output);

@@ -29,10 +29,6 @@ class Delete extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if (config('app.env') === 'test') {
-            $output->writeln('<fg=yellow>WARNING: You are running migrations on APP_ENV=test</>');
-        }
-        
         $databases = $input->getArgument('database');
 
         if (empty($databases)) {
@@ -45,10 +41,10 @@ class Delete extends Command
 
         foreach ($databases as $database) {
             if (!Connection::getInstance()->schemaExists($database)) {
-                $output->writeln('<fg=yellow>Database "' . $database . '" does not exists</>');
+                $output->writeln('<comment>[WARNING] Database "' . $database . '" does not exists</>');
             } else {
                 Connection::getInstance()->deleteSchema($database);
-                $output->writeln('<info>Database "' . $database . '" has been deleted</info>');
+                $output->writeln('<info>[INFO] Database "' . $database . '" has been deleted</info>');
             }
         }
 

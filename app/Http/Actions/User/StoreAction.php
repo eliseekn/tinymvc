@@ -16,6 +16,6 @@ class StoreAction
     public function handle(array $data): Model|false
 	{
         $data['password'] = hash_pwd($data['password']);
-        return (new User())->create($data);
+        return User::factory()->create($data);
 	}
 }

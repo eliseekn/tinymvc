@@ -79,7 +79,7 @@ class Auth
     
     public static function createToken(string $email): string
     {
-        $token = (new Token())->create([
+        $token = Token::factory()->create([
             'email' => $email,
             'value' => generate_token(),
         ]);

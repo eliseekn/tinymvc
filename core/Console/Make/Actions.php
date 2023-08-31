@@ -40,13 +40,13 @@ class Actions extends Command
         $types = array_map(fn ($type) => strtolower($type), $types);
 
         foreach ($types as $type) {
-            list(, $class) = Make::generateClass($type, 'action', true, true);
+            list(, $class) = Maker::generateClass($type, 'action', true, true);
             $class = str_replace(['Index', 'Show'], ['GetCollection', 'GetItem'], $class);
 
-            if (!Make::createAction($input->getArgument('model'), $type, $input->getOption('namespace'))) {
-                $output->writeln('<fg=yellow>Failed to create action "' . $class . '"</fg>');
+            if (!Maker::createAction($input->getArgument('model'), $type, $input->getOption('namespace'))) {
+                $output->writeln('<error>[ERROR] Failed to create action "' . $class . '"</error>');
             } else {
-                $output->writeln('<info>Action "' . $class . '" has been created</info>');
+                $output->writeln('<info>[INFO] Action "' . $class . '" has been created</info>');
             }
         }
 

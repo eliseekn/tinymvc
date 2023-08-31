@@ -31,13 +31,13 @@ class Middleware extends Command
         $middlewares = $input->getArgument('middleware');
 
         foreach ($middlewares as $middleware) {
-            list(, $class) = Make::generateClass($middleware, '', true);
+            list(, $class) = Maker::generateClass($middleware, '', true);
 
-            if (!Make::createMiddleware($middleware)) {
-                $output->writeln('<fg=yellow>Failed to create middleware "' . $class . '"</fg>');
+            if (!Maker::createMiddleware($middleware)) {
+                $output->writeln('<error>[ERROR] Failed to create middleware "' . $class . '"</error>');
             }
 
-            $output->writeln('<info>Middleware "' . $class . '" has been created</info>');
+            $output->writeln('<info>[INFO] Middleware "' . $class . '" has been created</info>');
         }
 
         return Command::SUCCESS;

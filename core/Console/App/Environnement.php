@@ -50,7 +50,7 @@ class Environnement extends Command
             'ENCRYPTION_KEY' => env('ENCRYPTION_KEY')
         ]);
 
-        $output->writeln('<info>Application environnement has been defined</info>');
+        $output->writeln('<info>[INFO] Application environnement has been defined</info>');
         return Command::SUCCESS;
     }
 }

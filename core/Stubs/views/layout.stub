@@ -21,7 +21,7 @@
             {% include "partials/alert.html.twig" with {alert: alert} %}
         {% endif %}
 
-        {% block body %}{% endblock %}
+        {% block content %}{% endblock %}
 
         <script defer src="{{ resources('vendor/fontawesome-5.13-all.js') }}"></script>
         <script defer src="{{ resources('vendor/bootstrap-5.1.1-dist/bootstrap.bundle.min.js') }}"></script>

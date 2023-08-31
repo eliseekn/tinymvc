@@ -13,7 +13,7 @@ use Core\Support\Storage;
 /**
  * Create templates from stubs
  */
-class Make
+class Maker
 {
     /**
      * Get stubs storage path
@@ -138,15 +138,15 @@ class Make
         return Storage::path(config('storage.migrations'))->writeFile($class . '.php', $data);
     }
 
-    public static function createSeed(string $seed): bool
+    public static function createSeeder(string $seeder): bool
     {
-        list($name, $class) = self::generateClass($seed, 'seed', true, true);
+        list($name, $class) = self::generateClass($seeder, 'seeder', true, true);
 
-        $data = self::stubs()->addPath('database')->readFile('Seed.stub');
+        $data = self::stubs()->addPath('database')->readFile('Seeder.stub');
         $data = str_replace('CLASSNAME', self::fixPluralTypo($class, true), $data);
-        $data = str_replace('TABLENAME', self::fixPluralTypo($name), $data);
+        $data = str_replace('MODELNAME', self::fixPluralTypo(ucfirst($name), true), $data);
 
-        return Storage::path(config('storage.seeds'))->writeFile(self::fixPluralTypo($class, true) . '.php', $data);
+        return Storage::path(config('storage.seeders'))->writeFile(self::fixPluralTypo($class, true) . '.php', $data);
     }
     
     public static function createFactory(string $factory, ?string $namespace = null): bool

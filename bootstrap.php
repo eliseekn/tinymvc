@@ -13,22 +13,18 @@ use Core\Support\Whoops;
 use Core\Support\Storage;
 
 /**
- * Setup application
+ * Application initialization
  */
 
-const DS = DIRECTORY_SEPARATOR;
-const APP_ROOT = __DIR__ . DS;
+const APP_ROOT = __DIR__ . DIRECTORY_SEPARATOR;
 
 set_time_limit(0);
 
 Whoops::register();
-
-$storage = Storage::path(absolute_path('storage'));
-
-if (!$storage->isDir()) $storage->createDir();
-if (!$storage->path(config('storage.logs'))->isDir()) $storage->createDir();
-if (!$storage->path(config('storage.cache'))->isDir()) $storage->createDir();
-if (!$storage->path(config('storage.sqlite'))->isDir()) $storage->createDir();
+Storage::init();
+Config::loadEnv();
+Route::load();
+Event::loadListeners();
 
 if (config('errors.display')) {
     ini_set('display_errors', 1);
@@ -44,17 +40,6 @@ if (config('errors.log')) {
     ini_set('log_errors', 0);
 }
 
-function handleExceptions($e)
-{
+set_exception_handler(function ($e) {
     throw new ErrorException($e->getMessage(), $e->getCode(), 1, $e->getFile(), $e->getLine(), $e->getPrevious());
-}
-
-set_exception_handler('handleExceptions');
-
-if (!Storage::path()->isFile('.env')) {
-    throw new Exception('Copy ".env.example" file to ".env" then edit it or run "php console app:setup" console command to setup application');
-}
-
-Config::loadEnv();
-Route::load();
-Event::loadListeners();
+});

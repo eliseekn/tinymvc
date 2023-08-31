@@ -31,13 +31,13 @@ class Helper extends Command
         $helpers = $input->getArgument('helper');
 
         foreach ($helpers as $helper) {
-            list(, $class) = Make::generateClass($helper);
+            list(, $class) = Maker::generateClass($helper);
 
-            if (!Make::createHelper($helper)) {
-                $output->writeln('<fg=yellow>Failed to create helper "' . $class . '"</fg>');
+            if (!Maker::createHelper($helper)) {
+                $output->writeln('<error>[ERROR] Failed to create helper "' . $class . '"</error>');
             }
 
-            $output->writeln('<info>Helper "' . $class . '" has been created</info>');
+            $output->writeln('<info>[INFO] Helper "' . $class . '" has been created</info>');
         }
 
         return Command::SUCCESS;

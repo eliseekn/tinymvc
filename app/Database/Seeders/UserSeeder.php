@@ -6,24 +6,21 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace App\Database\Seeds;
+namespace App\Database\Seeders;
 
-use App\Database\Factories\UserFactory;
+use App\Database\Models\User;
 use App\Enums\UserRole;
 
-/**
- * Run seeders
- */
-class Seeder
-{
+class UserSeeder
+{     
     public static function run(): void
     {
-        (new UserFactory())->create([
+        User::factory()->create([
             'name' => 'Admin',
             'email' => 'admin@tiny.mvc',
             'role' => UserRole::ADMIN->value
         ]);
 
-        (new UserFactory(5))->create();
+        User::factory(5)->create();
     }
 }

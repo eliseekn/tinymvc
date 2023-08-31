@@ -26,7 +26,7 @@ class Tests extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (config('app.env') !== 'test') {
-            $output->writeln('<fg=yellow>You must set APP_ENV to test in application configuration</>');
+            $output->writeln('<comment>[WARNING] You must set APP_ENV to test in application configuration</comment>');
             return Command::FAILURE;
         }
 
@@ -41,7 +41,7 @@ class Tests extends Command
         $args = ['php', 'vendor/bin/phpunit'];
 
         if (!is_null($input->getArgument('filename'))) {
-            $args = array_merge($args, ['tests' . DS . $input->getArgument('filename')]);
+            $args = array_merge($args, ['tests' . DIRECTORY_SEPARATOR . $input->getArgument('filename')]);
         }
 
         if (!is_null($input->getArgument('filter'))) {

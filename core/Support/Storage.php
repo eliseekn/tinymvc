@@ -25,13 +25,23 @@ class Storage
         self::$path = $path;
         return new self();
     }
-    
+
+    public static function init(): void
+    {
+        $storage = self::path(absolute_path('storage'));
+
+        if (!$storage->isDir()) $storage->createDir();
+        if (!$storage->path(config('storage.logs'))->isDir()) $storage->createDir();
+        if (!$storage->path(config('storage.cache'))->isDir()) $storage->createDir();
+        if (!$storage->path(config('storage.sqlite'))->isDir()) $storage->createDir();
+    }
+
     public function getPath(): string
     {
         return self::$path;
     }
 
-    public function addPath(string $path, string $trailling_slash = DS): self
+    public function addPath(string $path, string $trailling_slash = DIRECTORY_SEPARATOR): self
     {
         self::$path .= real_path($path) . $trailling_slash;
         return $this;
@@ -40,6 +50,16 @@ class Storage
     public function file(string $filename): string
     {
         return self::$path .= $filename;
+    }
+
+    public function getFileExtension(string $filename): string
+    {
+        return get_file_extension(self::$path .= $filename);
+    }
+
+    public function getFileName(string $filename): string
+    {
+        return get_file_name(self::$path .= $filename);
     }
 
     public function createDir(string $pathname = '', bool $recursive = false, int $mode = 0777): bool
@@ -101,7 +121,7 @@ class Storage
     {
         if ($this->isDir($pathname)) {
             $objects = scandir(self::$path . $pathname);
-            $pathname = empty($pathname) ? $pathname : $pathname . DS;
+            $pathname = empty($pathname) ? $pathname : $pathname . DIRECTORY_SEPARATOR;
 
             foreach ($objects as $object) {
                 if ($object != '.' && $object != '..') {

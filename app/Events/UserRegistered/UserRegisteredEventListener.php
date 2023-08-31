@@ -9,7 +9,6 @@
 namespace App\Events\UserRegistered;
 
 use App\Mails\WelcomeMail;
-use Core\Support\Mail\Mail;
 
 class UserRegisteredEventListener
 {

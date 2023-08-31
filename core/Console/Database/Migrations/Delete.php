@@ -31,10 +31,6 @@ class Delete extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if (config('app.env') === 'test') {
-            $output->writeln('<fg=yellow>WARNING: You are running migrations on APP_ENV=test</>');
-        }
-        
         $tables = $input->getArgument('table');
 
         if (empty($tables)) {
@@ -57,7 +53,7 @@ class Delete extends Command
     protected function delete(OutputInterface $output, string $table): void
     {
         if (!$this->isMigrated($table)) {
-            $output->writeln('<fg=yellow>Table "' . $table . '" has not been migrated</>');
+            $output->writeln('<comment>[WARNING] Table "' . $table . '" has not been migrated</>');
             return;
         }
 
@@ -68,7 +64,7 @@ class Delete extends Command
             ->deleteWhere('name', $table)
             ->execute();
 
-        $output->writeln('<info>Table "' . $table . '" has been deleted</info>');
+        $output->writeln('<info>[INFO] Table "' . $table . '" has been deleted</info>');
     }
 
     protected function isMigrated(string $table): bool

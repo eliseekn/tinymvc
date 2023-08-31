@@ -212,15 +212,18 @@ class Route
         }
 
         $paths = array_map(function ($path) {
-            $path = Storage::path(config('storage.routes'))->addPath($path, '')->getPath();
-            return str_replace(['//', '//"'], ['/', '/"'], $path);
+            $path = $path === '/'
+                ? config('storage.routes')
+                : Storage::path(config('storage.routes'))->addPath($path)->getPath();
+
+            return str_replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $path);
         }, config('routes.paths'));
 
         foreach ($paths as $path) {
-            $routes = Storage::path($path)->getFiles();
+            $routes = Storage::path($path)->addPath('')->getFiles();
 
             foreach ($routes as $route) {
-                require_once config('storage.routes') . $route;
+                require_once $path . $route;
             }
         }
     }

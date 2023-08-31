@@ -33,13 +33,13 @@ class Factory extends Command
         $factories = $input->getArgument('factory');
 
         foreach ($factories as $factory) {
-            list(, $class) = Make::generateClass($factory, 'factory', true, true);
+            list(, $class) = Maker::generateClass($factory, 'factory', true, true);
 
-            if (!Make::createFactory($factory, $input->getOption('namespace'))) {
-                $output->writeln('<fg=yellow>Failed to create factory "' . Make::fixPluralTypo($class, true) . '"</fg>');
+            if (!Maker::createFactory($factory, $input->getOption('namespace'))) {
+                $output->writeln('<error>[ERROR] Failed to create factory "' . Maker::fixPluralTypo($class, true) . '"</error>');
             }
 
-            $output->writeln('<info>Factory "' . Make::fixPluralTypo($class, true) . '" has been created</info>');
+            $output->writeln('<info>[INFO] Factory "' . Maker::fixPluralTypo($class, true) . '" has been created</info>');
         }
 
         return Command::SUCCESS;

@@ -34,13 +34,13 @@ class Test extends Command
         $tests = $input->getArgument('test');
 
         foreach ($tests as $test) {
-            list(, $class) = Make::generateClass($test, 'test', true);
+            list(, $class) = Maker::generateClass($test, 'test', true);
 
-            if (!Make::createTest($test, $input->getOption('unit'), $input->getOption('path'))) {
-                $output->writeln('<fg=yellow>Failed to create test "' . $class . '"</fg>');
+            if (!Maker::createTest($test, $input->getOption('unit'), $input->getOption('path'))) {
+                $output->writeln('<error>[ERROR] Failed to create test "' . $class . '"</error>');
             }
 
-            $output->writeln('<info>Test "' . $class . '" has been created</info>');
+            $output->writeln('<info>[INFO] Test "' . $class . '" has been created</info>');
         }
 
         return Command::SUCCESS;

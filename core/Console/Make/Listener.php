@@ -32,13 +32,13 @@ class Listener extends Command
         $listeners = $input->getArgument('listener');
 
         foreach ($listeners as $listener) {
-            list(, $class) = Make::generateClass(base_name: $listener, singular: true, force_singlular: true);
+            list(, $class) = Maker::generateClass(base_name: $listener, singular: true, force_singlular: true);
 
-            if (!Make::createListener($listener)) {
-                $output->writeln('<fg=yellow>Failed to create listener "' . Make::fixPluralTypo($class . 'EventListener', true) . '"</fg>');
+            if (!Maker::createListener($listener)) {
+                $output->writeln('<error>[ERROR] Failed to create listener "' . Maker::fixPluralTypo($class . 'EventListener', true) . '"</error>');
             }
 
-            $output->writeln('<info>Factory "' . Make::fixPluralTypo($class . 'EventListener', true) . '" has been created</info>');
+            $output->writeln('<info>[INFO] Factory "' . Maker::fixPluralTypo($class . 'EventListener', true) . '" has been created</info>');
         }
 
         return Command::SUCCESS;

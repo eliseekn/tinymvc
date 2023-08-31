@@ -305,7 +305,7 @@ if (!function_exists('real_path')) {
      */
     function real_path(string $path): string
     {
-        return str_replace('.', DS, $path);
+        return str_replace('.', DIRECTORY_SEPARATOR, $path);
     }
 }
 
@@ -315,7 +315,7 @@ if (!function_exists('absolute_path')) {
      */
     function absolute_path(string $path): string
     {
-        return APP_ROOT . real_path($path) . DS;
+        return APP_ROOT . real_path($path) . DIRECTORY_SEPARATOR;
     }
 }
 
