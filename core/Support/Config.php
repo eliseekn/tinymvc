@@ -9,6 +9,7 @@
 namespace Core\Support;
 
 use Dflydev\DotAccessData\Data;
+use Exception;
 
 /**
  * Manage configurations

@@ -34,10 +34,10 @@ class Seeder extends Command
             list(, $class) = Maker::generateClass($seeder, 'seeder', true, true);
 
             if (!Maker::createSeeder($seeder)) {
-                $output->writeln('<error>[ERROR] Failed to create seeder "' . Maker::fixPluralTypo($class, true) . '"</error>');
+                $output->writeln('<error>[ERROR] Failed to create seeder "' . Maker::fixPlural($class, true) . '"</error>');
+            } else {
+                $output->writeln('<info>[INFO] Seeder "' . Maker::fixPlural($class, true) . '" has been created</info>');
             }
-
-            $output->writeln('<info>[INFO] Seeder "' . Maker::fixPluralTypo($class, true) . '" has been created</info>');
         }
 
         return Command::SUCCESS;

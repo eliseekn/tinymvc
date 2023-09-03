@@ -9,11 +9,12 @@
 namespace Core\Console\Database;
 
 use Core\Database\Connection\Connection;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Execute MySQL queries 

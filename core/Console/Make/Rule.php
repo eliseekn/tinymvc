@@ -9,7 +9,6 @@
 namespace Core\Console\Make;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -36,9 +35,9 @@ class Rule extends Command
 
             if (!Maker::createRule($rule)) {
                 $output->writeln('<error>[ERROR] Failed to create request rule "' . $class . '"</error>');
+            } else {
+                $output->writeln('<info>[INFO] Request rule "' . $class . '" has been created</info>');
             }
-
-            $output->writeln('<info>[INFO] Request rule "' . $class . '" has been created</info>');
         }
 
         return Command::SUCCESS;

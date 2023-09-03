@@ -37,9 +37,9 @@ class Exception extends Command
 
         if (!Maker::createException($exception, $message)) {
             $output->writeln('<error>[ERROR] Failed to create exception "' . $class . '"</error>');
+        } else {
+            $output->writeln('<info>[INFO] Exception "' . $class . '" has been created</info>');
         }
-
-        $output->writeln('<info>[INFO] Exception "' . $class . '" has been created</info>');
 
         return Command::SUCCESS;
     }

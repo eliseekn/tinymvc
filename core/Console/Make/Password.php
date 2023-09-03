@@ -8,7 +8,6 @@
 
 namespace Core\Console\Make;
 
-use Core\Support\Encryption;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -29,7 +28,7 @@ class Password extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln('<info>[INFO] ' . $input->getArgument('password') . '</info> => <info>' . hash_pwd($input->getArgument('password')) . '</info>');
+        $output->writeln('<info>' . hash_pwd($input->getArgument('password')) . '</info>');
         return Command::SUCCESS;
     }
 }

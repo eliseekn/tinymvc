@@ -44,7 +44,7 @@ class Maker
             : str_replace('NAMESPACE', "$base\\$namespace", $data);
     }
 
-    public static function fixPluralTypo(string $word, bool $remove = false): string
+    public static function fixPlural(string $word, bool $remove = false): string
     {
         if (!$remove) {
             if ($word[-1] === 'y') {
@@ -73,8 +73,8 @@ class Maker
     {
         $name = ucfirst(strtolower($base_name));
 
-        if (!$singular) $name = self::fixPluralTypo($name);
-        if ($force_singlular) $name = self::fixPluralTypo($name, true);
+        if (!$singular) $name = self::fixPlural($name);
+        if ($force_singlular) $name = self::fixPlural($name, true);
 
         $name = self::removeUnderscore($name);
 
@@ -115,7 +115,7 @@ class Maker
 
         $data = self::stubs()->addPath('database')->readFile('Model.stub');
         $data = self::addNamespace($data, 'App\Database\Models', $namespace);
-        $data = str_replace('CLASSNAME', self::fixPluralTypo($class, true), $data);
+        $data = str_replace('CLASSNAME', self::fixPlural($class, true), $data);
         $data = str_replace('TABLENAME', $name, $data);
 
         $storage = Storage::path(config('storage.models'));
@@ -124,7 +124,7 @@ class Maker
             $storage = $storage->addPath(str_replace('\\', '/', $namespace));
         }
 
-        return $storage->writeFile(self::fixPluralTypo($class, true) . '.php', $data);
+        return $storage->writeFile(self::fixPlural($class, true) . '.php', $data);
     }
  
     public static function createMigration(string $migration): bool
@@ -143,10 +143,10 @@ class Maker
         list($name, $class) = self::generateClass($seeder, 'seeder', true, true);
 
         $data = self::stubs()->addPath('database')->readFile('Seeder.stub');
-        $data = str_replace('CLASSNAME', self::fixPluralTypo($class, true), $data);
-        $data = str_replace('MODELNAME', self::fixPluralTypo(ucfirst($name), true), $data);
+        $data = str_replace('CLASSNAME', self::fixPlural($class, true), $data);
+        $data = str_replace('MODELNAME', self::fixPlural(ucfirst($name), true), $data);
 
-        return Storage::path(config('storage.seeders'))->writeFile(self::fixPluralTypo($class, true) . '.php', $data);
+        return Storage::path(config('storage.seeders'))->writeFile(self::fixPlural($class, true) . '.php', $data);
     }
     
     public static function createFactory(string $factory, ?string $namespace = null): bool
@@ -155,8 +155,8 @@ class Maker
 
         $data = self::stubs()->addPath('database')->readFile('Factory.stub');
         $data = self::addNamespace($data, 'App\Database\Factories', $namespace);
-        $data = str_replace('CLASSNAME', self::fixPluralTypo($class, true), $data);
-        $data = str_replace('MODELNAME', self::fixPluralTypo(ucfirst($name), true), $data);
+        $data = str_replace('CLASSNAME', self::fixPlural($class, true), $data);
+        $data = str_replace('MODELNAME', self::fixPlural(ucfirst($name), true), $data);
 
         $storage = Storage::path(config('storage.factories'));
 
@@ -164,20 +164,20 @@ class Maker
             $storage = $storage->addPath(str_replace('\\', '/', $namespace));
         }
 
-        return $storage->writeFile(self::fixPluralTypo($class, true) . '.php', $data);
+        return $storage->writeFile(self::fixPlural($class, true) . '.php', $data);
     }
 
     public static function createEvent(string $event): bool
     {
         list(, $class) = self::generateClass(base_name: $event, singular: true, force_singlular: true);
-        $className = self::fixPluralTypo($class . 'Event', true);
+        $className = self::fixPlural($class . 'Event', true);
 
         $data = self::stubs()->addPath('events')->readFile('Event.stub');
-        $data = self::addNamespace($data, "App\Events\\" . self::fixPluralTypo($class, true));
+        $data = self::addNamespace($data, "App\Events\\" . self::fixPlural($class, true));
         $data = str_replace('CLASSNAME', $className, $data);
 
         $storage = Storage::path(config('storage.events'));
-        $storage = $storage->addPath(self::fixPluralTypo($class, true));
+        $storage = $storage->addPath(self::fixPlural($class, true));
 
         return $storage->writeFile($className . '.php', $data);
     }
@@ -185,14 +185,14 @@ class Maker
     public static function createListener(string $listener): bool
     {
         list(, $class) = self::generateClass(base_name: $listener, singular: true, force_singlular: true);
-        $className = self::fixPluralTypo($class . 'EventListener', true);
+        $className = self::fixPlural($class . 'EventListener', true);
 
         $data = self::stubs()->addPath('events')->readFile('Listener.stub');
-        $data = self::addNamespace($data, "App\Events\\" . self::fixPluralTypo($class, true));
+        $data = self::addNamespace($data, "App\Events\\" . self::fixPlural($class, true));
         $data = str_replace('CLASSNAME', $className, $data);
 
         $storage = Storage::path(config('storage.events'));
-        $storage = $storage->addPath(self::fixPluralTypo($class, true));
+        $storage = $storage->addPath(self::fixPlural($class, true));
 
         return $storage->writeFile($className . '.php', $data);
     }
@@ -355,8 +355,8 @@ class Maker
 
         $data = self::addNamespace($data, 'App\Http\Actions', $namespace);
         $data = str_replace('CLASSNAME', $class, $data);
-        $data = str_replace('$MODELNAME', '$' . self::fixPluralTypo($name, true), $data);
-        $data = str_replace('MODELNAME', self::fixPluralTypo(ucfirst($name), true), $data);
+        $data = str_replace('$MODELNAME', '$' . self::fixPlural($name, true), $data);
+        $data = str_replace('MODELNAME', self::fixPlural(ucfirst($name), true), $data);
 
         $storage = Storage::path(config('storage.actions'));
         $storage = $storage->addPath(str_replace('\\', '/', $namespace));

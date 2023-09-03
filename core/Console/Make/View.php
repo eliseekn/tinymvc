@@ -37,9 +37,9 @@ class View extends Command
             foreach ($views as $view) {
                 if (!Maker::createView(null, $view, $input->getOption('path'))) {
                     $output->writeln('<error>[ERROR] Failed to create view layout "' . $view . '"</error>');
+                } else {
+                    $output->writeln('<info>[INFO] View layout "' . $view . '" has been created</info>');
                 }
-    
-                $output->writeln('<info>[INFO] View layout "' . $view . '" has been created</info>');
             }
 
             return Command::SUCCESS;
@@ -48,9 +48,9 @@ class View extends Command
         foreach ($views as $view) {
             if (!Maker::createView($view, $input->getOption('extends'), $input->getOption('path'))) {
                 $output->writeln('<error>[ERROR] Failed to create view template "' . $view . '"</error>');
+            } else {
+                $output->writeln('<info>[INFO] View template "' . $view . '" has been created</info>');
             }
-
-            $output->writeln('<info>[INFO] View template "' . $view . '" has been created</info>');
         }
 
         return Command::SUCCESS;

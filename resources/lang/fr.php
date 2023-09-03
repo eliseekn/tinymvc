@@ -4,7 +4,7 @@
  * French translation
  */
 
- return [
+return [
     'home' => 'Accueil',
     'back_home' => "Retour à l'accueil",
     'name' => 'Nom',
@@ -32,7 +32,7 @@
     'email_verification_link_sent' => 'Lien de vérification par email envoyé à votre adresse email',
     'email_verification_link_not_sent' => "Echec de l'envoie du lien de vérification par email à votre adresse email",
     'password_reset_link_sent' => 'Lien de réinitialisation de mot de passe envoyé',
-    'password_reset_link_not_sent' => "Echec de l'envoie du lien de réinitiatlisation de mot de passe",
+    'password_reset_link_not_sent' => "Echec de l'envoie du lien de réinitialisation de mot de passe",
     'invalid_password_reset_link' => 'Lien de réinitialisation de mot de passe invalide',
     'expired_password_reset_link' => 'Lien de réinitialisation de mot de passe expiré',
     'email_verified' => 'Votre adresse email a été vérifiée',
@@ -40,7 +40,7 @@
     'login_failed' => 'Mot de passe ou adresse email incorrecte',
     'auth_attempts_exceeded' => "Nombre maximum de tentatives de connexions dépassé. Veuillez réessayez dans {timeout} minute(s)",
     'auth_required' => 'Autorisation Requise',
-    'invalid_auth_method' => "Méthode d'autentification invalide",
+    'invalid_auth_method' => "Méthode d'authentification invalide",
     'invalid_credentials' => 'Accès invalides',
     'bad_request' => 'Requête invalide',
     'all_rights_reserved' => 'Tous droits réservés',
@@ -64,4 +64,4 @@
     'october' => 'Octobre',
     'november' => 'Novembre',
     'week' => 'Semaine'
- ];
+];

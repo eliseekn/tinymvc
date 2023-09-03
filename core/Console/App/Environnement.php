@@ -35,18 +35,18 @@ class Environnement extends Command
             'APP_ENV' => $input->getArgument('name') . PHP_EOL,
             'APP_NAME' => env('APP_NAME') . PHP_EOL,
             'APP_URL' => env('APP_URL') . PHP_EOL,
-            'APP_LANG' => env('APP_LANG') . PHP_EOL . PHP_EOL,
+            'APP_LANG' => env('APP_LANG') . PHP_EOL,
             'DB_DRIVER' => env('DB_DRIVER') . PHP_EOL,
             'DB_NAME' => env('DB_NAME') . PHP_EOL,
             'DB_HOST' => env('DB_HOST') . PHP_EOL,
             'DB_PORT' => env('DB_PORT') . PHP_EOL,
             'DB_USERNAME' => env('DB_USERNAME') . PHP_EOL,
-            'DB_PASSWORD' => env('DB_PASSWORD') . PHP_EOL . PHP_EOL,
+            'DB_PASSWORD' => env('DB_PASSWORD') . PHP_EOL,
             'MAILER_TRANSPORT' => env('MAILER_TRANSPORT') . PHP_EOL,
             'MAILER_HOST' => env('MAILER_HOST') . PHP_EOL,
             'MAILER_PORT' => env('MAILER_PORT') . PHP_EOL,
             'MAILER_USERNAME' => env('MAILER_USERNAME') . PHP_EOL,
-            'MAILER_PASSWORD' => env('MAILER_PASSWORD') . PHP_EOL . PHP_EOL,
+            'MAILER_PASSWORD' => env('MAILER_PASSWORD') . PHP_EOL,
             'ENCRYPTION_KEY' => env('ENCRYPTION_KEY')
         ]);
 

@@ -10,7 +10,6 @@ namespace Core\Console\Make;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -36,11 +35,11 @@ class Event extends Command
             list(, $class) = Maker::generateClass(base_name: $event, singular: true, force_singlular: true);
 
             if (!Maker::createEvent($event)) {
-                $output->writeln('<error>[ERROR] Failed to create event "' . Maker::fixPluralTypo($class . 'Event', true) . '"</error>');
+                $output->writeln('<error>[ERROR] Failed to create event "' . Maker::fixPlural($class . 'Event', true) . '"</error>');
+            } else {
+                $output->writeln('<info>[INFO] Event "' . Maker::fixPlural($class . 'Event', true) . '" has been created</info>');
+                $this->getApplication()->find('make:listener')->run(new ArrayInput(['listener' => [$event]]), $output);
             }
-
-            $output->writeln('<info>[INFO] Factory "' . Maker::fixPluralTypo($class . 'Event', true) . '" has been created</info>');
-            $this->getApplication()->find('make:listener')->run(new ArrayInput(['listener' => [$event]]), $output);
         }
 
         return Command::SUCCESS;

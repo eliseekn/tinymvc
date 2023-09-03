@@ -42,35 +42,35 @@ class Model extends Command
             list($name, $class) = Maker::generateClass($model);
 
             if (!Maker::createModel($name, $input->getOption('namespace'))) {
-                $output->writeln('<error>[ERROR] Failed to create model "' . Maker::fixPluralTypo($class, true) . '"</error>');
-            }
+                $output->writeln('<error>[ERROR] Failed to create model "' . Maker::fixPlural($class, true) . '"</error>');
+            } else {
+                $output->writeln('<info>[INFO] Model "' . Maker::fixPlural($class, true) . '" has been created</info>');
 
-            $output->writeln('<info>[INFO] Model "' . Maker::fixPluralTypo($class, true) . '" has been created</info>');
+                if ($input->getOption('migration')) {
+                    $this->getApplication()->find('make:migration')->run(new ArrayInput(['migration' => [$model]]), $output);
+                }
 
-            if ($input->getOption('migration')) {
-                $this->getApplication()->find('make:migration')->run(new ArrayInput(['migration' => [$model]]), $output);
-            }
+                if ($input->getOption('controller')) {
+                    $this->getApplication()->find('make:controller')->run(new ArrayInput([
+                        'controller' => [$model],
+                        '--namespace' => $input->getOption('namespace')
+                    ]), $output);
+                }
 
-            if ($input->getOption('controller')) {
-                $this->getApplication()->find('make:controller')->run(new ArrayInput([
-                    'controller' => [$model],
-                    '--namespace' => $input->getOption('namespace')
-                ]), $output);
-            }
+                if ($input->getOption('factory')) {
+                    $this->getApplication()->find('make:factory')->run(new ArrayInput(['factory' => [$model]]), $output);
+                }
 
-            if ($input->getOption('factory')) {
-                $this->getApplication()->find('make:factory')->run(new ArrayInput(['factory' => [$model]]), $output);
-            }
+                if ($input->getOption('seed')) {
+                    $this->getApplication()->find('make:seed')->run(new ArrayInput(['seed' => [$model]]), $output);
+                }
 
-            if ($input->getOption('seed')) {
-                $this->getApplication()->find('make:seed')->run(new ArrayInput(['seed' => [$model]]), $output);
-            }
-            
-            if ($input->getOption('actions')) {
-                $this->getApplication()->find('make:actions')->run(new ArrayInput([
-                    'model' => [$model],
-                    '--namespace' => $input->getOption('namespace')
-                ]), $output);
+                if ($input->getOption('actions')) {
+                    $this->getApplication()->find('make:actions')->run(new ArrayInput([
+                        'model' => [$model],
+                        '--namespace' => $input->getOption('namespace')
+                    ]), $output);
+                }
             }
         }
 

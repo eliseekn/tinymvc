@@ -36,9 +36,9 @@ class Console extends Command
 
         if (!Maker::createConsole($input->getArgument('console'), $input->getOption('command'), $input->getOption('description'), $input->getOption('namespace'))) {
             $output->writeln('<error>[ERROR] Failed to create command "' . $class . '"</error>');
+        } else {
+            $output->writeln('<info>[INFO] Command "' . $class . '" has been created</info>');
         }
-
-        $output->writeln('<info>[INFO] Command "' . $class . '" has been created</info>');
 
         return Command::SUCCESS;
     }

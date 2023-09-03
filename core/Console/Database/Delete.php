@@ -29,6 +29,7 @@ class Delete extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $connection = Connection::getInstance();
         $databases = $input->getArgument('database');
 
         if (empty($databases)) {
@@ -40,10 +41,10 @@ class Delete extends Command
         }
 
         foreach ($databases as $database) {
-            if (!Connection::getInstance()->schemaExists($database)) {
-                $output->writeln('<comment>[WARNING] Database "' . $database . '" does not exists</>');
+            if (!$connection->schemaExists($database)) {
+                $output->writeln('<comment>[WARNING] Database "' . $database . '" does not exists</comment>');
             } else {
-                Connection::getInstance()->deleteSchema($database);
+                $connection->deleteSchema($database);
                 $output->writeln('<info>[INFO] Database "' . $database . '" has been deleted</info>');
             }
         }

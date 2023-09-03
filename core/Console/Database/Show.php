@@ -41,9 +41,7 @@ class Show extends Command
             foreach ($databases as $db) {
                 $rows[] = [$db->Database];
             }
-        }
-
-        else {
+        } else {
             $databases = Storage::path(config('storage.sqlite'))->getFiles();
 
             foreach ($databases as $db) {

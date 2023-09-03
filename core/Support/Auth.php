@@ -116,7 +116,7 @@ class Auth
             return $user;
         }
 
-        return $user->attribute($key);
+        return $user[$key];
     }
 
     public static function forget(): void

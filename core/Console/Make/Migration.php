@@ -37,9 +37,9 @@ class Migration extends Command
 
             if (!Maker::createMigration($migration)) {
                 $output->writeln('<error>[ERROR] Failed to create migration "' . $class . '"</error>');
+            } else {
+                $output->writeln('<info>[INFO] Migration "' . $class . '" has been created</info>');
             }
-
-            $output->writeln('<info>[INFO] Migration "' . $class . '" has been created</info>');
         }
 
         if ($input->getOption('seeder')) {
@@ -47,10 +47,10 @@ class Migration extends Command
                 list(, $class) = Maker::generateClass($migration, 'seeder', true, true);
             
                 if (!Maker::createSeeder($migration)) {
-                    $output->writeln('<error>[ERROR] Failed to create seeder "' . Maker::fixPluralTypo($class, true) . '"</error>');
+                    $output->writeln('<error>[ERROR] Failed to create seeder "' . Maker::fixPlural($class, true) . '"</error>');
+                } else {
+                    $output->writeln('<info>[INFO] Seeder "' . Maker::fixPlural($class, true) . '" has been created</info>');
                 }
-
-                $output->writeln('<info>[INFO] Seeder "' . Maker::fixPluralTypo($class, true) . '" has been created</info>');
             }
         }
 

@@ -38,9 +38,9 @@ class Test extends Command
 
             if (!Maker::createTest($test, $input->getOption('unit'), $input->getOption('path'))) {
                 $output->writeln('<error>[ERROR] Failed to create test "' . $class . '"</error>');
+            } else {
+                $output->writeln('<info>[INFO] Test "' . $class . '" has been created</info>');
             }
-
-            $output->writeln('<info>[INFO] Test "' . $class . '" has been created</info>');
         }
 
         return Command::SUCCESS;

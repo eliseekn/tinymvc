@@ -11,35 +11,18 @@ namespace Core;
 use Core\Http\Request;
 use Core\Routing\Router;
 use Core\Support\Whoops;
-use Core\Support\Exception;
 use Core\Http\Response;
+use Core\Events\Event;
 
 /**
  * Main application
  */
 class Application
 {
-    public function __construct()
-    {
-        Whoops::register();
-    }
-    
     public function run(): void
     {
-        $response = new Response();
-
-        try { 
-            Router::dispatch(new Request(), $response); 
-        } catch (Exception $e) {
-            if (config('errors.log')) {
-                save_log('Exception: ' . $e);
-            }
-
-            if (config('errors.display')) {
-                die($e);
-            }
-        
-            $response->view(config('errors.views.500'))->send(500);
-        }
+        Whoops::register();
+        Event::loadListeners();
+        Router::dispatch(new Request(), new Response());
     }
 }

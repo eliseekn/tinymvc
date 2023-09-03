@@ -13,6 +13,7 @@ use Core\Support\Storage;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Setup application
@@ -28,58 +29,25 @@ class Setup extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $config = [];
+        $io = new SymfonyStyle($input, $output);
 
         $config['APP_ENV'] = 'local' . PHP_EOL;
+        $config['APP_NAME'] = $this->getInput($io->ask('Application name', 'TinyMVC'));
+        $config['APP_URL'] = $this->getInput($io->ask('Application url', 'http://127.0.0.1:8080/'));
+        $config['APP_LANG'] = $this->getInput($io->ask('Application language', 'en'));
 
-        $output->write('<question>Application name (default: TinyMVC)</question> ');
-        $config['APP_NAME'] = $this->getInput('TinyMVC');
+        $config['DB_DRIVER'] = $this->getInput($io->choice('Application driver', ['mysql', 'sqlite'], 'mysql'));
+        $config['DB_HOST'] = $this->getInput($io->ask('Database host', '127.0.0.1'));
+        $config['DB_PORT'] = $this->getInput($io->ask('Database port', '3306'));
+        $config['DB_NAME'] = $this->getInput($io->ask('Database name', 'tinymvc'));
+        $config['DB_USERNAME'] = $this->getInput($io->ask('Database username', 'root'));
+        $config['DB_PASSWORD'] = $this->getInput($io->ask('Database password'));
 
-        $output->write('<question>Application url (default: http://127.0.0.1:8080/)</question> ');
-        $app_url = trim($this->getInput('http://127.0.0.1:8080/'));
-        
-        if (!empty($app_url) && $app_url[-1] !== '/') {
-            $app_url = $app_url . '/';
-        }
-
-        $config['APP_URL'] = $app_url . PHP_EOL;
-
-        $output->write('<question>Application language (default: en)</question> ');
-        $config['APP_LANG'] = $this->getInput('en') . PHP_EOL;
-
-        $output->write('<question>Database driver [mysql (default), sqlite]</question> ');
-        $config['DB_DRIVER'] = $this->getInput('mysql', ['mysql', 'sqlite']);
-
-        $output->write('<question>Database host (default: 127.0.0.1)</question> ');
-        $config['DB_HOST'] = $this->getInput('127.0.0.1');
-
-        $output->write('<question>Database port (default: 3306)</question> ');
-        $config['DB_PORT'] = $this->getInput('3306');
-
-        $output->write('<question>Database name (default: tinymvc)</question> ');
-        $config['DB_NAME'] = $this->getInput('tinymvc');
-
-        $output->write('<question>Database username (default: root)</question> ');
-        $config['DB_USERNAME'] = $this->getInput('root');
-
-        $output->write('<question>Database password</question> ');
-        $config['DB_PASSWORD'] = $this->getInput('') . PHP_EOL;
-
-        $output->write('<question>Mailer transport [smtp (default), sendmail]</question> ');
-        $config['MAILER_TRANSPORT'] = $this->getInput('smtp', ['smtp', 'sendmail']);
-
-        $output->write('<question>Mailer host (default: 127.0.0.1)</question> ');
-        $config['MAILER_HOST'] = $this->getInput('127.0.0.1');
-
-        $output->write('<question>Mailer port (default: 1025)</question> ');
-        $config['MAILER_PORT'] = $this->getInput('1025');
-
-        $output->write('<question>Mailer username</question> ');
-        $config['MAILER_USERNAME'] = $this->getInput('');
-
-        $output->write('<question>Mailer password</question> ');
-        $config['MAILER_PASSWORD'] = $this->getInput('') . PHP_EOL;
-
+        $config['MAILER_TRANSPORT'] = $this->getInput($io->choice('Mailer transport', ['smtp', 'sendmail'], 'smtp'));
+        $config['MAILER_HOST'] = $this->getInput($io->ask('Mailer host', '127.0.0.1'));
+        $config['MAILER_PORT'] = $this->getInput($io->ask('Mailer port', '1025'));
+        $config['MAILER_USERNAME'] = $this->getInput($io->ask('Mailer username'));
+        $config['MAILER_PASSWORD'] = $this->getInput($io->ask('Mailer password'));
         $config['ENCRYPTION_KEY'] = generate_token();
 
         Config::saveEnv($config);
@@ -88,24 +56,16 @@ class Setup extends Command
             Storage::path(config('storage.lang'))->copyFile('en.php', config('app.lang') . '.php');
         }
 
-        $output->writeln('<question>[INFO] Application has been setted up. You need to restart server to apply changes.</question>');
+        $output->writeln('<info>[INFO] Application has been set up. You need to restart server to apply changes.</info>');
         return Command::SUCCESS;
     }
 
-    private function getInput(string $default, ?array $expected = null): string
+    private function getInput(?string $input): string
     {
-        $input = fgets(STDIN);
-
-        if (is_null($expected)) {
-            if ($input === "\n" || $input = "\r\n") {
-                return $default . PHP_EOL;
-            }
+        if (is_null($input)) {
+            return PHP_EOL;
         }
 
-        if (!in_array(trim($input), $expected)) {
-            return $default . PHP_EOL;
-        }
-
-        return $input;
+        return $input . PHP_EOL;
     }
 }

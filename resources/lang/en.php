@@ -4,14 +4,14 @@
  * English translation
  */
 
- return [
-     'home' => 'Home',
-     'back_home' => 'Go back home',
+return [
+    'home' => 'Home',
+    'back_home' => 'Go back home',
     'name' => 'Name',
     'login' => 'Log in',
     'email' => 'Email address',
-     'password' => 'Password',
-     'new_password' => 'New password',
+    'password' => 'Password',
+    'new_password' => 'New password',
     'remember' => 'Remember me',
     'forgot_password' => 'Forgot password?',
     'reset_password' => 'Reset password',

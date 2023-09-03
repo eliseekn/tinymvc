@@ -35,9 +35,9 @@ class Mail extends Command
 
             if (!Maker::createMail($mail)) {
                 $output->writeln('<error>[ERROR] Failed to create mail template "' . $class . '"</error>');
+            } else {
+                $output->writeln('<info>[INFO] Mail template "' . $class . '" has been created</info>');
             }
-
-            $output->writeln('<info>[INFO] Mail template "' . $class . '" has been created</info>');
         }
 
         return Command::SUCCESS;

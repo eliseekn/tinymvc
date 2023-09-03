@@ -29,6 +29,7 @@ class Create extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $connection = Connection::getInstance();
         $databases = $input->getArgument('database');
 
         if (empty($databases)) {
@@ -40,10 +41,10 @@ class Create extends Command
         }
 
         foreach ($databases as $database) {
-            if (Connection::getInstance()->schemaExists($database)) {
-                $output->writeln('<comment>[WARNING] Database "' . $database . '" already exists</>');
+            if ($connection->schemaExists($database)) {
+                $output->writeln('<comment>[WARNING] Database "' . $database . '" already exists</comment>');
             } else {
-                Connection::getInstance()->createSchema($database);
+                $connection->createSchema($database);
                 $output->writeln('<info>[INFO] Database "' . $database . '" has been created</info>');
             }
         }

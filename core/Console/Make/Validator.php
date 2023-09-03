@@ -37,9 +37,9 @@ class Validator extends Command
 
             if (!Maker::createValidator($validator, $input->getOption('namespace'))) {
                 $output->writeln('<error>[ERROR] Failed to create request validator "' . $class . '"</error>');
+            } else {
+                $output->writeln('<info>[INFO] Request validator "' . $class . '" has been created</info>');
             }
-
-            $output->writeln('<info>[INFO] Request validator "' . $class . '" has been created</info>');
         }
 
         return Command::SUCCESS;

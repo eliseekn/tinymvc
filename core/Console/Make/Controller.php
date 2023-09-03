@@ -37,9 +37,9 @@ class Controller extends Command
 
             if (!Maker::createController($controller, $input->getOption('namespace'))) {
                 $output->writeln('<error>[ERROR] Failed to create controller "' . $class . '"</error>');
+            } else {
+                $output->writeln('<info>[INFO] Controller "' . $class . '" has been created</info>');
             }
-
-            $output->writeln('<info>[INFO] Controller "' . $class . '" has been created</info>');
         }
 
         return Command::SUCCESS;

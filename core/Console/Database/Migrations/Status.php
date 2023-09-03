@@ -11,8 +11,8 @@ namespace Core\Console\Database\Migrations;
 use Core\Database\Connection\Connection;
 use Core\Support\Storage;
 use Core\Database\QueryBuilder;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 

@@ -36,10 +36,10 @@ class Factory extends Command
             list(, $class) = Maker::generateClass($factory, 'factory', true, true);
 
             if (!Maker::createFactory($factory, $input->getOption('namespace'))) {
-                $output->writeln('<error>[ERROR] Failed to create factory "' . Maker::fixPluralTypo($class, true) . '"</error>');
+                $output->writeln('<error>[ERROR] Failed to create factory "' . Maker::fixPlural($class, true) . '"</error>');
+            } else {
+                $output->writeln('<info>[INFO] Factory "' . Maker::fixPlural($class, true) . '" has been created</info>');
             }
-
-            $output->writeln('<info>[INFO] Factory "' . Maker::fixPluralTypo($class, true) . '" has been created</info>');
         }
 
         return Command::SUCCESS;

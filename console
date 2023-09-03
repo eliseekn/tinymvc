@@ -15,6 +15,6 @@
 require 'vendor/autoload.php';
 require_once 'bootstrap.php';
 
-$console = new \Symfony\Component\Console\Application();
+$console = new \Symfony\Component\Console\Application(config('app.name'));
 $console->addCommands(array_merge(config('console.core'), config('console.app')));
 $console->run();

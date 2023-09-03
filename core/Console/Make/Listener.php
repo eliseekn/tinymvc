@@ -9,10 +9,10 @@
 namespace Core\Console\Make;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Create new listener
@@ -35,10 +35,10 @@ class Listener extends Command
             list(, $class) = Maker::generateClass(base_name: $listener, singular: true, force_singlular: true);
 
             if (!Maker::createListener($listener)) {
-                $output->writeln('<error>[ERROR] Failed to create listener "' . Maker::fixPluralTypo($class . 'EventListener', true) . '"</error>');
+                $output->writeln('<error>[ERROR] Failed to create listener "' . Maker::fixPlural($class . 'EventListener', true) . '"</error>');
+            } else {
+                $output->writeln('<info>[ERROR] Listener "' . Maker::fixPlural($class . 'EventListener', true) . '" has been created</info>');
             }
-
-            $output->writeln('<info>[INFO] Factory "' . Maker::fixPluralTypo($class . 'EventListener', true) . '" has been created</info>');
         }
 
         return Command::SUCCESS;
