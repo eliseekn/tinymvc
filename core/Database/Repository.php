@@ -205,7 +205,12 @@ class Repository
     {
         return $this->select('SUM(' . $column . ') AS value');
     }
-    
+
+    public function average(string $column): self
+    {
+        return $this->select('AVG(' . $column . ') AS value');
+    }
+
     public function max(string $column): self
     {
         return $this->select('MAX(' . $column . ') AS value');

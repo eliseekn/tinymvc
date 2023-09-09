@@ -107,6 +107,16 @@ class Model
         return !$data ? false : $data->attribute('value');
     }
 
+    public function average(string $column, ?Closure $subQuery = null): mixed
+    {
+        $data = $this->repository
+            ->average($column)
+            ->subQueryWhen(!is_null($subQuery), $subQuery)
+            ->get();
+
+        return !$data ? false : $data->attribute('value');
+    }
+
     public function max(string $column, ?Closure $subQuery = null): mixed
     {
         $data = $this->repository
@@ -154,10 +164,10 @@ class Model
     public function has(string $table, ?string $column = null): Repository
     {
         if (is_null($column)) {
-            $column = $this->getColumnFromTable($this->table);
+            $column = $this->getColumnFromTable($table);
         }
 
-        return (new Repository($table))->select('*')->where($column, $this->getId());
+        return $this->select('*')->where($column, $this->getId());
     }
 
     /**
@@ -169,21 +179,35 @@ class Model
             $column = $this->getColumnFromTable($table);
         }
 
-        return (new Repository($table))->select('*')->where('id', $this->attributes[$column]);
+        return $this->select('*')->where('id', $this->attributes[$column]);
     }
 
-    public function attribute(string $key): mixed
+    public function setAttribute(array $attributes): self
     {
-        return $this->attributes[$key];
-    }
-
-    public function fill(array $data): self
-    {
-        foreach ($data as $key => $value) {
+        foreach ($attributes as $key => $value) {
             $this->attributes[$key] = $value;
         }
 
         return $this;
+    }
+
+    public function getAttribute(string|array $attributes = []): int|string|array
+    {
+        if (is_string($attributes)) {
+            return $this->attributes[$attributes];
+        }
+
+        if (empty($attributes)) {
+            return $this->attributes;
+        }
+
+        $result = [];
+
+        foreach ($attributes as $attribute) {
+            $result[$attribute] = $this->attributes[$attribute];
+        }
+
+        return $result;
     }
     
     public function update(array $data): bool
@@ -217,25 +241,6 @@ class Model
     public function decrement(string $column, int $value = 1): void
     {
         $this->attributes[$column] -= $value;
-    }
-
-    public function toArray(array $attributes = []): array
-    {
-        if (empty($attributes)) {
-            return $this->attributes;
-        }
-
-        $result = [];
-
-        foreach ($attributes as $attribute) {
-            if (isset($attribute)) {
-                $result = array_merge($result, [
-                    $attribute => $this->attributes[$attribute]
-                ]);
-            }
-        }
-
-        return $result;
     }
 
     protected function getColumnFromTable(string $table): string

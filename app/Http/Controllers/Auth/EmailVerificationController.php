@@ -54,11 +54,11 @@ class EmailVerificationController extends Controller
 
         $token = Token::findByDescription($this->request->queries('email'), TokenDescription::EMAIL_VERIFICATION_TOKEN->value);
 
-        if (!$token || $token->attribute('value') !== $this->request->queries('token')) {
+        if (!$token || $token->getAttribute('value') !== $this->request->queries('token')) {
 			$this->response(__('invalid_password_reset_link'), 400);
 		}
 
-		if (carbon($token->attribute('expire'))->lt(carbon())) {
+		if (carbon($token->getAttribute('expire'))->lt(carbon())) {
 			$this->response(__('expired_password_reset_link'), 400);
 		}
 
@@ -70,7 +70,7 @@ class EmailVerificationController extends Controller
             $this->redirectUrl('/signup');
         }
 
-        WelcomeMail::send($user->attribute('email'), $user->attribute('name'));
+        WelcomeMail::send($user->getAttribute('email'), $user->getAttribute('name'));
         Alert::default(__('email_verified'))->success();
 
         $this->redirectUrl('/login');

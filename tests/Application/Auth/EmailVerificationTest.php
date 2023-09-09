@@ -22,12 +22,12 @@ class EmailVerificationTest extends ApplicationTestCase
     {
         $user = User::factory()->create(['email_verified' => null]);
         $token = Token::factory()->create([
-            'email' => $user->attribute('email'),
+            'email' => $user->getAttribute('email'),
             'description' => TokenDescription::EMAIL_VERIFICATION_TOKEN->value
         ]);
 
-        $client = $this->get('/email/verify?email=' . $user->attribute('email') . '&token=' . $token->attribute('value'));
+        $client = $this->get('/email/verify?email=' . $user->getAttribute('email') . '&token=' . $token->getAttribute('value'));
         $client->assertRedirectedToUrl(url('login'));
-        $this->assertDatabaseDoesNotHave('tokens', $token->toArray());
+        $this->assertDatabaseDoesNotHave('tokens', $token->getAttribute());
     }
 }

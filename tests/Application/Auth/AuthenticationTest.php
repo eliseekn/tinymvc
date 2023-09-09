@@ -19,7 +19,7 @@ class AuthenticationTest extends ApplicationTestCase
     public function test_can_not_authenticate_with_unregistered_user_credentials(): void
     {
         $user = User::factory()->make(['password' => 'password']);
-        $client = $this->post('/authenticate', $user->toArray(['email', 'password']));
+        $client = $this->post('/authenticate', $user->getAttribute(['email', 'password']));
         $client->assertSessionHasErrors();
         $client->assertRedirectedToUrl(url('login'));
     }
@@ -28,46 +28,46 @@ class AuthenticationTest extends ApplicationTestCase
     {
         $user = User::factory()->create();
         $client = $this->post('/authenticate', [
-            'email' => $user->attribute('email'),
+            'email' => $user->getAttribute('email'),
             'password' => 'password'
         ]);
         
         $client->assertSessionDoesNotHaveErrors();
-        $client->assertSessionHas('user', $user->toArray());
+        $client->assertSessionHas('user', $user->getAttribute());
     }
 
     public function test_can_register_user(): void
     {
         $user = User::factory()->make(['password' => 'password']);
-        $client = $this->post('/register', $user->toArray());
+        $client = $this->post('/register', $user->getAttribute());
         $client->assertSessionDoesNotHaveErrors();
 
         if (!config('security.auth.email_verification')) {
             $client->assertRedirectedToUrl(url('/login'));
         } else {
-            $client->assertRedirectedToUrl(url('/email/notify?email=' . $user->attribute('email')));
+            $client->assertRedirectedToUrl(url('/email/notify?email=' . $user->getAttribute('email')));
         }
 
-        $this->assertDatabaseHas('users', $user->toArray(['name', 'email']));
+        $this->assertDatabaseHas('users', $user->getAttribute(['name', 'email']));
     }
 
     public function test_can_logout(): void
     {
         $user = User::factory()->create();
         $this->post('/authenticate', [
-            'email' => $user->attribute('email'),
+            'email' => $user->getAttribute('email'),
             'password' => 'password'
         ]);
 
         $client = $this->auth($user)->post('/logout');
         $client->assertRedirectedToUrl(url('/'));
-        $client->assertSessionDoesNotHave('user', $user->toArray());
+        $client->assertSessionDoesNotHave('user', $user->getAttribute());
     }
 
     public function test_can_not_register_same_user_twice(): void
     {
         $user = User::factory()->create();
-        $client = $this->post('/register', $user->toArray());
+        $client = $this->post('/register', $user->getAttribute());
         $client->assertSessionHasErrors();
     }
 }

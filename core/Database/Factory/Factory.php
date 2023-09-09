@@ -40,12 +40,12 @@ class Factory
     public function make(array $data = []): mixed
     {
         if (count($this->class) === 1) {
-            $this->class[0]->fill(array_merge($this->data(), $data));
+            $this->class[0]->setAttribute(array_merge($this->data(), $data));
             return $this->class[0];
         }
 
         return array_map(function ($model) use ($data) {
-            $model->fill(array_merge($this->data(), $data));
+            $model->setAttribute(array_merge($this->data(), $data));
             return $model;
         }, $this->class);
     }
@@ -55,11 +55,11 @@ class Factory
         $class = $this->make($data);
 
         if (!is_array($class)) {
-            return $class->create($class->toArray());
+            return $class->create($class->getAttribute());
         }
 
         return array_map(function ($c) {
-            return $c->create($c->toArray());
+            return $c->create($c->getAttribute());
         }, $class);
     }
 }

@@ -87,7 +87,6 @@ class Router
 
         foreach ($routes as $route => $options) {
             list($method, $route) = explode(' ', $route, 2);
-
             $request_method = $request->inputs('_method', $request->method());
             $request->method($request_method);
 

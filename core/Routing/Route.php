@@ -123,12 +123,13 @@ class Route
     
     public function byPrefix(string $prefix): self
     {
-        if ($prefix[-1] === '/') $prefix = rtrim($prefix, '/');
+        if ($prefix[-1] === '/') {
+            $prefix = rtrim($prefix, '/');
+        }
 
         foreach (self::$tmp_routes as $route => $options) {
             list($method, $uri) = explode(' ', $route, 2);
             $_route = implode(' ', [$method, $prefix . $uri]);
-
             $_route = self::format($_route);
             self::$tmp_routes = self::update($route, $_route);
         }
@@ -164,7 +165,9 @@ class Route
     
     public function register(): void
     {
-        if (empty(self::$tmp_routes)) return;
+        if (empty(self::$tmp_routes)) {
+            return;
+        }
 
         self::$routes += self::$tmp_routes;
         self::$tmp_routes = [];
@@ -174,7 +177,9 @@ class Route
     {
         list($method, $uri) = explode(' ', $route, 2);
 
-        if (empty($uri)) $uri = '/';
+        if (empty($uri)) {
+            $uri = '/';
+        }
 
         if (strlen($uri) > 1) {
             if ($uri[0] !== '/') {

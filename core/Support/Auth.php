@@ -43,7 +43,7 @@ class Auth
         session()->create('user', $user->toArray());
             
         if ($request->hasInput('remember')) {
-            cookies()->create('user', $user->attribute('email'), 3600 * 24 * 365);
+            cookies()->create('user', $user->getAttribute('email'), 3600 * 24 * 365);
         }
         
         return true;
@@ -53,14 +53,14 @@ class Auth
     {
         if (filter_var($email, FILTER_VALIDATE_EMAIL) !== false) {
             $user = User::findByEmail($email);
-            return $user !== false && Encryption::check($password, $user->attribute('password'));
+            return $user !== false && Encryption::check($password, $user->getAttribute('password'));
         }
 
         $users = User::findAllWhereEmailLike($email);
 
         if ($users) {
             foreach ($users as $u) {
-                if (Encryption::check($password, $u->attribute('password'))) {
+                if (Encryption::check($password, $u->getAttribute('password'))) {
                     $user = $u;
                     return true;
                 }
@@ -73,7 +73,7 @@ class Auth
     public static function checkToken(string $token, &$user): bool
     {
         $token = Token::findByValue($token);
-        $user = User::findByEmail($token->attribute('email'));
+        $user = User::findByEmail($token->getAttribute('email'));
         return $user !== false;
     }
     
@@ -84,7 +84,7 @@ class Auth
             'value' => generate_token(),
         ]);
 
-        return Encryption::encrypt($token->attribute('value'));
+        return Encryption::encrypt($token->getAttribute('value'));
     }
 
     public static function check(Request $request): bool

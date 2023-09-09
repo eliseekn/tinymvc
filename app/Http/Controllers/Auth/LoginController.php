@@ -35,8 +35,7 @@ class LoginController extends Controller
 
         Alert::default(__('login_failed'))->error();
 
-        $this
-            ->response
+        $this->response
             ->url('/login')
             ->withInputs($this->request->only(['email', 'password']))
             ->withErrors([__('login_failed')])
