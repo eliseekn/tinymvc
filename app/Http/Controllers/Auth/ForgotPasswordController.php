@@ -58,7 +58,7 @@ class ForgotPasswordController extends Controller
 			$this->response(__('invalid_password_reset_link'), 400);
 		}
 
-		if (carbon($token->getAttribute('expire'))->lt(carbon())) {
+		if (carbon($token->getAttribute('expire_at'))->lt(carbon())) {
 			$this->response(__('expired_password_reset_link'), 400);
 		}
 

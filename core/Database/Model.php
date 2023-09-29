@@ -24,11 +24,6 @@ class Model
         $this->repository = new Repository($table);
     }
 
-    public function getTableName(): string
-    {
-        return $this->table;
-    }
-
     public function findBy(string $column, $operator = null, $value = null): self|false
     {
         return $this->repository->findWhere($column, $operator, $value);

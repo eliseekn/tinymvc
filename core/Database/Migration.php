@@ -60,9 +60,9 @@ class Migration
         return new self();
     }
 
-    public static function dropTable(string $table): false|PDOStatement
+    public static function dropTable(string $table): void
     {
-        return QueryBuilder::dropTable($table)->execute();
+        QueryBuilder::dropTable($table)->execute();
     }
 
     public static function dropForeign(string $table, string $name): false|PDOStatement
@@ -279,28 +279,22 @@ class Migration
         self::$qb->autoIncrement();
         return $this;
     }
-    
-    public function primaryKey(): self
-    {
-        self::$qb->primaryKey();
-        return $this;
-    }
-    
-    public function addPrimaryKey(string $column, bool $auto_increment = true): self
+
+    public function addPrimaryKey(string $column = 'id', bool $autoIncrement = true): self
     {
         $pk = self::driver() === 'mysql' ? $this->addBigInt($column) : $this->addInteger($column);
-        $pk->primaryKey();
+        self::$qb->primaryKey();
 
-        if ($auto_increment) {
+        if ($autoIncrement) {
             $pk->autoIncrement();
         }
 
         return $pk;
     }
     
-    public function addCurrentTimestamp(string $created_at = 'created_at', string $updated_at = 'updated_at'): self
+    public function addTimestamps(string $createdAt = 'created_at', string $updatedAt = 'updated_at'): self
     {
-        self::$qb->addCurrentTimestamp($created_at, $updated_at);
+        self::$qb->timestamps($createdAt, $updatedAt);
         return $this;
     }
     
@@ -316,14 +310,18 @@ class Migration
         return $this;
     }
 
-    public function default($default): self
+    public function default(string|int $default): self
     {
         self::$qb->default($default);
         return $this;
     }
     
-    public function migrate(bool $table = true): false|PDOStatement
+    public function run(bool $table = true): void
     {
-        return $table ? self::$qb->migrate() : self::$qb->flush()->execute();
+        if ($table) {
+            self::$qb->migrate();
+        }
+
+        self::$qb->flush()->execute();
     }
 }

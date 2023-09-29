@@ -16,13 +16,13 @@ class TokensTable_20210403034738
     public function create(): void
     {
         Migration::createTable('tokens')
-            ->addPrimaryKey('id')
+            ->addPrimaryKey()
             ->addString('email')
             ->addString('value')->unique()
-            ->addTimestamp('expire')->nullable()
+            ->addDateTime('expire_at')->nullable()
             ->addString('description')->default(TokenDescription::PASSWORD_RESET_TOKEN->value)
-            ->addCurrentTimestamp()
-            ->migrate();
+            ->addTimestamps()
+            ->run();
     }
     
     public function drop(): void

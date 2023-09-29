@@ -79,7 +79,7 @@ class Router
     
     public static function dispatch(Request $request, Response $response): void
     {   
-        $routes = Route::$routes;
+        $routes = Route::getRoutes();
 
         if (empty($routes)) {
             throw new RoutesNotDefinedException();

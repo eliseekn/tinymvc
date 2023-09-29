@@ -16,14 +16,14 @@ class UsersTable_20210403034738
     public function create(): void
     {
         Migration::createTable('users')
-            ->addPrimaryKey('id')
+            ->addPrimaryKey()
             ->addString('name')
             ->addString('email')->unique()
             ->addString('password')
             ->addDateTime('email_verified')->nullable()
             ->addString('role')->default(UserRole::USER->value)
-            ->addCurrentTimestamp()
-            ->migrate();
+            ->addTimestamps()
+            ->run();
     }
     
     public function drop(): void

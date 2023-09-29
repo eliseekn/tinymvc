@@ -9,7 +9,7 @@
 namespace Core\Testing;
 
 use App\Database\Models\User;
-use Core\Database\Model;
+use Core\Database\Factory;
 use Core\Database\Repository;
 use Core\Http\Client\Curl as Client;
 use Core\Support\Auth;

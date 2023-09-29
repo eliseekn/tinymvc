@@ -131,7 +131,7 @@ class Route
             list($method, $uri) = explode(' ', $route, 2);
             $_route = implode(' ', [$method, $prefix . $uri]);
             $_route = self::format($_route);
-            self::$tmp_routes = self::update($route, $_route);
+            self::$tmp_routes = self::updateRoute($route, $_route);
         }
 
         return $this;
@@ -197,17 +197,20 @@ class Route
     }
 
     /**
-     * Update formated route
-     * 
      * @link   https://thisinterestsme.com/php-replace-array-key/
      */
-    private static function update(string $old, string $new): array
+    private static function updateRoute(string $old, string $new): array
     {
         $array_keys = array_keys(self::$tmp_routes);
         $old_key_index = array_search($old, $array_keys);
         $array_keys[$old_key_index] = $new;
 
         return array_combine($array_keys, self::$tmp_routes);
+    }
+
+    public static function getRoutes(): array
+    {
+        return self::$routes;
     }
 
     public static function load(): void

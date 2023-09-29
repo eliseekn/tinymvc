@@ -234,7 +234,7 @@ class QueryBuilder
         return $this;
     }
 
-    public function default($default): self
+    public function default(string|int $default): self
     {
         self::$query = rtrim(self::$query, ', ');
         self::$query .= " DEFAULT '$default', ";
@@ -279,7 +279,7 @@ class QueryBuilder
         return $this;
 	}
     
-    public function addCurrentTimestamp(string $created_at = 'created_at', string $updated_at = 'updated_at'): self
+    public function timestamps(string $created_at = 'created_at', string $updated_at = 'updated_at'): self
     {
         if ($this->driver() === 'mysql') {
             self::$query .= " $created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, $updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, ";

@@ -16,20 +16,12 @@ use Core\Database\Model;
 class Factory
 {
     protected array $class;
-    protected string $model;
 
-    public function __construct(string $model, int $count)
+    public function __construct(protected readonly string $model, int $count)
     {
-        $this->model = $model;
-
         for ($i = 1; $i <= $count; $i++) {
             $this->class[] = new $model();
         }
-    }
-
-    public function getModelName(): string
-    {
-        return $this->model;
     }
 
     public function data(): array
@@ -58,8 +50,6 @@ class Factory
             return $class->create($class->getAttribute());
         }
 
-        return array_map(function ($c) {
-            return $c->create($c->getAttribute());
-        }, $class);
+        return array_map(fn ($c) => $c->create($c->getAttribute()), $class);
     }
 }
