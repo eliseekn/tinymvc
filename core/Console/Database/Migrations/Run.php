@@ -39,9 +39,9 @@ class Run extends Command
 
         if (!Connection::getInstance()->tableExists('migrations')) {
             Migration::createTable('migrations')
-                ->addPrimaryKey('id')
+                ->addPrimaryKey()
                 ->addString('name')
-                ->migrate();
+                ->run();
 
             $output->writeln('<info>[INFO] Migrations tables have been created</info>');
         }
