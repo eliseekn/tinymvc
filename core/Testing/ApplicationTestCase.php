@@ -8,8 +8,7 @@
 
 namespace Core\Testing;
 
-use App\Database\Models\User;
-use Core\Database\Factory;
+use Core\Database\Model;
 use Core\Database\Repository;
 use Core\Http\Client\Curl as Client;
 use Core\Support\Auth;
@@ -89,7 +88,7 @@ class ApplicationTestCase extends TestCase
         return strtolower(config('app.name')) . '_' . $name;
     }
 
-    public function auth(User|Model $user): self
+    public function auth(Model $user): self
     {
         $this->token = Auth::createToken($user->getAttribute('email'));
         $this->headers = array_merge($this->headers, ['Authorization' => "Bearer $this->token"]);
