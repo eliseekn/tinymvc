@@ -17,7 +17,7 @@ class Factory
 {
     protected array $class;
 
-    public function __construct(protected readonly string $model, int $count)
+    public function __construct(public string $model, int $count)
     {
         for ($i = 1; $i <= $count; $i++) {
             $this->class[] = new $model();

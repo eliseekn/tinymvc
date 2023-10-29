@@ -28,7 +28,7 @@ class QueryBuilder
                 return config('database.table_prefix') . $name;
             }
 
-            return config('database.name') .config('tests.database.suffix') . '.' . config('database.table_prefix') . $name;
+            return config('database.name') . config('tests.database.suffix') . '.' . config('database.table_prefix') . $name;
         }
 
         if (config('database.driver') === 'sqlite') {

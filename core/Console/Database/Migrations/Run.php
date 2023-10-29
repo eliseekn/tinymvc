@@ -30,12 +30,12 @@ class Run extends Command
     {
         $this->setDescription('Run migrations tables');
         $this->addArgument('table', InputArgument::OPTIONAL|InputArgument::IS_ARRAY, 'The name of migrations tables (separated by space if many)');
-        $this->addOption('seed', null, InputOption::VALUE_NONE, 'Insert all seeds');
+        $this->addOption('seed', null, InputOption::VALUE_NONE, 'Run seeders');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $tables = $input->getArgument('table');
+        $this->getApplication()->find('db:create')->run(new ArrayInput([]), $output);
 
         if (!Connection::getInstance()->tableExists('migrations')) {
             Migration::createTable('migrations')
@@ -47,17 +47,11 @@ class Run extends Command
         }
 
         if (empty($tables)) {
-            $files = Storage::path(config('storage.migrations'))->getFiles();
-
-            foreach ($files as $file) {
-                $this->migrate($output, get_file_name($file));
-            }
+            $tables = Storage::path(config('storage.migrations'))->getFiles();
         }
 
-        else {
-            foreach ($tables as $table) {
-                $this->migrate($output, $table);
-            }
+        foreach ($tables as $table) {
+            $this->migrate($output, get_file_name($table));
         }
 
         if ($input->getOption('seed')) {
@@ -91,7 +85,7 @@ class Run extends Command
         }
 
         return QueryBuilder::table('migrations')
-            ->select('*')
+            ->select('name')
             ->where('name', $table)
             ->exists();
     }

@@ -13,14 +13,10 @@ use Core\Http\Validator\RuleInterface;
 class CLASSNAME implements RuleInterface
 {
     public string $name = 'RULENAME';
+    public string $errorMessage = '';
 
     public function rule(string $field, array $input, array $params, $value) : bool
     {
         return true;
-    }
-
-    public function message(): string
-    {
-        return '';
     }
 }

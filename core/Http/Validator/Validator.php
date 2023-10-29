@@ -27,10 +27,12 @@ class Validator implements ValidatorInterface
 
         if (!empty($rules)) {
             foreach ($rules as $rule) {
+                $rule = new $rule();
+
                 GUMP::add_validator(
-                    (new $rule())->name,
-                    (new $rule())->rule(...),
-                    (new $rule())->message()
+                    $rule->name,
+                    $rule->errorMessage,
+                    $rule->rule(...)
                 );
             }
         }

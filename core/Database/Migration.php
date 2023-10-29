@@ -316,12 +316,12 @@ class Migration
         return $this;
     }
     
-    public function run(bool $table = true): void
+    public function run(bool $table = true): false|PDOStatement
     {
         if ($table) {
-            self::$qb->migrate();
+            return self::$qb->migrate();
         }
 
-        self::$qb->flush()->execute();
+        return self::$qb->flush()->execute();
     }
 }

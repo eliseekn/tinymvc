@@ -27,6 +27,8 @@ class User extends Model
 
     public static function findAllWhereEmailLike(string $email): array|false
     {
-        return (new self())->where('email', 'like', $email)->getAll();
+        return (new self())
+            ->where('email', 'like', $email)
+            ->getAll();
     }
 }

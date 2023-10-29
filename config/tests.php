@@ -12,7 +12,7 @@
 
 return [
     'database' => [
-        'driver' => 'sqlite',
+        'driver' => 'mysql',
         'suffix' => '_test'
     ],
 

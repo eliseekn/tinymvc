@@ -11,6 +11,4 @@ namespace Core\Http\Validator;
 interface RuleInterface
 {
     public function rule(string $field, array $input, array $params, $value): bool;
-
-    public function message(): string;
 }

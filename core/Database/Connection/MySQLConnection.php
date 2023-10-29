@@ -42,7 +42,7 @@ class MySQLConnection implements ConnectionInterface
     private function getDB(): string
     {
         return config('app.env') === 'test'
-            ? config('tests.database.suffix')
+            ? config('database.name') . config('tests.database.suffix')
             : config('database.name');
     }
 
@@ -63,7 +63,8 @@ class MySQLConnection implements ConnectionInterface
 	 */
 	public function executeQuery(string $query, ?array $args = null): false|PDOStatement
 	{
-		try {
+
+        try {
 			$stmt = $this->pdo->prepare(trim($query));
             $stmt->execute($args);
 		} catch (PDOException $e) {
