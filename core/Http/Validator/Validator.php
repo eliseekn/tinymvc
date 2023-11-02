@@ -31,8 +31,8 @@ class Validator implements ValidatorInterface
 
                 GUMP::add_validator(
                     $rule->name,
-                    $rule->errorMessage,
-                    $rule->rule(...)
+                    $rule->rule(...),
+                    $rule->errorMessage
                 );
             }
         }

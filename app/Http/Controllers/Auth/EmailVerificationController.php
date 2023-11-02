@@ -32,7 +32,7 @@ class EmailVerificationController extends Controller
             (new Token())->create([
                 'email'=> $this->request->queries('email'),
                 'value' => $tokenValue,
-                'expire' => carbon()->addDay()->toDateTimeString(),
+                'expires_at' => carbon()->addDay()->toDateTimeString(),
                 'description' => TokenDescription::EMAIL_VERIFICATION_TOKEN->value
             ]);
         }
@@ -58,7 +58,7 @@ class EmailVerificationController extends Controller
 			$this->response(__('invalid_password_reset_link'), 400);
 		}
 
-		if (carbon($token->getAttribute('expire_at'))->lt(carbon())) {
+		if (carbon($token->getAttribute('expires_at'))->lt(carbon())) {
 			$this->response(__('expired_password_reset_link'), 400);
 		}
 

@@ -19,7 +19,7 @@ class TokensTable_20210403034738
             ->addPrimaryKey()
             ->addString('email')
             ->addString('value')->unique()
-            ->addDateTime('expire_at')->nullable()
+            ->addDateTime('expires_at')->nullable()
             ->addString('description')->default(TokenDescription::PASSWORD_RESET_TOKEN->value)
             ->addTimestamps()
             ->run();

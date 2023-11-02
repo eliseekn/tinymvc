@@ -32,7 +32,7 @@ class ForgotPasswordController extends Controller
             (new Token())->create([
                 'email'=> $this->request->inputs('email'),
                 'value' => $tokenValue,
-                'expire' => carbon()->addHour()->toDateTimeString(),
+                'expires_at' => carbon()->addHour()->toDateTimeString(),
                 'description' => TokenDescription::PASSWORD_RESET_TOKEN->value
             ]);
         }
@@ -58,7 +58,7 @@ class ForgotPasswordController extends Controller
 			$this->response(__('invalid_password_reset_link'), 400);
 		}
 
-		if (carbon($token->getAttribute('expire_at'))->lt(carbon())) {
+		if (carbon($token->getAttribute('expires_at'))->lt(carbon())) {
 			$this->response(__('expired_password_reset_link'), 400);
 		}
 

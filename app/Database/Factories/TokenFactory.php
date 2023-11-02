@@ -26,7 +26,7 @@ class TokenFactory extends Factory
         return [
             'email' => faker()->unique()->email,
             'value' => generate_token(),
-            'expire' => carbon()->addHour()->toDateTimeString(),
+            'expires_at' => carbon()->addHour()->toDateTimeString(),
             'description' => TokenDescription::PASSWORD_RESET_TOKEN->value
         ];
     }

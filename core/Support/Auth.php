@@ -40,7 +40,7 @@ class Auth
         }
 
         session()->forget(['auth_attempts', 'auth_attempts_timeout']);
-        session()->create('user', $user->toArray());
+        session()->create('user', $user->getAttribute());
             
         if ($request->hasInput('remember')) {
             cookies()->create('user', $user->getAttribute('email'), 3600 * 24 * 365);
