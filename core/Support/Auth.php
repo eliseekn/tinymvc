@@ -40,10 +40,10 @@ class Auth
         }
 
         session()->forget(['auth_attempts', 'auth_attempts_timeout']);
-        session()->create('user', $user->getAttribute());
+        session()->create('user', $user->get());
             
         if ($request->hasInput('remember')) {
-            cookies()->create('user', $user->getAttribute('email'), 3600 * 24 * 365);
+            cookies()->create('user', $user->get('email'), 3600 * 24 * 365);
         }
         
         return true;
@@ -53,14 +53,14 @@ class Auth
     {
         if (filter_var($email, FILTER_VALIDATE_EMAIL) !== false) {
             $user = User::findByEmail($email);
-            return $user !== false && Encryption::check($password, $user->getAttribute('password'));
+            return $user !== false && Encryption::check($password, $user->get('password'));
         }
 
         $users = User::findAllWhereEmailLike($email);
 
         if ($users) {
             foreach ($users as $u) {
-                if (Encryption::check($password, $u->getAttribute('password'))) {
+                if (Encryption::check($password, $u->get('password'))) {
                     $user = $u;
                     return true;
                 }
@@ -73,7 +73,7 @@ class Auth
     public static function checkToken(string $token, &$user): bool
     {
         $token = Token::findByValue($token);
-        $user = User::findByEmail($token->getAttribute('email'));
+        $user = User::findByEmail($token->get('email'));
         return $user !== false;
     }
     
@@ -84,7 +84,7 @@ class Auth
             'value' => generate_token(),
         ]);
 
-        return Encryption::encrypt($token->getAttribute('value'));
+        return Encryption::encrypt($token->get('value'));
     }
 
     public static function check(Request $request): bool

@@ -8,6 +8,7 @@
 
 namespace Core\Routing;
 
+use Closure;
 use Core\Exceptions\RoutesPathsNotDefinedException;
 use Core\Support\Storage;
 use Core\Http\Response;
@@ -21,44 +22,44 @@ class Route
     protected static array $tmp_routes = [];
     public static array $routes = [];
 
-    private static function add(string $route, $handler): self
+    private static function add(string $route, Closure|array|string $handler): self
     {
         static::$route = self::format($route);
         static::$tmp_routes[static::$route] = ['handler' => $handler];
         return new self();
     }
 
-    public static function get(string $uri, $handler): self
+    public static function get(string $uri, Closure|array|string $handler): self
     {
         return self::add('GET ' . $uri, $handler);
     }
 
-    public static function post(string $uri, $handler): self
+    public static function post(string $uri, Closure|array|string $handler): self
     {
         return self::add('POST ' . $uri, $handler);
     }
     
-    public static function delete(string $uri, $handler): self
+    public static function delete(string $uri, Closure|array|string $handler): self
     {
         return self::add('DELETE ' . $uri, $handler);
     }
     
-    public static function options(string $uri, $handler): self
+    public static function options(string $uri, Closure|array|string $handler): self
     {
         return self::add('OPTIONS ' . $uri, $handler);
     }
     
-    public static function patch(string $uri, $handler): self
+    public static function patch(string $uri, Closure|array|string $handler): self
     {
         return self::add('PATCH ' . $uri, $handler);
     }
     
-    public static function put(string $uri, $handler): self
+    public static function put(string $uri, Closure|array|string $handler): self
     {
         return self::add('PUT ' . $uri, $handler);
     }
     
-    public static function any(string $uri, $handler): self
+    public static function any(string $uri, Closure|array|string $handler): self
     {
         return self::add('GET|POST|DELETE|PUT|OPTIONS|PATCH ' . $uri, $handler);
     }
@@ -75,7 +76,7 @@ class Route
         })->byController($controller)->byName($name);
     }
     
-    public static function match(string $methods, string $uri, $handler): self
+    public static function match(string $methods, string $uri, Closure|array|string $handler): self
     {
         return self::add($methods . ' ' . $uri, $handler);
     }

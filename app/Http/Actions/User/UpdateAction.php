@@ -25,6 +25,6 @@ class UpdateAction
             $data['password'] = hash_pwd($data['password']);
         }
 
-        return $user->setAttribute($data)->save();
+        return $user->set($data)->save();
 	}
 }

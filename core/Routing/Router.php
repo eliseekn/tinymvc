@@ -50,7 +50,7 @@ class Router
         }
     }
     
-    protected static function executeHandler($handler, array $params): mixed
+    protected static function executeHandler(Closure|array|string $handler, array $params): mixed
     {
         if ($handler instanceof Closure) {
             return (new DependencyInjection())->resolveClosure($handler, $params);

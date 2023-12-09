@@ -89,7 +89,7 @@ class Model
             ->subQueryWhen(!is_null($subQuery), $subQuery)
             ->get();
 
-        return !$data ? false : $data->attribute('value');
+        return !$data ? false : $data->get('value');
     }
 
     public function sum(string $column, ?Closure $subQuery = null): mixed
@@ -99,7 +99,7 @@ class Model
             ->subQueryWhen(!is_null($subQuery), $subQuery)
             ->get();
 
-        return !$data ? false : $data->attribute('value');
+        return !$data ? false : $data->get('value');
     }
 
     public function average(string $column, ?Closure $subQuery = null): mixed
@@ -109,7 +109,7 @@ class Model
             ->subQueryWhen(!is_null($subQuery), $subQuery)
             ->get();
 
-        return !$data ? false : $data->attribute('value');
+        return !$data ? false : $data->get('value');
     }
 
     public function max(string $column, ?Closure $subQuery = null): mixed
@@ -119,7 +119,7 @@ class Model
             ->subQueryWhen(!is_null($subQuery), $subQuery)
             ->get();
 
-        return !$data ? false : $data->attribute('value');
+        return !$data ? false : $data->get('value');
     }
 
     public function min(string $column, ?Closure $subQuery = null): mixed
@@ -129,7 +129,7 @@ class Model
             ->subQueryWhen(!is_null($subQuery), $subQuery)
             ->get();
 
-        return !$data ? false : $data->attribute('value');
+        return !$data ? false : $data->get('value');
     }
 
     public function metrics(): Metrics
@@ -177,7 +177,7 @@ class Model
         return $this->select('*')->where('id', $this->attributes[$column]);
     }
 
-    public function setAttribute(array $attributes): self
+    public function set(array $attributes): self
     {
         foreach ($attributes as $key => $value) {
             $this->attributes[$key] = $value;
@@ -186,23 +186,17 @@ class Model
         return $this;
     }
 
-    public function getAttribute(string|array $attributes = []): int|string|array
+    public function get(string|array $attributes = []): int|string|array
     {
-        if (is_string($attributes)) {
-            return $this->attributes[$attributes];
-        }
-
         if (empty($attributes)) {
             return $this->attributes;
         }
 
-        $result = [];
-
-        foreach ($attributes as $attribute) {
-            $result[$attribute] = $this->attributes[$attribute];
+        if (is_string($attributes)) {
+            return $this->attributes[$attributes];
         }
 
-        return $result;
+        return array_intersect_key($this->attributes, array_flip($attributes));
     }
     
     public function update(array $data): bool

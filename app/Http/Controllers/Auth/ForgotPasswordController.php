@@ -54,11 +54,11 @@ class ForgotPasswordController extends Controller
 
         $token = Token::findByDescription($this->request->queries('email'), TokenDescription::PASSWORD_RESET_TOKEN->value);
 
-        if (!$token || $token->getAttribute('value') !== $this->request->queries('token')) {
+        if (!$token || $token->get('value') !== $this->request->queries('token')) {
 			$this->response(__('invalid_password_reset_link'), 400);
 		}
 
-		if (carbon($token->getAttribute('expires_at'))->lt(carbon())) {
+		if (carbon($token->get('expires_at'))->lt(carbon())) {
 			$this->response(__('expired_password_reset_link'), 400);
 		}
 

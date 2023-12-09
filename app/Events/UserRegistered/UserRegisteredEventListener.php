@@ -14,6 +14,6 @@ class UserRegisteredEventListener
 {
     public function __invoke($user): void
     {
-        WelcomeMail::send($user->getAttribute('email'), $user->getAttribute('name'));
+        WelcomeMail::send($user->get('email'), $user->get('name'));
     }
 }

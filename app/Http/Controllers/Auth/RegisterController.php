@@ -32,7 +32,7 @@ class RegisterController extends Controller
         $user = $action->handle($validated);
 
         if (config('security.auth.email_verification')) {
-            $this->redirectUrl('/email/notify' , ['email' => $user->getAttribute('email')]);
+            $this->redirectUrl('/email/notify' , ['email' => $user->get('email')]);
         }
 
         UserRegisteredEvent::dispatch([$user]);
