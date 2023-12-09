@@ -23,19 +23,19 @@ class PasswordForgotTest extends ApplicationTestCase
     {
         $user = User::factory()->create();
         $token = Token::factory()->create([
-            'email' => $user->getAttribute('email'),
+            'email' => $user->get('email'),
             'description' => TokenDescription::PASSWORD_RESET_TOKEN->value
         ]);
 
-        $this->get('/password/reset?email=' . $user->getAttribute('email') . '&token=' . $token->getAttribute('value'));
-        $this->assertDatabaseDoesNotHave('tokens', $token->getAttribute());
+        $this->get('/password/reset?email=' . $user->get('email') . '&token=' . $token->get('value'));
+        $this->assertDatabaseDoesNotHave('tokens', $token->get());
     }
 
     public function test_can_update_password(): void
     {
         $user = User::factory()->create();
         $client = $this->post('/password/update', [
-            'email' => $user->getAttribute('email'),
+            'email' => $user->get('email'),
             'password' => 'new_password'
         ]);
 
