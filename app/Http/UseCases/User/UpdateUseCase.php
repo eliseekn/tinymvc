@@ -6,12 +6,12 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace App\Http\Actions\User;
+namespace App\Http\UseCases\User;
 
 use App\Database\Models\User;
 use Core\Database\Model;
 
-class UpdateAction
+class UpdateUseCase
 {
     public function handle(array $data, string $email): Model|false
 	{

@@ -9,6 +9,7 @@
 namespace Core\Console\Make;
 
 use Core\Support\Storage;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Create templates from stubs
@@ -339,26 +340,26 @@ class Maker
         return $storage->writeFile($class . '.php', $data);
     }
 
-    public static function createAction(string $model, string $type, ?string $namespace = null): bool
+    public static function createUseCase(string $model, string $type, OutputInterface $output, ?string $namespace = null): bool
     {
-        list($name,) = self::generateClass($model, 'action', true, true);
-        list($type, $class) = self::generateClass($type, 'action', true, true);
+        list($name,) = self::generateClass($model, 'use_case', true, true);
+        list($type, $class) = self::generateClass($type, 'use_case', true, true);
 
         $namespace = is_null($namespace) ? ucfirst($name) : $namespace . '\\' . ucfirst($name);
         $class = str_replace(['Index', 'Show'], ['GetCollection', 'GetItem'], $class);
 
         if (in_array($type, ['index', 'show', 'store', 'update', 'destroy'])) {
-            $data = self::stubs()->addPath('actions')->readFile($type . '.stub');
+            $data = self::stubs()->addPath('useCases')->readFile($type . '.stub');
         } else {
-            $data = self::stubs()->addPath('actions')->readFile('blank.stub');
+            $data = self::stubs()->addPath('useCases')->readFile('blank.stub');
         }
 
-        $data = self::addNamespace($data, 'App\Http\Actions', $namespace);
+        $data = self::addNamespace($data, 'App\Http\UseCases', $namespace);
         $data = str_replace('CLASSNAME', $class, $data);
         $data = str_replace('$MODELNAME', '$' . self::fixPlural($name, true), $data);
         $data = str_replace('MODELNAME', self::fixPlural(ucfirst($name), true), $data);
 
-        $storage = Storage::path(config('storage.actions'));
+        $storage = Storage::path(config('storage.useCases'));
         $storage = $storage->addPath(str_replace('\\', '/', $namespace));
 
         return $storage->writeFile($class . '.php', $data);

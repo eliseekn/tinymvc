@@ -9,7 +9,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Events\UserRegistered\UserRegisteredEvent;
-use App\Http\Actions\User\StoreAction;
+use App\Http\UseCases\User\StoreUseCase;
 use App\Http\Validators\Auth\RegisterValidator;
 use Core\Routing\Controller;
 use Core\Support\Alert;
@@ -26,10 +26,10 @@ class RegisterController extends Controller
         $this->redirectUrl(config('app.home'));
     }
 
-    public function register(StoreAction $action): void
+    public function register(StoreUseCase $useCase): void
     {
         $validated = $this->validate(new RegisterValidator());
-        $user = $action->handle($validated);
+        $user = $useCase->handle($validated);
 
         if (config('security.auth.email_verification')) {
             $this->redirectUrl('/email/notify' , ['email' => $user->get('email')]);

@@ -10,7 +10,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Database\Models\Token;
 use App\Enums\TokenDescription;
-use App\Http\Actions\User\UpdateAction;
+use App\Http\UseCases\User\UpdateUseCase;
 use App\Http\Validators\Auth\LoginValidator;
 use App\Mails\TokenMail;
 use Core\Routing\Controller;
@@ -66,10 +66,10 @@ class ForgotPasswordController extends Controller
         $this->render('auth.password.new', ['email' => $this->request->queries('email')]);
 	}
 	
-	public function update(UpdateAction $action): void
+	public function update(UpdateUseCase $useCase): void
 	{
         $validated = $this->validate(new LoginValidator());
-        $user = $action->handle(['password' => $validated['password']], $validated['email']);
+        $user = $useCase->handle(['password' => $validated['password']], $validated['email']);
 
         if (!$user) {
             Alert::default(__('password_not_reset'))->error();

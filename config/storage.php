@@ -33,6 +33,6 @@ return [
     'tests' => absolute_path('tests'),
     'console' => absolute_path('app.Console'),
     'sqlite' => absolute_path('storage.sqlite'),
-    'actions' => absolute_path('app.Http.Actions'),
+    'useCases' => absolute_path('app.Http.UseCases'),
     'events' => absolute_path('app.Events')
 ];

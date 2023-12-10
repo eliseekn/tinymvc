@@ -6,16 +6,15 @@
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace App\Http\Actions\User;
+namespace App\Http\UseCases\User;
 
 use App\Database\Models\User;
 use Core\Database\Model;
 
-class StoreAction
+class StoreUseCase
 {
     public function handle(array $data): Model|false
 	{
-        $data['password'] = hash_pwd($data['password']);
-        return User::factory()->create($data);
+        return (new User())->create($data);
 	}
 }

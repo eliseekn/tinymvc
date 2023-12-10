@@ -69,8 +69,8 @@ class Storage
     
     public function writeFile(string $filename, $content, bool $append = false): bool
     {
-        if (!$this->isDir()) {
-            if (!$this->createDir(recursive: true)) return false;
+        if (!$this->isDir() && !$this->createDir(recursive: true)) {
+            return false;
         }
 
         $flag = $append ? FILE_APPEND | LOCK_EX : 0;

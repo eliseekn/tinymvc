@@ -15,18 +15,18 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Create new actions 
+ * Create new use cases
  */
-class Actions extends Command
+class UseCase extends Command
 {
-    protected static $defaultName = 'make:action';
+    protected static $defaultName = 'make:use-case';
 
     protected function configure(): void
     {
-        $this->setDescription('Create new action');
+        $this->setDescription('Create new use case');
         $this->addArgument('model', InputArgument::REQUIRED, 'The name of model');
-        $this->addOption('type', null, InputOption::VALUE_OPTIONAL|InputOption::VALUE_IS_ARRAY, 'Specify action type (index, show, store, update or destroy)');
-        $this->addOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Specify namespace (base: App\Http\Actions)');
+        $this->addOption('type', null, InputOption::VALUE_OPTIONAL|InputOption::VALUE_IS_ARRAY, 'Specify use case type (index, show, store, update or destroy)');
+        $this->addOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Specify namespace (base: App\Http\UseCases)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -40,13 +40,13 @@ class Actions extends Command
         $types = array_map(fn ($type) => strtolower($type), $types);
 
         foreach ($types as $type) {
-            list(, $class) = Maker::generateClass($type, 'action', true, true);
+            list(, $class) = Maker::generateClass($type, 'use_case', true, true);
             $class = str_replace(['Index', 'Show'], ['GetCollection', 'GetItem'], $class);
 
-            if (!Maker::createAction($input->getArgument('model'), $type, $input->getOption('namespace'))) {
-                $output->writeln('<error>[ERROR] Failed to create action "' . $class . '"</error>');
+            if (!Maker::createUseCase($input->getArgument('model'), $type, $output, $input->getOption('namespace'))) {
+                $output->writeln('<error>[ERROR] Failed to create use case "' . $class . '"</error>');
             } else {
-                $output->writeln('<info>[INFO] Action "' . $class . '" has been created</info>');
+                $output->writeln('<info>[INFO] Use case "' . $class . '" has been created</info>');
             }
         }
 

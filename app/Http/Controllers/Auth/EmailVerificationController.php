@@ -10,7 +10,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Database\Models\Token;
 use App\Enums\TokenDescription;
-use App\Http\Actions\User\UpdateAction;
+use App\Http\UseCases\User\UpdateUseCase;
 use App\Mails\VerificationMail;
 use App\Mails\WelcomeMail;
 use Core\Routing\Controller;
@@ -46,7 +46,7 @@ class EmailVerificationController extends Controller
         $this->render('auth.login');
     }
 
-	public function verify(UpdateAction $action): void
+	public function verify(UpdateUseCase $useCase): void
 	{
         if (!$this->request->hasQuery(['email', 'token'])) {
             $this->response(__('bad_request'), 400);
@@ -63,7 +63,7 @@ class EmailVerificationController extends Controller
 		}
 
         $token->delete();
-        $user = $action->handle(['email_verified' => carbon()->toDateTimeString()], $this->request->queries('email'));
+        $user = $useCase->handle(['email_verified' => carbon()->toDateTimeString()], $this->request->queries('email'));
 
 		if (!$user) {
             Alert::default(__('account_not_found'))->error();

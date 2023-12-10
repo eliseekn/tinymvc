@@ -53,22 +53,7 @@ class Request
         return $data;
     }
 
-    private function getSingleFile(string $input, array $allowed_extensions = []): Uploader|null
-    {
-        if (empty($_FILES[$input])) {
-            return null;
-        }
-        
-        return new Uploader([
-            'name' => $_FILES[$input]['name'],
-            'tmp_name' => $_FILES[$input]['tmp_name'],
-            'size' => $_FILES[$input]['size'],
-            'type' => $_FILES[$input]['type'],
-            'error' => $_FILES[$input]['error']
-        ], $allowed_extensions);
-    }
-
-    private function getMultipleFiles(string $input, array $allowed_extensions = []): array
+    private function files(string $input, array $allowed_extensions = []): Uploader|array
     {
         $files = [];
 
@@ -77,6 +62,16 @@ class Request
         }
 
         $count = is_array($_FILES[$input]['tmp_name']) ? count($_FILES[$input]['tmp_name']) : 1;
+
+        if ($count === 1) {
+            return new Uploader([
+                'name' => $_FILES[$input]['name'],
+                'tmp_name' => $_FILES[$input]['tmp_name'],
+                'size' => $_FILES[$input]['size'],
+                'type' => $_FILES[$input]['type'],
+                'error' => $_FILES[$input]['error']
+            ], $allowed_extensions);
+        }
 
         for ($i = 0; $i < $count; $i++) {
             $files[] = new Uploader([
@@ -89,13 +84,6 @@ class Request
         }
         
         return $files;
-    }
-    
-    public function files(string $input, bool $multiple = false, array $allowed_extensions = []): array|Uploader|null
-    {
-        return $multiple
-            ? $this->getMultipleFiles($input, $allowed_extensions)
-            : $this->getSingleFile($input, $allowed_extensions);
     }
 
     public function method(?string $value = null)
