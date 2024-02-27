@@ -8,12 +8,14 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Core\Routing\Attributes\Route;
 use Core\Routing\Controller;
 use Core\Support\Alert;
 use Core\Support\Auth;
 
 class LogoutController extends Controller
 {
+    #[Route('POST', '/logout', ['auth'])]
 	public function __invoke(): void
 	{
         Auth::forget();

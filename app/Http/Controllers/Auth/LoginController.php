@@ -9,12 +9,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Validators\Auth\LoginValidator;
+use Core\Routing\Attributes\Route;
 use Core\Routing\Controller;
 use Core\Support\Alert;
 use Core\Support\Auth;
 
 class LoginController extends Controller
-{ 
+{
+    #[Route('GET', '/login', ['remember'])]
     public function index(): void
     {
         if (!Auth::check($this->request)) {
@@ -24,6 +26,7 @@ class LoginController extends Controller
         $this->redirectUrl(config('app.home'));
     }
 
+    #[Route(methods: 'POST', middlewares: ['csrf'])]
 	public function authenticate(): void
 	{
         $this->validate(new LoginValidator());

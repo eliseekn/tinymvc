@@ -13,6 +13,7 @@ use App\Enums\TokenDescription;
 use App\Http\UseCases\User\UpdateUseCase;
 use App\Mails\VerificationMail;
 use App\Mails\WelcomeMail;
+use Core\Routing\Attributes\Route;
 use Core\Routing\Controller;
 use Core\Support\Alert;
 
@@ -21,7 +22,8 @@ use Core\Support\Alert;
  */
 class EmailVerificationController extends Controller
 {
-    public function notify(): void
+    #[Route('GET', '/email/notify')]
+   public function notify(): void
     {
         $tokenValue = generate_token(15);
         $token = Token::findByDescription($this->request->queries('email'), TokenDescription::EMAIL_VERIFICATION_TOKEN->value);
@@ -46,6 +48,7 @@ class EmailVerificationController extends Controller
         $this->render('auth.login');
     }
 
+    #[Route('GET', '/email/verify')]
 	public function verify(UpdateUseCase $useCase): void
 	{
         if (!$this->request->hasQuery(['email', 'token'])) {

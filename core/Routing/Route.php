@@ -12,6 +12,9 @@ use Closure;
 use Core\Exceptions\RoutesPathsNotDefinedException;
 use Core\Support\Storage;
 use Core\Http\Response;
+use ReflectionClass;
+use ReflectionMethod;
+use Spatie\StructureDiscoverer\Discover;
 
 /**
  * Manage routes
@@ -214,25 +217,58 @@ class Route
         return self::$routes;
     }
 
+    protected static function loadFromAttributes(): void
+    {
+        $controllers = Discover::in(config('storage.controllers'))->classes()->get();
+
+        foreach ($controllers as $controller) {
+            $reflectionClass = new ReflectionClass($controller);
+            $methods = $reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC);
+
+            foreach ($methods as $method) {
+                $attributes = $method->getAttributes(Attributes\Route::class);
+
+                foreach ($attributes as $attribute) {
+                    $attribute = $attribute->newInstance();
+                    $route = self::match($attribute->methods, $attribute->uri ?? $method->getName(), [$controller, $method->getName()]);
+
+                    if ($attribute->middlewares) {
+                        $route->middleware($attribute->middlewares);
+                    }
+
+                    if ($attribute->name) {
+                        $route->name($attribute->name);
+                    }
+
+                    $route->register();
+                }
+            }
+        }
+    }
+
     public static function load(): void
     {
-        if (empty(config('routes.paths'))) {
+        self::loadFromAttributes();
+
+        if (empty(config('routes.paths')) && empty(self::$routes)) {
             throw new RoutesPathsNotDefinedException();
         }
 
-        $paths = array_map(function ($path) {
-            $path = $path === '/'
-                ? config('storage.routes')
-                : Storage::path(config('storage.routes'))->addPath($path)->getPath();
+        if (!empty(config('routes.paths'))) {
+            $paths = array_map(function ($path) {
+                $path = $path === '/'
+                    ? config('storage.routes')
+                    : Storage::path(config('storage.routes'))->addPath($path)->getPath();
 
-            return str_replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $path);
-        }, config('routes.paths'));
+                return str_replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $path);
+            }, config('routes.paths'));
 
-        foreach ($paths as $path) {
-            $routes = Storage::path($path)->addPath('')->getFiles();
+            foreach ($paths as $path) {
+                $routes = Storage::path($path)->addPath('')->getFiles();
 
-            foreach ($routes as $route) {
-                require_once $path . $route;
+                foreach ($routes as $route) {
+                    require_once $path . $route;
+                }
             }
         }
     }

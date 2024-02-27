@@ -11,12 +11,14 @@ namespace App\Http\Controllers\Auth;
 use App\Events\UserRegistered\UserRegisteredEvent;
 use App\Http\UseCases\User\StoreUseCase;
 use App\Http\Validators\Auth\RegisterValidator;
+use Core\Routing\Attributes\Route;
 use Core\Routing\Controller;
 use Core\Support\Alert;
 use Core\Support\Auth;
 
 class RegisterController extends Controller
 {
+    #[Route('GET', '/signup', ['remember'])]
     public function index(): void
     {
         if (!Auth::check($this->request)) {
@@ -26,6 +28,7 @@ class RegisterController extends Controller
         $this->redirectUrl(config('app.home'));
     }
 
+    #[Route(methods: 'POST', middlewares: ['csrf'])]
     public function register(StoreUseCase $useCase): void
     {
         $validated = $this->validate(new RegisterValidator());

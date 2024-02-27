@@ -13,6 +13,7 @@ use App\Enums\TokenDescription;
 use App\Http\UseCases\User\UpdateUseCase;
 use App\Http\Validators\Auth\LoginValidator;
 use App\Mails\TokenMail;
+use Core\Routing\Attributes\Route;
 use Core\Routing\Controller;
 use Core\Support\Alert;
 
@@ -21,6 +22,7 @@ use Core\Support\Alert;
  */
 class ForgotPasswordController extends Controller
 {
+    #[Route('POST', '/password/notify', ['csrf'])]
 	public function notify(): void
 	{
         $tokenValue = generate_token(15);
@@ -45,7 +47,8 @@ class ForgotPasswordController extends Controller
 
         $this->redirectBack();
 	}
-	
+
+    #[Route('GET', '/password/reset')]
 	public function reset(): void
 	{
         if (!$this->request->hasQuery(['email', 'token'])) {
@@ -65,7 +68,8 @@ class ForgotPasswordController extends Controller
         $token->delete();
         $this->render('auth.password.new', ['email' => $this->request->queries('email')]);
 	}
-	
+
+    #[Route('POST', '/password/update', ['csrf'])]
 	public function update(UpdateUseCase $useCase): void
 	{
         $validated = $this->validate(new LoginValidator());
