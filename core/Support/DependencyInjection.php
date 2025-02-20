@@ -11,8 +11,10 @@ declare(strict_types=1);
 namespace Core\Support;
 
 use Closure;
+use Core\Http\Cookies;
 use Core\Http\Request;
 use Core\Http\Response;
+use Core\Http\Session;
 use Core\Http\Validator\Validator;
 use ReflectionClass;
 use ReflectionFunction;
@@ -27,7 +29,7 @@ use ReflectionParameter;
 class DependencyInjection
 {
     /**
-     * Execute class with dependecies and methods dependencies.
+     * Execute class with dependencies and methods dependencies.
      */
     public function resolve(string $class, string $method, array $params = []): mixed
     {
@@ -56,7 +58,7 @@ class DependencyInjection
     }
 
     /**
-     * Execute closure with dependecies and methods dependencies.
+     * Execute closure with dependencies and methods dependencies.
      */
     public function resolveClosure(Closure $closure, array $params = []): mixed
     {
@@ -73,6 +75,8 @@ class DependencyInjection
     public function getDependencies(array $parameters): array
     {
         $dependencies = [];
+        $request = new Request();
+        $response = new Response();
 
         /**
          * @var ReflectionParameter $parameter
@@ -83,13 +87,17 @@ class DependencyInjection
             if (! is_null($dependency)) {
                 $class = $dependency->getName();
 
-                if (is_subclass_of($class, Validator::class)) {
-                    $class = (new $class)->validate((new Request())->inputs(), new Response());
-                } else {
-                    $class = new $class;
-                }
+                if (! $dependency->isBuiltin()) {
+                    if (is_subclass_of($class, Validator::class)) {
+                        $class = (new $class)->validate($request->inputs(), $response);
+                    } else if (is_subclass_of($class, UseCase::class)) {
+                        $class = new $class($request, $response, new Session(), new Cookies());
+                    } else {
+                        $class = new $class;
+                    }
 
-                $dependencies[] = $class;
+                    $dependencies[] = $class;
+                }
             }
         }
 

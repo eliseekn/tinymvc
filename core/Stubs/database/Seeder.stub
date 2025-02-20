@@ -8,12 +8,12 @@
 
 namespace App\Database\Seeders;
 
-use App\Database\Models\MODELNAME;
+use App\Database\Models\MODEL_NAME;
 
 class CLASSNAME
 {     
     public static function run(): void
     {
-        MODELNAME::factory(50)->create();
+        MODEL_NAME::factory(50)->create();
     }
 }

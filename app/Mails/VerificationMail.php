@@ -10,18 +10,27 @@ declare(strict_types=1);
 
 namespace App\Mails;
 
-use Core\Support\Mail\Mailer;
+use Core\Notifications\Mail\Mail;
+use Core\Notifications\Mail\Mailer\Mailer;
 
-class VerificationMail
+class VerificationMail extends Mail
 {
-    public static function send(string $email, string $token): bool
+    public function __construct(public string $email, public string $token)
     {
-        return (new Mailer())
-            ->to($email)
+        parent::__construct(new Mailer());
+    }
+
+    public function send(): bool
+    {
+        return $this
+            ->mailer
             ->from(config('mailer.sender.email'), config('mailer.sender.name'))
-            ->reply(config('mailer.sender.email'), config('mailer.sender.name'))
-            ->subject('Email verification')
-            ->body(view('emails.verification', compact('email', 'token')))
+            ->replyTo(config('mailer.sender.email'), config('mailer.sender.name'))
+            ->subject(__('email_verification_mail_subject'))
+            ->html('emails.verification', [
+                'email' => $this->email,
+                'token' => $this->token,
+            ])
             ->send();
     }
 }

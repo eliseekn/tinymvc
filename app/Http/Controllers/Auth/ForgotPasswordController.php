@@ -10,79 +10,35 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
-use App\Database\Models\Token;
-use App\Enums\TokenDescription;
+use App\Http\UseCases\PasswordReset\NotifyUseCase;
+use App\Http\UseCases\PasswordReset\ResetUseCase;
+use App\Http\UseCases\PasswordReset\UpdatePasswordUseCase;
 use App\Http\UseCases\User\UpdateUseCase;
 use App\Http\Validators\Auth\LoginValidator;
-use App\Mails\TokenMail;
+use Core\Enums\HttpMethod;
 use Core\Routing\Attributes\Route;
 use Core\Routing\Controller;
-use Core\Support\Alert;
 
 /**
  * Manage password forgot.
  */
 class ForgotPasswordController extends Controller
 {
-    #[Route('POST', '/password/notify', ['csrf'])]
-    public function notify(): void
+    #[Route(HttpMethod::POST, '/password/notify', ['csrf'])]
+    public function notify(NotifyUseCase $useCase): void
     {
-        $tokenValue = generate_token(15);
-        $token = Token::findByDescription($this->request->inputs('email'), TokenDescription::PASSWORD_RESET);
-
-        if ($token) {
-            $token->update(['value' => $tokenValue]);
-        } else {
-            (new Token())->create([
-                'email' => $this->request->inputs('email'),
-                'value' => $tokenValue,
-                'expires_at' => carbon()->addHour()->toDateTimeString(),
-                'description' => TokenDescription::PASSWORD_RESET,
-            ]);
-        }
-
-        if (! TokenMail::send($this->request->inputs('email'), $tokenValue)) {
-            Alert::default(__('password_reset_link_not_sent'))->error();
-        } else {
-            Alert::default(__('password_reset_link_sent'))->success();
-        }
-
-        $this->redirectBack();
+        $useCase->handle();
     }
 
-    #[Route('GET', '/password/reset')]
-    public function reset(): void
+    #[Route(HttpMethod::GET, '/password/reset')]
+    public function reset(ResetUseCase $useCase): void
     {
-        if (! $this->request->hasQuery(['email', 'token'])) {
-            $this->response(__('bad_request'), 400);
-        }
-
-        $token = Token::findByDescription($this->request->queries('email'), TokenDescription::PASSWORD_RESET);
-
-        if (! $token || $token->get('value') !== $this->request->queries('token')) {
-            $this->response(__('invalid_password_reset_link'), 400);
-        }
-
-        if (carbon($token->get('expires_at'))->lt(carbon())) {
-            $this->response(__('expired_password_reset_link'), 400);
-        }
-
-        $token->delete();
-        $this->render('auth.password.new', ['email' => $this->request->queries('email')]);
+        $useCase->handle();
     }
 
-    #[Route('POST', '/password/update', ['csrf'])]
-    public function update(UpdateUseCase $useCase, LoginValidator $validator): void
+    #[Route(HttpMethod::POST, '/password/update', ['csrf'])]
+    public function update(UpdatePasswordUseCase $useCase, LoginValidator $validator, UpdateUseCase $updateUseCase): void
     {
-        $data = $validator->validated();
-        $user = $useCase->handle(['password' => $data['password']], $data['email']);
-
-        if (! $user) {
-            Alert::default(__('password_not_reset'))->error();
-            $this->redirectBack();
-        }
-
-        Alert::default(__('password_reset'))->success();
-        $this->redirectUrl('/login');
+        $useCase->handle($updateUseCase, $validator->validated());
     }
 }

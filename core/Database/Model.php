@@ -11,7 +11,8 @@ declare(strict_types=1);
 namespace Core\Database;
 
 use Closure;
-use Core\Support\Metrics\Metrics;
+use Core\Database\Metrics\Metrics;
+use Core\Notifications\Notifiable;
 use PDOStatement;
 
 /**
@@ -19,6 +20,8 @@ use PDOStatement;
  */
 class Model
 {
+    use Notifiable;
+
     protected Repository $repository;
 
     public function __construct(protected readonly string $table, protected array $attributes = [])
@@ -26,14 +29,14 @@ class Model
         $this->repository = new Repository($table);
     }
 
+    public function getTable(): string
+    {
+        return $this->table;
+    }
+
     public function findBy(string $column, $operator = null, $value = null): self|false
     {
         return $this->repository->findWhere($column, $operator, $value);
-    }
-
-    public function find(int $id): self|false
-    {
-        return $this->findBy('id', $id);
     }
 
     public function getAll(): array|false
@@ -84,7 +87,7 @@ class Model
         return $this->select('*')->where($column, $operator, $value);
     }
 
-    public function count(string $column = 'id', ?Closure $subQuery = null): mixed
+    public function count(string $column = 'id', ?Closure $subQuery = null): string|array|false|int
     {
         $data = $this->repository
             ->count($column)
@@ -94,7 +97,7 @@ class Model
         return ! $data ? false : $data->get('value');
     }
 
-    public function sum(string $column, ?Closure $subQuery = null): mixed
+    public function sum(string $column, ?Closure $subQuery = null): string|array|false|int
     {
         $data = $this->repository
             ->sum($column)
@@ -104,7 +107,7 @@ class Model
         return ! $data ? false : $data->get('value');
     }
 
-    public function average(string $column, ?Closure $subQuery = null): mixed
+    public function average(string $column, ?Closure $subQuery = null): string|int|false|array
     {
         $data = $this->repository
             ->average($column)
@@ -114,7 +117,7 @@ class Model
         return ! $data ? false : $data->get('value');
     }
 
-    public function max(string $column, ?Closure $subQuery = null): mixed
+    public function max(string $column, ?Closure $subQuery = null): string|int|false|array
     {
         $data = $this->repository
             ->max($column)
@@ -124,7 +127,7 @@ class Model
         return ! $data ? false : $data->get('value');
     }
 
-    public function min(string $column, ?Closure $subQuery = null): mixed
+    public function min(string $column, ?Closure $subQuery = null): string|int|false|array
     {
         $data = $this->repository
             ->min($column)
@@ -143,7 +146,7 @@ class Model
     {
         $id = $this->repository->insertGetId($data);
 
-        return is_null($id) ? false : $this->find($id);
+        return is_null($id) ? false : $this->findBy('id', $id);
     }
 
     public function truncate(): false|PDOStatement
@@ -189,7 +192,7 @@ class Model
         return $this;
     }
 
-    public function get(string|array $attributes = null): int|string|array
+    public function get(string|array $attributes = null): int|string|array|null
     {
         if (is_null($attributes)) {
             return $this->attributes;
@@ -219,7 +222,7 @@ class Model
         }
 
         if ($this->update($this->attributes)) {
-            return $this->find($this->getId());
+            return $this->findBy('id', $this->getId());
         }
 
         return false;

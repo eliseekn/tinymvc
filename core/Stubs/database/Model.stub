@@ -17,22 +17,27 @@ class CLASSNAME extends Model
 
     public function __construct()
     {
-        parent::__construct('TABLENAME');
+        parent::__construct('TABLE_NAME');
     }
 
-    public static function findById(string $id): Model|false
+    public static function find(int $id): Model|false
     {
-        return (new self())->find($id);
+        return (new self)->findBy('id', $id);
     }
 
     public static function findByColumn(string $column): Model|false
     {
-        return (new self())->findBy('column', $column);
+        return (new self)->findBy('column', $column);
+    }
+
+    public static function all(): array|false
+    {
+        return (new self)->getAll();
     }
 
     public static function findAllByColumn(string $column): array|false
     {
-        return (new self())
+        return (new self)
             ->where('column', $column)
             ->getAll();
     }

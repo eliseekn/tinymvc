@@ -1,5 +1,11 @@
 {% if alert.display == 'toast' %}
-    <alert-toast type="{{ alert.type }}" message="{{ alert.message }}"></alert-toast>
+    <div class="position-absolute" style="top: 1em; right: 1em; z-index: 11111">
+        <div class="alert alert-{{ alert.type }} alert-dismissible show" role="alert">
+            {{ alert.message|raw }}
+
+            <button class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
 {% else %}
     <div class="alert alert-{{ alert.type }} alert-dismissible show" role="alert">
         {{ alert.message|raw }}

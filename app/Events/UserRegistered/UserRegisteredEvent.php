@@ -10,12 +10,15 @@ declare(strict_types=1);
 
 namespace App\Events\UserRegistered;
 
+use Core\Database\Model;
 use Core\Events\Event;
 
 class UserRegisteredEvent
 {
-    public static function dispatch(array $params = []): void
+    public function __construct(public Model $user) {}
+
+    public function dispatch(): void
     {
-        Event::dispatch('UserRegisteredEvent', $params);
+        Event::dispatch(self::class, $this);
     }
 }

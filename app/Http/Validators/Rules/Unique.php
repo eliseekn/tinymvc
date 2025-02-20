@@ -12,6 +12,7 @@ namespace App\Http\Validators\Rules;
 
 use Core\Database\Repository;
 use Core\Http\Validator\RuleInterface;
+use Core\Routing\Route;
 
 class Unique implements RuleInterface
 {
@@ -21,9 +22,18 @@ class Unique implements RuleInterface
 
     public function rule(string $field, array $input, array $params, $value): bool
     {
-        return ! (new Repository($params[0]))
-            ->select('*')
-            ->where($field, $value)
-            ->exists();
+        if (! isset($params[1])) {
+            return ! (new Repository($params[0]))
+                ->select($field)
+                ->where($field, $value)
+                ->first();
+        }
+
+        $model = (new Repository($params[0]))
+            ->select($field)
+            ->where('id', $params[1])
+            ->first();
+
+        return $model->get($field) === $value;
     }
 }

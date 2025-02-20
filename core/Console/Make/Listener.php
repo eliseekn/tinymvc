@@ -13,6 +13,7 @@ namespace Core\Console\Make;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -24,22 +25,20 @@ class Listener extends Command
 
     protected function configure(): void
     {
-        $this->setDescription('Create new listener');
-        $this->addArgument('listener', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'The name of event listener table (separated by space if many)');
+        $this->setDescription('Create new event listener');
+        $this->addArgument('listener', InputArgument::REQUIRED, 'The name of event listener');
+        $this->addArgument('event', InputArgument::REQUIRED, 'Event name');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $listeners = $input->getArgument('listener');
+        $listener = $input->getArgument('listener');
+        $event = $input->getArgument('event');
 
-        foreach ($listeners as $listener) {
-            list(, $class) = Maker::generateClass(base_name: $listener, singular: true, force_singlular: true);
-
-            if (! Maker::createListener($listener)) {
-                $output->writeln('<error>[ERROR] Failed to create listener "' . Maker::fixPlural($class . 'EventListener', true) . '"</error>');
-            } else {
-                $output->writeln('<info>[ERROR] Listener "' . Maker::fixPlural($class . 'EventListener', true) . '" has been created</info>');
-            }
+        if (! Maker::createListener($listener, $event)) {
+            $output->writeln('<error>[ERROR] Failed to create listener "' . $listener) . '"</error>';
+        } else {
+            $output->writeln('<info>[ERROR] Listener "' . $listener) . '" has been created</info>';
         }
 
         return Command::SUCCESS;

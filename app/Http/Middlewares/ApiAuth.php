@@ -10,10 +10,9 @@ declare(strict_types=1);
 
 namespace App\Http\Middlewares;
 
+use Core\Http\Auth;
 use Core\Http\Request;
 use Core\Http\Response;
-use Core\Support\Auth;
-use Core\Support\Encryption;
 
 /**
  * Authenticate user by api token.
@@ -32,7 +31,7 @@ class ApiAuth
             $response->json([__('invalid_auth_method')])->send(400);
         }
 
-        if (! Auth::checkToken(Encryption::decrypt($token), $user)) {
+        if (! Auth::checkToken(decrypt($token), $user)) {
             $response->json([__('invalid_credentials')])->send(401);
         }
     }

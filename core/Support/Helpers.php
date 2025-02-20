@@ -9,15 +9,32 @@ declare(strict_types=1);
  */
 
 use Carbon\Carbon;
+use Core\Http\Cookies;
 use Core\Http\Request;
+use Core\Http\Session;
 use Core\Routing\Route;
 use Core\Routing\View;
 use Core\Support\Config;
-use Core\Support\Cookies;
 use Core\Support\Encryption;
-use Core\Support\Session;
 use Core\Support\Storage;
 use Faker\Factory;
+
+/**
+ * Encryption
+ */
+if (! function_exists('encrypt')) {
+    function encrypt(string $value): string
+    {
+        return Encryption::encrypt($value);
+    }
+}
+
+if (! function_exists('decrypt')) {
+    function decrypt(string $value): string
+    {
+        return Encryption::decrypt($value);
+    }
+}
 
 /*
  * Cookie helper
@@ -130,13 +147,24 @@ if (! function_exists('generate_csrf_token')) {
     }
 }
 
+
+if (! function_exists('request')) {
+    /**
+     * Generate crsf token html input tag.
+     */
+    function request(): Request
+    {
+        return new Request();
+    }
+}
+
 if (! function_exists('csrf_token_input')) {
     /**
      * Generate crsf token html input tag.
      */
     function csrf_token_input(): string
     {
-        return '<input type="hidden" name="_csrf_token" id="csrf_token" value="' . generate_csrf_token() . '">';
+        return '<input type="hidden" name="_csrf_token" value="' . generate_csrf_token() . '">';
     }
 }
 
@@ -220,8 +248,7 @@ if (! function_exists('route_uri')) {
                 }
             }
         } else {
-            $params = is_array($params) ? $params : [$params];
-            reset($params);
+            $params = parse_array($params);
 
             foreach ($patterns as $pattern) {
                 if (strpos($uri, '+)?')) {
@@ -235,7 +262,7 @@ if (! function_exists('route_uri')) {
                 }
 
                 if (strpos($uri, $pattern)) {
-                    $uri = substr_replace($uri, current($params), strpos($uri, $pattern), strlen($pattern));
+                    $uri = substr_replace($uri, $params, strpos($uri, $pattern), strlen($pattern));
                     next($params);
                 }
             }
@@ -284,7 +311,7 @@ if (! function_exists('storage_url')) {
 if (! function_exists('current_url')) {
     function current_url(): string
     {
-        return url((new Request())->fullUri());
+        return url(request()->fullUri());
     }
 }
 
@@ -360,17 +387,19 @@ if (! function_exists('config')) {
     /**
      * Read configuration.
      */
-    function config(string $data, $default = null): mixed
+    function config(string $key, $default = null): mixed
     {
-        if (! str_contains($data, '.')) {
-            return null;
+        if (! str_contains($key, '.')) {
+            $path = absolute_path('config') . $key . '.php';
+
+            return Config::readFile($path, default: $default);
         }
 
-        $file = substr($data, 0, strpos($data, '.'));
-        $data = substr($data, strpos($data, '.') + 1, strlen($data));
+        $file = substr($key, 0, strpos($key, '.'));
+        $key = substr($key, strpos($key, '.') + 1, strlen($key));
         $path = absolute_path('config') . $file . '.php';
 
-        return Config::readFile($path, $data, $default);
+        return Config::readFile($path, $key, $default);
     }
 }
 
@@ -456,60 +485,18 @@ if (! function_exists('init_storage')) {
         if (! $storage->isDir()) {
             $storage->createDir();
         }
+
         if (! $storage->path(config('storage.logs'))->isDir()) {
             $storage->createDir();
         }
+
         if (! $storage->path(config('storage.cache'))->isDir()) {
             $storage->createDir();
         }
+
         if (! $storage->path(config('storage.sqlite'))->isDir()) {
             $storage->createDir();
         }
-    }
-}
-
-/*
- * Laravel helpers from \Illuminate\Support\helpers.php
- */
-if (! function_exists('trait_uses_recursive')) {
-    /**
-     * Returns all traits used by a trait and its traits.
-     *
-     * @param  string $trait
-     * @return array
-     */
-    function trait_uses_recursive(string $trait): array
-    {
-        $traits = class_uses($trait) ?: [];
-
-        foreach ($traits as $trait) {
-            $traits += trait_uses_recursive($trait);
-        }
-
-        return $traits;
-    }
-}
-
-if (! function_exists('class_uses_recursive')) {
-    /**
-     * Returns all traits used by a class, its parent classes and trait of their traits.
-     *
-     * @param  object|string $class
-     * @return array
-     */
-    function class_uses_recursive(mixed $class): array
-    {
-        if (is_object($class)) {
-            $class = get_class($class);
-        }
-
-        $results = [];
-
-        foreach (array_reverse(class_parents($class)) + [$class => $class] as $class) {
-            $results += trait_uses_recursive($class);
-        }
-
-        return array_unique($results);
     }
 }
 
@@ -579,5 +566,12 @@ if (! function_exists('parse_raw_http_request')) {
         }
 
         return $a_data;
+    }
+}
+
+if (! function_exists('report')) {
+    function report(Exception $e): void
+    {
+        error_log($e->getMessage());
     }
 }

@@ -8,12 +8,13 @@
 
 namespace NAMESPACE;
 
-use App\Database\Models\MODELNAME;
+use App\Database\Models\MODEL_NAME;
+use Core\Support\UseCase;
 
-class CLASSNAME
+class CLASSNAME extends UseCase
 {
     public function handle(): array|false
 	{
-        return (new MODELNAME())->all();
+        return (new MODEL_NAME())->all();
 	}
 }

@@ -1,0 +1,19 @@
+<div class="d-flex justify-content-between mb-3">
+    <div class="d-flex align-items-center">
+        <div class="me-3">
+            <select name="perPage" id="perPage" class="form-select">
+                <option value="10" {{ request().queries('perPage') == 10 ? 'selected' : '' }}>10</option>
+                <option value="25" {{ request().queries('perPage') == 25 ? 'selected' : '' }}>25</option>
+                <option value="50" {{ request().queries('perPage') == 50 ? 'selected' : '' }}>50</option>
+                <option value="100" {{ request().queries('perPage') == 100 ? 'selected' : '' }}>100</option>
+            </select>
+        </div>
+
+        <label for="perPage">entries per page</label>
+    </div>
+
+    <div class="d-flex align-items-center">
+        <input type="search" class="form-control me-3" name="search" id="search" placeholder="Enter search query" value="{{ request().queries('search') }}">
+        <button type="button" class="btn btn-primary" id="search-button">Search</button>
+    </div>
+</div>

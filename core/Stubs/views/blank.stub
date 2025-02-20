@@ -1,7 +1,7 @@
-LAYOUTNAME
+LAYOUT_NAME
 
 {% block title %}
-	{{ __('RESOURCENAME') }}
+	{{ __('RESOURCE_NAME') }}
 {% endblock %}
 
 {% block content %}

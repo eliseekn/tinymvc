@@ -1,0 +1,72 @@
+{% extends "layouts/dashboard.html.twig" %}
+
+{% block title %}
+	Users | Edit
+{% endblock %}
+
+{% block description %}
+	Edit user
+{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+	<h1>Edit user</h1>
+</div>
+
+<div class="card shadow">
+	<form method="post" action="{{ url('/dashboard/users/' ~ user.getId()) }}">
+		{{ csrf_token_input()|raw }}
+		{{ method_input('patch')|raw }}
+
+		<div class="card-body">
+			<div class="modal-body">
+				<div class="mb-3">
+					<label for="name" class="form-label">{{ __('name') }}</label>
+					<input type="text" class="form-control {{ errors.name ? 'is-invalid' }}" value="{{ user.get('name') }}" aria-describedby="name-error" name="name" id="name" autofocus>
+
+					{% if errors.name is not empty %}
+						<div id="name-error" class="invalid-feedback">
+							{{ errors.name }}
+						</div>
+					{% endif %}
+				</div>
+
+				<div class="mb-3">
+					<label for="email" class="form-label">{{ __('email') }}</label>
+					<input type="email" id="email" name="email" class="form-control {{ errors.email ? 'is-invalid' }}" value="{{ user.get('email') }}" aria-describedby="email-error">
+
+					{% if errors.email is not empty %}
+						<div id="email-error" class="invalid-feedback">
+							{{ errors.email }}
+						</div>
+					{% endif %}
+				</div>
+
+				<div>
+					<label for="role" class="form-label">Role</label>
+
+					<select name="role" id="role" class="form-select {{ errors.role ? 'is-invalid' }}" aria-describedby="role-error">
+						<option value="{{ enum("\\App\\Enums\\UserRole").USER.value }}" {{ user.get('role') == enum("\\App\\Enums\\UserRole").USER.value ? 'selected' : '' }}>
+							{{ enum("\\App\\Enums\\UserRole").USER.value }}
+						</option>
+						<option value="{{ enum("\\App\\Enums\\UserRole").ADMIN.value }}" {{ user.get('role') == enum("\\App\\Enums\\UserRole").ADMIN.value ? 'selected' : '' }}>
+							{{ enum("\\App\\Enums\\UserRole").ADMIN.value }}
+						</option>
+					</select>
+
+					{% if errors.role is not empty %}
+						<div id="role-error" class="invalid-feedback">
+							{{ errors.role }}
+						</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+
+		<div class="card-footer">
+			<button type="submit" class="btn btn-primary spinner me-3">Submit</button>
+			<a href="{{ url('dashboard/users') }}" class="btn btn-secondary">Cancel</a>
+		</div>
+	</form>
+</div>
+{% endblock %}

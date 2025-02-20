@@ -39,17 +39,22 @@ class Request
 
     public function queries(?string $key = null, $default = null): mixed
     {
-        $query = is_null($key) ? $_GET : ($_GET[$key] ?? '');
+        if (is_null($key)) {
+            return $_GET;
+        }
 
-        return empty($query) ? $default : $query;
+        return empty($_GET[$key]) ? $default : $_GET[$key];
     }
 
     public function inputs(?string $key = null, $default = null): mixed
     {
         $_POST = array_merge($_POST, $this->raw());
-        $input = is_null($key) ? $_POST : ($_POST[$key] ?? '');
 
-        return empty($input) ? $default : $input;
+        if (is_null($key)) {
+            return $_POST;
+        }
+
+        return empty($_POST[$key]) ? $default : $_POST[$key];
     }
 
     public function raw(): array
@@ -60,7 +65,7 @@ class Request
         return $data;
     }
 
-    private function files(string $input, array $allowed_extensions = []): Uploader|array
+    public function files(string $input, array $allowed_extensions = []): Uploader|array
     {
         $files = [];
 
@@ -128,6 +133,20 @@ class Request
         }
 
         return $uri;
+    }
+
+    public function route(): array
+    {
+        $result = [];
+        $params = explode('/', $this->uri());
+
+        foreach ($params as $param) {
+            if (is_numeric($param)) {
+                $result[] = $param;
+            }
+        }
+
+        return $result;
     }
 
     public function uriContains(string $uri): bool

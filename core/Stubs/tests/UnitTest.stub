@@ -9,13 +9,10 @@
 namespace Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use Core\Testing\RefreshDatabase;
 
 class CLASSNAME extends TestCase
 {
-    use RefreshDatabase;
-
-    public function test_example_test_name(): void
+    public function test_case_example(): void
     {
         //
     }

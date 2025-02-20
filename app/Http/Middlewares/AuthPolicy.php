@@ -10,10 +10,10 @@ declare(strict_types=1);
 
 namespace App\Http\Middlewares;
 
+use Core\Http\Auth;
 use Core\Http\Request;
 use Core\Http\Response;
 use Core\Support\Alert;
-use Core\Support\Auth;
 
 /**
  * Check if user has been authenticated.

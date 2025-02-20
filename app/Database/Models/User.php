@@ -12,6 +12,7 @@ namespace App\Database\Models;
 
 use Core\Database\Factory\HasFactory;
 use Core\Database\Model;
+use Core\Support\Pagination;
 
 class User extends Model
 {
@@ -22,15 +23,33 @@ class User extends Model
         parent::__construct('users');
     }
 
-    public static function findByEmail(string $email): Model|false
+    public static function find(int $id): Model|false
     {
-        return (new self())->findBy('email', $email);
+        return (new self)->findBy('id', $id);
     }
 
-    public static function findAllWhereEmailLike(string $email): array|false
+    public static function findByEmail(string $email): Model|false
     {
-        return (new self())
-            ->where('email', 'like', $email)
-            ->getAll();
+        return (new self)->findBy('email', $email);
+    }
+
+    public static function findByIdentifier(string $value): Model|false
+    {
+        return (new self)->findBy(config('security.auth.identifier'), $value);
+    }
+
+    public static function all(): array|false
+    {
+        return (new self)->getAll();
+    }
+
+    public static function allPaginate(int $perPage, int $page, ?string $search = null): Pagination
+    {
+        return (new self)
+            ->select('*')
+            ->where('id', '<>', auth('id'))
+            ->andRaw("(name LIKE '%$search%' OR email LIKE '%$search%')")
+            ->orderDesc('created_at')
+            ->paginate($perPage, $page);
     }
 }

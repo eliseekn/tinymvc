@@ -36,7 +36,7 @@ class Migration
         return new self();
     }
 
-    public static function addColumn(string $table): self
+    public static function createColumn(string $table): self
     {
         static::$qb = QueryBuilder::addColumn($table);
 
@@ -79,14 +79,22 @@ class Migration
 
     public static function disableForeignKeyCheck(): false|PDOStatement
     {
-        $query = static::driver() === 'mysql' ? 'SET foreign_key_checks = 0' : 'PRAGMA foreign_keys = OFF';
+        $query = match (static::driver()) {
+            'mysql' => 'SET foreign_key_checks = 0',
+            'pgsql' => 'SET session_replication_role = replica',
+            default => 'PRAGMA foreign_keys = OFF',
+        };
 
         return QueryBuilder::setQuery($query)->execute();
     }
 
     public static function enableForeignKeyCheck(): false|PDOStatement
     {
-        $query = static::driver() === 'mysql' ? 'SET foreign_key_checks = 1' : 'PRAGMA foreign_keys = ON';
+        $query = match (static::driver()) {
+            'mysql' => 'SET foreign_key_checks = 1',
+            'pgsql' => 'SET session_replication_role = DEFAULT',
+            default => 'PRAGMA foreign_keys = ON',
+        };
 
         return QueryBuilder::setQuery($query)->execute();
     }
@@ -362,9 +370,9 @@ class Migration
         return $this;
     }
 
-    public function run(bool $table = true): false|PDOStatement
+    public function run(bool $update = false): false|PDOStatement
     {
-        if ($table) {
+        if (! $update) {
             return self::$qb->migrate();
         }
 

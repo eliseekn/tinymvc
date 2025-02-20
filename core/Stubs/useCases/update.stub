@@ -8,14 +8,15 @@
 
 namespace NAMESPACE;
 
-use App\Database\Models\MODELNAME;
+use App\Database\Models\MODEL_NAME;
 use Core\Database\Model;
+use Core\Support\UseCase;
 
-class CLASSNAME
+class CLASSNAME extends UseCase
 {
     public function handle(array $data, int $id): Model|false
 	{
-        $MODELNAME = (new MODELNAME())->find($id);
-        return !$MODELNAME ? false : $MODELNAME->fill($data)->save();
+        $MODEL_NAME = (new MODEL_NAME())->find($id);
+        return ! $MODEL_NAME ? false : $MODEL_NAME->set($data)->save();
 	}
 }

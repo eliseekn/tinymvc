@@ -1,0 +1,33 @@
+<div class="card-footer d-flex align-items-center justify-content-between">
+    <p class="mb-0">
+        Showing <span class="fw-bold">{{ data.items|length }}</span> of <span class="fw-bold">{{ data.getTotalItems() }}</span> entries
+    </p>
+
+    <nav>
+        <ul class="pagination justify-content-center mb-0">
+            {% if data.hasLess() %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ data.previousPageUrl() }}">
+                        Previous
+                    </a>
+                </li>
+            {% endif %}
+
+            {% if data.totalPages() > 1 %}
+                {% for i in 1..data.totalPages() %}
+                    <li class="page-item {{ data.currentPage() == i ? 'active' : '' }}">
+                        <a class="page-link" href="{{ data.pageUrl(i) }}">{{ i }}</a>
+                    </li>
+                {% endfor %}
+            {% endif %}
+
+            {% if data.hasMore() %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ data.nextPageUrl() }}">
+                        Next
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>

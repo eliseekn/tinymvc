@@ -22,6 +22,11 @@ class Token extends Model
         parent::__construct('tokens');
     }
 
+    public static function find(int $id): Model|false
+    {
+        return (new self)->findBy('id', $id);
+    }
+
     public static function findByValue(string $value): Model|false
     {
         return (new self())->findBy('value', $value);
@@ -33,5 +38,10 @@ class Token extends Model
             ->where('email', $email)
             ->and('description', $description)
             ->first();
+    }
+
+    public static function all(): array|false
+    {
+        return (new self)->getAll();
     }
 }

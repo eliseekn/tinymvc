@@ -74,10 +74,9 @@ class Router
             }
 
             throw new ControllerNotFoundException($handler);
-        } else {
-
-            throw new InvalidRouteHandlerException();
         }
+
+        throw new InvalidRouteHandlerException();
     }
 
     public static function dispatch(): void

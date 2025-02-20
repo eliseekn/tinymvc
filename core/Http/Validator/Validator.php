@@ -48,14 +48,19 @@ class Validator implements ValidatorInterface
         $this->errors = GUMP::is_valid($this->inputs, $this->rules, $this->messages);
 
         if ($this->failed() && ! is_null($response)) {
-            $response
-                ->back()
-                ->withErrors($this->errors())
-                ->withInputs($this->inputs)
-                ->send(400);
+            $this->validationFailed($response);
         }
 
         return $this;
+    }
+
+    public function validationFailed(?Response $response = null): void
+    {
+        $response
+            ?->back()
+            ->withErrors($this->errors())
+            ->withInputs($this->inputs)
+            ->send(400);
     }
 
     public function rules(): array
@@ -90,6 +95,7 @@ class Validator implements ValidatorInterface
         foreach ($this->errors as $error) {
             foreach ($this->inputs as $key => $value) {
                 if (strpos(strtolower($error), strval($key))) {
+                    $error = str_replace(['<span class="gump-field">', '</span>'], ['', ''], $error);
                     $errors = array_merge($errors, [$key => $error]);
                 }
             }

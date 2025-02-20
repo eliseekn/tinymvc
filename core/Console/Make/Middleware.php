@@ -33,7 +33,7 @@ class Middleware extends Command
         $middlewares = $input->getArgument('middleware');
 
         foreach ($middlewares as $middleware) {
-            list(, $class) = Maker::generateClass($middleware, '', true);
+            list(, $class) = Maker::generateClass($middleware, singular: true);
 
             if (! Maker::createMiddleware($middleware)) {
                 $output->writeln('<error>[ERROR] Failed to create middleware "' . $class . '"</error>');

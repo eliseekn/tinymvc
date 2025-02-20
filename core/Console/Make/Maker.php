@@ -28,7 +28,7 @@ class Maker
 
     private static function removeUnderscore(string $word): string
     {
-        if (strpos($word, '_')) {
+        if (str_contains($word, '_')) {
             $words = explode('_', $word);
             $word = '';
 
@@ -72,14 +72,15 @@ class Maker
         return $word;
     }
 
-    public static function generateClass(string $base_name, string $suffix = '', bool $singular = false, bool $force_singlular = false): array
+    public static function generateClass(string $base_name, string $suffix = '', bool $singular = false, bool $force_singular = false): array
     {
         $name = ucfirst(strtolower($base_name));
 
         if (! $singular) {
             $name = self::fixPlural($name);
         }
-        if ($force_singlular) {
+        
+        if ($force_singular) {
             $name = self::fixPlural($name, true);
         }
 
@@ -123,7 +124,7 @@ class Maker
         $data = self::stubs()->addPath('database')->readFile('Model.stub');
         $data = self::addNamespace($data, 'App\Database\Models', $namespace);
         $data = str_replace('CLASSNAME', self::fixPlural($class, true), $data);
-        $data = str_replace('TABLENAME', $name, $data);
+        $data = str_replace('TABLE_NAME', $name, $data);
 
         $storage = Storage::path(config('storage.models'));
 
@@ -140,7 +141,7 @@ class Maker
 
         $data = self::stubs()->addPath('database')->readFile('Migration.stub');
         $data = str_replace('CLASSNAME', $class, $data);
-        $data = str_replace('TABLENAME', $name, $data);
+        $data = str_replace('TABLE_NAME', $name, $data);
 
         return Storage::path(config('storage.migrations'))->writeFile($class . '.php', $data);
     }
@@ -151,7 +152,7 @@ class Maker
 
         $data = self::stubs()->addPath('database')->readFile('Seeder.stub');
         $data = str_replace('CLASSNAME', self::fixPlural($class, true), $data);
-        $data = str_replace('MODELNAME', self::fixPlural(ucfirst($name), true), $data);
+        $data = str_replace('MODEL_NAME', self::fixPlural(ucfirst($name), true), $data);
 
         return Storage::path(config('storage.seeders'))->writeFile(self::fixPlural($class, true) . '.php', $data);
     }
@@ -163,7 +164,7 @@ class Maker
         $data = self::stubs()->addPath('database')->readFile('Factory.stub');
         $data = self::addNamespace($data, 'App\Database\Factories', $namespace);
         $data = str_replace('CLASSNAME', self::fixPlural($class, true), $data);
-        $data = str_replace('MODELNAME', self::fixPlural(ucfirst($name), true), $data);
+        $data = str_replace('MODEL_NAME', self::fixPlural(ucfirst($name), true), $data);
 
         $storage = Storage::path(config('storage.factories'));
 
@@ -176,7 +177,7 @@ class Maker
 
     public static function createEvent(string $event): bool
     {
-        list(, $class) = self::generateClass(base_name: $event, singular: true, force_singlular: true);
+        list(, $class) = self::generateClass(base_name: $event, singular: true, force_singular: true);
         $className = self::fixPlural($class . 'Event', true);
 
         $data = self::stubs()->addPath('events')->readFile('Event.stub');
@@ -189,19 +190,17 @@ class Maker
         return $storage->writeFile($className . '.php', $data);
     }
 
-    public static function createListener(string $listener): bool
+    public static function createListener(string $listener, string $event): bool
     {
-        list(, $class) = self::generateClass(base_name: $listener, singular: true, force_singlular: true);
-        $className = self::fixPlural($class . 'EventListener', true);
-
         $data = self::stubs()->addPath('events')->readFile('Listener.stub');
-        $data = self::addNamespace($data, "App\Events\\" . self::fixPlural($class, true));
-        $data = str_replace('CLASSNAME', $className, $data);
+        $data = self::addNamespace($data, "App\Events\\" . $event);
+        $data = str_replace('CLASSNAME', $listener, $data);
+        $data = str_replace('EVENT', $event, $data);
 
         $storage = Storage::path(config('storage.events'));
-        $storage = $storage->addPath(self::fixPlural($class, true));
+        $storage = $storage->addPath($event);
 
-        return $storage->writeFile($className . '.php', $data);
+        return $storage->writeFile($listener . '.php', $data);
     }
 
     public static function createHelper(string $helper): bool
@@ -272,7 +271,7 @@ class Maker
         $data = self::stubs()->addPath('validators')->readFile('Rule.stub');
         $data = self::addNamespace($data, 'App\Http\Validators\Rules');
         $data = str_replace('CLASSNAME', $class, $data);
-        $data = str_replace('RULENAME', strtolower($name), $data);
+        $data = str_replace('RULE_NAME', strtolower($name), $data);
 
         $storage = Storage::path(config('storage.rules'));
 
@@ -281,7 +280,7 @@ class Maker
 
     public static function createMiddleware(string $middleware): bool
     {
-        list(, $class) = self::generateClass($middleware, '', true);
+        list(, $class) = self::generateClass($middleware, singular: true);
 
         $data = self::stubs()->readFile('Middleware.stub');
         $data = str_replace('CLASSNAME', $class, $data);
@@ -295,7 +294,7 @@ class Maker
 
         $data = self::stubs()->readFile('Mail.stub');
         $data = str_replace('CLASSNAME', $class, $data);
-        $data = str_replace('RESOURCENAME', $name, $data);
+        $data = str_replace('RESOURCE_NAME', $name, $data);
 
         if (! Storage::path(config('storage.mails'))->writeFile($class . '.php', $data)) {
             return false;
@@ -314,8 +313,8 @@ class Maker
             ? self::stubs()->addPath('views')->readFile('layout.stub')
             : self::stubs()->addPath('views')->readFile('blank.stub');
 
-        $data = str_replace('LAYOUTNAME', '{% extends "layouts/' . $layout . '.html.twig" %}', $data);
-        $data = is_null($view) ? $data : str_replace('RESOURCENAME', $view, $data);
+        $data = str_replace('LAYOUT_NAME', '{% extends "layouts/' . $layout . '.html.twig" %}', $data);
+        $data = is_null($view) ? $data : str_replace('RESOURCE_NAME', $view, $data);
 
         $storage = Storage::path(config('storage.views'));
 
@@ -335,8 +334,8 @@ class Maker
         $data = self::stubs()->readFile('Console.stub');
         $data = self::addNamespace($data, 'App\Console', $namespace);
         $data = str_replace('CLASSNAME', $class, $data);
-        $data = str_replace('COMMANDNAME', $command, $data);
-        $data = str_replace('COMMANDDESCPTION', $description, $data);
+        $data = str_replace('COMMAND_NAME', $command, $data);
+        $data = str_replace('COMMAND_DESCRIPTION', $description, $data);
 
         $storage = Storage::path(config('storage.console'));
 
@@ -363,8 +362,8 @@ class Maker
 
         $data = self::addNamespace($data, 'App\Http\UseCases', $namespace);
         $data = str_replace('CLASSNAME', $class, $data);
-        $data = str_replace('$MODELNAME', '$' . self::fixPlural($name, true), $data);
-        $data = str_replace('MODELNAME', self::fixPlural(ucfirst($name), true), $data);
+        $data = str_replace('$MODEL_NAME', '$' . self::fixPlural($name, true), $data);
+        $data = str_replace('MODEL_NAME', self::fixPlural(ucfirst($name), true), $data);
 
         $storage = Storage::path(config('storage.useCases'));
         $storage = $storage->addPath(str_replace('\\', '/', $namespace));

@@ -10,38 +10,28 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\UseCases\LoginUseCase;
 use App\Http\Validators\Auth\LoginValidator;
+use Core\Enums\HttpMethod;
+use Core\Http\Auth;
 use Core\Routing\Attributes\Route;
 use Core\Routing\Controller;
-use Core\Support\Alert;
-use Core\Support\Auth;
 
 class LoginController extends Controller
 {
-    #[Route('GET', '/login', ['remember'])]
+    #[Route(HttpMethod::GET, '/login', ['remember'])]
     public function index(): void
     {
         if (! Auth::check($this->request)) {
             $this->render('auth.login');
         }
 
-        $this->redirectUrl(config('app.home'));
+        $this->redirectToUrl( '/dashboard');
     }
 
-    #[Route('POST', middlewares: ['csrf'])]
-    public function authenticate(LoginValidator $validator): void
+    #[Route(HttpMethod::POST, middlewares: ['csrf'])]
+    public function authenticate(LoginUseCase $useCase, LoginValidator $validator): void
     {
-        if (Auth::attempt($this->response, $this->request)) {
-            Alert::toast(__('welcome', ['name' => Auth::get('name')]))->success();
-            $this->redirectUrl(config('app.home'));
-        }
-
-        Alert::default(__('login_failed'))->error();
-
-        $this->response
-            ->url('/login')
-            ->withInputs($this->request->only(['email', 'password']))
-            ->withErrors([__('login_failed')])
-            ->send();
+        $useCase->handle($validator->validated());
     }
 }

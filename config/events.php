@@ -13,7 +13,7 @@ declare(strict_types=1);
  */
 
 return [
-    'listeners' => [
-        'UserRegisteredEvent' => App\Events\UserRegistered\UserRegisteredEventListener::class,
-    ],
+    \App\Events\UserRegistered\UserRegisteredEvent::class => [
+        \App\Events\UserRegistered\SendWelcomeEmail::class
+    ]
 ];

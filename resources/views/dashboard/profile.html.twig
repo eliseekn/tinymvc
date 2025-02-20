@@ -1,0 +1,116 @@
+{% extends "layouts/dashboard.html.twig" %}
+
+{% block title %}
+	Edit profile
+{% endblock %}
+
+{% block description %}
+	Edit profile
+{% endblock %}
+
+{% block content %}
+<h1 class="mb-3">Edit profile</h1>
+
+<div class="card shadow">
+	<form method="post" action="{{ route('dashboard.profile.update') }}" enctype="multipart/form-data">
+		{{ csrf_token_input()|raw }}
+		{{ method_input('patch')|raw }}
+
+		<div class="card-body">
+			<div class="mb-3">
+				<label for="name" class="form-label">{{ __('name') }}</label>
+				<input type="text" class="form-control {{ errors.name ? 'is-invalid' }}" value="{{ inputs.name ?: auth('name') }}" aria-describedby="name-error" name="name" id="name" autofocus>
+
+				{% if errors.name is not empty %}
+					<div id="name-error" class="invalid-feedback">
+						{{ errors.name|raw }}
+					</div>
+				{% endif %}
+			</div>
+
+			<div class="mb-3">
+				<label for="email" class="form-label">{{ __('email') }}</label>
+				<input type="email" id="email" name="email" class="form-control {{ errors.email ? 'is-invalid' }}" value="{{ inputs.email ?: auth('email') }}" aria-describedby="email-error">
+
+				{% if errors.email is not empty %}
+					<div id="email-error" class="invalid-feedback">
+						{{ errors.email|raw }}
+					</div>
+				{% endif %}
+			</div>
+
+			<div class="mb-3">
+				<label for="password" class="form-label">{{ __('new_password') }}</label>
+
+				<div class="input-group">
+					<input type="password" id="password" name="password" class="form-control {{ errors.password ? 'is-invalid' }}" value="{{ inputs.password ?: '' }}" aria-describedby="password-error">
+
+					<span class="input-group-text" id="password-toggle" title="Toggle display" style="cursor: pointer">
+					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+					  <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+					  <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
+					</svg>
+				</span>
+				</div>
+
+				{% if errors.password is not empty %}
+					<div id="password-error" class="invalid-feedback d-block">
+						{{ errors.password|raw }}
+					</div>
+				{% endif %}
+			</div>
+
+			<div>
+				<div class="d-flex align-items-center justify-content-between">
+					<label for="avatar" class="form-label">Avatar</label>
+
+					{% if auth('avatar') is not null %}
+						<div class="d-flex align-items-center">
+							<span>{{ auth('avatar') }}</span>
+
+							<button type="submit" class="btn btn-sm" id="delete-avatar">
+								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-danger">
+									<polyline points="3 6 5 6 21 6"></polyline>
+									<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+								</svg>
+							</button>
+						</div>
+					{% endif %}
+				</div>
+
+				<input type="file" class="form-control {{ errors.avatar ? 'is-invalid' }}" aria-describedby="avatar-error" name="avatar" id="avatar" accept="image/*">
+
+				{% if errors.avatar is not empty %}
+					<div id="avatar-error" class="invalid-feedback">
+						{{ errors.avatar|raw }}
+					</div>
+				{% endif %}
+			</div>
+		</div>
+
+		<div class="card-footer">
+			<button type="submit" class="btn btn-primary spinner">
+				{{ __('submit') }}
+			</button>
+		</div>
+	</form>
+</div>
+
+<form method="POST" action="{{ route('dashboard.profile.delete_avatar') }}" id="delete-avatar-form">
+	{{ csrf_token_input()|raw }}
+	{{ method_input('delete')|raw }}
+</form>
+{% endblock %}
+
+{% block scripts %}
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			document
+				.querySelector('#delete-avatar')
+				?.addEventListener('click', e => {
+					e.preventDefault()
+					displayConfirmMessage('Are you sure you want to delete your avatar?', document.querySelector('#delete-avatar-form'))
+				})
+		})
+	</script>
+{% endblock %}

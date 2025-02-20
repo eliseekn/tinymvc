@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Core\Routing;
 
 use Closure;
+use Core\Enums\HttpMethod;
 use Core\Exceptions\RoutesPathsNotDefinedException;
 use Core\Http\Response;
 use Core\Support\Storage;
@@ -39,37 +40,37 @@ class Route
 
     public static function get(string $uri, Closure|array|string $handler): self
     {
-        return self::add('GET ' . $uri, $handler);
+        return self::add(HttpMethod::GET . ' ' . $uri, $handler);
     }
 
     public static function post(string $uri, Closure|array|string $handler): self
     {
-        return self::add('POST ' . $uri, $handler);
+        return self::add(HttpMethod::POST . ' ' . $uri, $handler);
     }
 
     public static function delete(string $uri, Closure|array|string $handler): self
     {
-        return self::add('DELETE ' . $uri, $handler);
+        return self::add(HttpMethod::DELETE . ' ' . $uri, $handler);
     }
 
     public static function options(string $uri, Closure|array|string $handler): self
     {
-        return self::add('OPTIONS ' . $uri, $handler);
+        return self::add(HttpMethod::OPTIONS . ' ' . $uri, $handler);
     }
 
     public static function patch(string $uri, Closure|array|string $handler): self
     {
-        return self::add('PATCH ' . $uri, $handler);
+        return self::add(HttpMethod::PATCH . ' ' . $uri, $handler);
     }
 
     public static function put(string $uri, Closure|array|string $handler): self
     {
-        return self::add('PUT ' . $uri, $handler);
+        return self::add(HttpMethod::PUT . ' ' . $uri, $handler);
     }
 
     public static function any(string $uri, Closure|array|string $handler): self
     {
-        return self::add('GET|POST|DELETE|PUT|OPTIONS|PATCH ' . $uri, $handler);
+        return self::add(HttpMethod::ANY . ' ' . $uri, $handler);
     }
 
     public static function all(string $name, string $controller, array $excepts = []): self
@@ -77,6 +78,9 @@ class Route
         return self::group(function () use ($name, $excepts) {
             if (! in_array('index', $excepts)) {
                 self::get('/' . $name, 'index')->name('index');
+            }
+            if (! in_array('create', $excepts)) {
+                self::get('/' . $name, 'create')->name('create');
             }
             if (! in_array('store', $excepts)) {
                 self::post('/' . $name, 'store')->name('store');
@@ -271,18 +275,18 @@ class Route
     {
         self::loadFromAttributes();
 
-        if (empty(config('routes.paths')) && empty(self::$routes)) {
+        if (empty(config('routes')) && empty(self::$routes)) {
             throw new RoutesPathsNotDefinedException();
         }
 
-        if (! empty(config('routes.paths'))) {
+        if (! empty(config('routes'))) {
             $paths = array_map(function ($path) {
                 $path = $path === DIRECTORY_SEPARATOR
                     ? config('storage.routes')
                     : Storage::path(config('storage.routes'))->addPath($path)->getPath();
 
                 return str_replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $path);
-            }, config('routes.paths'));
+            }, config('routes'));
 
             foreach ($paths as $path) {
                 $routes = Storage::path($path)->addPath('')->getFiles();

@@ -12,7 +12,7 @@ use Core\Http\Validator\RuleInterface;
 
 class CLASSNAME implements RuleInterface
 {
-    public string $name = 'RULENAME';
+    public string $name = 'RULE_NAME';
     public string $errorMessage = '';
 
     public function rule(string $field, array $input, array $params, $value) : bool

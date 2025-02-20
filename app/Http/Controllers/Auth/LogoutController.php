@@ -10,19 +10,20 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
+use Core\Enums\HttpMethod;
+use Core\Http\Auth;
 use Core\Routing\Attributes\Route;
 use Core\Routing\Controller;
 use Core\Support\Alert;
-use Core\Support\Auth;
 
 class LogoutController extends Controller
 {
-    #[Route('POST', '/logout', ['auth'])]
+    #[Route(HttpMethod::POST, '/logout', ['auth'])]
     public function __invoke(): void
     {
         Auth::forget();
         Alert::toast(__('logged_out'))->success();
 
-        $this->redirectUrl(config('app.home'));
+        $this->redirectToUrl(config('app.home'));
     }
 }

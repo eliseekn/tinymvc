@@ -50,7 +50,6 @@ class Environnement extends Command
             'DB_PORT' => env('DB_PORT') . PHP_EOL,
             'DB_USERNAME' => env('DB_USERNAME') . PHP_EOL,
             'DB_PASSWORD' => env('DB_PASSWORD') . PHP_EOL,
-            'MAILER_TRANSPORT' => env('MAILER_TRANSPORT') . PHP_EOL,
             'MAILER_HOST' => env('MAILER_HOST') . PHP_EOL,
             'MAILER_PORT' => env('MAILER_PORT') . PHP_EOL,
             'MAILER_USERNAME' => env('MAILER_USERNAME') . PHP_EOL,

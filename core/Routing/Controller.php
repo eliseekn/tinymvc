@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Core\Routing;
 
+use Core\Http\Cookies;
 use Core\Http\Request;
 use Core\Http\Response;
+use Core\Http\Session;
 use Core\Http\Validator\Validator;
-use Core\Support\Cookies;
-use Core\Support\Session;
 
 class Controller
 {
@@ -20,7 +20,7 @@ class Controller
     ) {
     }
 
-    public function redirectUrl(string $uri, array $queries = []): void
+    public function redirectToUrl(string $uri, array $queries = []): void
     {
         $this->response->url($uri, $queries)->send();
     }

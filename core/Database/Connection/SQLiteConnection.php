@@ -88,8 +88,7 @@ class SQLiteConnection implements ConnectionInterface
 
     public function tableExists(string $name): bool
     {
-        $stmt = $this->executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='" . $name . "'");
-
+        $stmt = $this->executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name = ?", [$name]);
         return $stmt->fetch() !== false;
     }
 

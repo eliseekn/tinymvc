@@ -14,7 +14,7 @@ class CLASSNAME
 {         
     public function create(): void
     {
-        Migration::createTable('TABLENAME')
+        Migration::createTable('TABLE_NAME')
             ->addPrimaryKey()
             ->addTimestamps()
             ->run();
@@ -22,6 +22,6 @@ class CLASSNAME
     
     public function drop(): void
     {
-        Migration::dropTable('TABLENAME');
+        Migration::dropTable('TABLE_NAME');
     }
 }

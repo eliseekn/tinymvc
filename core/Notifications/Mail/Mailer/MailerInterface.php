@@ -1,0 +1,34 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
+ * @license MIT (https://opensource.org/licenses/MIT)
+ * @link https://github.com/eliseekn/tinymvc
+ */
+
+namespace Core\Notifications\Mail\Mailer;
+
+interface MailerInterface
+{
+    public function to(string $address, string $name);
+
+    public function from(string $address, string $name);
+
+    public function replyTo(string $address, string $name);
+
+    public function cc(string $address, string $name);
+
+    public function bcc(string $address, string $name);
+
+    public function subject(string $subject);
+
+    public function body(string $message, bool $html);
+
+    public function html(string $view, array $data = []);
+
+    public function attachment(string $attachment, string $filename);
+
+    public function send();
+}

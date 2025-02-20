@@ -23,7 +23,7 @@ class Application
     public function run(): void
     {
         Whoops::register();
-        Event::loadListeners();
+        Event::load();
         Route::load();
         Router::dispatch();
     }

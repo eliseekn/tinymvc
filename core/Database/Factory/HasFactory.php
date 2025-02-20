@@ -8,7 +8,7 @@ use Spatie\StructureDiscoverer\Discover;
 
 trait HasFactory
 {
-    public static function factory(int $count = 1): mixed
+    public static function factory(int $count = 1): Factory
     {
         $factories = Discover::in(config('storage.factories'))->classes()->get();
         $factories = array_values(

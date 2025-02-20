@@ -62,12 +62,16 @@ class Config
         return $data === false ? $default : $data;
     }
 
-    public static function readFile(string $config, string $path, $default = null): mixed
+    public static function readFile(string $path, string $key = null, $default = null): mixed
     {
-        $config = require $config;
-        $data = new Data($config);
+        $path = require $path;
+        $data = new Data($path);
 
-        return $data->get($path, $default);
+        if ($key === null) {
+            return $data->export();
+        }
+
+        return $data->get($key, $default);
     }
 
     public static function readTranslations(string $expr, array $data = []): string

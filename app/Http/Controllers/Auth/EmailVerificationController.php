@@ -10,74 +10,20 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
-use App\Database\Models\Token;
-use App\Enums\TokenDescription;
+use App\Http\UseCases\EmailVerification\VerifyUseCase;
 use App\Http\UseCases\User\UpdateUseCase;
-use App\Mails\VerificationMail;
-use App\Mails\WelcomeMail;
+use Core\Enums\HttpMethod;
 use Core\Routing\Attributes\Route;
 use Core\Routing\Controller;
-use Core\Support\Alert;
 
 /**
  * Manage email verification link.
  */
 class EmailVerificationController extends Controller
 {
-    #[Route('GET', '/email/notify')]
-    public function notify(): void
+    #[Route(HttpMethod::GET, '/email/verify')]
+    public function __invoke(VerifyUseCase $verifyUseCase, UpdateUseCase $updateUseCase): void
     {
-        $tokenValue = generate_token(15);
-        $token = Token::findByDescription($this->request->queries('email'), TokenDescription::EMAIL_VERIFICATION);
-
-        if ($token) {
-            $token->update(['value' => $tokenValue]);
-        } else {
-            (new Token())->create([
-                'email' => $this->request->queries('email'),
-                'value' => $tokenValue,
-                'expires_at' => carbon()->addDay()->toDateTimeString(),
-                'description' => TokenDescription::EMAIL_VERIFICATION,
-            ]);
-        }
-
-        if (! VerificationMail::send($this->request->queries('email'), $tokenValue)) {
-            Alert::default(__('email_verification_link_not_sent'))->error();
-            $this->render('auth.signup');
-        }
-
-        Alert::default(__('email_verification_link_sent'))->success();
-        $this->render('auth.login');
-    }
-
-    #[Route('GET', '/email/verify')]
-    public function verify(UpdateUseCase $useCase): void
-    {
-        if (! $this->request->hasQuery(['email', 'token'])) {
-            $this->response(__('bad_request'), 400);
-        }
-
-        $token = Token::findByDescription($this->request->queries('email'), TokenDescription::EMAIL_VERIFICATION);
-
-        if (! $token || $token->get('value') !== $this->request->queries('token')) {
-            $this->response(__('invalid_password_reset_link'), 400);
-        }
-
-        if (carbon($token->get('expires_at'))->lt(carbon())) {
-            $this->response(__('expired_password_reset_link'), 400);
-        }
-
-        $token->delete();
-        $user = $useCase->handle(['email_verified_at' => carbon()->toDateTimeString()], $this->request->queries('email'));
-
-        if (! $user) {
-            Alert::default(__('account_not_found'))->error();
-            $this->redirectUrl('/signup');
-        }
-
-        WelcomeMail::send($user->get('email'), $user->get('name'));
-        Alert::default(__('email_verified_at'))->success();
-
-        $this->redirectUrl('/login');
+        $verifyUseCase->handle($updateUseCase);
     }
 }

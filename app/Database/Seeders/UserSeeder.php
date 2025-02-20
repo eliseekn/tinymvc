@@ -20,9 +20,14 @@ class UserSeeder
         User::factory()->create([
             'name' => 'Admin',
             'email' => 'admin@tiny.mvc',
-            'role' => UserRole::ADMIN,
+            'role' => UserRole::ADMIN->value,
+            'email_verified_at' => carbon()->toDateTimeString(),
         ]);
 
-        User::factory(5)->create();
+        for ($i = 0; $i < 10; ++$i) {
+            User::factory()->create([
+                'created_at' => carbon(faker()->dateTimeBetween('-24 months'))->toDateTimeString(),
+            ]);
+        }
     }
 }

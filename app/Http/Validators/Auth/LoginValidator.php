@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Http\Validators\Auth;
 
+use Core\Http\Validator\Rule;
 use Core\Http\Validator\Validator;
 
 class LoginValidator extends Validator
@@ -24,9 +25,8 @@ class LoginValidator extends Validator
      */
     public function rules(): array
     {
-        return [
-            'email' => 'required|valid_email|max_len,255',
-            'password' => 'required|max_len,255',
-        ];
+        return Rule::add('email', [Rule::REQUIRED, Rule::EMAIL, Rule::MaxLen(255)])
+            ->add('password', [Rule::REQUIRED, Rule::MaxLen(255)])
+            ->get();
     }
 }

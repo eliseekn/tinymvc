@@ -15,7 +15,14 @@ class CLASSNAME extends ApplicationTestCase
 {
     use RefreshDatabase;
 
-    public function test_example_test_name(): void
+    protected function tearDown(): void
+    {
+        $this->refreshDatabase();
+
+        parent::tearDown();
+    }
+
+    public function test_case_example(): void
     {
         //
     }

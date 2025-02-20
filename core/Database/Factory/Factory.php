@@ -31,7 +31,7 @@ class Factory
         return [];
     }
 
-    public function make(array $data = []): mixed
+    public function make(array $data = []): Model|false|array
     {
         if (count($this->class) === 1) {
             $this->class[0]->set(array_merge($this->data(), $data));
@@ -46,7 +46,7 @@ class Factory
         }, $this->class);
     }
 
-    public function create(array $data = []): Model|array|bool
+    public function create(array $data = []): Model|false|array
     {
         $class = $this->make($data);
 

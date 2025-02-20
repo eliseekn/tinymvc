@@ -21,6 +21,14 @@ class PasswordForgotTest extends ApplicationTestCase
 {
     use RefreshDatabase;
 
+    protected function tearDown(): void
+    {
+        $this->refreshDatabase();
+
+        parent::tearDown();
+    }
+
+
     public function test_can_reset_password(): void
     {
         $user = User::factory()->create();

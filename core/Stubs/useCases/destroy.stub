@@ -8,13 +8,14 @@
 
 namespace NAMESPACE;
 
-use App\Database\Models\MODELNAME;
+use App\Database\Models\MODEL_NAME;
+use Core\Support\UseCase;
 
-class CLASSNAME
+class CLASSNAME extends UseCase
 {
     public function handle(int $id): bool
 	{
-        $MODELNAME = (new MODELNAME())->find($id);
-        return $MODELNAME && $MODELNAME->delete();
+        $MODEL_NAME = (new MODEL_NAME())->find($id);
+        return $MODEL_NAME && $MODEL_NAME->delete();
 	}
 }

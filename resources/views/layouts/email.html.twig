@@ -6,10 +6,15 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 		<style>
+			body {
+				background-color: aliceblue;
+			}
+
 			.card {
                 padding: 1.5em;
-                border: 0px solid gray;
+                border: 0 solid gray;
                 box-shadow: 0 0 5px gray;
+				background-color: floralwhite;
             }
 
             .footer {
@@ -18,7 +23,7 @@
             }
 		</style>
 
-		<title>{% block title %}TinyMVC{% endblock %}</title>
+		<title>TinyMVC</title>
 	</head>
 
 	<body>
@@ -41,7 +46,7 @@
 						<tr>
                             <td align="center" class="footer">
                                 {% block footer %}
-                                <p>© {{ date('Y') }} {{ config('app.name') }}. {{ __('all_rights_reserved') }}</p>
+                                <p>{{ config('app.name') }} © {{ date('Y') }}. {{ __('all_rights_reserved') }}</p>
                                 {% endblock %}
                             </td>
                         </tr>

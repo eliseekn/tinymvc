@@ -17,7 +17,7 @@ class Shell extends Command
 
     protected function configure(): void
     {
-        $this->setDescription('Start a PHP interactive shell');
+        $this->setDescription('Start a interactive PHP shell');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

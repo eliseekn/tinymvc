@@ -35,17 +35,16 @@ class Setup extends Command
 
         $config['APP_ENV'] = 'local' . PHP_EOL;
         $config['APP_NAME'] = $this->getInput($io->ask('Application name', 'TinyMVC'));
-        $config['APP_URL'] = $this->getInput($io->ask('Application url', 'http://127.0.0.1:8080/'));
+        $config['APP_URL'] = $this->getInput($io->ask('Application url', 'http://127.0.0.1:8888/'));
         $config['APP_LANG'] = $this->getInput($io->ask('Application language', 'en'));
 
-        $config['DB_DRIVER'] = $this->getInput($io->choice('Application driver', ['mysql', 'sqlite'], 'mysql'));
+        $config['DB_DRIVER'] = $this->getInput($io->choice('Application driver', ['mysql', 'sqlite', 'pgsql'], 'mysql'));
         $config['DB_HOST'] = $this->getInput($io->ask('Database host', '127.0.0.1'));
         $config['DB_PORT'] = $this->getInput($io->ask('Database port', '3306'));
         $config['DB_NAME'] = $this->getInput($io->ask('Database name', 'tinymvc'));
         $config['DB_USERNAME'] = $this->getInput($io->ask('Database username', 'root'));
         $config['DB_PASSWORD'] = $this->getInput($io->ask('Database password'));
 
-        $config['MAILER_TRANSPORT'] = $this->getInput($io->choice('Mailer transport', ['smtp', 'sendmail'], 'smtp'));
         $config['MAILER_HOST'] = $this->getInput($io->ask('Mailer host', '127.0.0.1'));
         $config['MAILER_PORT'] = $this->getInput($io->ask('Mailer port', '1025'));
         $config['MAILER_USERNAME'] = $this->getInput($io->ask('Mailer username'));

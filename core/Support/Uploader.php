@@ -28,6 +28,11 @@ class Uploader
         return $this->file['name'] ?? '';
     }
 
+    public function getFilename(): string
+    {
+        return get_file_name($this->getOriginalFilename());
+    }
+
     public function getTempFilename(): string
     {
         return $this->file['tmp_name'] ?? '';

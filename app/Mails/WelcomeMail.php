@@ -10,18 +10,24 @@ declare(strict_types=1);
 
 namespace App\Mails;
 
-use Core\Support\Mail\Mailer;
+use Core\Notifications\Mail\Mail;
+use Core\Notifications\Mail\Mailer\Mailer;
 
-class WelcomeMail
+class WelcomeMail extends Mail
 {
-    public static function send(string $email, string $name): bool
+    public function __construct(public string $name)
     {
-        return (new Mailer())
-            ->to($email)
+        parent::__construct(new Mailer());
+    }
+
+    public function send(): bool
+    {
+        return $this
+            ->mailer
             ->from(config('mailer.sender.email'), config('mailer.sender.name'))
-            ->reply(config('mailer.sender.email'), config('mailer.sender.name'))
-            ->subject('Welcome')
-            ->body(view('emails.welcome', compact('name')))
+            ->replyTo(config('mailer.sender.email'), config('mailer.sender.name'))
+            ->subject(__('welcome_mail_subject'))
+            ->html('emails.welcome', ['name' => $this->name])
             ->send();
     }
 }

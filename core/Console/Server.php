@@ -27,7 +27,7 @@ class Server extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $host = $input->getOption('host') ?? '127.0.0.1';
-        $port = $input->getOption('port') ?? 8080;
+        $port = $input->getOption('port') ?? 8888;
 
         $process = new Process(['php', '-S', "$host:$port"]);
         $process->setTimeout(null);

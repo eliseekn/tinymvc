@@ -11,9 +11,9 @@ declare(strict_types=1);
 namespace Core\Database;
 
 use Closure;
+use Core\Database\Metrics\Metrics;
 use Core\Exceptions\InvalidSQLQueryException;
-use Core\Support\Metrics\Metrics;
-use Core\Support\Pager;
+use Core\Support\Pagination;
 use PDOStatement;
 
 /**
@@ -542,16 +542,18 @@ class Repository
         return $this->range(0, $count);
     }
 
-    public function paginate(int $items_per_page, int $page = 1): Pager
+    public function paginate(int $items_per_page, int $page = 1): Pagination
     {
         list($query, $args) = $this->qb->toSQL();
 
         $total_items = count(QueryBuilder::setQuery($query, $args)->fetchAll());
-        $pager = new Pager($total_items, $items_per_page, $page);
+        $pager = new Pagination($total_items, $items_per_page, $page);
 
         $items = $items_per_page > 0
             ? QueryBuilder::setQuery($query, $args)->limit($pager->getFirstItem(), $items_per_page)->fetchAll()
             : QueryBuilder::setQuery($query, $args)->fetchAll();
+
+        $items = array_map(fn ($item) => (new Model($this->table))->findBy('id', $item->id), $items);
 
         return $pager->setItems($items);
     }
@@ -596,10 +598,10 @@ class Repository
         return $this;
     }
 
-    public function subQueryWhen(bool $condition, Closure $callback): self
+    public function subQueryWhen(bool $condition, ?Closure $callback = null): self
     {
-        if ($condition) {
-            call_user_func_array($callback, [$this]);
+        if ($condition === true) {
+            $this->subQuery($callback);
         }
 
         return $this;

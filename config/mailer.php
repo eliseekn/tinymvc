@@ -13,8 +13,6 @@ declare(strict_types=1);
  */
 
 return [
-    'transport' => env('MAILER_TRANSPORT', 'smtp'),
-
     'sender' => [
         'name' => env('MAILER_SENDER_NAME', 'TinyMVC'),
         'email' => env('MAILER_SENDER_MAIL', 'no-reply@tiny.mvc'),

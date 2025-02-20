@@ -78,20 +78,13 @@ class MySQLConnection implements ConnectionInterface
 
     public function schemaExists(string $name): bool
     {
-        $stmt = $this->executeQuery('
-            SELECT schema_name FROM information_schema.schemata WHERE schema_name = "' . $name . '"
-        ');
-
+        $stmt = $this->executeQuery('SELECT schema_name FROM information_schema.schemata WHERE schema_name = ?', [$name]);
         return $stmt->fetch() !== false;
     }
 
     public function tableExists(string $name): bool
     {
-        $stmt = $this->executeQuery('
-            SELECT * FROM information_schema.tables WHERE table_schema = "' . $this->getDB() . '" 
-            AND table_name = "' . $name . '" LIMIT 1
-        ');
-
+        $stmt = $this->executeQuery('SELECT * FROM information_schema.tables WHERE table_schema = ? AND table_name = ? LIMIT 1', [$this->getDB(), $name]);
         return $stmt->fetch() !== false;
     }
 

@@ -14,11 +14,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CLASSNAME extends Command
 {
-    protected static $defaultName = 'COMMANDNAME';
+    protected static $defaultName = 'COMMAND_NAME';
 
     protected function configure(): void
     {
-        $this->setDescription('COMMANDDESCPTION');
+        $this->setDescription('COMMAND_DESCRIPTION');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

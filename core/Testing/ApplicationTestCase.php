@@ -12,8 +12,8 @@ namespace Core\Testing;
 
 use Core\Database\Model;
 use Core\Database\Repository;
+use Core\Http\Auth;
 use Core\Http\Client\Curl as Client;
-use Core\Support\Auth;
 use CURLFile;
 use PHPUnit\Framework\TestCase;
 
@@ -30,25 +30,10 @@ class ApplicationTestCase extends TestCase
 
     protected function setUp(): void
     {
-        $uses = array_flip(class_uses_recursive(static::class));
-
-        if (isset($uses[Concerns\LoadFaker::class])) {
-            $this->loadFaker();
-        }
-
         $this->token = '';
         $this->headers = [];
 
         parent::setUp();
-    }
-
-    protected function tearDown(): void
-    {
-        $uses = array_flip(class_uses_recursive(static::class));
-
-        if (isset($uses[RefreshDatabase::class])) {
-            $this->refreshDatabase();
-        }
     }
 
     protected function url(string $uri): string

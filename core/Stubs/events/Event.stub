@@ -12,8 +12,10 @@ use Core\Events\Event;
 
 class CLASSNAME
 {
-    public static function dispatch(array $params = []): void
+    public function __construct(public Model $user) {}
+
+    public function dispatch(): void
     {
-        Event::dispatch('CLASSNAME', $params);
+        Event::dispatch(self::class, $this);
     }
 }

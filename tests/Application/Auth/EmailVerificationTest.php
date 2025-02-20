@@ -20,6 +20,13 @@ class EmailVerificationTest extends ApplicationTestCase
 {
     use RefreshDatabase;
 
+    protected function tearDown(): void
+    {
+        $this->refreshDatabase();
+
+        parent::tearDown();
+    }
+
     public function test_can_verify_email(): void
     {
         $user = User::factory()->create(['email_verified_at' => null]);

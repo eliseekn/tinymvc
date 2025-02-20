@@ -26,6 +26,12 @@ return [
         'engine' => 'InnoDB',
     ],
 
+    'pgsql' => [
+        'host' => env('DB_HOST', '127.0.0.1'),
+        'username' => env('DB_USERNAME', 'root'),
+        'password' => env('DB_PASSWORD', 'root'),
+    ],
+
     'sqlite' => [
         'memory' => false,
     ],

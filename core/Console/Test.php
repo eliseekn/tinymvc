@@ -24,7 +24,6 @@ class Test extends Command
         $this->setDescription('Run tests cases');
         $this->addArgument('test', InputArgument::OPTIONAL, 'Specify test name');
         $this->addArgument('filter', InputArgument::OPTIONAL, 'Specify test case');
-        $this->addOption('unit', null, InputOption::VALUE_OPTIONAL, 'Use Unit test folder');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -43,16 +42,14 @@ class Test extends Command
         $server->setTimeout(null);
         $server->start();
 
-        $folder = is_null($input->getOption('unit')) ? 'Application' : 'Unit';
-
         $args = ['php', 'vendor/bin/phpunit'];
 
         if (! is_null($input->getArgument('test'))) {
-            $filename = str_contains('.php', $input->getArgument('test'))
+            $filename = str_contains($input->getArgument('test'), '.php')
                 ? $input->getArgument('test')
                 : $input->getArgument('test') . '.php';
 
-            $args = array_merge($args, ['tests' . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $filename]);
+            $args = array_merge($args, ['tests' . DIRECTORY_SEPARATOR . $filename]);
         }
 
         if (! is_null($input->getArgument('filter'))) {

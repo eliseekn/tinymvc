@@ -12,8 +12,9 @@ namespace App\Http\UseCases\User;
 
 use App\Database\Models\User;
 use Core\Database\Model;
+use Core\Support\UseCase;
 
-class UpdateUseCase
+class UpdateUseCase extends UseCase
 {
     public function handle(array $data, string $email): Model|false
     {

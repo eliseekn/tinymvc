@@ -9,35 +9,35 @@
 {% endblock %}
 
 {% block content %}
-	<div class="card shadow p-4">
-		<form method="post" action="{{ url('password/update') }}">
-			{{ csrf_token_input()|raw }}
+<div class="card shadow p-4">
+	<form method="post" action="{{ url('password/update') }}">
+		{{ csrf_token_input()|raw }}
 
-			<div class="mb-3">
-				<label for="email" class="form-label">{{ __('email') }}</label>
-				<input type="email" id="email" name="email" class="form-control" value="{{ email }}" autofocus>
+		<div class="mb-3">
+			<label for="email" class="form-label">{{ __('email') }}</label>
+			<input type="email" id="email" name="email" class="form-control" value="{{ email }}" autofocus>
+		</div>
+
+		<div class="mb-3">
+			<label for="password" class="form-label">{{ __('new_password') }}</label>
+
+			<div class="input-group">
+				<input type="password" id="password" name="password" class="form-control">
+
+				<span class="input-group-text" id="password-toggle" title="Toggle display" style="cursor: pointer">
+					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+					  <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+					  <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
+					</svg>
+				</span>
 			</div>
+		</div>
 
-			<div class="mb-3">
-				<label for="password" class="form-label">{{ __('new_password') }}</label>
-
-				<div class="input-group">
-					<input type="password" id="password" name="password" class="form-control">
-
-					<span class="input-group-text" id="password-toggle" title="Toggle display" style="cursor: pointer">
-						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
-						  <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
-						  <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
-						</svg>
-					</span>
-				</div>
-			</div>
-
-			<div class="d-grid gap-2">
-			    <button type="submit" class="btn btn-primary spinner">
-                    {{ __('submit') }}
-                </button>
-            </div>
-		</form>
-	</div>
+		<div class="d-grid gap-2">
+			<button type="submit" class="btn btn-primary spinner">
+				{{ __('submit') }}
+			</button>
+		</div>
+	</form>
+</div>
 {% endblock %}

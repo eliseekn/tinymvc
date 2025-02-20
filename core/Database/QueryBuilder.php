@@ -228,7 +228,12 @@ class QueryBuilder
     public function autoIncrement(): self
     {
         self::$query = rtrim(self::$query, ', ');
-        self::$query .= $this->driver() === 'mysql' ? ' AUTO_INCREMENT, ' : ' AUTOINCREMENT, ';
+
+        self::$query .= match ($this->driver()) {
+            'mysql' => ' AUTO_INCREMENT, ',
+            'pgsql' => ' SERIAL, ',
+            default => ' AUTOINCREMENT, ',
+        };
 
         return $this;
     }
@@ -310,11 +315,11 @@ class QueryBuilder
 
     public function timestamps(string $created_at = 'created_at', string $updated_at = 'updated_at'): self
     {
-        if ($this->driver() === 'mysql') {
-            self::$query .= " $created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, $updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, ";
-        } else {
-            self::$query .= " $created_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')), $updated_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')), ";
-        }
+        self::$query .= match ($this->driver()) {
+            'mysql' => " $created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, $updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, ",
+            'pgsql' => " $created_at TIMESTAMP NOT NULL DEFAULT NOW(), $updated_at TIMESTAMP NOT NULL DEFAULT NOW(), ",
+            default => " $created_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')), $updated_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')), ",
+        };
 
         return $this;
     }
@@ -624,8 +629,8 @@ class QueryBuilder
 
     public function subQueryWhen(bool $condition, Closure $callback): self
     {
-        if ($condition) {
-            call_user_func_array($callback, [$this]);
+        if ($condition === true) {
+            $this->subQuery($callback);
         }
 
         return $this;

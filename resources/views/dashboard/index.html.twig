@@ -1,0 +1,63 @@
+{% extends "layouts/dashboard.html.twig" %}
+
+{% block title %}
+	Dashboard
+{% endblock %}
+
+{% block description %}
+	Dashboard
+{% endblock %}
+
+{% block content %}
+	<h1 class="mb-3">Dashboard</h1>
+
+	<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+        <div class="col">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-capitalize">Total users</h5>
+                    <p class="card-text fs-2 fw-bold mb-1">{{ totalUsers }}</p>
+                </div>
+            </div>
+        </div>
+	</div>
+
+	<div class="row mt-4">
+		<div class="col-lg-6 mb-5 mb-lg-0">
+			<div class="card shadow-sm h-100">
+				<div class="card-body">
+					<h5 class="card-title text-capitalize">Registered users</h5>
+					<canvas id="users-chart" height="250"></canvas>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block scripts %}
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			const ctx = document.querySelector('#users-chart')
+			const data = JSON.parse(`{{ usersTrend|json_encode()|raw }}`)
+
+			return new Chart(ctx, {
+				type: 'bar',
+				data: {
+					labels: data.labels,
+					datasets: [{
+						label: 'Users',
+						fill: false,
+						data: data.data,
+						borderWidth: 3,
+					}]
+				},
+				options: {
+					responsive: true,
+					title: {
+						display: false,
+					}
+				}
+			})
+		})
+	</script>
+{% endblock %}

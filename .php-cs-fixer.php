@@ -77,7 +77,7 @@ $finder = Finder::create()
         __DIR__ . '/app',
         __DIR__ . '/config',
         __DIR__ . '/core',
-        __DIR__ . '/resources',
+        __DIR__ . '/resources/lang',
         __DIR__ . '/routes',
         __DIR__ . '/tests',
     ])
@@ -87,7 +87,8 @@ $finder = Finder::create()
 
 $config = new Config();
 
-return $config->setFinder($finder)
+return $config
+    ->setFinder($finder)
     ->setRules($rules)
     ->setRiskyAllowed(true)
     ->setUsingCache(true);

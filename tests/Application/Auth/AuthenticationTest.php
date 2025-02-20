@@ -18,6 +18,13 @@ class AuthenticationTest extends ApplicationTestCase
 {
     use RefreshDatabase;
 
+    protected function tearDown(): void
+    {
+        $this->refreshDatabase();
+
+        parent::tearDown();
+    }
+
     public function test_can_not_authenticate_with_unregistered_user_credentials(): void
     {
         $user = User::factory()->make(['password' => 'password']);
@@ -45,17 +52,11 @@ class AuthenticationTest extends ApplicationTestCase
     {
         $user = User::factory()->make(['password' => 'password']);
 
-        $response = $this
+        $this
             ->post('/register', $user->get())
-            ->assertSessionDoesNotHaveErrors();
-
-        if (! config('security.auth.email_verification')) {
-            $response->assertRedirectedToUrl(url('/login'));
-        } else {
-            $response->assertRedirectedToUrl(url('/email/notify?email=' . $user->get('email')));
-        }
-
-        $this->assertDatabaseHas('users', $user->get(['name', 'email']));
+            ->assertSessionDoesNotHaveErrors()
+            ->assertRedirectedToUrl(url('/login'))
+            ->assertDatabaseHas('users', $user->get(['name', 'email']));
     }
 
     public function test_can_logout(): void

@@ -15,10 +15,11 @@ declare(strict_types=1);
 return [
     'csrf' => App\Http\Middlewares\CsrfProtection::class,
     'cors' => App\Http\Middlewares\HttpCors::class,
-    'email_verified' => App\Http\Middlewares\EmailVerified::class,
+    'verified' => App\Http\Middlewares\EmailVerified::class,
     'remember' => App\Http\Middlewares\RememberUser::class,
     'sanitize' => App\Http\Middlewares\SanitizeInputs::class,
     'auth' => App\Http\Middlewares\AuthPolicy::class,
-    'api_auth' => App\Http\Middlewares\ApiAuth::class,
-    'http_auth' => App\Http\Middlewares\HttpAuth::class,
+    'api' => App\Http\Middlewares\ApiAuth::class,
+    'http' => App\Http\Middlewares\HttpAuth::class,
+    'admin' => App\Http\Middlewares\CheckUserAdmin::class,
 ];

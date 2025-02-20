@@ -8,18 +8,23 @@
 
 namespace App\Mails;
 
-use Core\Support\Mail\Mailer;
+use Core\Notifications\Mail\Mailer\Mailer;
 
-class CLASSNAME
+class CLASSNAME extends Mailer
 {
-    public static function send(string $email): bool
+    public function __construct(public string $email)
     {
-        return (new Mailer())
-            ->to($email)
+        parent::__construct();
+    }
+
+    public function send(): bool
+    {
+        return $this
+            ->to($this->email)
             ->from(config('mailer.sender.email'), config('mailer.sender.name'))
             ->reply(config('mailer.sender.email'), config('mailer.sender.name'))
-			->subject('Subject')
-            ->body(view('emails.RESOURCENAME'))
+            ->subject(__('password_reset_mail_subject'))
+            ->html('emails.RESOURCE_NAME')
             ->send();
     }
 }
