@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Core\Notifications\Mail;
 
 use Core\Notifications\Mail\Mailer\MailerInterface;
@@ -7,7 +9,9 @@ use Core\Notifications\NotificationInterface;
 
 class Mail implements NotificationInterface
 {
-    public function __construct(public MailerInterface $mailer) {}
+    public function __construct(public MailerInterface $mailer)
+    {
+    }
 
     public function to(string $address, string $name = ''): self
     {

@@ -19,6 +19,6 @@ class NotificationNotSentException extends Exception
 {
     public function __construct()
     {
-        parent::__construct("Failed to send notification");
+        parent::__construct('Failed to send notification');
     }
 }

@@ -26,7 +26,7 @@ class LoginController extends Controller
             $this->render('auth.login');
         }
 
-        $this->redirectToUrl( '/dashboard');
+        $this->redirectToUrl('/dashboard');
     }
 
     #[Route(HttpMethod::POST, middlewares: ['csrf'])]

@@ -90,7 +90,7 @@ class DependencyInjection
                 if (! $dependency->isBuiltin()) {
                     if (is_subclass_of($class, Validator::class)) {
                         $class = (new $class)->validate($request->inputs(), $response);
-                    } else if (is_subclass_of($class, UseCase::class)) {
+                    } elseif (is_subclass_of($class, UseCase::class)) {
                         $class = new $class($request, $response, new Session(), new Cookies());
                     } else {
                         $class = new $class;

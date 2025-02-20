@@ -14,6 +14,6 @@ declare(strict_types=1);
 
 return [
     \App\Events\UserRegistered\UserRegisteredEvent::class => [
-        \App\Events\UserRegistered\SendWelcomeEmail::class
-    ]
+        \App\Events\UserRegistered\SendWelcomeEmail::class,
+    ],
 ];

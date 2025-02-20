@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
@@ -8,7 +10,6 @@
 
 namespace App\Http\Validators;
 
-use Core\Http\Response;
 use Core\Http\Validator\Rule;
 use Core\Http\Validator\Validator;
 
@@ -29,7 +30,7 @@ class UpdateProfileValidator extends Validator
                 Rule::REQUIRED,
                 Rule::EMAIL,
                 Rule::MaxLen(255),
-                'unique,users;'.auth('id')
+                'unique,users;' . auth('id'),
             ])
             ->add('password', Rule::MaxLen(255))
             ->add('avatar', Rule::FileExtension(['png', 'jpg', 'jpeg']))

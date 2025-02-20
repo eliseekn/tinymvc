@@ -74,5 +74,5 @@ return [
     'november' => 'November',
     'week' => 'Week',
     'ignore_email' => 'If you did not intend any action, please ignore this email.',
-    'hello' => 'Hello'
+    'hello' => 'Hello',
 ];

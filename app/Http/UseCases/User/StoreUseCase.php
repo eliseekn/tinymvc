@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
@@ -15,7 +17,7 @@ use Core\Support\UseCase;
 class StoreUseCase extends UseCase
 {
     public function handle(array $data): void
-	{
+    {
         $data['password'] = hash_pwd($data['password']);
 
         if (! User::factory()->create($data)) {
@@ -24,5 +26,5 @@ class StoreUseCase extends UseCase
 
         Alert::toast('User created')->success();
         $this->response->back()->send();
-	}
+    }
 }

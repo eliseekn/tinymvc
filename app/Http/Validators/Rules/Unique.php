@@ -12,7 +12,6 @@ namespace App\Http\Validators\Rules;
 
 use Core\Database\Repository;
 use Core\Http\Validator\RuleInterface;
-use Core\Routing\Route;
 
 class Unique implements RuleInterface
 {

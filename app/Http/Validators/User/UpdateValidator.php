@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace App\Http\Validators\User;
 
 use App\Enums\UserRole;
-use Core\Http\Response;
 use Core\Http\Validator\Rule;
 use Core\Http\Validator\Validator;
 
@@ -32,7 +31,7 @@ class UpdateValidator extends Validator
                 Rule::REQUIRED,
                 Rule::EMAIL,
                 Rule::MaxLen(255),
-                'unique,users;'.request()->route()[0]
+                'unique,users;' . request()->route()[0],
             ])
             ->add('role', Rule::In([UserRole::USER->value, UserRole::ADMIN->value]))
             ->get();

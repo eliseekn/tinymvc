@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Core\Http\Validator;
 
 class Rule
@@ -81,7 +83,7 @@ class Rule
 
     public static function Date(?string $format = null): string
     {
-        return 'date' . !is_null($format) ? ",$format" : '';
+        return 'date' . ! is_null($format) ? ",$format" : '';
     }
 
     public static function FileExtension(array $data): string

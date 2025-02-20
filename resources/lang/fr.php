@@ -35,7 +35,7 @@ return [
     'email_not_verified' => "Votre adresse email n'a pas encore été vérifiée.",
     'not_logged' => 'Connectez-vous avant de pouvoir accéder à cette page',
     'email_verification_mail_subject' => "Vérification d'email",
-    'email_verification_mail' => "Vous avez reçu cet email car vous avez créer un compte sur {app_name}. Veuillez cliquer sur le lien ci-dessous pour activer votre compte.",
+    'email_verification_mail' => 'Vous avez reçu cet email car vous avez créer un compte sur {app_name}. Veuillez cliquer sur le lien ci-dessous pour activer votre compte.',
     'email_verification_link_sent' => 'Lien de vérification par email envoyé à votre adresse email',
     'email_verification_link_not_sent' => "Echec de l'envoie du lien de vérification par email à votre adresse email",
     'password_reset_mail_message' => 'Une demande de réinitialisation de mot de passe à effectuée sur votre compte. Veuillez cliquer sur le lien ci-dessous pour réinitialiser votre mot de passe:',
@@ -74,5 +74,5 @@ return [
     'november' => 'Novembre',
     'week' => 'Semaine',
     'ignore_email' => "Si vous n'avez effectué aucune action, veuillez ignorer cet email.",
-    'hello' => 'Salut'
+    'hello' => 'Salut',
 ];

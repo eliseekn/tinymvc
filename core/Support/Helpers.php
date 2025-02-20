@@ -19,7 +19,7 @@ use Core\Support\Encryption;
 use Core\Support\Storage;
 use Faker\Factory;
 
-/**
+/*
  * Encryption
  */
 if (! function_exists('encrypt')) {

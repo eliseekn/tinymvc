@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\UseCases\User;
 
 use App\Database\Models\User;
@@ -16,7 +18,7 @@ class GetCollectionUseCase extends UseCase
                     $query['perPage'] ?? 10,
                     $query['page'] ?? 1,
                     $query['search'] ?? null,
-                )
+                ),
             ])
             ->send();
     }

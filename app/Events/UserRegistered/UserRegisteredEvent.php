@@ -15,7 +15,9 @@ use Core\Events\Event;
 
 class UserRegisteredEvent
 {
-    public function __construct(public Model $user) {}
+    public function __construct(public Model $user)
+    {
+    }
 
     public function dispatch(): void
     {

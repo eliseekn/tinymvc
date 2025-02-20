@@ -79,7 +79,7 @@ class Maker
         if (! $singular) {
             $name = self::fixPlural($name);
         }
-        
+
         if ($force_singular) {
             $name = self::fixPlural($name, true);
         }

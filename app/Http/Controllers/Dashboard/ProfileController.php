@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
@@ -12,8 +14,8 @@ use App\Http\Services\FileUploadService;
 use App\Http\UseCases\User\UpdateUseCase;
 use App\Http\Validators\UpdateProfileValidator;
 use Core\Enums\HttpMethod;
-use Core\Routing\Controller;
 use Core\Routing\Attributes\Route;
+use Core\Routing\Controller;
 use Core\Support\Alert;
 use Core\Support\Storage;
 

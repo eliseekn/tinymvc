@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
@@ -68,5 +70,4 @@ class UserController extends Controller
         Alert::toast('User deleted')->success();
         $this->response->back()->send();
     }
-
 }

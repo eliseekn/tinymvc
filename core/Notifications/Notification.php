@@ -1,12 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Core\Notifications;
 
 use Core\Exceptions\NotificationNotSentException;
 
 class Notification
 {
-    public function __construct(public NotificationInterface $notifiable) {}
+    public function __construct(public NotificationInterface $notifiable)
+    {
+    }
 
     public static function send(NotificationInterface $mail): self
     {
