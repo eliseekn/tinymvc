@@ -1,5 +1,5 @@
 {% if alert.display == 'toast' %}
-    <div class="position-absolute" style="top: 1em; right: 1em; z-index: 11111">
+    <div class="position-absolute" style="top: 1em; right: 1em; z-index: 11111" data-timeout="3000">
         <div class="alert alert-{{ alert.type }} alert-dismissible show" role="alert">
             {{ alert.message|raw }}
 
