@@ -20,7 +20,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Manage application tests.
  */
-class ApplicationTestCase extends TestCase
+abstract class FeatureTestCase extends TestCase
 {
     private Client $client;
 
@@ -185,16 +185,26 @@ class ApplicationTestCase extends TestCase
         return $this;
     }
 
-    public function assertResponseHasJson(array $expected): self
+    public function assertJsonEquals(array $expected): self
     {
         $this->assertJsonStringEqualsJsonString(json_encode($expected), $this->getBody());
 
         return $this;
     }
 
-    public function assertResponseDoesNotHaveJson(array $expected): self
+    public function assertJsonDoesNotEquals(array $expected): self
     {
         $this->assertJsonStringNotEqualsJsonString(json_encode($expected), $this->getBody());
+
+        return $this;
+    }
+
+    public function assertJsonContains(array $expected): self
+    {
+        foreach ($expected as $key => $value) {
+            $this->assertArrayHasKey($key, $expected);
+            $this->assertEquals($value, $value);
+        }
 
         return $this;
     }

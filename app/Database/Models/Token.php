@@ -32,6 +32,11 @@ class Token extends Model
         return (new self())->findBy('value', $value);
     }
 
+    public static function findByUser(string $email): Model|false
+    {
+        return (new self())->findBy('email', $email);
+    }
+
     public static function findByDescription(string $email, string $description): Model|false
     {
         return (new self())

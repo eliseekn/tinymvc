@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Http\UseCases\User;
 
 use App\Database\Models\User;
+use Core\Enums\HttpCode;
 use Core\Support\Alert;
 use Core\Support\UseCase;
 
@@ -25,6 +26,6 @@ class StoreUseCase extends UseCase
         }
 
         Alert::toast('User created')->success();
-        $this->response->back()->send();
+        $this->response->back()->send(HttpCode::CREATED);
     }
 }

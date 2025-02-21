@@ -231,17 +231,18 @@ class Maker
         if ($unit_test) {
             $data = self::stubs()->addPath('tests')->readFile('UnitTest.stub');
         } else {
-            $data = self::stubs()->addPath('tests')->readFile('ApplicationTest.stub');
+            $data = self::stubs()->addPath('tests')->readFile('FeatureTest.stub');
         }
 
         $data = str_replace('CLASSNAME', $class, $data);
+        $data = str_replace('PATH', $path ?? '', $data);
 
         $storage = Storage::path(config('storage.tests'));
 
         if ($unit_test) {
             $storage = $storage->addPath('Unit')->addPath($path ?? '');
         } else {
-            $storage = $storage->addPath('Application')->addPath($path ?? '');
+            $storage = $storage->addPath('Feature')->addPath($path ?? '');
         }
 
         return $storage->writeFile($class . '.php', $data);

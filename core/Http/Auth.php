@@ -75,6 +75,18 @@ class Auth
         return encrypt($token->get('value'));
     }
 
+    public static function deleteToken(Request $request): bool
+    {
+        return Token::findByValue(self::getToken($request))->delete();
+    }
+
+    public static function getToken(Request $request): string
+    {
+        list($method, $token) = $request->getHttpAuth();
+
+        return trim($method) !== 'Bearer' ? '' : decrypt($token);
+    }
+
     public static function check(Request $request): bool
     {
         $result = session()->has('user');

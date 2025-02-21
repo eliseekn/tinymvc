@@ -13,5 +13,4 @@ enum HttpMethod: string
     public const OPTIONS = 'OPTIONS';
     public const DELETE = 'DELETE';
     public const ANY = 'GET|POST|DELETE|PUT|OPTIONS|PATCH';
-
 }

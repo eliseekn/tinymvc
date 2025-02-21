@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Core\Http;
 
+use Core\Enums\HttpCode;
 use Core\Exceptions\FileNotFoundException;
 use Core\Exceptions\InvalidJsonDataException;
 use Core\Exceptions\InvalidResponseDataException;
@@ -165,7 +166,7 @@ class Response
         return $this;
     }
 
-    public function send(int $code = 302): void
+    public function send(int $code = HttpCode::FOUND): void
     {
         if (config('app.env') === 'test') {
             header('Session:' . json_encode($_SESSION));

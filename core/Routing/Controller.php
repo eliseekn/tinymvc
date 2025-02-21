@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Core\Routing;
 
+use Core\Enums\HttpCode;
 use Core\Http\Cookies;
 use Core\Http\Request;
 use Core\Http\Response;
@@ -37,20 +38,20 @@ class Controller
 
     public function render(string $view, array $data = []): void
     {
-        $this->response->view($view, $data)->send(200);
+        $this->response->view($view, $data)->send(HttpCode::OK);
     }
 
-    public function response(string $data, int $code = 200): void
+    public function response(string $data, int $code = HttpCode::OK): void
     {
         $this->response->data($data)->send($code);
     }
 
-    public function jsonResponse(array $data, int $code = 200): void
+    public function jsonResponse(array $data, int $code = HttpCode::OK): void
     {
         $this->response->json($data)->send($code);
     }
 
-    public function downloadResponse(string $filename, int $code = 200): void
+    public function downloadResponse(string $filename, int $code = HttpCode::OK): void
     {
         $this->response->download($filename)->send($code);
     }

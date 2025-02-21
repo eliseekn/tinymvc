@@ -8,13 +8,13 @@ declare(strict_types=1);
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Tests\Application\Auth;
+namespace Tests\Feature\Auth;
 
 use App\Database\Models\User;
-use Core\Testing\ApplicationTestCase;
+use Core\Testing\FeatureTestCase;
 use Core\Testing\RefreshDatabase;
 
-class AuthenticationTest extends ApplicationTestCase
+class AuthenticationTest extends FeatureTestCase
 {
     use RefreshDatabase;
 

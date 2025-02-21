@@ -8,15 +8,15 @@ declare(strict_types=1);
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Tests\Application\Auth;
+namespace Tests\Feature\Auth;
 
 use App\Database\Models\Token;
 use App\Database\Models\User;
 use App\Enums\TokenDescription;
-use Core\Testing\ApplicationTestCase;
+use Core\Testing\FeatureTestCase;
 use Core\Testing\RefreshDatabase;
 
-class EmailVerificationTest extends ApplicationTestCase
+class EmailVerificationTest extends FeatureTestCase
 {
     use RefreshDatabase;
 

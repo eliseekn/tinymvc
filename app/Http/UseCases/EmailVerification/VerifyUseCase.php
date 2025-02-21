@@ -14,6 +14,7 @@ use App\Database\Models\Token;
 use App\Enums\TokenDescription;
 use App\Http\UseCases\User\UpdateUseCase;
 use App\Mails\WelcomeMail;
+use Core\Enums\HttpCode;
 use Core\Notifications\Notification;
 use Core\Support\Alert;
 use Core\Support\UseCase;
@@ -24,18 +25,18 @@ class VerifyUseCase extends UseCase
     public function handle(UpdateUseCase $updateUseCase): void
     {
         if (! $this->request->hasQuery(['email', 'token'])) {
-            $this->response->data(__('bad_request'))->send(400);
+            $this->response->data(__('bad_request'))->send(HttpCode::BAD_REQUEST);
         }
 
         $email = $this->request->queries('email');
         $token = Token::findByDescription($email, TokenDescription::EMAIL_VERIFICATION);
 
         if (! $token || $token->get('value') !== $this->request->queries('token')) {
-            $this->response->data(__('invalid_password_reset_link'))->send(400);
+            $this->response->data(__('invalid_password_reset_link'))->send(HttpCode::BAD_REQUEST);
         }
 
         if (carbon($token->get('expires_at'))->lt(carbon())) {
-            $this->response->data(__('expired_password_reset_link'))->send(400);
+            $this->response->data(__('expired_password_reset_link'))->send(HttpCode::BAD_REQUEST);
         }
 
         $token->delete();

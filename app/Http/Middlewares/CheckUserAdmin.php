@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Http\Middlewares;
 
 use App\Enums\UserRole;
+use Core\Enums\HttpCode;
 use Core\Http\Response;
 
 class CheckUserAdmin
@@ -18,7 +19,7 @@ class CheckUserAdmin
     public function handle(Response $response): void
     {
         if (auth('role') !== UserRole::ADMIN->value) {
-            $response->data('Forbidden')->send(403);
+            $response->data('Forbidden')->send(HttpCode::FORBIDDEN);
         }
     }
 }

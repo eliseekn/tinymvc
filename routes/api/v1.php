@@ -8,6 +8,7 @@ declare(strict_types=1);
  * @link https://github.com/eliseekn/tinymvc
  */
 
+use App\Http\Controllers\Api\v1\AuthController;
 use Core\Routing\Route;
 
 /*
@@ -15,7 +16,10 @@ use Core\Routing\Route;
  */
 
 Route::group(function () {
-    //
+    Route::group(function () {
+        Route::post('/login', 'login');
+        Route::post('/logout', 'logout')->middleware('auth');
+    })->byController(AuthController::class);
 })
-    ->byPrefix('api')
+    ->byPrefix('api/v1')
     ->register();

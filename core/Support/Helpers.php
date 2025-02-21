@@ -520,8 +520,14 @@ if (! function_exists('parse_raw_http_request')) {
         $input = file_get_contents('php://input');
 
         if (! isset($_SERVER['CONTENT_TYPE'])) {
-            // we expect regular puts to containt a query string containing data
+            // we expect regular puts to contain a query string containing data
             parse_str(urldecode($input), $a_data);
+
+            return $a_data;
+        }
+
+        if ($_SERVER['CONTENT_TYPE'] === 'application/json') {
+            $a_data = json_decode($input, true);
 
             return $a_data;
         }
@@ -531,7 +537,7 @@ if (! function_exists('parse_raw_http_request')) {
 
         // content type is probably regular form-encoded
         if (! count($matches)) {
-            // we expect regular puts to containt a query string containing data
+            // we expect regular puts to contain a query string containing data
             parse_str(urldecode($input), $a_data);
 
             return $a_data;
@@ -549,7 +555,7 @@ if (! function_exists('parse_raw_http_request')) {
                 continue;
             }
 
-            // you'll have to var_dump $block to understand this and maybe replace \n or \r with a visibile char
+            // you'll have to var_dump $block to understand this and maybe replace \n or \r with a visible char
 
             // parse uploaded files
             if (str_contains($block, 'application/octet-stream')) {

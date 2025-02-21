@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Http\Middlewares;
 
+use Core\Enums\HttpCode;
 use Core\Http\Auth;
 use Core\Http\Request;
 use Core\Http\Response;
@@ -22,17 +23,17 @@ class ApiAuth
     public function handle(Request $request, Response $response): void
     {
         if (empty($request->getHttpAuth())) {
-            $response->json([__('auth_required')])->send(401);
+            $response->json([__('auth_required')])->send(HttpCode::UNAUTHORIZED);
         }
 
         list($method, $token) = $request->getHttpAuth();
 
         if (trim($method) !== 'Bearer') {
-            $response->json([__('invalid_auth_method')])->send(400);
+            $response->json([__('invalid_auth_method')])->send(HttpCode::BAD_REQUEST);
         }
 
         if (! Auth::checkToken(decrypt($token), $user)) {
-            $response->json([__('invalid_credentials')])->send(401);
+            $response->json([__('invalid_credentials')])->send(HttpCode::UNAUTHORIZED);
         }
     }
 }
