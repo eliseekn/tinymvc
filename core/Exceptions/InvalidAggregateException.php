@@ -13,7 +13,7 @@ namespace Core\Exceptions;
 use Exception;
 
 /**
- * This exception occurs when date format is invalid.
+ * This exception occurs when date format is invalid
  */
 class InvalidAggregateException extends Exception
 {

@@ -24,8 +24,10 @@ class UpdateUseCase extends UseCase
             return false;
         }
 
-        if (isset($data['password'])) {
+        if (! empty($data['password'])) {
             $data['password'] = hash_pwd($data['password']);
+        } else {
+            unset($data['password']);
         }
 
         return $user->set($data)->save();

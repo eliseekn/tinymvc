@@ -52,6 +52,7 @@ class QueryBuilder
     public static function table(string $name): self
     {
         self::$table = self::setTable($name);
+        self::$args = [];
 
         return new self();
     }
@@ -627,7 +628,7 @@ class QueryBuilder
         return $this;
     }
 
-    public function subQueryWhen(bool $condition, Closure $callback): self
+    public function subQueryWhen(bool $condition, ?Closure $callback = null): self
     {
         if ($condition === true) {
             $this->subQuery($callback);

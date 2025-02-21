@@ -9,7 +9,25 @@
 {% endblock %}
 
 {% block content %}
-	<h1 class="mb-3">Dashboard</h1>
+	<div class="d-flex justify-content-between align-items-md-center flex-md-row flex-column mb-4">
+		<h1>Dashboard</h1>
+
+		<div>
+			<select id="users-trends" class="form-select">
+				<option value="day" {{ request().queries('period') == 'day' ? 'selected' : '' }}>This week</option>
+				<option value="last_week" {{ request().queries('period') == 'last_week' ? 'selected' : '' }}>Since last week</option>
+				<option value="week" {{ request().queries('period') == 'week' ? 'selected' : '' }}>This month</option>
+				<option value="last_month" {{ request().queries('period') == 'last_month' ? 'selected' : '' }}>Since last month</option>
+				<option value="quater_year" {{ request().queries('period') == 'quater_year' ? 'selected' : '' }}>This quater year</option>
+				<option value="half_year" {{ request().queries('period') == 'half_year' ? 'selected' : '' }}>This half year</option>
+				<option value="month" {{ request().queries('period') == 'month' ? 'selected' : '' }}>This year</option>
+				<option value="last_year" {{ request().queries('period') == 'last_year' ? 'selected' : '' }}>Since last year</option>
+				<option value="year" {{ request().queries('period') == 'year' ? 'selected' : '' }}>Last 5 years</option>
+				{% set periods = ['last_week', 'day', 'week', 'quater_year', 'half_year', 'month', 'year', 'last_month', 'last_year'] %}
+				<option value="custom" {{ (request().queries('period') is not null and request().queries('period') not in periods) ? 'selected' : '' }}>Custom</option>
+			</select>
+		</div>
+	</div>
 
 	<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
         <div class="col">
@@ -20,6 +38,18 @@
                 </div>
             </div>
         </div>
+
+		<div class="col">
+			<div class="card shadow-sm h-100">
+				<div class="card-body">
+					<h5 class="card-title text-capitalize">Total users (today)</h5>
+					<p class="card-text fs-2 fw-bold mb-1">{{ totalUsersToday['count'] ?? totalUsersToday }}</p>
+					{% if totalUsersToday['variation'] is not null %}
+						<p class="card-text fs-6">{{ totalUsersToday['variation']['type'] }} of {{ totalUsersToday['variation']['value'] }}</p>
+					{% endif %}
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<div class="row mt-4">
@@ -31,14 +61,24 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="col-lg-6">
+			<div class="card shadow-sm h-100">
+				<div class="card-body">
+					<h5 class="card-title text-capitalize mb-3">Users roles</h5>
+					<div style="height: 400px">
+						<canvas id="users-roles-chart"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 {% endblock %}
 
 {% block scripts %}
 	<script>
-		document.addEventListener('DOMContentLoaded', () => {
+		function drawUsersChart(data) {
 			const ctx = document.querySelector('#users-chart')
-			const data = JSON.parse(`{{ usersTrend|json_encode()|raw }}`)
 
 			return new Chart(ctx, {
 				type: 'bar',
@@ -56,6 +96,73 @@
 					title: {
 						display: false,
 					}
+				}
+			})
+		}
+
+		function drawUsersRoleChart(data) {
+			let ctx = document.querySelector('#users-roles-chart')
+
+			return new Chart(ctx, {
+				type: 'doughnut',
+				data: {
+					labels: data.labels,
+					datasets: [{
+						label: 'Users roles',
+						fill: false,
+						data: data.data,
+						borderWidth: 3,
+					}]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					title: {
+						display: false,
+					}
+				}
+			})
+		}
+
+		document.addEventListener('DOMContentLoaded', () => {
+			drawUsersChart(JSON.parse(`{{ usersTrends|json_encode()|raw }}`))
+			drawUsersRoleChart(JSON.parse(`{{ usersRolesTrends|json_encode()|raw }}`))
+
+			document.querySelector('#users-trends').addEventListener('change', e => {
+				if (e.target.value !== 'custom') {
+					window.location.href = "{{ request().uri() }}?period=" + e.target.value
+				} else {
+					Swal.fire({
+						html: `
+                            <p class="mt-3">Define period :</p>
+
+                            <div>
+                                <label for="start_date" class="form-label text-start">Start</label>
+                                <input type="date" id="start_date" name="start_date" class="swal2-input">
+                            </div>
+
+                            <label for="end_date" class="form-label text-start">End&nbsp;&nbsp;</label>
+                            <input type="date" id="end_date" name="end_date" class="swal2-input">
+                        `,
+						preConfirm: () => {
+							const startDate = Swal.getPopup().querySelector('#start_date').value
+							const endDate = Swal.getPopup().querySelector('#end_date').value
+
+							if (!startDate || !endDate) {
+								Swal.showValidationMessage('You must define start and end date')
+							}
+
+							return { startDate: startDate, endDate: endDate }
+						},
+						confirmButtonColor: '#0071bc',
+						showCancelButton: true,
+					}).then(result => {
+						if (!result.isConfirmed) {
+							return
+						}
+
+						window.location.href = "{{ request().uri() }}?period=" + result.value.startDate + '~' + result.value.endDate
+					})
 				}
 			})
 		})

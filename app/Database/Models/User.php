@@ -43,13 +43,13 @@ class User extends Model
         return (new self)->getAll();
     }
 
-    public static function allPaginate(int $perPage, int $page, ?string $search = null): Pagination
+    public static function allPaginate($perPage, $page, ?string $search = null): Pagination
     {
         return (new self)
             ->select('*')
             ->where('id', '<>', auth('id'))
             ->andRaw("(name LIKE '%$search%' OR email LIKE '%$search%')")
             ->orderDesc('created_at')
-            ->paginate($perPage, $page);
+            ->paginate((int) $perPage, (int) $page);
     }
 }

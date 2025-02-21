@@ -13,12 +13,12 @@ namespace Core\Exceptions;
 use Exception;
 
 /**
- * This exception occurs when date format is invalid
+ * This exception occurs when withVariationsCount parameter is equal 0
  */
-class InvalidPeriodException extends Exception
+class InvalidVariationsCountException extends Exception
 {
     public function __construct()
     {
-        parent::__construct('Invalid period value. Valid period is day, week, month or year');
+        parent::__construct('Invalid withVariationsCount value. withVariationsCount value should be more than 0');
     }
 }
