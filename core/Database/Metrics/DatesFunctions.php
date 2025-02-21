@@ -20,7 +20,7 @@ trait DatesFunctions
 {
     protected function carbon(): Carbon
     {
-        return Carbon::parse($this->year.'-'.$this->month.'-'.$this->day);
+        return Carbon::parse($this->year . '-' . $this->month . '-' . $this->day);
     }
 
     protected function getDayPeriod(): array
@@ -104,11 +104,11 @@ trait DatesFunctions
             }
 
             if ($this->period === Period::MONTH->value) {
-                $datum['label'] = carbon($this->year.'-'.$datum['label'])->locale(config('app.lang'))->monthName;
+                $datum['label'] = carbon($this->year . '-' . $datum['label'])->locale(config('app.lang'))->monthName;
             } elseif ($this->period === Period::DAY->value) {
-                $datum['label'] = carbon($this->year.'-'.$this->month.'-'.$datum['label'])->locale(config('app.lang'))->dayName;
+                $datum['label'] = carbon($this->year . '-' . $this->month . '-' . $datum['label'])->locale(config('app.lang'))->dayName;
             } elseif ($this->period === Period::WEEK->value) {
-                $datum['label'] = 'Week '.$datum['label'];
+                $datum['label'] = 'Week ' . $datum['label'];
             } elseif ($this->period === Period::YEAR->value) {
                 $datum['label'] = intval($datum['label']);
             } else {
@@ -175,7 +175,7 @@ trait DatesFunctions
                 $this->carbon()->startOfMonth()->format('Y-m-d'),
                 $this->carbon()->format('Y-m-d')
             )->interval('1 week'))
-            ->map(fn ($date) => 'Week '.carbon($date)->locale(config('app.lang'))->week)->toArray();
+            ->map(fn ($date) => 'Week ' . carbon($date)->locale(config('app.lang'))->week)->toArray();
 
         foreach ($dates as $date) {
             $result[$date] = $this->missingDataValue;
@@ -228,7 +228,7 @@ trait DatesFunctions
             CarbonPeriod::between(
                 $this->period[0],
                 $this->period[1]
-            )->interval('1 '.$this->groupBy))
+            )->interval('1 ' . $this->groupBy))
             ->map(fn ($date) => carbon($date)->format('Y-m-d'))->toArray();
     }
 

@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Dashboard;
 
 use App\Database\Models\User;
-use Core\Database\Metrics\Enums\Aggregate;
 use Core\Database\Metrics\Enums\Period;
 use Core\Database\Metrics\Metrics;
 use Core\Enums\HttpMethod;
@@ -36,7 +35,6 @@ class DashboardController extends Controller
             'usersRolesTrends' => $this->trendsByRoles((new User)->metrics()->fillMissingData(), $period),
         ]);
     }
-
 
     private function metrics(Metrics $metrics, string|array $period): mixed
     {
