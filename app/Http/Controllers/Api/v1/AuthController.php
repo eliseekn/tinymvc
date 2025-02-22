@@ -21,36 +21,36 @@ use Core\Support\Encryption;
 class AuthController extends Controller
 {
     public function login(LoginValidator $validator): void
-	{
+    {
         $data = $validator->validated();
         $user = User::findByEmail($data['email']);
 
         if (! $user || ! Encryption::check($data['password'], $user->get('password'))) {
             $this->jsonResponse([
                 'status' => ResponseStatus::ERROR,
-                'data' => 'Email or password is incorrect'
+                'data' => 'Email or password is incorrect',
             ], HttpCode::UNAUTHORIZED);
         }
 
         $this->jsonResponse([
             'status' => ResponseStatus::SUCCESS,
             'token' => Auth::createToken($user->get('email')),
-            'user' => $user->get()
+            'user' => $user->get(),
         ]);
-	}
+    }
 
     public function logout(): void
     {
         if (! Auth::deleteToken($this->request)) {
             $this->jsonResponse([
                 'status' => ResponseStatus::ERROR,
-                'data' => 'Failed to logout'
+                'data' => 'Failed to logout',
             ], HttpCode::INTERNAL_SERVER_ERROR);
         }
 
         $this->jsonResponse([
             'status' => ResponseStatus::SUCCESS,
-            'data' => 'Logout successfully'
+            'data' => 'Logout successfully',
         ]);
     }
 }

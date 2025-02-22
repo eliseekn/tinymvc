@@ -17,8 +17,8 @@ use Core\Support\UseCase;
 class UpdateUseCase extends UseCase
 {
     public function handle(array $data, int $id): Model|false
-	{
+    {
         $user = User::find($id);
         return ! $user ? false : $user->set($data)->save();
-	}
+    }
 }

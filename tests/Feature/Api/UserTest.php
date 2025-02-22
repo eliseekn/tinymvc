@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
@@ -37,7 +39,7 @@ class UserTest extends FeatureTestCase
             ->assertStatusEquals(HttpCode::CREATED)
             ->assertJsonContains([
                 'status' => ResponseStatus::SUCCESS,
-                'data' => 'User created'
+                'data' => 'User created',
             ]);
     }
 
@@ -54,7 +56,7 @@ class UserTest extends FeatureTestCase
                 [
                     'name' => $users[0]->get('name'),
                     'email' => $users[0]->get('email'),
-                ]
+                ],
             ]);
     }
 

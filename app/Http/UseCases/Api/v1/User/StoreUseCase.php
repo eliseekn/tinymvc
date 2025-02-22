@@ -18,19 +18,19 @@ use Core\Support\UseCase;
 class StoreUseCase extends UseCase
 {
     public function handle(array $data): void
-	{
+    {
         $data['password'] = hash_pwd($data['password']);
 
         if (! User::factory()->create($data)) {
             $this->response->json([
                 'status' => ResponseStatus::ERROR,
-                'data' => 'Failed to create user'
+                'data' => 'Failed to create user',
             ])->send(HttpCode::INTERNAL_SERVER_ERROR);
         }
 
         $this->response->json([
             'status' => ResponseStatus::SUCCESS,
-            'data' => 'User created'
+            'data' => 'User created',
         ])->send(HttpCode::CREATED);
-	}
+    }
 }

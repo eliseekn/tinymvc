@@ -34,7 +34,7 @@ class UserController extends Controller
 
     #[Route(HttpMethod::POST, 'api/v1/users', ['api', 'admin'])]
     public function store(StoreUseCase $useCase, StoreValidator $validator): void
-	{
+    {
         $useCase->handle($validator->validated());
-	}
+    }
 }

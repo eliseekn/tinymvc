@@ -62,7 +62,7 @@ class Validator implements ValidatorInterface
         if ($request->isJson()) {
             $response?->json([
                 'status' => ResponseStatus::ERROR,
-                'data' => $this->errors()
+                'data' => $this->errors(),
             ])
             ->send(HttpCode::BAD_REQUEST);
         }

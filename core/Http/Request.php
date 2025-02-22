@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace Core\Http;
 
-use Core\Http\Validator\Validator;
 use Core\Support\Uploader;
 
 /**

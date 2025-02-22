@@ -27,7 +27,7 @@ class ApiAuth
         if (empty($request->getHttpAuth())) {
             $response->json([
                 'status' => ResponseStatus::ERROR,
-                'data' => __('auth_required')
+                'data' => __('auth_required'),
             ])->send(HttpCode::UNAUTHORIZED);
         }
 
@@ -36,14 +36,14 @@ class ApiAuth
         if (trim($method) !== HttpAuthMethod::BEARER) {
             $response->json([
                 'status' => ResponseStatus::ERROR,
-                'data' => __('invalid_auth_method')
+                'data' => __('invalid_auth_method'),
             ])->send(HttpCode::BAD_REQUEST);
         }
 
         if (! Auth::checkToken(decrypt($token), $user)) {
             $response->json([
                 'status' => ResponseStatus::ERROR,
-                'data' => __('invalid_credentials')
+                'data' => __('invalid_credentials'),
             ])->send(HttpCode::UNAUTHORIZED);
         }
     }

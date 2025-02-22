@@ -24,7 +24,7 @@ class CheckUserAdmin
             if ($request->isJson()) {
                 $response->json([
                     'status' => ResponseStatus::ERROR,
-                    'data' => 'Forbidden'
+                    'data' => 'Forbidden',
                 ])->send(HttpCode::FORBIDDEN);
             }
 

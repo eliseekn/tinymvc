@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
@@ -36,7 +38,7 @@ class AuthenticationTest extends FeatureTestCase
             ->assertStatusOk()
             ->assertJsonContains([
                 'status' => ResponseStatus::SUCCESS,
-                'user' => $user->get()
+                'user' => $user->get(),
             ]);
     }
 
@@ -50,7 +52,7 @@ class AuthenticationTest extends FeatureTestCase
             ->assertStatusOk()
             ->assertJsonContains([
                 'status' => ResponseStatus::SUCCESS,
-                'data' => 'Logout successfully'
+                'data' => 'Logout successfully',
             ]);
     }
 }
