@@ -27,7 +27,7 @@ class UseCase extends Command
     {
         $this->setDescription('Create new use case');
         $this->addArgument('model', InputArgument::REQUIRED, 'The name of model');
-        $this->addOption('type', null, InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'Specify use case type (index, show, store, update or destroy)');
+        $this->addOption('type', null, InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'Specify use case type (index, show, store, update or delete)');
         $this->addOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Specify namespace (base: App\Http\UseCases)');
     }
 
@@ -36,7 +36,7 @@ class UseCase extends Command
         $types = $input->getOption('type');
 
         if (empty($types)) {
-            $types = ['index', 'show', 'store', 'update', 'destroy'];
+            $types = ['index', 'show', 'store', 'update', 'delete'];
         }
 
         $types = array_map(fn ($type) => strtolower($type), $types);

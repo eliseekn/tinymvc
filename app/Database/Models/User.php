@@ -40,15 +40,19 @@ class User extends Model
 
     public static function all(): array|false
     {
-        return (new self)->getAll();
+        return (new self)->getAll('*');
     }
 
     public static function allPaginate($perPage, $page, ?string $search = null): Pagination
     {
+        $userId = auth()->get('id');
+
         return (new self)
             ->select('*')
-            ->where('id', '<>', auth('id'))
-            ->andRaw("(name LIKE '%$search%' OR email LIKE '%$search%')")
+            ->where('id', '<>', $userId)
+            ->subQueryWhen(! is_null($search), function ($q) use ($search) {
+                $q->andRaw("(name LIKE '%$search%' OR email LIKE '%$search%')");
+            })
             ->orderDesc('created_at')
             ->paginate((int) $perPage, (int) $page);
     }

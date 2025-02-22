@@ -19,7 +19,7 @@
 		<div class="card-body">
 			<div class="mb-3">
 				<label for="name" class="form-label">{{ __('name') }}</label>
-				<input type="text" class="form-control {{ errors.name ? 'is-invalid' }}" value="{{ inputs.name ?: auth('name') }}" aria-describedby="name-error" name="name" id="name" autofocus>
+				<input type="text" class="form-control {{ errors.name ? 'is-invalid' }}" value="{{ inputs.name ?: auth().get('name') }}" aria-describedby="name-error" name="name" id="name" autofocus>
 
 				{% if errors.name is not empty %}
 					<div id="name-error" class="invalid-feedback">
@@ -30,7 +30,7 @@
 
 			<div class="mb-3">
 				<label for="email" class="form-label">{{ __('email') }}</label>
-				<input type="email" id="email" name="email" class="form-control {{ errors.email ? 'is-invalid' }}" value="{{ inputs.email ?: auth('email') }}" aria-describedby="email-error">
+				<input type="email" id="email" name="email" class="form-control {{ errors.email ? 'is-invalid' }}" value="{{ inputs.email ?: auth().get('email') }}" aria-describedby="email-error">
 
 				{% if errors.email is not empty %}
 					<div id="email-error" class="invalid-feedback">
@@ -64,9 +64,9 @@
 				<div class="d-flex align-items-center justify-content-between">
 					<label for="avatar" class="form-label">Avatar</label>
 
-					{% if auth('avatar') is not null %}
+					{% if auth().get('avatar') is not null %}
 						<div class="d-flex align-items-center">
-							<span>{{ auth('avatar') }}</span>
+							<span>{{ auth().get('avatar') }}</span>
 
 							<button type="submit" class="btn btn-sm" id="delete-avatar">
 								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-danger">

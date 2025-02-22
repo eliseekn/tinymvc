@@ -355,7 +355,7 @@ class Maker
         $namespace = is_null($namespace) ? ucfirst($name) : $namespace . '\\' . ucfirst($name);
         $class = str_replace(['Index', 'Show'], ['GetCollection', 'GetItem'], $class);
 
-        if (in_array($type, ['index', 'show', 'store', 'update', 'destroy'])) {
+        if (in_array($type, ['index', 'show', 'store', 'update', 'delete'])) {
             $data = self::stubs()->addPath('useCases')->readFile($type . '.stub');
         } else {
             $data = self::stubs()->addPath('useCases')->readFile('blank.stub');

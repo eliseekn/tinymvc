@@ -63,7 +63,9 @@ class UserController extends Controller
     #[Route(HttpMethod::DELETE, '/dashboard/users/{id:int}/delete', ['auth', 'verified', 'admin'], 'users.delete')]
     public function delete(int $id): void
     {
-        if (! User::find($id)->delete()) {
+        $user = User::find($id);
+
+        if (! $user || ! $user->delete()) {
             Alert::toast('Failed to delete user')->error();
         }
 

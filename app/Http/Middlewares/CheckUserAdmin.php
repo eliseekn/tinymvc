@@ -12,13 +12,22 @@ namespace App\Http\Middlewares;
 
 use App\Enums\UserRole;
 use Core\Enums\HttpCode;
+use Core\Enums\ResponseStatus;
+use Core\Http\Request;
 use Core\Http\Response;
 
 class CheckUserAdmin
 {
-    public function handle(Response $response): void
+    public function handle(Request $request, Response $response): void
     {
-        if (auth('role') !== UserRole::ADMIN->value) {
+        if (auth()->get('role') !== UserRole::ADMIN->value) {
+            if ($request->isJson()) {
+                $response->json([
+                    'status' => ResponseStatus::ERROR,
+                    'data' => 'Forbidden'
+                ])->send(HttpCode::FORBIDDEN);
+            }
+
             $response->data('Forbidden')->send(HttpCode::FORBIDDEN);
         }
     }

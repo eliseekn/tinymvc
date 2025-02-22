@@ -12,6 +12,7 @@ namespace Core\Testing;
 
 use Core\Database\Model;
 use Core\Database\Repository;
+use Core\Enums\HttpAuthMethod;
 use Core\Http\Auth;
 use Core\Http\Client\Curl as Client;
 use CURLFile;
@@ -82,7 +83,7 @@ abstract class FeatureTestCase extends TestCase
     public function auth(Model $user): self
     {
         $this->token = Auth::createToken($user->get('email'));
-        $this->headers = array_merge($this->headers, ['Authorization' => "Bearer $this->token"]);
+        $this->headers = array_merge($this->headers, ['Authorization' => HttpAuthMethod::BEARER . ' ' .  $this->token]);
 
         return $this;
     }
@@ -132,6 +133,13 @@ abstract class FeatureTestCase extends TestCase
     public function postJson(string $uri, array $data = [], array $headers = []): self
     {
         $this->client = Client::post($this->url($uri), $data, $this->setHeaders($headers), true);
+
+        return $this;
+    }
+
+    public function getJson(string $uri, array $headers = []): self
+    {
+        $this->client = Client::get($this->url($uri), $this->setHeaders($headers), true);
 
         return $this;
     }

@@ -12,6 +12,8 @@ namespace Core\Http;
 
 use App\Database\Models\Token;
 use App\Database\Models\User;
+use Core\Database\Model;
+use Core\Enums\HttpAuthMethod;
 use Core\Support\Encryption;
 
 /**
@@ -24,7 +26,7 @@ class Auth
         return session()->get('auth_attempts', 0);
     }
 
-    public static function attempt(Response $response, Request $request): bool
+    public static function attempt(Response $response, Request $request, &$user): bool
     {
         session()->push('auth_attempts', 1, 0);
         $credentials = $request->only([config('security.auth.identifier'), 'password']);
@@ -77,30 +79,29 @@ class Auth
 
     public static function deleteToken(Request $request): bool
     {
-        return Token::findByValue(self::getToken($request))->delete();
+        $token = Token::findByValue(self::getToken($request));
+
+        return $token && $token->delete();
     }
 
     public static function getToken(Request $request): string
     {
+        if (empty($request->getHttpAuth())) {
+            return '';
+        }
+
         list($method, $token) = $request->getHttpAuth();
 
-        return trim($method) !== 'Bearer' ? '' : decrypt($token);
+        return trim($method) !== HttpAuthMethod::BEARER ? '' : decrypt($token);
     }
 
     public static function check(Request $request): bool
     {
-        $result = session()->has('user');
-
-        if (! $result) {
-            if (empty($request->getHttpAuth())) {
-                return false;
-            }
-
-            list($method, $token) = $request->getHttpAuth();
-            $result = trim($method) === 'Bearer' && self::checkToken(decrypt($token), $user);
+        if (! $request->isJson()) {
+            return session()->has('user');
         }
 
-        return $result;
+        return self::checkToken(self::getToken($request), $user);
     }
 
     public static function remember(): bool
@@ -108,15 +109,23 @@ class Auth
         return cookies()->has('user');
     }
 
-    public static function get(?string $key = null): mixed
+    public static function user(Request $request): Model|false|null
     {
-        $user = session()->get('user');
+        if (! $request->isJson()) {
+            $user = session()->get('user');
 
-        if (is_null($key)) {
-            return $user;
+            if (is_null($user)) {
+                return null;
+            }
+
+            return User::find($user['id']);
         }
 
-        return $user[$key];
+        if (! self::checkToken(self::getToken($request), $user)) {
+            return null;
+        }
+
+        return $user;
     }
 
     public static function forget(): void

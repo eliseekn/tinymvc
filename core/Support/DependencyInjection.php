@@ -75,8 +75,6 @@ class DependencyInjection
     public function getDependencies(array $parameters): array
     {
         $dependencies = [];
-        $request = new Request();
-        $response = new Response();
 
         /**
          * @var ReflectionParameter $parameter
@@ -89,9 +87,9 @@ class DependencyInjection
 
                 if (! $dependency->isBuiltin()) {
                     if (is_subclass_of($class, Validator::class)) {
-                        $class = (new $class)->validate($request->inputs(), $response);
+                        $class = (new $class)->validate(new Request, new Response);
                     } elseif (is_subclass_of($class, UseCase::class)) {
-                        $class = new $class($request, $response, new Session(), new Cookies());
+                        $class = new $class(new Request, new Response, new Session, new Cookies);
                     } else {
                         $class = new $class;
                     }

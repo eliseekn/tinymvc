@@ -30,7 +30,7 @@ class UpdateProfileValidator extends Validator
                 Rule::REQUIRED,
                 Rule::EMAIL,
                 Rule::MaxLen(255),
-                'unique,users;' . auth('id'),
+                'unique,users;' . auth()->get('id'),
             ])
             ->add('password', Rule::MaxLen(255))
             ->add('avatar', Rule::FileExtension(['png', 'jpg', 'jpeg']))

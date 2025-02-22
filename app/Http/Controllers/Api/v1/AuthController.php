@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
@@ -26,7 +28,7 @@ class AuthController extends Controller
         if (! $user || ! Encryption::check($data['password'], $user->get('password'))) {
             $this->jsonResponse([
                 'status' => ResponseStatus::ERROR,
-                'message' => 'Email or password is incorrect'
+                'data' => 'Email or password is incorrect'
             ], HttpCode::UNAUTHORIZED);
         }
 
@@ -42,13 +44,13 @@ class AuthController extends Controller
         if (! Auth::deleteToken($this->request)) {
             $this->jsonResponse([
                 'status' => ResponseStatus::ERROR,
-                'message' => 'Failed to logout'
+                'data' => 'Failed to logout'
             ], HttpCode::INTERNAL_SERVER_ERROR);
         }
 
         $this->jsonResponse([
             'status' => ResponseStatus::SUCCESS,
-            'message' => 'Logout successfully'
+            'data' => 'Logout successfully'
         ]);
     }
 }

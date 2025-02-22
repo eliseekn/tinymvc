@@ -29,17 +29,13 @@ class Token extends Model
 
     public static function findByValue(string $value): Model|false
     {
-        return (new self())->findBy('value', $value);
-    }
-
-    public static function findByUser(string $email): Model|false
-    {
-        return (new self())->findBy('email', $email);
+        return (new self)->findBy('value', $value);
     }
 
     public static function findByDescription(string $email, string $description): Model|false
     {
-        return (new self())
+        return (new self)
+            ->select('*')
             ->where('email', $email)
             ->and('description', $description)
             ->first();
@@ -47,6 +43,6 @@ class Token extends Model
 
     public static function all(): array|false
     {
-        return (new self)->getAll();
+        return (new self)->getAll('*');
     }
 }

@@ -10,6 +10,9 @@ declare(strict_types=1);
 
 namespace Core\Http\Validator;
 
+use Core\Enums\HttpCode;
+use Core\Enums\ResponseStatus;
+use Core\Http\Request;
 use Core\Http\Response;
 use GUMP;
 use Spatie\StructureDiscoverer\Discover;
@@ -40,27 +43,35 @@ class Validator implements ValidatorInterface
         }
     }
 
-    public function validate(array $inputs, ?Response $response = null): self
+    public function validate(Request $request, ?Response $response = null): self
     {
-        $this->inputs = $inputs;
+        $this->inputs = $request->inputs();
         $this->rules = empty($this->rules) ? $this->rules() : $this->rules;
         $this->messages = empty($this->messages) ? $this->messages() : $this->messages;
         $this->errors = GUMP::is_valid($this->inputs, $this->rules, $this->messages);
 
         if ($this->failed() && ! is_null($response)) {
-            $this->validationFailed($response);
+            $this->validationFailed($request, $response);
         }
 
         return $this;
     }
 
-    public function validationFailed(?Response $response = null): void
+    public function validationFailed(Request $request, ?Response $response = null): void
     {
+        if ($request->isJson()) {
+            $response?->json([
+                'status' => ResponseStatus::ERROR,
+                'data' => $this->errors()
+            ])
+            ->send(HttpCode::BAD_REQUEST);
+        }
+
         $response
             ?->back()
             ->withErrors($this->errors())
             ->withInputs($this->inputs)
-            ->send(400);
+            ->send(HttpCode::BAD_REQUEST);
     }
 
     public function rules(): array

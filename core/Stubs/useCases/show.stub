@@ -16,6 +16,6 @@ class CLASSNAME extends UseCase
 {
     public function handle(int $id): Model|false
 	{
-        return (new MODEL_NAME())->find($id);
+        return MODEL_NAME::find($id);
 	}
 }

@@ -10,7 +10,9 @@ declare(strict_types=1);
 
 namespace App\Http\Middlewares;
 
+use Core\Enums\HttpAuthMethod;
 use Core\Enums\HttpCode;
+use Core\Enums\ResponseStatus;
 use Core\Http\Auth;
 use Core\Http\Request;
 use Core\Http\Response;
@@ -23,20 +25,29 @@ class HttpAuth
     public function handle(Request $request, Response $response): void
     {
         if (empty($request->getHttpAuth())) {
-            $response->json([__('auth_required')])->send(HttpCode::UNAUTHORIZED);
+            $response->json([
+                'status' => ResponseStatus::ERROR,
+                'data' => __('auth_required')
+            ])->send(HttpCode::UNAUTHORIZED);
         }
 
         list($method, $credentials) = $request->getHttpAuth();
 
-        if (trim($method) !== 'Basic') {
-            $response->json([__('invalid_auth_method')])->send(HttpCode::BAD_REQUEST);
+        if (trim($method) !== HttpAuthMethod::BASIC) {
+            $response->json([
+                'status' => ResponseStatus::ERROR,
+                'data' => __('invalid_auth_method')
+            ])->send(HttpCode::BAD_REQUEST);
         }
 
         $credentials = base64_decode($credentials);
         list($email, $password) = explode(':', $credentials);
 
         if (! Auth::checkCredentials($email, $password, $user)) {
-            $response->json([__('invalid_credentials')])->send(HttpCode::UNAUTHORIZED);
+            $response->json([
+                'status' => ResponseStatus::ERROR,
+                'data' => __('invalid_credentials')
+            ])->send(HttpCode::UNAUTHORIZED);
         }
     }
 }

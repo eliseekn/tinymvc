@@ -55,14 +55,14 @@ class Curl implements ClientInterface
                 curl_setopt($curl, CURLOPT_CUSTOMREQUEST, strtoupper($method));
             }
 
+            // set json headers
+            if ($json) {
+                $headers = array_merge($headers, ['Content-Type' => 'application/json']);
+            }
+
             //set data
             if (! empty($data)) {
-                if ($json) {
-                    $data = json_encode($data);
-                    $headers = array_merge($headers, ['Content-Type' => 'application/json']);
-                }
-
-                curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+                curl_setopt($curl, CURLOPT_POSTFIELDS, $json ? json_encode($data) : $data);
             }
 
             //set headers
@@ -118,9 +118,9 @@ class Curl implements ClientInterface
         return new self();
     }
 
-    public static function get($url, array $headers = []): self
+    public static function get($url, array $headers = [], bool $json = false): self
     {
-        return self::send('GET', $url, [], $headers);
+        return self::send('GET', $url, [], $headers, json: $json);
     }
 
     public static function post($url, array $data = [], array $headers = [], bool $json = false): self

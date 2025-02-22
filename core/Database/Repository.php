@@ -27,6 +27,11 @@ class Repository
     {
     }
 
+    public function getTable(): string
+    {
+        return $this->table;
+    }
+
     public function select(array|string $columns): self
     {
         $this->qb = QueryBuilder::table($this->table)->select($columns);
@@ -600,7 +605,7 @@ class Repository
 
     public function subQueryWhen(bool $condition, ?Closure $callback = null): self
     {
-        if ($condition === true) {
+        if ($condition) {
             $this->subQuery($callback);
         }
 

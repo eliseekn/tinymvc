@@ -32,6 +32,11 @@ class Request
         return empty($header) ? [] : explode(' ', $header);
     }
 
+    public function isJson(): bool
+    {
+        return $this->headers('CONTENT_TYPE') === 'application/json';
+    }
+
     public function host(): mixed
     {
         return $this->headers('HTTP_HOST', '');
@@ -238,12 +243,5 @@ class Request
         }
 
         return $result;
-    }
-
-    public function validate(array $rules, array $messages = [], array $inputs = []): Validator
-    {
-        $inputs = empty($inputs) ? $this->inputs() : $inputs;
-
-        return (new Validator($rules, $messages))->validate($inputs);
     }
 }

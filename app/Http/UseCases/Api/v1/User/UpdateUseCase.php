@@ -1,22 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace NAMESPACE;
+namespace App\Http\UseCases\Api\v1\User;
 
-use App\Database\Models\MODEL_NAME;
+use App\Database\Models\User;
 use Core\Database\Model;
 use Core\Support\UseCase;
 
-class CLASSNAME extends UseCase
+class UpdateUseCase extends UseCase
 {
     public function handle(array $data, int $id): Model|false
 	{
-        $MODEL_NAME = MODEL_NAME::find($id);
-        return ! $MODEL_NAME ? false : $MODEL_NAME->set($data)->save();
+        $user = User::find($id);
+        return ! $user ? false : $user->set($data)->save();
 	}
 }

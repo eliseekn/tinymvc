@@ -39,7 +39,7 @@ class ProfileController extends Controller
         $data = $validator->validated();
         $data['avatar'] = $filename;
 
-        $user = $useCase->handle($data, auth('email'));
+        $user = $useCase->handle($data, auth()->get('email'));
 
         if (! $user) {
             Alert::toast('Failed to update profile')->error();
@@ -54,12 +54,12 @@ class ProfileController extends Controller
     #[Route(HttpMethod::DELETE, '/dashboard/profile/avatar', ['auth', 'verified'], 'dashboard.profile.delete_avatar')]
     public function deleteAvatar(UpdateUseCase $useCase): void
     {
-        $user = $useCase->handle(['avatar' => null], auth('email'));
+        $user = $useCase->handle(['avatar' => null], auth()->get('email'));
 
         if (! $user) {
             Alert::toast('Failed to update profile')->error();
         } else {
-            Storage::path(config('storage.uploads'))->deleteFile(auth('avatar'));
+            Storage::path(config('storage.uploads'))->deleteFile(auth()->get('avatar'));
             session()->create('user', $user->get());
         }
 

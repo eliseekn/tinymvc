@@ -71,7 +71,7 @@ class AuthenticationTest extends FeatureTestCase
         $this
             ->auth($user)
             ->post('/logout')
-            ->assertRedirectedToUrl(url('/'))
+            ->assertRedirectedToUrl(url('/login'))
             ->assertSessionDoesNotHave('user', $user->get());
     }
 

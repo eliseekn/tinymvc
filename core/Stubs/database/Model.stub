@@ -32,12 +32,14 @@ class CLASSNAME extends Model
 
     public static function all(): array|false
     {
-        return (new self)->getAll();
+        return (new self)->getAll('*');
     }
 
     public static function findAllByColumn(string $column): array|false
     {
         return (new self)
+            ->repository()
+            ->select('*')
             ->where('column', $column)
             ->getAll();
     }

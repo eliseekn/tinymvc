@@ -59,7 +59,7 @@ class Controller
     public function validate(Validator $validator): array
     {
         return $validator
-            ->validate($this->request->inputs(), $this->response)
+            ->validate($this->request, $this->response)
             ->validated();
     }
 }

@@ -15,6 +15,6 @@ class CLASSNAME extends UseCase
 {
     public function handle(): array|false
 	{
-        return (new MODEL_NAME())->all();
+        return MODEL_NAME::all();
 	}
 }

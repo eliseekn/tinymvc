@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Core\Support;
 
+use Core\Database\Model;
 use Core\Http\Request;
 
 /**
@@ -35,6 +36,11 @@ class Pagination
     public function getItems(): array
     {
         return $this->items;
+    }
+
+    public function getItemsAsArray(): array
+    {
+        return array_map(fn (Model $user) => $user->get(), $this->items);
     }
 
     public function setItems(array $items): self

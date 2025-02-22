@@ -9,6 +9,8 @@ declare(strict_types=1);
  */
 
 use Carbon\Carbon;
+use Core\Database\Model;
+use Core\Http\Auth;
 use Core\Http\Cookies;
 use Core\Http\Request;
 use Core\Http\Session;
@@ -95,15 +97,9 @@ if (! function_exists('auth')) {
     /**
      * Get authenticated user session data.
      */
-    function auth(?string $key = null): mixed
+    function auth(): Model|false|null
     {
-        $user = session()->get('user');
-
-        if (is_null($user)) {
-            return false;
-        }
-
-        return is_null($key) ? $user : $user[$key];
+        return Auth::user(request());
     }
 }
 
@@ -528,6 +524,10 @@ if (! function_exists('parse_raw_http_request')) {
 
         if ($_SERVER['CONTENT_TYPE'] === 'application/json') {
             $a_data = json_decode($input, true);
+
+            if (is_null($a_data)) {
+                $a_data = [];
+            }
 
             return $a_data;
         }

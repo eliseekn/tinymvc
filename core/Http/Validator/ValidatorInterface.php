@@ -10,11 +10,12 @@ declare(strict_types=1);
 
 namespace Core\Http\Validator;
 
+use Core\Http\Request;
 use Core\Http\Response;
 
 interface ValidatorInterface
 {
-    public function validate(array $inputs, Response $response);
+    public function validate(Request $request, Response $response);
 
     public function failed();
 

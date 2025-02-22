@@ -18,7 +18,7 @@ use Core\Routing\Route;
 Route::group(function () {
     Route::group(function () {
         Route::post('/login', 'login');
-        Route::post('/logout', 'logout')->middleware('auth');
+        Route::post('/logout', 'logout')->middleware('api');
     })->byController(AuthController::class);
 })
     ->byPrefix('api/v1')
