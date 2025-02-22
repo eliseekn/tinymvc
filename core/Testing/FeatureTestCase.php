@@ -13,6 +13,7 @@ namespace Core\Testing;
 use Core\Database\Model;
 use Core\Database\Repository;
 use Core\Enums\HttpAuthMethod;
+use Core\Enums\HttpCode;
 use Core\Http\Auth;
 use Core\Http\Client\Curl as Client;
 use CURLFile;
@@ -167,21 +168,42 @@ abstract class FeatureTestCase extends TestCase
 
     public function assertStatusOk(): self
     {
-        $this->assertStatusEquals(200);
+        $this->assertStatusEquals(HttpCode::OK);
 
         return $this;
     }
 
     public function assertStatusForbidden(): self
     {
-        $this->assertStatusEquals(403);
+        $this->assertStatusEquals(HttpCode::FORBIDDEN);
 
         return $this;
     }
 
     public function assertStatusUnauthenticated(): self
     {
-        $this->assertStatusEquals(401);
+        $this->assertStatusEquals(HttpCode::UNAUTHORIZED);
+
+        return $this;
+    }
+
+    public function assertStatusNotFound(): self
+    {
+        $this->assertStatusEquals(HttpCode::NOT_FOUND);
+
+        return $this;
+    }
+
+    public function assertStatusFound(): self
+    {
+        $this->assertStatusEquals(HttpCode::FOUND);
+
+        return $this;
+    }
+
+    public function assertStatusBadRequest(): self
+    {
+        $this->assertStatusEquals(HttpCode::BAD_REQUEST);
 
         return $this;
     }
