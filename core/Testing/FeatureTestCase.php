@@ -159,6 +159,13 @@ abstract class FeatureTestCase extends TestCase
         return $this;
     }
 
+    public function deleteJson(string $uri, array $headers = []): self
+    {
+        $this->client = Client::delete($this->url($uri), $this->setHeaders($headers), true);
+
+        return $this;
+    }
+
     public function assertStatusEquals(int $expected): self
     {
         $this->assertEquals($expected, $this->getStatusCode());

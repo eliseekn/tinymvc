@@ -50,9 +50,9 @@ class UserController extends Controller
     #[Route(HttpMethod::PATCH, '/dashboard/users/{id:int}', ['auth', 'verified', 'admin'], 'users.update')]
     public function update(UpdateUseCase $useCase, UpdateValidator $validator, int $id): void
     {
-        $email = User::find($id)->get('email');
+        $user = User::find($id);
 
-        if (! $useCase->handle($validator->validated(), $email)) {
+        if (! $user || ! $useCase->handle($validator->validated(), $user->get('email'))) {
             Alert::toast('Failed to update user')->error();
         }
 

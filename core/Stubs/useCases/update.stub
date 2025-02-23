@@ -17,6 +17,6 @@ class CLASSNAME extends UseCase
     public function handle(array $data, int $id): Model|false
 	{
         $MODEL_NAME = MODEL_NAME::find($id);
-        return ! $MODEL_NAME ? false : $MODEL_NAME->set($data)->save();
+        return $MODEL_NAME && $MODEL_NAME->set($data)->save();
 	}
 }

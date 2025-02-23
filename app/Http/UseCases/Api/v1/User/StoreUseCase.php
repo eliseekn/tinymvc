@@ -24,13 +24,13 @@ class StoreUseCase extends UseCase
         if (! User::factory()->create($data)) {
             $this->response->json([
                 'status' => ResponseStatus::ERROR,
-                'data' => 'Failed to create user',
+                'message' => 'Failed to create user',
             ])->send(HttpCode::INTERNAL_SERVER_ERROR);
         }
 
         $this->response->json([
             'status' => ResponseStatus::SUCCESS,
-            'data' => 'User created',
+            'message' => 'User created',
         ])->send(HttpCode::CREATED);
     }
 }

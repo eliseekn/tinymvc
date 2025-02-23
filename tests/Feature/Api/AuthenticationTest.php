@@ -52,7 +52,7 @@ class AuthenticationTest extends FeatureTestCase
             ->assertStatusOk()
             ->assertJsonContains([
                 'status' => ResponseStatus::SUCCESS,
-                'data' => 'Logout successfully',
+                'message' => 'Logout successfully',
             ]);
     }
 }

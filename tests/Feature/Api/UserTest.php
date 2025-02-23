@@ -39,8 +39,9 @@ class UserTest extends FeatureTestCase
             ->assertStatusEquals(HttpCode::CREATED)
             ->assertJsonContains([
                 'status' => ResponseStatus::SUCCESS,
-                'data' => 'User created',
-            ]);
+                'message' => 'User created',
+            ])
+            ->assertDatabaseHas('users', ['name' => $user->get('name')]);
     }
 
     public function test_can_get_collection(): void
@@ -73,5 +74,39 @@ class UserTest extends FeatureTestCase
                 'name' => $user->get('name'),
                 'email' => $user->get('email'),
             ]);
+    }
+
+    public function test_can_update(): void
+    {
+        $admin = User::factory()->create(['role' => UserRole::ADMIN->value]);
+        $user = User::factory()->create();
+        $name = faker()->name();
+
+        $this
+            ->auth($admin)
+            ->patchJson('/api/v1/users/' . $user->getId(), ['name' => $name])
+            ->assertStatusOk()
+            ->assertJsonEquals([
+                'status' => ResponseStatus::SUCCESS,
+                'message' => 'User updated',
+                'user' => $user->set(['name' => $name])->get(),
+            ])
+            ->assertDatabaseHas('users', ['name' => $name]);
+    }
+
+    public function test_can_delete(): void
+    {
+        $admin = User::factory()->create(['role' => UserRole::ADMIN->value]);
+        $user = User::factory()->create();
+
+        $this
+            ->auth($admin)
+            ->deleteJson('/api/v1/users/' . $user->getId())
+            ->assertStatusOk()
+            ->assertJsonEquals([
+                'status' => ResponseStatus::SUCCESS,
+                'message' => 'User delete',
+            ])
+            ->assertDatabaseDoesNotHave('users', ['name' => $user->get('name')]);
     }
 }

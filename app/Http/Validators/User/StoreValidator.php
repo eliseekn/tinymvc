@@ -27,9 +27,21 @@ class StoreValidator extends Validator
     public function rules(): array
     {
         return Rule::add('name', [Rule::REQUIRED, Rule::MaxLen(255)])
-            ->add('email', [Rule::REQUIRED, Rule::EMAIL, Rule::MaxLen(255), 'unique,users'])
-            ->add('password', [Rule::REQUIRED, Rule::MaxLen(255), Rule::MinLen(8)])
-            ->add('role', [Rule::REQUIRED, Rule::In([UserRole::USER->value, UserRole::ADMIN->value])])
+            ->add('email', [
+                Rule::REQUIRED,
+                Rule::EMAIL,
+                Rule::MaxLen(255),
+                'unique,users'
+            ])
+            ->add('password', [
+                Rule::REQUIRED,
+                Rule::MaxLen(255),
+                Rule::MinLen(8)
+            ])
+            ->add('role', [
+                Rule::REQUIRED,
+                Rule::In([UserRole::USER->value, UserRole::ADMIN->value])
+            ])
             ->get();
     }
 }

@@ -27,7 +27,7 @@ class HttpAuth
         if (empty($request->getHttpAuth())) {
             $response->json([
                 'status' => ResponseStatus::ERROR,
-                'data' => __('auth_required'),
+                'message' => __('auth_required'),
             ])->send(HttpCode::UNAUTHORIZED);
         }
 
@@ -36,7 +36,7 @@ class HttpAuth
         if (trim($method) !== HttpAuthMethod::BASIC) {
             $response->json([
                 'status' => ResponseStatus::ERROR,
-                'data' => __('invalid_auth_method'),
+                'message' => __('invalid_auth_method'),
             ])->send(HttpCode::BAD_REQUEST);
         }
 
@@ -46,7 +46,7 @@ class HttpAuth
         if (! Auth::checkCredentials($email, $password, $user)) {
             $response->json([
                 'status' => ResponseStatus::ERROR,
-                'data' => __('invalid_credentials'),
+                'message' => __('invalid_credentials'),
             ])->send(HttpCode::UNAUTHORIZED);
         }
     }

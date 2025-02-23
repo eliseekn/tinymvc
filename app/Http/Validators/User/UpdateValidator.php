@@ -28,7 +28,6 @@ class UpdateValidator extends Validator
     {
         return Rule::add('name', Rule::MaxLen(255))
             ->add('email', [
-                Rule::REQUIRED,
                 Rule::EMAIL,
                 Rule::MaxLen(255),
                 'unique,users;' . request()->route()[0],

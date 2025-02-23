@@ -28,7 +28,7 @@ class AuthController extends Controller
         if (! $user || ! Encryption::check($data['password'], $user->get('password'))) {
             $this->jsonResponse([
                 'status' => ResponseStatus::ERROR,
-                'data' => 'Email or password is incorrect',
+                'message' => 'Email or password is incorrect',
             ], HttpCode::UNAUTHORIZED);
         }
 
@@ -44,13 +44,13 @@ class AuthController extends Controller
         if (! Auth::deleteToken($this->request)) {
             $this->jsonResponse([
                 'status' => ResponseStatus::ERROR,
-                'data' => 'Failed to logout',
+                'message' => 'Failed to logout',
             ], HttpCode::INTERNAL_SERVER_ERROR);
         }
 
         $this->jsonResponse([
             'status' => ResponseStatus::SUCCESS,
-            'data' => 'Logout successfully',
+            'message' => 'Logout successfully',
         ]);
     }
 }

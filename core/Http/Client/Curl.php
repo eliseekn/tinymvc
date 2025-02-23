@@ -133,9 +133,9 @@ class Curl implements ClientInterface
         return self::send('PUT', $url, $data, $headers, $json);
     }
 
-    public static function delete($url, array $headers = []): self
+    public static function delete($url, array $headers = [], bool $json = false): self
     {
-        return self::send('DELETE', $url, [], $headers);
+        return self::send('DELETE', $url, [], $headers, json: $json);
     }
 
     public static function options($url, array $data = [], array $headers = [], bool $json = false): self
