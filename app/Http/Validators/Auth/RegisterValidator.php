@@ -30,7 +30,7 @@ class RegisterValidator extends Validator
                 Rule::REQUIRED,
                 Rule::EMAIL,
                 Rule::MaxLen(255),
-                'unique,users'
+                'unique,users',
             ])
             ->add('password', [Rule::REQUIRED, Rule::MaxLen(255)])
             ->get();

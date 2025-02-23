@@ -31,16 +31,16 @@ class StoreValidator extends Validator
                 Rule::REQUIRED,
                 Rule::EMAIL,
                 Rule::MaxLen(255),
-                'unique,users'
+                'unique,users',
             ])
             ->add('password', [
                 Rule::REQUIRED,
                 Rule::MaxLen(255),
-                Rule::MinLen(8)
+                Rule::MinLen(8),
             ])
             ->add('role', [
                 Rule::REQUIRED,
-                Rule::In([UserRole::USER->value, UserRole::ADMIN->value])
+                Rule::In([UserRole::USER->value, UserRole::ADMIN->value]),
             ])
             ->get();
     }

@@ -57,7 +57,7 @@ class UserController extends Controller
         $this->jsonResponse([
             'status' => ResponseStatus::SUCCESS,
             'message' => 'User updated',
-            'user' => User::find($id)->get()
+            'user' => User::find($id)->get(),
         ]);
     }
 
