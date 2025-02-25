@@ -55,7 +55,7 @@ class Curl implements ClientInterface
             }
 
             //set data
-            if (!empty($data)) {
+            if (! empty($data)) {
                 if ($json) {
                     curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
                 } elseif (self::isMultipart($data)) {

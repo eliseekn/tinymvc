@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Core\Http\Validator;
 
-use GUMP;
-
 class Rule
 {
     public const REQUIRED = 'required';

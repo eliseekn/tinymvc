@@ -11,8 +11,6 @@ declare(strict_types=1);
 namespace App\Http\Validators;
 
 use App\Http\Validators\Rules\Unique;
-use Core\Http\Request;
-use Core\Http\Response;
 use Core\Http\Validator\Rule;
 use Core\Http\Validator\Validator;
 
@@ -34,7 +32,7 @@ class UpdateProfileValidator extends Validator
                 Rule::maxLen(255),
                 Rule::custom(Unique::class, [
                     'users',
-                    auth()->get('id')
+                    auth()->get('id'),
                 ]),
             ])
             ->add('password', Rule::maxLen(255))

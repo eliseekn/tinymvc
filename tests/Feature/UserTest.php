@@ -32,7 +32,7 @@ class UserTest extends FeatureTestCase
         $this
             ->auth($user)
             ->patch('/dashboard/profile', [
-                'avatar' => $this->createFileUpload('avatar.jpg')
+                'avatar' => $this->createFileUpload('avatar.jpg'),
             ])
             ->assertStatusFound()
             ->assertIsFile(storage(config('storage.uploads'))->file('avatar.jpg'))
