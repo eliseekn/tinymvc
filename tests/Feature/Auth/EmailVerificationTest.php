@@ -38,7 +38,7 @@ class EmailVerificationTest extends FeatureTestCase
 
         $this
             ->get('/email/verify?email=' . $user->get('email') . '&token=' . $token->get('value'))
-            ->assertRedirectedToUrl(url('login'))
+            ->assertRedirectedToUrl('/login')
             ->assertDatabaseDoesNotHave('tokens', $token->get());
     }
 }

@@ -39,6 +39,6 @@ class ForgotPasswordController extends Controller
     #[Route(HttpMethod::POST, '/password/update', ['csrf'])]
     public function update(UpdatePasswordUseCase $useCase, LoginValidator $validator, UpdateUseCase $updateUseCase): void
     {
-        $useCase->handle($updateUseCase, $validator->validated());
+        $useCase->handle($updateUseCase, $validator->inputs());
     }
 }

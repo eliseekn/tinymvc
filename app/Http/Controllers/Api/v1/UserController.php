@@ -39,7 +39,7 @@ class UserController extends Controller
     #[Route(HttpMethod::POST, 'api/v1/users', ['api', 'admin'])]
     public function store(StoreUseCase $useCase, StoreValidator $validator): void
     {
-        $useCase->handle($validator->validated());
+        $useCase->handle($validator->inputs());
     }
 
     #[Route(HttpMethod::PATCH, 'api/v1/users/{id:int}', ['api', 'admin'])]
@@ -47,7 +47,7 @@ class UserController extends Controller
     {
         $user = User::find($id);
 
-        if (! $user || ! $useCase->handle($validator->validated(), $user->get('email'))) {
+        if (! $user || ! $useCase->handle($validator->inputs(), $user->get('email'))) {
             $this->jsonResponse([
                 'status' => ResponseStatus::ERROR,
                 'message' => 'Failed to update user',

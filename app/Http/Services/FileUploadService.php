@@ -14,6 +14,10 @@ class FileUploadService
             return false;
         }
 
+        if (! $file->isAllowed()) {
+            return false;
+        }
+
         $filename = slugify($file->getFilename()) . '.' . $file->getFileExtension();
 
         return $file->save(filename: $filename);

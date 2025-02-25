@@ -55,9 +55,13 @@ abstract class FeatureTestCase extends TestCase
 
     protected function getHeaders(?string $key = null): mixed
     {
-        $headers = $this->client->getHeaders()[0];
+        $headers = $this->client->getHeaders();
 
-        return is_null($key) ? $headers : $headers[$key][0];
+        if (empty($headers)) {
+            return [];
+        }
+
+        return is_null($key) ? $headers[0] : $headers[0][$key][0];
     }
 
     protected function getSession(?string $key = null): mixed
@@ -91,9 +95,7 @@ abstract class FeatureTestCase extends TestCase
 
     public function createFileUpload(string $filename, ?string $mime_type = null, ?string $name = null): CURLFile
     {
-        $this->headers = array_merge($this->headers, ['Content-Type' => 'multipart/form-data']);
-
-        return curl_file_create($filename, $mime_type, $name);
+        return new CURLFile(storage(config('storage.tmp'))->file($filename), $mime_type, $name);
     }
 
     public function get(string $uri, array $headers = []): self
@@ -248,14 +250,14 @@ abstract class FeatureTestCase extends TestCase
 
     public function assertRedirectedToUrl(string $expected): self
     {
-        $this->assertEquals($expected, $this->getHeaders('location'));
+        $this->assertEquals(url($expected), $this->getHeaders('location'));
 
         return $this;
     }
 
     public function assertNotRedirectedToUrl(string $expected): self
     {
-        $this->assertNotEquals($expected, $this->getHeaders('location'));
+        $this->assertNotEquals(url($expected), $this->getHeaders('location'));
 
         return $this;
     }
@@ -336,6 +338,20 @@ abstract class FeatureTestCase extends TestCase
     public function assertSessionDoesNotHaveErrors(): self
     {
         $this->assertTrue(empty($this->getSession()[$this->sessionKey('errors')]));
+
+        return $this;
+    }
+
+    public function assertIsFile(string $expected): self
+    {
+        $this->assertFileExists($expected);
+
+        return $this;
+    }
+
+    public function assertIsNotFile(string $expected): self
+    {
+        $this->assertFileDoesNotExist($expected);
 
         return $this;
     }

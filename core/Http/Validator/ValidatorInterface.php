@@ -21,7 +21,7 @@ interface ValidatorInterface
 
     public function errors();
 
-    public function validated();
+    public function inputs();
 
     public function rules();
 

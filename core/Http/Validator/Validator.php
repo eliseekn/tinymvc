@@ -54,6 +54,8 @@ class Validator implements ValidatorInterface
             $this->validationFailed($request, $response);
         }
 
+        $this->validationSucceeded($request, $response);
+
         return $this;
     }
 
@@ -72,6 +74,11 @@ class Validator implements ValidatorInterface
             ->withErrors($this->errors())
             ->withInputs($this->inputs)
             ->send(HttpCode::BAD_REQUEST);
+    }
+
+    public function validationSucceeded(Request $request, ?Response $response = null): void
+    {
+        //
     }
 
     public function rules(): array
@@ -115,7 +122,7 @@ class Validator implements ValidatorInterface
         return $errors;
     }
 
-    public function validated(): array
+    public function inputs(): array
     {
         $validated = [];
         $inputs = array_keys($this->rules());

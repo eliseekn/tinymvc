@@ -60,6 +60,6 @@ class Controller
     {
         return $validator
             ->validate($this->request, $this->response)
-            ->validated();
+            ->inputs();
     }
 }

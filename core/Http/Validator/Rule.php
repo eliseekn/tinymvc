@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Core\Http\Validator;
 
+use GUMP;
+
 class Rule
 {
     public const REQUIRED = 'required';
@@ -31,67 +33,82 @@ class Rule
         return new self();
     }
 
+    public static function custom(string $rule, $data = null): string
+    {
+        $rule = new $rule();
+
+        if (is_null($data)) {
+            return $rule->name;
+        }
+
+        if (is_array($data)) {
+            return $rule->name . ',' . implode(';', $data);
+        }
+
+        return $rule->name . ',' . $data;
+    }
+
     public function get(): array
     {
         return self::$rules;
     }
 
-    public static function In(array $data): string
+    public static function in(array $data): string
     {
         return 'contains_list,' . implode(';', $data);
     }
 
-    public static function NotIn(array $data): string
+    public static function notIn(array $data): string
     {
         return 'doesnt_contain_list,' . implode(';', $data);
     }
 
-    public static function Boolean(bool $strict = false): string
+    public static function boolean(bool $strict = false): string
     {
         return 'boolean' . $strict ? ',strict' : '';
     }
 
-    public static function MaxLen(int $value): string
+    public static function maxLen(int $value): string
     {
         return "max_len,$value";
     }
 
-    public static function MinLen(int $value): string
+    public static function minLen(int $value): string
     {
         return "min_len,$value";
     }
 
-    public static function MaxNumeric(int $value): string
+    public static function maxNumeric(int $value): string
     {
         return "max_numeric,$value";
     }
 
-    public static function MinNumeric(int $value): string
+    public static function minNumeric(int $value): string
     {
         return "min_numeric,$value";
     }
 
-    public static function Len(int $value): string
+    public static function len(int $value): string
     {
         return "exact_len,$value";
     }
 
-    public static function BetweenLen(int $start, int $end): string
+    public static function betweenLen(int $start, int $end): string
     {
         return "between_len,$start;$end";
     }
 
-    public static function Date(?string $format = null): string
+    public static function date(?string $format = null): string
     {
         return 'date' . ! is_null($format) ? ",$format" : '';
     }
 
-    public static function FileExtension(array $data): string
+    public static function fileExtension(array $data): string
     {
         return 'extension,' . implode(';', $data);
     }
 
-    public static function RegEx(string $pattern): string
+    public static function regEx(string $pattern): string
     {
         return "regex,$pattern";
     }

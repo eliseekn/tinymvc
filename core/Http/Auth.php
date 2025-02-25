@@ -97,11 +97,11 @@ class Auth
 
     public static function check(Request $request): bool
     {
-        if (! $request->isJson()) {
-            return session()->has('user');
+        if ($request->isJson() || config('app.env') === 'test') {
+            return self::checkToken(self::getToken($request), $user);
         }
 
-        return self::checkToken(self::getToken($request), $user);
+        return session()->has('user');
     }
 
     public static function remember(): bool
@@ -111,21 +111,21 @@ class Auth
 
     public static function user(Request $request): Model|false|null
     {
-        if (! $request->isJson()) {
-            $user = session()->get('user');
-
-            if (is_null($user)) {
+        if ($request->isJson() || config('app.env') === 'test') {
+            if (! self::checkToken(self::getToken($request), $user)) {
                 return null;
             }
 
-            return User::find($user['id']);
+            return $user;
         }
 
-        if (! self::checkToken(self::getToken($request), $user)) {
+        $user = session()->get('user');
+
+        if (is_null($user)) {
             return null;
         }
 
-        return $user;
+        return User::find($user['id']);
     }
 
     public static function forget(): void

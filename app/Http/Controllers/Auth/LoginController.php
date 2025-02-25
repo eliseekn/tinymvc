@@ -32,6 +32,6 @@ class LoginController extends Controller
     #[Route(HttpMethod::POST, middlewares: ['csrf'])]
     public function authenticate(LoginUseCase $useCase, LoginValidator $validator): void
     {
-        $useCase->handle($validator->validated());
+        $useCase->handle($validator->inputs());
     }
 }

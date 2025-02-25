@@ -22,7 +22,7 @@ class AuthController extends Controller
 {
     public function login(LoginValidator $validator): void
     {
-        $data = $validator->validated();
+        $data = $validator->inputs();
         $user = User::findByEmail($data['email']);
 
         if (! $user || ! Encryption::check($data['password'], $user->get('password'))) {

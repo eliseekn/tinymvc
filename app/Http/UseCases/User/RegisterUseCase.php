@@ -13,7 +13,6 @@ namespace App\Http\UseCases\User;
 use App\Database\Models\User;
 use App\Events\UserRegistered\UserRegisteredEvent;
 use App\Http\UseCases\EmailVerification\NotifyUseCase;
-use Core\Enums\HttpCode;
 use Core\Support\Alert;
 use Core\Support\UseCase;
 
@@ -32,6 +31,6 @@ class RegisterUseCase extends UseCase
         (new UserRegisteredEvent($user))->dispatch();
 
         Alert::default(__('account_created'))->success();
-        $this->response->url('/login')->send(HttpCode::CREATED);
+        $this->response->view('auth.login')->send();
     }
 }

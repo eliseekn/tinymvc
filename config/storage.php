@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 return [
     'uploads' => absolute_path('storage.uploads'),
+    'tmp' => absolute_path('storage.tmp'),
     'public' => absolute_path('public'),
     'routes' => absolute_path('routes'),
     'views' => absolute_path('resources.views'),

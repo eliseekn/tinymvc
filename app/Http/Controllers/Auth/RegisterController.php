@@ -33,6 +33,6 @@ class RegisterController extends Controller
     #[Route(HttpMethod::POST, middlewares: ['csrf'])]
     public function register(RegisterUseCase $useCase, NotifyUseCase $notifyUseCase, RegisterValidator $validator): void
     {
-        $useCase->handle($validator->validated(), $notifyUseCase);
+        $useCase->handle($validator->inputs(), $notifyUseCase);
     }
 }

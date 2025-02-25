@@ -51,6 +51,11 @@ class Storage
         return get_file_extension(self::$path .= $filename);
     }
 
+    public function getFileBaseName(string $filename): string
+    {
+        return get_file_basename(self::$path .= $filename);
+    }
+
     public function getFileName(string $filename): string
     {
         return get_file_name(self::$path .= $filename);
@@ -85,9 +90,9 @@ class Storage
         return copy(self::$path . $filename, self::$path . $destination);
     }
 
-    public function renameFile(string $oldname, string $newname): bool
+    public function renameFile(string $oldName, string $newName): bool
     {
-        return rename(self::$path . $oldname, self::$path . $newname);
+        return rename(self::$path . $oldName, self::$path . $newName);
     }
 
     public function moveFile(string $filename, string $destination): bool

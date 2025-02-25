@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace Core\Support;
 
+use Core\Enums\HttpMethod;
+
 /**
  * Manage uploaded files.
  */
@@ -55,7 +57,11 @@ class Uploader
 
     public function isUploaded(): bool
     {
-        return is_uploaded_file($this->getTempFilename());
+        if (request()->method() === HttpMethod::POST) {
+            return is_uploaded_file($this->getTempFilename());
+        }
+
+        return file_exists($this->getTempFilename());
     }
 
     public function isOverSized(int $max_size): bool
@@ -111,6 +117,10 @@ class Uploader
             }
         }
 
-        return move_uploaded_file($this->getTempFilename(), Storage::path($destination)->file($this->filename));
+        if (request()->method() === HttpMethod::POST) {
+            return move_uploaded_file($this->getTempFilename(), Storage::path($destination)->file($this->filename));
+        }
+
+        return rename($this->getTempFilename(), Storage::path($destination)->file($this->filename));
     }
 }

@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace Core\Http\Client;
 
-use Core\Exceptions\InvalidUrlFormatException;
+use Core\Enums\HttpMethod;
 
 /**
  * Send asynchronous HTTP requests using curl.
@@ -25,7 +25,7 @@ class Curl implements ClientInterface
      *         https://www.codexworld.com/post-receive-json-data-using-php-curl/
      *         https://stackoverflow.com/questions/13420952/php-curl-delete-request
      */
-    public static function send(string $method, $url, array $data = [], array $headers = [], bool $json = false): self
+    public static function send(string $method, array|string $url, array $data = [], array $headers = [], bool $json = false): self
     {
         $response_headers = [];
         $response = [];
@@ -33,25 +33,19 @@ class Curl implements ClientInterface
         $curl_array = [];
         $curl_multi = curl_multi_init();
 
-        if (! is_array($url)) {
-            if (! is_string($url)) {
-                throw new InvalidUrlFormatException();
-            }
+        $url = parse_array($url);
 
-            $url = [$url];
-        }
-
-        foreach ($url as $key => $url) {
+        foreach ($url as $key => $_url) {
             $curl_array[$key] = curl_init();
             $curl = $curl_array[$key];
 
             //set options
-            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_URL, $_url);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl, CURLOPT_TIMEOUT_MS, 300000);
 
             //set method
-            if (strtoupper($method) !== 'GET') {
+            if (strtoupper($method) !== HttpMethod::GET) {
                 curl_setopt($curl, CURLOPT_CUSTOMREQUEST, strtoupper($method));
             }
 
@@ -61,8 +55,15 @@ class Curl implements ClientInterface
             }
 
             //set data
-            if (! empty($data)) {
-                curl_setopt($curl, CURLOPT_POSTFIELDS, $json ? json_encode($data) : $data);
+            if (!empty($data)) {
+                if ($json) {
+                    curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+                } elseif (self::isMultipart($data)) {
+                    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+                    $headers = array_merge($headers, ['Content-Type' => 'multipart/form-data']);
+                } else {
+                    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+                }
             }
 
             //set headers
@@ -83,6 +84,7 @@ class Curl implements ClientInterface
                 function ($curl, $header) use (&$response_headers, $key) {
                     $len = strlen($header);
                     $header = explode(':', $header, 2);
+
                     if (count($header) < 2) {
                         return $len;
                     }
@@ -100,6 +102,10 @@ class Curl implements ClientInterface
 
         do {
             curl_multi_exec($curl_multi, $i);
+
+            if (curl_multi_errno($curl_multi)) {
+                error_log(curl_error($curl_multi));
+            }
         } while ($i);
 
         //retrieves response
@@ -118,34 +124,45 @@ class Curl implements ClientInterface
         return new self();
     }
 
-    public static function get($url, array $headers = [], bool $json = false): self
+    protected static function isMultipart(array $data): bool
     {
-        return self::send('GET', $url, [], $headers, json: $json);
+        foreach ($data as $value) {
+            if ($value instanceof CURLFile) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
-    public static function post($url, array $data = [], array $headers = [], bool $json = false): self
+    public static function get(array|string $url, array $headers = [], bool $json = false): self
     {
-        return self::send('POST', $url, $data, $headers, $json);
+        return self::send(HttpMethod::GET, $url, [], $headers, json: $json);
     }
 
-    public static function put($url, array $data = [], array $headers = [], bool $json = false): self
+    public static function post(array|string $url, array $data = [], array $headers = [], bool $json = false): self
     {
-        return self::send('PUT', $url, $data, $headers, $json);
+        return self::send(HttpMethod::POST, $url, $data, $headers, $json);
     }
 
-    public static function delete($url, array $headers = [], bool $json = false): self
+    public static function put(array|string $url, array $data = [], array $headers = [], bool $json = false): self
     {
-        return self::send('DELETE', $url, [], $headers, json: $json);
+        return self::send(HttpMethod::PUT, $url, $data, $headers, $json);
     }
 
-    public static function options($url, array $data = [], array $headers = [], bool $json = false): self
+    public static function delete(array|string $url, array $headers = [], bool $json = false): self
     {
-        return self::send('OPTIONS', $url, $data, $headers, $json);
+        return self::send(HttpMethod::DELETE, $url, [], $headers, json: $json);
     }
 
-    public static function patch($url, array $data = [], array $headers = [], bool $json = false): self
+    public static function options(array|string $url, array $data = [], array $headers = [], bool $json = false): self
     {
-        return self::send('PATCH', $url, $data, $headers, $json);
+        return self::send(HttpMethod::OPTIONS, $url, $data, $headers, $json);
+    }
+
+    public static function patch(array|string $url, array $data = [], array $headers = [], bool $json = false): self
+    {
+        return self::send(HttpMethod::PATCH, $url, $data, $headers, $json);
     }
 
     public function getHeaders(): mixed

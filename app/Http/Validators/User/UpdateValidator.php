@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Http\Validators\User;
 
 use App\Enums\UserRole;
+use App\Http\Validators\Rules\Unique;
 use Core\Http\Validator\Rule;
 use Core\Http\Validator\Validator;
 
@@ -26,13 +27,16 @@ class UpdateValidator extends Validator
      */
     public function rules(): array
     {
-        return Rule::add('name', Rule::MaxLen(255))
+        return Rule::add('name', Rule::maxLen(255))
             ->add('email', [
                 Rule::EMAIL,
-                Rule::MaxLen(255),
-                'unique,users;' . request()->route()[0],
+                Rule::maxLen(255),
+                Rule::custom(Unique::class, [
+                    'users',
+                    request()->route()[0]
+                ]),
             ])
-            ->add('role', Rule::In([UserRole::USER->value, UserRole::ADMIN->value]))
+            ->add('role', Rule::in([UserRole::USER->value, UserRole::ADMIN->value]))
             ->get();
     }
 }

@@ -224,7 +224,7 @@ class Maker
         return Storage::path(config('storage.exceptions'))->writeFile($class . '.php', $data);
     }
 
-    public static function createTest(string $test, bool $unit_test, ?string $path = null): bool
+    public static function createTest(string $test, bool $unit_test, ?string $namespace = null): bool
     {
         list(, $class) = self::generateClass($test, 'test', true);
 
@@ -235,14 +235,14 @@ class Maker
         }
 
         $data = str_replace('CLASSNAME', $class, $data);
-        $data = str_replace('PATH', $path ?? '', $data);
+        $data = str_replace('\NAMESPACE', '\\' . $namespace ?? '', $data);
 
         $storage = Storage::path(config('storage.tests'));
 
         if ($unit_test) {
-            $storage = $storage->addPath('Unit')->addPath($path ?? '');
+            $storage = $storage->addPath('Unit')->addPath($namespace ?? '');
         } else {
-            $storage = $storage->addPath('Feature')->addPath($path ?? '');
+            $storage = $storage->addPath('Feature')->addPath($namespace ?? '');
         }
 
         return $storage->writeFile($class . '.php', $data);

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Http\Validators\User;
 
 use App\Enums\UserRole;
+use App\Http\Validators\Rules\Unique;
 use Core\Http\Validator\Rule;
 use Core\Http\Validator\Validator;
 
@@ -26,21 +27,21 @@ class StoreValidator extends Validator
      */
     public function rules(): array
     {
-        return Rule::add('name', [Rule::REQUIRED, Rule::MaxLen(255)])
+        return Rule::add('name', [Rule::REQUIRED, Rule::maxLen(255)])
             ->add('email', [
                 Rule::REQUIRED,
                 Rule::EMAIL,
-                Rule::MaxLen(255),
-                'unique,users',
+                Rule::maxLen(255),
+                Rule::custom(Unique::class, 'users'),
             ])
             ->add('password', [
                 Rule::REQUIRED,
-                Rule::MaxLen(255),
-                Rule::MinLen(8),
+                Rule::maxLen(255),
+                Rule::minLen(8),
             ])
             ->add('role', [
                 Rule::REQUIRED,
-                Rule::In([UserRole::USER->value, UserRole::ADMIN->value]),
+                Rule::in([UserRole::USER->value, UserRole::ADMIN->value]),
             ])
             ->get();
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
@@ -8,22 +10,23 @@
 
 namespace App\Mails;
 
+use Core\Notifications\Mail\Mail;
 use Core\Notifications\Mail\Mailer\Mailer;
 
-class CLASSNAME extends Mailer
+class CLASSNAME extends Mail
 {
     public function __construct(public string $email)
     {
-        parent::__construct();
+        parent::__construct(new Mailer());
     }
 
     public function send(): bool
     {
         return $this
-            ->to($this->email)
+            ->mailer
             ->from(config('mailer.sender.email'), config('mailer.sender.name'))
             ->reply(config('mailer.sender.email'), config('mailer.sender.name'))
-            ->subject(__('password_reset_mail_subject'))
+            ->subject('Subject')
             ->html('emails.RESOURCE_NAME')
             ->send();
     }

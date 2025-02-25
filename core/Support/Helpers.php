@@ -207,6 +207,7 @@ if (! function_exists('url')) {
         }
 
         $url .= ltrim($uri, '/');
+
         $params = is_array($params)
             ? (empty($params) ? '' : implode('/', $params))
             : $params;
@@ -216,7 +217,7 @@ if (! function_exists('url')) {
 }
 
 if (! function_exists('route_uri')) {
-    function route_uri(string $name, $params = null): string
+    function route_uri(string $name, array $params = []): string
     {
         $uri = '';
         $patterns = ['([a-zA-Z-_]+)', '(\d+)', '([^/]+)'];
@@ -233,7 +234,7 @@ if (! function_exists('route_uri')) {
             throw new Exception('Route name "' . $name . '" is not defined.');
         }
 
-        if (is_null($params)) {
+        if (empty($params)) {
             foreach ($patterns as $pattern) {
                 if (strpos($uri, '+)?')) {
                     $pattern = "?$pattern?";
@@ -278,7 +279,7 @@ if (! function_exists('route')) {
     /**
      * Get route absolute url.
      */
-    function route(string $name, $params = null): string
+    function route(string $name, array $params = []): string
     {
         return url(route_uri($name, $params));
     }
@@ -412,26 +413,21 @@ if (! function_exists('__')) {
 if (! function_exists('get_file_extension')) {
     function get_file_extension(string $file): string
     {
-        if (empty($file) || ! str_contains($file, '.')) {
-            return '';
-        }
-
-        $file_ext = explode('.', $file);
-
-        return end($file_ext);
+        return pathinfo($file, PATHINFO_EXTENSION);
     }
 }
 
 if (! function_exists('get_file_name')) {
     function get_file_name(string $file): string
     {
-        if (empty($file) || ! str_contains($file, '.')) {
-            return '';
-        }
+        return pathinfo($file, PATHINFO_FILENAME);
+    }
+}
 
-        $filename = explode('.', $file);
-
-        return $filename[0];
+if (! function_exists('get_file_basename')) {
+    function get_file_basename(string $file): string
+    {
+        return pathinfo($file, PATHINFO_BASENAME);
     }
 }
 
@@ -491,6 +487,10 @@ if (! function_exists('init_storage')) {
         }
 
         if (! $storage->path(config('storage.sqlite'))->isDir()) {
+            $storage->createDir();
+        }
+
+        if (! $storage->path(config('storage.tmp'))->isDir()) {
             $storage->createDir();
         }
     }
@@ -560,8 +560,34 @@ if (! function_exists('parse_raw_http_request')) {
             // parse uploaded files
             if (str_contains($block, 'application/octet-stream')) {
                 // match "name", then everything after "stream" (optional) except for prepending newlines
-                preg_match("/name=\"([^\"]*)\".*stream[\n|\r]+([^\n\r].*)?$/s", $block, $matches);
-                $a_data['files'][$matches[1]] = $matches[2];
+                if (preg_match('/name="([^"]+)"; filename="([^"]+)"/', $block, $fileMatches)) {
+                    $fieldName = $fileMatches[1];
+                    $fileName = $fileMatches[2];
+
+                    // Extract file content (skip headers)
+                    $fileContent = substr($block, strpos($block, "\r\n\r\n") + 4);
+                    $fileContent = substr($fileContent, 0, -2); // Remove trailing CRLF
+
+                    // Save file to tmp directory
+                    $tmpFilePath = tempnam(sys_get_temp_dir(), 'php');
+                    file_put_contents($tmpFilePath, $fileContent);
+
+                    // Detect MIME type dynamically
+                    $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
+                    $mimeType = finfo_file($fileInfo, $tmpFilePath);
+                    finfo_close($fileInfo);
+
+                    // Populate $_FILES array
+                    $_FILES[$fieldName] = [
+                        'name' => get_file_basename($fileName),
+                        'type' => $mimeType,
+                        'tmp_name' => $tmpFilePath,
+                        'error' => 0,
+                        'size' => filesize($tmpFilePath),
+                    ];
+                }
+
+                $a_data = [];
             }
             // parse all other fields
             else {

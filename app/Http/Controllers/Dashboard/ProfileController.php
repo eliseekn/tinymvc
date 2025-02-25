@@ -13,6 +13,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Services\FileUploadService;
 use App\Http\UseCases\User\UpdateUseCase;
 use App\Http\Validators\UpdateProfileValidator;
+use Core\Enums\HttpCode;
 use Core\Enums\HttpMethod;
 use Core\Routing\Attributes\Route;
 use Core\Routing\Controller;
@@ -30,13 +31,14 @@ class ProfileController extends Controller
     #[Route(HttpMethod::PATCH, '/dashboard/profile', ['auth', 'verified'], 'dashboard.profile.update')]
     public function update(UpdateUseCase $useCase, UpdateProfileValidator $validator, FileUploadService $fileUploadService): void
     {
-        $file = $this->request->files('avatar');
+        $file = $this->request->files('avatar', ['png', 'jpg', 'jpeg']);
 
         if (! $fileUploadService->handle($file, $filename)) {
             Alert::toast('Failed to upload avatar image')->error();
+            $this->response->back()->send(HttpCode::INTERNAL_SERVER_ERROR);
         }
 
-        $data = $validator->validated();
+        $data = $validator->inputs();
         $data['avatar'] = $filename;
 
         $user = $useCase->handle($data, auth()->get('email'));

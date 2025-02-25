@@ -25,17 +25,17 @@ class AuthenticationTest extends FeatureTestCase
         parent::tearDown();
     }
 
-    public function test_can_not_authenticate_with_unregistered_user_credentials(): void
+    public function test_unregistered_user_can_not_authenticate(): void
     {
         $user = User::factory()->make(['password' => 'password']);
 
         $this
             ->post('/authenticate', $user->get(['email', 'password']))
             ->assertSessionHasErrors()
-            ->assertRedirectedToUrl(url('login'));
+            ->assertRedirectedToUrl('/login');
     }
 
-    public function test_can_authenticate_with_registered_user_credentials(): void
+    public function test_user_can_authenticate(): void
     {
         $user = User::factory()->create();
 
@@ -48,18 +48,17 @@ class AuthenticationTest extends FeatureTestCase
             ->assertSessionHas('user', $user->get());
     }
 
-    public function test_can_register_user(): void
+    public function test_user_can_register(): void
     {
         $user = User::factory()->make(['password' => 'password']);
 
         $this
             ->post('/register', $user->get())
             ->assertSessionDoesNotHaveErrors()
-            ->assertRedirectedToUrl(url('/login'))
             ->assertDatabaseHas('users', $user->get(['name', 'email']));
     }
 
-    public function test_can_logout(): void
+    public function test_user_can_logout(): void
     {
         $user = User::factory()->create();
 
@@ -71,11 +70,11 @@ class AuthenticationTest extends FeatureTestCase
         $this
             ->auth($user)
             ->post('/logout')
-            ->assertRedirectedToUrl(url('/login'))
+            ->assertRedirectedToUrl(config('app.home'))
             ->assertSessionDoesNotHave('user', $user->get());
     }
 
-    public function test_can_not_register_same_user_twice(): void
+    public function test_user_can_not_register_twice(): void
     {
         $user = User::factory()->create();
 

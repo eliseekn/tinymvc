@@ -67,7 +67,7 @@ class Response
         return $this;
     }
 
-    public function route(string $route, $params = null): self
+    public function route(string $route, array $params = []): self
     {
         return $this->url(route_uri($route, $params));
     }

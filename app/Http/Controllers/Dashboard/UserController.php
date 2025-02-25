@@ -38,7 +38,7 @@ class UserController extends Controller
     #[Route(HttpMethod::POST, '/dashboard/users', ['auth', 'verified', 'admin'], 'users.store')]
     public function store(StoreUseCase $useCase, StoreValidator $validator): void
     {
-        $useCase->handle($validator->validated());
+        $useCase->handle($validator->inputs());
     }
 
     #[Route(HttpMethod::GET, '/dashboard/users/{id:int}/edit', ['auth', 'verified', 'admin'], 'users.edit')]
@@ -52,7 +52,7 @@ class UserController extends Controller
     {
         $user = User::find($id);
 
-        if (! $user || ! $useCase->handle($validator->validated(), $user->get('email'))) {
+        if (! $user || ! $useCase->handle($validator->inputs(), $user->get('email'))) {
             Alert::toast('Failed to update user')->error();
         }
 

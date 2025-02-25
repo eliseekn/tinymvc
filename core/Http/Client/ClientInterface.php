@@ -12,5 +12,5 @@ namespace Core\Http\Client;
 
 interface ClientInterface
 {
-    public static function send(string $method, $url, array $data = [], array $headers = [], bool $json = false);
+    public static function send(string $method, array|string $url, array $data = [], array $headers = [], bool $json = false);
 }

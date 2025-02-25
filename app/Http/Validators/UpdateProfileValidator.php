@@ -10,6 +10,9 @@ declare(strict_types=1);
 
 namespace App\Http\Validators;
 
+use App\Http\Validators\Rules\Unique;
+use Core\Http\Request;
+use Core\Http\Response;
 use Core\Http\Validator\Rule;
 use Core\Http\Validator\Validator;
 
@@ -25,15 +28,16 @@ class UpdateProfileValidator extends Validator
      */
     public function rules(): array
     {
-        return Rule::add('name', Rule::MaxLen(255))
+        return Rule::add('name', Rule::maxLen(255))
             ->add('email', [
-                Rule::REQUIRED,
                 Rule::EMAIL,
-                Rule::MaxLen(255),
-                'unique,users;' . auth()->get('id'),
+                Rule::maxLen(255),
+                Rule::custom(Unique::class, [
+                    'users',
+                    auth()->get('id')
+                ]),
             ])
-            ->add('password', Rule::MaxLen(255))
-            ->add('avatar', Rule::FileExtension(['png', 'jpg', 'jpeg']))
+            ->add('password', Rule::maxLen(255))
             ->get();
     }
 }
