@@ -44,8 +44,8 @@
 				<div class="card-body">
 					<h5 class="card-title text-capitalize">Total users (today)</h5>
 					<p class="card-text fs-2 fw-bold mb-1">{{ totalUsersToday['count'] ?? totalUsersToday }}</p>
-					{% if totalUsersToday['variation'] is not null %}
-						<p class="card-text fs-6">{{ totalUsersToday['variation']['type'] }} of {{ totalUsersToday['variation']['value'] }}</p>
+					{% if totalUsersToday['variation'] is not empty %}
+						<p class="card-text fs-6">{{ totalUsersToday['variation']['type'] ?? 0 }} of {{ totalUsersToday['variation']['value'] ?? 0 }}</p>
 					{% endif %}
 				</div>
 			</div>
