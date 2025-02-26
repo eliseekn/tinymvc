@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace Core\Console\App;
 
 use Core\Support\Config;
-use Core\Support\Storage;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
