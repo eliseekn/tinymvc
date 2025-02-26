@@ -1,12 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
+
+declare(strict_types=1);
 
 namespace App\Http\Controllers\Dashboard;
 
@@ -14,8 +14,8 @@ use App\Database\Models\User;
 use Core\Database\Metrics\Enums\Period;
 use Core\Database\Metrics\Metrics;
 use Core\Enums\HttpMethod;
-use Core\Routing\Attributes\Route;
-use Core\Routing\Controller;
+use Core\Http\Routing\Attributes\Route;
+use Core\Http\Routing\Controller;
 
 class DashboardController extends Controller
 {

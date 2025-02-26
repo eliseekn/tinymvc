@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Core\Console;
 
 use Closure;
-use Core\Routing\Route;
+use Core\Http\Routing\Route;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;

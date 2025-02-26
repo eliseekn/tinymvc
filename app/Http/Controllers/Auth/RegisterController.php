@@ -1,12 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
+
+declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
@@ -15,8 +15,8 @@ use App\Http\UseCases\User\RegisterUseCase;
 use App\Http\Validators\Auth\RegisterValidator;
 use Core\Enums\HttpMethod;
 use Core\Http\Auth;
-use Core\Routing\Attributes\Route;
-use Core\Routing\Controller;
+use Core\Http\Routing\Attributes\Route;
+use Core\Http\Routing\Controller;
 
 class RegisterController extends Controller
 {
@@ -30,7 +30,7 @@ class RegisterController extends Controller
         $this->redirectToUrl(config('app.home'));
     }
 
-    #[Route(HttpMethod::POST, middlewares: ['csrf'])]
+    #[Route(HttpMethod::POST)]
     public function register(RegisterUseCase $useCase, NotifyUseCase $notifyUseCase, RegisterValidator $validator): void
     {
         $useCase->handle($validator->inputs(), $notifyUseCase);

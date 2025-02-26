@@ -1,21 +1,21 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
 
+declare(strict_types=1);
+
 use Carbon\Carbon;
 use Core\Database\Model;
 use Core\Http\Auth;
 use Core\Http\Cookies;
 use Core\Http\Request;
+use Core\Http\Routing\Route;
+use Core\Http\Routing\View;
 use Core\Http\Session;
-use Core\Routing\Route;
-use Core\Routing\View;
 use Core\Support\Config;
 use Core\Support\Encryption;
 use Core\Support\Storage;
@@ -113,19 +113,6 @@ if (! function_exists('hash_pwd')) {
     function hash_pwd(string $password): string
     {
         return Encryption::hash($password);
-    }
-}
-
-if (! function_exists('sanitize')) {
-    /**
-     * Sanitize html and others scripting languages.
-     */
-    function sanitize(string $str): string
-    {
-        $str = stripslashes($str);
-        $str = htmlspecialchars($str);
-
-        return strip_tags($str);
     }
 }
 
@@ -404,9 +391,9 @@ if (! function_exists('__')) {
     /**
      * Translate words and expressions.
      */
-    function __(string $expr, array $data = []): string
+    function __(string $expression, array $data = []): string
     {
-        return Config::readTranslations($expr, $data);
+        return Config::readTranslations($expression, $data);
     }
 }
 
@@ -493,111 +480,6 @@ if (! function_exists('init_storage')) {
         if (! $storage->path(config('storage.tmp'))->isDir()) {
             $storage->createDir();
         }
-    }
-}
-
-if (! function_exists('parse_raw_http_request')) {
-    /**
-     * Parse raw HTTP request data.
-     *
-     * Pass in $a_data as an array. This is done by reference to avoid copying
-     * the data around too much.
-     *
-     * Any files found in the request will be added by their field name to the
-     * $data['files'] array.
-     *
-     * @ref: http://www.chlab.ch/blog/archives/webdevelopment/manually-parse-raw-http-data-php
-     *
-     * @return array Associative array of request data
-     */
-    function parse_raw_http_request(array &$a_data): array
-    {
-        // read incoming data
-        $input = file_get_contents('php://input');
-
-        if (! isset($_SERVER['CONTENT_TYPE'])) {
-            // we expect regular puts to contain a query string containing data
-            parse_str(urldecode($input), $a_data);
-
-            return $a_data;
-        }
-
-        if ($_SERVER['CONTENT_TYPE'] === 'application/json') {
-            $a_data = json_decode($input, true);
-
-            if (is_null($a_data)) {
-                $a_data = [];
-            }
-
-            return $a_data;
-        }
-
-        // grab multipart boundary from content type header
-        preg_match('/boundary=(.*)$/', $_SERVER['CONTENT_TYPE'], $matches);
-
-        // content type is probably regular form-encoded
-        if (! count($matches)) {
-            // we expect regular puts to contain a query string containing data
-            parse_str(urldecode($input), $a_data);
-
-            return $a_data;
-        }
-
-        $boundary = $matches[1];
-
-        // split content by boundary and get rid of last -- element
-        $a_blocks = preg_split("/-+$boundary/", $input);
-        array_pop($a_blocks);
-
-        // loop data blocks
-        foreach ($a_blocks as $id => $block) {
-            if (empty($block)) {
-                continue;
-            }
-
-            // you'll have to var_dump $block to understand this and maybe replace \n or \r with a visible char
-
-            // parse uploaded files
-            if (str_contains($block, 'application/octet-stream')) {
-                // match "name", then everything after "stream" (optional) except for prepending newlines
-                if (preg_match('/name="([^"]+)"; filename="([^"]+)"/', $block, $fileMatches)) {
-                    $fieldName = $fileMatches[1];
-                    $fileName = $fileMatches[2];
-
-                    // Extract file content (skip headers)
-                    $fileContent = substr($block, strpos($block, "\r\n\r\n") + 4);
-                    $fileContent = substr($fileContent, 0, -2); // Remove trailing CRLF
-
-                    // Save file to tmp directory
-                    $tmpFilePath = tempnam(sys_get_temp_dir(), 'php');
-                    file_put_contents($tmpFilePath, $fileContent);
-
-                    // Detect MIME type dynamically
-                    $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
-                    $mimeType = finfo_file($fileInfo, $tmpFilePath);
-                    finfo_close($fileInfo);
-
-                    // Populate $_FILES array
-                    $_FILES[$fieldName] = [
-                        'name' => get_file_basename($fileName),
-                        'type' => $mimeType,
-                        'tmp_name' => $tmpFilePath,
-                        'error' => 0,
-                        'size' => filesize($tmpFilePath),
-                    ];
-                }
-
-                $a_data = [];
-            }
-            // parse all other fields
-            else {
-                // match "name" and optional value in between newline sequences
-                preg_match('/name=\"([^\"]*)\"[\n|\r]+([^\n\r].*)?\r$/s', $block, $matches);
-                $a_data[$matches[1]] = $matches[2];
-            }
-        }
-
-        return $a_data;
     }
 }
 

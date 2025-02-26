@@ -1,16 +1,17 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Core\Routing;
+declare(strict_types=1);
+
+namespace Core\Http\Routing;
 
 use Closure;
+use Core\Enums\HttpMethod;
 use Core\Exceptions\ControllerNotFoundException;
 use Core\Exceptions\InvalidRouteHandlerException;
 use Core\Exceptions\MiddlewareNotFoundException;
@@ -39,8 +40,12 @@ class Router
         return true;
     }
 
-    protected static function executeMiddlewares(array $middlewares): void
+    protected static function executeMiddlewares(Request $request, array $middlewares): void
     {
+        if (in_array(strtoupper($request->method()), [HttpMethod::POST, HttpMethod::PUT, HttpMethod::PUT])) {
+            $middlewares = array_merge($middlewares, ['csrf']);
+        }
+
         foreach ($middlewares as $middleware) {
             $middleware = config('middlewares.' . $middleware);
 
@@ -48,21 +53,21 @@ class Router
                 throw new MiddlewareNotFoundException($middleware);
             }
 
-            (new DependencyInjection())->resolve($middleware, 'handle');
+            (new DependencyInjection)->resolve($middleware, 'handle');
         }
     }
 
     protected static function executeHandler(Closure|array|string $handler, array $params): mixed
     {
         if ($handler instanceof Closure) {
-            return (new DependencyInjection())->resolveClosure($handler, $params);
+            return (new DependencyInjection)->resolveClosure($handler, $params);
         }
 
         if (is_array($handler)) {
             list($controller, $action) = $handler;
 
             if (class_exists($controller) && method_exists($controller, $action)) {
-                return (new DependencyInjection())->resolve($controller, $action, $params);
+                return (new DependencyInjection)->resolve($controller, $action, $params);
             }
 
             throw new ControllerNotFoundException("$controller/$action");
@@ -70,7 +75,7 @@ class Router
 
         if (is_string($handler)) {
             if (class_exists($handler)) {
-                return (new DependencyInjection())->resolve($handler, '__invoke', $params);
+                return (new DependencyInjection)->resolve($handler, '__invoke', $params);
             }
 
             throw new ControllerNotFoundException($handler);
@@ -104,7 +109,7 @@ class Router
                 }
 
                 if (isset($options['middlewares'])) {
-                    self::executeMiddlewares($options['middlewares']);
+                    self::executeMiddlewares($request, $options['middlewares']);
                 }
 
                 self::executeHandler($options['handler'], $params);

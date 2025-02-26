@@ -1,12 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
+
+declare(strict_types=1);
 
 namespace Core\Database\Connection;
 
@@ -31,7 +31,11 @@ class Connection
             ? config('tests.database.driver')
             : config('database.driver');
 
-        $this->db = $driver === 'mysql' ? new MySQLConnection() : new SQLiteConnection();
+        $this->db = match ($driver) {
+            'mysql' => new MySQLConnection(),
+            'sqlite' => new SQLiteConnection(),
+            'pgsql' => new PostgreSQLConnection()
+        };
     }
 
     public static function getInstance(): self

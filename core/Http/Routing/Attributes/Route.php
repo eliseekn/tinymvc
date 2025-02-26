@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Core\Routing\Attributes;
+namespace Core\Http\Routing\Attributes;
 
 use Attribute;
 

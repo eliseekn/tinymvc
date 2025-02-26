@@ -1,14 +1,14 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
 
-namespace Core\Routing;
+declare(strict_types=1);
+
+namespace Core\Http\Routing;
 
 use Closure;
 use Core\Enums\HttpMethod;
@@ -251,7 +251,7 @@ class Route
             $methods = $reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC);
 
             foreach ($methods as $method) {
-                $attributes = $method->getAttributes(Attributes\Route::class);
+                $attributes = $method->getAttributes(\Core\Http\Routing\Attributes\Route::class);
 
                 foreach ($attributes as $attribute) {
                     $attribute = $attribute->newInstance();

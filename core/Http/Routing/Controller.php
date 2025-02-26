@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Core\Routing;
+namespace Core\Http\Routing;
 
 use Core\Enums\HttpCode;
 use Core\Http\Cookies;

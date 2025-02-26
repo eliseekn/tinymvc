@@ -1,12 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
+
+declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\v1;
 
@@ -15,7 +15,7 @@ use App\Http\Validators\Auth\LoginValidator;
 use Core\Enums\HttpCode;
 use Core\Enums\ResponseStatus;
 use Core\Http\Auth;
-use Core\Routing\Controller;
+use Core\Http\Routing\Controller;
 use Core\Support\Encryption;
 
 class AuthController extends Controller

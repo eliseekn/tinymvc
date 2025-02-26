@@ -1,12 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
+
+declare(strict_types=1);
 
 namespace Core\Http;
 
@@ -43,6 +43,7 @@ class Auth
         }
 
         session()->forget(['auth_attempts', 'auth_attempts_timeout']);
+        session()->regenerate();
         session()->create('user', $user->get());
 
         if ($request->hasInput('remember')) {

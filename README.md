@@ -7,9 +7,7 @@ TinyMVC is a PHP framework based on MVC architecture that helps you build easily
 
 ## Requirements
 ```
-PHP 8.1.x
-MySQL/SQLite
-Composer
+PHP ^8.1
 Yarn or NPM
 ```
 

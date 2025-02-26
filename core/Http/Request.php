@@ -1,12 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
  * @link https://github.com/eliseekn/tinymvc
  */
+
+declare(strict_types=1);
 
 namespace Core\Http;
 
@@ -41,32 +41,38 @@ class Request
         return $this->headers('HTTP_HOST', '');
     }
 
-    public function queries(?string $key = null, $default = null): mixed
+    public function queries(?string $key = null, $default = null): array|string|int|bool
     {
-        if (is_null($key)) {
-            return $_GET;
+        $result = $_GET;
+
+        foreach ($result as $field => $value) {
+            if (! is_null($value)) {
+                $result[$field] = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+            }
         }
 
-        return empty($_GET[$key]) ? $default : $_GET[$key];
-    }
-
-    public function inputs(?string $key = null, $default = null): mixed
-    {
-        $_POST = array_merge($_POST, $this->raw());
-
         if (is_null($key)) {
-            return $_POST;
+            return $result;
         }
 
-        return empty($_POST[$key]) ? $default : $_POST[$key];
+        return empty($result[$key]) ? $default : $result[$key];
     }
 
-    public function raw(): array
+    public function inputs(?string $key = null, $default = null): array|string|int|bool
     {
-        $data = [];
-        parse_raw_http_request($data);
+        $result = array_merge($_POST, $this->raw());
 
-        return $data;
+        foreach ($result as $field => $value) {
+            if (! is_null($value)) {
+                $result[$field] = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+            }
+        }
+
+        if (is_null($key)) {
+            return $result;
+        }
+
+        return empty($result[$key]) ? $default : $result[$key];
     }
 
     public function files(string $input, array $allowed_extensions = []): Uploader|array
@@ -203,10 +209,17 @@ class Request
         return $result;
     }
 
-    public function set(string $item, $value): void
+    public function setInput(string $item, $value): void
     {
         if (isset($_POST[$item])) {
             $_POST[$item] = $value;
+        }
+    }
+
+    public function setQuery(string $item, $value): void
+    {
+        if (isset($_GET[$item])) {
+            $_GET[$item] = $value;
         }
     }
 
@@ -242,5 +255,90 @@ class Request
         }
 
         return $result;
+    }
+
+    /**
+     * Parse raw HTTP request data.
+     *
+     * Pass in $a_data as an array. This is done by reference to avoid copying
+     * the data around too much.
+     *
+     * Any files found in the request will be added by their field name to the
+     * $data['files'] array.
+     *
+     * @ref: http://www.chlab.ch/blog/archives/webdevelopment/manually-parse-raw-http-data-php
+     *
+     * @return array Associative array of request data
+     */
+    public function raw(): array
+    {
+        $input = file_get_contents('php://input');
+
+        if (! isset($_SERVER['CONTENT_TYPE'])) {
+            parse_str(urldecode($input), $data);
+
+            return $data;
+        }
+
+        if ($_SERVER['CONTENT_TYPE'] === 'application/json') {
+            $data = json_decode($input, true);
+
+            if (is_null($data)) {
+                $data = [];
+            }
+
+            return $data;
+        }
+
+        preg_match('/boundary=(.*)$/', $_SERVER['CONTENT_TYPE'], $matches);
+
+        if (! count($matches)) {
+            parse_str(urldecode($input), $data);
+
+            return $data;
+        }
+
+        $boundary = $matches[1];
+
+        $a_blocks = preg_split("/-+$boundary/", $input);
+        array_pop($a_blocks);
+
+        foreach ($a_blocks as $id => $block) {
+            if (empty($block)) {
+                continue;
+            }
+
+            if (str_contains($block, 'application/octet-stream')) {
+                if (preg_match('/name="([^"]+)"; filename="([^"]+)"/', $block, $fileMatches)) {
+                    $fieldName = $fileMatches[1];
+                    $fileName = $fileMatches[2];
+
+                    $fileContent = substr($block, strpos($block, "\r\n\r\n") + 4);
+                    $fileContent = substr($fileContent, 0, -2); // Remove trailing CRLF
+
+                    $tmpFilePath = tempnam(sys_get_temp_dir(), 'php');
+                    file_put_contents($tmpFilePath, $fileContent);
+
+                    $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
+                    $mimeType = finfo_file($fileInfo, $tmpFilePath);
+                    finfo_close($fileInfo);
+
+                    $_FILES[$fieldName] = [
+                        'name' => get_file_basename($fileName),
+                        'type' => $mimeType,
+                        'tmp_name' => $tmpFilePath,
+                        'error' => 0,
+                        'size' => filesize($tmpFilePath),
+                    ];
+                }
+
+                $data = [];
+            } else {
+                preg_match('/name=\"([^\"]*)\"[\n|\r]+([^\n\r].*)?\r$/s', $block, $matches);
+                $data[$matches[1]] = $matches[2];
+            }
+        }
+
+        return $data;
     }
 }
