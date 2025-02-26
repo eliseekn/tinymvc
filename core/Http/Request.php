@@ -272,6 +272,7 @@ class Request
      */
     public function raw(): array
     {
+        $data = [];
         $input = file_get_contents('php://input');
 
         if (! isset($_SERVER['CONTENT_TYPE'])) {
