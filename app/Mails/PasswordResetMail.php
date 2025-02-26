@@ -26,7 +26,7 @@ class PasswordResetMail extends Mail
             ->mailer
             ->from(config('mailer.sender.email'), config('mailer.sender.name'))
             ->replyTo(config('mailer.sender.email'), config('mailer.sender.name'))
-            ->subject(__('password_reset_mail_subject'))
+            ->subject(__('email.password_reset_subject'))
             ->html('emails.password_reset', [
                 'email' => $this->email,
                 'token' => $this->token,

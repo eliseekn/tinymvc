@@ -26,7 +26,7 @@ class VerificationMail extends Mail
             ->mailer
             ->from(config('mailer.sender.email'), config('mailer.sender.name'))
             ->replyTo(config('mailer.sender.email'), config('mailer.sender.name'))
-            ->subject(__('email_verification_mail_subject'))
+            ->subject(__('email.email_verification_subject'))
             ->html('emails.verification', [
                 'email' => $this->email,
                 'token' => $this->token,

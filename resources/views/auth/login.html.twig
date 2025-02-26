@@ -1,11 +1,11 @@
 {% extends "layouts/auth.html.twig" %}
 
 {% block title %}
-	{{ __('login') }}
+	{{ __('form.login') }}
 {% endblock %}
 
 {% block description %}
-	{{ __('login') }}
+	{{ __('form.login') }}
 {% endblock %}
 
 {% block content %}
@@ -25,7 +25,7 @@
 		{{ csrf_token_input()|raw }}
 
 		<div class="mb-3">
-			<label for="email" class="form-label">{{ __('email') }}</label>
+			<label for="email" class="form-label">{{ __('form.email') }}</label>
 			<input type="text" id="email" name="email" class="form-control {{ errors.email ? 'is-invalid' }}" value="{{ inputs.email ?: '' }}" aria-describedby="email-error" autofocus>
 
 			{% if errors.email is not empty %}
@@ -36,7 +36,7 @@
 		</div>
 
 		<div class="mb-3">
-			<label for="password" class="form-label">{{ __('password') }}</label>
+			<label for="password" class="form-label">{{ __('form.password') }}</label>
 
 			<div class="input-group">
 				<input type="password" id="password" name="password" class="form-control {{ errors.password ? 'is-invalid' }}" value="{{ inputs.password ?: '' }}" aria-describedby="password-error">
@@ -59,24 +59,24 @@
 		<div class="d-flex flex-column flex-lg-row justify-content-lg-between justify-content-center mb-3 mb-lg-0 mx-auto">
 			<div class="mb-3 form-check form-switch">
 				<input type="checkbox" class="form-check-input" id="remember" name="remember">
-				<label class="form-check-label" for="remember">{{ __('remember') }}</label>
+				<label class="form-check-label" for="remember">{{ __('form.remember') }}</label>
 			</div>
 
 			<a href="{{ url('password/forgot') }}">
-				{{ __('forgot_password') }}
+				{{ __('form.forgot_password') }}
 			</a>
 		</div>
 
 		<div class="d-grid gap-2">
 			<button type="submit" class="btn btn-primary spinner" {{ auth_attempts_exceeded() ? 'disabled' }}>
-				{{ __('submit') }}
+				{{ __('form.submit') }}
 			</button>
 		</div>
 	</form>
 
 	<p class="mt-4 text-center">
-		{{ __('no_account') }}
-		<a href="{{ url('signup') }}">{{ __('signup_here') }}</a>
+		{{ __('form.no_account') }}
+		<a href="{{ url('signup') }}">{{ __('form.signup_here') }}</a>
 	</p>
 </div>
 {% endblock %}

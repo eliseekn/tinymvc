@@ -1,11 +1,11 @@
 {% extends "layouts/auth.html.twig" %}
 
 {% block title %}
-	{{ __('signup') }}
+	{{ __('form.signup') }}
 {% endblock %}
 
 {% block description %}
-	{{ __('signup') }}
+	{{ __('form.signup') }}
 {% endblock %}
 
 {% block content %}
@@ -14,7 +14,7 @@
 		{{ csrf_token_input()|raw }}
 
 		<div class="mb-3">
-			<label for="name" class="form-label">{{ __('name') }}</label>
+			<label for="name" class="form-label">{{ __('form.name') }}</label>
 			<input type="text" class="form-control {{ errors.name ? 'is-invalid' }}" value="{{ inputs.name ?: '' }}" aria-describedby="name-error" name="name" id="name" autofocus>
 
 			{% if errors.name is not empty %}
@@ -25,7 +25,7 @@
 		</div>
 
 		<div class="mb-3">
-			<label for="email" class="form-label">{{ __('email') }}</label>
+			<label for="email" class="form-label">{{ __('form.email') }}</label>
 			<input type="email" id="email" name="email" class="form-control {{ errors.email ? 'is-invalid' }}" value="{{ inputs.email ?: '' }}" aria-describedby="email-error">
 
 			{% if errors.email is not empty %}
@@ -36,7 +36,7 @@
 		</div>
 
 		<div class="mb-3">
-			<label for="password" class="form-label">{{ __('password') }}</label>
+			<label for="password" class="form-label">{{ __('form.password') }}</label>
 
 			<div class="input-group">
 				<input type="password" id="password" name="password" class="form-control {{ errors.password ? 'is-invalid' }}" value="{{ inputs.password ?: '' }}" aria-describedby="password-error">
@@ -58,14 +58,14 @@
 
 		<div class="d-grid gap-2">
 			<button type="submit" class="btn btn-primary spinner">
-				{{ __('submit') }}
+				{{ __('form.submit') }}
 			</button>
 		</div>
 	</form>
 
 	<p class="mt-4 text-center">
-		{{ __('have_account') }}
-		<a href="{{ url('login') }}">{{ __('login_here') }}</a>
+		{{ __('form.have_account') }}
+		<a href="{{ url('login') }}">{{ __('form.login_here') }}</a>
 	</p>
 </div>
 {% endblock %}

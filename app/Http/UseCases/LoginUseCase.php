@@ -23,12 +23,12 @@ class LoginUseCase extends UseCase
             $this->response->url('/dashboard')->send();
         }
 
-        Alert::default(__('login_failed'))->error();
+        Alert::default(__('alert.login_failed'))->error();
 
         $this->response
             ->url('/login')
             ->withInputs($data)
-            ->withErrors([__('login_failed')])
+            ->withErrors([__('alert.login_failed')])
             ->send();
     }
 }

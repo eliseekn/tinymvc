@@ -1,18 +1,18 @@
 {% extends "layouts/auth.html.twig" %}
 
 {% block title %}
-	{{ __('forgot_password') }}
+	{{ __('form.forgot_password') }}
 {% endblock %}
 
 {% block description %}
-	{{ __('forgot_password') }}
+	{{ __('form.forgot_password') }}
 {% endblock %}
 
 {% block content %}
 <div class="card mb-3">
 	<div class="card-body bg-light">
 		<p class="card-text">
-			{{ __('reset_password_instructions') }}
+			{{ __('form.reset_password_instructions') }}
 		</p>
 	</div>
 </div>
@@ -22,13 +22,13 @@
 		{{ csrf_token_input()|raw }}
 
 		<div class="mb-3">
-			<label for="email" class="form-label">{{ __('email') }}</label>
+			<label for="email" class="form-label">{{ __('form.email') }}</label>
 			<input type="email" id="email" name="email" class="form-control" required autofocus>
 		</div>
 
 		<div class="d-grid gap-2">
 			<button type="submit" class="btn btn-primary spinner">
-				{{ __('submit') }}
+				{{ __('form.submit') }}
 			</button>
 		</div>
 	</form>

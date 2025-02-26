@@ -22,7 +22,7 @@ class EmailVerified
     public function handle(Request $request, Response $response): void
     {
         if (config('security.auth.email_verification') && is_null(auth()->get('email_verified_at'))) {
-            Alert::default(__('email_not_verified'))->error();
+            Alert::default(__('alert.email_not_verified'))->error();
 
             $response
                 ->url('/login')

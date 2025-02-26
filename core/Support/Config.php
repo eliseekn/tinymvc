@@ -74,10 +74,12 @@ class Config
         return $data->get($key, $default);
     }
 
-    public static function readTranslations(string $expr, array $data = []): string
+    public static function readTranslations(string $expression, array $data = []): string
     {
-        $translations = require absolute_path('resources.lang') . config('app.lang') . '.php';
-        $translated = $translations[$expr];
+        list($file, $expression) = explode('.', $expression);
+
+        $translations = require absolute_path('resources.translations') . config('app.lang') . DIRECTORY_SEPARATOR . $file . '.php';
+        $translated = $translations[$expression];
 
         foreach ($data as $key => $value) {
             $translated = str_replace('{' . $key . '}', $value, $translated);

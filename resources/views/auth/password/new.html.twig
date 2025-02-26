@@ -1,11 +1,11 @@
 {% extends "layouts/auth.html.twig" %}
 
 {% block title %}
-	{{ __('reset_password') }}
+	{{ __('form.reset_password') }}
 {% endblock %}
 
 {% block description %}
-	{{ __('reset_password') }}
+	{{ __('form.reset_password') }}
 {% endblock %}
 
 {% block content %}
@@ -14,12 +14,12 @@
 		{{ csrf_token_input()|raw }}
 
 		<div class="mb-3">
-			<label for="email" class="form-label">{{ __('email') }}</label>
+			<label for="email" class="form-label">{{ __('form.email') }}</label>
 			<input type="email" id="email" name="email" class="form-control" value="{{ email }}" autofocus>
 		</div>
 
 		<div class="mb-3">
-			<label for="password" class="form-label">{{ __('new_password') }}</label>
+			<label for="password" class="form-label">{{ __('form.new_password') }}</label>
 
 			<div class="input-group">
 				<input type="password" id="password" name="password" class="form-control">
@@ -35,7 +35,7 @@
 
 		<div class="d-grid gap-2">
 			<button type="submit" class="btn btn-primary spinner">
-				{{ __('submit') }}
+				{{ __('form.submit') }}
 			</button>
 		</div>
 	</form>

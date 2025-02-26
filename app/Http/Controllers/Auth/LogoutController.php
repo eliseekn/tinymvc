@@ -22,7 +22,7 @@ class LogoutController extends Controller
     public function __invoke(): void
     {
         Auth::forget();
-        Alert::toast(__('logged_out'))->success();
+        Alert::toast(__('alert.logged_out'))->success();
 
         $this->redirectToUrl(config('app.home'));
     }

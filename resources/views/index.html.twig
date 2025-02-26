@@ -35,7 +35,7 @@
 			  <path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
 			</svg>
 
-			Log in
+			{{ __('form.login') }}
 		</a>
 
 		<a href="{{ url('signup') }}" class="ms-3 btn btn-primary d-flex align-items-center">
@@ -43,7 +43,7 @@
 			  <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
 			</svg>
 
-			Sign up
+			{{ __('form.signup') }}
 		</a>
 		{% else %}
 		<a href="{{ url('dashboard') }}" class="ms-3 btn btn-primary d-flex align-items-center">
@@ -51,7 +51,7 @@
 			  <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
 			</svg>
 
-			Dashboard
+			{{ __('app.dashboard') }}
 		</a>
 
 		<form action="{{ url('logout') }}" method="post">
@@ -60,7 +60,7 @@
 				  <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
 				</svg>
 
-				Log out
+				{{ __('form.logout') }}
 			</button>
 		</form>
 		{% endif %}

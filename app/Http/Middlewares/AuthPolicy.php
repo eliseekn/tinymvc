@@ -23,12 +23,12 @@ class AuthPolicy
     public function handle(Request $request, Response $response): void
     {
         if (! Auth::check($request)) {
-            Alert::default(__('not_logged'))->error();
+            Alert::default(__('alert.not_logged'))->error();
 
             $response
                 ->url('/login')
                 ->intended($request->fullUri())
-                ->withErrors([__('not_logged')])
+                ->withErrors([__('alert.not_logged')])
                 ->send();
         }
     }

@@ -77,7 +77,7 @@ $finder = Finder::create()
         __DIR__ . '/app',
         __DIR__ . '/config',
         __DIR__ . '/core',
-        __DIR__ . '/resources/lang',
+        __DIR__ . '/resources/translations',
         __DIR__ . '/routes',
         __DIR__ . '/tests',
     ])

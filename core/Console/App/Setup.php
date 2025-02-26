@@ -56,10 +56,6 @@ class Setup extends Command
 
         Config::saveEnv($config);
 
-        if (! Storage::path(config('storage.lang'))->isFile(config('app.lang'))) {
-            Storage::path(config('storage.lang'))->copyFile('en.php', config('app.lang') . '.php');
-        }
-
         $output->writeln('<info>[INFO] Application has been set up. You need to restart server to apply changes.</info>');
 
         return Command::SUCCESS;

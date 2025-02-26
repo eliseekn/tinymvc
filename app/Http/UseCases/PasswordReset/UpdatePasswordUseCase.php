@@ -15,11 +15,11 @@ class UpdatePasswordUseCase extends UseCase
         $user = $updateUseCase->handle(['password' => $data['password']], $data['email']);
 
         if (! $user) {
-            Alert::default(__('password_not_reset'))->error();
+            Alert::default(__('alert.password_not_reset'))->error();
             $this->response->back()->send();
         }
 
-        Alert::default(__('password_reset'))->success();
+        Alert::default(__('alert.password_reset'))->success();
         $this->response->url('/login')->send();
     }
 }

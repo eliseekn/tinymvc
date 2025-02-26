@@ -38,15 +38,15 @@ class NotifyUseCase extends UseCase
 
         try {
             Notification::send(new VerificationMail($email, $tokenValue))->to($email);
-            Alert::default(__('password_reset_link_sent'))->success();
+            Alert::default(__('alert.password_reset_link_sent'))->success();
         } catch (Exception $e) {
             report($e);
             $token->delete();
-            Alert::default(__('email_verification_link_not_sent'))->error();
+            Alert::default(__('alert.email_verification_link_not_sent'))->error();
             $this->response->view('auth.signup');
         }
 
-        Alert::default(__('email_verification_link_sent'))->success();
+        Alert::default(__('alert.email_verification_link_sent'))->success();
         $this->response->view('auth.login');
     }
 }

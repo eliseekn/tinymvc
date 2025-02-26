@@ -24,11 +24,11 @@ class CheckUserAdmin
             if ($request->isJson()) {
                 $response->json([
                     'status' => ResponseStatus::ERROR,
-                    'message' => 'Forbidden',
+                    'message' => __('alert.forbidden'),
                 ])->send(HttpCode::FORBIDDEN);
             }
 
-            $response->data('Forbidden')->send(HttpCode::FORBIDDEN);
+            $response->data(__('alert.forbidden'))->send(HttpCode::FORBIDDEN);
         }
     }
 }

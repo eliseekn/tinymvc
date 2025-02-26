@@ -23,7 +23,7 @@
             }
 		</style>
 
-		<title>TinyMVC</title>
+		<title>{{ config('app.name') }}</title>
 	</head>
 
 	<body>
@@ -31,7 +31,7 @@
 			<tr>
 				<td align="center">
 					<table width="100%" cellpadding="0" cellspacing="0" role="presentation">
-						{% block header %}<h1>TinyMVC</h1>{% endblock %}
+						{% block header %}<h1>{{ config('app.name') }}</h1>{% endblock %}
 
 						<tr>
 							<td class="body" width="100%" cellpadding="0" cellspacing="0">
@@ -46,7 +46,7 @@
 						<tr>
                             <td align="center" class="footer">
                                 {% block footer %}
-                                <p>{{ config('app.name') }} © {{ date('Y') }}. {{ __('all_rights_reserved') }}</p>
+                                <p>{{ config('app.name') }} © {{ date('Y') }}. {{ __('email.all_rights_reserved') }}</p>
                                 {% endblock %}
                             </td>
                         </tr>

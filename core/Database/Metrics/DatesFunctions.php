@@ -108,7 +108,7 @@ trait DatesFunctions
             } elseif ($this->period === Period::DAY->value) {
                 $datum['label'] = carbon($this->year . '-' . $this->month . '-' . $datum['label'])->locale(config('app.lang'))->dayName;
             } elseif ($this->period === Period::WEEK->value) {
-                $datum['label'] = 'Week ' . $datum['label'];
+                $datum['label'] = __('date.week') . $datum['label'];
             } elseif ($this->period === Period::YEAR->value) {
                 $datum['label'] = intval($datum['label']);
             } else {

@@ -33,11 +33,11 @@ class NotifyUseCase extends UseCase
 
         try {
             Notification::send(new PasswordResetMail($email, $tokenValue))->to($email);
-            Alert::default(__('password_reset_link_sent'))->success();
+            Alert::default(__('alert.password_reset_link_sent'))->success();
         } catch (Exception $e) {
             report($e);
             $token->delete();
-            Alert::default(__('password_reset_link_not_sent'))->success();
+            Alert::default(__('alert.password_reset_link_not_sent'))->success();
         }
 
         $this->response->back()->send();

@@ -26,7 +26,7 @@ class WelcomeMail extends Mail
             ->mailer
             ->from(config('mailer.sender.email'), config('mailer.sender.name'))
             ->replyTo(config('mailer.sender.email'), config('mailer.sender.name'))
-            ->subject(__('welcome_mail_subject'))
+            ->subject(__('email.welcome_subject'))
             ->html('emails.welcome', ['name' => $this->name])
             ->send();
     }
