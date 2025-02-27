@@ -63,6 +63,12 @@ class Auth
     public static function checkToken(string $token, &$user): bool
     {
         $token = Token::findByValue($token);
+
+        if ($token === false) {
+            $user = null;
+            return false;
+        }
+
         $user = User::findByEmail($token->get('email'));
 
         return $user !== false;

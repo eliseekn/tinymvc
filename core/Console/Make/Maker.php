@@ -224,28 +224,43 @@ class Maker
         return Storage::path(config('storage.exceptions'))->writeFile($class . '.php', $data);
     }
 
-    public static function createTest(string $test, bool $unit_test, ?string $namespace = null): bool
+    public static function createTest(string $test, ?string $namespace = null): bool
     {
         list(, $class) = self::generateClass($test, 'test', true);
 
-        if ($unit_test) {
-            $data = self::stubs()->addPath('tests')->readFile('UnitTest.stub');
-        } else {
-            $data = self::stubs()->addPath('tests')->readFile('FeatureTest.stub');
-        }
-
+        $data = self::stubs()->addPath('tests')->readFile('FeatureTest.stub');
         $data = str_replace('CLASSNAME', $class, $data);
-        $data = str_replace('\NAMESPACE', '\\' . $namespace ?? '', $data);
+        $data = self::addNamespace($data, 'Tests\Feature', $namespace);
 
-        $storage = Storage::path(config('storage.tests'));
+        return Storage::path(config('storage.tests'))
+            ->addPath('Feature')->addPath($namespace ?? '')
+            ->writeFile($class . '.php', $data);
+    }
 
-        if ($unit_test) {
-            $storage = $storage->addPath('Unit')->addPath($namespace ?? '');
-        } else {
-            $storage = $storage->addPath('Feature')->addPath($namespace ?? '');
-        }
+    public static function createUnitTest(string $test, ?string $namespace = null): bool
+    {
+        list(, $class) = self::generateClass($test, 'test', true);
 
-        return $storage->writeFile($class . '.php', $data);
+        $data = self::stubs()->addPath('tests')->readFile('UnitTest.stub');
+        $data = str_replace('CLASSNAME', $class, $data);
+        $data = self::addNamespace($data, 'Tests\Unit', $namespace);
+
+        return Storage::path(config('storage.tests'))
+            ->addPath('Unit')->addPath($namespace ?? '')
+            ->writeFile($class . '.php', $data);
+    }
+
+    public static function createBrowserTest(string $test, ?string $namespace = null): bool
+    {
+        list(, $class) = self::generateClass($test, 'test', true);
+
+        $data = self::stubs()->addPath('tests')->readFile('BrowserTest.stub');
+        $data = str_replace('CLASSNAME', $class, $data);
+        $data = self::addNamespace($data, 'Tests\Browser', $namespace);
+
+        return Storage::path(config('storage.tests'))
+            ->addPath('Browser')->addPath($namespace ?? '')
+            ->writeFile($class . '.php', $data);
     }
 
     public static function createValidator(string $validator, ?string $namespace = null): bool

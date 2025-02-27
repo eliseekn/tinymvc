@@ -8,7 +8,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\NAMESPACE;
+namespace NAMESPACE;
 
 use Core\Testing\FeatureTestCase;
 use Core\Testing\RefreshDatabase;

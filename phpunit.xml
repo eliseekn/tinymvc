@@ -26,4 +26,8 @@
             <html outputDirectory="./storage/coverage-report" lowUpperBound="50" highLowerBound="90"/>
         </report>
     </coverage>
+
+    <extensions>
+        <extension class="Symfony\Component\Panther\ServerExtension"/>
+    </extensions>
 </phpunit>

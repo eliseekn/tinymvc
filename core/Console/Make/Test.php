@@ -25,9 +25,10 @@ class Test extends Command
 
     protected function configure(): void
     {
-        $this->setDescription('Create new PHPUnit test case');
+        $this->setDescription('Create new test case');
         $this->addArgument('test', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'The name of test (separated by space if many)');
         $this->addOption('unit', 'u', InputOption::VALUE_NONE, 'Setup for unit test');
+        $this->addOption('browser', 'b', InputOption::VALUE_NONE, 'Setup for browser test');
         $this->addOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Specify namespace');
     }
 
@@ -38,7 +39,15 @@ class Test extends Command
         foreach ($tests as $test) {
             list(, $class) = Maker::generateClass($test, 'test', true);
 
-            if (! Maker::createTest($test, $input->getOption('unit'), $input->getOption('namespace'))) {
+            if ($input->getOption('unit')) {
+                $result = Maker::createUnitTest($test, $input->getOption('namespace'));
+            } else if ($input->getOption('browser')) {
+                $result = Maker::createBrowserTest($test, $input->getOption('namespace'));
+            } else {
+                $result = Maker::createTest($test, $input->getOption('namespace'));
+            }
+
+            if (! $result) {
                 $output->writeln('<error>[ERROR] Failed to create test "' . $class . '"</error>');
             } else {
                 $output->writeln('<info>[INFO] Test "' . $class . '" has been created</info>');

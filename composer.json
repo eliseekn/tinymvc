@@ -45,6 +45,9 @@
         "filp/whoops": "^2.12",
         "fakerphp/faker": "^1.15",
         "phpstan/phpstan": "2.0.x-dev",
-        "friendsofphp/php-cs-fixer": "dev-master"
+        "friendsofphp/php-cs-fixer": "dev-master",
+        "symfony/panther": "^1.0",
+        "symfony/finder": "7.3.x-dev",
+        "symfony/test-pack": "v1.1.0"
     }
 }
