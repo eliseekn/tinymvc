@@ -11,9 +11,9 @@ declare(strict_types=1);
 namespace Core\Testing;
 
 use Core\Enums\HttpMethod;
+use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\DomCrawler\Crawler;
 use Symfony\Component\Panther\PantherTestCase;
-use Symfony\Component\Panther\Client;
 
 /**
  * Manage browser tests.

@@ -41,7 +41,7 @@ class Test extends Command
 
             if ($input->getOption('unit')) {
                 $result = Maker::createUnitTest($test, $input->getOption('namespace'));
-            } else if ($input->getOption('browser')) {
+            } elseif ($input->getOption('browser')) {
                 $result = Maker::createBrowserTest($test, $input->getOption('namespace'));
             } else {
                 $result = Maker::createTest($test, $input->getOption('namespace'));
