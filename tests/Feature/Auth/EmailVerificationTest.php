@@ -22,9 +22,9 @@ class EmailVerificationTest extends FeatureTestCase
 
     protected function tearDown(): void
     {
-        $this->refreshDatabase();
-
         parent::tearDown();
+
+        $this->refreshDatabase();
     }
 
     public function test_can_verify_email(): void

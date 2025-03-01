@@ -13,7 +13,7 @@ namespace Core\Testing;
 use Symfony\Component\Process\Process;
 
 /**
- * Automatically refresh database.
+ * Automatically reset migrations database.
  */
 trait RefreshDatabase
 {

@@ -21,5 +21,9 @@ return [
     'host' => '127.0.0.1',
     'port' => 8889,
 
-    'browser' => \Symfony\Component\Panther\PantherTestCase::FIREFOX, //browser testing
+    'browser' => [
+        \Symfony\Component\Panther\PantherTestCase::FIREFOX, //browser name
+        'headless' => true,
+        'screenshots_dir' => config('storage.tmp')
+    ]
 ];

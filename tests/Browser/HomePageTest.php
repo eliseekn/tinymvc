@@ -18,6 +18,8 @@ class HomePageTest extends BrowserTestCase
     {
         $this
             ->visit('/')
-            ->assertPageTitleEquals('TinyMVC | PHP framework based on MVC architecture');
+            ->assertPageTitleSame('TinyMVC | PHP framework based on MVC architecture')
+            ->assertSelectorTextContains('h1', 'TinyMVC')
+            ->assertSelectorTextContains('a[href="https://github.com/eliseekn/tinymvc"]', 'Github');
     }
 }

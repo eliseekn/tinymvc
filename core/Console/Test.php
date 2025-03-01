@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
+ * @license MIT (https://opensource.org/licenses/MIT)
+ * @link https://github.com/eliseekn/tinymvc
+ */
+
 declare(strict_types=1);
 
 namespace Core\Console;
@@ -33,10 +39,6 @@ class Test extends Command
             return Command::FAILURE;
         }
 
-        $this->getApplication()->find('db:create')->run(new ArrayInput([]), $output);
-        $this->getApplication()->find('migrations:reset')->run(new ArrayInput([]), $output);
-        $this->getApplication()->find('db:seed')->run(new ArrayInput([]), $output);
-
         $server = new Process(['php', '-S', config('tests.host') . ':' . config('tests.port')]);
         $server->setTimeout(null);
         $server->start();
@@ -55,7 +57,10 @@ class Test extends Command
             $args = array_merge($args, ['--filter=' . $input->getArgument('filter')]);
         }
 
-        $phpunit = new Process($args);
+        $phpunit = new Process($args, null, [
+            'PANTHER_NO_HEADLESS' => ! config('tests.browser.headless') ? '1' : '0',
+            'PANTHER_ERROR_SCREENSHOT_DIR' => config('tests.browser.screenshots_dir') . DIRECTORY_SEPARATOR . uniqid('test_', true),
+        ]);
         $phpunit->setTimeout(null);
         $phpunit->start();
         $phpunit->wait(function ($type, $buffer) { echo $buffer; });

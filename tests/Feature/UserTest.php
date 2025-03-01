@@ -20,9 +20,9 @@ class UserTest extends FeatureTestCase
 
     protected function tearDown(): void
     {
-        $this->refreshDatabase();
-
         parent::tearDown();
+
+        $this->refreshDatabase();
     }
 
     public function test_can_update_profile(): void
@@ -32,10 +32,11 @@ class UserTest extends FeatureTestCase
         $this
             ->auth($user)
             ->patch('/dashboard/profile', [
-                'avatar' => $this->createFileUpload('avatar.jpg'),
+                'avatar' => $this->file(storage(config('storage.tmp'))->file('avatar.jpg')),
             ])
             ->assertStatusFound()
-            ->assertIsFile(storage(config('storage.uploads'))->file('avatar.jpg'))
             ->assertDatabaseHas('users', ['avatar' => User::find($user->getId())->get('avatar')]);
+
+        $this->assertFileExists(storage(config('storage.uploads'))->file('avatar.jpg'));
     }
 }

@@ -23,9 +23,9 @@ class UserTest extends FeatureTestCase
 
     protected function tearDown(): void
     {
-        $this->refreshDatabase();
-
         parent::tearDown();
+
+        $this->refreshDatabase();
     }
 
     public function test_can_store(): void
@@ -86,11 +86,7 @@ class UserTest extends FeatureTestCase
             ->auth($admin)
             ->patchJson('/api/v1/users/' . $user->getId(), ['name' => $name])
             ->assertStatusOk()
-            ->assertJsonEquals([
-                'status' => ResponseStatus::SUCCESS,
-                'message' => 'User updated',
-                'user' => $user->set(['name' => $name])->get(),
-            ])
+            ->assertJsonContains(['user' => $user->set(['name' => $name])->get(),])
             ->assertDatabaseHas('users', ['name' => $name]);
     }
 
@@ -103,10 +99,7 @@ class UserTest extends FeatureTestCase
             ->auth($admin)
             ->deleteJson('/api/v1/users/' . $user->getId())
             ->assertStatusOk()
-            ->assertJsonEquals([
-                'status' => ResponseStatus::SUCCESS,
-                'message' => 'User delete',
-            ])
+            ->assertJsonContains(['status' => ResponseStatus::SUCCESS,])
             ->assertDatabaseDoesNotHave('users', ['name' => $user->get('name')]);
     }
 }

@@ -23,9 +23,9 @@ class PasswordForgotTest extends FeatureTestCase
 
     protected function tearDown(): void
     {
-        $this->refreshDatabase();
-
         parent::tearDown();
+
+        $this->refreshDatabase();
     }
 
     public function test_can_reset_password(): void

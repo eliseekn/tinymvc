@@ -20,9 +20,9 @@ class AuthenticationTest extends FeatureTestCase
 
     protected function tearDown(): void
     {
-        $this->refreshDatabase();
-
         parent::tearDown();
+
+        $this->refreshDatabase();
     }
 
     public function test_unregistered_user_can_not_authenticate(): void

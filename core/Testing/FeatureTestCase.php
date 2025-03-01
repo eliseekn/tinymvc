@@ -32,10 +32,10 @@ abstract class FeatureTestCase extends TestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
+
         $this->token = '';
         $this->headers = [];
-
-        parent::setUp();
     }
 
     protected function url(string $uri): string
@@ -93,9 +93,9 @@ abstract class FeatureTestCase extends TestCase
         return $this;
     }
 
-    public function createFileUpload(string $filename, ?string $mime_type = null, ?string $name = null): CURLFile
+    public function file(string $filename, ?string $mime_type = null, ?string $name = null): CURLFile
     {
-        return new CURLFile(storage(config('storage.tmp'))->file($filename), $mime_type, $name);
+        return new CURLFile($filename, $mime_type, $name);
     }
 
     public function get(string $uri, array $headers = []): self
@@ -224,20 +224,6 @@ abstract class FeatureTestCase extends TestCase
         return $this;
     }
 
-    public function assertJsonEquals(array $expected): self
-    {
-        $this->assertJsonStringEqualsJsonString(json_encode($expected), $this->getBody());
-
-        return $this;
-    }
-
-    public function assertJsonDoesNotEquals(array $expected): self
-    {
-        $this->assertJsonStringNotEqualsJsonString(json_encode($expected), $this->getBody());
-
-        return $this;
-    }
-
     public function assertJsonContains(array $expected): self
     {
         foreach ($expected as $key => $value) {
@@ -258,20 +244,6 @@ abstract class FeatureTestCase extends TestCase
     public function assertNotRedirectedToUrl(string $expected): self
     {
         $this->assertNotEquals(url($expected), $this->getHeaders('location'));
-
-        return $this;
-    }
-
-    public function assertView(string $view): self
-    {
-        $this->assertEquals($this->getBody(), view($view));
-
-        return $this;
-    }
-
-    public function assertNotView(string $view): self
-    {
-        $this->assertNotEquals($this->getBody(), view($view));
 
         return $this;
     }
@@ -338,20 +310,6 @@ abstract class FeatureTestCase extends TestCase
     public function assertSessionDoesNotHaveErrors(): self
     {
         $this->assertTrue(empty($this->getSession()[$this->sessionKey('errors')]));
-
-        return $this;
-    }
-
-    public function assertIsFile(string $expected): self
-    {
-        $this->assertFileExists($expected);
-
-        return $this;
-    }
-
-    public function assertIsNotFile(string $expected): self
-    {
-        $this->assertFileDoesNotExist($expected);
 
         return $this;
     }

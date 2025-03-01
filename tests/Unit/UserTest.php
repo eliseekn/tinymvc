@@ -12,11 +12,12 @@ namespace Tests\Unit;
 
 use App\Database\Models\User;
 use App\Enums\UserRole;
+use Core\Database\Model;
 use PHPUnit\Framework\TestCase;
 
 class UserTest extends TestCase
 {
-    public function test_user_data_is_valide(): void
+    public function test_user_instance(): void
     {
         $data = [
             'name' => faker()->name(),
@@ -29,6 +30,7 @@ class UserTest extends TestCase
 
         $user = User::factory()->make($data);
 
+        $this->assertInstanceOf(Model::class, $user);
         $this->assertEquals($data, $user->get());
     }
 }
