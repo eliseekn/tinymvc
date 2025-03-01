@@ -86,7 +86,7 @@ class UserTest extends FeatureTestCase
             ->auth($admin)
             ->patchJson('/api/v1/users/' . $user->getId(), ['name' => $name])
             ->assertStatusOk()
-            ->assertJsonContains(['user' => $user->set(['name' => $name])->get(),])
+            ->assertJsonContains(['user' => $user->set(['name' => $name])->get()])
             ->assertDatabaseHas('users', ['name' => $name]);
     }
 
@@ -99,7 +99,7 @@ class UserTest extends FeatureTestCase
             ->auth($admin)
             ->deleteJson('/api/v1/users/' . $user->getId())
             ->assertStatusOk()
-            ->assertJsonContains(['status' => ResponseStatus::SUCCESS,])
+            ->assertJsonContains(['status' => ResponseStatus::SUCCESS])
             ->assertDatabaseDoesNotHave('users', ['name' => $user->get('name')]);
     }
 }

@@ -24,6 +24,6 @@ return [
     'browser' => [
         \Symfony\Component\Panther\PantherTestCase::FIREFOX, //browser name
         'headless' => true,
-        'screenshots_dir' => config('storage.tmp')
-    ]
+        'screenshots_dir' => config('storage.tmp'),
+    ],
 ];

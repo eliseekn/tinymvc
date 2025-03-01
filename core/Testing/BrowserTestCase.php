@@ -37,7 +37,7 @@ abstract class BrowserTestCase extends TestCase
 
         $this->client = static::createPantherClient([
             'browser' => config('tests.browser'),
-            'external_base_uri' => 'http://' . config('tests.host') . ':' . config('tests.port')
+            'external_base_uri' => 'http://' . config('tests.host') . ':' . config('tests.port'),
         ]);
     }
 
