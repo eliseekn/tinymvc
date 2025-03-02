@@ -50,7 +50,7 @@ abstract class BrowserTestCase extends TestCase
 
     public function takeScreenshot(): self
     {
-        $saveAs = storage(config('tests.browser.screenshots_folder'))
+        $saveAs = storage(config('tests.browser.screenshots_dir'))
             ->file(uniqid('screenshot_', true) . '.png');
 
         $this->client->takeScreenshot($saveAs);

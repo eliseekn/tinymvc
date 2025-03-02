@@ -58,7 +58,7 @@ class Test extends Command
 
         $phpunit = new Process($args, null, [
             'PANTHER_NO_HEADLESS' => ! config('tests.browser.headless') ? '1' : '0',
-            'PANTHER_ERROR_SCREENSHOT_DIR' => config('tests.browser.screenshots_dir') . DIRECTORY_SEPARATOR . uniqid('test_', true),
+            'PANTHER_ERROR_SCREENSHOT_DIR' => config('storage.browser.screenshots_dir'),
         ]);
         $phpunit->setTimeout(null);
         $phpunit->start();

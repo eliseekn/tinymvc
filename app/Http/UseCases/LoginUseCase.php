@@ -19,7 +19,7 @@ class LoginUseCase extends UseCase
     public function handle(array $data): void
     {
         if (Auth::attempt($this->response, $this->request, $user)) {
-            Alert::toast(__('welcome', ['name' => $user->get('name')]))->success();
+            Alert::toast(__('alert.welcome', ['name' => $user->get('name')]))->success();
             $this->response->url('/dashboard')->send();
         }
 

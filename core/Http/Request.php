@@ -41,7 +41,7 @@ class Request
         return $this->headers('HTTP_HOST', '');
     }
 
-    public function queries(?string $key = null, $default = null): array|string|int|bool
+    public function queries(?string $key = null, $default = null): array|string|int|bool|null
     {
         $result = $_GET;
 
@@ -58,7 +58,7 @@ class Request
         return empty($result[$key]) ? $default : $result[$key];
     }
 
-    public function inputs(?string $key = null, $default = null): array|string|int|bool
+    public function inputs(?string $key = null, $default = null): array|string|int|null
     {
         $result = array_merge($_POST, $this->raw());
 

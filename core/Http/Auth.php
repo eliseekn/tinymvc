@@ -104,11 +104,15 @@ class Auth
 
     public static function check(Request $request): bool
     {
+        if (session()->has('user')) {
+            return true;
+        }
+
         if ($request->isJson() || config('app.env') === 'test') {
             return self::checkToken(self::getToken($request), $user);
         }
 
-        return session()->has('user');
+        return false;
     }
 
     public static function remember(): bool

@@ -76,10 +76,10 @@ class Config
 
     public static function readTranslations(string $expression, array $data = []): string
     {
-        list($file, $expression) = explode('.', $expression);
+        $expression = explode('.', $expression, 2);
 
-        $translations = require absolute_path('resources.translations') . config('app.lang') . DIRECTORY_SEPARATOR . $file . '.php';
-        $translated = $translations[$expression];
+        $translations = require absolute_path('resources.translations') . config('app.lang') . DIRECTORY_SEPARATOR . $expression[0] . '.php';
+        $translated = $translations[$expression[1]];
 
         foreach ($data as $key => $value) {
             $translated = str_replace('{' . $key . '}', $value, $translated);
