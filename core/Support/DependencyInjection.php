@@ -83,8 +83,10 @@ class DependencyInjection
             $dependency = $parameter->getType();
 
             if (! is_null($dependency)) {
+                // @phpstan-ignore-next-line
                 $class = $dependency->getName();
 
+                // @phpstan-ignore-next-line
                 if (! $dependency->isBuiltin()) {
                     if (is_subclass_of($class, Validator::class)) {
                         $class = (new $class)->validate(new Request, new Response);

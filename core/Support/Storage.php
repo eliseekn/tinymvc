@@ -19,8 +19,39 @@ class Storage
 {
     protected static string $path = '';
 
+    public static function init(): void
+    {
+        $storage = Storage::path(absolute_path('storage'));
+
+        if (! $storage->isDir()) {
+            $storage->createDir();
+        }
+
+        if (! $storage->path(config('storage.logs'))->isDir()) {
+            $storage->createDir();
+        }
+
+        if (! $storage->path(config('storage.cache'))->isDir()) {
+            $storage->createDir();
+        }
+
+        if (! $storage->path(config('storage.sqlite'))->isDir()) {
+            $storage->createDir();
+        }
+
+        if (! $storage->path(config('storage.tmp'))->isDir()) {
+            $storage->createDir();
+        }
+
+        if (! $storage->path(config('storage.uploads'))->isDir()) {
+            $storage->createDir();
+        }
+    }
+
     /**
      * Set storage path.
+     *
+     * @phpstan-ignore-next-line
      */
     public static function path(string $path = APP_ROOT): self
     {

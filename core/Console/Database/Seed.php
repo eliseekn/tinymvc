@@ -37,6 +37,7 @@ class Seed extends Command
             $seeders = Discover::in(config('storage.seeders'))->classes()->get();
 
             foreach ($seeders as $seeder) {
+                // @phpstan-ignore-next-line
                 $seeder::run();
             }
 

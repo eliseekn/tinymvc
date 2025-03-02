@@ -14,6 +14,7 @@ class Notification
 
     public static function send(NotificationInterface $mail): self
     {
+        // @phpstan-ignore-next-line
         return new static($mail);
     }
 

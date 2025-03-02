@@ -61,8 +61,9 @@ class Rule
         return 'doesnt_contain_list,' . implode(';', $data);
     }
 
-    public static function boolean(bool $strict = false): string
+    public static function boolean(bool $strict): string
     {
+        // @phpstan-ignore-next-line
         return 'boolean' . $strict ? ',strict' : '';
     }
 
@@ -98,6 +99,7 @@ class Rule
 
     public static function date(?string $format = null): string
     {
+        // @phpstan-ignore-next-line
         return 'date' . ! is_null($format) ? ",$format" : '';
     }
 

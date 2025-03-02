@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Core\Http\Client;
 
 use Core\Enums\HttpMethod;
+use CURLFile;
 
 /**
  * Send asynchronous HTTP requests using curl.
@@ -32,6 +33,7 @@ class Curl implements ClientInterface
         $status_code = [];
         $curl_array = [];
         $curl_multi = curl_multi_init();
+        $errors = [];
 
         $url = parse_array($url);
 
@@ -102,16 +104,13 @@ class Curl implements ClientInterface
 
         do {
             curl_multi_exec($curl_multi, $i);
-
-            if (curl_multi_errno($curl_multi)) {
-                error_log(curl_error($curl_multi));
-            }
         } while ($i);
 
         //retrieves response
         foreach ($curl_array as $key => $curl) {
             $response[$key] = curl_multi_getcontent($curl);
             $status_code[$key] = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            $errors[$key] = curl_error($curl);
             curl_multi_remove_handle($curl_multi, $curl);
         }
 
@@ -120,6 +119,12 @@ class Curl implements ClientInterface
         self::$response['headers'] = $response_headers;
         self::$response['body'] = $response;
         self::$response['status_code'] = $status_code;
+
+        if (!empty($errors)) {
+            foreach ($errors as $error) {
+                error_log($error);
+            }
+        }
 
         return new self();
     }

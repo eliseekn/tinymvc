@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Core\Database\Connection;
 
+use PDO;
+use PDOException;
+use PDOStatement;
+
 class PostgreSQLConnection implements ConnectionInterface
 {
     protected PDO $pdo;

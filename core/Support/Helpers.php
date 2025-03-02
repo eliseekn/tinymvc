@@ -69,6 +69,7 @@ if (! function_exists('view')) {
 }
 
 if (! function_exists('storage')) {
+    // @phpstan-ignore-next-line
     function storage(string $path = APP_ROOT): Storage
     {
         return Storage::path($path);
@@ -329,6 +330,7 @@ if (! function_exists('absolute_path')) {
      */
     function absolute_path(string $path): string
     {
+        // @phpstan-ignore-next-line
         return APP_ROOT . real_path($path) . DIRECTORY_SEPARATOR;
     }
 }
@@ -453,33 +455,6 @@ if (! function_exists('faker')) {
     function faker()
     {
         return Factory::create(config('app.lang'));
-    }
-}
-
-if (! function_exists('init_storage')) {
-    function init_storage(): void
-    {
-        $storage = Storage::path(absolute_path('storage'));
-
-        if (! $storage->isDir()) {
-            $storage->createDir();
-        }
-
-        if (! $storage->path(config('storage.logs'))->isDir()) {
-            $storage->createDir();
-        }
-
-        if (! $storage->path(config('storage.cache'))->isDir()) {
-            $storage->createDir();
-        }
-
-        if (! $storage->path(config('storage.sqlite'))->isDir()) {
-            $storage->createDir();
-        }
-
-        if (! $storage->path(config('storage.tmp'))->isDir()) {
-            $storage->createDir();
-        }
     }
 }
 

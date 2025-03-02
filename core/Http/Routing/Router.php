@@ -49,7 +49,7 @@ class Router
         foreach ($middlewares as $middleware) {
             $middleware = config('middlewares.' . $middleware);
 
-            if (! class_exists($middleware) || ! method_exists($middleware, 'handle')) {
+            if (! class_exists($middleware) && ! method_exists($middleware, 'handle')) {
                 throw new MiddlewareNotFoundException($middleware);
             }
 
@@ -57,17 +57,21 @@ class Router
         }
     }
 
-    protected static function executeHandler(Closure|array|string $handler, array $params): mixed
+    protected static function executeHandler(Closure|array|string $handler, array $params): void
     {
         if ($handler instanceof Closure) {
-            return (new DependencyInjection)->resolveClosure($handler, $params);
+            (new DependencyInjection)->resolveClosure($handler, $params);
+
+            return;
         }
 
         if (is_array($handler)) {
             list($controller, $action) = $handler;
 
             if (class_exists($controller) && method_exists($controller, $action)) {
-                return (new DependencyInjection)->resolve($controller, $action, $params);
+                (new DependencyInjection)->resolve($controller, $action, $params);
+
+                return;
             }
 
             throw new ControllerNotFoundException("$controller/$action");
@@ -75,12 +79,15 @@ class Router
 
         if (is_string($handler)) {
             if (class_exists($handler)) {
-                return (new DependencyInjection)->resolve($handler, '__invoke', $params);
+                (new DependencyInjection)->resolve($handler, '__invoke', $params);
+
+                return;
             }
 
             throw new ControllerNotFoundException($handler);
         }
 
+        // @phpstan-ignore-next-line
         throw new InvalidRouteHandlerException();
     }
 

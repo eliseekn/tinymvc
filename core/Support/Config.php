@@ -31,16 +31,16 @@ class Config
             putenv($data);
         }
 
-        return Storage::path()->writeFile('.env', $data);
+        return storage()->writeFile('.env', $data);
     }
 
     public static function loadEnv(): void
     {
-        if (! Storage::path()->isFile('.env')) {
+        if (! storage()->isFile('.env')) {
             throw new Exception('Copy ".env.example" file to ".env" then edit it or run "php console app:setup" console command to setup application');
         }
 
-        $lines = file(Storage::path()->file('.env'), FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        $lines = file(storage()->file('.env'), FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
         foreach ($lines as $line) {
             if (strpos(trim($line), '#')) {

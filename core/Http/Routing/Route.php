@@ -30,6 +30,10 @@ class Route
 
     public static array $routes = [];
 
+    public function __construct()
+    {
+    }
+
     private static function add(string $route, Closure|array|string $handler): self
     {
         static::$route = self::format($route);
@@ -123,6 +127,7 @@ class Route
     {
         call_user_func($callback);
 
+        // @phpstan-ignore-next-line
         return new static();
     }
 

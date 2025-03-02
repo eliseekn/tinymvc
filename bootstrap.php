@@ -15,6 +15,8 @@ use Core\Support\Storage;
  * Application initialization
  */
 
+const APP_ROOT = __DIR__ . DIRECTORY_SEPARATOR;
+
 set_time_limit(0);
 
 set_exception_handler(function ($e) {
@@ -28,9 +30,7 @@ set_exception_handler(function ($e) {
     );
 });
 
-const APP_ROOT = __DIR__ . DIRECTORY_SEPARATOR;
-
-init_storage();
+Storage::init();
 Config::loadEnv();
 
 if (config('errors.display')) {
@@ -42,7 +42,7 @@ if (config('errors.display')) {
 
 if (config('errors.log')) {
     ini_set('log_errors', 1);
-    ini_set('error_log', Storage::path(config('storage.logs'))->file('tinymvc_' . date('m_d_y') . '.log'));
+    ini_set('error_log', storage(config('storage.logs'))->file('tinymvc_' . date('m_d_y') . '.log'));
 } else {
     ini_set('log_errors', 0);
 }

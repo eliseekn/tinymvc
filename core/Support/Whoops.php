@@ -30,6 +30,7 @@ class Whoops
     {
         $run = new Run();
         $handler = new PrettyPageHandler();
+        // @phpstan-ignore-next-line
         $handler->setApplicationPaths([APP_ROOT]);
         $run->pushHandler($handler);
         $run->register();

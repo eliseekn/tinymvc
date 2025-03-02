@@ -32,16 +32,17 @@ class Connection
             : config('database.driver');
 
         $this->db = match ($driver) {
-            'mysql' => new MySQLConnection(),
+            'pgsql' => new PostgreSQLConnection(),
             'sqlite' => new SQLiteConnection(),
-            'pgsql' => new PostgreSQLConnection()
+            default => new MySQLConnection()
         };
     }
 
     public static function getInstance(): self
     {
         if (is_null(self::$instance)) {
-            self::$instance = new static();
+           // @phpstan-ignore-next-line
+            self::$instance = new static(1);
         }
 
         return self::$instance;

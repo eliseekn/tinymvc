@@ -54,6 +54,7 @@ class DashboardController extends Controller
             'last_month' => $metrics->countFrom(carbon()->subMonth()->startOfMonth()->format('Y-m-d'))->metrics(),
             'year' => $metrics->countByYear(count: 5)->metrics(),
             'last_year' => $metrics->countFrom(carbon()->subYear()->startOfYear()->format('Y-m-d'))->metrics(),
+            default => 0
         };
     }
 
@@ -75,6 +76,7 @@ class DashboardController extends Controller
             'last_month' => $metrics->countFrom(carbon()->subMonth()->startOfMonth()->format('Y-m-d'))->trends(),
             'year' => $metrics->countByYear(count: 5)->trends(),
             'last_year' => $metrics->countFrom(carbon()->subYear()->startOfYear()->format('Y-m-d'))->trends(),
+            default => []
         };
     }
 
@@ -97,6 +99,7 @@ class DashboardController extends Controller
             'last_month' => $metrics->labelColumn('role')->countFrom(carbon()->subMonth()->startOfMonth()->format('Y-m-d'))->trends(true),
             'year' => $metrics->labelColumn('role')->countByYear(count: 5)->trends(true),
             'last_year' => $metrics->labelColumn('role')->countFrom(carbon()->subYear()->startOfYear()->format('Y-m-d'))->trends(true),
+            default => []
         };
     }
 }

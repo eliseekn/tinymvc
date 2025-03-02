@@ -81,6 +81,7 @@ abstract class BrowserTestCase extends TestCase
 
     public function assertSelectorExists(string $selector): self
     {
+        // @phpstan-ignore-next-line
         $this->assertNotEmpty($this->crawler->filter($selector));
 
         return $this;
@@ -88,6 +89,7 @@ abstract class BrowserTestCase extends TestCase
 
     public function assertSelectorNotExists(string $selector): self
     {
+        // @phpstan-ignore-next-line
         $this->assertEmpty($this->crawler->filter($selector));
 
         return $this;

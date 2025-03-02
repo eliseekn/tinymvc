@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace Core\Database\Connection;
 
-use Core\Support\Storage;
 use PDO;
 use PDOException;
 use PDOStatement;
@@ -83,7 +82,7 @@ class SQLiteConnection implements ConnectionInterface
 
     public function schemaExists(string $name): bool
     {
-        return config('database.sqlite.memory') || Storage::path(config('storage.sqlite'))->isFile($name);
+        return config('database.sqlite.memory') || storage(config('storage.sqlite'))->isFile($name);
     }
 
     public function tableExists(string $name): bool
@@ -95,14 +94,14 @@ class SQLiteConnection implements ConnectionInterface
     public function createSchema(string $name): void
     {
         if (! config('database.sqlite.memory')) {
-            Storage::path(config('storage.sqlite'))->writeFile($name . '.db', '');
+            storage(config('storage.sqlite'))->writeFile($name . '.db', '');
         }
     }
 
     public function deleteSchema(string $name): void
     {
         if (! config('database.sqlite.memory')) {
-            Storage::path(config('storage.sqlite'))->deleteFile($name . '.db');
+            storage(config('storage.sqlite'))->deleteFile($name . '.db');
         }
     }
 }
