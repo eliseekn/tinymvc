@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace Core;
 
-use Core\Events\Event;
+use Core\Event\Event;
 use Core\Http\Routing\Route;
 use Core\Http\Routing\Router;
 use Core\Support\Whoops;

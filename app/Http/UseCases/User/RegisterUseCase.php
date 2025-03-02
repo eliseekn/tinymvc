@@ -28,9 +28,9 @@ class RegisterUseCase extends UseCase
             $notifyUseCase->handle($user->get('email'));
         }
 
-        (new UserRegisteredEvent($user))->dispatch();
+        dispatch(new UserRegisteredEvent($user));
 
-        Alert::default(__('account_created'))->success();
+        Alert::default(__('alert.account_created'))->success();
         $this->response->view('auth.login')->send();
     }
 }

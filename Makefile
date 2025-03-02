@@ -1,7 +1,7 @@
 test:
-	php console app:env test
-	php console test
-	php console app:env local
+	@php console app:env test
+	@php console test
+	@php console app:env local
 
 dc-up:
 	docker-compose up
@@ -13,4 +13,7 @@ format:
 	./vendor/bin/php-cs-fixer fix --show-progress=dots .
 
 serve:
-	php console serve
+	@php console serve
+
+reset-db:
+	@php console migrations:reset --seed

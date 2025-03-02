@@ -11,13 +11,10 @@ declare(strict_types=1);
 namespace NAMESPACE;
 
 use Core\Events\Event;
+use Core\Events\EventInterface;
+use Core\Events\Dispatchable;
 
-class CLASSNAME
+class CLASSNAME implements EventInterface
 {
-    public function __construct(public Model $user) {}
-
-    public function dispatch(): void
-    {
-        Event::dispatch(self::class, $this);
-    }
+    public function __construct() {}
 }

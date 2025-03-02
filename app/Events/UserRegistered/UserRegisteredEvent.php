@@ -11,16 +11,14 @@ declare(strict_types=1);
 namespace App\Events\UserRegistered;
 
 use Core\Database\Model;
-use Core\Events\Event;
+use Core\Event\Dispatchable;
+use Core\Event\EventInterface;
 
-class UserRegisteredEvent
+class UserRegisteredEvent implements EventInterface
 {
+    use Dispatchable;
+
     public function __construct(public Model $user)
     {
-    }
-
-    public function dispatch(): void
-    {
-        Event::dispatch(self::class, $this);
     }
 }

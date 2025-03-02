@@ -111,16 +111,16 @@ class Uploader
         $this->filename = $filename ?? $this->getOriginalFilename();
 
         //create destination directory if not exists
-        if (! Storage::path($destination)->isDir()) {
-            if (! Storage::path($destination)->createDir('', true)) {
+        if (! storage($destination)->isDir()) {
+            if (! storage($destination)->createDir('', true)) {
                 return false;
             }
         }
 
         if (request()->method() === HttpMethod::POST) {
-            return move_uploaded_file($this->getTempFilename(), Storage::path($destination)->file($this->filename));
+            return move_uploaded_file($this->getTempFilename(), storage($destination)->file($this->filename));
         }
 
-        return rename($this->getTempFilename(), Storage::path($destination)->file($this->filename));
+        return rename($this->getTempFilename(), storage($destination)->file($this->filename));
     }
 }

@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 use Carbon\Carbon;
 use Core\Database\Model;
+use Core\Event\EventInterface;
 use Core\Http\Auth;
 use Core\Http\Cookies;
 use Core\Http\Request;
@@ -462,5 +463,14 @@ if (! function_exists('report')) {
     function report(Exception $e): void
     {
         error_log($e->getMessage());
+    }
+}
+
+if (! function_exists('dispatch')) {
+    function dispatch(object $event): void
+    {
+        if ($event instanceof EventInterface) {
+            $event->dispatch();
+        }
     }
 }
