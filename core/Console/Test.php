@@ -38,7 +38,7 @@ class Test extends Command
 
         Config::updateEnv([
             'APP_ENV' => AppEnv::TEST,
-            'APP_URL' => 'http://'. config('tests.host') . ':' . config('tests.port') . '/',
+            'APP_URL' => 'http://' . config('tests.host') . ':' . config('tests.port') . '/',
         ]);
 
         $server = new Process(['php', '-S', config('tests.host') . ':' . config('tests.port')]);
