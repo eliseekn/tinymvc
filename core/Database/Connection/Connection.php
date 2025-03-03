@@ -41,7 +41,7 @@ class Connection
     public static function getInstance(): self
     {
         if (is_null(self::$instance)) {
-           // @phpstan-ignore-next-line
+            // @phpstan-ignore-next-line
             self::$instance = new static(1);
         }
 

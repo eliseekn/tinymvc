@@ -43,9 +43,10 @@ class Config
         $lines = file(storage()->file('.env'), FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
         foreach ($lines as $line) {
-            if (strpos(trim($line), '#')) {
+            if (str_contains(trim($line), '#')) {
                 continue;
             }
+
             if (trim($line) === '') {
                 continue;
             }
@@ -53,6 +54,29 @@ class Config
             list($key, $value) = explode('=', trim($line), 2);
             putenv("$key=$value");
         }
+    }
+
+    public static function updateEnv(array $config): bool
+    {
+        if (empty($config)) {
+            return false;
+        }
+
+        $data = '';
+        $lines = file(storage()->file('.env'), FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
+        foreach ($lines as $line) {
+            list($key, $value) = explode('=', trim($line), 2);
+
+            if (array_key_exists($key, $config)) {
+                $value = trim($config[$key]);
+            }
+
+            $data .= "$key=$value\n";
+            putenv("$key=$value");
+        }
+
+        return storage()->writeFile('.env', $data);
     }
 
     public static function readEnv(string $key, $default = null): mixed

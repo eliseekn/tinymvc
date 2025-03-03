@@ -1,7 +1,5 @@
 test:
-	@php console app:env test
 	@php console test
-	@php console app:env local
 
 dc-up:
 	docker-compose up

@@ -120,7 +120,7 @@ class Curl implements ClientInterface
         self::$response['body'] = $response;
         self::$response['status_code'] = $status_code;
 
-        if (!empty($errors)) {
+        if (! empty($errors)) {
             foreach ($errors as $error) {
                 error_log($error);
             }

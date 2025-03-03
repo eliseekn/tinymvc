@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace Core\Console;
 
+use Core\Enums\AppEnv;
+use Core\Support\Config;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -32,11 +34,12 @@ class Test extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if (config('app.env') !== 'test') {
-            $output->writeln('<comment>[WARNING] You must set APP_ENV to test in application configuration</comment>');
+        $appUrl = config('app.url');
 
-            return Command::FAILURE;
-        }
+        Config::updateEnv([
+            'APP_ENV' => AppEnv::TEST,
+            'APP_URL' => 'http://'. config('tests.host') . ':' . config('tests.port') . '/',
+        ]);
 
         $server = new Process(['php', '-S', config('tests.host') . ':' . config('tests.port')]);
         $server->setTimeout(null);
@@ -58,13 +61,20 @@ class Test extends Command
 
         $phpunit = new Process($args, null, [
             'PANTHER_NO_HEADLESS' => ! config('tests.browser.headless') ? '1' : '0',
-            'PANTHER_ERROR_SCREENSHOT_DIR' => config('storage.browser.screenshots_dir'),
+            'PANTHER_ERROR_SCREENSHOT_DIR' => config('tests.browser.screenshots_dir'),
         ]);
         $phpunit->setTimeout(null);
         $phpunit->start();
-        $phpunit->wait(function ($type, $buffer) { echo $buffer; });
+        $phpunit->wait(function ($type, $buffer) use ($output) {
+            $output->write($buffer);
+        });
 
         $server->stop();
+
+        Config::updateEnv([
+            'APP_ENV' => AppEnv::LOCAL,
+            'APP_URL' => $appUrl,
+        ]);
 
         return Command::SUCCESS;
     }

@@ -22,7 +22,7 @@ return [
     'port' => 8889,
 
     'browser' => [
-        \Symfony\Component\Panther\PantherTestCase::FIREFOX, //browser name
+        \Symfony\Component\Panther\PantherTestCase::FIREFOX,
         'headless' => true,
         'screenshots_dir' => config('storage.tmp'),
     ],

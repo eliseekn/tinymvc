@@ -304,11 +304,7 @@ if (! function_exists('current_url')) {
 if (! function_exists('url_contains')) {
     function url_contains(string $str): bool
     {
-        if (! preg_match('/' . $str . '/', explode('//', current_url())[1])) {
-            return false;
-        }
-
-        return true;
+        return preg_match('/' . preg_quote($str, '/') . '/i', current_url()) === 1;
     }
 }
 
@@ -470,6 +466,7 @@ if (! function_exists('dispatch')) {
     function dispatch(object $event): void
     {
         if ($event instanceof EventInterface) {
+            // @phpstan-ignore-next-line
             $event->dispatch();
         }
     }

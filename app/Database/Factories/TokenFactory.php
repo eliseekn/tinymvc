@@ -26,7 +26,7 @@ class TokenFactory extends Factory
     public function data(): array
     {
         return [
-            'email' => faker()->unique()->email,
+            'email' => faker()->unique()->email(),
             'value' => generate_token(),
             'expires_at' => carbon()->addHour()->toDateTimeString(),
             'description' => TokenDescription::PASSWORD_RESET,

@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 return [
     'home' => '/',
-    'env' => env('APP_ENV', 'local'), //local, test or prod
+    'env' => env('APP_ENV', \Core\Enums\AppEnv::LOCAL),
     'name' => env('APP_NAME', 'TinyMVC'),
     'url' => env('APP_URL', 'http://127.0.0.1:8888/'),
     'lang' => env('APP_LANG', 'en'),
