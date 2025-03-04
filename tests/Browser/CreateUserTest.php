@@ -19,7 +19,7 @@ class CreateUserTest extends BrowserTestCase
     public function test_case_example(): void
     {
         $user = User::factory()->create([
-            'role' => UserRole::ADMIN->value
+            'role' => UserRole::ADMIN->value,
         ]);
 
         $this
