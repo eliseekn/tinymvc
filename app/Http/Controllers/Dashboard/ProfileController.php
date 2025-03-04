@@ -31,15 +31,17 @@ class ProfileController extends Controller
     #[Route(HttpMethod::PATCH, '/dashboard/profile', ['auth', 'verified'], 'dashboard.profile.update')]
     public function update(UpdateUseCase $useCase, UpdateProfileValidator $validator, FileUploadService $fileUploadService): void
     {
+        $data = $validator->inputs();
         $file = $this->request->files('avatar', ['png', 'jpg', 'jpeg']);
 
-        if (! $fileUploadService->handle($file, $filename)) {
+        if (! $file->isEmpty() && ! $fileUploadService->handle($file, $filename)) {
             Alert::toast('Failed to upload avatar image')->error();
-            $this->response->back()->send(HttpCode::INTERNAL_SERVER_ERROR);
+            $this->response->back()->send();
         }
 
-        $data = $validator->inputs();
-        $data['avatar'] = $filename;
+        if (isset($filename)) {
+            $data['avatar'] = $filename;
+        }
 
         $user = $useCase->handle($data, auth()->get('email'));
 

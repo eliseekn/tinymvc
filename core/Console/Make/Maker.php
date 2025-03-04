@@ -26,7 +26,7 @@ class Maker
         return Storage::path(config('storage.stubs'));
     }
 
-    private static function removeUnderscore(string $word): string
+    public static function removeUnderscore(string $word): string
     {
         if (str_contains($word, '_')) {
             $words = explode('_', $word);
@@ -195,7 +195,7 @@ class Maker
         $data = self::stubs()->addPath('events')->readFile('Listener.stub');
         $data = self::addNamespace($data, "App\Events\\" . $event);
         $data = str_replace('CLASSNAME', $listener, $data);
-        $data = str_replace('EVENT', $event, $data);
+        $data = str_replace('EVENT', $event . 'Event', $data);
 
         $storage = Storage::path(config('storage.events'));
         $storage = $storage->addPath($event);
@@ -306,7 +306,7 @@ class Maker
 
     public static function createMail(string $mail): bool
     {
-        list($name, $class) = self::generateClass($mail, 'mail');
+        list($name, $class) = self::generateClass($mail, 'mail', force_singular: true);
 
         $data = self::stubs()->readFile('Mail.stub');
         $data = str_replace('CLASSNAME', $class, $data);

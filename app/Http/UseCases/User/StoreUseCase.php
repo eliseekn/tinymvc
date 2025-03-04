@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Http\UseCases\User;
 
 use App\Database\Models\User;
+use App\Events\UserCreated\UserCreatedEvent;
 use Core\Enums\HttpCode;
 use Core\Support\Alert;
 use Core\Support\UseCase;
@@ -19,13 +20,18 @@ class StoreUseCase extends UseCase
 {
     public function handle(array $data): void
     {
-        $data['password'] = hash_pwd($data['password']);
+        $password = $data['password'];
+        $data['password'] = hash_pwd($password);
 
-        if (! User::factory()->create($data)) {
+        $user = User::factory()->create($data);
+
+        if (! $user) {
             Alert::toast('Failed to create user')->error();
         }
 
+        dispatch(new UserCreatedEvent($user, $password));
+
         Alert::toast('User created')->success();
-        $this->response->back()->send(HttpCode::CREATED);
+        $this->response->back()->send();
     }
 }

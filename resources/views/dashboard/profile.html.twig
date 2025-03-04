@@ -18,7 +18,7 @@
 
 		<div class="card-body">
 			<div class="mb-3">
-				<label for="name" class="form-label">{{ __('name') }}</label>
+				<label for="name" class="form-label">{{ __('form.name') }}</label>
 				<input type="text" class="form-control {{ errors.name ? 'is-invalid' }}" value="{{ inputs.name ?: auth().get('name') }}" aria-describedby="name-error" name="name" id="name" autofocus>
 
 				{% if errors.name is not empty %}
@@ -29,7 +29,7 @@
 			</div>
 
 			<div class="mb-3">
-				<label for="email" class="form-label">{{ __('email') }}</label>
+				<label for="email" class="form-label">{{ __('form.email') }}</label>
 				<input type="email" id="email" name="email" class="form-control {{ errors.email ? 'is-invalid' }}" value="{{ inputs.email ?: auth().get('email') }}" aria-describedby="email-error">
 
 				{% if errors.email is not empty %}
@@ -40,7 +40,7 @@
 			</div>
 
 			<div class="mb-3">
-				<label for="password" class="form-label">{{ __('new_password') }}</label>
+				<label for="password" class="form-label">{{ __('form.new_password') }}</label>
 
 				<div class="input-group">
 					<input type="password" id="password" name="password" class="form-control {{ errors.password ? 'is-invalid' }}" value="{{ inputs.password ?: '' }}" aria-describedby="password-error">
@@ -90,7 +90,7 @@
 
 		<div class="card-footer">
 			<button type="submit" class="btn btn-primary spinner">
-				{{ __('submit') }}
+				{{ __('form.submit') }}
 			</button>
 		</div>
 	</form>

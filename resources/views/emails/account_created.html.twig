@@ -1,0 +1,8 @@
+{% extends "layouts/email.html.twig" %}
+
+{% block content %}
+    <p>{{ __('email.hello') }},</p>
+    <p>Your account has been created successfully. Your password is: {{ password }}</p>
+    <p>Click the link below to login to your account:</p>
+    <p><a href="{{ url }}">{{ url }}</a></p>
+{% endblock %}

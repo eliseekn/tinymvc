@@ -32,12 +32,13 @@ class Listener extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $listener = $input->getArgument('listener');
+        $listener = Maker::removeUnderscore($listener);
         $event = $input->getArgument('event');
 
         if (! Maker::createListener($listener, $event)) {
-            $output->writeln('<error>[ERROR] Failed to create listener "' . $listener) . '"</error>';
+            $output->writeln('<error>[ERROR] Failed to create listener "' . $listener . '"</error>');
         } else {
-            $output->writeln('<info>[ERROR] Listener "' . $listener) . '" has been created</info>';
+            $output->writeln('<info>[INFO] Listener "' . $listener . '" has been created</info>');
         }
 
         return Command::SUCCESS;

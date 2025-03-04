@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Core\Support;
 
 use Core\Enums\HttpMethod;
+use Core\Enums\UploadFileError;
 
 /**
  * Manage uploaded files.
@@ -55,6 +56,11 @@ class Uploader
         return empty($this->allowed_extensions) || in_array(strtolower($this->getFileExtension()), $this->allowed_extensions);
     }
 
+    public function isEmpty(): bool
+    {
+        return $this->getError() === UploadFileError::UPLOAD_ERR_NO_FILE;
+    }
+
     public function isUploaded(): bool
     {
         if (request()->method() === HttpMethod::POST) {
@@ -89,20 +95,20 @@ class Uploader
 
     public function getError(): string
     {
-        if ($this->file['error'] !== UPLOAD_ERR_OK) {
-            return match ($this->file['error']) {
-                UPLOAD_ERR_INI_SIZE => 'Uploaded file exceeds the upload_max_filesize directive in php.ini',
-                UPLOAD_ERR_FORM_SIZE => 'Uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
-                UPLOAD_ERR_PARTIAL => 'Uploaded file was only partially uploaded.',
-                UPLOAD_ERR_NO_FILE => 'No file was uploaded',
-                UPLOAD_ERR_NO_TMP_DIR => 'Missing a temporary folder',
-                UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk',
-                8 => 'File upload stopped by extension',
-                default => 'Unknown error',
-            };
+        if ($this->file['error'] === UPLOAD_ERR_OK) {
+            return UploadFileError::UPLOAD_NO_ERR;
         }
 
-        return 'Unknown error';
+        return match ($this->file['error']) {
+            UPLOAD_ERR_INI_SIZE => UploadFileError::UPLOAD_ERR_INI_SIZE,
+            UPLOAD_ERR_FORM_SIZE => UploadFileError::UPLOAD_ERR_FORM_SIZE,
+            UPLOAD_ERR_PARTIAL => UploadFileError::UPLOAD_ERR_PARTIAL,
+            UPLOAD_ERR_NO_FILE => UploadFileError::UPLOAD_ERR_NO_FILE,
+            UPLOAD_ERR_NO_TMP_DIR => UploadFileError::UPLOAD_ERR_NO_TMP_DIR,
+            UPLOAD_ERR_CANT_WRITE => UploadFileError::UPLOAD_ERR_CANT_WRITE,
+            8 => UploadFileError::UPLOAD_ERR_STOPPED_EXT,
+            default => UploadFileError::UPLOAD_ERR_UNKNOWN,
+        };
     }
 
     public function save(?string $destination = null, ?string $filename = null): bool

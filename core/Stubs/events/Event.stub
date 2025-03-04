@@ -10,11 +10,12 @@ declare(strict_types=1);
 
 namespace NAMESPACE;
 
-use Core\Events\Event;
 use Core\Events\EventInterface;
 use Core\Events\Dispatchable;
 
 class CLASSNAME implements EventInterface
 {
+    use Dispatchable;
+
     public function __construct() {}
 }

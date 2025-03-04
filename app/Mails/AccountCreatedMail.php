@@ -13,9 +13,9 @@ namespace App\Mails;
 use Core\Notifications\Mail\Mail;
 use Core\Notifications\Mail\Mailer\Mailer;
 
-class CLASSNAME extends Mail
+class AccountCreatedMail extends Mail
 {
-    public function __construct()
+    public function __construct(public string $password, public string $url)
     {
         parent::__construct(new Mailer());
     }
@@ -26,8 +26,11 @@ class CLASSNAME extends Mail
             ->mailer
             ->from(config('mailer.sender.email'), config('mailer.sender.name'))
             ->replyTo(config('mailer.sender.email'), config('mailer.sender.name'))
-            ->subject('Subject')
-            ->html('emails.RESOURCE_NAME')
+            ->subject('Account created')
+            ->html('emails.account_created', [
+                'password' => $this->password,
+                'url' => $this->url,
+            ])
             ->send();
     }
 }

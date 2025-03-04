@@ -12,7 +12,7 @@ namespace App\Events\UserRegistered;
 
 use App\Mails\WelcomeMail;
 
-class SendWelcomeEmail
+class SendWelcomeNotification
 {
     public function __invoke(UserRegisteredEvent $event): void
     {
