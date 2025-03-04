@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Database\Models;
 
+use App\Enums\UserRole;
 use Core\Database\Factory\HasFactory;
 use Core\Database\Model;
 use Core\Support\Pagination;
@@ -38,9 +39,12 @@ class User extends Model
         return (new self)->findBy(config('security.auth.identifier'), $value);
     }
 
-    public static function all(): array|false
+    public static function admins(): array|false
     {
-        return (new self)->getAll('*');
+        return (new self)
+            ->select('email')
+            ->where('role', UserRole::ADMIN->value)
+            ->getAll();
     }
 
     public static function allPaginate($perPage, $page, ?string $search = null): Pagination

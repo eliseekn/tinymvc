@@ -42,7 +42,11 @@ class Router
 
     protected static function executeMiddlewares(Request $request, array $middlewares): void
     {
-        if (in_array(strtoupper($request->method()), [HttpMethod::POST, HttpMethod::PUT, HttpMethod::PUT])) {
+        if (in_array($request->uri(), config('security.csrf_excluded_uri'))) {
+            return;
+        }
+
+        if (in_array(strtoupper($request->method()), [HttpMethod::POST, HttpMethod::PATCH, HttpMethod::PUT])) {
             $middlewares = array_merge($middlewares, ['csrf']);
         }
 

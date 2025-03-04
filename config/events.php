@@ -15,6 +15,7 @@ declare(strict_types=1);
 return [
     \App\Events\UserRegistered\UserRegisteredEvent::class => [
         \App\Events\UserRegistered\SendWelcomeNotification::class,
+        \App\Events\UserRegistered\SendAdminNotification::class
     ],
 
     \App\Events\UserCreated\UserCreatedEvent::class => [

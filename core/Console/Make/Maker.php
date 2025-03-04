@@ -23,7 +23,7 @@ class Maker
      */
     private static function stubs(): Storage
     {
-        return Storage::path(config('storage.stubs'));
+        return storage(config('storage.stubs'));
     }
 
     public static function removeUnderscore(string $word): string
@@ -108,7 +108,7 @@ class Maker
         $data = self::addNamespace($data, 'App\Http\Controllers', $namespace);
         $data = str_replace('CLASSNAME', $class, $data);
 
-        $storage = Storage::path(config('storage.controllers'));
+        $storage = storage(config('storage.controllers'));
 
         if (! is_null($namespace)) {
             $storage = $storage->addPath(str_replace('\\', '/', $namespace));
@@ -126,7 +126,7 @@ class Maker
         $data = str_replace('CLASSNAME', self::fixPlural($class, true), $data);
         $data = str_replace('TABLE_NAME', $name, $data);
 
-        $storage = Storage::path(config('storage.models'));
+        $storage = storage(config('storage.models'));
 
         if (! is_null($namespace)) {
             $storage = $storage->addPath(str_replace('\\', '/', $namespace));
@@ -143,7 +143,7 @@ class Maker
         $data = str_replace('CLASSNAME', $class, $data);
         $data = str_replace('TABLE_NAME', $name, $data);
 
-        return Storage::path(config('storage.migrations'))->writeFile($class . '.php', $data);
+        return storage(config('storage.migrations'))->writeFile($class . '.php', $data);
     }
 
     public static function createSeeder(string $seeder): bool
@@ -154,7 +154,7 @@ class Maker
         $data = str_replace('CLASSNAME', self::fixPlural($class, true), $data);
         $data = str_replace('MODEL_NAME', self::fixPlural(ucfirst($name), true), $data);
 
-        return Storage::path(config('storage.seeders'))->writeFile(self::fixPlural($class, true) . '.php', $data);
+        return storage(config('storage.seeders'))->writeFile(self::fixPlural($class, true) . '.php', $data);
     }
 
     public static function createFactory(string $factory, ?string $namespace = null): bool
@@ -166,7 +166,7 @@ class Maker
         $data = str_replace('CLASSNAME', self::fixPlural($class, true), $data);
         $data = str_replace('MODEL_NAME', self::fixPlural(ucfirst($name), true), $data);
 
-        $storage = Storage::path(config('storage.factories'));
+        $storage = storage(config('storage.factories'));
 
         if (! is_null($namespace)) {
             $storage = $storage->addPath(str_replace('\\', '/', $namespace));
@@ -184,7 +184,7 @@ class Maker
         $data = self::addNamespace($data, "App\Events\\" . self::fixPlural($class, true));
         $data = str_replace('CLASSNAME', $className, $data);
 
-        $storage = Storage::path(config('storage.events'));
+        $storage = storage(config('storage.events'));
         $storage = $storage->addPath(self::fixPlural($class, true));
 
         return $storage->writeFile($className . '.php', $data);
@@ -197,7 +197,7 @@ class Maker
         $data = str_replace('CLASSNAME', $listener, $data);
         $data = str_replace('EVENT', $event . 'Event', $data);
 
-        $storage = Storage::path(config('storage.events'));
+        $storage = storage(config('storage.events'));
         $storage = $storage->addPath($event);
 
         return $storage->writeFile($listener . '.php', $data);
@@ -210,7 +210,7 @@ class Maker
         $data = self::stubs()->readFile('Helper.stub');
         $data = str_replace('CLASSNAME', $class, $data);
 
-        return Storage::path(config('storage.helpers'))->writeFile($class . '.php', $data);
+        return storage(config('storage.helpers'))->writeFile($class . '.php', $data);
     }
 
     public static function createException(string $exception, string $message): bool
@@ -221,7 +221,7 @@ class Maker
         $data = str_replace('CLASSNAME', $class, $data);
         $data = str_replace('MESSAGE', $message, $data);
 
-        return Storage::path(config('storage.exceptions'))->writeFile($class . '.php', $data);
+        return storage(config('storage.exceptions'))->writeFile($class . '.php', $data);
     }
 
     public static function createTest(string $test, ?string $namespace = null): bool
@@ -232,7 +232,7 @@ class Maker
         $data = str_replace('CLASSNAME', $class, $data);
         $data = self::addNamespace($data, 'Tests\Feature', $namespace);
 
-        return Storage::path(config('storage.tests'))
+        return storage(config('storage.tests'))
             ->addPath('Feature')->addPath($namespace ?? '')
             ->writeFile($class . '.php', $data);
     }
@@ -245,7 +245,7 @@ class Maker
         $data = str_replace('CLASSNAME', $class, $data);
         $data = self::addNamespace($data, 'Tests\Unit', $namespace);
 
-        return Storage::path(config('storage.tests'))
+        return storage(config('storage.tests'))
             ->addPath('Unit')->addPath($namespace ?? '')
             ->writeFile($class . '.php', $data);
     }
@@ -258,7 +258,7 @@ class Maker
         $data = str_replace('CLASSNAME', $class, $data);
         $data = self::addNamespace($data, 'Tests\Browser', $namespace);
 
-        return Storage::path(config('storage.tests'))
+        return storage(config('storage.tests'))
             ->addPath('Browser')->addPath($namespace ?? '')
             ->writeFile($class . '.php', $data);
     }
@@ -271,7 +271,7 @@ class Maker
         $data = self::addNamespace($data, 'App\Http\Validators', $namespace);
         $data = str_replace('CLASSNAME', $class, $data);
 
-        $storage = Storage::path(config('storage.validators'));
+        $storage = storage(config('storage.validators'));
 
         if (! is_null($namespace)) {
             $storage = $storage->addPath(str_replace('\\', '/', $namespace));
@@ -289,7 +289,7 @@ class Maker
         $data = str_replace('CLASSNAME', $class, $data);
         $data = str_replace('RULE_NAME', strtolower($name), $data);
 
-        $storage = Storage::path(config('storage.rules'));
+        $storage = storage(config('storage.rules'));
 
         return $storage->writeFile($class . '.php', $data);
     }
@@ -301,7 +301,7 @@ class Maker
         $data = self::stubs()->readFile('Middleware.stub');
         $data = str_replace('CLASSNAME', $class, $data);
 
-        return Storage::path(config('storage.middlewares'))->writeFile($class . '.php', $data);
+        return storage(config('storage.middlewares'))->writeFile($class . '.php', $data);
     }
 
     public static function createMail(string $mail): bool
@@ -312,13 +312,13 @@ class Maker
         $data = str_replace('CLASSNAME', $class, $data);
         $data = str_replace('RESOURCE_NAME', $name, $data);
 
-        if (! Storage::path(config('storage.mails'))->writeFile($class . '.php', $data)) {
+        if (! storage(config('storage.mails'))->writeFile($class . '.php', $data)) {
             return false;
         }
 
         $data = self::stubs()->addPath('views')->readFile('email.stub');
 
-        return Storage::path(config('storage.views'))
+        return storage(config('storage.views'))
             ->addPath('emails')
             ->writeFile($name . '.html.twig', $data);
     }
@@ -332,7 +332,7 @@ class Maker
         $data = str_replace('LAYOUT_NAME', '{% extends "layouts/' . $layout . '.html.twig" %}', $data);
         $data = is_null($view) ? $data : str_replace('RESOURCE_NAME', $view, $data);
 
-        $storage = Storage::path(config('storage.views'));
+        $storage = storage(config('storage.views'));
 
         $storage = is_null($view) && ! is_null($layout)
             ? $storage->addPath('layouts')
@@ -353,7 +353,7 @@ class Maker
         $data = str_replace('COMMAND_NAME', $command, $data);
         $data = str_replace('COMMAND_DESCRIPTION', $description, $data);
 
-        $storage = Storage::path(config('storage.console'));
+        $storage = storage(config('storage.console'));
 
         if (! is_null($namespace)) {
             $storage = $storage->addPath(str_replace('\\', '/', $namespace));
@@ -381,7 +381,7 @@ class Maker
         $data = str_replace('$MODEL_NAME', '$' . self::fixPlural($name, true), $data);
         $data = str_replace('MODEL_NAME', self::fixPlural(ucfirst($name), true), $data);
 
-        $storage = Storage::path(config('storage.useCases'));
+        $storage = storage(config('storage.useCases'));
         $storage = $storage->addPath(str_replace('\\', '/', $namespace));
 
         return $storage->writeFile($class . '.php', $data);
