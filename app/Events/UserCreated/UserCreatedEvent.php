@@ -11,12 +11,14 @@ declare(strict_types=1);
 namespace App\Events\UserCreated;
 
 use Core\Database\Model;
-use Core\Event\EventInterface;
 use Core\Event\Dispatchable;
+use Core\Event\EventInterface;
 
 class UserCreatedEvent implements EventInterface
 {
     use Dispatchable;
 
-    public function __construct(public Model $user, public string $password) {}
+    public function __construct(public Model $user, public string $password)
+    {
+    }
 }

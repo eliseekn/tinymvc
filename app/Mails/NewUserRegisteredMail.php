@@ -30,7 +30,7 @@ class NewUserRegisteredMail extends Mail
             ->subject('New user registered')
             ->html('emails.new_user_registered', [
                 'user' => $this->user,
-                'url' => $this->url
+                'url' => $this->url,
             ])
             ->send();
     }

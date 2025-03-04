@@ -13,7 +13,6 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Services\FileUploadService;
 use App\Http\UseCases\User\UpdateUseCase;
 use App\Http\Validators\UpdateProfileValidator;
-use Core\Enums\HttpCode;
 use Core\Enums\HttpMethod;
 use Core\Http\Routing\Attributes\Route;
 use Core\Http\Routing\Controller;

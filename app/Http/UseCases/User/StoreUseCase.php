@@ -12,7 +12,6 @@ namespace App\Http\UseCases\User;
 
 use App\Database\Models\User;
 use App\Events\UserCreated\UserCreatedEvent;
-use Core\Enums\HttpCode;
 use Core\Support\Alert;
 use Core\Support\UseCase;
 
