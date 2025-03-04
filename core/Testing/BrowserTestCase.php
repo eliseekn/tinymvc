@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Core\Testing;
 
 use Core\Enums\HttpMethod;
+use Core\Testing\Traits\DatabaseTestCaseTrait;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverDimension;
 use Facebook\WebDriver\WebDriverElement;
@@ -26,7 +27,7 @@ use Symfony\Component\Panther\PantherTestCaseTrait;
  */
 abstract class BrowserTestCase extends TestCase
 {
-    use PantherTestCaseTrait;
+    use PantherTestCaseTrait, DatabaseTestCaseTrait;
 
     public Client $client;
 

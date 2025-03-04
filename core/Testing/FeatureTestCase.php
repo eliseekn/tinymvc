@@ -11,11 +11,11 @@ declare(strict_types=1);
 namespace Core\Testing;
 
 use Core\Database\Model;
-use Core\Database\Repository;
 use Core\Enums\HttpAuthMethod;
 use Core\Enums\HttpCode;
 use Core\Http\Auth;
 use Core\Http\Client\Curl as Client;
+use Core\Testing\Traits\DatabaseTestCaseTrait;
 use CURLFile;
 use PHPUnit\Framework\TestCase;
 
@@ -24,6 +24,8 @@ use PHPUnit\Framework\TestCase;
  */
 abstract class FeatureTestCase extends TestCase
 {
+    use DatabaseTestCaseTrait;
+
     private Client $client;
 
     private array $headers;
@@ -244,22 +246,6 @@ abstract class FeatureTestCase extends TestCase
     public function assertNotRedirectedToUrl(string $expected): self
     {
         $this->assertNotEquals(url($expected), $this->getHeaders('location'));
-
-        return $this;
-    }
-
-    public function assertDatabaseHas(string $table, array $expected): self
-    {
-        $result = (new Repository($table))->findMany($expected, 'and')->exists();
-        $this->assertTrue($result);
-
-        return $this;
-    }
-
-    public function assertDatabaseDoesNotHave(string $table, array $expected): self
-    {
-        $result = (new Repository($table))->findMany($expected, 'and')->exists();
-        $this->assertFalse($result);
 
         return $this;
     }

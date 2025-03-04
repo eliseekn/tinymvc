@@ -13,10 +13,20 @@ namespace Tests\Browser;
 use App\Database\Models\User;
 use App\Enums\UserRole;
 use Core\Testing\BrowserTestCase;
+use Core\Testing\RefreshDatabase;
 
 class CreateUserTest extends BrowserTestCase
 {
-    public function test_case_example(): void
+    use RefreshDatabase;
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        $this->refreshDatabase();
+    }
+
+    public function test_can_store(): void
     {
         $user = User::factory()->create([
             'role' => UserRole::ADMIN->value,
@@ -52,20 +62,21 @@ class CreateUserTest extends BrowserTestCase
         $this->client->waitForElementToContain('h1', 'Create user');
         $this->crawler = $this->client->refreshCrawler();
 
+        $data = [
+            'name' => faker()->name(),
+            'email' => faker()->unique()->safeEmail(),
+            'role' => UserRole::USER->value,
+            'password' => 'password',
+        ];
+
         $this->client->submit(
-            $this->crawler
-                ->selectButton('Submit')
-                ->form([
-                    'name' => faker()->name(),
-                    'email' => faker()->unique()->safeEmail(),
-                    'role' => UserRole::USER->value,
-                    'password' => 'password',
-                ])
+            $this->crawler->selectButton('Submit')->form($data)
         );
 
         $this->client->waitForVisibility('.alert.alert-success');
         $this->crawler = $this->client->refreshCrawler();
 
         $this->assertEquals('User created', $this->crawler->filter('.alert.alert-success')->text());
+        $this->assertDatabaseHas('users', ['email' => $data['email']]);
     }
 }
