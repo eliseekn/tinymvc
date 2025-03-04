@@ -122,21 +122,21 @@ class Auth
 
     public static function user(Request $request): Model|false|null
     {
-        if ($request->isJson() || config('app.env') === 'test') {
-            if (! self::checkToken(self::getToken($request), $user)) {
+        if (session()->has('user')) {
+            $user = session()->get('user');
+
+            if (is_null($user)) {
                 return null;
             }
 
-            return $user;
+            return User::find($user['id']);
         }
 
-        $user = session()->get('user');
-
-        if (is_null($user)) {
+        if (! self::checkToken(self::getToken($request), $user)) {
             return null;
         }
 
-        return User::find($user['id']);
+        return $user;
     }
 
     public static function forget(): void
