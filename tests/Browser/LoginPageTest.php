@@ -34,7 +34,7 @@ class LoginPageTest extends BrowserTestCase
 
         $dashboard = __('app.dashboard');
 
-        $this->client->waitForElementToContain('h1', $dashboard, 5);
+        $this->client->waitForElementToContain('h1', $dashboard);
         $this->crawler = $this->client->refreshCrawler();
 
         $this->assertEquals($dashboard, $this->crawler->filter('h1')->text());

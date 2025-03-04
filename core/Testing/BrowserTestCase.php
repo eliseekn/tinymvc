@@ -12,6 +12,7 @@ namespace Core\Testing;
 
 use Core\Enums\HttpMethod;
 use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\WebDriverDimension;
 use Facebook\WebDriver\WebDriverElement;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Panther\Client;
@@ -39,6 +40,15 @@ abstract class BrowserTestCase extends TestCase
             'browser' => config('tests.browser'),
             'external_base_uri' => 'http://' . config('tests.host') . ':' . config('tests.port'),
         ]);
+
+        $this->client->manage()->window()->setSize(
+            new WebDriverDimension(1500, 2000)
+        );
+    }
+
+    public function url(string $uri): string
+    {
+        return 'http://' . config('tests.host') . ':' . config('tests.port') . '/' . ltrim($uri, '/');
     }
 
     public function visit(string $url, string $method = HttpMethod::GET): self
