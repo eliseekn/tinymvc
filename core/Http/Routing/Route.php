@@ -225,7 +225,7 @@ class Route
             '/\{([a-zA-Z-_]+):([^}]+)\}/i' => '$2',
             '/\balpha\b/' => '([a-zA-Z-_]+)',
             '/\bnum\b/' => '(\d+)',
-            '/\balphaNum\b/' => '([a-zA-Z0-9]+)',
+            '/\balphaNum\b/' => '([a-zA-Z0-9-_]+)',
             '/\bany\b/' => '([^/]+)',
         ];
 
