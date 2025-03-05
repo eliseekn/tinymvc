@@ -24,25 +24,25 @@ use Core\Http\Routing\Controller;
 
 class UserController extends Controller
 {
-    #[Route(HttpMethod::GET, 'api/v1/users', ['api'])]
+    #[Route(HttpMethod::GET, '/api/v1/users', ['api'])]
     public function index(GetCollectionUseCase $useCase): void
     {
         $useCase->handle($this->request->queries());
     }
 
-    #[Route(HttpMethod::GET, 'api/v1/users/{id:num}', ['api'])]
+    #[Route(HttpMethod::GET, '/api/v1/users/{id:num}', ['api'])]
     public function show(int $id): void
     {
         $this->jsonResponse(User::find($id)->get());
     }
 
-    #[Route(HttpMethod::POST, 'api/v1/users', ['api', 'admin'])]
+    #[Route(HttpMethod::POST, '/api/v1/users', ['api', 'admin'])]
     public function store(StoreUseCase $useCase, StoreValidator $validator): void
     {
         $useCase->handle($validator->inputs());
     }
 
-    #[Route(HttpMethod::PATCH, 'api/v1/users/{id:num}', ['api', 'admin'])]
+    #[Route(HttpMethod::PATCH, '/api/v1/users/{id:num}', ['api', 'admin'])]
     public function update(UpdateUseCase $useCase, UpdateValidator $validator, int $id): void
     {
         $user = User::find($id);
@@ -61,7 +61,7 @@ class UserController extends Controller
         ]);
     }
 
-    #[Route(HttpMethod::DELETE, 'api/v1/users/{id:num}', ['api', 'admin'])]
+    #[Route(HttpMethod::DELETE, '/api/v1/users/{id:num}', ['api', 'admin'])]
     public function delete(int $id): void
     {
         $user = User::find($id);
