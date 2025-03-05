@@ -125,6 +125,6 @@ class Router
             }
         }
 
-        $response->view(config('errors.views.404'))->send(404);
+        $response->view(config('errors.views.404'))->send();
     }
 }

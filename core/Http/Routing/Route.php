@@ -220,9 +220,9 @@ class Route
             }
         }
 
-        $uri = preg_replace('/{([a-zA-Z-_]+)}/i', 'any', $uri);
-        $uri = preg_replace('/{([a-zA-Z-_]+):([^\}]+)}/i', '$2', $uri);
-        $uri = preg_replace('/\bstr\b/', '([a-zA-Z-_]+)', $uri);
+        $uri = preg_replace('/{([a-zA-Z0-9-_@]+)}/i', 'any', $uri);
+        $uri = preg_replace('/{([a-zA-Z0-9-_@]+):([^\}]+)}/i', '$2', $uri);
+        $uri = preg_replace('/\bstr\b/', '([a-zA-Z0-9-_@]+)', $uri);
         $uri = preg_replace('/\bint\b/', '(\d+)', $uri);
         $uri = preg_replace('/\bany\b/', '([^/]+)', $uri);
 

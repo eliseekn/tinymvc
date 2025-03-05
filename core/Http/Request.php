@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Core\Http;
 
+use Core\Http\Routing\Route;
 use Core\Support\Uploader;
 
 /**
@@ -145,18 +146,20 @@ class Request
         return $uri;
     }
 
-    public function route(): array
+    public function routeParams(): array
     {
-        $result = [];
-        $params = explode('/', $this->uri());
+        $routes = Route::getAll();
 
-        foreach ($params as $param) {
-            if (is_numeric($param)) {
-                $result[] = $param;
+        foreach ($routes as $route => $options) {
+            list(, $route) = explode(' ', $route, 2);
+
+            if (preg_match('#^' . $route . '$#', $this->uri(), $params)) {
+                array_shift($params);
+                break;
             }
         }
 
-        return $result;
+        return $params ?? [];
     }
 
     public function uriContains(string $uri): bool
