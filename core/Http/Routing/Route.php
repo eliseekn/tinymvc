@@ -90,16 +90,16 @@ class Route
                 self::post('/' . $name, 'store')->name('store');
             }
             if (! in_array('update', $excepts)) {
-                self::match('PATCH|PUT', '/' . $name . '/{id:int}', 'update')->name('update');
+                self::match('PATCH|PUT', '/' . $name . '/{id:num}', 'update')->name('update');
             }
             if (! in_array('show', $excepts)) {
-                self::get('/' . $name . '/{id:int}', 'show')->name('show');
+                self::get('/' . $name . '/{id:num}', 'show')->name('show');
             }
             if (! in_array('edit', $excepts)) {
-                self::get('/' . $name . '/{id:int}/edit', 'edit')->name('edit');
+                self::get('/' . $name . '/{id:num}/edit', 'edit')->name('edit');
             }
             if (! in_array('delete', $excepts)) {
-                self::delete('/' . $name . '/{id:int}', 'delete')->name('delete');
+                self::delete('/' . $name . '/{id:num}', 'delete')->name('delete');
             }
         })->byController($controller)->byName($name);
     }
@@ -220,11 +220,16 @@ class Route
             }
         }
 
-        $uri = preg_replace('/{([a-zA-Z0-9-_@]+)}/i', 'any', $uri);
-        $uri = preg_replace('/{([a-zA-Z0-9-_@]+):([^\}]+)}/i', '$2', $uri);
-        $uri = preg_replace('/\bstr\b/', '([a-zA-Z0-9-_@]+)', $uri);
-        $uri = preg_replace('/\bint\b/', '(\d+)', $uri);
-        $uri = preg_replace('/\bany\b/', '([^/]+)', $uri);
+        $patterns = [
+            '/\{([a-zA-Z-_]+)\}/i' => 'any',
+            '/\{([a-zA-Z-_]+):([^}]+)\}/i' => '$2',
+            '/\balpha\b/' => '([a-zA-Z-_]+)',
+            '/\bnum\b/' => '(\d+)',
+            '/\balphaNum\b/' => '([a-zA-Z0-9]+)',
+            '/\bany\b/' => '([^/]+)',
+        ];
+
+        $uri = preg_replace(array_keys($patterns), array_values($patterns), $uri);
 
         return implode(' ', [$method, $uri]);
     }

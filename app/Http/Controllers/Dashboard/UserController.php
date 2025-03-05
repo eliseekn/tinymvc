@@ -41,13 +41,13 @@ class UserController extends Controller
         $useCase->handle($validator->inputs());
     }
 
-    #[Route(HttpMethod::GET, '/dashboard/users/{id:int}/edit', ['auth', 'verified', 'admin'], 'users.edit')]
+    #[Route(HttpMethod::GET, '/dashboard/users/{id:num}/edit', ['auth', 'verified', 'admin'], 'users.edit')]
     public function edit(int $id): void
     {
         $this->render('dashboard.users.edit', ['user' => User::find($id)]);
     }
 
-    #[Route(HttpMethod::PATCH, '/dashboard/users/{id:int}', ['auth', 'verified', 'admin'], 'users.update')]
+    #[Route(HttpMethod::PATCH, '/dashboard/users/{id:num}', ['auth', 'verified', 'admin'], 'users.update')]
     public function update(UpdateUseCase $useCase, UpdateValidator $validator, int $id): void
     {
         $user = User::find($id);
@@ -60,7 +60,7 @@ class UserController extends Controller
         $this->response->back()->send();
     }
 
-    #[Route(HttpMethod::DELETE, '/dashboard/users/{id:int}/delete', ['auth', 'verified', 'admin'], 'users.delete')]
+    #[Route(HttpMethod::DELETE, '/dashboard/users/{id:num}/delete', ['auth', 'verified', 'admin'], 'users.delete')]
     public function delete(int $id): void
     {
         $user = User::find($id);
