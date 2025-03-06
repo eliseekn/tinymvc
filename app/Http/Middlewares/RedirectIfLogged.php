@@ -13,23 +13,13 @@ namespace App\Http\Middlewares;
 use Core\Http\Auth;
 use Core\Http\Request;
 use Core\Http\Response;
-use Core\Support\Alert;
 
-/**
- * Check if user has been authenticated.
- */
-class AuthPolicy
-{
+class RedirectIfLogged
+{    
     public function handle(Request $request, Response $response): void
     {
-        if (! Auth::check($request)) {
-            Alert::default(__('alert.not_logged'))->error();
-
-            $response
-                ->url('/login')
-                ->intended($request->fullUri())
-                ->withErrors([__('alert.not_logged')])
-                ->send();
+        if (Auth::check($request)) {
+            $response->url(config('security.redirect_if_logged'))->send();
         }
     }
 }

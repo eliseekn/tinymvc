@@ -8,7 +8,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Middlewares;
+namespace Core\Http\Middlewares;
 
 use Core\Exceptions\InvalidCsrfTokenException;
 use Core\Exceptions\MissingCsrfTokenException;

@@ -18,6 +18,7 @@ use Core\Exceptions\MiddlewareNotFoundException;
 use Core\Exceptions\RouteHandlerNotDefinedException;
 use Core\Exceptions\RoutesNotDefinedException;
 use Core\Exceptions\RoutesPathsNotDefinedException;
+use Core\Http\Middlewares\CsrfProtection;
 use Core\Http\Request;
 use Core\Http\Response;
 use Core\Support\DependencyInjection;
@@ -27,12 +28,9 @@ use Core\Support\DependencyInjection;
  */
 class Router
 {
-    protected static function match(Request $request, string $method, string $route, &$params): bool
+    protected static function match(Request $request, string $route, &$params): bool
     {
-        if (
-            ! preg_match('/' . strtoupper($method) . '/', strtoupper($request->method())) ||
-            ! preg_match('#^' . $route . '$#', $request->uri(), $params)
-        ) {
+        if (! preg_match('#^' . $route . '$#', $request->method() . ' ' . $request->uri(), $params)) {
             return false;
         }
 
@@ -48,7 +46,7 @@ class Router
     {
         if (in_array(strtoupper($request->method()), [HttpMethod::POST, HttpMethod::PATCH, HttpMethod::PUT])) {
             if (! in_array($request->uri(), config('security.csrf_excluded_uri'))) {
-                $middlewares = array_merge($middlewares, ['csrf']);
+                (new DependencyInjection)->resolve(CsrfProtection::class, 'handle');
             }
         }
 
@@ -120,11 +118,10 @@ class Router
         }
 
         foreach ($routes as $route => $options) {
-            list($method, $route) = explode(' ', $route, 2);
             $request_method = $request->inputs('_method', $request->method());
             $request->method($request_method);
 
-            if (self::match($request, $method, $route, $params)) {
+            if (self::match($request, $route, $params)) {
                 if (! isset($options['handler'])) {
                     throw new RouteHandlerNotDefinedException($route);
                 }

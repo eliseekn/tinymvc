@@ -25,22 +25,22 @@ class AuthenticationTest extends FeatureTestCase
         $this->refreshDatabase();
     }
 
-    public function test_unregistered_user_can_not_authenticate(): void
+    public function test_unregistered_user_can_not_login(): void
     {
         $user = User::factory()->make(['password' => 'password']);
 
         $this
-            ->post('/authenticate', $user->get(['email', 'password']))
+            ->post('/login', $user->get(['email', 'password']))
             ->assertSessionHasErrors()
             ->assertRedirectedToUrl('/login');
     }
 
-    public function test_user_can_authenticate(): void
+    public function test_user_can_login(): void
     {
         $user = User::factory()->create();
 
         $this
-            ->post('/authenticate', [
+            ->post('/login', [
                 'email' => $user->get('email'),
                 'password' => 'password',
             ])
@@ -62,7 +62,7 @@ class AuthenticationTest extends FeatureTestCase
     {
         $user = User::factory()->create();
 
-        $this->post('/authenticate', [
+        $this->post('/login', [
             'email' => $user->get('email'),
             'password' => 'password',
         ]);

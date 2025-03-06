@@ -10,23 +10,26 @@ declare(strict_types=1);
 
 namespace App\Http\Middlewares;
 
+use Core\Http\Auth;
 use Core\Http\Request;
 use Core\Http\Response;
 use Core\Support\Alert;
 
 /**
- * Check if email has been verified.
+ * Check if user has been authenticated.
  */
-class EmailVerified
+class Authenticated
 {
     public function handle(Request $request, Response $response): void
     {
-        if (config('security.auth.email_verification') && is_null(auth()->get('email_verified_at'))) {
-            Alert::default(__('alert.email_not_verified'))->error();
+        if (! Auth::check($request)) {
+            Auth::forget();
+            Alert::default(__('alert.not_logged'))->error();
 
             $response
-                ->url('/email/notify')
+                ->url('/login')
                 ->intended($request->fullUri())
+                ->withErrors([__('alert.not_logged')])
                 ->send();
         }
     }

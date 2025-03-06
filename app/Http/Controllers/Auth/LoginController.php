@@ -19,18 +19,14 @@ use Core\Http\Routing\Controller;
 
 class LoginController extends Controller
 {
-    #[Route(HttpMethod::GET, '/login', ['remember'])]
+    #[Route(HttpMethod::GET, '/login', ['remember', 'redirect'])]
     public function index(): void
     {
-        if (! Auth::check($this->request)) {
-            $this->render('auth.login');
-        }
-
-        $this->redirectToUrl('/dashboard');
+        $this->render('auth.login');
     }
 
-    #[Route(HttpMethod::POST)]
-    public function authenticate(LoginUseCase $useCase, LoginValidator $validator): void
+    #[Route(HttpMethod::POST, '/login')]
+    public function login(LoginUseCase $useCase, LoginValidator $validator): void
     {
         $useCase->handle($validator->inputs());
     }

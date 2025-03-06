@@ -13,12 +13,12 @@ declare(strict_types=1);
  */
 
 return [
-    'csrf' => App\Http\Middlewares\CsrfProtection::class,
-    'cors' => App\Http\Middlewares\HttpCors::class,
-    'verified' => App\Http\Middlewares\EmailVerified::class,
-    'remember' => App\Http\Middlewares\RememberUser::class,
-    'auth' => App\Http\Middlewares\AuthPolicy::class,
-    'api' => App\Http\Middlewares\ApiAuth::class,
-    'http' => App\Http\Middlewares\HttpAuth::class,
-    'admin' => App\Http\Middlewares\CheckUserAdmin::class,
+    'cors' => \App\Http\Middlewares\HttpCors::class,
+    'verified' => \App\Http\Middlewares\EmailVerified::class,
+    'remember' => \App\Http\Middlewares\RememberUser::class,
+    'auth' => \App\Http\Middlewares\Authenticated::class,
+    'api' => \App\Http\Middlewares\ApiAuth::class,
+    'http' => \App\Http\Middlewares\HttpAuth::class,
+    'admin' => \App\Http\Middlewares\CheckUserAdmin::class,
+    'redirect' => \App\Http\Middlewares\RedirectIfLogged::class
 ];

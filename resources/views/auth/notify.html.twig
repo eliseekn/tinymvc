@@ -1,0 +1,36 @@
+{% extends "layouts/auth.html.twig" %}
+
+{% block title %}
+	{{ __('form.email_verification') }}
+{% endblock %}
+
+{% block description %}
+	{{ __('form.email_verification') }}
+{% endblock %}
+
+{% block content %}
+<div class="card mb-3">
+	<div class="card-body bg-light">
+		<p class="card-text">
+			{{ __('form.verify_email_instructions') }}
+		</p>
+	</div>
+</div>
+
+<div class="card shadow p-4">
+	<form method="post" action="{{ url('email/notify') }}">
+		{{ csrf_token_input()|raw }}
+
+		<div class="mb-3">
+			<label for="email" class="form-label">{{ __('form.email') }}</label>
+			<input type="email" id="email" name="email" class="form-control" required autofocus>
+		</div>
+
+		<div class="d-grid gap-2">
+			<button type="submit" class="btn btn-primary spinner">
+				{{ __('form.submit') }}
+			</button>
+		</div>
+	</form>
+</div>
+{% endblock %}

@@ -33,4 +33,6 @@ return [
         '/logout',
         '/api/logout',
     ],
+
+    'redirect_if_logged' => '/dashboard'
 ];

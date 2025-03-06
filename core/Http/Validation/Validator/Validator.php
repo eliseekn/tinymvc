@@ -133,7 +133,7 @@ class Validator implements ValidatorInterface
         return $errors;
     }
 
-    public function inputs(): array
+    public function inputs(?string $name = null): array|string
     {
         $validated = [];
         $inputs = array_keys($this->rules());
@@ -144,6 +144,10 @@ class Validator implements ValidatorInterface
                     $validated = array_merge($validated, [$key => $value]);
                 }
             }
+        }
+
+        if (! is_null($name) && isset($validated[$name])) {
+            return $validated[$name];
         }
 
         return $validated;

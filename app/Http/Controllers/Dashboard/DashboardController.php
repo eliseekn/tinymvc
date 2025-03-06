@@ -14,6 +14,10 @@ use App\Database\Models\User;
 use Core\Database\Metrics\Enums\Period;
 use Core\Database\Metrics\Metrics;
 use Core\Enums\HttpMethod;
+use Core\Exceptions\InvalidAggregateException;
+use Core\Exceptions\InvalidDateFormatException;
+use Core\Exceptions\InvalidPeriodException;
+use Core\Exceptions\InvalidVariationsCountException;
 use Core\Http\Routing\Attributes\Route;
 use Core\Http\Routing\Controller;
 

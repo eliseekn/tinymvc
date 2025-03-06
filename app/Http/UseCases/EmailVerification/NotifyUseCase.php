@@ -43,10 +43,10 @@ class NotifyUseCase extends UseCase
             report($e);
             $token->delete();
             Alert::default(__('alert.email_verification_link_not_sent'))->error();
-            $this->response->view('auth.signup');
+            $this->response->url('/signup')->send();
         }
 
         Alert::default(__('alert.email_verification_link_sent'))->success();
-        $this->response->view('auth.login');
+        $this->response->url('/email/notify')->send();
     }
 }

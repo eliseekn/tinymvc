@@ -12,6 +12,7 @@ namespace Core\Http;
 
 use App\Database\Models\Token;
 use App\Database\Models\User;
+use App\Enums\TokenDescription;
 use Core\Database\Model;
 use Core\Enums\HttpAuthMethod;
 use Core\Support\Encryption;
@@ -79,6 +80,7 @@ class Auth
         $token = Token::factory()->create([
             'email' => $email,
             'value' => generate_token(),
+            'description' => TokenDescription::AUTHENTICATION,
         ]);
 
         return encrypt($token->get('value'));

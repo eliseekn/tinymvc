@@ -34,6 +34,12 @@
 				</thead>
 
 				<tbody>
+				{% if user is empty %}
+				<tr>
+					<td>No result found.</td>
+				</tr>
+				{% endif %}
+
 				{% for user in users.getItems() %}
 					<tr>
 						<td>

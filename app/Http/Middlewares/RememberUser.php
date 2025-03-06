@@ -22,7 +22,7 @@ class RememberUser
         if (cookies()->has('user')) {
             $user = User::findByEmail(cookies()->get('user'));
 
-            if ($user !== false) {
+            if (! $user) {
                 session()->create('user', $user);
             }
         }

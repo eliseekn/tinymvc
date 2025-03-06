@@ -21,7 +21,7 @@
 {% endif %}
 
 <div class="card shadow p-4">
-	<form method="post" action="{{ url('authenticate') }}">
+	<form method="post" action="{{ url('login') }}">
 		{{ csrf_token_input()|raw }}
 
 		<div class="mb-3">
