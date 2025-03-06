@@ -46,6 +46,9 @@ class Mailer implements MailerInterface
         }
     }
 
+    /**
+     * @throws \PHPMailer\PHPMailer\Exception
+     */
     public function to(string $address, string $name = ''): self
     {
         $this->phpMailer->addAddress($address, $name);
@@ -53,6 +56,9 @@ class Mailer implements MailerInterface
         return $this;
     }
 
+    /**
+     * @throws \PHPMailer\PHPMailer\Exception
+     */
     public function from(string $address, string $name = ''): self
     {
         $this->phpMailer->setFrom($address, $name);
@@ -60,6 +66,9 @@ class Mailer implements MailerInterface
         return $this;
     }
 
+    /**
+     * @throws \PHPMailer\PHPMailer\Exception
+     */
     public function replyTo(string $address, string $name = ''): self
     {
         $this->phpMailer->addReplyTo($address, $name);
@@ -67,6 +76,9 @@ class Mailer implements MailerInterface
         return $this;
     }
 
+    /**
+     * @throws \PHPMailer\PHPMailer\Exception
+     */
     public function cc(string $address, string $name = ''): self
     {
         $this->phpMailer->addCC($address, $name);
@@ -74,6 +86,9 @@ class Mailer implements MailerInterface
         return $this;
     }
 
+    /**
+     * @throws \PHPMailer\PHPMailer\Exception
+     */
     public function bcc(string $address, string $name = ''): self
     {
         $this->phpMailer->addBCC($address, $name);
@@ -104,6 +119,9 @@ class Mailer implements MailerInterface
         return $this->body(view($view, $data));
     }
 
+    /**
+     * @throws \PHPMailer\PHPMailer\Exception
+     */
     public function attachment(string $attachment, string $filename = ''): self
     {
         $this->phpMailer->addAttachment($attachment, $filename);

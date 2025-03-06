@@ -11,6 +11,12 @@ declare(strict_types=1);
 namespace Core;
 
 use Core\Event\Event;
+use Core\Exceptions\ControllerNotFoundException;
+use Core\Exceptions\InvalidRouteHandlerException;
+use Core\Exceptions\MiddlewareNotFoundException;
+use Core\Exceptions\RouteHandlerNotDefinedException;
+use Core\Exceptions\RoutesNotDefinedException;
+use Core\Exceptions\RoutesPathsNotDefinedException;
 use Core\Http\Routing\Route;
 use Core\Http\Routing\Router;
 use Core\Support\Whoops;
@@ -20,6 +26,14 @@ use Core\Support\Whoops;
  */
 class Application
 {
+    /**
+     * @throws MiddlewareNotFoundException
+     * @throws InvalidRouteHandlerException
+     * @throws RoutesNotDefinedException
+     * @throws RoutesPathsNotDefinedException
+     * @throws ControllerNotFoundException
+     * @throws RouteHandlerNotDefinedException
+     */
     public function run(): void
     {
         Whoops::register();

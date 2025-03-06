@@ -11,6 +11,7 @@ declare(strict_types=1);
 use Carbon\Carbon;
 use Core\Database\Model;
 use Core\Event\EventInterface;
+use Core\Exceptions\ViewNotFoundException;
 use Core\Http\Auth;
 use Core\Http\Cookies;
 use Core\Http\Request;
@@ -63,6 +64,9 @@ if (! function_exists('session')) {
  * View get content helper
  */
 if (! function_exists('view')) {
+    /**
+     * @throws ViewNotFoundException
+     */
     function view(string $view, array $data = []): string
     {
         return View::getContent($view, $data);
@@ -206,6 +210,9 @@ if (! function_exists('url')) {
 }
 
 if (! function_exists('route_uri')) {
+    /**
+     * @throws Exception
+     */
     function route_uri(string $name, array $params = []): string
     {
         $uri = '';
@@ -267,6 +274,7 @@ if (! function_exists('route_uri')) {
 if (! function_exists('route')) {
     /**
      * Get route absolute url.
+     * @throws Exception
      */
     function route(string $name, array $params = []): string
     {

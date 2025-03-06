@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace NAMESPACE;
 
-use Core\Http\Validator\RuleInterface;
+use Core\Http\Validation\Rule\RuleInterface;
 
 class CLASSNAME implements RuleInterface
 {

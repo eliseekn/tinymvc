@@ -42,7 +42,7 @@ class Connection
     {
         if (is_null(self::$instance)) {
             // @phpstan-ignore-next-line
-            self::$instance = new static(1);
+            self::$instance = new static();
         }
 
         return self::$instance;

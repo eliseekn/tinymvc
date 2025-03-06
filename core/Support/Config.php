@@ -34,6 +34,9 @@ class Config
         return storage()->writeFile('.env', $data);
     }
 
+    /**
+     * @throws Exception
+     */
     public static function loadEnv(): void
     {
         if (! storage()->isFile('.env')) {

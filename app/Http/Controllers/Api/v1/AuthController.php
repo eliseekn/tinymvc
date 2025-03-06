@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api\v1;
 
 use App\Database\Models\User;
-use App\Http\Validators\Auth\LoginValidator;
+use App\Http\Validation\Validators\Auth\LoginValidator;
 use Core\Enums\HttpCode;
 use Core\Enums\ResponseStatus;
 use Core\Http\Auth;

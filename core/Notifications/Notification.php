@@ -18,6 +18,9 @@ class Notification
         return new static($mail);
     }
 
+    /**
+     * @throws NotificationNotSentException
+     */
     public function to(string $recipient): void
     {
         $this->notifiable->to($recipient);

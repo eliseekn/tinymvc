@@ -8,12 +8,12 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Validators\User;
+namespace App\Http\Validation\Validators\User;
 
 use App\Enums\UserRole;
-use App\Http\Validators\Rules\Unique;
-use Core\Http\Validator\Rule;
-use Core\Http\Validator\Validator;
+use App\Http\Validation\Rules\Unique;
+use Core\Http\Validation\Rule\Rule;
+use Core\Http\Validation\Validator\Validator;
 
 class UpdateValidator extends Validator
 {
@@ -37,6 +37,6 @@ class UpdateValidator extends Validator
                 ]),
             ])
             ->add('role', Rule::in([UserRole::USER->value, UserRole::ADMIN->value]))
-            ->get();
+            ->make();
     }
 }

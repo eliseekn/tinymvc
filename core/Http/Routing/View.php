@@ -13,6 +13,7 @@ namespace Core\Http\Routing;
 use Core\Exceptions\ViewNotFoundException;
 use Core\Support\Storage;
 use Core\Support\TwigExtensions;
+use Exception;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
@@ -24,6 +25,8 @@ class View
 {
     /**
      * Retrieves view template content.
+     * @throws ViewNotFoundException
+     * @throws Exception
      */
     public static function getContent(string $view, array $data = []): string
     {
@@ -47,10 +50,14 @@ class View
             $twig->addExtension(new DebugExtension());
         }
 
-        return $twig->render($view, array_merge($data, [
-            'inputs' => (object) session()->pull('inputs'),
-            'errors' => (object) session()->pull('errors'),
-            'alert' => session()->pull('alert'),
-        ]));
+        try {
+            return $twig->render($view, array_merge($data, [
+                'inputs' => (object)session()->pull('inputs'),
+                'errors' => (object)session()->pull('errors'),
+                'alert' => session()->pull('alert'),
+            ]));
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage(), $e->getCode(), $e);
+        }
     }
 }

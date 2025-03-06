@@ -75,6 +75,16 @@ class Uploader
         return $this->getFileSize() > $max_size;
     }
 
+    public function isUnderSized(int $max_size): bool
+    {
+        return $this->getFileSize() < $max_size;
+    }
+
+    public function isExactSize(int $max_size): bool
+    {
+        return $this->getFileSize() === $max_size;
+    }
+
     public function getFileSize(): int
     {
         return $this->file['size'] ?? 0;

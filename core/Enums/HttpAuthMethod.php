@@ -7,5 +7,6 @@ namespace Core\Enums;
 enum HttpAuthMethod: string
 {
     public const BEARER = 'Bearer';
+
     public const BASIC = 'Basic';
 }

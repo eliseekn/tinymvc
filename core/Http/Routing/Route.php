@@ -14,6 +14,7 @@ use Closure;
 use Core\Enums\HttpMethod;
 use Core\Exceptions\RoutesPathsNotDefinedException;
 use Core\Http\Response;
+use Core\Http\Routing\Attributes\Route as RouteAttribute;
 use Core\Support\Storage;
 use ReflectionClass;
 use ReflectionMethod;
@@ -246,6 +247,9 @@ class Route
         return array_combine($array_keys, self::$tmp_routes);
     }
 
+    /**
+     * @throws RoutesPathsNotDefinedException
+     */
     public static function getAll(): array
     {
         self::load();
@@ -261,7 +265,7 @@ class Route
             $methods = $reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC);
 
             foreach ($methods as $method) {
-                $attributes = $method->getAttributes(\Core\Http\Routing\Attributes\Route::class);
+                $attributes = $method->getAttributes(RouteAttribute::class);
 
                 foreach ($attributes as $attribute) {
                     $attribute = $attribute->newInstance();
@@ -281,6 +285,9 @@ class Route
         }
     }
 
+    /**
+     * @throws RoutesPathsNotDefinedException
+     */
     public static function load(): void
     {
         self::loadFromAttributes();

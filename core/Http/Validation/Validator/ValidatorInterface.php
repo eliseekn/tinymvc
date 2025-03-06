@@ -8,7 +8,7 @@
 
 declare(strict_types=1);
 
-namespace Core\Http\Validator;
+namespace Core\Http\Validation\Validator;
 
 use Core\Http\Request;
 use Core\Http\Response;

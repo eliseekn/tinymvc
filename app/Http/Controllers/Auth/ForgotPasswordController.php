@@ -14,7 +14,7 @@ use App\Http\UseCases\PasswordReset\NotifyUseCase;
 use App\Http\UseCases\PasswordReset\ResetUseCase;
 use App\Http\UseCases\PasswordReset\UpdatePasswordUseCase;
 use App\Http\UseCases\User\UpdateUseCase;
-use App\Http\Validators\Auth\LoginValidator;
+use App\Http\Validation\Validators\Auth\LoginValidator;
 use Core\Enums\HttpMethod;
 use Core\Http\Routing\Attributes\Route;
 use Core\Http\Routing\Controller;

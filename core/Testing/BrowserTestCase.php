@@ -12,6 +12,8 @@ namespace Core\Testing;
 
 use Core\Enums\HttpMethod;
 use Core\Testing\Traits\DatabaseTestCaseTrait;
+use Facebook\WebDriver\Exception\NoSuchElementException;
+use Facebook\WebDriver\Exception\TimeoutException;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverDimension;
 use Facebook\WebDriver\WebDriverElement;
@@ -74,6 +76,9 @@ abstract class BrowserTestCase extends TestCase
         return $this->crawler->filter($selector)->text();
     }
 
+    /**
+     * @throws NoSuchElementException
+     */
     public function findElement(string $element): WebDriverElement
     {
         $element = trim($element);
@@ -85,6 +90,9 @@ abstract class BrowserTestCase extends TestCase
         return $this->client->findElement($webDriver);
     }
 
+    /**
+     * @throws NoSuchElementException
+     */
     public function getAttribute(string $element, string $attribute): ?string
     {
         return $this->findElement($element)->getAttribute($attribute);
@@ -134,6 +142,10 @@ abstract class BrowserTestCase extends TestCase
         return $this;
     }
 
+    /**
+     * @throws NoSuchElementException
+     * @throws TimeoutException
+     */
     public function assertSelectorWillExist(string $selector): self
     {
         $this->client->waitFor($selector);
@@ -142,6 +154,10 @@ abstract class BrowserTestCase extends TestCase
         return $this;
     }
 
+    /**
+     * @throws NoSuchElementException
+     * @throws TimeoutException
+     */
     public function assertSelectorWillNotExist(string $selector): self
     {
         $this->client->waitForStaleness($selector);
@@ -150,6 +166,9 @@ abstract class BrowserTestCase extends TestCase
         return $this;
     }
 
+    /**
+     * @throws NoSuchElementException
+     */
     public function assertSelectorIsVisible(string $selector): self
     {
         $this->assertTrue($this->findElement($selector)->isDisplayed());
@@ -157,6 +176,10 @@ abstract class BrowserTestCase extends TestCase
         return $this;
     }
 
+    /**
+     * @throws NoSuchElementException
+     * @throws TimeoutException
+     */
     public function assertSelectorWillBeVisible(string $selector): self
     {
         $this->client->waitForVisibility($selector);
@@ -165,6 +188,9 @@ abstract class BrowserTestCase extends TestCase
         return $this;
     }
 
+    /**
+     * @throws NoSuchElementException
+     */
     public function assertSelectorIsNotVisible(string $selector): self
     {
         $element = self::findElement($selector);
@@ -173,6 +199,10 @@ abstract class BrowserTestCase extends TestCase
         return $this;
     }
 
+    /**
+     * @throws NoSuchElementException
+     * @throws TimeoutException
+     */
     public function assertSelectorWillNotBeVisible(string $selector): self
     {
         $this->client->waitForInvisibility($selector);
@@ -181,6 +211,10 @@ abstract class BrowserTestCase extends TestCase
         return $this;
     }
 
+    /**
+     * @throws NoSuchElementException
+     * @throws TimeoutException
+     */
     public function assertSelectorWillContain(string $selector, string $text): self
     {
         $this->client->waitForElementToContain($selector, $text);
@@ -189,6 +223,10 @@ abstract class BrowserTestCase extends TestCase
         return $this;
     }
 
+    /**
+     * @throws NoSuchElementException
+     * @throws TimeoutException
+     */
     public function assertSelectorWillNotContain(string $selector, string $text): self
     {
         $this->client->waitForElementToNotContain($selector, $text);
@@ -197,6 +235,9 @@ abstract class BrowserTestCase extends TestCase
         return $this;
     }
 
+    /**
+     * @throws NoSuchElementException
+     */
     public function assertSelectorIsEnabled(string $selector): self
     {
         $this->assertTrue($this->findElement($selector)->isEnabled());
@@ -204,6 +245,10 @@ abstract class BrowserTestCase extends TestCase
         return $this;
     }
 
+    /**
+     * @throws NoSuchElementException
+     * @throws TimeoutException
+     */
     public function assertSelectorWillBeEnabled(string $selector): self
     {
         $this->client->waitForEnabled($selector);
@@ -212,6 +257,9 @@ abstract class BrowserTestCase extends TestCase
         return $this;
     }
 
+    /**
+     * @throws NoSuchElementException
+     */
     public function assertSelectorIsDisabled(string $selector): self
     {
         $this->assertFalse($this->findElement($selector)->isEnabled());
@@ -219,6 +267,10 @@ abstract class BrowserTestCase extends TestCase
         return $this;
     }
 
+    /**
+     * @throws NoSuchElementException
+     * @throws TimeoutException
+     */
     public function assertSelectorWillBeDisabled(string $selector): self
     {
         $this->client->waitForDisabled($selector);
@@ -227,6 +279,9 @@ abstract class BrowserTestCase extends TestCase
         return $this;
     }
 
+    /**
+     * @throws NoSuchElementException
+     */
     public function assertSelectorAttributeContains(string $selector, string $attribute, string $text = null): self
     {
         if (null === $text) {
@@ -240,6 +295,10 @@ abstract class BrowserTestCase extends TestCase
         return $this;
     }
 
+    /**
+     * @throws NoSuchElementException
+     * @throws TimeoutException
+     */
     public function assertSelectorAttributeWillContain(string $selector, string $attribute, string $text): self
     {
         $this->client->waitForAttributeToContain($selector, $attribute, $text);
@@ -248,6 +307,9 @@ abstract class BrowserTestCase extends TestCase
         return $this;
     }
 
+    /**
+     * @throws NoSuchElementException
+     */
     public function assertSelectorAttributeNotContains(string $selector, string $attribute, string $text): self
     {
         $this->assertStringNotContainsString($text, $this->getAttribute($selector, $attribute));
@@ -255,6 +317,10 @@ abstract class BrowserTestCase extends TestCase
         return $this;
     }
 
+    /**
+     * @throws NoSuchElementException
+     * @throws TimeoutException
+     */
     public function assertSelectorAttributeWillNotContain(string $selector, string $attribute, string $text): self
     {
         $this->client->waitForAttributeToNotContain($selector, $attribute, $text);

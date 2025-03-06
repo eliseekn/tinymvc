@@ -8,14 +8,13 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Validators\User;
+namespace App\Http\Validation\Validators\Auth;
 
-use App\Enums\UserRole;
-use App\Http\Validators\Rules\Unique;
-use Core\Http\Validator\Rule;
-use Core\Http\Validator\Validator;
+use App\Http\Validation\Rules\Unique;
+use Core\Http\Validation\Rule\Rule;
+use Core\Http\Validation\Validator\Validator;
 
-class StoreValidator extends Validator
+class RegisterValidator extends Validator
 {
     public function __construct()
     {
@@ -34,15 +33,7 @@ class StoreValidator extends Validator
                 Rule::maxLen(255),
                 Rule::custom(Unique::class, 'users'),
             ])
-            ->add('password', [
-                Rule::REQUIRED,
-                Rule::maxLen(255),
-                Rule::minLen(8),
-            ])
-            ->add('role', [
-                Rule::REQUIRED,
-                Rule::in([UserRole::USER->value, UserRole::ADMIN->value]),
-            ])
-            ->get();
+            ->add('password', [Rule::REQUIRED, Rule::maxLen(255)])
+            ->make();
     }
 }

@@ -15,6 +15,7 @@ use Core\Database\Metrics\Enums\Aggregate;
 use Core\Database\Metrics\Enums\Period;
 use Core\Database\QueryBuilder;
 use Core\Exceptions\InvalidAggregateException;
+use Core\Exceptions\InvalidDateFormatException;
 use Core\Exceptions\InvalidPeriodException;
 use Core\Exceptions\InvalidVariationsCountException;
 
@@ -108,26 +109,41 @@ class Metrics
         return $this;
     }
 
+    /**
+     * @throws InvalidPeriodException
+     */
     public function byDay(int $count = 0): self
     {
         return $this->by(Period::DAY->value, $count);
     }
 
+    /**
+     * @throws InvalidPeriodException
+     */
     public function byWeek(int $count = 0): self
     {
         return $this->by(Period::WEEK->value, $count);
     }
 
+    /**
+     * @throws InvalidPeriodException
+     */
     public function byMonth(int $count = 0): self
     {
         return $this->by(Period::MONTH->value, $count);
     }
 
+    /**
+     * @throws InvalidPeriodException
+     */
     public function byYear(int $count = 0): self
     {
         return $this->by(Period::YEAR->value, $count);
     }
 
+    /**
+     * @throws InvalidDateFormatException
+     */
     public function between(string $start, string $end, string $dateIsoFormat = 'YYYY-MM-DD'): self
     {
         $this->checkDateFormat([$start, $end]);
@@ -137,6 +153,9 @@ class Metrics
         return $this;
     }
 
+    /**
+     * @throws InvalidDateFormatException
+     */
     public function from(string $date, string $dateIsoFormat = 'YYYY-MM-DD'): self
     {
         return $this->between($date, carbon()->format('Y-m-d'), $dateIsoFormat);
@@ -197,6 +216,9 @@ class Metrics
         return $this;
     }
 
+    /**
+     * @throws InvalidAggregateException
+     */
     protected function aggregate(string $aggregate, string $column): self
     {
         $aggregate = strtolower($aggregate);
@@ -211,31 +233,50 @@ class Metrics
         return $this;
     }
 
+    /**
+     * @throws InvalidAggregateException
+     */
     public function count(string $column = 'id'): self
     {
         return $this->aggregate(Aggregate::COUNT->value, $column);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     */
     public function average(string $column): self
     {
         return $this->aggregate(Aggregate::AVERAGE->value, $column);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     */
     public function sum(string $column): self
     {
         return $this->aggregate(Aggregate::SUM->value, $column);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     */
     public function max(string $column): self
     {
         return $this->aggregate(Aggregate::MAX->value, $column);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     */
     public function min(string $column): self
     {
         return $this->aggregate(Aggregate::MIN->value, $column);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidPeriodException
+     */
     protected function countBy(string $period, string $column = 'id', int $count = 0): self
     {
         return $this
@@ -243,6 +284,10 @@ class Metrics
             ->aggregate(Aggregate::COUNT->value, $column);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidPeriodException
+     */
     protected function averageBy(string $period, string $column = 'id', int $count = 0): self
     {
         return $this
@@ -250,6 +295,10 @@ class Metrics
             ->aggregate(Aggregate::AVERAGE->value, $column);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidPeriodException
+     */
     protected function sumBy(string $period, string $column = 'id', int $count = 0): self
     {
         return $this
@@ -257,6 +306,10 @@ class Metrics
             ->aggregate(Aggregate::SUM->value, $column);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidPeriodException
+     */
     protected function maxBy(string $period, string $column = 'id', int $count = 0): self
     {
         return $this
@@ -264,6 +317,10 @@ class Metrics
             ->aggregate(Aggregate::MAX->value, $column);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidPeriodException
+     */
     protected function minBy(string $period, string $column = 'id', int $count = 0): self
     {
         return $this
@@ -271,106 +328,190 @@ class Metrics
             ->aggregate(Aggregate::MIN->value, $column);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidPeriodException
+     */
     public function countByDay(string $column = 'id', int $count = 0): self
     {
         return $this->countBy(Period::DAY->value, $column, $count);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidPeriodException
+     */
     public function countByWeek(string $column = 'id', int $count = 0): self
     {
         return $this->countBy(Period::WEEK->value, $column, $count);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidPeriodException
+     */
     public function countByMonth(string $column = 'id', int $count = 0): self
     {
         return $this->countBy(Period::MONTH->value, $column, $count);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidPeriodException
+     */
     public function countByYear(string $column = 'id', int $count = 0): self
     {
         return $this->countBy(Period::YEAR->value, $column, $count);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidPeriodException
+     */
     public function sumByDay(string $column, int $count = 0): self
     {
         return $this->sumBy(Period::DAY->value, $column, $count);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidPeriodException
+     */
     public function sumByWeek(string $column, int $count = 0): self
     {
         return $this->sumBy(Period::WEEK->value, $column, $count);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidPeriodException
+     */
     public function sumByMonth(string $column, int $count = 0): self
     {
         return $this->sumBy(Period::MONTH->value, $column, $count);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidPeriodException
+     */
     public function sumByYear(string $column, int $count = 0): self
     {
         return $this->sumBy(Period::YEAR->value, $column, $count);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidPeriodException
+     */
     public function averageByDay(string $column, int $count = 0): self
     {
         return $this->averageBy(Period::DAY->value, $column, $count);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidPeriodException
+     */
     public function averageByWeek(string $column, int $count = 0): self
     {
         return $this->averageBy(Period::WEEK->value, $column, $count);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidPeriodException
+     */
     public function averageByMonth(string $column, int $count = 0): self
     {
         return $this->averageBy(Period::MONTH->value, $column, $count);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidPeriodException
+     */
     public function averageByYear(string $column, int $count = 0): self
     {
         return $this->averageBy(Period::YEAR->value, $column, $count);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidPeriodException
+     */
     public function maxByDay(string $column, int $count = 0): self
     {
         return $this->maxBy(Period::DAY->value, $column, $count);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidPeriodException
+     */
     public function maxByWeek(string $column, int $count = 0): self
     {
         return $this->maxBy(Period::WEEK->value, $column, $count);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidPeriodException
+     */
     public function maxByMonth(string $column, int $count = 0): self
     {
         return $this->maxBy(Period::MONTH->value, $column, $count);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidPeriodException
+     */
     public function maxByYear(string $column, int $count = 0): self
     {
         return $this->maxBy(Period::YEAR->value, $column, $count);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidPeriodException
+     */
     public function minByDay(string $column, int $count = 0): self
     {
         return $this->minBy(Period::DAY->value, $column, $count);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidPeriodException
+     */
     public function minByWeek(string $column, int $count = 0): self
     {
         return $this->minBy(Period::WEEK->value, $column, $count);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidPeriodException
+     */
     public function minByMonth(string $column, int $count = 0): self
     {
         return $this->minBy(Period::MONTH->value, $column, $count);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidPeriodException
+     */
     public function minByYear(string $column, int $count = 0): self
     {
         return $this->minBy(Period::YEAR->value, $column, $count);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidDateFormatException
+     */
     public function countBetween(array $period, string $column = 'id', string $dateIsoFormat = 'YYYY-MM-DD'): self
     {
         return $this
@@ -378,6 +519,10 @@ class Metrics
             ->between($period[0], $period[1], $dateIsoFormat);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidDateFormatException
+     */
     public function sumBetween(array $period, string $column, string $dateIsoFormat = 'YYYY-MM-DD'): self
     {
         return $this
@@ -385,6 +530,10 @@ class Metrics
             ->between($period[0], $period[1], $dateIsoFormat);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidDateFormatException
+     */
     public function averageBetween(array $period, string $column, string $dateIsoFormat = 'YYYY-MM-DD'): self
     {
         return $this
@@ -392,6 +541,10 @@ class Metrics
             ->between($period[0], $period[1], $dateIsoFormat);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidDateFormatException
+     */
     public function maxBetween(array $period, string $column, string $dateIsoFormat = 'YYYY-MM-DD'): self
     {
         return $this
@@ -399,6 +552,10 @@ class Metrics
             ->between($period[0], $period[1], $dateIsoFormat);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidDateFormatException
+     */
     public function minBetween(array $period, string $column, string $dateIsoFormat = 'YYYY-MM-DD'): self
     {
         return $this
@@ -406,6 +563,10 @@ class Metrics
             ->between($period[0], $period[1], $dateIsoFormat);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidDateFormatException
+     */
     public function countFrom(string $date, string $column = 'id', string $dateIsoFormat = 'YYYY-MM-DD'): self
     {
         return $this
@@ -413,6 +574,10 @@ class Metrics
             ->from($date, $dateIsoFormat);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidDateFormatException
+     */
     public function sumFrom(string $date, string $column, string $dateIsoFormat = 'YYYY-MM-DD'): self
     {
         return $this
@@ -420,6 +585,10 @@ class Metrics
             ->from($date, $dateIsoFormat);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidDateFormatException
+     */
     public function averageFrom(string $date, string $column, string $dateIsoFormat = 'YYYY-MM-DD'): self
     {
         return $this
@@ -427,6 +596,10 @@ class Metrics
             ->from($date, $dateIsoFormat);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidDateFormatException
+     */
     public function maxFrom(string $date, string $column, string $dateIsoFormat = 'YYYY-MM-DD'): self
     {
         return $this
@@ -434,6 +607,10 @@ class Metrics
             ->from($date, $dateIsoFormat);
     }
 
+    /**
+     * @throws InvalidAggregateException
+     * @throws InvalidDateFormatException
+     */
     public function minFrom(string $date, string $column, string $dateIsoFormat = 'YYYY-MM-DD'): self
     {
         return $this
@@ -710,6 +887,8 @@ class Metrics
 
     /**
      * Generate metrics data with variations
+     * @throws InvalidVariationsCountException
+     * @throws InvalidPeriodException|InvalidAggregateException
      */
     public function metricsWithVariations(int $previousCount, string $previousPeriod, bool $inPercent = false): array
     {

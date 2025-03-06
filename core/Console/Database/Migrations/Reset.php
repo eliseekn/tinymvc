@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Core\Console\Database\Migrations;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -31,6 +32,9 @@ class Reset extends Command
         $this->addOption('seed', null, InputOption::VALUE_NONE, 'Insert all seeds');
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $tables = $input->getArgument('table');

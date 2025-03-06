@@ -10,7 +10,8 @@ declare(strict_types=1);
 
 namespace NAMESPACE;
 
-use Core\Http\Validator\Validator;
+use Core\Http\Validation\Validator\Validator;
+use Core\Http\Validation\Rule\Rule;
 
 class CLASSNAME extends Validator
 {
@@ -24,7 +25,8 @@ class CLASSNAME extends Validator
      */
     public function rules(): array
     {
-        return [];
+        return Rule::add('column', [Rule::REQUIRED, Rule::maxLen(255)])
+           ->make();
     }
 
     /**

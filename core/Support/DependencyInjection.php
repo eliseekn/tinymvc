@@ -15,8 +15,9 @@ use Core\Http\Cookies;
 use Core\Http\Request;
 use Core\Http\Response;
 use Core\Http\Session;
-use Core\Http\Validator\Validator;
+use Core\Http\Validation\Validator\Validator;
 use ReflectionClass;
+use ReflectionException;
 use ReflectionFunction;
 use ReflectionParameter;
 
@@ -30,6 +31,8 @@ class DependencyInjection
 {
     /**
      * Execute class with dependencies and methods dependencies.
+     * @throws ReflectionException
+     * @throws \Exception
      */
     public function resolve(string $class, string $method, array $params = []): mixed
     {
@@ -59,6 +62,8 @@ class DependencyInjection
 
     /**
      * Execute closure with dependencies and methods dependencies.
+     * @throws ReflectionException
+     * @throws \Exception
      */
     public function resolveClosure(Closure $closure, array $params = []): mixed
     {
@@ -71,6 +76,7 @@ class DependencyInjection
 
     /**
      * Generate new instance of dependencies.
+     * @throws \Exception
      */
     public function getDependencies(array $parameters): array
     {

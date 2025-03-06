@@ -12,7 +12,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\UseCases\EmailVerification\NotifyUseCase;
 use App\Http\UseCases\User\RegisterUseCase;
-use App\Http\Validators\Auth\RegisterValidator;
+use App\Http\Validation\Validators\Auth\RegisterValidator;
 use Core\Enums\HttpMethod;
 use Core\Http\Auth;
 use Core\Http\Routing\Attributes\Route;

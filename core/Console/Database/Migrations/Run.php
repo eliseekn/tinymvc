@@ -15,6 +15,7 @@ use Core\Database\Migration;
 use Core\Database\QueryBuilder;
 use Core\Support\Storage;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -35,6 +36,9 @@ class Run extends Command
         $this->addOption('seed', null, InputOption::VALUE_NONE, 'Run seeders');
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->getApplication()->find('db:create')->run(new ArrayInput([]), $output);

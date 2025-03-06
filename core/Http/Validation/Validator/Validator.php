@@ -8,12 +8,14 @@
 
 declare(strict_types=1);
 
-namespace Core\Http\Validator;
+namespace Core\Http\Validation\Validator;
 
 use Core\Enums\HttpCode;
 use Core\Enums\ResponseStatus;
+use Core\Exceptions\InvalidJsonDataException;
 use Core\Http\Request;
 use Core\Http\Response;
+use Exception;
 use GUMP;
 use Spatie\StructureDiscoverer\Discover;
 
@@ -22,6 +24,9 @@ use Spatie\StructureDiscoverer\Discover;
  */
 class Validator implements ValidatorInterface
 {
+    /**
+     * @throws Exception
+     */
     public function __construct(
         protected array $rules = [],
         protected array $messages = [],
@@ -43,6 +48,9 @@ class Validator implements ValidatorInterface
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function validate(Request $request, ?Response $response = null): self
     {
         $this->inputs = $request->inputs();
@@ -59,6 +67,9 @@ class Validator implements ValidatorInterface
         return $this;
     }
 
+    /**
+     * @throws InvalidJsonDataException
+     */
     public function validationFailed(Request $request, ?Response $response = null): void
     {
         if ($request->isJson()) {
@@ -73,7 +84,7 @@ class Validator implements ValidatorInterface
             ?->back()
             ->withErrors($this->errors())
             ->withInputs($this->inputs)
-            ->send(HttpCode::BAD_REQUEST);
+            ->send();
     }
 
     public function validationSucceeded(Request $request, ?Response $response = null): void

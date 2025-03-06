@@ -56,21 +56,33 @@ class Repository
         return $this;
     }
 
+    /**
+     * @throws InvalidSQLQueryException
+     */
     public function findWhere(string $column, $operator = null, $value = null): Model|false
     {
         return $this->select('*')->where($column, $operator, $value)->get();
     }
 
+    /**
+     * @throws InvalidSQLQueryException
+     */
     public function find($operator = null, $value = null): Model|false
     {
         return $this->findWhere('id', $operator, $value);
     }
 
+    /**
+     * @throws InvalidSQLQueryException
+     */
     public function findAllWhere(string $column, $operator = null, $value = null): array|false
     {
         return $this->select('*')->where($column, $operator, $value)->getAll();
     }
 
+    /**
+     * @throws InvalidSQLQueryException
+     */
     public function findAll($operator = null, $value = null): array|false
     {
         return $this->findAllWhere('id', $operator, $value);
@@ -81,6 +93,9 @@ class Repository
         return $this->select('*')->whereRaw($query, $args);
     }
 
+    /**
+     * @throws InvalidSQLQueryException
+     */
     public function findMany(array $items, string $glue = 'or'): self
     {
         $result = $this->select('*');
@@ -97,6 +112,9 @@ class Repository
         return $result;
     }
 
+    /**
+     * @throws InvalidSQLQueryException
+     */
     public function findOrCreate(int $id, array $items): Model|bool
     {
         $result = $this->findWhere('id', $id);
@@ -167,6 +185,9 @@ class Repository
         return $this;
     }
 
+    /**
+     * @throws InvalidSQLQueryException
+     */
     public function updateWhere(array $data, array $items): bool
     {
         if (! isset($data[2])) {
@@ -180,11 +201,17 @@ class Repository
         return $this->update($items)->where($data[0], $data[1], $data[2])->execute()->rowCount() > 0;
     }
 
+    /**
+     * @throws InvalidSQLQueryException
+     */
     public function updateIfExists(int $id, array $items): bool
     {
         return $this->updateWhere(['id', $id], $items);
     }
 
+    /**
+     * @throws InvalidSQLQueryException
+     */
     public function updateOrCreate(int $id, array $items): bool
     {
         if ($this->findWhere('id', $id) === false) {
@@ -201,6 +228,9 @@ class Repository
         return $this;
     }
 
+    /**
+     * @throws InvalidSQLQueryException
+     */
     public function deleteWhere(string $column, $operator = null, $value = null): bool
     {
         if (! $this->select('*')->where($column, $operator, $value)->exists()) {
@@ -210,6 +240,9 @@ class Repository
         return $this->delete()->where($column, $operator, $value)->execute()->rowCount() > 0;
     }
 
+    /**
+     * @throws InvalidSQLQueryException
+     */
     public function deleteIfExists(int $id): bool
     {
         return $this->deleteWhere('id', $id);
@@ -245,6 +278,9 @@ class Repository
         return Metrics::table($this->table);
     }
 
+    /**
+     * @throws InvalidSQLQueryException
+     */
     public function where(string $column, $operator = null, $value = null): self
     {
         if (is_null($operator) && is_null($value)) {
@@ -276,6 +312,9 @@ class Repository
         return $this;
     }
 
+    /**
+     * @throws InvalidSQLQueryException
+     */
     public function and(string $column, $operator = null, $value = null): self
     {
         if (is_null($operator) && is_null($value)) {
@@ -307,6 +346,9 @@ class Repository
         return $this;
     }
 
+    /**
+     * @throws InvalidSQLQueryException
+     */
     public function or(string $column, $operator = null, $value = null): self
     {
         if (is_null($operator) && is_null($value)) {
@@ -349,31 +391,49 @@ class Repository
         return $this;
     }
 
+    /**
+     * @throws InvalidSQLQueryException
+     */
     public function whereGreater(string $column, $value): self
     {
         return $this->where($column, '>=', $value);
     }
 
+    /**
+     * @throws InvalidSQLQueryException
+     */
     public function andGreater(string $column, $value): self
     {
         return $this->and($column, '>=', $value);
     }
 
+    /**
+     * @throws InvalidSQLQueryException
+     */
     public function orGreater(string $column, $value): self
     {
         return $this->or($column, '>=', $value);
     }
 
+    /**
+     * @throws InvalidSQLQueryException
+     */
     public function whereLower(string $column, $value): self
     {
         return $this->where($column, '<=', $value);
     }
 
+    /**
+     * @throws InvalidSQLQueryException
+     */
     public function andLower(string $column, $value): self
     {
         return $this->and($column, '<=', $value);
     }
 
+    /**
+     * @throws InvalidSQLQueryException
+     */
     public function orLower(string $column, $value): self
     {
         return $this->or($column, '<=', $value);

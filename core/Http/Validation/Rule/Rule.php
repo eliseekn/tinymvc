@@ -2,24 +2,36 @@
 
 declare(strict_types=1);
 
-namespace Core\Http\Validator;
+namespace Core\Http\Validation\Rule;
 
 class Rule
 {
     public const REQUIRED = 'required';
+
     public const EMAIL = 'valid_email';
-    public const FILE = 'required_file';
+
     public const ALPHA = 'alpha';
+
     public const ALPHA_NUMERIC = 'alpha_numeric';
+
     public const ALPHA_DASH = 'alpha_dash';
+
     public const ALPHA_NUMERIC_DASH = 'alpha_numeric_dash';
+
     public const ALPHA_NUMERIC_SPACE = 'alpha_numeric_space';
+
     public const ALPHA_SPACE = 'alpha_space';
+
     public const NUMERIC = 'numeric';
+
     public const INTEGER = 'integer';
+
     public const FLOAT = 'float';
+
     public const URL = 'url';
+
     public const URL_EXISTS = 'url_exists';
+
     public const JSON = 'valid_json_string';
 
     protected static array $rules;
@@ -46,7 +58,7 @@ class Rule
         return $rule->name . ',' . $data;
     }
 
-    public function get(): array
+    public function make(): array
     {
         return self::$rules;
     }

@@ -8,11 +8,11 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Validators;
+namespace App\Http\Validation\Validators;
 
-use App\Http\Validators\Rules\Unique;
-use Core\Http\Validator\Rule;
-use Core\Http\Validator\Validator;
+use App\Http\Validation\Rules\Unique;
+use Core\Http\Validation\Rule\Rule;
+use Core\Http\Validation\Validator\Validator;
 
 class UpdateProfileValidator extends Validator
 {
@@ -36,6 +36,6 @@ class UpdateProfileValidator extends Validator
                 ]),
             ])
             ->add('password', Rule::maxLen(255))
-            ->get();
+            ->make();
     }
 }

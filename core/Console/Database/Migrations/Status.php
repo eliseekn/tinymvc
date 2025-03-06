@@ -55,7 +55,7 @@ class Status extends Command
         }
 
         return QueryBuilder::table('migrations')
-            ->select('*')
+            ->select('name')
             ->where('name', $table)
             ->exists();
     }

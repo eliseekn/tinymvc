@@ -14,6 +14,8 @@ use Core\Enums\HttpCode;
 use Core\Exceptions\FileNotFoundException;
 use Core\Exceptions\InvalidJsonDataException;
 use Core\Exceptions\InvalidResponseDataException;
+use Exception;
+use JetBrains\PhpStorm\NoReturn;
 
 /**
  * Send HTTP response.
@@ -34,6 +36,9 @@ class Response
         return $this;
     }
 
+    /**
+     * @throws InvalidResponseDataException
+     */
     public function data(string $data): self
     {
         if (empty($data)) {
@@ -67,6 +72,9 @@ class Response
         return $this;
     }
 
+    /**
+     * @throws Exception
+     */
     public function route(string $route, array $params = []): self
     {
         return $this->url(route_uri($route, $params));
@@ -125,6 +133,9 @@ class Response
         return $this;
     }
 
+    /**
+     * @throws FileNotFoundException
+     */
     public function download(string $filename): self
     {
         if (! file_exists($filename)) {
@@ -148,6 +159,9 @@ class Response
         return $this;
     }
 
+    /**
+     * @throws InvalidJsonDataException
+     */
     public function json(array $data): self
     {
         if (empty($data)) {

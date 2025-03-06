@@ -268,7 +268,7 @@ class Maker
         list(, $class) = self::generateClass($validator, 'validator', true);
 
         $data = self::stubs()->addPath('validators')->readFile('Validator.stub');
-        $data = self::addNamespace($data, 'App\Http\Validators', $namespace);
+        $data = self::addNamespace($data, 'App\Http\Validation\Validators', $namespace);
         $data = str_replace('CLASSNAME', $class, $data);
 
         $storage = storage(config('storage.validators'));
@@ -285,7 +285,7 @@ class Maker
         list($name, $class) = self::generateClass(base_name: $rule, singular: true);
 
         $data = self::stubs()->addPath('validators')->readFile('Rule.stub');
-        $data = self::addNamespace($data, 'App\Http\Validators\Rules');
+        $data = self::addNamespace($data, 'App\Http\Validation\Rules');
         $data = str_replace('CLASSNAME', $class, $data);
         $data = str_replace('RULE_NAME', strtolower($name), $data);
 

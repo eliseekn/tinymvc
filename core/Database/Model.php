@@ -12,6 +12,7 @@ namespace Core\Database;
 
 use Closure;
 use Core\Database\Metrics\Metrics;
+use Core\Exceptions\InvalidSQLQueryException;
 use Core\Notifications\Notifiable;
 use PDOStatement;
 
@@ -156,6 +157,7 @@ class Model
 
     /**
      * Get relationship of the model.
+     * @throws InvalidSQLQueryException
      */
     public function has(string $table, ?string $column = null): Repository
     {
@@ -168,6 +170,7 @@ class Model
 
     /**
      * Get relationship belongs to the model.
+     * @throws InvalidSQLQueryException
      */
     public function belongsTo(string $table, ?string $column = null): Repository
     {

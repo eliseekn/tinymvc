@@ -10,8 +10,6 @@ declare(strict_types=1);
 
 namespace Core\Support;
 
-use ErrorException;
-
 /**
  * Manage files and folders.
  */
@@ -202,12 +200,7 @@ class Storage
     public function getFilesAndFolders(): array
     {
         $results = [];
-
-        try {
-            $objects = scandir(self::$path);
-        } catch (ErrorException $e) {
-            return $results;
-        }
+        $objects = scandir(self::$path);
 
         foreach ($objects as $object) {
             if ($object != '.' && $object != '..') {

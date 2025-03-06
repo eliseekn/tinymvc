@@ -17,6 +17,7 @@ use Core\Exceptions\InvalidRouteHandlerException;
 use Core\Exceptions\MiddlewareNotFoundException;
 use Core\Exceptions\RouteHandlerNotDefinedException;
 use Core\Exceptions\RoutesNotDefinedException;
+use Core\Exceptions\RoutesPathsNotDefinedException;
 use Core\Http\Request;
 use Core\Http\Response;
 use Core\Support\DependencyInjection;
@@ -40,6 +41,9 @@ class Router
         return true;
     }
 
+    /**
+     * @throws MiddlewareNotFoundException
+     */
     protected static function executeMiddlewares(Request $request, array $middlewares): void
     {
         if (in_array(strtoupper($request->method()), [HttpMethod::POST, HttpMethod::PATCH, HttpMethod::PUT])) {
@@ -59,6 +63,10 @@ class Router
         }
     }
 
+    /**
+     * @throws InvalidRouteHandlerException
+     * @throws ControllerNotFoundException
+     */
     protected static function executeHandler(Closure|array|string $handler, array $params): void
     {
         if ($handler instanceof Closure) {
@@ -93,6 +101,14 @@ class Router
         throw new InvalidRouteHandlerException();
     }
 
+    /**
+     * @throws MiddlewareNotFoundException
+     * @throws InvalidRouteHandlerException
+     * @throws RoutesNotDefinedException
+     * @throws RoutesPathsNotDefinedException
+     * @throws RouteHandlerNotDefinedException
+     * @throws ControllerNotFoundException
+     */
     public static function dispatch(): void
     {
         $request = new Request();
