@@ -15,7 +15,6 @@ use Core\Exceptions\FileNotFoundException;
 use Core\Exceptions\InvalidJsonDataException;
 use Core\Exceptions\InvalidResponseDataException;
 use Exception;
-use JetBrains\PhpStorm\NoReturn;
 
 /**
  * Send HTTP response.

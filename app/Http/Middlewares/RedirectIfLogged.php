@@ -15,7 +15,7 @@ use Core\Http\Request;
 use Core\Http\Response;
 
 class RedirectIfLogged
-{    
+{
     public function handle(Request $request, Response $response): void
     {
         if (Auth::check($request)) {

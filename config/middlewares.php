@@ -20,5 +20,5 @@ return [
     'api' => \App\Http\Middlewares\ApiAuth::class,
     'http' => \App\Http\Middlewares\HttpAuth::class,
     'admin' => \App\Http\Middlewares\CheckUserAdmin::class,
-    'redirect' => \App\Http\Middlewares\RedirectIfLogged::class
+    'redirect' => \App\Http\Middlewares\RedirectIfLogged::class,
 ];

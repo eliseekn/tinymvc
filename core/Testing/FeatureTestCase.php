@@ -17,7 +17,6 @@ use Core\Http\Auth;
 use Core\Http\Client\Curl as Client;
 use Core\Testing\Traits\DatabaseTestCaseTrait;
 use CURLFile;
-use JetBrains\PhpStorm\NoReturn;
 use PHPUnit\Framework\TestCase;
 
 /**

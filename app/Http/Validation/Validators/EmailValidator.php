@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace App\Http\Validation\Validators;
 
-use Core\Http\Validation\Validator\Validator;
 use Core\Http\Validation\Rule\Rule;
+use Core\Http\Validation\Validator\Validator;
 
 class EmailValidator extends Validator
 {
@@ -28,7 +28,7 @@ class EmailValidator extends Validator
         return Rule::add('email', [
             Rule::REQUIRED,
             Rule::EMAIL,
-            Rule::maxLen(255)
+            Rule::maxLen(255),
         ])
            ->make();
     }
