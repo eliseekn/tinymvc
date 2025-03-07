@@ -40,8 +40,8 @@ abstract class BrowserTestCase extends TestCase
         parent::setUp();
 
         $this->client = static::createPantherClient([
-            'browser' => config('tests.browser'),
-            'external_base_uri' => 'http://' . config('tests.host') . ':' . config('tests.port'),
+            'browser' => config('tests.browser.name'),
+            'external_base_uri' => config('tests.url.protocol') . config('tests.url.host') . ':' . config('tests.url.port'),
         ]);
 
         $this->client->manage()->window()->setSize(
@@ -51,7 +51,7 @@ abstract class BrowserTestCase extends TestCase
 
     public function url(string $uri): string
     {
-        return 'http://' . config('tests.host') . ':' . config('tests.port') . '/' . ltrim($uri, '/');
+        return config('tests.url.protocol') . config('tests.url.host') . ':' . config('tests.url.port') . '/' . ltrim($uri, '/');
     }
 
     public function visit(string $url, string $method = HttpMethod::GET): self

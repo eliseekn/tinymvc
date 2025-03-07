@@ -13,16 +13,19 @@ declare(strict_types=1);
  */
 
 return [
-    'database' => [
+    'db' => [
         'driver' => 'sqlite',
         'suffix' => '_test',
     ],
 
-    'host' => '127.0.0.1',
-    'port' => 8889,
+    'url' => [
+        'protocol' => 'http://',
+        'host' => '127.0.0.1',
+        'port' => 8889,
+    ],
 
     'browser' => [
-        \Symfony\Component\Panther\PantherTestCase::FIREFOX,
+        'name' => \Symfony\Component\Panther\PantherTestCase::FIREFOX,
         'headless' => true,
         'screenshots_dir' => config('storage.tmp'),
     ],
