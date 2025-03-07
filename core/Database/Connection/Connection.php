@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Core\Database\Connection;
 
+use Core\Enums\DatabaseDriver;
 use PDO;
 use PDOStatement;
 
@@ -28,12 +29,12 @@ class Connection
     private function __construct()
     {
         $driver = config('app.env') === 'test'
-            ? config('tests.database.driver')
+            ? config('tests.db.driver')
             : config('database.driver');
 
         $this->db = match ($driver) {
-            'pgsql' => new PostgreSQLConnection(),
-            'sqlite' => new SQLiteConnection(),
+            DatabaseDriver::PGSQL => new PostgreSQLConnection(),
+            DatabaseDriver::SQLITE => new SQLiteConnection(),
             default => new MySQLConnection()
         };
     }

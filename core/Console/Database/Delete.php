@@ -37,7 +37,7 @@ class Delete extends Command
         if (empty($databases)) {
             $db = config('app.env') !== 'test'
                 ? config('database.name')
-                : config('database.name') . config('tests.database.suffix');
+                : config('database.name') . config('tests.db.suffix');
 
             $databases = [$db];
         }

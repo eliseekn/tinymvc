@@ -69,7 +69,7 @@ class Metrics
     public function __construct(protected string $table)
     {
         $this->driver = config('app.env') === 'test'
-            ? config('tests.database.driver')
+            ? config('tests.db.driver')
             : config('database.driver');
 
         $this->qb = QueryBuilder::table($this->table);

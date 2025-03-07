@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace Core\Console\Database;
 
 use Core\Database\Connection\Connection;
-use Core\Support\Storage;
+use Core\Enums\DatabaseDriver;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -34,17 +34,17 @@ class Show extends Command
         $rows = [];
 
         $driver = config('app.env') === 'test'
-            ? config('tests.database.driver')
+            ? config('tests.db.driver')
             : config('database.driver');
 
-        if ($driver === 'mysql') {
+        if ($driver === DatabaseDriver::MYSQL) {
             $databases = Connection::getInstance()->executeQuery('SHOW DATABASES')->fetchAll();
 
             foreach ($databases as $db) {
                 $rows[] = [$db->Database];
             }
         } else {
-            $databases = Storage::path(config('storage.sqlite'))->getFiles();
+            $databases = storage(config('storage.sqlite'))->getFiles();
 
             foreach ($databases as $db) {
                 $rows[] = [basename($db)];

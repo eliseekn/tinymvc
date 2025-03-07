@@ -12,6 +12,7 @@ namespace Core\Database;
 
 use Closure;
 use Core\Database\Connection\Connection;
+use Core\Enums\DatabaseDriver;
 use PDOStatement;
 
 /**
@@ -28,11 +29,11 @@ class QueryBuilder
     public static function setTable(string $name): string
     {
         if (config('app.env') === 'test') {
-            if (config('tests.database.driver') === 'sqlite') {
+            if (config('tests.db.driver') === 'sqlite') {
                 return config('database.table_prefix') . $name;
             }
 
-            return config('database.name') . config('tests.database.suffix') . '.' . config('database.table_prefix') . $name;
+            return config('database.name') . config('tests.db.suffix') . '.' . config('database.table_prefix') . $name;
         }
 
         if (config('database.driver') === 'sqlite') {
@@ -45,7 +46,7 @@ class QueryBuilder
     public function driver(): string
     {
         return config('app.env') === 'test'
-            ? config('tests.database.driver')
+            ? config('tests.db.driver')
             : config('database.driver');
     }
 
@@ -231,8 +232,8 @@ class QueryBuilder
         self::$query = rtrim(self::$query, ', ');
 
         self::$query .= match ($this->driver()) {
-            'mysql' => ' AUTO_INCREMENT, ',
-            'pgsql' => ' SERIAL, ',
+            DatabaseDriver::MYSQL => ' AUTO_INCREMENT, ',
+            DatabaseDriver::PGSQL => ' SERIAL, ',
             default => ' AUTOINCREMENT, ',
         };
 
@@ -317,8 +318,8 @@ class QueryBuilder
     public function timestamps(string $created_at = 'created_at', string $updated_at = 'updated_at'): self
     {
         self::$query .= match ($this->driver()) {
-            'mysql' => " $created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, $updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, ",
-            'pgsql' => " $created_at TIMESTAMP NOT NULL DEFAULT NOW(), $updated_at TIMESTAMP NOT NULL DEFAULT NOW(), ",
+            DatabaseDriver::MYSQL => " $created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, $updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, ",
+            DatabaseDriver::PGSQL => " $created_at TIMESTAMP NOT NULL DEFAULT NOW(), $updated_at TIMESTAMP NOT NULL DEFAULT NOW(), ",
             default => " $created_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')), $updated_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')), ",
         };
 
@@ -329,7 +330,7 @@ class QueryBuilder
     {
         self::$query = rtrim(self::$query, ', ') . ')';
 
-        if ($this->driver() === 'mysql') {
+        if ($this->driver() === DatabaseDriver::MYSQL) {
             self::$query .= " ENGINE='" . config('database.mysql.engine') . "'";
         }
 

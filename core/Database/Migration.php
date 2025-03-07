@@ -25,7 +25,7 @@ class Migration
     public static function driver(): string
     {
         return config('app.env') === 'test'
-            ? config('tests.database.driver')
+            ? config('tests.db.driver')
             : config('database.driver');
     }
 

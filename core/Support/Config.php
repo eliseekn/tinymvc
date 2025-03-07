@@ -46,11 +46,7 @@ class Config
         $lines = file(storage()->file('.env'), FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
         foreach ($lines as $line) {
-            if (str_contains(trim($line), '#')) {
-                continue;
-            }
-
-            if (trim($line) === '') {
+            if (str_contains(trim($line), '#') || trim($line) === '') {
                 continue;
             }
 
@@ -69,6 +65,10 @@ class Config
         $lines = file(storage()->file('.env'), FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
         foreach ($lines as $line) {
+            if (str_contains(trim($line), '#') || trim($line) === '') {
+                continue;
+            }
+
             list($key, $value) = explode('=', trim($line), 2);
 
             if (array_key_exists($key, $config)) {

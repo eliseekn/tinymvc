@@ -42,7 +42,7 @@ abstract class FeatureTestCase extends TestCase
 
     protected function url(string $uri): string
     {
-        return config('tests.host') . ':' . config('tests.port') . '/' . ltrim($uri, '/');
+        return config('tests.url.host') . ':' . config('tests.url.port') . '/' . ltrim($uri, '/');
     }
 
     protected function getBody(): string

@@ -35,7 +35,7 @@ class PostgreSQLConnection implements ConnectionInterface
     private function getDB(): string
     {
         return config('app.env') === 'test'
-            ? config('database.name') . config('tests.database.suffix')
+            ? config('database.name') . config('tests.db.suffix')
             : config('database.name');
     }
 

@@ -13,6 +13,7 @@ namespace Core\Database\Metrics;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Core\Database\Metrics\Enums\Period;
+use Core\Enums\DatabaseDriver;
 use Core\Exceptions\InvalidDateFormatException;
 use DateTime;
 
@@ -61,7 +62,7 @@ trait DatesFunctions
 
     protected function formatPeriod(string $period): string
     {
-        if ($this->driver === 'mysql') {
+        if ($this->driver === DatabaseDriver::MYSQL) {
             return match ($period) {
                 Period::TODAY->value, Period::DAY->value => "day($this->dateColumn)",
                 Period::WEEK->value => "week($this->dateColumn)",
@@ -70,7 +71,7 @@ trait DatesFunctions
             };
         }
 
-        if ($this->driver === 'pgsql') {
+        if ($this->driver === DatabaseDriver::PGSQL) {
             return match ($period) {
                 Period::TODAY->value, Period::DAY->value => "EXTRACT(DAY FROM $this->dateColumn)",
                 Period::WEEK->value => "EXTRACT(WEEK FROM $this->dateColumn)",
@@ -90,8 +91,8 @@ trait DatesFunctions
     protected function formatDateColumn(): string
     {
         return match ($this->driver) {
-            'mysql' => "date($this->dateColumn)",
-            'pgsql' => "TO_CHAR($this->dateColumn, 'YYYY-MM-DD')",
+            DatabaseDriver::MYSQL => "date($this->dateColumn)",
+            DatabaseDriver::PGSQL => "TO_CHAR($this->dateColumn, 'YYYY-MM-DD')",
             default => "strftime('%Y-%m-%d', $this->dateColumn)",
         };
     }

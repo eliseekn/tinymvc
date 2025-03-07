@@ -3,7 +3,7 @@
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/eliseekn/tinymvc.svg?style=flat-square)](https://packagist.org/packages/eliseekn/tinymvc)
 [![Total Downloads](https://img.shields.io/packagist/dt/eliseekn/tinymvc.svg?style=flat-square)](https://packagist.org/packages/eliseekn/tinymvc)
 
-TinyMVC is a PHP framework based on MVC architecture that helps you build easily and quickly powerful web applications and REST API.
+TinyMVC is a PHP framework based on MVC architecture that helps you build easily and quickly powerful web applications and RESTful API.
 
 ## Requirements
 ```
@@ -38,14 +38,14 @@ cp .env.example .env
 php console app:setup
 ```
 
-2. Setup database
+3. Setup database
 
 In your terminal :
 ```
 php console migrations:run --seed
 ```
 
-3. Start a local server development
+4. Start a local server development
 
 In your terminal :
 ```
