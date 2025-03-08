@@ -32,6 +32,9 @@ class Model
         return $this->table;
     }
 
+    /**
+     * @throws InvalidSQLQueryException
+     */
     public function findBy(string $column, $operator = null, $value = null): self|false
     {
         return (new Repository($this->table))->findWhere($column, $operator, $value);
@@ -138,6 +141,9 @@ class Model
         return (new Repository($this->table))->metrics();
     }
 
+    /**
+     * @throws InvalidSQLQueryException
+     */
     public function create(array $data): self|false
     {
         $id = (new Repository($this->table))->insertGetId($data);
@@ -197,22 +203,31 @@ class Model
         }
 
         if (is_string($attributes)) {
-            return $this->attributes[$attributes];
+            return $this->attributes[$attributes] ?? null;
         }
 
         return array_intersect_key($this->attributes, array_flip($attributes));
     }
 
+    /**
+     * @throws InvalidSQLQueryException
+     */
     public function update(array $data): bool
     {
         return (new Repository($this->table))->updateIfExists($this->getId(), $data);
     }
 
+    /**
+     * @throws InvalidSQLQueryException
+     */
     public function delete(): bool
     {
         return (new Repository($this->table))->deleteIfExists($this->getId());
     }
 
+    /**
+     * @throws InvalidSQLQueryException
+     */
     public function save(): self|false
     {
         if (empty($this->getId())) {
