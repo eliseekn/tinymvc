@@ -380,6 +380,27 @@ class Repository
         return $this;
     }
 
+    public function whereNotEquals(string $column, $value): self
+    {
+        $this->qb->where($column, '<>', $value);
+
+        return $this;
+    }
+
+    public function andNotEquals(string $column, $value): self
+    {
+        $this->qb->and($column, '<>', $value);
+
+        return $this;
+    }
+
+    public function orNotEquals(string $column, $value): self
+    {
+        $this->qb->or($column, '<>', $value);
+
+        return $this;
+    }
+
     public function whereNot(string $column, $operator = null, $value = null): self
     {
         if (is_null($operator) && ! is_null($value)) {

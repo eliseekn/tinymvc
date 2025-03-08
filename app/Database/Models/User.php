@@ -13,6 +13,7 @@ namespace App\Database\Models;
 use App\Enums\UserRole;
 use Core\Database\Factory\HasFactory;
 use Core\Database\Model;
+use Core\Database\Repository;
 use Core\Support\Pagination;
 
 class User extends Model
@@ -53,8 +54,8 @@ class User extends Model
 
         return (new self)
             ->select('*')
-            ->where('id', '<>', $userId)
-            ->subQueryWhen(! is_null($search), function ($q) use ($search) {
+            ->whereNotEquals('id', $userId)
+            ->subQueryWhen(! is_null($search), function (Repository $q) use ($search) {
                 $q->andRaw("(name LIKE '%$search%' OR email LIKE '%$search%')");
             })
             ->orderDesc('created_at')
