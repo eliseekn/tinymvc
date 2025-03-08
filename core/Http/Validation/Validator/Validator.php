@@ -133,7 +133,7 @@ class Validator implements ValidatorInterface
         return $errors;
     }
 
-    public function inputs(?string $name = null): array|string
+    public function inputs(string|array $name = null): array|string|null
     {
         $validated = [];
         $inputs = array_keys($this->rules());
@@ -146,10 +146,14 @@ class Validator implements ValidatorInterface
             }
         }
 
-        if (! is_null($name) && isset($validated[$name])) {
-            return $validated[$name];
+        if (is_null($name)) {
+            return $validated;
         }
 
-        return $validated;
+        if (is_string($name)) {
+            return $validated[$name] ?? null;
+        }
+
+        return array_intersect_key($validated, array_flip($name));
     }
 }
