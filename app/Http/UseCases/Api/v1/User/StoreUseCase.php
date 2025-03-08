@@ -19,7 +19,7 @@ class StoreUseCase extends UseCase
 {
     public function handle(array $data): void
     {
-        $data['password'] = hash_pwd($data['password']);
+        $data['password'] = bcrypt($data['password']);
 
         if (! User::factory()->create($data)) {
             $this->response->json([

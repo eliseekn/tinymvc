@@ -20,7 +20,7 @@ class StoreUseCase extends UseCase
     public function handle(array $data): void
     {
         $password = $data['password'];
-        $data['password'] = hash_pwd($password);
+        $data['password'] = bcrypt($password);
 
         $user = User::factory()->create($data);
 

@@ -112,11 +112,11 @@ if (! function_exists('auth')) {
 /*
  * Security utils
  */
-if (! function_exists('hash_pwd')) {
+if (! function_exists('bcrypt')) {
     /**
      * Hash password.
      */
-    function hash_pwd(string $password): string
+    function bcrypt(string $password): string
     {
         return Encryption::hash($password);
     }

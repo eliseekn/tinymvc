@@ -20,7 +20,7 @@ class RegisterUseCase extends UseCase
 {
     public function handle(array $data, NotifyUseCase $notifyUseCase): void
     {
-        $data['password'] = hash_pwd($data['password']);
+        $data['password'] = bcrypt($data['password']);
 
         $user = User::factory()->create($data);
 

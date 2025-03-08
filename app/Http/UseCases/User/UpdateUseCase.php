@@ -25,7 +25,7 @@ class UpdateUseCase extends UseCase
         }
 
         if (! empty($data['password'])) {
-            $data['password'] = hash_pwd($data['password']);
+            $data['password'] = bcrypt($data['password']);
         } else {
             unset($data['password']);
         }

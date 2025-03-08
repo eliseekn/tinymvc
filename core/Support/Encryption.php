@@ -35,7 +35,7 @@ class Encryption
 
     public static function hash(string $str): string
     {
-        return password_hash($str, PASSWORD_DEFAULT);
+        return password_hash($str, PASSWORD_BCRYPT);
     }
 
     /**

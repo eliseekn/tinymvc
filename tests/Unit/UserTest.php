@@ -22,7 +22,7 @@ class UserTest extends TestCase
         $data = [
             'name' => faker()->name(),
             'email' => faker()->unique()->email(),
-            'password' => hash_pwd('password'),
+            'password' => bcrypt('password'),
             'email_verified_at' => null,
             'role' => UserRole::USER->value,
             'avatar' => null,
