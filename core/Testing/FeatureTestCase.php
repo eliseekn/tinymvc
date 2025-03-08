@@ -14,7 +14,7 @@ use Core\Database\Model;
 use Core\Enums\HttpAuthMethod;
 use Core\Enums\HttpCode;
 use Core\Http\Auth;
-use Core\Http\Client\Curl as Client;
+use Core\Http\Client\Client;
 use Core\Testing\Traits\DatabaseTestCaseTrait;
 use CURLFile;
 use PHPUnit\Framework\TestCase;

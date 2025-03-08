@@ -16,7 +16,7 @@ use CURLFile;
 /**
  * Send asynchronous HTTP requests using curl.
  */
-class Curl implements ClientInterface
+class Client implements ClientInterface
 {
     protected static array $response = [];
 
