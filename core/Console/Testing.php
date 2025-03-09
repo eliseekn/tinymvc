@@ -66,7 +66,20 @@ class Testing extends Command
         $phpunit->setTimeout(null);
         $phpunit->start();
         $phpunit->wait(function ($type, $buffer) use ($output) {
-            $output->write($buffer);
+            $lines = explode("\n", trim($buffer));
+
+            foreach ($lines as $line) {
+                $line = trim($line);
+
+                if (preg_match('/^OK \(\d+ tests?, \d+ assertions?\)$/', $line)) {
+                    $output->writeln('<bg=green;fg=black> ' . $line . '</>');
+                } else if (in_array($line, ['.', 'F', 'E'])) {
+                    $output->write($line);
+                } else {
+                    $output->writeln($line);
+                    $output->writeln('');
+                }
+            }
         });
 
         $server->stop();
