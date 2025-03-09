@@ -44,6 +44,13 @@ class UserController extends Controller
     #[Route(HttpMethod::GET, '/dashboard/users/{id:num}/edit', ['auth', 'verified', 'admin'], 'users.edit')]
     public function edit(int $id): void
     {
+        $user = User::find($id);
+
+        if (! $user) {
+            Alert::toast('User not found')->error();
+            $this->redirectBack();
+        }
+
         $this->render('dashboard.users.edit', ['user' => User::find($id)]);
     }
 
