@@ -17,7 +17,6 @@ use Core\Exceptions\MiddlewareNotFoundException;
 use Core\Exceptions\RouteHandlerNotDefinedException;
 use Core\Exceptions\RoutesNotDefinedException;
 use Core\Exceptions\RoutesPathsNotDefinedException;
-use Core\Http\Routing\Route;
 use Core\Http\Routing\Router;
 use Core\Support\Whoops;
 

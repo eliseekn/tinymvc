@@ -13,7 +13,6 @@ namespace Core\Console\Database\Migrations;
 use Core\Database\Connection\Connection;
 use Core\Database\Migration;
 use Core\Database\QueryBuilder;
-use Core\Support\Storage;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Input\ArrayInput;
