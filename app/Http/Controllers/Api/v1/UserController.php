@@ -24,16 +24,23 @@ use Core\Http\Routing\Controller;
 
 class UserController extends Controller
 {
-    #[Route(HttpMethod::GET, '/api/v1/users', ['api'])]
-    public function index(GetCollectionUseCase $useCase): void
+    #[Route(HttpMethod::GET, '/api/v1/users/{id:num?}', ['api'])]
+    public function index(GetCollectionUseCase $useCase, ?int $id = null): void
     {
-        $useCase->handle($this->request->queries());
-    }
+        if (is_null($id)) {
+            $useCase->handle($this->request->queries());
+        }
 
-    #[Route(HttpMethod::GET, '/api/v1/users/{id:num}', ['api'])]
-    public function show(int $id): void
-    {
-        $this->jsonResponse(User::find($id)->get());
+        $user = User::find($id);
+
+        if (! $user) {
+            $this->jsonResponse([
+                'status' => ResponseStatus::ERROR,
+                'message' => 'User not found',
+            ], HttpCode::NOT_FOUND);
+        }
+
+        $this->jsonResponse($user->get());
     }
 
     #[Route(HttpMethod::POST, '/api/v1/users', ['api', 'admin'])]
