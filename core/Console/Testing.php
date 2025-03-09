@@ -73,7 +73,7 @@ class Testing extends Command
 
                 if (preg_match('/^OK \(\d+ tests?, \d+ assertions?\)$/', $line)) {
                     $output->writeln('<bg=green;fg=black> ' . $line . '</>');
-                } else if (in_array($line, ['.', 'F', 'E'])) {
+                } elseif (in_array($line, ['.', 'F', 'E'])) {
                     $output->write($line);
                 } else {
                     $output->writeln($line);
