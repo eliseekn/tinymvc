@@ -38,7 +38,6 @@ class Application
     {
         Whoops::register();
         Event::load();
-        Route::load();
         Router::dispatch();
     }
 }

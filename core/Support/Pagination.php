@@ -116,33 +116,33 @@ class Pagination
 
     public function firstPageUrl(): string
     {
-        return url($this->generateUri(1));
+        return url($this->uri(1));
     }
 
     public function previousPageUrl(): string
     {
-        return url($this->generateUri($this->previousPage()));
+        return url($this->uri($this->previousPage()));
     }
 
     public function nextPageUrl(): string
     {
-        return url($this->generateUri($this->nextPage()));
+        return url($this->uri($this->nextPage()));
     }
 
     public function lastPageUrl(): string
     {
-        return url($this->generateUri($this->totalPages()));
+        return url($this->uri($this->totalPages()));
     }
 
     public function pageUrl(int $page): string
     {
-        return url($this->generateUri($page));
+        return url($this->uri($page));
     }
 
     /**
      * Generate pagination URI
      */
-    private function generateUri(int $page): string
+    private function uri(int $page): string
     {
         $request = new Request();
         $uri = $request->fullUri();

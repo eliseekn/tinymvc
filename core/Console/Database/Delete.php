@@ -44,10 +44,10 @@ class Delete extends Command
 
         foreach ($databases as $database) {
             if (! $connection->schemaExists($database)) {
-                $output->writeln('<comment>[WARNING] Database "' . $database . '" does not exists</comment>');
+                $output->writeln('<bg=bright-yellow;fg=black> WARN </> Database <options=bold>' . $database . '</> does not exists.');
             } else {
                 $connection->deleteSchema($database);
-                $output->writeln('<info>[INFO] Database "' . $database . '" has been deleted</info>');
+                $output->writeln('<bg=blue;options=bold> INFO </> Database <options=bold>' . $database . '</> has been deleted.');
             }
         }
 

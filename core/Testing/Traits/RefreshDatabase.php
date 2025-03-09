@@ -8,7 +8,7 @@
 
 declare(strict_types=1);
 
-namespace Core\Testing;
+namespace Core\Testing\Traits;
 
 use Symfony\Component\Process\Process;
 

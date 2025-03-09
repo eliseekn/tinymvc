@@ -36,9 +36,9 @@ class Event extends Command
             list(, $class) = Maker::generateClass(base_name: $event, singular: true, force_singular: true);
 
             if (! Maker::createEvent($event)) {
-                $output->writeln('<error>[ERROR] Failed to create event "' . Maker::fixPlural($class . 'Event', true) . '"</error>');
+                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create event  <options=bold>' . Maker::fixPlural($class . 'Event', true) . '</>.');
             } else {
-                $output->writeln('<info>[INFO] Event "' . Maker::fixPlural($class . 'Event', true) . '" has been created</info>');
+                $output->writeln('<bg=blue;options=bold> INFO </> Event <options=bold>' . Maker::fixPlural($class . 'Event', true) . '</> has been created.');
             }
         }
 

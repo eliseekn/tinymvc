@@ -36,9 +36,9 @@ class Middleware extends Command
             list(, $class) = Maker::generateClass($middleware, singular: true);
 
             if (! Maker::createMiddleware($middleware)) {
-                $output->writeln('<error>[ERROR] Failed to create middleware "' . $class . '"</error>');
+                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create middleware <options=bold>' . $class . '</>.');
             } else {
-                $output->writeln('<info>[INFO] Middleware "' . $class . '" has been created</info>');
+                $output->writeln('<bg=blue;options=bold> INFO </> Middleware <options=bold>' . $class . '</> has been created.');
             }
         }
 

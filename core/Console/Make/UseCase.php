@@ -46,9 +46,9 @@ class UseCase extends Command
             $class = str_replace(['Index', 'Show'], ['GetCollection', 'GetItem'], $class);
 
             if (! Maker::createUseCase($input->getArgument('model'), $type, $output, $input->getOption('namespace'))) {
-                $output->writeln('<error>[ERROR] Failed to create use case "' . $class . '"</error>');
+                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create use case <options=bold>' . $class . '</>.');
             } else {
-                $output->writeln('<info>[INFO] Use case "' . $class . '" has been created</info>');
+                $output->writeln('<bg=blue;options=bold> INFO </> Use case <options=bold>' . $class . '</> has been created.');
             }
         }
 

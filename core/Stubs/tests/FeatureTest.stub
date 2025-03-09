@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace NAMESPACE;
 
 use Core\Testing\FeatureTestCase;
-use Core\Testing\RefreshDatabase;
+use Core\Testing\Traits\RefreshDatabase;
 
 class CLASSNAME extends FeatureTestCase
 {

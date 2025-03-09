@@ -48,9 +48,9 @@ class Test extends Command
             }
 
             if (! $result) {
-                $output->writeln('<error>[ERROR] Failed to create test "' . $class . '"</error>');
+                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create test <options=bold>' . $class . '</>.');
             } else {
-                $output->writeln('<info>[INFO] Test "' . $class . '" has been created</info>');
+                $output->writeln('<bg=blue;options=bold> INFO </> Test <options=bold>' . $class . '</> has been created.');
             }
         }
 

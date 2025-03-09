@@ -38,9 +38,9 @@ class Factory extends Command
             list(, $class) = Maker::generateClass($factory, 'factory', true, true);
 
             if (! Maker::createFactory($factory, $input->getOption('namespace'))) {
-                $output->writeln('<error>[ERROR] Failed to create factory "' . Maker::fixPlural($class, true) . '"</error>');
+                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create factory <options=bold>' . Maker::fixPlural($class, true) . '</>.');
             } else {
-                $output->writeln('<info>[INFO] Factory "' . Maker::fixPlural($class, true) . '" has been created</info>');
+                $output->writeln('<bg=blue;options=bold> INFO </> Factory <options=bold>' . Maker::fixPlural($class, true) . '</> has been created.');
             }
         }
 

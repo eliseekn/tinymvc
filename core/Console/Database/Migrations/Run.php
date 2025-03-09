@@ -23,7 +23,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Run migrations tables.
+ * Run migrations.
  */
 class Run extends Command
 {
@@ -31,8 +31,8 @@ class Run extends Command
 
     protected function configure(): void
     {
-        $this->setDescription('Run migrations tables');
-        $this->addArgument('table', InputArgument::OPTIONAL | InputArgument::IS_ARRAY, 'The name of migrations tables (separated by space if many)');
+        $this->setDescription('Run migrations');
+        $this->addArgument('migration', InputArgument::OPTIONAL | InputArgument::IS_ARRAY, 'The name of migrations (separated by space if many)');
         $this->addOption('seed', null, InputOption::VALUE_NONE, 'Run seeders');
     }
 
@@ -49,41 +49,41 @@ class Run extends Command
                 ->addString('name')
                 ->run();
 
-            $output->writeln('<info>[INFO] Migrations tables have been created</info>');
+            $output->writeln('<bg=blue;options=bold> INFO </> Migrations tables have been created.');
         }
 
-        $tables = Storage::path(config('storage.migrations'))->getFiles();
+        $migrations = storage(config('storage.migrations'))->getFiles();
 
-        foreach ($tables as $table) {
-            $this->migrate($output, get_file_name($table));
+        foreach ($migrations as $migration) {
+            $this->migrate($output, get_file_name($migration));
         }
 
         if ($input->getOption('seed')) {
-            $this->getApplication()->find('db:seed')->run(new ArrayInput($tables), $output);
+            $this->getApplication()->find('db:seed')->run(new ArrayInput($migrations), $output);
         }
 
         return Command::SUCCESS;
     }
 
-    protected function migrate(OutputInterface $output, string $table): void
+    protected function migrate(OutputInterface $output, string $migration): void
     {
-        if ($this->isMigrated($table)) {
-            $output->writeln('<comment>[WARNING] Table "' . $table . '" has already been migrated</>');
+        if ($this->isMigrated($migration)) {
+            $output->writeln('<bg=bright-yellow;fg=black> WARN </> Migration <options=bold>' . $migration . '</> has already been migrated.');
 
             return;
         }
 
-        $migration = '\App\Database\Migrations\\' . $table;
-        (new $migration())->create();
+        $migrationClass = '\App\Database\Migrations\\' . $migration;
+        (new $migrationClass())->create();
 
         QueryBuilder::table('migrations')
-            ->insert(['name' => $table])
+            ->insert(['name' => $migration])
             ->execute();
 
-        $output->writeln('<info>[INFO] Table "' . $table . '" has been migrated</info>');
+        $output->writeln('<bg=blue;options=bold> INFO </> Migration <options=bold>' . $migration . '</> has been migrated.');
     }
 
-    protected function isMigrated(string $table): bool
+    protected function isMigrated(string $migration): bool
     {
         if (! Connection::getInstance()->tableExists('migrations')) {
             return false;
@@ -91,7 +91,7 @@ class Run extends Command
 
         return QueryBuilder::table('migrations')
             ->select('name')
-            ->where('name', $table)
+            ->where('name', $migration)
             ->exists();
     }
 }

@@ -44,10 +44,10 @@ class Create extends Command
 
         foreach ($databases as $database) {
             if ($connection->schemaExists($database)) {
-                $output->writeln('<comment>[WARNING] Database "' . $database . '" already exists</comment>');
+                $output->writeln('<bg=bright-yellow;fg=black> WARN </> Database <options=bold>' . $database . '</> already exists.');
             } else {
                 $connection->createSchema($database);
-                $output->writeln('<info>[INFO] Database "' . $database . '" has been created</info>');
+                $output->writeln('<bg=blue;options=bold> INFO </> Database <options=bold>' . $database . '</> has been created.');
             }
         }
 

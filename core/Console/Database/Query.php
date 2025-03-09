@@ -13,6 +13,7 @@ namespace Core\Console\Database;
 use Core\Database\Connection\Connection;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -33,7 +34,7 @@ class Query extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $stmt = Connection::getInstance()->executeQuery($input->getArgument('query'));
-        $output->writeln('<info>[INFO] Query executed</info>');
+        $output->writeln('<bg=blue;options=bold> INFO </> Query executed.');
         $output->writeln('');
 
         $result = $stmt->fetchAll();
@@ -41,10 +42,12 @@ class Query extends Command
 
         foreach ($result as $key => $value) {
             foreach ($value as $k => $v) {
-                $rows[] = [$k, $v];
+                $rows[] = [$k, $v ?? 'null'];
             }
 
-            $rows[] = ['', ''];
+            if ($key < count($result) - 1) {
+                $rows[] = new TableSeparator();
+            }
         }
 
         $table = new Table($output);

@@ -38,9 +38,9 @@ class Migration extends Command
             list(, $class) = Maker::generateClass($migration, 'migration');
 
             if (! Maker::createMigration($migration)) {
-                $output->writeln('<error>[ERROR] Failed to create migration "' . $class . '"</error>');
+                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create migration <options=bold>' . $class . '</>.');
             } else {
-                $output->writeln('<info>[INFO] Migration "' . $class . '" has been created</info>');
+                $output->writeln('<bg=blue;options=bold> INFO </> Migration <options=bold>' . $class . '</> has been created.');
             }
         }
 
@@ -49,9 +49,9 @@ class Migration extends Command
                 list(, $class) = Maker::generateClass($migration, 'seeder', true, true);
 
                 if (! Maker::createSeeder($migration)) {
-                    $output->writeln('<error>[ERROR] Failed to create seeder "' . Maker::fixPlural($class, true) . '"</error>');
+                    $output->writeln('<bg=red;options=bold> ERROR </> Failed to create seeder <options=bold>' . Maker::fixPlural($class, true) . '</>.');
                 } else {
-                    $output->writeln('<info>[INFO] Seeder "' . Maker::fixPlural($class, true) . '" has been created</info>');
+                    $output->writeln('<bg=blue;options=bold> INFO </> Seeder <options=bold>' . Maker::fixPlural($class, true) . '</> has been created.');
                 }
             }
         }

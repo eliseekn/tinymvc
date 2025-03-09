@@ -12,14 +12,13 @@ namespace Core\Console\Database\Migrations;
 
 use Core\Database\Connection\Connection;
 use Core\Database\QueryBuilder;
-use Core\Support\Storage;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Delete migrations tables.
+ * Delete migrations.
  */
 class Delete extends Command
 {
@@ -27,44 +26,44 @@ class Delete extends Command
 
     protected function configure(): void
     {
-        $this->setDescription('Delete migrations tables');
-        $this->addArgument('table', InputArgument::OPTIONAL | InputArgument::IS_ARRAY, 'The name of migrations tables (separated by space if many)');
+        $this->setDescription('Delete migrations');
+        $this->addArgument('migration', InputArgument::OPTIONAL | InputArgument::IS_ARRAY, 'The name of migrations (separated by space if many)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $tables = $input->getArgument('table');
+        $migrations = $input->getArgument('migration');
 
-        if (empty($tables)) {
-            $tables = Storage::path(config('storage.migrations'))->getFiles();
+        if (empty($migrations)) {
+            $migrations = storage(config('storage.migrations'))->getFiles();
         }
 
-        foreach ($tables as $table) {
-            $this->delete($output, get_file_name($table));
+        foreach ($migrations as $migration) {
+            $this->delete($output, get_file_name($migration));
         }
 
         return Command::SUCCESS;
     }
 
-    protected function delete(OutputInterface $output, string $table): void
+    protected function delete(OutputInterface $output, string $migration): void
     {
-        if (! $this->isMigrated($table)) {
-            $output->writeln('<comment>[WARNING] Table "' . $table . '" has not been migrated</>');
+        if (! $this->isMigrated($migration)) {
+            $output->writeln('<bg=bright-yellow;fg=black> WARN </> Migration <options=bold>' . $migration . '</> has not been migrated.');
 
             return;
         }
 
-        $migration = '\App\Database\Migrations\\' . $table;
-        (new $migration())->drop();
+        $migrationClass = '\App\Database\Migrations\\' . $migration;
+        (new $migrationClass())->drop();
 
         QueryBuilder::table('migrations')
-            ->deleteWhere('name', $table)
+            ->deleteWhere('name', $migration)
             ->execute();
 
-        $output->writeln('<info>[INFO] Table "' . $table . '" has been deleted</info>');
+        $output->writeln('<bg=blue;options=bold> INFO </> Migration <options=bold>' . $migration . '</> has been deleted.');
     }
 
-    protected function isMigrated(string $table): bool
+    protected function isMigrated(string $migration): bool
     {
         if (! Connection::getInstance()->tableExists('migrations')) {
             return false;
@@ -72,7 +71,7 @@ class Delete extends Command
 
         return QueryBuilder::table('migrations')
             ->select('*')
-            ->where('name', $table)
+            ->where('name', $migration)
             ->exists();
     }
 }

@@ -13,7 +13,7 @@ namespace Core\Database;
 use Closure;
 use Core\Database\Metrics\Metrics;
 use Core\Exceptions\InvalidSQLQueryException;
-use Core\Notifications\Notifiable;
+use Core\Notification\Notifiable;
 use PDOStatement;
 
 /**

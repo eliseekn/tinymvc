@@ -12,7 +12,7 @@ namespace Tests\Feature\Auth;
 
 use App\Database\Models\User;
 use Core\Testing\FeatureTestCase;
-use Core\Testing\RefreshDatabase;
+use Core\Testing\Traits\RefreshDatabase;
 
 class AuthenticationTest extends FeatureTestCase
 {

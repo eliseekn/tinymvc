@@ -15,7 +15,7 @@ use App\Enums\TokenDescription;
 use App\Http\UseCases\User\UpdateUseCase;
 use App\Mails\WelcomeMail;
 use Core\Enums\HttpCode;
-use Core\Notifications\Notification;
+use Core\Notification\Notification;
 use Core\Support\Alert;
 use Core\Support\UseCase;
 use Exception;

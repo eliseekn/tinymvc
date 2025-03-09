@@ -36,9 +36,9 @@ class Helper extends Command
             list(, $class) = Maker::generateClass($helper, 'helper', true);
 
             if (! Maker::createHelper($helper)) {
-                $output->writeln('<error>[ERROR] Failed to create helper "' . $class . '"</error>');
+                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create helper <options=bold>' . $class . '</>.');
             } else {
-                $output->writeln('<info>[INFO] Helper "' . $class . '" has been created</info>');
+                $output->writeln('<bg=blue;options=bold> INFO </> Helper <options=bold>' . $class . '</> has been created.');
             }
         }
 

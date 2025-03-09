@@ -15,7 +15,7 @@ use App\Database\Models\User;
 use App\Enums\TokenDescription;
 use Core\Support\Encryption;
 use Core\Testing\FeatureTestCase;
-use Core\Testing\RefreshDatabase;
+use Core\Testing\Traits\RefreshDatabase;
 
 class PasswordForgotTest extends FeatureTestCase
 {

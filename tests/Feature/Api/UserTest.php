@@ -15,7 +15,7 @@ use App\Enums\UserRole;
 use Core\Enums\HttpCode;
 use Core\Enums\ResponseStatus;
 use Core\Testing\FeatureTestCase;
-use Core\Testing\RefreshDatabase;
+use Core\Testing\Traits\RefreshDatabase;
 
 class UserTest extends FeatureTestCase
 {

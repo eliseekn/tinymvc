@@ -13,7 +13,7 @@ namespace Tests\Feature\Api;
 use App\Database\Models\User;
 use Core\Enums\ResponseStatus;
 use Core\Testing\FeatureTestCase;
-use Core\Testing\RefreshDatabase;
+use Core\Testing\Traits\RefreshDatabase;
 
 class AuthenticationTest extends FeatureTestCase
 {

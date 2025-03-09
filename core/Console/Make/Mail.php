@@ -24,8 +24,8 @@ class Mail extends Command
 
     protected function configure(): void
     {
-        $this->setDescription('Create new mail template');
-        $this->addArgument('mail', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'The name of mail template (separated by space if many)');
+        $this->setDescription('Create new mail');
+        $this->addArgument('mail', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'The name of mail (separated by space if many)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -36,9 +36,9 @@ class Mail extends Command
             list(, $class) = Maker::generateClass($mail, 'mail', force_singular: true);
 
             if (! Maker::createMail($mail)) {
-                $output->writeln('<error>[ERROR] Failed to create mail template "' . $class . '"</error>');
+                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create mail <options=bold>' . $class . '</>.');
             } else {
-                $output->writeln('<info>[INFO] Mail template "' . $class . '" has been created</info>');
+                $output->writeln('<bg=blue;options=bold> INFO </> Mail <options=bold>' . $class . '</> has been created.');
             }
         }
 

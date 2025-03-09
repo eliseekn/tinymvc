@@ -29,7 +29,7 @@ class ClearLogs extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         storage(config('storage.logs'))->deleteDir();
-        $output->writeln('<info>[INFO] Logs have been cleared</info>');
+        $output->writeln('<bg=blue;options=bold> INFO </> Logs have been cleared.');
 
         return Command::SUCCESS;
     }

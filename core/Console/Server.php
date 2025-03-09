@@ -32,8 +32,8 @@ class Server extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $host = $input->getOption('host') ?? '127.0.0.1';
-        $port = $input->getOption('port') ?? 8888;
+        $host = $input->getOption('host') ?? parse_url(config('app.url'), PHP_URL_HOST);
+        $port = $input->getOption('port') ?? parse_url(config('app.url'), PHP_URL_PORT);
 
         $process = new Process(['php', '-S', "$host:$port"]);
         $process->setTimeout(null);

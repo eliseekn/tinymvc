@@ -14,7 +14,7 @@ use App\Database\Models\Token;
 use App\Database\Models\User;
 use App\Enums\TokenDescription;
 use Core\Testing\FeatureTestCase;
-use Core\Testing\RefreshDatabase;
+use Core\Testing\Traits\RefreshDatabase;
 
 class EmailVerificationTest extends FeatureTestCase
 {

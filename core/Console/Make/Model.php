@@ -44,9 +44,9 @@ class Model extends Command
             list($name, $class) = Maker::generateClass($model);
 
             if (! Maker::createModel($name, $input->getOption('namespace'))) {
-                $output->writeln('<error>[ERROR] Failed to create model "' . Maker::fixPlural($class, true) . '"</error>');
+                $output->writeln('<bg=red;options=bold> ERROR </>  Failed to create model <options=bold>' . Maker::fixPlural($class, true) . '</>.');
             } else {
-                $output->writeln('<info>[INFO] Model "' . Maker::fixPlural($class, true) . '" has been created</info>');
+                $output->writeln('<bg=blue;options=bold> INFO </> Model <options=bold>' . Maker::fixPlural($class, true) . '</> has been created.');
 
                 if ($input->getOption('migration')) {
                     $this->getApplication()->find('make:migration')->run(new ArrayInput(['migration' => [$model]]), $output);
@@ -64,7 +64,7 @@ class Model extends Command
                 }
 
                 if ($input->getOption('seed')) {
-                    $this->getApplication()->find('make:seed')->run(new ArrayInput(['seed' => [$model]]), $output);
+                    $this->getApplication()->find('make:seeder')->run(new ArrayInput(['seeder' => [$model]]), $output);
                 }
 
                 if ($input->getOption('actions')) {

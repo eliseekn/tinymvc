@@ -36,9 +36,9 @@ class Seeder extends Command
             list(, $class) = Maker::generateClass($seeder, 'seeder', true, true);
 
             if (! Maker::createSeeder($seeder)) {
-                $output->writeln('<error>[ERROR] Failed to create seeder "' . Maker::fixPlural($class, true) . '"</error>');
+                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create seeder <options=bold>' . Maker::fixPlural($class, true) . '</>.');
             } else {
-                $output->writeln('<info>[INFO] Seeder "' . Maker::fixPlural($class, true) . '" has been created</info>');
+                $output->writeln('<bg=blue;options=bold> INFO </> Seeder <options=bold>' . Maker::fixPlural($class, true) . '</> has been created.');
             }
         }
 

@@ -19,18 +19,18 @@ const APP_ROOT = __DIR__ . DIRECTORY_SEPARATOR;
 
 set_time_limit(0);
 
-set_exception_handler(/**
- * @throws ErrorException
- */ function ($e) {
-    throw new ErrorException(
-        $e->getMessage(),
-        $e->getCode(),
-        1,
-        $e->getFile(),
-        $e->getLine(),
-        $e->getPrevious()
-    );
-});
+set_exception_handler(
+    function ($e) {
+        throw new ErrorException(
+            $e->getMessage(),
+            $e->getCode(),
+            1,
+            $e->getFile(),
+            $e->getLine(),
+            $e->getPrevious()
+        );
+    }
+);
 
 Storage::init();
 Config::loadEnv();

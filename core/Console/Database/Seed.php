@@ -41,7 +41,7 @@ class Seed extends Command
                 $seeder::run();
             }
 
-            $output->writeln('<info>[INFO] All seeders have been run</info>');
+            $output->writeln('<bg=blue;options=bold> INFO </> All seeders have been run.');
         } else {
             foreach ($seeders as $seeder) {
                 $this->seed($output, $seeder);
@@ -55,6 +55,6 @@ class Seed extends Command
     {
         $seeder = '\App\Database\Seeders\\' . $seeder;
         $seeder::run();
-        $output->writeln('<info>[INFO] Seeder "' . $seeder . '" has been run</info>');
+        $output->writeln('<bg=blue;options=bold> Seeder <options=bold>' . $seeder . '</> has been run.');
     }
 }

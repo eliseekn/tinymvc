@@ -11,8 +11,8 @@ declare(strict_types=1);
 namespace App\Mails;
 
 use Core\Database\Model;
-use Core\Notifications\Mail\Mail;
-use Core\Notifications\Mail\Mailer\Mailer;
+use Core\Notification\Mail\Mail;
+use Core\Notification\Mail\Mailer\Mailer;
 
 class NewUserRegisteredMail extends Mail
 {

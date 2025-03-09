@@ -13,7 +13,7 @@ namespace Tests\Browser;
 use App\Database\Models\User;
 use App\Enums\UserRole;
 use Core\Testing\BrowserTestCase;
-use Core\Testing\RefreshDatabase;
+use Core\Testing\Traits\RefreshDatabase;
 
 class CreateUserTest extends BrowserTestCase
 {

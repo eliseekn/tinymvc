@@ -36,9 +36,9 @@ class Listener extends Command
         $event = $input->getArgument('event');
 
         if (! Maker::createListener($listener, $event)) {
-            $output->writeln('<error>[ERROR] Failed to create listener "' . $listener . '"</error>');
+            $output->writeln('<bg=red;options=bold> ERROR </> Failed to create listener <options=bold>' . $listener . '</>.');
         } else {
-            $output->writeln('<info>[INFO] Listener "' . $listener . '" has been created</info>');
+            $output->writeln('<bg=blue;options=bold> INFO </> Listener <options=bold>' . $listener . '</> has been created.');
         }
 
         return Command::SUCCESS;

@@ -31,7 +31,7 @@ class EncryptionKey extends Command
     {
         Config::updateEnv(['ENCRYPTION_KEY' => generate_token()]);
 
-        $output->writeln('<info>[INFO] Application encryption key has been generated</info>');
+        $output->writeln('<bg=blue;options=bold> INFO </> Application encryption key has been generated.');
 
         return Command::SUCCESS;
     }

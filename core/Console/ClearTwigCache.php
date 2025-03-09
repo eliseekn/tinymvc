@@ -29,7 +29,7 @@ class ClearTwigCache extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         storage(config('storage.cache'))->deleteDir();
-        $output->writeln('<info>[INFO] Twig templates cache has been cleared</info>');
+        $output->writeln('<bg=blue;options=bold> INFO </> Twig templates cache has been cleared.');
 
         return Command::SUCCESS;
     }

@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Reset migrations tables.
+ * Reset migrations.
  */
 class Reset extends Command
 {
@@ -27,8 +27,8 @@ class Reset extends Command
 
     protected function configure(): void
     {
-        $this->setDescription('Reset migrations tables');
-        $this->addArgument('table', InputArgument::OPTIONAL | InputArgument::IS_ARRAY, 'The name of migrations tables (separated by space if many)');
+        $this->setDescription('Reset migrations');
+        $this->addArgument('migration', InputArgument::OPTIONAL | InputArgument::IS_ARRAY, 'The name of migrations (separated by space if many)');
         $this->addOption('seed', null, InputOption::VALUE_NONE, 'Insert all seeds');
     }
 
@@ -37,13 +37,13 @@ class Reset extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $tables = $input->getArgument('table');
+        $migrations = $input->getArgument('migration');
 
-        $this->getApplication()->find('migrations:delete')->run(new ArrayInput($tables), $output);
-        $this->getApplication()->find('migrations:run')->run(new ArrayInput($tables), $output);
+        $this->getApplication()->find('migrations:delete')->run(new ArrayInput($migrations), $output);
+        $this->getApplication()->find('migrations:run')->run(new ArrayInput($migrations), $output);
 
         if ($input->getOption('seed')) {
-            $this->getApplication()->find('db:seed')->run(new ArrayInput($tables), $output);
+            $this->getApplication()->find('db:seed')->run(new ArrayInput($migrations), $output);
         }
 
         return Command::SUCCESS;

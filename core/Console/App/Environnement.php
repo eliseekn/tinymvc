@@ -33,14 +33,14 @@ class Environnement extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (! in_array($input->getArgument('name'), [AppEnv::TEST, AppEnv::PROD, AppEnv::LOCAL])) {
-            $output->writeln('<error>[ERROR] Invalid application environnement "' . $input->getArgument('name') . '"</error>');
+            $output->writeln('<bg=red;options=bold> ERROR </> Invalid application environnement name.');
 
             return Command::FAILURE;
         }
 
         Config::updateEnv(['APP_ENV' => $input->getArgument('name') . PHP_EOL]);
 
-        $output->writeln('<info>[INFO] Application environnement has been defined to "' . $input->getArgument('name') . '"</info>');
+        $output->writeln('<bg=blue;options=bold> INFO </> Application environnement has been defined to <options=bold>' . $input->getArgument('name') . '</>.');
 
         return Command::SUCCESS;
     }

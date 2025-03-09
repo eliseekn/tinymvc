@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Display migrations tables status.
+ * Display migrations status.
  */
 class Status extends Command
 {
@@ -27,28 +27,28 @@ class Status extends Command
 
     protected function configure(): void
     {
-        $this->setDescription('Display migrations tables status');
+        $this->setDescription('Display migrations status');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $rows = [];
-        $files = Storage::path(config('storage.migrations'))->getFiles();
+        $files = storage(config('storage.migrations'))->getFiles();
 
         foreach ($files as $table) {
-            $status = $this->isMigrated(get_file_name($table)) ? '<info>migrated</info>' : '<fg=red>not migrated</>';
+            $status = $this->isMigrated(get_file_name($table)) ? 'Yes' : '<fg=red>No</>';
             $rows[] = [get_file_name($table), $status];
         }
 
         $table = new Table($output);
-        $table->setHeaders(['Tables', 'Status']);
+        $table->setHeaders(['Tables', 'Migrated']);
         $table->setRows($rows);
         $table->render();
 
         return Command::SUCCESS;
     }
 
-    protected function isMigrated(string $table): bool
+    protected function isMigrated(string $migration): bool
     {
         if (! Connection::getInstance()->tableExists('migrations')) {
             return false;
@@ -56,7 +56,7 @@ class Status extends Command
 
         return QueryBuilder::table('migrations')
             ->select('name')
-            ->where('name', $table)
+            ->where('name', $migration)
             ->exists();
     }
 }

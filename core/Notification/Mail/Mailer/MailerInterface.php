@@ -8,7 +8,7 @@
 
 declare(strict_types=1);
 
-namespace Core\Notifications\Mail\Mailer;
+namespace Core\Notification\Mail\Mailer;
 
 interface MailerInterface
 {

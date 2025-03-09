@@ -36,9 +36,9 @@ class Rule extends Command
             list(, $class) = Maker::generateClass(base_name: $rule, singular: true);
 
             if (! Maker::createRule($rule)) {
-                $output->writeln('<error>[ERROR] Failed to create request rule "' . $class . '"</error>');
+                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create request rule <options=bold>' . $class . '</>.');
             } else {
-                $output->writeln('<info>[INFO] Request rule "' . $class . '" has been created</info>');
+                $output->writeln('<bg=blue;options=bold> INFO </> Request rule <options=bold>' . $class . '</> has been created.');
             }
         }
 

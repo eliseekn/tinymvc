@@ -40,7 +40,6 @@ class CLASSNAME extends Model
     public static function findAllByColumn(string $column): array|false
     {
         return (new self)
-            ->repository()
             ->select('*')
             ->where('column', $column)
             ->getAll();

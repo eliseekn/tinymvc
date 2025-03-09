@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Core\Notifications\Mail;
+namespace Core\Notification\Mail;
 
-use Core\Notifications\Mail\Mailer\MailerInterface;
-use Core\Notifications\NotificationInterface;
+use Core\Notification\Mail\Mailer\MailerInterface;
+use Core\Notification\NotificationInterface;
 
 class Mail implements NotificationInterface
 {
