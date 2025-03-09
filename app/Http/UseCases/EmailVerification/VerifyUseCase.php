@@ -49,7 +49,7 @@ class VerifyUseCase extends UseCase
 
         try {
             Notification::send(new WelcomeMail($user->get('name')))->to($email);
-            Alert::default(__('alert.email_verified_at'))->success();
+            Alert::toast(__('alert.email_verified_at'))->success();
         } catch (Exception $e) {
             report($e);
         }
