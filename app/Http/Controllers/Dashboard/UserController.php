@@ -41,7 +41,7 @@ class UserController extends Controller
         $useCase->handle($validator->inputs());
     }
 
-    #[Route(HttpMethod::GET, '/dashboard/users/{id:num}/edit', ['auth', 'verified', 'admin'], 'users.edit')]
+    #[Route(HttpMethod::GET, '/dashboard/users/{id}/edit', ['auth', 'verified', 'admin'], 'users.edit', ['id' => 'num'])]
     public function edit(int $id): void
     {
         $user = User::find($id);
@@ -54,7 +54,7 @@ class UserController extends Controller
         $this->render('dashboard.users.edit', ['user' => User::find($id)]);
     }
 
-    #[Route(HttpMethod::PATCH, '/dashboard/users/{id:num}', ['auth', 'verified', 'admin'], 'users.update')]
+    #[Route(HttpMethod::PATCH, '/dashboard/users/{id}', ['auth', 'verified', 'admin'], 'users.update', ['id' => 'num'])]
     public function update(UpdateUseCase $useCase, UpdateValidator $validator, int $id): void
     {
         $user = User::find($id);
@@ -67,7 +67,7 @@ class UserController extends Controller
         $this->response->back()->send();
     }
 
-    #[Route(HttpMethod::DELETE, '/dashboard/users/{id:num}/delete', ['auth', 'verified', 'admin'], 'users.delete')]
+    #[Route(HttpMethod::DELETE, '/dashboard/users/{id}/delete', ['auth', 'verified', 'admin'], 'users.delete', ['id' => 'num'])]
     public function delete(int $id): void
     {
         $user = User::find($id);

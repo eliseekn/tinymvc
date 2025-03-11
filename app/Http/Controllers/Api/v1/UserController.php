@@ -24,7 +24,7 @@ use Core\Http\Routing\Controller;
 
 class UserController extends Controller
 {
-    #[Route(HttpMethod::GET, '/api/v1/users/{id:num?}', ['api'])]
+    #[Route(HttpMethod::GET, '/api/v1/users/{id?}', ['api'], parameters: ['id' => 'num'])]
     public function index(GetCollectionUseCase $useCase, ?int $id = null): void
     {
         if (is_null($id)) {
@@ -49,7 +49,7 @@ class UserController extends Controller
         $useCase->handle($validator->inputs());
     }
 
-    #[Route(HttpMethod::PATCH, '/api/v1/users/{id:num}', ['api', 'admin'])]
+    #[Route(HttpMethod::PATCH, '/api/v1/users/{id}', ['api', 'admin'], parameters: ['id' => 'num'])]
     public function update(UpdateUseCase $useCase, UpdateValidator $validator, int $id): void
     {
         $user = User::find($id);
@@ -68,7 +68,7 @@ class UserController extends Controller
         ]);
     }
 
-    #[Route(HttpMethod::DELETE, '/api/v1/users/{id:num}', ['api', 'admin'])]
+    #[Route(HttpMethod::DELETE, '/api/v1/users/{id}', ['api', 'admin'], parameters: ['id' => 'num'])]
     public function delete(int $id): void
     {
         $user = User::find($id);

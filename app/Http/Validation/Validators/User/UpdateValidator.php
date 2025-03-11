@@ -33,7 +33,7 @@ class UpdateValidator extends Validator
                 Rule::maxLen(255),
                 Rule::custom(Unique::class, [
                     'users',
-                    request()->routeParams()[0],
+                    request()->routeParam('id'),
                 ]),
             ])
             ->add('role', Rule::in([UserRole::USER->value, UserRole::ADMIN->value]))

@@ -22,14 +22,28 @@ use Core\Http\Middlewares\CsrfProtection;
 use Core\Http\Request;
 use Core\Http\Response;
 use Core\Support\DependencyInjection;
+use Exception;
 
 /**
  * Routing system.
  */
 class Router
 {
-    protected static function match(Request $request, string $route, &$params): bool
+    protected static function match(Request $request, string $route, &$params, array $routeParams = []): bool
     {
+        $route = preg_replace_callback('/\{([a-zA-Z0-9_-]+)\??\}/', function ($matches) use ($routeParams) {
+            $param = $matches[1];
+            $optional = str_contains($matches[0], '?');
+
+            if (! isset($routeParams[$param])) {
+                throw new Exception("No pattern defined for parameter: $param");
+            }
+
+            $pattern = $routeParams[$param];
+
+            return $optional ? "?$pattern?" : $pattern;
+        }, $route);
+
         if (! preg_match('#^' . $route . '$#', $request->method() . ' ' . $request->uri(), $params)) {
             return false;
         }
@@ -82,7 +96,7 @@ class Router
                 return;
             }
 
-            throw new ControllerNotFoundException("$controller/$action");
+            throw new ControllerNotFoundException("$controller@$action");
         }
 
         if (is_string($handler)) {
@@ -121,7 +135,7 @@ class Router
             $request_method = $request->inputs('_method', $request->method());
             $request->method($request_method);
 
-            if (self::match($request, $route, $params)) {
+            if (self::match($request, $route, $params, $options['parameters'] ?? [])) {
                 if (! isset($options['handler'])) {
                     throw new RouteHandlerNotDefinedException($route);
                 }

@@ -37,7 +37,7 @@ class Route
 
     private static function add(string $route, Closure|array|string $handler): self
     {
-        static::$route = self::format($route);
+        static::$route = $route;
         static::$tmp_routes[static::$route] = ['handler' => $handler];
 
         return new self();
@@ -140,6 +140,17 @@ class Route
         return $this;
     }
 
+    public function whereParameters(array $params): self
+    {
+        foreach ($params as $key => $value) {
+            $params[$key] = self::format($value);
+        }
+
+        self::$tmp_routes[self::$route]['parameters'] = $params;
+
+        return $this;
+    }
+
     public function byMiddleware(array|string $middlewares): self
     {
         $middlewares = parse_array($middlewares);
@@ -207,33 +218,16 @@ class Route
         self::$tmp_routes = [];
     }
 
-    private static function format(string $route): string
+    public static function format(string $route): string
     {
-        list($method, $uri) = explode(' ', $route, 2);
-
-        if (empty($uri)) {
-            $uri = '/';
-        }
-
-        if (strlen($uri) > 1) {
-            if ($uri[0] !== '/') {
-                $uri = '/' . $uri;
-            }
-        }
-
         $patterns = [
-            '/\{([a-zA-Z-_]+)\}/i' => 'any',
-            '/\{([a-zA-Z-_]+):([^}]+)\?}/i' => '?$2?',
-            '/\{([a-zA-Z-_]+):([^}]+)\}/i' => '$2',
             '/\balpha\b/' => '([a-zA-Z-_]+)',
             '/\bnum\b/' => '(\d+)',
             '/\balphaNum\b/' => '([a-zA-Z0-9-_]+)',
             '/\bany\b/' => '([^/]+)',
         ];
 
-        $uri = preg_replace(array_keys($patterns), array_values($patterns), $uri);
-
-        return implode(' ', [$method, $uri]);
+        return preg_replace(array_keys($patterns), array_values($patterns), $route);
     }
 
     /**
@@ -270,7 +264,7 @@ class Route
 
                 foreach ($attributes as $attribute) {
                     $attribute = $attribute->newInstance();
-                    $route = self::match($attribute->methods, $attribute->uri ?? $method->getName(), [$controller, $method->getName()]);
+                    $route = self::match($attribute->methods, $attribute->uri ?? '/' . $method->getName(), [$controller, $method->getName()]);
 
                     if ($attribute->middlewares) {
                         $route->middleware($attribute->middlewares);
@@ -278,6 +272,10 @@ class Route
 
                     if ($attribute->name) {
                         $route->name($attribute->name);
+                    }
+
+                    if ($attribute->parameters) {
+                        $route->whereParameters($attribute->parameters);
                     }
 
                     $route->register();

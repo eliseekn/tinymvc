@@ -12,6 +12,7 @@ namespace Core\Http;
 
 use Core\Http\Routing\Route;
 use Core\Support\Uploader;
+use Exception;
 
 /**
  * Handle HTTP requests.
@@ -146,20 +147,43 @@ class Request
         return $uri;
     }
 
-    public function routeParams(): array
+    public function routeParam(string $name): mixed
     {
+        $result = [];
         $routes = Route::getAll();
 
         foreach ($routes as $route => $options) {
-            list(, $route) = explode(' ', $route, 2);
+            $routeParams = $options['parameters'] ?? [];
 
-            if (preg_match('#^' . $route . '$#', $this->uri(), $params)) {
-                array_shift($params);
+            $route = preg_replace_callback('/\{([a-zA-Z0-9_-]+)\??\}/', function ($matches) use ($routeParams, &$result) {
+                $param = $matches[1];
+                $optional = str_contains($matches[0], '?');
+
+                if (! isset($routeParams[$param])) {
+                    throw new Exception("No pattern defined for parameter: $param");
+                }
+
+                $result[$param] = null;
+                $pattern = $routeParams[$param];
+
+                return $optional ? "?$pattern?" : $pattern;
+            }, $route);
+
+            if (preg_match('#^' . $route . '$#', $this->method() . ' ' . $this->uri(), $matches)) {
+                array_shift($matches);
+                $paramKeys = array_keys($result);
+
+                foreach ($matches as $index => $value) {
+                    if ($value !== '') {
+                        $result[$paramKeys[$index]] = $value;
+                    }
+                }
+
                 break;
             }
         }
 
-        return $params ?? [];
+        return $result[$name] ?? null;
     }
 
     public function uriContains(string $uri): bool

@@ -13,7 +13,8 @@ class Route
         public string $methods,
         public ?string $uri = null,
         public ?array $middlewares = null,
-        public ?string $name = null
+        public ?string $name = null,
+        public ?array $parameters = null,
     ) {
     }
 }

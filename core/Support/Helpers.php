@@ -11,6 +11,7 @@ declare(strict_types=1);
 use Carbon\Carbon;
 use Core\Database\Model;
 use Core\Event\EventInterface;
+use Core\Exceptions\RouteNameNotDefinedException;
 use Core\Exceptions\ViewNotFoundException;
 use Core\Http\Auth;
 use Core\Http\Cookies;
@@ -216,58 +217,40 @@ if (! function_exists('route_uri')) {
     function route_uri(string $name, array $params = []): string
     {
         $uri = '';
-        $patterns = ['([a-zA-Z-_]+)', '(\d+)', '([^/]+)'];
+        $routeParams = [];
+        $routes = Route::getAll();
 
-        foreach (Route::$routes as $route => $options) {
-            if (! empty($options['name'])) {
-                if ($name === $options['name']) {
-                    $uri = explode(' ', $route, 2)[1];
-                }
+        foreach ($routes as $route => $options) {
+            if (! empty($options['name']) && $name === $options['name']) {
+                $uri = explode(' ', $route, 2)[1];
+                $routeParams = $options['parameters'] ?? [];
             }
         }
 
         if (empty($uri)) {
-            throw new Exception('Route name "' . $name . '" is not defined.');
+            throw new RouteNameNotDefinedException($uri);
         }
 
-        if (empty($params)) {
-            foreach ($patterns as $pattern) {
-                if (strpos($uri, '+)?')) {
-                    $pattern = "?$pattern?";
-                }
+        $uri = preg_replace_callback('/\{([a-zA-Z0-9_-]+)\??\}/', function ($matches) use ($routeParams, $params) {
+            $optional = str_contains($matches[0], '?');
+            $param = $matches[1];
 
-                if (strpos($uri, $pattern)) {
-                    $uri = substr_replace($uri, '', strpos($uri, $pattern), strlen($pattern));
-                }
+            if ($optional && ! isset($params[$param])) {
+                return '';
             }
-        } else {
-            $params = parse_array($params);
 
-            foreach ($patterns as $pattern) {
-                if (strpos($uri, '+)?')) {
-                    $pattern = "?$pattern?";
-
-                    if (strpos($uri, $pattern)) {
-                        $uri = substr_replace($uri, '', strpos($uri, $pattern), strlen($pattern));
-                        next($params);
-                        continue;
-                    }
-                }
-
-                if (strpos($uri, $pattern)) {
-                    $uri = substr_replace($uri, $params, strpos($uri, $pattern), strlen($pattern));
-                    next($params);
-                }
+            if (! isset($params[$param])) {
+                throw new Exception('Missing required parameter');
             }
-        }
 
-        $uri = str_replace('//', '/', $uri);
+            if (! preg_match('/^' . $routeParams[$param] . '$/', (string) $params[$param])) {
+                throw new Exception('Invalid parameter type');
+            }
 
-        if ($uri !== '/') {
-            $uri = rtrim($uri, '/');
-        }
+            return $params[$param];
+        }, $uri);
 
-        return $uri;
+        return rtrim(preg_replace('#//+#', '/', $uri), '/');
     }
 }
 

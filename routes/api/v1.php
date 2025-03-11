@@ -21,5 +21,5 @@ Route::group(function () {
         Route::post('/logout', 'logout')->middleware('api');
     })->byController(AuthController::class);
 })
-    ->byPrefix('api/v1')
+    ->byPrefix('/api/v1')
     ->register();
