@@ -25,22 +25,22 @@ class User extends Model
         parent::__construct('users');
     }
 
-    public static function find(int $id): Model|false
+    public static function find(int $id): ?Model
     {
         return (new self)->findBy('id', $id);
     }
 
-    public static function findByEmail(string $email): Model|false
+    public static function findByEmail(string $email): ?Model
     {
         return (new self)->findBy('email', $email);
     }
 
-    public static function findByIdentifier(string $value): Model|false
+    public static function findByIdentifier(string $value): ?Model
     {
         return (new self)->findBy(config('security.auth.identifier'), $value);
     }
 
-    public static function admins(): array|false
+    public static function admins(): array
     {
         return (new self)
             ->select('email')

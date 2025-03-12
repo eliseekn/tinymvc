@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Core\Support;
 
 use Closure;
+use Core\Database\Model;
 use Core\Http\Cookies;
 use Core\Http\Request;
 use Core\Http\Response;
@@ -34,7 +35,7 @@ class DependencyInjection
      * @throws ReflectionException
      * @throws \Exception
      */
-    public function resolve(string $class, string $method, array $params = []): mixed
+    public function resolve(string $class, string $method, array $params = [], array $bindings = []): mixed
     {
         $reflector = new ReflectionClass($class);
         $constructor = $reflector->getConstructor();
@@ -55,7 +56,7 @@ class DependencyInjection
             }
         }
 
-        $dependencies = $this->getDependencies($parameters);
+        $dependencies = $this->getDependencies($parameters, $bindings);
 
         return call_user_func_array([$class, $method], array_merge($dependencies, $params));
     }
@@ -65,11 +66,11 @@ class DependencyInjection
      * @throws ReflectionException
      * @throws \Exception
      */
-    public function resolveClosure(Closure $closure, array $params = []): mixed
+    public function resolveClosure(Closure $closure, array $params = [], array $bindings = []): mixed
     {
         $reflector = new ReflectionFunction($closure);
         $parameters = $reflector->getParameters();
-        $dependencies = $this->getDependencies($parameters);
+        $dependencies = $this->getDependencies($parameters, $bindings);
 
         return call_user_func_array($closure, array_merge($dependencies, $params));
     }
@@ -78,9 +79,10 @@ class DependencyInjection
      * Generate new instance of dependencies.
      * @throws \Exception
      */
-    public function getDependencies(array $parameters): array
+    public function getDependencies(array $parameters, array $bindings = []): array
     {
         $dependencies = [];
+        $bindingKey = 0;
 
         /**
          * @var ReflectionParameter $parameter
@@ -98,6 +100,10 @@ class DependencyInjection
                         $class = (new $class)->validate(new Request, new Response);
                     } elseif (is_subclass_of($class, UseCase::class)) {
                         $class = new $class(new Request, new Response, new Session, new Cookies);
+                    } elseif ($class === Model::class) {
+                        list($table, $column, $value) = array_values($bindings[$bindingKey]);
+                        $class = (new $class($table))->findBy($column, $value);
+                        $bindingKey++;
                     } else {
                         $class = new $class;
                     }

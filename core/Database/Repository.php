@@ -39,12 +39,12 @@ class Repository
         return $this;
     }
 
-    public function selectOne(array|string $columns): Model|false
+    public function selectOne(array|string $columns): ?Model
     {
         return $this->select($columns)->get();
     }
 
-    public function selectAll(array|string $columns): array|false
+    public function selectAll(array|string $columns): array
     {
         return $this->select($columns)->getAll();
     }
@@ -59,7 +59,7 @@ class Repository
     /**
      * @throws InvalidSQLQueryException
      */
-    public function findWhere(string $column, $operator = null, $value = null): Model|false
+    public function findWhere(string $column, $operator = null, $value = null): ?Model
     {
         return $this->select('*')->where($column, $operator, $value)->get();
     }
@@ -67,7 +67,7 @@ class Repository
     /**
      * @throws InvalidSQLQueryException
      */
-    public function find($operator = null, $value = null): Model|false
+    public function find($operator = null, $value = null): ?Model
     {
         return $this->findWhere('id', $operator, $value);
     }
@@ -75,7 +75,7 @@ class Repository
     /**
      * @throws InvalidSQLQueryException
      */
-    public function findAllWhere(string $column, $operator = null, $value = null): array|false
+    public function findAllWhere(string $column, $operator = null, $value = null): array
     {
         return $this->select('*')->where($column, $operator, $value)->getAll();
     }
@@ -83,7 +83,7 @@ class Repository
     /**
      * @throws InvalidSQLQueryException
      */
-    public function findAll($operator = null, $value = null): array|false
+    public function findAll($operator = null, $value = null): array
     {
         return $this->findAllWhere('id', $operator, $value);
     }
@@ -119,29 +119,30 @@ class Repository
     {
         $result = $this->findWhere('id', $id);
 
-        if ($result === false) {
-            $result = $this->insert($items);
+        if (! $result) {
+            $result = $this->insertGetId($items);
+            $result = $this->find($result);
         }
 
         return $result;
     }
 
-    public function findBetween(string $column, $start = null, $end = null): Model|false
+    public function findBetween(string $column, $start = null, $end = null): ?Model
     {
         return $this->select('*')->whereBetween($column, $start, $end)->get();
     }
 
-    public function findAllBetween(string $column, $start = null, $end = null): array|false
+    public function findAllBetween(string $column, $start = null, $end = null): array
     {
         return $this->select('*')->whereBetween($column, $start, $end)->getAll();
     }
 
-    public function findNotBetween(string $column, $start = null, $end = null): Model|false
+    public function findNotBetween(string $column, $start = null, $end = null): ?Model
     {
         return $this->select('*')->whereNotBetween($column, $start, $end)->get();
     }
 
-    public function findAllNotBetween(string $column, $start = null, $end = null): array|false
+    public function findAllNotBetween(string $column, $start = null, $end = null): array
     {
         return $this->select('*')->whereNotBetween($column, $start, $end)->getAll();
     }
@@ -602,28 +603,28 @@ class Repository
         return $this->qb->exists();
     }
 
-    public function first(): Model|false
+    public function first(): ?Model
     {
         $rows = $this->oldest()->take(1);
 
-        return ! $rows ? false : $rows[0];
+        return ! $rows ? null : $rows[0];
     }
 
-    public function last(): Model|false
+    public function last(): ?Model
     {
         $rows = $this->newest()->take(1);
 
-        return ! $rows ? false : $rows[0];
+        return ! $rows ? null : $rows[0];
     }
 
-    public function range(int $start, int $end): array|false
+    public function range(int $start, int $end): array
     {
         $this->qb->limit($start, $end);
 
         return $this->getAll();
     }
 
-    public function take(int $count): array|false
+    public function take(int $count): array
     {
         return $this->range(0, $count);
     }
@@ -644,18 +645,18 @@ class Repository
         return $pager->setItems($items);
     }
 
-    public function get(): Model|false
+    public function get(): ?Model
     {
         $row = $this->execute()->fetch();
 
-        return ! $row ? false : new Model($this->table, (array) $row);
+        return ! $row ? null : new Model($this->table, (array) $row);
     }
 
-    public function getAll(): array|false
+    public function getAll(): array
     {
         $rows = $this->execute()->fetchAll();
 
-        return ! $rows ? false : array_map(fn ($row) => new Model($this->table, (array) $row), $rows);
+        return ! $rows ? [] : array_map(fn ($row) => new Model($this->table, (array) $row), $rows);
     }
 
     public function toSQL(): array

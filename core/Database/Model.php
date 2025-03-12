@@ -35,27 +35,27 @@ class Model
     /**
      * @throws InvalidSQLQueryException
      */
-    public function findBy(string $column, $operator = null, $value = null): self|false
+    public function findBy(string $column, $operator = null, $value = null): ?self
     {
         return (new Repository($this->table))->findWhere($column, $operator, $value);
     }
 
-    public function getAll(array|string $columns): array|false
+    public function getAll(array|string $columns): array
     {
         return (new Repository($this->table))->selectAll($columns);
     }
 
-    public function first(array|string $columns): self|false
+    public function first(array|string $columns): ?self
     {
         return (new Repository($this->table))->select($columns)->first();
     }
 
-    public function last(array|string $columns): self|false
+    public function last(array|string $columns): ?self
     {
         return (new Repository($this->table))->select($columns)->last();
     }
 
-    public function take(int $count, ?Closure $subQuery = null): array|false
+    public function take(int $count, ?Closure $subQuery = null): array
     {
         return (new Repository($this->table))
             ->select('*')
@@ -63,7 +63,7 @@ class Model
             ->take($count);
     }
 
-    public function oldest(array|string $columns, string $column = 'created_at', ?Closure $subQuery = null): array|false
+    public function oldest(array|string $columns, string $column = 'created_at', ?Closure $subQuery = null): array
     {
         return (new Repository($this->table))
             ->select($columns)
@@ -72,7 +72,7 @@ class Model
             ->getAll();
     }
 
-    public function newest(array|string $columns, string $column = 'created_at', ?Closure $subQuery = null): array|false
+    public function newest(array|string $columns, string $column = 'created_at', ?Closure $subQuery = null): array
     {
         return (new Repository($this->table))
             ->select($columns)
@@ -86,54 +86,54 @@ class Model
         return (new Repository($this->table))->select($columns);
     }
 
-    public function count(string $column = 'id', ?Closure $subQuery = null): string|array|false|int
+    public function count(string $column = 'id', ?Closure $subQuery = null): string|array|int
     {
         $data = (new Repository($this->table))
             ->count($column)
             ->subQueryWhen(! is_null($subQuery), $subQuery)
             ->get();
 
-        return ! $data ? false : $data->get('value');
+        return ! $data ? 0 : $data->get('value');
     }
 
-    public function sum(string $column, ?Closure $subQuery = null): string|array|false|int
+    public function sum(string $column, ?Closure $subQuery = null): string|array|int
     {
         $data = (new Repository($this->table))
             ->sum($column)
             ->subQueryWhen(! is_null($subQuery), $subQuery)
             ->get();
 
-        return ! $data ? false : $data->get('value');
+        return ! $data ? 0 : $data->get('value');
     }
 
-    public function average(string $column, ?Closure $subQuery = null): string|int|false|array
+    public function average(string $column, ?Closure $subQuery = null): string|int|array
     {
         $data = (new Repository($this->table))
             ->average($column)
             ->subQueryWhen(! is_null($subQuery), $subQuery)
             ->get();
 
-        return ! $data ? false : $data->get('value');
+        return ! $data ? 0 : $data->get('value');
     }
 
-    public function max(string $column, ?Closure $subQuery = null): string|int|false|array
+    public function max(string $column, ?Closure $subQuery = null): string|int|array
     {
         $data = (new Repository($this->table))
             ->max($column)
             ->subQueryWhen(! is_null($subQuery), $subQuery)
             ->get();
 
-        return ! $data ? false : $data->get('value');
+        return ! $data ? 0 : $data->get('value');
     }
 
-    public function min(string $column, ?Closure $subQuery = null): string|int|false|array
+    public function min(string $column, ?Closure $subQuery = null): string|int|array
     {
         $data = (new Repository($this->table))
             ->min($column)
             ->subQueryWhen(! is_null($subQuery), $subQuery)
             ->get();
 
-        return ! $data ? false : $data->get('value');
+        return ! $data ? 0 : $data->get('value');
     }
 
     public function metrics(): Metrics

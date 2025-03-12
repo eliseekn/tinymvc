@@ -77,7 +77,7 @@ class Testing extends Command
                     $output->write($line);
                 } else {
                     $output->writeln($line);
-                    $output->writeln('');
+                    $output->write('');
                 }
             }
         });

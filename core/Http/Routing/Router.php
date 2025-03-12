@@ -44,13 +44,12 @@ class Router
             return $optional ? "?$pattern?" : $pattern;
         }, $route);
 
-        if (! preg_match('#^' . $route . '$#', $request->method() . ' ' . $request->uri(), $params)) {
-            return false;
+        if (preg_match('#^' . $route . '$#', $request->method() . ' ' . $request->uri(), $params)) {
+            array_shift($params);
+            return true;
         }
 
-        array_shift($params);
-
-        return true;
+        return false;
     }
 
     /**
@@ -79,10 +78,10 @@ class Router
      * @throws InvalidRouteHandlerException
      * @throws ControllerNotFoundException
      */
-    protected static function executeHandler(Closure|array|string $handler, array $params): void
+    protected static function executeHandler(Closure|array|string $handler, array $params, array $bindings): void
     {
         if ($handler instanceof Closure) {
-            (new DependencyInjection)->resolveClosure($handler, $params);
+            (new DependencyInjection)->resolveClosure($handler, $params, $bindings);
 
             return;
         }
@@ -91,7 +90,7 @@ class Router
             list($controller, $action) = $handler;
 
             if (class_exists($controller) && method_exists($controller, $action)) {
-                (new DependencyInjection)->resolve($controller, $action, $params);
+                (new DependencyInjection)->resolve($controller, $action, $params, $bindings);
 
                 return;
             }
@@ -101,7 +100,7 @@ class Router
 
         if (is_string($handler)) {
             if (class_exists($handler)) {
-                (new DependencyInjection)->resolve($handler, '__invoke', $params);
+                (new DependencyInjection)->resolve($handler, '__invoke', $params, $bindings);
 
                 return;
             }
@@ -120,6 +119,7 @@ class Router
      * @throws RoutesPathsNotDefinedException
      * @throws RouteHandlerNotDefinedException
      * @throws ControllerNotFoundException
+     * @throws Exception
      */
     public static function dispatch(): void
     {
@@ -148,7 +148,9 @@ class Router
                     self::executeMiddlewares($request, $options['middlewares']);
                 }
 
-                self::executeHandler($options['handler'], $params);
+                $bindings = resolve_route_binding($route, $options['parameters'] ?? [],$options['bindings'] ?? []);
+
+                self::executeHandler($options['handler'], $params, $bindings);
             }
         }
 

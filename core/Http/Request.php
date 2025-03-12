@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace Core\Http;
 
+use Core\Exceptions\RouteParameterException;
+use Core\Exceptions\RoutesPathsNotDefinedException;
 use Core\Http\Routing\Route;
 use Core\Support\Uploader;
 use Exception;
@@ -147,6 +149,10 @@ class Request
         return $uri;
     }
 
+    /**
+     * @throws RoutesPathsNotDefinedException
+     * @throws RouteParameterException
+     */
     public function routeParam(string $name): mixed
     {
         $result = [];
@@ -155,32 +161,22 @@ class Request
         foreach ($routes as $route => $options) {
             $routeParams = $options['parameters'] ?? [];
 
-            $route = preg_replace_callback('/\{([a-zA-Z0-9_-]+)\??\}/', function ($matches) use ($routeParams, &$result) {
-                $param = $matches[1];
-                $optional = str_contains($matches[0], '?');
+            $route = route_parameters_to_regex($route, $routeParams, $result);
 
-                if (! isset($routeParams[$param])) {
-                    throw new Exception("No pattern defined for parameter: $param");
-                }
-
-                $result[$param] = null;
-                $pattern = $routeParams[$param];
-
-                return $optional ? "?$pattern?" : $pattern;
-            }, $route);
-
-            if (preg_match('#^' . $route . '$#', $this->method() . ' ' . $this->uri(), $matches)) {
-                array_shift($matches);
-                $paramKeys = array_keys($result);
-
-                foreach ($matches as $index => $value) {
-                    if ($value !== '') {
-                        $result[$paramKeys[$index]] = $value;
-                    }
-                }
-
-                break;
+            if (! preg_match('#^' . $route . '$#', $this->method() . ' ' . $this->uri(), $matches)) {
+                return null;
             }
+
+            array_shift($matches);
+            $paramKeys = array_keys($result);
+
+            foreach ($matches as $index => $value) {
+                if ($value !== '') {
+                    $result[$paramKeys[$index]] = $value;
+                }
+            }
+
+            break;
         }
 
         return $result[$name] ?? null;

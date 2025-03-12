@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Core\Database\Model;
 use Core\Event\EventInterface;
 use Core\Exceptions\RouteNameNotDefinedException;
+use Core\Exceptions\RouteParameterException;
 use Core\Exceptions\ViewNotFoundException;
 use Core\Http\Auth;
 use Core\Http\Cookies;
@@ -262,6 +263,69 @@ if (! function_exists('route')) {
     function route(string $name, array $params = []): string
     {
         return url(route_uri($name, $params));
+    }
+}
+
+if (! function_exists('route_parameters_to_regex')) {
+    /**
+     * @throws RouteParameterException
+     */
+    function route_parameters_to_regex(string $route, array $routeParams, &$result): string
+    {
+        $result = [];
+
+        return preg_replace_callback('/\{([a-zA-Z0-9_-]+)\??\}/', function ($matches) use ($routeParams, &$result) {
+            $param = $matches[1];
+            $optional = str_contains($matches[0], '?');
+
+            if (! isset($routeParams[$param])) {
+                throw new RouteParameterException("No pattern defined for parameter: $param");
+            }
+
+            $result[$param] = null;
+            $pattern = $routeParams[$param];
+
+            return $optional ? "?$pattern?" : $pattern;
+        }, $route);
+    }
+}
+
+if (! function_exists('resolve_binding')) {
+    /**
+     * Resolve route model binding
+     * @throws RouteParameterException
+     */
+    function resolve_route_binding(string $route, array $routeParams, array $binding): array
+    {
+        $params = [];
+        $bindingsResolved = [];
+
+        $route = route_parameters_to_regex($route, $routeParams, $result);
+
+        if (! preg_match('#^' . $route . '$#', request()->method() . ' ' . request()->uri(), $matches)) {
+            return $params;
+        }
+
+        array_shift($matches);
+        $paramKeys = array_keys($result);
+
+        foreach ($matches as $index => $value) {
+            if ($value !== '') {
+                $params[$paramKeys[$index]] = $value;
+            }
+        }
+
+        foreach ($binding as $key => $value) {
+            if (isset($params[$key])) {
+                $bindingsResolved[] = [
+                    'table' => $value[0],
+                    'column' => $value[1],
+                    'value' => $params[$key],
+                ];
+            }
+        }
+
+        return $bindingsResolved;
     }
 }
 

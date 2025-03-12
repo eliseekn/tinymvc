@@ -26,7 +26,7 @@ class CreateUserTest extends BrowserTestCase
         $this->refreshDatabase();
     }
 
-    public function test_can_store(): void
+    public function test_can_create(): void
     {
         $user = User::factory()->create([
             'role' => UserRole::ADMIN->value,

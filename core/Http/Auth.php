@@ -58,21 +58,21 @@ class Auth
     {
         $user = User::findByIdentifier($identifier);
 
-        return $user !== false && Encryption::check($password, $user->get('password'));
+        return $user && Encryption::check($password, $user->get('password'));
     }
 
     public static function checkToken(string $token, &$user): bool
     {
         $token = Token::findByValue($token);
 
-        if ($token === false) {
+        if (! $token) {
             $user = null;
             return false;
         }
 
         $user = User::findByEmail($token->get('email'));
 
-        return $user !== false;
+        return ! is_null($user);
     }
 
     public static function createToken(string $email): string
@@ -122,7 +122,7 @@ class Auth
         return cookies()->has('user');
     }
 
-    public static function user(Request $request): Model|false|null
+    public static function user(Request $request): Model|null
     {
         if (session()->has('user')) {
             $user = session()->get('user');

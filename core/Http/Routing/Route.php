@@ -12,10 +12,10 @@ namespace Core\Http\Routing;
 
 use Closure;
 use Core\Enums\HttpMethod;
+use Core\Enums\RouteParameter;
 use Core\Exceptions\RoutesPathsNotDefinedException;
 use Core\Http\Response;
 use Core\Http\Routing\Attributes\Route as RouteAttribute;
-use Core\Support\Storage;
 use ReflectionClass;
 use ReflectionMethod;
 use Spatie\StructureDiscoverer\Discover;
@@ -140,13 +140,20 @@ class Route
         return $this;
     }
 
-    public function whereParameters(array $params): self
+    public function whereParameters(array $parameters): self
     {
-        foreach ($params as $key => $value) {
-            $params[$key] = self::format($value);
+        foreach ($parameters as $key => $value) {
+            $parameters[$key] = self::format($value);
         }
 
-        self::$tmp_routes[self::$route]['parameters'] = $params;
+        self::$tmp_routes[self::$route]['parameters'] = $parameters;
+
+        return $this;
+    }
+
+    public function bindParameters(array $parameters): self
+    {
+        self::$tmp_routes[self::$route]['bindings'] = $parameters;
 
         return $this;
     }
@@ -221,10 +228,10 @@ class Route
     public static function format(string $route): string
     {
         $patterns = [
-            '/\balpha\b/' => '([a-zA-Z-_]+)',
-            '/\bnum\b/' => '(\d+)',
-            '/\balphaNum\b/' => '([a-zA-Z0-9-_]+)',
-            '/\bany\b/' => '([^/]+)',
+            '/\b'.RouteParameter::ALPHA.'\b/' => '([a-zA-Z-_]+)',
+            '/\b'.RouteParameter::NUMBER.'\b/' => '(\d+)',
+            '/\b'.RouteParameter::ALPHA_NUMERIC.'\b/' => '([a-zA-Z0-9-_]+)',
+            '/\b'.RouteParameter::ANY.'\b/' => '([^/]+)',
         ];
 
         return preg_replace(array_keys($patterns), array_values($patterns), $route);
@@ -278,6 +285,10 @@ class Route
                         $route->whereParameters($attribute->parameters);
                     }
 
+                    if ($attribute->bindings) {
+                        $route->bindParameters($attribute->bindings);
+                    }
+
                     $route->register();
                 }
             }
@@ -299,13 +310,13 @@ class Route
             $paths = array_map(function ($path) {
                 $path = $path === DIRECTORY_SEPARATOR
                     ? config('storage.routes')
-                    : Storage::path(config('storage.routes'))->addPath($path)->getPath();
+                    : storage(config('storage.routes'))->addPath($path)->getPath();
 
                 return str_replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $path);
             }, config('routes'));
 
             foreach ($paths as $path) {
-                $routes = Storage::path($path)->addPath('')->getFiles();
+                $routes = storage($path)->addPath('')->getFiles();
 
                 foreach ($routes as $route) {
                     require_once $path . $route;

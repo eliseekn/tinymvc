@@ -16,23 +16,31 @@ use App\Http\UseCases\Api\v1\User\StoreUseCase;
 use App\Http\UseCases\User\UpdateUseCase;
 use App\Http\Validation\Validators\User\StoreValidator;
 use App\Http\Validation\Validators\User\UpdateValidator;
+use Core\Database\Model;
 use Core\Enums\HttpCode;
 use Core\Enums\HttpMethod;
 use Core\Enums\ResponseStatus;
+use Core\Enums\RouteParameter;
 use Core\Http\Routing\Attributes\Route;
 use Core\Http\Routing\Controller;
 
 class UserController extends Controller
 {
-    #[Route(HttpMethod::GET, '/api/v1/users/{id?}', ['api'], parameters: ['id' => 'num'])]
-    public function index(GetCollectionUseCase $useCase, ?int $id = null): void
+    #[Route(HttpMethod::GET, '/api/v1/users', ['api'])]
+    public function index(GetCollectionUseCase $useCase): void
     {
-        if (is_null($id)) {
-            $useCase->handle($this->request->queries());
-        }
+        $useCase->handle($this->request->queries());
+    }
 
-        $user = User::find($id);
-
+    #[Route(
+        HttpMethod::GET,
+        '/api/v1/users/{user}',
+        ['api'],
+        parameters: ['user' => RouteParameter::NUMBER],
+        bindings: ['user' => ['users', 'id']]
+    )]
+    public function show(?Model $user = null): void
+    {
         if (! $user) {
             $this->jsonResponse([
                 'status' => ResponseStatus::ERROR,
@@ -49,11 +57,15 @@ class UserController extends Controller
         $useCase->handle($validator->inputs());
     }
 
-    #[Route(HttpMethod::PATCH, '/api/v1/users/{id}', ['api', 'admin'], parameters: ['id' => 'num'])]
-    public function update(UpdateUseCase $useCase, UpdateValidator $validator, int $id): void
+    #[Route(
+        HttpMethod::PATCH,
+        '/api/v1/users/{user}',
+        ['api', 'admin'],
+        parameters: ['user' => RouteParameter::NUMBER],
+        bindings: ['user' => ['users', 'id']]
+    )]
+    public function update(UpdateUseCase $useCase, UpdateValidator $validator, ?Model $user = null): void
     {
-        $user = User::find($id);
-
         if (! $user || ! $useCase->handle($validator->inputs(), $user->get('email'))) {
             $this->jsonResponse([
                 'status' => ResponseStatus::ERROR,
@@ -64,15 +76,19 @@ class UserController extends Controller
         $this->jsonResponse([
             'status' => ResponseStatus::SUCCESS,
             'message' => 'User updated',
-            'user' => User::find($id)->get(),
+            'user' => $user->get(),
         ]);
     }
 
-    #[Route(HttpMethod::DELETE, '/api/v1/users/{id}', ['api', 'admin'], parameters: ['id' => 'num'])]
-    public function delete(int $id): void
+    #[Route(
+        HttpMethod::DELETE,
+        '/api/v1/users/{user}',
+        ['api', 'admin'],
+        parameters: ['user' => RouteParameter::NUMBER],
+        bindings: ['user' => ['users', 'id']]
+    )]
+    public function delete(?Model $user = null): void
     {
-        $user = User::find($id);
-
         if (! $user || ! $user->delete()) {
             $this->jsonResponse([
                 'status' => ResponseStatus::ERROR,

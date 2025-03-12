@@ -16,7 +16,9 @@ use App\Http\UseCases\User\StoreUseCase;
 use App\Http\UseCases\User\UpdateUseCase;
 use App\Http\Validation\Validators\User\StoreValidator;
 use App\Http\Validation\Validators\User\UpdateValidator;
+use Core\Database\Model;
 use Core\Enums\HttpMethod;
+use Core\Enums\RouteParameter;
 use Core\Http\Routing\Attributes\Route;
 use Core\Http\Routing\Controller;
 use Core\Support\Alert;
@@ -41,24 +43,34 @@ class UserController extends Controller
         $useCase->handle($validator->inputs());
     }
 
-    #[Route(HttpMethod::GET, '/dashboard/users/{id}/edit', ['auth', 'verified', 'admin'], 'users.edit', ['id' => 'num'])]
-    public function edit(int $id): void
+    #[Route(
+        HttpMethod::GET,
+        '/dashboard/users/{user}/edit',
+        ['auth', 'verified', 'admin'],
+        'users.edit',
+        ['user' => RouteParameter::NUMBER],
+        ['user' => ['users', 'id']]
+    )]
+    public function edit(?Model $user = null): void
     {
-        $user = User::find($id);
-
         if (! $user) {
             Alert::toast('User not found')->error();
             $this->redirectBack();
         }
 
-        $this->render('dashboard.users.edit', ['user' => User::find($id)]);
+        $this->render('dashboard.users.edit', ['user' => $user]);
     }
 
-    #[Route(HttpMethod::PATCH, '/dashboard/users/{id}', ['auth', 'verified', 'admin'], 'users.update', ['id' => 'num'])]
-    public function update(UpdateUseCase $useCase, UpdateValidator $validator, int $id): void
+    #[Route(
+        HttpMethod::PATCH,
+        '/dashboard/users/{user}',
+        ['auth', 'verified', 'admin'],
+        'users.update',
+        ['user' => RouteParameter::NUMBER],
+        ['user' => ['users', 'id']]
+    )]
+    public function update(UpdateUseCase $useCase, UpdateValidator $validator, ?Model $user = null): void
     {
-        $user = User::find($id);
-
         if (! $user || ! $useCase->handle($validator->inputs(), $user->get('email'))) {
             Alert::toast('Failed to update user')->error();
         }
@@ -67,11 +79,16 @@ class UserController extends Controller
         $this->response->back()->send();
     }
 
-    #[Route(HttpMethod::DELETE, '/dashboard/users/{id}/delete', ['auth', 'verified', 'admin'], 'users.delete', ['id' => 'num'])]
-    public function delete(int $id): void
+    #[Route(
+        HttpMethod::DELETE,
+        '/dashboard/users/{user}/delete',
+        ['auth', 'verified', 'admin'],
+        'users.delete',
+        ['user' => RouteParameter::NUMBER],
+        ['user' => ['users', 'id']]
+    )]
+    public function delete(?Model $user = null): void
     {
-        $user = User::find($id);
-
         if (! $user || ! $user->delete()) {
             Alert::toast('Failed to delete user')->error();
         }

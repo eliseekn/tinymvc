@@ -32,12 +32,4 @@ class EmailValidator extends Validator
         ])
            ->make();
     }
-
-    /**
-     * Custom errors messages
-     */
-    public function messages(): array
-    {
-        return [];
-    }
 }
