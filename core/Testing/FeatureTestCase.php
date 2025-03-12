@@ -15,7 +15,7 @@ use Core\Enums\HttpAuthMethod;
 use Core\Enums\HttpCode;
 use Core\Http\Auth;
 use Core\Http\Client\Client;
-use Core\Testing\Traits\DatabaseTestCaseTrait;
+use Core\Testing\Traits\DatabaseTestCase;
 use CURLFile;
 use PHPUnit\Framework\TestCase;
 
@@ -24,7 +24,7 @@ use PHPUnit\Framework\TestCase;
  */
 abstract class FeatureTestCase extends TestCase
 {
-    use DatabaseTestCaseTrait;
+    use DatabaseTestCase;
 
     private Client $client;
 
@@ -264,7 +264,7 @@ abstract class FeatureTestCase extends TestCase
         return $this;
     }
 
-    public function assertSessionHas(string $key, $value): self
+    public function assertSessionHas(string $key, string|int $value): self
     {
         if (! array_key_exists($this->sessionKey($key), $this->getSession())) {
             // @phpstan-ignore-next-line
@@ -276,7 +276,7 @@ abstract class FeatureTestCase extends TestCase
         return $this;
     }
 
-    public function assertSessionDoesNotHave(string $key, $value): self
+    public function assertSessionDoesNotHave(string $key, string|int $value): self
     {
         if (! array_key_exists($this->sessionKey($key), $this->getSession())) {
             // @phpstan-ignore-next-line

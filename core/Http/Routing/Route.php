@@ -228,10 +228,10 @@ class Route
     public static function format(string $route): string
     {
         $patterns = [
-            '/\b'.RouteParameter::ALPHA.'\b/' => '([a-zA-Z-_]+)',
-            '/\b'.RouteParameter::NUMBER.'\b/' => '(\d+)',
-            '/\b'.RouteParameter::ALPHA_NUMERIC.'\b/' => '([a-zA-Z0-9-_]+)',
-            '/\b'.RouteParameter::ANY.'\b/' => '([^/]+)',
+            '/\b' . RouteParameter::ALPHA . '\b/' => '([a-zA-Z-_]+)',
+            '/\b' . RouteParameter::NUMBER . '\b/' => '(\d+)',
+            '/\b' . RouteParameter::ALPHA_NUMERIC . '\b/' => '([a-zA-Z0-9-_]+)',
+            '/\b' . RouteParameter::ANY . '\b/' => '([^/]+)',
         ];
 
         return preg_replace(array_keys($patterns), array_values($patterns), $route);

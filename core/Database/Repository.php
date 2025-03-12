@@ -215,7 +215,7 @@ class Repository
      */
     public function updateOrCreate(int $id, array $items): bool
     {
-        if ($this->findWhere('id', $id) === false) {
+        if (! $this->findWhere('id', $id)) {
             return $this->insert($items);
         }
 

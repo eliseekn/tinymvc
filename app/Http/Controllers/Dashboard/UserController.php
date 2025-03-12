@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Database\Models\User;
 use App\Http\UseCases\User\GetCollectionUseCase;
 use App\Http\UseCases\User\StoreUseCase;
 use App\Http\UseCases\User\UpdateUseCase;

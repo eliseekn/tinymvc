@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace Core\Testing;
 
 use Core\Enums\HttpMethod;
-use Core\Testing\Traits\DatabaseTestCaseTrait;
+use Core\Testing\Traits\DatabaseTestCase;
 use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\TimeoutException;
 use Facebook\WebDriver\WebDriverBy;
@@ -29,7 +29,7 @@ use Symfony\Component\Panther\PantherTestCaseTrait;
  */
 abstract class BrowserTestCase extends TestCase
 {
-    use PantherTestCaseTrait, DatabaseTestCaseTrait;
+    use PantherTestCaseTrait, DatabaseTestCase;
 
     public Client $client;
 

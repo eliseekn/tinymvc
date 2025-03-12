@@ -105,7 +105,7 @@ if (! function_exists('auth')) {
     /**
      * Get authenticated user session data.
      */
-    function auth(): Model|false|null
+    function auth(): Model|null
     {
         return Auth::user(request());
     }

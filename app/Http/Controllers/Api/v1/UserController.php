@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Database\Models\User;
 use App\Http\UseCases\Api\v1\User\GetCollectionUseCase;
 use App\Http\UseCases\Api\v1\User\StoreUseCase;
 use App\Http\UseCases\User\UpdateUseCase;

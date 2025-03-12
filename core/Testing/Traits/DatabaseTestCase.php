@@ -7,7 +7,7 @@ namespace Core\Testing\Traits;
 use Core\Database\Repository;
 use Core\Exceptions\InvalidSQLQueryException;
 
-trait DatabaseTestCaseTrait
+trait DatabaseTestCase
 {
     /**
      * @throws InvalidSQLQueryException

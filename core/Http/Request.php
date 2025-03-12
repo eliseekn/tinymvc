@@ -14,7 +14,6 @@ use Core\Exceptions\RouteParameterException;
 use Core\Exceptions\RoutesPathsNotDefinedException;
 use Core\Http\Routing\Route;
 use Core\Support\Uploader;
-use Exception;
 
 /**
  * Handle HTTP requests.

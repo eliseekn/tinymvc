@@ -148,7 +148,7 @@ class Router
                     self::executeMiddlewares($request, $options['middlewares']);
                 }
 
-                $bindings = resolve_route_binding($route, $options['parameters'] ?? [],$options['bindings'] ?? []);
+                $bindings = resolve_route_binding($route, $options['parameters'] ?? [], $options['bindings'] ?? []);
 
                 self::executeHandler($options['handler'], $params, $bindings);
             }
