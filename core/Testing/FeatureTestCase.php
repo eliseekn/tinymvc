@@ -264,7 +264,7 @@ abstract class FeatureTestCase extends TestCase
         return $this;
     }
 
-    public function assertSessionHas(string $key, string|int $value): self
+    public function assertSessionHas(string $key, $value): self
     {
         if (! array_key_exists($this->sessionKey($key), $this->getSession())) {
             // @phpstan-ignore-next-line
@@ -276,7 +276,7 @@ abstract class FeatureTestCase extends TestCase
         return $this;
     }
 
-    public function assertSessionDoesNotHave(string $key, string|int $value): self
+    public function assertSessionDoesNotHave(string $key, $value): self
     {
         if (! array_key_exists($this->sessionKey($key), $this->getSession())) {
             // @phpstan-ignore-next-line
