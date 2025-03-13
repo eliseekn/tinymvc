@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace Core\Console\Database;
 
-use Spatie\StructureDiscoverer\Discover;
+use App\Database\Seeders\Seeders;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -34,9 +34,7 @@ class Seed extends Command
         $seeders = $input->getArgument('seeder');
 
         if (empty($seeders)) {
-            $seeders = Discover::in(config('storage.seeders'))->classes()->get();
-
-            foreach ($seeders as $seeder) {
+            foreach (Seeders::get() as $seeder) {
                 // @phpstan-ignore-next-line
                 $seeder::run();
             }

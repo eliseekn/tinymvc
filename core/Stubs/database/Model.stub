@@ -22,22 +22,22 @@ class CLASSNAME extends Model
         parent::__construct('TABLE_NAME');
     }
 
-    public static function find(int $id): Model|false
+    public static function find(int $id): ?Model
     {
         return (new self)->findBy('id', $id);
     }
 
-    public static function findByColumn(string $column): Model|false
+    public static function findByColumn(string $column): ?Model
     {
         return (new self)->findBy('column', $column);
     }
 
-    public static function all(): array|false
+    public static function all(): array
     {
         return (new self)->getAll('*');
     }
 
-    public static function findAllByColumn(string $column): array|false
+    public static function findAllByColumn(string $column): array
     {
         return (new self)
             ->select('*')

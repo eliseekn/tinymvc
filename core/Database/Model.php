@@ -165,26 +165,64 @@ class Model
      * Get relationship of the model.
      * @throws InvalidSQLQueryException
      */
-    public function has(string $table, ?string $column = null): Repository
+    public function hasOne(string $table, ?string $column = null): ?Model
     {
         if (is_null($column)) {
             $column = $this->getColumnFromTable($table);
         }
 
-        return (new Repository($this->table))->select('*')->where($column, $this->getId());
+        return (new Repository($this->table))
+            ->select('*')
+            ->where($column, $this->getId())
+            ->get();
+    }
+
+    /**
+     * Get relationship of the model.
+     * @throws InvalidSQLQueryException
+     */
+    public function hasMany(string $table, ?string $column = null): array
+    {
+        if (is_null($column)) {
+            $column = $this->getColumnFromTable($table);
+        }
+
+        return (new Repository($this->table))
+            ->select('*')
+            ->where($column, $this->getId())
+            ->getAll();
     }
 
     /**
      * Get relationship belongs to the model.
      * @throws InvalidSQLQueryException
      */
-    public function belongsTo(string $table, ?string $column = null): Repository
+    public function belongsTo(string $table, ?string $column = null): ?Model
     {
         if (is_null($column)) {
             $column = $this->getColumnFromTable($table);
         }
 
-        return (new Repository($this->table))->select('*')->where('id', $this->attributes[$column]);
+        return (new Repository($this->table))
+            ->select('*')
+            ->where('id', $this->attributes[$column])
+            ->get();
+    }
+
+    /**
+     * Get relationship belongs to the model.
+     * @throws InvalidSQLQueryException
+     */
+    public function belongsToMany(string $table, ?string $column = null): array
+    {
+        if (is_null($column)) {
+            $column = $this->getColumnFromTable($table);
+        }
+
+        return (new Repository($this->table))
+            ->select('*')
+            ->where('id', $this->attributes[$column])
+            ->getAll();
     }
 
     public function set(array $attributes): self
