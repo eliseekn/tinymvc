@@ -35,7 +35,6 @@ class Seed extends Command
 
         if (empty($seeders)) {
             foreach (Seeders::get() as $seeder) {
-                // @phpstan-ignore-next-line
                 $seeder::run();
             }
 
