@@ -21,7 +21,7 @@ class GetCollectionUseCase extends UseCase
         $this
             ->response
             ->json(
-                User::allPaginate(
+                User::findAllPaginate(
                     $query['perPage'] ?? 10,
                     $query['page'] ?? 1,
                     $query['search'] ?? null,

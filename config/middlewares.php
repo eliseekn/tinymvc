@@ -19,6 +19,6 @@ return [
     'auth' => \App\Http\Middlewares\Authenticated::class,
     'api' => \App\Http\Middlewares\ApiAuth::class,
     'http' => \App\Http\Middlewares\HttpAuth::class,
-    'admin' => \App\Http\Middlewares\CheckUserAdmin::class,
+    'admin' => \App\Http\Middlewares\CheckIfUserAdmin::class,
     'redirect' => \App\Http\Middlewares\RedirectIfLogged::class,
 ];

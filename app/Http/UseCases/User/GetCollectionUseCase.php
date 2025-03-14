@@ -14,7 +14,7 @@ class GetCollectionUseCase extends UseCase
         $this
             ->response
             ->view('dashboard.users.index', [
-                'users' => User::allPaginate(
+                'users' => User::findAllPaginate(
                     $query['perPage'] ?? 10,
                     $query['page'] ?? 1,
                     $query['search'] ?? null,

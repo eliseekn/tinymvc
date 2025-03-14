@@ -32,7 +32,7 @@ class CLASSNAME extends Model
         return (new self)->findBy('column', $column);
     }
 
-    public static function all(): array
+    public static function findAll(): array
     {
         return (new self)->getAll('*');
     }
