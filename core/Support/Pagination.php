@@ -40,7 +40,7 @@ class Pagination
 
     public function getItemsAsArray(): array
     {
-        return array_map(fn (Model $user) => $user->get(), $this->items);
+        return array_map(fn (Model $model) => $model->get(), $this->items);
     }
 
     public function setItems(array $items): self

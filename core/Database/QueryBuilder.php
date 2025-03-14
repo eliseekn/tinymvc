@@ -79,41 +79,36 @@ class QueryBuilder
         return new self();
     }
 
-    public static function dropForeign(string $table, string $key): self
+    public static function dropForeign(string $key): self
     {
-        self::alter($table);
         self::$query .= " DROP FOREIGN KEY $key";
 
         return new self();
     }
 
-    public static function addColumn(string $table): self
+    public static function addColumn(): self
     {
-        self::alter($table);
         self::$query .= ' ADD COLUMN ';
 
         return new self();
     }
 
-    public static function renameColumn(string $table, string $old, string $new): self
+    public static function renameColumn(string $old, string $new): self
     {
-        self::alter($table);
         self::$query .= " RENAME COLUMN $old TO $new";
 
         return new self();
     }
 
-    public static function updateColumn(string $table, string $column): self
+    public static function updateColumn(string $column): self
     {
-        self::alter($table);
         self::$query .= " CHANGE $column ";
 
         return new self();
     }
 
-    public static function deleteColumn(string $table, string $column): self
+    public static function deleteColumn(string $column): self
     {
-        self::alter($table);
         self::$query .= " DROP COLUMN $column";
 
         return new self();
@@ -173,10 +168,7 @@ class QueryBuilder
     public function update(array $items): self
     {
         self::$query = 'UPDATE ' . self::$table . ' SET ';
-
-        if (config('database.timestamps')) {
-            $items = array_merge($items, ['updated_at' => carbon()->toDateTimeString()]);
-        }
+        $items = array_merge($items, ['updated_at' => carbon()->toDateTimeString()]);
 
         foreach ($items as $key => $value) {
             self::$query .= "$key = ?, ";
@@ -278,6 +270,13 @@ class QueryBuilder
         return $this;
     }
 
+    public function addForeignKey(string $name, string $column): self
+    {
+        self::$query .= " ADD CONSTRAINT $name FOREIGN KEY ($column)";
+
+        return $this;
+    }
+
     public function references(string $table, string $column): self
     {
         self::$query .= ' REFERENCES ' . self::setTable($table) . "($column)";
@@ -315,12 +314,12 @@ class QueryBuilder
         return $this;
     }
 
-    public function timestamps(string $created_at = 'created_at', string $updated_at = 'updated_at'): self
+    public function timestamps(): self
     {
         self::$query .= match ($this->driver()) {
-            DatabaseDriver::MYSQL => " $created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, $updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, ",
-            DatabaseDriver::PGSQL => " $created_at TIMESTAMP NOT NULL DEFAULT NOW(), $updated_at TIMESTAMP NOT NULL DEFAULT NOW(), ",
-            default => " $created_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')), $updated_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')), ",
+            DatabaseDriver::MYSQL => ' created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, ',
+            DatabaseDriver::PGSQL => ' created_at TIMESTAMP NOT NULL DEFAULT NOW(), updated_at TIMESTAMP NOT NULL DEFAULT NOW(), ',
+            default => " created_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')), updated_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')), ",
         };
 
         return $this;

@@ -16,7 +16,8 @@ class UsersTable_20250220101052
 {
     public function create(): void
     {
-        Migration::createColumn('users')
+        Migration::alterTable('users')
+            ->addColumn()
             ->addString('avatar')->nullable()
             ->run(true);
     }

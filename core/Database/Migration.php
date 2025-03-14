@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Core\Database;
 
+use Core\Enums\DatabaseDriver;
 use PDOStatement;
 
 /**
@@ -36,35 +37,42 @@ class Migration
         return new self();
     }
 
-    public static function createColumn(string $table): self
+    public static function alterTable(string $table): self
     {
-        static::$qb = QueryBuilder::addColumn($table);
+        static::$qb = QueryBuilder::alter($table);
 
         return new self();
     }
 
-    public static function renameColumn(string $table, string $old, string $new): self
+    public function addColumn(): self
     {
-        static::$qb = QueryBuilder::renameColumn($table, $old, $new);
+        static::$qb->addColumn();
 
-        return new self();
+        return $this;
+    }
+
+    public function renameColumn(string $old, string $new): self
+    {
+        static::$qb->renameColumn($old, $new);
+
+        return $this;
     }
 
     /**
      * Generate CHANGE COLUMN query.
      */
-    public static function updateColumn(string $table, string $column): self
+    public function updateColumn(string $column): self
     {
-        static::$qb = QueryBuilder::updateColumn($table, $column);
+        static::$qb->updateColumn($column);
 
-        return new self();
+        return $this;
     }
 
-    public static function deleteColumn(string $table, string $column): self
+    public function deleteColumn(string $column): self
     {
-        static::$qb = QueryBuilder::deleteColumn($table, $column);
+        static::$qb->deleteColumn($column);
 
-        return new self();
+        return $this;
     }
 
     public static function dropTable(string $table): void
@@ -72,16 +80,16 @@ class Migration
         QueryBuilder::dropTable($table)->execute();
     }
 
-    public static function dropForeign(string $table, string $name): false|PDOStatement
+    public static function dropForeign(string $name): false|PDOStatement
     {
-        return QueryBuilder::dropForeign($table, 'fk_' . $name)->execute();
+        return QueryBuilder::dropForeign('fk_' . $name)->execute();
     }
 
     public static function disableForeignKeyCheck(): false|PDOStatement
     {
         $query = match (static::driver()) {
-            'mysql' => 'SET foreign_key_checks = 0',
-            'pgsql' => 'SET session_replication_role = replica',
+            DatabaseDriver::MYSQL => 'SET foreign_key_checks = 0',
+            DatabaseDriver::PGSQL => 'SET session_replication_role = replica',
             default => 'PRAGMA foreign_keys = OFF',
         };
 
@@ -91,8 +99,8 @@ class Migration
     public static function enableForeignKeyCheck(): false|PDOStatement
     {
         $query = match (static::driver()) {
-            'mysql' => 'SET foreign_key_checks = 1',
-            'pgsql' => 'SET session_replication_role = DEFAULT',
+            DatabaseDriver::MYSQL => 'SET foreign_key_checks = 1',
+            DatabaseDriver::PGSQL => 'SET session_replication_role = DEFAULT',
             default => 'PRAGMA foreign_keys = ON',
         };
 
@@ -281,9 +289,16 @@ class Migration
         return $this;
     }
 
-    public function addForeignKey(string $column, string $name): self
+    public function foreignKey(string $column, string $name): self
     {
         self::$qb->foreignKey('fk_' . $name, $column);
+
+        return $this;
+    }
+
+    public function addForeignKey(string $column, string $name): self
+    {
+        self::$qb->addForeignKey('fk_' . $name, $column);
 
         return $this;
     }
@@ -332,7 +347,7 @@ class Migration
 
     public function addPrimaryKey(string $column = 'id', bool $autoIncrement = true): self
     {
-        $pk = self::driver() === 'mysql' ? $this->addBigInt($column) : $this->addInteger($column);
+        $pk = self::driver() === DatabaseDriver::MYSQL ? $this->addBigInt($column) : $this->addInteger($column);
         self::$qb->primaryKey();
 
         if ($autoIncrement) {
@@ -340,13 +355,6 @@ class Migration
         }
 
         return $pk;
-    }
-
-    public function addTimestamps(string $createdAt = 'created_at', string $updatedAt = 'updated_at'): self
-    {
-        self::$qb->timestamps($createdAt, $updatedAt);
-
-        return $this;
     }
 
     public function nullable(): self
@@ -373,7 +381,7 @@ class Migration
     public function run(bool $update = false): false|PDOStatement
     {
         if (! $update) {
-            return self::$qb->migrate();
+            return self::$qb->timestamps()->migrate();
         }
 
         return self::$qb->flush()->execute();

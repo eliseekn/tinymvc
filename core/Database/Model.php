@@ -14,7 +14,6 @@ use Closure;
 use Core\Database\Metrics\Metrics;
 use Core\Exceptions\InvalidSQLQueryException;
 use Core\Notification\Notifiable;
-use PDOStatement;
 
 /**
  * Manage database models.
@@ -151,11 +150,6 @@ class Model
         return is_null($id) ? false : $this->findBy('id', $id);
     }
 
-    public function truncate(): false|PDOStatement
-    {
-        return (new Repository($this->table))->delete()->execute();
-    }
-
     public function getId(): int
     {
         return (int) $this->get('id');
@@ -203,14 +197,14 @@ class Model
             $column = $this->getColumnFromTable($table);
         }
 
-        return (new Repository($this->table))
+        return (new Repository($table))
             ->select('*')
             ->where('id', $this->attributes[$column])
             ->get();
     }
 
     /**
-     * Get relationship belongs to the model.
+     * Get relationship belongs to many the model.
      * @throws InvalidSQLQueryException
      */
     public function belongsToMany(string $table, ?string $column = null): array
@@ -219,7 +213,7 @@ class Model
             $column = $this->getColumnFromTable($table);
         }
 
-        return (new Repository($this->table))
+        return (new Repository($table))
             ->select('*')
             ->where('id', $this->attributes[$column])
             ->getAll();

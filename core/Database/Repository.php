@@ -115,9 +115,9 @@ class Repository
     /**
      * @throws InvalidSQLQueryException
      */
-    public function findOrCreate(int $id, array $items): Model|bool
+    public function findOrCreate(string $column, $value, array $items): Model|bool
     {
-        $result = $this->findWhere('id', $id);
+        $result = $this->findWhere($column, $value);
 
         if (! $result) {
             $result = $this->insertGetId($items);
@@ -640,7 +640,7 @@ class Repository
             ? QueryBuilder::setQuery($query, $args)->limit($pager->getFirstItem(), $items_per_page)->fetchAll()
             : QueryBuilder::setQuery($query, $args)->fetchAll();
 
-        $items = array_map(fn ($item) => (new Model($this->table))->findBy('id', $item->id), $items);
+        $items = array_map(fn ($item) => new Model($this->table, (array) $item), $items);
 
         return $pager->setItems($items);
     }

@@ -648,6 +648,7 @@ class Metrics
                 ->selectRaw($this->asData())
                 ->whereColumn($this->formatDateColumn())
                 ->between($this->period[0], $this->period[1])
+                ->subQueryWhen(! is_null($this->subQuery), $this->subQuery)
                 ->fetch();
         }
 
@@ -722,6 +723,7 @@ class Metrics
                 ->selectRaw($this->asData() . ', ' . $this->asLabel($this->formatDateColumn()) . $this->groupedData)
                 ->whereColumn($this->formatDateColumn())
                 ->between($this->period[0], $this->period[1])
+                ->subQueryWhen(! is_null($this->subQuery), $this->subQuery)
                 ->groupBy('label')
                 ->orderBy('label', 'asc')
                 ->fetchAll();
