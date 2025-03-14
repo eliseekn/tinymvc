@@ -17,7 +17,9 @@ return [
     'debug' => true,
 
     'extensions' => [
-        'functions' => [],
+        'functions' => [
+            'is_user_admin' => 'is_user_admin',
+        ],
         'filters' => [],
         'globals' => [],
     ],
