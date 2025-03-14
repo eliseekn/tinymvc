@@ -11,3 +11,15 @@ declare(strict_types=1);
 /*
  * Write your custom helper functions here
  */
+
+use App\Enums\UserRole;
+
+if (! function_exists('is_user_admin')) {
+    /*
+     * Check if user is role admin
+     */
+    function is_user_admin(): bool
+    {
+        return auth()->belongsTo('roles')->get('name') === UserRole::ADMIN->value;
+    }
+}

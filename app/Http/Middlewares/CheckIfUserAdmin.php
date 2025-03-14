@@ -10,17 +10,16 @@ declare(strict_types=1);
 
 namespace App\Http\Middlewares;
 
-use App\Enums\UserRole;
 use Core\Enums\HttpCode;
 use Core\Enums\ResponseStatus;
 use Core\Http\Request;
 use Core\Http\Response;
 
-class CheckUserAdmin
+class CheckIfUserAdmin
 {
     public function handle(Request $request, Response $response): void
     {
-        if (auth()->get('role') !== UserRole::ADMIN->value) {
+        if (! is_user_admin()) {
             if ($request->isJson()) {
                 $response->json([
                     'status' => ResponseStatus::ERROR,
