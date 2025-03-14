@@ -23,7 +23,6 @@ class TokensTable_20210403034738
             ->addString('value')->unique()
             ->addDateTime('expires_at')->nullable()
             ->addString('description')->default(TokenDescription::PASSWORD_RESET)
-            ->addTimestamps()
             ->run();
     }
 

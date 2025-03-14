@@ -40,9 +40,4 @@ class Token extends Model
             ->and('description', $description)
             ->first();
     }
-
-    public static function all(): array
-    {
-        return (new self)->getAll('*');
-    }
 }

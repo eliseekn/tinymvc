@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace App\Http\Validation\Rules;
 
 use Core\Database\Repository;
-use Core\Exceptions\InvalidSQLQueryException;
 use Core\Exceptions\ModelNotFoundException;
 use Core\Http\Validation\Rule\RuleInterface;
 
@@ -21,10 +20,6 @@ class Unique implements RuleInterface
 
     public string $errorMessage = 'This {field} is already registered';
 
-    /**
-     * @throws InvalidSQLQueryException
-     * @throws ModelNotFoundException
-     */
     public function rule(string $field, array $input, array $params, $value): bool
     {
         if (! isset($params[1])) {
