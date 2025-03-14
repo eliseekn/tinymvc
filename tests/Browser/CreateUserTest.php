@@ -10,7 +10,9 @@ declare(strict_types=1);
 
 namespace Tests\Browser;
 
+use App\Database\Models\Role;
 use App\Database\Models\User;
+use App\Database\Seeders\RoleSeeder;
 use App\Enums\UserRole;
 use Core\Testing\BrowserTestCase;
 use Core\Testing\Traits\RefreshDatabase;
@@ -18,6 +20,13 @@ use Core\Testing\Traits\RefreshDatabase;
 class CreateUserTest extends BrowserTestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        RoleSeeder::run();
+    }
 
     protected function tearDown(): void
     {
@@ -29,7 +38,7 @@ class CreateUserTest extends BrowserTestCase
     public function test_can_create(): void
     {
         $user = User::factory()->create([
-            'role' => UserRole::ADMIN->value,
+            'role_id' => Role::findByName(UserRole::ADMIN->value)?->getId(),
         ]);
 
         $this
@@ -65,7 +74,6 @@ class CreateUserTest extends BrowserTestCase
         $data = [
             'name' => faker()->name(),
             'email' => faker()->unique()->safeEmail(),
-            'role' => UserRole::USER->value,
             'password' => 'password',
         ];
 

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Api;
 
 use App\Database\Models\User;
+use App\Database\Seeders\RoleSeeder;
 use Core\Enums\ResponseStatus;
 use Core\Testing\FeatureTestCase;
 use Core\Testing\Traits\RefreshDatabase;
@@ -18,6 +19,13 @@ use Core\Testing\Traits\RefreshDatabase;
 class AuthenticationTest extends FeatureTestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        RoleSeeder::run();
+    }
 
     protected function tearDown(): void
     {

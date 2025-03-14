@@ -11,10 +11,28 @@ declare(strict_types=1);
 namespace Tests\Browser;
 
 use App\Database\Models\User;
+use App\Database\Seeders\RoleSeeder;
 use Core\Testing\BrowserTestCase;
+use Core\Testing\Traits\RefreshDatabase;
 
 class LoginPageTest extends BrowserTestCase
 {
+    use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        RoleSeeder::run();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        $this->refreshDatabase();
+    }
+
     public function test_can_authenticate(): void
     {
         $user = User::factory()->create();

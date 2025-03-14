@@ -10,7 +10,9 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api;
 
+use App\Database\Models\Role;
 use App\Database\Models\User;
+use App\Database\Seeders\RoleSeeder;
 use App\Enums\UserRole;
 use Core\Enums\HttpCode;
 use Core\Enums\ResponseStatus;
@@ -21,6 +23,13 @@ class UserTest extends FeatureTestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        RoleSeeder::run();
+    }
+
     protected function tearDown(): void
     {
         parent::tearDown();
@@ -30,8 +39,13 @@ class UserTest extends FeatureTestCase
 
     public function test_can_store(): void
     {
-        $admin = User::factory()->create(['role' => UserRole::ADMIN->value]);
-        $user = User::factory()->make(['password' => 'password']);
+        $admin = User::factory()->create([
+            'role_id' => Role::findByName(UserRole::ADMIN->value)?->getId(),
+        ]);
+        $user = User::factory()->make([
+            'password' => 'password',
+            'role_id' => Role::findByName(UserRole::USER->value)?->getId(),
+        ]);
 
         $this
             ->auth($admin)
@@ -46,7 +60,9 @@ class UserTest extends FeatureTestCase
 
     public function test_can_get_collection(): void
     {
-        $admin = User::factory()->create(['role' => UserRole::ADMIN->value]);
+        $admin = User::factory()->create([
+            'role_id' => Role::findByName(UserRole::ADMIN->value)?->getId(),
+        ]);
         $users = User::factory(10)->create();
 
         $this
@@ -63,7 +79,9 @@ class UserTest extends FeatureTestCase
 
     public function test_can_get_item(): void
     {
-        $admin = User::factory()->create(['role' => UserRole::ADMIN->value]);
+        $admin = User::factory()->create([
+            'role_id' => Role::findByName(UserRole::ADMIN->value)?->getId(),
+        ]);
         $user = User::factory()->create();
 
         $this
@@ -78,8 +96,12 @@ class UserTest extends FeatureTestCase
 
     public function test_can_update(): void
     {
-        $admin = User::factory()->create(['role' => UserRole::ADMIN->value]);
-        $user = User::factory()->create();
+        $admin = User::factory()->create([
+            'role_id' => Role::findByName(UserRole::ADMIN->value)?->getId(),
+        ]);
+        $user = User::factory()->create([
+            'role_id' => Role::findByName(UserRole::USER->value)?->getId(),
+        ]);
         $name = faker()->name();
 
         $this
@@ -92,7 +114,9 @@ class UserTest extends FeatureTestCase
 
     public function test_can_delete(): void
     {
-        $admin = User::factory()->create(['role' => UserRole::ADMIN->value]);
+        $admin = User::factory()->create([
+            'role_id' => Role::findByName(UserRole::ADMIN->value)?->getId(),
+        ]);
         $user = User::factory()->create();
 
         $this
