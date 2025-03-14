@@ -31,27 +31,28 @@ class Seed extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $seeders = $input->getArgument('seeder');
+        $seeders = ! empty($input->getArgument('seeder'))
+            ? $input->getArgument('seeder')
+            : Seeders::get();
 
-        if (empty($seeders)) {
-            foreach (Seeders::get() as $seeder) {
-                $seeder::run();
-            }
-
-            $output->writeln('<bg=blue;options=bold> INFO </> All seeders have been run.');
-        } else {
-            foreach ($seeders as $seeder) {
-                $this->seed($output, $seeder);
-            }
+        foreach ($seeders as $seeder) {
+            $this->seed($output, $seeder);
         }
+
+        $output->writeln('<bg=blue;options=bold> INFO </> All seeders have been run.');
 
         return Command::SUCCESS;
     }
 
     protected function seed(OutputInterface $output, string $seeder): void
     {
-        $seeder = '\App\Database\Seeders\\' . $seeder;
-        $seeder::run();
-        $output->writeln('<bg=blue;options=bold> Seeder <options=bold>' . $seeder . '</> has been run.');
+        if (str_contains($seeder, '\\')) {
+            $seeder = explode('\\', $seeder);
+            $seeder = end($seeder);
+        }
+
+        $seederClass = '\App\Database\Seeders\\' . $seeder;
+        $seederClass::run();
+        $output->writeln('<bg=blue;options=bold> INFO </> Seeder <options=bold>' . $seeder . '</> has been run.');
     }
 }

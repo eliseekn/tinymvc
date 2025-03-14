@@ -51,7 +51,9 @@ class Run extends Command
             $output->writeln('<bg=blue;options=bold> INFO </> Migrations tables have been created.');
         }
 
-        $migrations = storage(config('storage.migrations'))->getFiles();
+        $migrations = ! empty($input->getArgument('migration'))
+            ? $input->getArgument('migration')
+            : storage(config('storage.migrations'))->getFiles();
 
         foreach ($migrations as $migration) {
             $this->migrate($output, get_file_name($migration));
@@ -66,6 +68,11 @@ class Run extends Command
 
     protected function migrate(OutputInterface $output, string $migration): void
     {
+        if (str_contains($migration, '\\')) {
+            $migration = explode('\\', $migration);
+            $migration = end($migration);
+        }
+
         if ($this->isMigrated($migration)) {
             $output->writeln('<bg=bright-yellow;fg=black> WARN </> Migration <options=bold>' . $migration . '</> has already been migrated.');
 
