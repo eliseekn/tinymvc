@@ -42,6 +42,16 @@ if (! function_exists('decrypt')) {
     }
 }
 
+if (! function_exists('bcrypt')) {
+    /**
+     * Hash password.
+     */
+    function bcrypt(string $password): string
+    {
+        return Encryption::hash($password);
+    }
+}
+
 /*
  * Cookie helper
  */
@@ -105,7 +115,7 @@ if (! function_exists('auth')) {
     /**
      * Get authenticated user session data.
      */
-    function auth(): Model|null
+    function auth(): ?Model
     {
         return Auth::user(request());
     }
@@ -114,16 +124,6 @@ if (! function_exists('auth')) {
 /*
  * Security utils
  */
-if (! function_exists('bcrypt')) {
-    /**
-     * Hash password.
-     */
-    function bcrypt(string $password): string
-    {
-        return Encryption::hash($password);
-    }
-}
-
 if (! function_exists('generate_csrf_token')) {
     function generate_csrf_token(): string
     {
@@ -137,7 +137,6 @@ if (! function_exists('generate_csrf_token')) {
         return $csrf_token;
     }
 }
-
 
 if (! function_exists('request')) {
     /**
