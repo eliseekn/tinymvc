@@ -50,7 +50,7 @@ class Request
 
         foreach ($result as $field => $value) {
             if (! is_null($value)) {
-                $result[$field] = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+                $result[$field] = htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
             }
         }
 
@@ -67,7 +67,7 @@ class Request
 
         foreach ($result as $field => $value) {
             if (! is_null($value)) {
-                $result[$field] = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+                $result[$field] = htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
             }
         }
 
@@ -162,20 +162,19 @@ class Request
 
             $route = route_parameters_to_regex($route, $routeParams, $result);
 
-            if (! preg_match('#^' . $route . '$#', $this->method() . ' ' . $this->uri(), $matches)) {
-                return null;
-            }
+            if (preg_match('#^' . $route . '$#', $this->method() . ' ' . $this->uri(), $matches)) {
+                array_shift($matches);
+                $paramKeys = array_keys($result);
 
-            array_shift($matches);
-            $paramKeys = array_keys($result);
-
-            foreach ($matches as $index => $value) {
-                if ($value !== '') {
-                    $result[$paramKeys[$index]] = $value;
+                foreach ($matches as $index => $value) {
+                    if ($value !== '') {
+                        $result[$paramKeys[$index]] = $value;
+                        break;
+                    }
                 }
-            }
 
-            break;
+                break;
+            }
         }
 
         return $result[$name] ?? null;
