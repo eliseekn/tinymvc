@@ -45,18 +45,17 @@
 				<div>
 					<label for="role" class="form-label">Role</label>
 
-					<select name="role" id="role" class="form-select {{ errors.role ? 'is-invalid' }}" aria-describedby="role-error">
-						<option value="{{ enum("\\App\\Enums\\UserRole").USER.value }}" {{ user.get('role') == enum("\\App\\Enums\\UserRole").USER.value ? 'selected' : '' }}>
-							{{ enum("\\App\\Enums\\UserRole").USER.value }}
-						</option>
-						<option value="{{ enum("\\App\\Enums\\UserRole").ADMIN.value }}" {{ user.get('role') == enum("\\App\\Enums\\UserRole").ADMIN.value ? 'selected' : '' }}>
-							{{ enum("\\App\\Enums\\UserRole").ADMIN.value }}
-						</option>
+					<select name="role_id" id="role" class="form-select {{ errors.role_id ? 'is-invalid' }}" aria-describedby="role_id-error">
+						{% for role in roles %}
+							<option value="{{ role.get('id') }}" {{ role.get('id') == user.get('role_id') ? 'selected' : '' }}>
+								{{ role.get('name') }}
+							</option>
+						{% endfor %}
 					</select>
 
-					{% if errors.role is not empty %}
-						<div id="role-error" class="invalid-feedback">
-							{{ errors.role }}
+					{% if errors.role_id is not empty %}
+						<div id="role_id-error" class="invalid-feedback">
+							{{ errors.role_id }}
 						</div>
 					{% endif %}
 				</div>

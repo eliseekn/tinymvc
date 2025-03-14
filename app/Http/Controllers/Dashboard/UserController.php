@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Database\Models\Role;
 use App\Http\UseCases\User\GetCollectionUseCase;
 use App\Http\UseCases\User\StoreUseCase;
 use App\Http\UseCases\User\UpdateUseCase;
@@ -33,7 +34,9 @@ class UserController extends Controller
     #[Route(HttpMethod::GET, '/dashboard/users/create', ['auth', 'verified', 'admin'], 'users.create')]
     public function create(): void
     {
-        $this->render('dashboard.users.create');
+        $this->render('dashboard.users.create', [
+            'roles' => Role::findAll(),
+        ]);
     }
 
     #[Route(HttpMethod::POST, '/dashboard/users', ['auth', 'verified', 'admin'], 'users.store')]
@@ -57,7 +60,10 @@ class UserController extends Controller
             $this->redirectBack();
         }
 
-        $this->render('dashboard.users.edit', ['user' => $user]);
+        $this->render('dashboard.users.edit', [
+            'user' => $user,
+            'roles' => Role::findAll(),
+        ]);
     }
 
     #[Route(

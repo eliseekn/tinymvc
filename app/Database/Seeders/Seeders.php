@@ -9,6 +9,7 @@ class Seeders
     public static function get(): array
     {
         return [
+            RoleSeeder::class,
             UserSeeder::class,
         ];
     }

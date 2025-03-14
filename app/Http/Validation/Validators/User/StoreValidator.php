@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace App\Http\Validation\Validators\User;
 
-use App\Enums\UserRole;
+use App\Http\Validation\Rules\Exists;
 use App\Http\Validation\Rules\Unique;
 use Core\Http\Validation\Rule\Rule;
 use Core\Http\Validation\Validator\Validator;
@@ -39,9 +39,9 @@ class StoreValidator extends Validator
                 Rule::maxLen(255),
                 Rule::minLen(8),
             ])
-            ->add('role', [
+            ->add('role_id', [
                 Rule::REQUIRED,
-                Rule::in([UserRole::USER->value, UserRole::ADMIN->value]),
+                Rule::custom(Exists::class, ['roles', 'id']),
             ])
             ->make();
     }

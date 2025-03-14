@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace App\Http\Validation\Validators\User;
 
-use App\Enums\UserRole;
+use App\Http\Validation\Rules\Exists;
 use App\Http\Validation\Rules\Unique;
 use Core\Http\Validation\Rule\Rule;
 use Core\Http\Validation\Validator\Validator;
@@ -33,10 +33,10 @@ class UpdateValidator extends Validator
                 Rule::maxLen(255),
                 Rule::custom(Unique::class, [
                     'users',
-                    request()->routeParam('id'),
+                    request()->routeParam('user'),
                 ]),
             ])
-            ->add('role', Rule::in([UserRole::USER->value, UserRole::ADMIN->value]))
+            ->add('role_id', Rule::custom(Exists::class, ['roles', 'id']))
             ->make();
     }
 }

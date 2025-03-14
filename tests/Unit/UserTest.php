@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use App\Database\Models\User;
-use App\Enums\UserRole;
 use Core\Database\Model;
 use PHPUnit\Framework\TestCase;
 
@@ -24,7 +23,7 @@ class UserTest extends TestCase
             'email' => faker()->unique()->email(),
             'password' => bcrypt('password'),
             'email_verified_at' => null,
-            'role' => UserRole::USER->value,
+            'role_id' => null,
             'avatar' => null,
         ];
 

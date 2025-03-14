@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Database\Seeders;
 
+use App\Database\Models\Role;
 use App\Database\Models\User;
 use App\Enums\UserRole;
 
@@ -20,7 +21,7 @@ class UserSeeder
         User::factory()->create([
             'name' => 'Admin',
             'email' => 'admin@tiny.mvc',
-            'role' => UserRole::ADMIN->value,
+            'role_id' => Role::findByName(UserRole::ADMIN->value)->getId(),
             'email_verified_at' => carbon()->toDateTimeString(),
         ]);
 

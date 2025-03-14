@@ -90,15 +90,15 @@ class DashboardController extends Controller
         }
 
         return match ($period) {
-            'day' => $metrics->labelColumn('role')->countByDay()->trends(true),
-            'last_week' => $metrics->labelColumn('role')->countFrom(carbon()->subWeek()->startOfWeek()->format('Y-m-d'))->trends(true),
-            'week' => $metrics->labelColumn('role')->countByWeek()->trends(true),
-            'quater_year' => $metrics->labelColumn('role')->countByMonth(count: 4)->trends(true),
-            'half_year' => $metrics->labelColumn('role')->countByMonth(count: 6)->trends(true),
-            'month' => $metrics->labelColumn('role')->countByMonth()->trends(true),
-            'last_month' => $metrics->labelColumn('role')->countFrom(carbon()->subMonth()->startOfMonth()->format('Y-m-d'))->trends(true),
-            'year' => $metrics->labelColumn('role')->countByYear(count: 5)->trends(true),
-            'last_year' => $metrics->labelColumn('role')->countFrom(carbon()->subYear()->startOfYear()->format('Y-m-d'))->trends(true),
+            'day' => $metrics->labelColumn('role_id')->countByDay()->trends(true),
+            'last_week' => $metrics->labelColumn('role_id')->countFrom(carbon()->subWeek()->startOfWeek()->format('Y-m-d'))->trends(true),
+            'week' => $metrics->labelColumn('role_id')->countByWeek()->trends(true),
+            'quater_year' => $metrics->labelColumn('role_id')->countByMonth(count: 4)->trends(true),
+            'half_year' => $metrics->labelColumn('role_id')->countByMonth(count: 6)->trends(true),
+            'month' => $metrics->labelColumn('role_id')->countByMonth()->trends(true),
+            'last_month' => $metrics->labelColumn('role_id')->countFrom(carbon()->subMonth()->startOfMonth()->format('Y-m-d'))->trends(true),
+            'year' => $metrics->labelColumn('role_id')->countByYear(count: 5)->trends(true),
+            'last_year' => $metrics->labelColumn('role_id')->countFrom(carbon()->subYear()->startOfYear()->format('Y-m-d'))->trends(true),
             default => []
         };
     }
