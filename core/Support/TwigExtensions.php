@@ -65,26 +65,28 @@ class TwigExtensions extends AbstractExtension implements GlobalsInterface
 
     public function getFunctions(): array
     {
-        return $this->getCustomFunctions() + [
-            new TwigFunction('auth_attempts_exceeded', 'auth_attempts_exceeded'),
-            new TwigFunction('auth', 'auth'),
-            new TwigFunction('method_input', 'method_input'),
-            new TwigFunction('csrf_token_input', 'csrf_token_input'),
-            new TwigFunction('csrf_token_meta', 'csrf_token_meta'),
-            new TwigFunction('url', 'url'),
-            new TwigFunction('route', 'route'),
-            new TwigFunction('public_url', 'public_url'),
-            new TwigFunction('storage_url', 'storage_url'),
-            new TwigFunction('current_url', 'current_url'),
-            new TwigFunction('url_contains', 'url_contains'),
-            new TwigFunction('config', 'config'),
-            new TwigFunction('__', '__'),
-            new TwigFunction('date', 'date'),
-            new TwigFunction('session', 'session'),
-            new TwigFunction('cookies', 'cookies'),
-            new TwigFunction('carbon', 'carbon'),
-            new TwigFunction('request', 'request'),
-            new TwigFunction('dd', 'dd'),
-        ];
+        return array_merge(
+            $this->getCustomFunctions(), [
+                new TwigFunction('auth_attempts_exceeded', 'auth_attempts_exceeded'),
+                new TwigFunction('auth', 'auth'),
+                new TwigFunction('method_input', 'method_input'),
+                new TwigFunction('csrf_token_input', 'csrf_token_input'),
+                new TwigFunction('csrf_token_meta', 'csrf_token_meta'),
+                new TwigFunction('url', 'url'),
+                new TwigFunction('route', 'route'),
+                new TwigFunction('public_url', 'public_url'),
+                new TwigFunction('storage_url', 'storage_url'),
+                new TwigFunction('current_url', 'current_url'),
+                new TwigFunction('url_contains', 'url_contains'),
+                new TwigFunction('config', 'config'),
+                new TwigFunction('__', '__'),
+                new TwigFunction('date', 'date'),
+                new TwigFunction('session', 'session'),
+                new TwigFunction('cookies', 'cookies'),
+                new TwigFunction('carbon', 'carbon'),
+                new TwigFunction('request', 'request'),
+                new TwigFunction('dd', 'dd'),
+            ]
+        );
     }
 }
