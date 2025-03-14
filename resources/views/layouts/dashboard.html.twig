@@ -30,7 +30,7 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        {% if auth().get('role') == enum("\\App\\Enums\\UserRole").ADMIN.value %}
+                        {% if is_user_admin() %}
                             <li class="nav-item">
                                 <a class="nav-link {{ url_contains('dashboard/users') ? 'active' : '' }}" aria-current="page" href="{{ route('users.index') }}">Users</a>
                             </li>
@@ -68,7 +68,7 @@
                                                 <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
                                             </svg>
 
-                                            Log out
+                                            {{ __('form.logout') }}
                                         </button>
                                     </form>
                                 </li>
