@@ -25,7 +25,7 @@ class Pagination
     public function __construct(int $total_items, int $items_per_page, int $page = 1)
     {
         $this->pagination = [
-            'page' => $page,
+            'current_page' => $page,
             'first_item' => ($page - 1) * $items_per_page,
             'total_items' => $total_items,
             'items_per_page' => $items_per_page,
@@ -40,7 +40,20 @@ class Pagination
 
     public function getItemsAsArray(): array
     {
-        return array_map(fn (Model $model) => $model->get(), $this->items);
+        $items = array_map(fn (Model $model) => $model->get(), $this->items);
+
+        return [
+            'data' => $items,
+            'pagination' => array_merge(
+                $this->pagination, [
+                    'first_page_url' => $this->firstPageUrl(),
+                    'last_page_url' => $this->lastPageUrl(),
+                    'current_page_url' => $this->pageUrl($this->pagination['current_page']),
+                    'next_page_url' => $this->nextPageUrl(),
+                    'previous_page_url' => $this->previousPageUrl(),
+                ]
+            ),
+        ];
     }
 
     public function setItems(array $items): self
@@ -72,24 +85,32 @@ class Pagination
 
     public function currentPage(): int
     {
-        if ($this->pagination['page'] < 1) {
+        if ($this->pagination['current_page'] < 1) {
             return 1;
         }
 
-        if ($this->pagination['page'] > $this->totalPages()) {
+        if ($this->pagination['current_page'] > $this->totalPages()) {
             return $this->totalPages();
         }
 
-        return $this->pagination['page'];
+        return $this->pagination['current_page'];
     }
 
     public function previousPage(): int
     {
+        if ($this->currentPage() === 1) {
+            return 1;
+        }
+
         return $this->currentPage() - 1;
     }
 
     public function nextPage(): int
     {
+        if ($this->totalPages() === $this->currentPage()) {
+            return $this->totalPages();
+        }
+
         return $this->currentPage() + 1;
     }
 
