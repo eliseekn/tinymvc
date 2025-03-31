@@ -18,8 +18,6 @@ return [
     'log' => true,
 
     'views' => [
-        '403' => 'errors'.DIRECTORY_SEPARATOR.'403',
         '404' => 'errors'.DIRECTORY_SEPARATOR.'404',
-        '500' => 'errors'.DIRECTORY_SEPARATOR.'500',
     ],
 ];
