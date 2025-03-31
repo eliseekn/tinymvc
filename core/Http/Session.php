@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -36,17 +37,17 @@ class Session
 
     public function create(string $name, $data): void
     {
-        $_SESSION[strtolower(config('app.name')) . '_' . $name] = $data;
+        $_SESSION[strtolower(config('app.name')).'_'.$name] = $data;
     }
 
     public function get(string $name, $default = null): mixed
     {
-        return $_SESSION[strtolower(config('app.name')) . '_' . $name] ?? $default;
+        return $_SESSION[strtolower(config('app.name')).'_'.$name] ?? $default;
     }
 
     public function has(string $name): bool
     {
-        return isset($_SESSION[strtolower(config('app.name')) . '_' . $name]);
+        return isset($_SESSION[strtolower(config('app.name')).'_'.$name]);
     }
 
     public function forget(array|string $names): void
@@ -54,7 +55,7 @@ class Session
         $names = parse_array($names);
 
         foreach ($names as $name) {
-            unset($_SESSION[strtolower(config('app.name')) . '_' . $name]);
+            unset($_SESSION[strtolower(config('app.name')).'_'.$name]);
         }
     }
 
@@ -90,6 +91,6 @@ class Session
             }
         }
 
-        $_SESSION[strtolower(config('app.name')) . '_' . $name] = $stored_data;
+        $_SESSION[strtolower(config('app.name')).'_'.$name] = $stored_data;
     }
 }

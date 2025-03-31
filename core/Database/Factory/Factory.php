@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -22,7 +23,7 @@ class Factory
     public function __construct(public string $model, int $count)
     {
         for ($i = 1; $i <= $count; $i++) {
-            $this->class[] = new $model();
+            $this->class[] = new $model;
         }
     }
 

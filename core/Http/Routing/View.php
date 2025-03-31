@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -25,13 +26,14 @@ class View
 {
     /**
      * Retrieves view template content.
+     *
      * @throws ViewNotFoundException
      * @throws Exception
      */
     public static function getContent(string $view, array $data = []): string
     {
         $path = Storage::path(config('storage.views'));
-        $view = real_path($view) . '.html.twig';
+        $view = real_path($view).'.html.twig';
 
         if (! $path->isFile($view)) {
             throw new ViewNotFoundException($path->file($view));
@@ -44,10 +46,10 @@ class View
             'debug' => config('twig.debug'),
         ]);
 
-        $twig->addExtension(new TwigExtensions());
+        $twig->addExtension(new TwigExtensions);
 
         if (config('twig.debug')) {
-            $twig->addExtension(new DebugExtension());
+            $twig->addExtension(new DebugExtension);
         }
 
         try {

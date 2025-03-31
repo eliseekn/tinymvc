@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -15,7 +16,7 @@ use Core\Support\Storage;
  * Application initialization
  */
 
-const APP_ROOT = __DIR__ . DIRECTORY_SEPARATOR;
+const APP_ROOT = __DIR__.DIRECTORY_SEPARATOR;
 
 set_time_limit(0);
 
@@ -44,7 +45,7 @@ if (config('errors.display')) {
 
 if (config('errors.log')) {
     ini_set('log_errors', 1);
-    ini_set('error_log', storage(config('storage.logs'))->file('tinymvc_' . date('m_d_y') . '.log'));
+    ini_set('error_log', storage(config('storage.logs'))->file('tinymvc_'.date('m_d_y').'.log'));
 } else {
     ini_set('log_errors', 0);
 }

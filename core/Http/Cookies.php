@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -19,19 +20,19 @@ class Cookies
     {
         $value = config('security.encryption.cookies') ? encrypt($value) : $value;
 
-        return setcookie(config('app.name') . '_' . $name, $value, time() + $expire, '/', $domain, $secure, true);
+        return setcookie(config('app.name').'_'.$name, $value, time() + $expire, '/', $domain, $secure, true);
     }
 
     public function get(string $name): mixed
     {
-        $value = $_COOKIE[config('app.name') . '_' . $name] ?? '';
+        $value = $_COOKIE[config('app.name').'_'.$name] ?? '';
 
         return config('security.encryption.cookies') ? decrypt($value) : $value;
     }
 
     public function has(string $name): bool
     {
-        return isset($_COOKIE[config('app.name') . '_' . $name]);
+        return isset($_COOKIE[config('app.name').'_'.$name]);
     }
 
     public function delete(array|string $names): void
@@ -39,7 +40,7 @@ class Cookies
         $names = parse_array($names);
 
         foreach ($names as $name) {
-            setcookie(config('app.name') . '_' . $name, '', time() - 3600, '/');
+            setcookie(config('app.name').'_'.$name, '', time() - 3600, '/');
         }
     }
 }

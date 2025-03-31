@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -48,9 +49,9 @@ class Test extends Command
             }
 
             if (! $result) {
-                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create test <options=bold>' . $class . '</>.');
+                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create test <options=bold>'.$class.'</>.');
             } else {
-                $output->writeln('<bg=blue;options=bold> INFO </> Test <options=bold>' . $class . '</> has been created.');
+                $output->writeln('<bg=blue;options=bold> INFO </> Test <options=bold>'.$class.'</> has been created.');
             }
         }
 

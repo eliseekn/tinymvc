@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -42,7 +43,7 @@ class Routes extends Command
 
             if (is_array($handler)) {
                 list($controller, $action) = $handler;
-                $handler = $controller . '@' . $action;
+                $handler = $controller.'@'.$action;
             }
 
             if ($handler instanceof Closure) {

@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -38,9 +39,9 @@ class Environnement extends Command
             return Command::FAILURE;
         }
 
-        Config::updateEnv(['APP_ENV' => $input->getArgument('name') . PHP_EOL]);
+        Config::updateEnv(['APP_ENV' => $input->getArgument('name').PHP_EOL]);
 
-        $output->writeln('<bg=blue;options=bold> INFO </> Application environnement has been defined to <options=bold>' . $input->getArgument('name') . '</>.');
+        $output->writeln('<bg=blue;options=bold> INFO </> Application environnement has been defined to <options=bold>'.$input->getArgument('name').'</>.');
 
         return Command::SUCCESS;
     }

@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -30,7 +31,7 @@ class Password extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln('<info>' . bcrypt($input->getArgument('password')) . '</info>');
+        $output->writeln('<info>'.bcrypt($input->getArgument('password')).'</info>');
 
         return Command::SUCCESS;
     }

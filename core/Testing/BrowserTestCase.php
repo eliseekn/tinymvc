@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -29,7 +30,8 @@ use Symfony\Component\Panther\PantherTestCaseTrait;
  */
 abstract class BrowserTestCase extends TestCase
 {
-    use PantherTestCaseTrait, DatabaseTestCase;
+    use PantherTestCaseTrait;
+    use DatabaseTestCase;
 
     public Client $client;
 
@@ -41,7 +43,7 @@ abstract class BrowserTestCase extends TestCase
 
         $this->client = static::createPantherClient([
             'browser' => config('tests.browser.name'),
-            'external_base_uri' => config('tests.url.protocol') . config('tests.url.host') . ':' . config('tests.url.port'),
+            'external_base_uri' => config('tests.url.protocol').config('tests.url.host').':'.config('tests.url.port'),
         ]);
 
         $this->client->manage()->window()->setSize(
@@ -51,7 +53,7 @@ abstract class BrowserTestCase extends TestCase
 
     public function url(string $uri): string
     {
-        return config('tests.url.protocol') . config('tests.url.host') . ':' . config('tests.url.port') . '/' . ltrim($uri, '/');
+        return config('tests.url.protocol').config('tests.url.host').':'.config('tests.url.port').'/'.ltrim($uri, '/');
     }
 
     public function visit(string $url, string $method = HttpMethod::GET): self
@@ -64,7 +66,7 @@ abstract class BrowserTestCase extends TestCase
     public function takeScreenshot(): self
     {
         $saveAs = storage(config('tests.browser.screenshots_dir'))
-            ->file(uniqid('screenshot_', true) . '.png');
+            ->file(uniqid('screenshot_', true).'.png');
 
         $this->client->takeScreenshot($saveAs);
 

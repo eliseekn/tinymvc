@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -36,9 +37,9 @@ class Middleware extends Command
             list(, $class) = Maker::generateClass($middleware, singular: true);
 
             if (! Maker::createMiddleware($middleware)) {
-                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create middleware <options=bold>' . $class . '</>.');
+                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create middleware <options=bold>'.$class.'</>.');
             } else {
-                $output->writeln('<bg=blue;options=bold> INFO </> Middleware <options=bold>' . $class . '</> has been created.');
+                $output->writeln('<bg=blue;options=bold> INFO </> Middleware <options=bold>'.$class.'</> has been created.');
             }
         }
 

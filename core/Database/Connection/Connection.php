@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -33,9 +34,9 @@ class Connection
             : config('database.driver');
 
         $this->db = match ($driver) {
-            DatabaseDriver::PGSQL => new PostgreSQLConnection(),
-            DatabaseDriver::SQLITE => new SQLiteConnection(),
-            default => new MySQLConnection()
+            DatabaseDriver::PGSQL => new PostgreSQLConnection,
+            DatabaseDriver::SQLITE => new SQLiteConnection,
+            default => new MySQLConnection
         };
     }
 
@@ -43,7 +44,7 @@ class Connection
     {
         if (is_null(self::$instance)) {
             // @phpstan-ignore-next-line
-            self::$instance = new static();
+            self::$instance = new static;
         }
 
         return self::$instance;

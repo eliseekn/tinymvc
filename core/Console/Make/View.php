@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -38,9 +39,9 @@ class View extends Command
         if (is_null($input->getOption('extends'))) {
             foreach ($views as $view) {
                 if (! Maker::createView(null, $view, $input->getOption('path'))) {
-                    $output->writeln('<bg=red;options=bold> ERROR </> Failed to create view layout <options=bold>' . $view . '</>.');
+                    $output->writeln('<bg=red;options=bold> ERROR </> Failed to create view layout <options=bold>'.$view.'</>.');
                 } else {
-                    $output->writeln('<bg=blue;options=bold> INFO </> View layout <options=bold>' . $view . '</> has been created.');
+                    $output->writeln('<bg=blue;options=bold> INFO </> View layout <options=bold>'.$view.'</> has been created.');
                 }
             }
 
@@ -49,9 +50,9 @@ class View extends Command
 
         foreach ($views as $view) {
             if (! Maker::createView($view, $input->getOption('extends'), $input->getOption('path'))) {
-                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create view template <options=bold>' . $view . '</>.');
+                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create view template <options=bold>'.$view.'</>.');
             } else {
-                $output->writeln('<bg=blue;options=bold> INFO </> View template <options=bold>' . $view . '</> has been created.');
+                $output->writeln('<bg=blue;options=bold> INFO </> View template <options=bold>'.$view.'</> has been created.');
             }
         }
 

@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -46,9 +47,9 @@ class UseCase extends Command
             $class = str_replace(['Index', 'Show'], ['GetCollection', 'GetItem'], $class);
 
             if (! Maker::createUseCase($input->getArgument('model'), $type, $output, $input->getOption('namespace'))) {
-                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create use case <options=bold>' . $class . '</>.');
+                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create use case <options=bold>'.$class.'</>.');
             } else {
-                $output->writeln('<bg=blue;options=bold> INFO </> Use case <options=bold>' . $class . '</> has been created.');
+                $output->writeln('<bg=blue;options=bold> INFO </> Use case <options=bold>'.$class.'</> has been created.');
             }
         }
 

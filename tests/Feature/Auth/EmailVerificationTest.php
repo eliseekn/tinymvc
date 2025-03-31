@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -45,7 +46,7 @@ class EmailVerificationTest extends FeatureTestCase
         ]);
 
         $this
-            ->get('/email/verify?email=' . $user->get('email') . '&token=' . $token->get('value'))
+            ->get('/email/verify?email='.$user->get('email').'&token='.$token->get('value'))
             ->assertRedirectedToUrl('/login')
             ->assertDatabaseDoesNotHave('tokens', $token->get());
     }

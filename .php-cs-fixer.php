@@ -4,10 +4,10 @@ use PhpCsFixer\Config;
 use PhpCsFixer\Finder;
 
 $rules = [
-    '@PSR2' => true,
+    '@PSR12' => true,
     'array_syntax' => ['syntax' => 'short'],
     'binary_operator_spaces' => [
-        'default' => 'single_space'
+        'default' => 'single_space',
     ],
     'blank_line_after_namespace' => true,
     'blank_line_after_opening_tag' => true,
@@ -16,12 +16,12 @@ $rules = [
             'method' => 'one',
             'property' => 'one',
             'const' => 'one',
-            'case'  => 'one',
-        ]
+            'case' => 'one',
+        ],
     ],
     'class_definition' => true,
     'concat_space' => [
-        'spacing' => 'one'
+        'spacing' => 'none',
     ],
     'declare_strict_types' => true,
     'function_declaration' => true,
@@ -68,28 +68,24 @@ $rules = [
     'trim_array_spaces' => true,
     'unary_operator_spaces' => true,
     'visibility_required' => [
-        'elements' => ['method', 'property', 'const']
+        'elements' => ['method', 'property', 'const'],
     ],
     'whitespace_after_comma_in_array' => true,
     'not_operator_with_successor_space' => true,
+    'phpdoc_separation' => true,
+    'new_with_parentheses' => [
+        'anonymous_class' => false,
+        'named_class' => false,
+    ],
 ];
 
-$finder = Finder::create()
-    ->in([
-        __DIR__ . '/app',
-        __DIR__ . '/config',
-        __DIR__ . '/core',
-        __DIR__ . '/resources/translations',
-        __DIR__ . '/routes',
-        __DIR__ . '/tests',
-    ])
+$finder = (new Finder)
+    ->in(__DIR__)
     ->name('*.php')
     ->ignoreDotFiles(true)
     ->ignoreVCS(true);
 
-$config = new Config();
-
-return $config
+return (new Config)
     ->setFinder($finder)
     ->setRules($rules)
     ->setRiskyAllowed(true)

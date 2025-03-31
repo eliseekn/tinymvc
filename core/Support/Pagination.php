@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -165,7 +166,7 @@ class Pagination
      */
     private function uri(int $page): string
     {
-        $request = new Request();
+        $request = new Request;
         $uri = $request->fullUri();
         $queries = '';
 
@@ -176,6 +177,6 @@ class Pagination
         parse_str($queries, $queryArray);
         $queryArray['page'] = $page;
 
-        return $request->uri() . '?' . http_build_query($queryArray);
+        return $request->uri().'?'.http_build_query($queryArray);
     }
 }

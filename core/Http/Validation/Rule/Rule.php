@@ -40,22 +40,22 @@ class Rule
     {
         self::$rules[$name] = implode('|', parse_array($rules));
 
-        return new self();
+        return new self;
     }
 
     public static function custom(string $rule, $data = null): string
     {
-        $rule = new $rule();
+        $rule = new $rule;
 
         if (is_null($data)) {
             return $rule->name;
         }
 
         if (is_array($data)) {
-            return $rule->name . ',' . implode(';', $data);
+            return $rule->name.','.implode(';', $data);
         }
 
-        return $rule->name . ',' . $data;
+        return $rule->name.','.$data;
     }
 
     public function make(): array
@@ -65,18 +65,18 @@ class Rule
 
     public static function in(array $data): string
     {
-        return 'contains_list,' . implode(';', $data);
+        return 'contains_list,'.implode(';', $data);
     }
 
     public static function notIn(array $data): string
     {
-        return 'doesnt_contain_list,' . implode(';', $data);
+        return 'doesnt_contain_list,'.implode(';', $data);
     }
 
     public static function boolean(bool $strict): string
     {
         // @phpstan-ignore-next-line
-        return 'boolean' . $strict ? ',strict' : '';
+        return 'boolean'.$strict ? ',strict' : '';
     }
 
     public static function maxLen(int $value): string
@@ -112,12 +112,12 @@ class Rule
     public static function date(?string $format = null): string
     {
         // @phpstan-ignore-next-line
-        return 'date' . ! is_null($format) ? ",$format" : '';
+        return 'date'.! is_null($format) ? ",$format" : '';
     }
 
     public static function fileExtension(array $data): string
     {
-        return 'extension,' . implode(';', $data);
+        return 'extension,'.implode(';', $data);
     }
 
     public static function regEx(string $pattern): string

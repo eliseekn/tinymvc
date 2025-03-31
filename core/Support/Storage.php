@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -55,7 +56,7 @@ class Storage
     {
         self::$path = $path;
 
-        return new self();
+        return new self;
     }
 
     public function getPath(): string
@@ -65,7 +66,7 @@ class Storage
 
     public function addPath(string $path, string $trailing_slash = DIRECTORY_SEPARATOR): self
     {
-        self::$path .= real_path($path) . $trailing_slash;
+        self::$path .= real_path($path).$trailing_slash;
 
         return $this;
     }
@@ -92,7 +93,7 @@ class Storage
 
     public function createDir(string $pathname = '', bool $recursive = false, int $mode = 0777): bool
     {
-        return mkdir(self::$path . $pathname, $mode, $recursive);
+        return mkdir(self::$path.$pathname, $mode, $recursive);
     }
 
     public function writeFile(string $filename, $content, bool $append = false): bool
@@ -102,26 +103,26 @@ class Storage
         }
 
         $flag = $append ? FILE_APPEND | LOCK_EX : 0;
-        $success = file_put_contents(self::$path . $filename, $content, $flag);
+        $success = file_put_contents(self::$path.$filename, $content, $flag);
 
         return ! ($success === false);
     }
 
     public function readFile(string $filename): string
     {
-        $data = file_get_contents(self::$path . $filename);
+        $data = file_get_contents(self::$path.$filename);
 
         return $data === false ? '' : $data;
     }
 
     public function copyFile(string $filename, string $destination): bool
     {
-        return copy(self::$path . $filename, self::$path . $destination);
+        return copy(self::$path.$filename, self::$path.$destination);
     }
 
     public function renameFile(string $oldName, string $newName): bool
     {
-        return rename(self::$path . $oldName, self::$path . $newName);
+        return rename(self::$path.$oldName, self::$path.$newName);
     }
 
     public function moveFile(string $filename, string $destination): bool
@@ -131,17 +132,17 @@ class Storage
 
     public function isFile(string $filename): bool
     {
-        return is_file(self::$path . $filename);
+        return is_file(self::$path.$filename);
     }
 
     public function isDir(string $pathname = ''): bool
     {
-        return is_dir(self::$path . $pathname);
+        return is_dir(self::$path.$pathname);
     }
 
     public function deleteFile(string $filename): bool
     {
-        return unlink(self::$path . $filename);
+        return unlink(self::$path.$filename);
     }
 
     /**
@@ -150,20 +151,20 @@ class Storage
     public function deleteDir(string $pathname = ''): bool
     {
         if ($this->isDir($pathname)) {
-            $objects = scandir(self::$path . $pathname);
-            $pathname = empty($pathname) ? $pathname : $pathname . DIRECTORY_SEPARATOR;
+            $objects = scandir(self::$path.$pathname);
+            $pathname = empty($pathname) ? $pathname : $pathname.DIRECTORY_SEPARATOR;
 
             foreach ($objects as $object) {
                 if ($object != '.' && $object != '..') {
-                    if ($this->isDir($pathname . $object) && ! is_link(self::$path . $pathname . $object)) {
-                        $this->deleteDir($pathname . $object);
+                    if ($this->isDir($pathname.$object) && ! is_link(self::$path.$pathname.$object)) {
+                        $this->deleteDir($pathname.$object);
                     } else {
-                        $this->deleteFile($pathname . $object);
+                        $this->deleteFile($pathname.$object);
                     }
                 }
             }
 
-            return rmdir(self::$path . $pathname);
+            return rmdir(self::$path.$pathname);
         }
 
         return false;

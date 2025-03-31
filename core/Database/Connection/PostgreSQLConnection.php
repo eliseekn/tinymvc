@@ -18,7 +18,7 @@ class PostgreSQLConnection implements ConnectionInterface
     public function __construct()
     {
         try {
-            $this->pdo = new PDO('pgsql:host=' . config('database.pgsql.host') . ';port=' . config('database.pgsql.port') . ';dbname=' . $this->getDB(), config('database.pgsql.username'), config('database.pgsql.password'));
+            $this->pdo = new PDO('pgsql:host='.config('database.pgsql.host').';port='.config('database.pgsql.port').';dbname='.$this->getDB(), config('database.pgsql.username'), config('database.pgsql.password'));
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
             $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
@@ -35,7 +35,7 @@ class PostgreSQLConnection implements ConnectionInterface
     private function getDB(): string
     {
         return config('app.env') === 'test'
-            ? config('database.name') . config('tests.db.suffix')
+            ? config('database.name').config('tests.db.suffix')
             : config('database.name');
     }
 
@@ -80,11 +80,11 @@ class PostgreSQLConnection implements ConnectionInterface
 
     public function createSchema(string $name): void
     {
-        $this->executeStatement('CREATE SCHEMA "' . $name . '"');
+        $this->executeStatement('CREATE SCHEMA "'.$name.'"');
     }
 
     public function deleteSchema(string $name): void
     {
-        $this->executeStatement('DROP SCHEMA IF EXISTS "' . $name . '" CASCADE');
+        $this->executeStatement('DROP SCHEMA IF EXISTS "'.$name.'" CASCADE');
     }
 }

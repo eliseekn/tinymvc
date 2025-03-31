@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -31,7 +32,7 @@ class Shell extends Command
     {
         $loader = (new AliasLoader)->register();
 
-        $shell = new \Psy\Shell();
+        $shell = new \Psy\Shell;
         $shell->run();
 
         $loader->unregister();

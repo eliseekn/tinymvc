@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -28,8 +29,8 @@ class Whoops
      */
     public static function register(): void
     {
-        $run = new Run();
-        $handler = new PrettyPageHandler();
+        $run = new Run;
+        $handler = new PrettyPageHandler;
         // @phpstan-ignore-next-line
         $handler->setApplicationPaths([APP_ROOT]);
         $run->pushHandler($handler);

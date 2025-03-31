@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -36,9 +37,9 @@ class Seeder extends Command
             list(, $class) = Maker::generateClass($seeder, 'seeder', true, true);
 
             if (! Maker::createSeeder($seeder)) {
-                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create seeder <options=bold>' . Maker::fixPlural($class, true) . '</>.');
+                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create seeder <options=bold>'.Maker::fixPlural($class, true).'</>.');
             } else {
-                $output->writeln('<bg=blue;options=bold> INFO </> Seeder <options=bold>' . Maker::fixPlural($class, true) . '</> has been created.');
+                $output->writeln('<bg=blue;options=bold> INFO </> Seeder <options=bold>'.Maker::fixPlural($class, true).'</> has been created.');
             }
         }
 

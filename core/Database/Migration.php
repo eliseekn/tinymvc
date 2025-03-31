@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -34,14 +35,14 @@ class Migration
     {
         static::$qb = QueryBuilder::createTable($name);
 
-        return new self();
+        return new self;
     }
 
     public static function alterTable(string $table): self
     {
         static::$qb = QueryBuilder::alter($table);
 
-        return new self();
+        return new self;
     }
 
     public function addColumn(): self
@@ -82,7 +83,7 @@ class Migration
 
     public static function dropForeign(string $name): false|PDOStatement
     {
-        return QueryBuilder::dropForeign('fk_' . $name)->execute();
+        return QueryBuilder::dropForeign('fk_'.$name)->execute();
     }
 
     public static function disableForeignKeyCheck(): false|PDOStatement
@@ -123,35 +124,35 @@ class Migration
 
     public function addInt(string $name, int $size = 11, bool $unsigned = false): self
     {
-        self::$qb->column($name, "INT($size)" . ($unsigned ? ' UNSIGNED' : ''));
+        self::$qb->column($name, "INT($size)".($unsigned ? ' UNSIGNED' : ''));
 
         return $this;
     }
 
     public function addTinyInt(string $name, int $size = 4, bool $unsigned = false): self
     {
-        self::$qb->column($name, "TINYINT($size)" . ($unsigned ? ' UNSIGNED' : ''));
+        self::$qb->column($name, "TINYINT($size)".($unsigned ? ' UNSIGNED' : ''));
 
         return $this;
     }
 
     public function addSmallInt(string $name, int $size = 6, bool $unsigned = false): self
     {
-        self::$qb->column($name, "SMALLINT($size)" . ($unsigned ? ' UNSIGNED' : ''));
+        self::$qb->column($name, "SMALLINT($size)".($unsigned ? ' UNSIGNED' : ''));
 
         return $this;
     }
 
     public function addMediumInt(string $name, int $size = 8, bool $unsigned = false): self
     {
-        self::$qb->column($name, "MEDIUMINT($size)" . ($unsigned ? ' UNSIGNED' : ''));
+        self::$qb->column($name, "MEDIUMINT($size)".($unsigned ? ' UNSIGNED' : ''));
 
         return $this;
     }
 
     public function addBigInt(string $name, int $size = 20, bool $unsigned = false): self
     {
-        self::$qb->column($name, "BIGINT($size)" . ($unsigned ? ' UNSIGNED' : ''));
+        self::$qb->column($name, "BIGINT($size)".($unsigned ? ' UNSIGNED' : ''));
 
         return $this;
     }
@@ -291,14 +292,14 @@ class Migration
 
     public function foreignKey(string $column, string $name): self
     {
-        self::$qb->foreignKey('fk_' . $name, $column);
+        self::$qb->foreignKey('fk_'.$name, $column);
 
         return $this;
     }
 
     public function addForeignKey(string $column, string $name): self
     {
-        self::$qb->addForeignKey('fk_' . $name, $column);
+        self::$qb->addForeignKey('fk_'.$name, $column);
 
         return $this;
     }

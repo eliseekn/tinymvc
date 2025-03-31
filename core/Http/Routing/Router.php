@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -44,7 +45,7 @@ class Router
             return $optional ? "?$pattern?" : $pattern;
         }, $route);
 
-        if (preg_match('#^' . $route . '$#', $request->method() . ' ' . $request->uri(), $params)) {
+        if (preg_match('#^'.$route.'$#', $request->method().' '.$request->uri(), $params)) {
             array_shift($params);
             return true;
         }
@@ -64,7 +65,7 @@ class Router
         }
 
         foreach ($middlewares as $middleware) {
-            $middleware = config('middlewares.' . $middleware);
+            $middleware = config('middlewares.'.$middleware);
 
             if (! class_exists($middleware) && ! method_exists($middleware, 'handle')) {
                 throw new MiddlewareNotFoundException($middleware);
@@ -109,7 +110,7 @@ class Router
         }
 
         // @phpstan-ignore-next-line
-        throw new InvalidRouteHandlerException();
+        throw new InvalidRouteHandlerException;
     }
 
     /**
@@ -123,12 +124,12 @@ class Router
      */
     public static function dispatch(): void
     {
-        $request = new Request();
-        $response = new Response();
+        $request = new Request;
+        $response = new Response;
         $routes = Route::getAll();
 
         if (empty($routes)) {
-            throw new RoutesNotDefinedException();
+            throw new RoutesNotDefinedException;
         }
 
         foreach ($routes as $route => $options) {

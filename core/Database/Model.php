@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -157,6 +158,7 @@ class Model
 
     /**
      * Get relationship of the model.
+     *
      * @throws InvalidSQLQueryException
      */
     public function hasOne(string $table, ?string $column = null): ?Model
@@ -173,6 +175,7 @@ class Model
 
     /**
      * Get relationship of the model.
+     *
      * @throws InvalidSQLQueryException
      */
     public function hasMany(string $table, ?string $column = null): array
@@ -189,6 +192,7 @@ class Model
 
     /**
      * Get relationship belongs to the model.
+     *
      * @throws InvalidSQLQueryException
      */
     public function belongsTo(string $table, ?string $column = null): ?Model
@@ -205,6 +209,7 @@ class Model
 
     /**
      * Get relationship belongs to many the model.
+     *
      * @throws InvalidSQLQueryException
      */
     public function belongsToMany(string $table, ?string $column = null): array
@@ -294,6 +299,6 @@ class Model
             $table = rtrim($table, 's');
         }
 
-        return $table . '_id';
+        return $table.'_id';
     }
 }

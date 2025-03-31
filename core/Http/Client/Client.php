@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -126,7 +127,7 @@ class Client implements ClientInterface
             }
         }
 
-        return new self();
+        return new self;
     }
 
     protected static function isMultipart(array $data): bool

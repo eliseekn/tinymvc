@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -74,19 +75,19 @@ class Run extends Command
         }
 
         if ($this->isMigrated($migration)) {
-            $output->writeln('<bg=bright-yellow;fg=black> WARN </> Migration <options=bold>' . $migration . '</> has already been migrated.');
+            $output->writeln('<bg=bright-yellow;fg=black> WARN </> Migration <options=bold>'.$migration.'</> has already been migrated.');
 
             return;
         }
 
-        $migrationClass = '\App\Database\Migrations\\' . $migration;
-        (new $migrationClass())->create();
+        $migrationClass = '\App\Database\Migrations\\'.$migration;
+        (new $migrationClass)->create();
 
         QueryBuilder::table('migrations')
             ->insert(['name' => $migration])
             ->execute();
 
-        $output->writeln('<bg=blue;options=bold> INFO </> Migration <options=bold>' . $migration . '</> has been migrated.');
+        $output->writeln('<bg=blue;options=bold> INFO </> Migration <options=bold>'.$migration.'</> has been migrated.');
     }
 
     protected function isMigrated(string $migration): bool

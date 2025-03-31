@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -22,7 +23,7 @@ class Encryption
         $enc_key = openssl_digest(config('security.encryption.key'), 'SHA256', true);
         $enc_iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length(self::$cipher_method));
 
-        return openssl_encrypt($str, self::$cipher_method, $enc_key, 0, $enc_iv) . '::' . bin2hex($enc_iv);
+        return openssl_encrypt($str, self::$cipher_method, $enc_key, 0, $enc_iv).'::'.bin2hex($enc_iv);
     }
 
     public static function decrypt(string $enc_str): string

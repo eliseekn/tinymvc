@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -28,7 +29,7 @@ class NotifyUseCase extends UseCase
         if ($token) {
             $token->update(['value' => $tokenValue]);
         } else {
-            $token = (new Token())->create([
+            $token = (new Token)->create([
                 'email' => $email,
                 'value' => $tokenValue,
                 'expires_at' => carbon()->addDay()->toDateTimeString(),

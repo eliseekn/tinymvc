@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -37,17 +38,17 @@ class Delete extends Command
         if (empty($databases)) {
             $db = config('app.env') !== 'test'
                 ? config('database.name')
-                : config('database.name') . config('tests.db.suffix');
+                : config('database.name').config('tests.db.suffix');
 
             $databases = [$db];
         }
 
         foreach ($databases as $database) {
             if (! $connection->schemaExists($database)) {
-                $output->writeln('<bg=bright-yellow;fg=black> WARN </> Database <options=bold>' . $database . '</> does not exists.');
+                $output->writeln('<bg=bright-yellow;fg=black> WARN </> Database <options=bold>'.$database.'</> does not exists.');
             } else {
                 $connection->deleteSchema($database);
-                $output->writeln('<bg=blue;options=bold> INFO </> Database <options=bold>' . $database . '</> has been deleted.');
+                $output->writeln('<bg=blue;options=bold> INFO </> Database <options=bold>'.$database.'</> has been deleted.');
             }
         }
 

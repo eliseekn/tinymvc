@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -251,27 +252,27 @@ class Repository
 
     public function count(string $column = 'id'): self
     {
-        return $this->select('COUNT(' . $column . ') AS value');
+        return $this->select('COUNT('.$column.') AS value');
     }
 
     public function sum(string $column): self
     {
-        return $this->select('SUM(' . $column . ') AS value');
+        return $this->select('SUM('.$column.') AS value');
     }
 
     public function average(string $column): self
     {
-        return $this->select('AVG(' . $column . ') AS value');
+        return $this->select('AVG('.$column.') AS value');
     }
 
     public function max(string $column): self
     {
-        return $this->select('MAX(' . $column . ') AS value');
+        return $this->select('MAX('.$column.') AS value');
     }
 
     public function min(string $column): self
     {
-        return $this->select('MIN(' . $column . ') AS value');
+        return $this->select('MIN('.$column.') AS value');
     }
 
     public function metrics(): Metrics
@@ -285,7 +286,7 @@ class Repository
     public function where(string $column, $operator = null, $value = null): self
     {
         if (is_null($operator) && is_null($value)) {
-            throw new InvalidSQLQueryException();
+            throw new InvalidSQLQueryException;
         }
 
         if (! is_null($operator) && is_null($value)) {
@@ -319,7 +320,7 @@ class Repository
     public function and(string $column, $operator = null, $value = null): self
     {
         if (is_null($operator) && is_null($value)) {
-            throw new InvalidSQLQueryException();
+            throw new InvalidSQLQueryException;
         }
 
         if (! is_null($operator) && is_null($value)) {
@@ -353,7 +354,7 @@ class Repository
     public function or(string $column, $operator = null, $value = null): self
     {
         if (is_null($operator) && is_null($value)) {
-            throw new InvalidSQLQueryException();
+            throw new InvalidSQLQueryException;
         }
 
         if (! is_null($operator) && is_null($value)) {
@@ -558,7 +559,7 @@ class Repository
 
     public function join(string $table, string $first_column, string $operator, string $second_column, string $method = 'inner'): self
     {
-        $method = $method . 'Join';
+        $method = $method.'Join';
         $this->qb->$method($table, $second_column, $operator, $first_column);
 
         return $this;

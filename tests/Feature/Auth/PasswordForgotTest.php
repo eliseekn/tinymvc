@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -46,7 +47,7 @@ class PasswordForgotTest extends FeatureTestCase
         ]);
 
         $this
-            ->get('/password/reset?email=' . $user->get('email') . '&token=' . $token->get('value'))
+            ->get('/password/reset?email='.$user->get('email').'&token='.$token->get('value'))
             ->assertDatabaseDoesNotHave('tokens', $token->get());
     }
 

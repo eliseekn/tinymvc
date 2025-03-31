@@ -18,7 +18,7 @@ class FileUploadService
             return false;
         }
 
-        $filename = slugify($file->getFilename()) . '.' . $file->getFileExtension();
+        $filename = slugify($file->getFilename()).'.'.$file->getFileExtension();
 
         return $file->save(filename: $filename);
     }

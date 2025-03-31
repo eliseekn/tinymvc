@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -36,9 +37,9 @@ class Event extends Command
             list(, $class) = Maker::generateClass(base_name: $event, singular: true, force_singular: true);
 
             if (! Maker::createEvent($event)) {
-                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create event  <options=bold>' . Maker::fixPlural($class . 'Event', true) . '</>.');
+                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create event  <options=bold>'.Maker::fixPlural($class.'Event', true).'</>.');
             } else {
-                $output->writeln('<bg=blue;options=bold> INFO </> Event <options=bold>' . Maker::fixPlural($class . 'Event', true) . '</> has been created.');
+                $output->writeln('<bg=blue;options=bold> INFO </> Event <options=bold>'.Maker::fixPlural($class.'Event', true).'</> has been created.');
             }
         }
 

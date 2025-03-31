@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -41,7 +42,7 @@ class Response
     public function data(string $data): self
     {
         if (empty($data)) {
-            throw new InvalidResponseDataException();
+            throw new InvalidResponseDataException;
         }
 
         $this->addHeaders(['Content-Length' => strlen($data)]);
@@ -62,11 +63,11 @@ class Response
         $query = '';
 
         if (! empty($queries)) {
-            $query .= '?' . http_build_query($queries);
+            $query .= '?'.http_build_query($queries);
         }
 
         $this->uri = ! session()->has('intended') ? $uri : session()->pull('intended');
-        $this->addHeaders(['Location' => url($this->uri . rawurldecode($query))]);
+        $this->addHeaders(['Location' => url($this->uri.rawurldecode($query))]);
 
         return $this;
     }
@@ -144,7 +145,7 @@ class Response
         $this->addHeaders([
             'Content-Type' => mime_content_type($filename),
             'Content-Length' => filesize($filename),
-            'Content-Disposition' => 'attachment; filename="' . basename($filename) . '"',
+            'Content-Disposition' => 'attachment; filename="'.basename($filename).'"',
             'Cache-Control' => 'no-cache',
             'Pragma' => 'no-cache',
             'Expires' => '0',
@@ -164,7 +165,7 @@ class Response
     public function json(array $data): self
     {
         if (empty($data)) {
-            throw new InvalidJsonDataException();
+            throw new InvalidJsonDataException;
         }
 
         $data = json_encode($data);
@@ -182,13 +183,13 @@ class Response
     public function send(int $code = HttpCode::FOUND): void
     {
         if (config('app.env') === 'test') {
-            header('Session:' . json_encode($_SESSION));
+            header('Session:'.json_encode($_SESSION));
         }
 
         http_response_code($code);
 
         foreach ($this->headers as $key => $value) {
-            header($key . ':' . $value);
+            header($key.':'.$value);
         }
 
         if (! empty($this->data)) {

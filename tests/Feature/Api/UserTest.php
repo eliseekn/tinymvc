@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -86,7 +87,7 @@ class UserTest extends FeatureTestCase
 
         $this
             ->auth($admin)
-            ->getJson('/api/v1/users/' . $user->getId())
+            ->getJson('/api/v1/users/'.$user->getId())
             ->assertStatusOk()
             ->assertJsonContains([
                 'name' => $user->get('name'),
@@ -106,7 +107,7 @@ class UserTest extends FeatureTestCase
 
         $this
             ->auth($admin)
-            ->patchJson('/api/v1/users/' . $user->getId(), ['name' => $name])
+            ->patchJson('/api/v1/users/'.$user->getId(), ['name' => $name])
             ->assertStatusOk()
             ->assertJsonContains(['user' => $user->set(['name' => $name])->get()])
             ->assertDatabaseHas('users', ['name' => $name]);
@@ -121,7 +122,7 @@ class UserTest extends FeatureTestCase
 
         $this
             ->auth($admin)
-            ->deleteJson('/api/v1/users/' . $user->getId())
+            ->deleteJson('/api/v1/users/'.$user->getId())
             ->assertStatusOk()
             ->assertJsonContains(['status' => ResponseStatus::SUCCESS])
             ->assertDatabaseDoesNotHave('users', ['name' => $user->get('name')]);

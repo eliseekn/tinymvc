@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -36,9 +37,9 @@ class Listener extends Command
         $event = $input->getArgument('event');
 
         if (! Maker::createListener($listener, $event)) {
-            $output->writeln('<bg=red;options=bold> ERROR </> Failed to create listener <options=bold>' . $listener . '</>.');
+            $output->writeln('<bg=red;options=bold> ERROR </> Failed to create listener <options=bold>'.$listener.'</>.');
         } else {
-            $output->writeln('<bg=blue;options=bold> INFO </> Listener <options=bold>' . $listener . '</> has been created.');
+            $output->writeln('<bg=blue;options=bold> INFO </> Listener <options=bold>'.$listener.'</> has been created.');
         }
 
         return Command::SUCCESS;

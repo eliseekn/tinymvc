@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -24,8 +25,8 @@ class MySQLConnection implements ConnectionInterface
     public function __construct()
     {
         try {
-            $this->pdo = new PDO('mysql:host=' . config('database.mysql.host') . ';port=' . config('database.mysql.port'), config('database.mysql.username'), config('database.mysql.password'));
-            $this->pdo->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, 'SET NAMES ' . config('database.mysql.charset') . ' COLLATE ' . config('database.mysql.collation'));
+            $this->pdo = new PDO('mysql:host='.config('database.mysql.host').';port='.config('database.mysql.port'), config('database.mysql.username'), config('database.mysql.password'));
+            $this->pdo->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, 'SET NAMES '.config('database.mysql.charset').' COLLATE '.config('database.mysql.collation'));
             $this->pdo->setAttribute(PDO::MYSQL_ATTR_FOUND_ROWS, true);
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
@@ -44,7 +45,7 @@ class MySQLConnection implements ConnectionInterface
     private function getDB(): string
     {
         return config('app.env') === 'test'
-            ? config('database.name') . config('tests.db.suffix')
+            ? config('database.name').config('tests.db.suffix')
             : config('database.name');
     }
 
@@ -92,8 +93,8 @@ class MySQLConnection implements ConnectionInterface
     {
         $this->executeStatement(
             '
-            CREATE DATABASE ' . $name . ' CHARACTER SET ' . config('database.mysql.charset') .
-            ' COLLATE ' . config('database.mysql.collation')
+            CREATE DATABASE '.$name.' CHARACTER SET '.config('database.mysql.charset').
+            ' COLLATE '.config('database.mysql.collation')
         );
     }
 

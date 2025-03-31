@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -18,7 +19,7 @@ class NewUserRegisteredMail extends Mail
 {
     public function __construct(public Model $user, public string $url)
     {
-        parent::__construct(new Mailer());
+        parent::__construct(new Mailer);
     }
 
     public function send(): bool

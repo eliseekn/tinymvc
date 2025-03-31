@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -51,8 +52,8 @@ class Seed extends Command
             $seeder = end($seeder);
         }
 
-        $seederClass = '\App\Database\Seeders\\' . $seeder;
+        $seederClass = '\App\Database\Seeders\\'.$seeder;
         $seederClass::run();
-        $output->writeln('<bg=blue;options=bold> INFO </> Seeder <options=bold>' . $seeder . '</> has been run.');
+        $output->writeln('<bg=blue;options=bold> INFO </> Seeder <options=bold>'.$seeder.'</> has been run.');
     }
 }

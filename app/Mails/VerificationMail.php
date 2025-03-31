@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -17,7 +18,7 @@ class VerificationMail extends Mail
 {
     public function __construct(public string $email, public string $token)
     {
-        parent::__construct(new Mailer());
+        parent::__construct(new Mailer);
     }
 
     public function send(): bool

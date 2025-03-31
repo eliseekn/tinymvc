@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -42,7 +43,7 @@ abstract class FeatureTestCase extends TestCase
 
     protected function url(string $uri): string
     {
-        return config('tests.url.host') . ':' . config('tests.url.port') . '/' . ltrim($uri, '/');
+        return config('tests.url.host').':'.config('tests.url.port').'/'.ltrim($uri, '/');
     }
 
     protected function getBody(): string
@@ -84,13 +85,13 @@ abstract class FeatureTestCase extends TestCase
 
     protected function sessionKey(string $name): string
     {
-        return strtolower(config('app.name')) . '_' . $name;
+        return strtolower(config('app.name')).'_'.$name;
     }
 
     public function auth(Model $user): self
     {
         $this->token = Auth::createToken($user->get('email'));
-        $this->headers = array_merge($this->headers, ['Authorization' => HttpAuthMethod::BEARER . ' ' . $this->token]);
+        $this->headers = array_merge($this->headers, ['Authorization' => HttpAuthMethod::BEARER.' '.$this->token]);
 
         return $this;
     }

@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -32,6 +33,7 @@ class DependencyInjection
 {
     /**
      * Execute class with dependencies and methods dependencies.
+     *
      * @throws ReflectionException
      * @throws \Exception
      */
@@ -63,6 +65,7 @@ class DependencyInjection
 
     /**
      * Execute closure with dependencies and methods dependencies.
+     *
      * @throws ReflectionException
      * @throws \Exception
      */
@@ -77,6 +80,7 @@ class DependencyInjection
 
     /**
      * Generate new instance of dependencies.
+     *
      * @throws \Exception
      */
     public function getDependencies(array $parameters, array $bindings = []): array

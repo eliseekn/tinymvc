@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -44,9 +45,9 @@ class Model extends Command
             list($name, $class) = Maker::generateClass($model);
 
             if (! Maker::createModel($name, $input->getOption('namespace'))) {
-                $output->writeln('<bg=red;options=bold> ERROR </>  Failed to create model <options=bold>' . Maker::fixPlural($class, true) . '</>.');
+                $output->writeln('<bg=red;options=bold> ERROR </>  Failed to create model <options=bold>'.Maker::fixPlural($class, true).'</>.');
             } else {
-                $output->writeln('<bg=blue;options=bold> INFO </> Model <options=bold>' . Maker::fixPlural($class, true) . '</> has been created.');
+                $output->writeln('<bg=blue;options=bold> INFO </> Model <options=bold>'.Maker::fixPlural($class, true).'</> has been created.');
 
                 if ($input->getOption('migration')) {
                     $this->getApplication()->find('make:migration')->run(new ArrayInput(['migration' => [$model]]), $output);

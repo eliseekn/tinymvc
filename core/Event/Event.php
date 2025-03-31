@@ -22,7 +22,7 @@ class Event
     public static function dispatch(string $name, object $event): void
     {
         foreach (self::$events[$name] as $listener) {
-            call_user_func_array([new $listener(), '__invoke'], [$event]);
+            call_user_func_array([new $listener, '__invoke'], [$event]);
         }
     }
 }

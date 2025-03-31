@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -58,7 +59,7 @@ if (! function_exists('bcrypt')) {
 if (! function_exists('cookies')) {
     function cookies(): Cookies
     {
-        return new Cookies();
+        return new Cookies;
     }
 }
 
@@ -68,7 +69,7 @@ if (! function_exists('cookies')) {
 if (! function_exists('session')) {
     function session(): Session
     {
-        return new Session();
+        return new Session;
     }
 }
 
@@ -144,7 +145,7 @@ if (! function_exists('request')) {
      */
     function request(): Request
     {
-        return new Request();
+        return new Request;
     }
 }
 
@@ -154,7 +155,7 @@ if (! function_exists('csrf_token_input')) {
      */
     function csrf_token_input(): string
     {
-        return '<input type="hidden" name="_csrf_token" value="' . generate_csrf_token() . '">';
+        return '<input type="hidden" name="_csrf_token" value="'.generate_csrf_token().'">';
     }
 }
 
@@ -164,7 +165,7 @@ if (! function_exists('csrf_token_meta')) {
      */
     function csrf_token_meta(): string
     {
-        return '<meta name="csrf_token" content="' . generate_csrf_token() . '">';
+        return '<meta name="csrf_token" content="'.generate_csrf_token().'">';
     }
 }
 
@@ -174,7 +175,7 @@ if (! function_exists('method_input')) {
      */
     function method_input(string $method): string
     {
-        return '<input type="hidden" name="_method" value="' . $method . '">';
+        return '<input type="hidden" name="_method" value="'.$method.'">';
     }
 }
 
@@ -206,7 +207,7 @@ if (! function_exists('url')) {
             ? (empty($params) ? '' : implode('/', $params))
             : $params;
 
-        return is_null($params) ? $url : $url . '/' . $params;
+        return is_null($params) ? $url : $url.'/'.$params;
     }
 }
 
@@ -243,7 +244,7 @@ if (! function_exists('route_uri')) {
                 throw new Exception('Missing required parameter');
             }
 
-            if (! preg_match('/^' . $routeParams[$param] . '$/', (string) $params[$param])) {
+            if (! preg_match('/^'.$routeParams[$param].'$/', (string) $params[$param])) {
                 throw new Exception('Invalid parameter type');
             }
 
@@ -257,6 +258,7 @@ if (! function_exists('route_uri')) {
 if (! function_exists('route')) {
     /**
      * Get route absolute url.
+     *
      * @throws Exception
      */
     function route(string $name, array $params = []): string
@@ -292,6 +294,7 @@ if (! function_exists('route_parameters_to_regex')) {
 if (! function_exists('resolve_binding')) {
     /**
      * Resolve route model binding
+     *
      * @throws RouteParameterException
      */
     function resolve_route_binding(string $route, array $routeParams, array $binding): array
@@ -301,7 +304,7 @@ if (! function_exists('resolve_binding')) {
 
         $route = route_parameters_to_regex($route, $routeParams, $result);
 
-        if (! preg_match('#^' . $route . '$#', request()->method() . ' ' . request()->uri(), $matches)) {
+        if (! preg_match('#^'.$route.'$#', request()->method().' '.request()->uri(), $matches)) {
             return $params;
         }
 
@@ -334,7 +337,7 @@ if (! function_exists('public_url')) {
      */
     function public_url(string $asset): string
     {
-        return url('public/' . $asset);
+        return url('public/'.$asset);
     }
 }
 
@@ -344,7 +347,7 @@ if (! function_exists('storage_url')) {
      */
     function storage_url(string $path): string
     {
-        return url('storage/' . $path);
+        return url('storage/'.$path);
     }
 }
 
@@ -358,7 +361,7 @@ if (! function_exists('current_url')) {
 if (! function_exists('url_contains')) {
     function url_contains(string $str): bool
     {
-        return preg_match('/' . preg_quote($str, '/') . '/i', current_url()) === 1;
+        return preg_match('/'.preg_quote($str, '/').'/i', current_url()) === 1;
     }
 }
 
@@ -382,7 +385,7 @@ if (! function_exists('absolute_path')) {
     function absolute_path(string $path): string
     {
         // @phpstan-ignore-next-line
-        return APP_ROOT . real_path($path) . DIRECTORY_SEPARATOR;
+        return APP_ROOT.real_path($path).DIRECTORY_SEPARATOR;
     }
 }
 
@@ -427,14 +430,14 @@ if (! function_exists('config')) {
     function config(string $key, $default = null): mixed
     {
         if (! str_contains($key, '.')) {
-            $path = absolute_path('config') . $key . '.php';
+            $path = absolute_path('config').$key.'.php';
 
             return Config::readFile($path, default: $default);
         }
 
         $file = substr($key, 0, strpos($key, '.'));
         $key = substr($key, strpos($key, '.') + 1, strlen($key));
-        $path = absolute_path('config') . $file . '.php';
+        $path = absolute_path('config').$file.'.php';
 
         return Config::readFile($path, $key, $default);
     }

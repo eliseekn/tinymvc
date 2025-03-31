@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -24,7 +25,7 @@ class SQLiteConnection implements ConnectionInterface
     public function __construct()
     {
         try {
-            $this->pdo = new PDO('sqlite:' . $this->getDB());
+            $this->pdo = new PDO('sqlite:'.$this->getDB());
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
             $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
@@ -46,11 +47,11 @@ class SQLiteConnection implements ConnectionInterface
     private function getDB(): string
     {
         if (config('app.env') === 'test') {
-            return config('storage.sqlite') . config('database.name') . config('tests.db.suffix') . '.db';
+            return config('storage.sqlite').config('database.name').config('tests.db.suffix').'.db';
         }
 
         return config('database.sqlite.memory') ? ':memory:'
-            : config('storage.sqlite') . config('database.name') . '.db';
+            : config('storage.sqlite').config('database.name').'.db';
     }
 
     /**
@@ -94,14 +95,14 @@ class SQLiteConnection implements ConnectionInterface
     public function createSchema(string $name): void
     {
         if (! config('database.sqlite.memory')) {
-            storage(config('storage.sqlite'))->writeFile($name . '.db', '');
+            storage(config('storage.sqlite'))->writeFile($name.'.db', '');
         }
     }
 
     public function deleteSchema(string $name): void
     {
         if (! config('database.sqlite.memory')) {
-            storage(config('storage.sqlite'))->deleteFile($name . '.db');
+            storage(config('storage.sqlite'))->deleteFile($name.'.db');
         }
     }
 }

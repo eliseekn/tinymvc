@@ -23,7 +23,7 @@ class NotifyUseCase extends UseCase
         if ($token) {
             $token->update(['value' => $tokenValue]);
         } else {
-            $token = (new Token())->create([
+            $token = (new Token)->create([
                 'email' => $email,
                 'value' => $tokenValue,
                 'expires_at' => carbon()->addHour()->toDateTimeString(),

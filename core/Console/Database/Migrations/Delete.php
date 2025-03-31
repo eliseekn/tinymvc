@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -48,19 +49,19 @@ class Delete extends Command
     protected function delete(OutputInterface $output, string $migration): void
     {
         if (! $this->isMigrated($migration)) {
-            $output->writeln('<bg=bright-yellow;fg=black> WARN </> Migration <options=bold>' . $migration . '</> has not been migrated.');
+            $output->writeln('<bg=bright-yellow;fg=black> WARN </> Migration <options=bold>'.$migration.'</> has not been migrated.');
 
             return;
         }
 
-        $migrationClass = '\App\Database\Migrations\\' . $migration;
-        (new $migrationClass())->drop();
+        $migrationClass = '\App\Database\Migrations\\'.$migration;
+        (new $migrationClass)->drop();
 
         QueryBuilder::table('migrations')
             ->deleteWhere('name', $migration)
             ->execute();
 
-        $output->writeln('<bg=blue;options=bold> INFO </> Migration <options=bold>' . $migration . '</> has been deleted.');
+        $output->writeln('<bg=blue;options=bold> INFO </> Migration <options=bold>'.$migration.'</> has been deleted.');
     }
 
     protected function isMigrated(string $migration): bool

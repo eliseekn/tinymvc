@@ -26,7 +26,7 @@ class Notification
         $this->notifiable->to($recipient);
 
         if (! $this->notifiable->send()) {
-            throw new NotificationNotSentException();
+            throw new NotificationNotSentException;
         }
     }
 }

@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -73,7 +74,7 @@ class Metrics
             : config('database.driver');
 
         $this->qb = QueryBuilder::table($this->table);
-        $this->dateColumn = $this->table . '.created_at';
+        $this->dateColumn = $this->table.'.created_at';
         $this->period = Period::MONTH->value;
         $this->aggregate = Aggregate::COUNT->value;
         $this->year = carbon()->year;
@@ -100,7 +101,7 @@ class Metrics
         $period = strtolower($period);
 
         if (! in_array($period, Period::values())) {
-            throw new InvalidPeriodException();
+            throw new InvalidPeriodException;
         }
 
         $this->period = $period;
@@ -224,11 +225,11 @@ class Metrics
         $aggregate = strtolower($aggregate);
 
         if (! in_array($aggregate, Aggregate::values())) {
-            throw new InvalidAggregateException();
+            throw new InvalidAggregateException;
         }
 
         $this->aggregate = $aggregate;
-        $this->column = $this->table . '.' . $column;
+        $this->column = $this->table.'.'.$column;
 
         return $this;
     }
@@ -620,14 +621,14 @@ class Metrics
 
     public function dateColumn(string $column): self
     {
-        $this->dateColumn = $this->table . '.' . $column;
+        $this->dateColumn = $this->table.'.'.$column;
 
         return $this;
     }
 
     public function labelColumn(string $column): self
     {
-        $this->labelColumn = $this->table . '.' . $column;
+        $this->labelColumn = $this->table.'.'.$column;
 
         return $this;
     }
@@ -720,7 +721,7 @@ class Metrics
     {
         if (is_array($this->period)) {
             return $this->qb
-                ->selectRaw($this->asData() . ', ' . $this->asLabel($this->formatDateColumn()) . $this->groupedData)
+                ->selectRaw($this->asData().', '.$this->asLabel($this->formatDateColumn()).$this->groupedData)
                 ->whereColumn($this->formatDateColumn())
                 ->between($this->period[0], $this->period[1])
                 ->subQueryWhen(! is_null($this->subQuery), $this->subQuery)
@@ -731,7 +732,7 @@ class Metrics
 
         return match ($this->period) {
             Period::DAY->value => $this->qb
-                ->selectRaw($this->asData() . ', ' . $this->asLabel(Period::DAY->value) . $this->groupedData)
+                ->selectRaw($this->asData().', '.$this->asLabel(Period::DAY->value).$this->groupedData)
                 ->where($this->formatPeriod(Period::YEAR->value), $this->year)
                 ->and($this->formatPeriod(Period::MONTH->value), $this->month)
                 ->subQueryWhen($this->count === 1, function (QueryBuilder $qb) {
@@ -747,7 +748,7 @@ class Metrics
                 ->fetchAll(),
 
             Period::WEEK->value => $this->qb
-                ->selectRaw($this->asData() . ', ' . $this->asLabel(Period::WEEK->value) . $this->groupedData)
+                ->selectRaw($this->asData().', '.$this->asLabel(Period::WEEK->value).$this->groupedData)
                 ->where($this->formatPeriod(Period::YEAR->value), $this->year)
                 ->and($this->formatPeriod(Period::MONTH->value), $this->month)
                 ->subQueryWhen($this->count === 1, function (QueryBuilder $qb) {
@@ -763,7 +764,7 @@ class Metrics
                 ->fetchAll(),
 
             Period::MONTH->value => $this->qb
-                ->selectRaw($this->asData() . ', ' . $this->asLabel(Period::MONTH->value) . $this->groupedData)
+                ->selectRaw($this->asData().', '.$this->asLabel(Period::MONTH->value).$this->groupedData)
                 ->where($this->formatPeriod(Period::YEAR->value), $this->year)
                 ->subQueryWhen($this->count === 1, function (QueryBuilder $qb) {
                     $qb->and($this->formatPeriod(Period::MONTH->value), $this->month);
@@ -778,7 +779,7 @@ class Metrics
                 ->fetchAll(),
 
             Period::YEAR->value => $this->qb
-                ->selectRaw($this->asData() . ', ' . $this->asLabel(Period::YEAR->value) . $this->groupedData)
+                ->selectRaw($this->asData().', '.$this->asLabel(Period::YEAR->value).$this->groupedData)
                 ->subQueryWhen($this->count === 1, function (QueryBuilder $qb) {
                     $qb->where($this->formatPeriod(Period::YEAR->value), $this->year);
                 })
@@ -792,7 +793,7 @@ class Metrics
                 ->fetchAll(),
 
             default => $this->qb
-                ->selectRaw($this->asData() . ', ' . $this->asLabel() . $this->groupedData)
+                ->selectRaw($this->asData().', '.$this->asLabel().$this->groupedData)
                 ->groupBy('label')
                 ->orderBy('label', 'asc')
                 ->fetchAll(),
@@ -805,10 +806,10 @@ class Metrics
         $result = [];
 
         foreach ($dataLabels as $key => $value) {
-            $result[] = $aggregate . '(' . $this->column . ' = "' . $value . '")' . " as data$key";
+            $result[] = $aggregate.'('.$this->column.' = "'.$value.'")'." as data$key";
         }
 
-        $this->groupedData = ', ' . implode(', ', $result);
+        $this->groupedData = ', '.implode(', ', $result);
 
         return $this;
     }
@@ -826,7 +827,7 @@ class Metrics
             $label = $this->labelColumn;
         }
 
-        return $label . ' as label';
+        return $label.' as label';
     }
 
     protected function populateMissingDataForPeriod(array $data, bool $inPercent = false, string $dataLabel = 'data'): array
@@ -889,22 +890,23 @@ class Metrics
 
     /**
      * Generate metrics data with variations
+     *
      * @throws InvalidVariationsCountException
      * @throws InvalidPeriodException|InvalidAggregateException
      */
     public function metricsWithVariations(int $previousCount, string $previousPeriod, bool $inPercent = false): array
     {
         if (! in_array($previousPeriod, Period::values())) {
-            throw new InvalidPeriodException();
+            throw new InvalidPeriodException;
         }
 
         if ($previousCount <= 0) {
-            throw new InvalidVariationsCountException();
+            throw new InvalidVariationsCountException;
         }
 
         $metrics = (new self($this->table))
             ->by($previousPeriod, $previousCount)
-            ->aggregate($this->aggregate, str_replace($this->table . '.', '', $this->column));
+            ->aggregate($this->aggregate, str_replace($this->table.'.', '', $this->column));
 
         $variations = match ($previousPeriod) {
             Period::DAY->value => $metrics
@@ -930,7 +932,7 @@ class Metrics
         $value = $result['count'] - $variations;
 
         if ($inPercent && $variations > 0) {
-            $value = (abs($value) / $variations) * 100 . '%';
+            $value = (abs($value) / $variations) * 100 .'%';
         }
 
         if ($value > 0) {

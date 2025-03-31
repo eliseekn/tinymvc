@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -30,17 +31,17 @@ class QueryBuilder
     {
         if (config('app.env') === 'test') {
             if (config('tests.db.driver') === 'sqlite') {
-                return config('database.table_prefix') . $name;
+                return config('database.table_prefix').$name;
             }
 
-            return config('database.name') . config('tests.db.suffix') . '.' . config('database.table_prefix') . $name;
+            return config('database.name').config('tests.db.suffix').'.'.config('database.table_prefix').$name;
         }
 
         if (config('database.driver') === 'sqlite') {
-            return config('database.table_prefix') . $name;
+            return config('database.table_prefix').$name;
         }
 
-        return config('database.name') . '.' . config('database.table_prefix') . $name;
+        return config('database.name').'.'.config('database.table_prefix').$name;
     }
 
     public function driver(): string
@@ -55,63 +56,63 @@ class QueryBuilder
         self::$table = self::setTable($name);
         self::$args = [];
 
-        return new self();
+        return new self;
     }
 
     public static function createTable(string $name): self
     {
-        self::$query = 'CREATE TABLE ' . self::setTable($name) . ' (';
+        self::$query = 'CREATE TABLE '.self::setTable($name).' (';
 
-        return new self();
+        return new self;
     }
 
     public static function dropTable(string $name): self
     {
-        self::$query = 'DROP TABLE IF EXISTS ' . self::setTable($name);
+        self::$query = 'DROP TABLE IF EXISTS '.self::setTable($name);
 
-        return new self();
+        return new self;
     }
 
     public static function alter(string $table): self
     {
-        self::$query = 'ALTER TABLE ' . self::setTable($table);
+        self::$query = 'ALTER TABLE '.self::setTable($table);
 
-        return new self();
+        return new self;
     }
 
     public static function dropForeign(string $key): self
     {
         self::$query .= " DROP FOREIGN KEY $key";
 
-        return new self();
+        return new self;
     }
 
     public static function addColumn(): self
     {
         self::$query .= ' ADD COLUMN ';
 
-        return new self();
+        return new self;
     }
 
     public static function renameColumn(string $old, string $new): self
     {
         self::$query .= " RENAME COLUMN $old TO $new";
 
-        return new self();
+        return new self;
     }
 
     public static function updateColumn(string $column): self
     {
         self::$query .= " CHANGE $column ";
 
-        return new self();
+        return new self;
     }
 
     public static function deleteColumn(string $column): self
     {
         self::$query .= " DROP COLUMN $column";
 
-        return new self();
+        return new self;
     }
 
     public function select(array|string $columns): self
@@ -124,16 +125,16 @@ class QueryBuilder
         }
 
         self::$query = rtrim(self::$query, ', ');
-        self::$query .= ' FROM ' . self::$table;
+        self::$query .= ' FROM '.self::$table;
 
         return $this;
     }
 
     public function selectRaw(string $query, array $args = []): self
     {
-        self::$query = 'SELECT ' . $query;
+        self::$query = 'SELECT '.$query;
         self::$args = array_merge(self::$args, $args);
-        self::$query .= ' FROM ' . self::$table;
+        self::$query .= ' FROM '.self::$table;
 
         return $this;
     }
@@ -145,7 +146,7 @@ class QueryBuilder
 
     public function insert(array $items): self
     {
-        self::$query = 'INSERT INTO ' . self::$table . ' (';
+        self::$query = 'INSERT INTO '.self::$table.' (';
 
         foreach ($items as $key => $value) {
             self::$query .= "$key, ";
@@ -167,7 +168,7 @@ class QueryBuilder
 
     public function update(array $items): self
     {
-        self::$query = 'UPDATE ' . self::$table . ' SET ';
+        self::$query = 'UPDATE '.self::$table.' SET ';
         $items = array_merge($items, ['updated_at' => carbon()->toDateTimeString()]);
 
         foreach ($items as $key => $value) {
@@ -182,7 +183,7 @@ class QueryBuilder
 
     public function delete(): self
     {
-        self::$query = 'DELETE FROM ' . self::$table;
+        self::$query = 'DELETE FROM '.self::$table;
 
         return $this;
     }
@@ -279,7 +280,7 @@ class QueryBuilder
 
     public function references(string $table, string $column): self
     {
-        self::$query .= ' REFERENCES ' . self::setTable($table) . "($column)";
+        self::$query .= ' REFERENCES '.self::setTable($table)."($column)";
 
         return $this;
     }
@@ -327,10 +328,10 @@ class QueryBuilder
 
     public function migrate(): false|PDOStatement
     {
-        self::$query = rtrim(self::$query, ', ') . ')';
+        self::$query = rtrim(self::$query, ', ').')';
 
         if ($this->driver() === DatabaseDriver::MYSQL) {
-            self::$query .= " ENGINE='" . config('database.mysql.engine') . "'";
+            self::$query .= " ENGINE='".config('database.mysql.engine')."'";
         }
 
         return $this->execute();
@@ -351,17 +352,17 @@ class QueryBuilder
 
     public function whereRaw(string $query, array $args = []): self
     {
-        return $this->rawQuery(' WHERE ' . $query, $args);
+        return $this->rawQuery(' WHERE '.$query, $args);
     }
 
     public function andRaw(string $query, array $args = []): self
     {
-        return $this->rawQuery(' AND ' . $query, $args);
+        return $this->rawQuery(' AND '.$query, $args);
     }
 
     public function orRaw(string $query, array $args = []): self
     {
-        return $this->rawQuery(' OR ' . $query, $args);
+        return $this->rawQuery(' OR '.$query, $args);
     }
 
     public function whereNot(string $column, $operator = null, $value = null): self
@@ -423,7 +424,7 @@ class QueryBuilder
 
         $items = rtrim($items, ', ');
 
-        self::$query .= ' IN (' . $items . ') ';
+        self::$query .= ' IN ('.$items.') ';
 
         return $this;
     }
@@ -439,7 +440,7 @@ class QueryBuilder
 
         $items = rtrim($items, ', ');
 
-        self::$query .= ' NOT IN (' . $items . ') ';
+        self::$query .= ' NOT IN ('.$items.') ';
 
         return $this;
     }
@@ -513,12 +514,12 @@ class QueryBuilder
 
     public function havingRaw(string $query, array $args = []): self
     {
-        return $this->rawQuery(' HAVING ' . $query, $args);
+        return $this->rawQuery(' HAVING '.$query, $args);
     }
 
     public function orderBy(string $column, string $direction): self
     {
-        self::$query .= " ORDER BY $column " . strtoupper($direction);
+        self::$query .= " ORDER BY $column ".strtoupper($direction);
 
         return $this;
     }
@@ -550,35 +551,35 @@ class QueryBuilder
 
     public function innerJoin(string $table, string $first_column, string $operator, string $second_column): self
     {
-        self::$query .= ' INNER JOIN ' . self::setTable($table) . " ON $first_column $operator $second_column";
+        self::$query .= ' INNER JOIN '.self::setTable($table)." ON $first_column $operator $second_column";
 
         return $this;
     }
 
     public function leftJoin(string $table, string $first_column, string $operator, string $second_column): self
     {
-        self::$query .= ' LEFT JOIN ' . self::setTable($table) . " ON $first_column $operator $second_column";
+        self::$query .= ' LEFT JOIN '.self::setTable($table)." ON $first_column $operator $second_column";
 
         return $this;
     }
 
     public function rightJoin(string $table, string $first_column, string $operator, string $second_column): self
     {
-        self::$query .= ' RIGHT JOIN ' . self::setTable($table) . " ON $first_column $operator $second_column";
+        self::$query .= ' RIGHT JOIN '.self::setTable($table)." ON $first_column $operator $second_column";
 
         return $this;
     }
 
     public function fullJoin(string $table, string $first_column, string $operator, string $second_column): self
     {
-        self::$query .= ' FULL JOIN ' . self::setTable($table) . " ON $first_column $operator $second_column";
+        self::$query .= ' FULL JOIN '.self::setTable($table)." ON $first_column $operator $second_column";
 
         return $this;
     }
 
     public function outerJoin(string $table, string $first_column, string $operator, string $second_column): self
     {
-        self::$query .= ' FULL OUTER JOIN ' . self::setTable($table) . " ON $first_column $operator $second_column";
+        self::$query .= ' FULL OUTER JOIN '.self::setTable($table)." ON $first_column $operator $second_column";
 
         return $this;
     }
@@ -610,12 +611,12 @@ class QueryBuilder
         self::$query = $query;
         self::$args = $args;
 
-        return new self();
+        return new self;
     }
 
     public function rawQuery(string $query, array $args = []): self
     {
-        self::$query .= ' ' . $query;
+        self::$query .= ' '.$query;
         self::$args = array_merge(self::$args, $args);
 
         return $this;

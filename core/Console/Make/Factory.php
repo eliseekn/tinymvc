@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -38,9 +39,9 @@ class Factory extends Command
             list(, $class) = Maker::generateClass($factory, 'factory', true, true);
 
             if (! Maker::createFactory($factory, $input->getOption('namespace'))) {
-                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create factory <options=bold>' . Maker::fixPlural($class, true) . '</>.');
+                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create factory <options=bold>'.Maker::fixPlural($class, true).'</>.');
             } else {
-                $output->writeln('<bg=blue;options=bold> INFO </> Factory <options=bold>' . Maker::fixPlural($class, true) . '</> has been created.');
+                $output->writeln('<bg=blue;options=bold> INFO </> Factory <options=bold>'.Maker::fixPlural($class, true).'</> has been created.');
             }
         }
 

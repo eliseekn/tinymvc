@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -162,7 +163,7 @@ class Request
 
             $route = route_parameters_to_regex($route, $routeParams, $result);
 
-            if (preg_match('#^' . $route . '$#', $this->method() . ' ' . $this->uri(), $matches)) {
+            if (preg_match('#^'.$route.'$#', $this->method().' '.$this->uri(), $matches)) {
                 array_shift($matches);
                 $paramKeys = array_keys($result);
 

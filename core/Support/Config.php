@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -105,11 +106,11 @@ class Config
     {
         $expression = explode('.', $expression, 2);
 
-        $translations = require absolute_path('resources.translations') . config('app.lang') . DIRECTORY_SEPARATOR . $expression[0] . '.php';
+        $translations = require absolute_path('resources.translations').config('app.lang').DIRECTORY_SEPARATOR.$expression[0].'.php';
         $translated = $translations[$expression[1]];
 
         foreach ($data as $key => $value) {
-            $translated = str_replace('{' . $key . '}', $value, $translated);
+            $translated = str_replace('{'.$key.'}', $value, $translated);
         }
 
         return $translated;

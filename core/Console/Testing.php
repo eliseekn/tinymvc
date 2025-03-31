@@ -3,6 +3,7 @@
 /**
  * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
+ *
  * @link https://github.com/eliseekn/tinymvc
  */
 
@@ -38,10 +39,10 @@ class Testing extends Command
 
         Config::updateEnv([
             'APP_ENV' => AppEnv::TEST,
-            'APP_URL' => config('tests.url.protocol') . config('tests.url.host') . ':' . config('tests.url.port') . '/',
+            'APP_URL' => config('tests.url.protocol').config('tests.url.host').':'.config('tests.url.port').'/',
         ]);
 
-        $server = new Process(['php', '-S', config('tests.url.host') . ':' . config('tests.url.port')]);
+        $server = new Process(['php', '-S', config('tests.url.host').':'.config('tests.url.port')]);
         $server->setTimeout(null);
         $server->start();
 
@@ -50,13 +51,13 @@ class Testing extends Command
         if (! is_null($input->getArgument('test'))) {
             $filename = str_contains($input->getArgument('test'), '.php')
                 ? $input->getArgument('test')
-                : $input->getArgument('test') . '.php';
+                : $input->getArgument('test').'.php';
 
-            $args = array_merge($args, ['tests' . DIRECTORY_SEPARATOR . $filename]);
+            $args = array_merge($args, ['tests'.DIRECTORY_SEPARATOR.$filename]);
         }
 
         if (! is_null($input->getArgument('filter'))) {
-            $args = array_merge($args, ['--filter=' . $input->getArgument('filter')]);
+            $args = array_merge($args, ['--filter='.$input->getArgument('filter')]);
         }
 
         $phpunit = new Process($args, null, [
@@ -72,7 +73,7 @@ class Testing extends Command
                 $line = trim($line);
 
                 if (preg_match('/^OK \(\d+ tests?, \d+ assertions?\)$/', $line)) {
-                    $output->writeln('<bg=green;fg=black> ' . $line . '</>');
+                    $output->writeln('<bg=green;fg=black> '.$line.'</>');
                 } elseif (in_array($line, ['.', 'F', 'E'])) {
                     $output->write($line);
                 } else {
