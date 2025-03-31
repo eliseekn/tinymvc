@@ -16,7 +16,7 @@ use App\Events\UserCreated\UserCreatedEvent;
 use Core\Support\Alert;
 use Core\Support\UseCase;
 
-class StoreUseCase extends UseCase
+final class StoreUseCase extends UseCase
 {
     public function handle(array $data): void
     {

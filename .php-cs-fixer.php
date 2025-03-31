@@ -81,7 +81,7 @@ $rules = [
 
 $finder = (new Finder)
     ->in(__DIR__)
-    ->name('*.php')
+    ->name(['*.php', '*.stub'])
     ->ignoreDotFiles(true)
     ->ignoreVCS(true);
 

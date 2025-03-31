@@ -15,7 +15,7 @@ use Core\Database\Migration;
 
 class RolesTable_20250313135833
 {
-    public function create(): void
+    public function up(): void
     {
         Migration::createTable('roles')
             ->addPrimaryKey()
@@ -23,7 +23,7 @@ class RolesTable_20250313135833
             ->run();
     }
 
-    public function drop(): void
+    public function down(): void
     {
         Migration::disableForeignKeyCheck();
         Migration::dropTable('roles');

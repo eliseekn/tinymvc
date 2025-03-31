@@ -8,7 +8,7 @@ use App\Http\UseCases\User\UpdateUseCase;
 use Core\Support\Alert;
 use Core\Support\UseCase;
 
-class UpdatePasswordUseCase extends UseCase
+final class UpdatePasswordUseCase extends UseCase
 {
     public function handle(UpdateUseCase $updateUseCase, array $data): void
     {

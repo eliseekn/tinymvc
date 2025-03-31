@@ -40,7 +40,7 @@ class User extends Model
         return (new self)->findBy(config('security.auth.identifier'), $value);
     }
 
-    public static function findAllAByRole(string $role): array
+    public static function findAllByRole(string $role): array
     {
         return (new self)
             ->select('email')

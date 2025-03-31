@@ -13,7 +13,7 @@ namespace NAMESPACE;
 use App\Database\Models\MODEL_NAME;
 use Core\Support\UseCase;
 
-class CLASSNAME extends UseCase
+final class CLASSNAME extends UseCase
 {
     public function handle(int $id): bool
 	{

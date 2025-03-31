@@ -13,9 +13,9 @@ namespace NAMESPACE;
 use App\Database\Models\MODEL_NAME;
 use Core\Support\UseCase;
 
-class CLASSNAME extends UseCase
+final class CLASSNAME extends UseCase
 {
-    public function handle(): array|false
+  public function handle(): array|false
 	{
         return MODEL_NAME::all();
 	}

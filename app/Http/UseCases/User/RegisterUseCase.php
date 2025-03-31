@@ -17,7 +17,7 @@ use App\Http\UseCases\EmailVerification\NotifyUseCase;
 use Core\Support\Alert;
 use Core\Support\UseCase;
 
-class RegisterUseCase extends UseCase
+final class RegisterUseCase extends UseCase
 {
     public function handle(array $data, NotifyUseCase $notifyUseCase): void
     {

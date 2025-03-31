@@ -19,7 +19,7 @@ class SendAdminNotification
 {
     public function __invoke(UserRegisteredEvent $event): void
     {
-        $admins = User::findAllAByRole(UserRole::ADMIN->value);
+        $admins = User::findAllByRole(UserRole::ADMIN->value);
 
         foreach ($admins as $admin) {
             $admin->notify(new NewUserRegisteredMail($event->user, url('/login')));

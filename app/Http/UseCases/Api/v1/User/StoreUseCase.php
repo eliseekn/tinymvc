@@ -16,7 +16,7 @@ use Core\Enums\HttpCode;
 use Core\Enums\ResponseStatus;
 use Core\Support\UseCase;
 
-class StoreUseCase extends UseCase
+final class StoreUseCase extends UseCase
 {
     public function handle(array $data): void
     {

@@ -15,16 +15,11 @@ use Core\Database\Migration;
 
 class UsersTable_20250220101052
 {
-    public function create(): void
+    public function up(): void
     {
         Migration::alterTable('users')
             ->addColumn()
             ->addString('avatar')->nullable()
-            ->run(true);
-    }
-
-    public function drop(): void
-    {
-        //
+            ->run();
     }
 }

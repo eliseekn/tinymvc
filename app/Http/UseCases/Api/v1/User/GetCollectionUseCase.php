@@ -15,7 +15,7 @@ use App\Database\Models\User;
 use Core\Enums\HttpCode;
 use Core\Support\UseCase;
 
-class GetCollectionUseCase extends UseCase
+final class GetCollectionUseCase extends UseCase
 {
     public function handle(array $query): void
     {

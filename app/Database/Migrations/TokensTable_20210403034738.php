@@ -11,23 +11,22 @@ declare(strict_types=1);
 
 namespace App\Database\Migrations;
 
-use App\Enums\TokenDescription;
 use Core\Database\Migration;
 
 class TokensTable_20210403034738
 {
-    public function create(): void
+    public function up(): void
     {
         Migration::createTable('tokens')
             ->addPrimaryKey()
             ->addString('email')
             ->addString('value')->unique()
             ->addDateTime('expires_at')->nullable()
-            ->addString('description')->default(TokenDescription::PASSWORD_RESET)
+            ->addString('description')
             ->run();
     }
 
-    public function drop(): void
+    public function down(): void
     {
         Migration::dropTable('tokens');
     }

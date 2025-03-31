@@ -15,7 +15,7 @@ use Core\Http\Auth;
 use Core\Support\Alert;
 use Core\Support\UseCase;
 
-class LoginUseCase extends UseCase
+final class LoginUseCase extends UseCase
 {
     public function handle(array $data): void
     {

@@ -15,7 +15,7 @@ use App\Database\Models\User;
 use Core\Database\Model;
 use Core\Support\UseCase;
 
-class UpdateUseCase extends UseCase
+final class UpdateUseCase extends UseCase
 {
     public function handle(array $data, string $email): Model|false
     {

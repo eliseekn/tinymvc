@@ -55,7 +55,10 @@ class Delete extends Command
         }
 
         $migrationClass = '\App\Database\Migrations\\'.$migration;
-        (new $migrationClass)->drop();
+
+        if (method_exists($migrationClass, 'down')) {
+            (new $migrationClass)->down();
+        }
 
         QueryBuilder::table('migrations')
             ->deleteWhere('name', $migration)

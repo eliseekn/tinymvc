@@ -9,7 +9,7 @@ use App\Enums\TokenDescription;
 use Core\Enums\HttpCode;
 use Core\Support\UseCase;
 
-class ResetUseCase extends UseCase
+final class ResetUseCase extends UseCase
 {
     public function handle(): void
     {

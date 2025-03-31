@@ -81,7 +81,7 @@ class Run extends Command
         }
 
         $migrationClass = '\App\Database\Migrations\\'.$migration;
-        (new $migrationClass)->create();
+        (new $migrationClass)->up();
 
         QueryBuilder::table('migrations')
             ->insert(['name' => $migration])

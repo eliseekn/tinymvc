@@ -14,15 +14,14 @@ use Core\Database\Migration;
 
 class CLASSNAME
 {         
-    public function create(): void
+    public function up(): void
     {
         Migration::createTable('TABLE_NAME')
             ->addPrimaryKey()
-            ->addTimestamps()
             ->run();
     }
     
-    public function drop(): void
+    public function down(): void
     {
         Migration::dropTable('TABLE_NAME');
     }

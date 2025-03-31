@@ -21,7 +21,7 @@ use Core\Support\Alert;
 use Core\Support\UseCase;
 use Exception;
 
-class VerifyUseCase extends UseCase
+final class VerifyUseCase extends UseCase
 {
     public function handle(UpdateUseCase $updateUseCase): void
     {

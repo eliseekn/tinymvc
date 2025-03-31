@@ -15,24 +15,19 @@ use Core\Database\Migration;
 
 class UsersTable_20250313135908
 {
-    public function create(): void
+    public function up(): void
     {
         Migration::alterTable('users')
             ->deleteColumn('role')
-            ->run(true);
+            ->run();
 
         Migration::alterTable('users')
             ->addColumn()
             ->addBigInt('role_id')->nullable()
-            ->run(true);
+            ->run();
 
         Migration::alterTable('users')
             ->addForeignKey('role_id', 'users_role')->references('roles', 'id')
-            ->run(true);
-    }
-
-    public function drop(): void
-    {
-        //
+            ->run();
     }
 }

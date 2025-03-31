@@ -11,12 +11,11 @@ declare(strict_types=1);
 
 namespace App\Database\Migrations;
 
-use App\Enums\UserRole;
 use Core\Database\Migration;
 
 class UsersTable_20210403034738
 {
-    public function create(): void
+    public function up(): void
     {
         Migration::createTable('users')
             ->addPrimaryKey()
@@ -24,11 +23,11 @@ class UsersTable_20210403034738
             ->addString('email')->unique()
             ->addString('password')
             ->addDateTime('email_verified_at')->nullable()
-            ->addString('role')->default(UserRole::USER->value)
+            ->addString('role')
             ->run();
     }
 
-    public function drop(): void
+    public function down(): void
     {
         Migration::dropTable('users');
     }

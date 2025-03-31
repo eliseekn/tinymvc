@@ -19,7 +19,7 @@ use Core\Support\Alert;
 use Core\Support\UseCase;
 use Exception;
 
-class NotifyUseCase extends UseCase
+final class NotifyUseCase extends UseCase
 {
     public function handle(string $email): void
     {

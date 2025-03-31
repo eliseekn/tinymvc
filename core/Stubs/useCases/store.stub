@@ -14,9 +14,9 @@ use App\Database\Models\MODEL_NAME;
 use Core\Database\Model;
 use Core\Support\UseCase;
 
-class CLASSNAME extends UseCase
+final class CLASSNAME extends UseCase
 {
-    public function handle(array $data): Model|false
+  public function handle(array $data): Model|false
 	{
         return MODEL_NAME::factory()->create($data);
 	}

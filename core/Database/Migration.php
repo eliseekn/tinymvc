@@ -19,9 +19,6 @@ use PDOStatement;
  */
 class Migration
 {
-    /**
-     * @var QueryBuilder
-     */
     protected static QueryBuilder $qb;
 
     public static function driver(): string
@@ -379,9 +376,9 @@ class Migration
         return $this;
     }
 
-    public function run(bool $update = false): false|PDOStatement
+    public function run(): false|PDOStatement
     {
-        if (! $update) {
+        if (str_contains(self::$qb->toSQL()[0], 'CREATE')) {
             return self::$qb->timestamps()->migrate();
         }
 
