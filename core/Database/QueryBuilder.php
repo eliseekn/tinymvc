@@ -27,28 +27,22 @@ class QueryBuilder
 
     protected static string $table;
 
-    public static function setTable(string $name): string
+    public static function connection(array $db = []): Connection
     {
-        if (config('app.env') === 'test') {
-            if (config('tests.db.driver') === 'sqlite') {
-                return config('database.table_prefix').$name;
-            }
-
-            return config('database.name').config('tests.db.suffix').'.'.config('database.table_prefix').$name;
+        if (empty($db)) {
+            return Connection::getInstance();
         }
 
-        if (config('database.driver') === 'sqlite') {
+        return Connection::setInstance(new Connection($db));
+    }
+
+    public static function setTable(string $name): string
+    {
+        if (static::connection()->getDriver() === DatabaseDriver::SQLITE) {
             return config('database.table_prefix').$name;
         }
 
-        return config('database.name').'.'.config('database.table_prefix').$name;
-    }
-
-    public function driver(): string
-    {
-        return config('app.env') === 'test'
-            ? config('tests.db.driver')
-            : config('database.driver');
+        return static::connection()->getDBName().'.'.config('database.table_prefix').$name;
     }
 
     public static function table(string $name): self
@@ -70,6 +64,10 @@ class QueryBuilder
     {
         self::$query = 'DROP TABLE IF EXISTS '.self::setTable($name);
 
+        if (static::connection()->getDriver() === DatabaseDriver::PGSQL) {
+            self::$query .= ' CASCADE';
+        }
+
         return new self;
     }
 
@@ -82,7 +80,9 @@ class QueryBuilder
 
     public static function dropForeign(string $key): self
     {
-        self::$query .= " DROP FOREIGN KEY $key";
+        self::$query .= static::connection()->getDriver() === DatabaseDriver::PGSQL
+            ? " DROP CONSTRAINT $key"
+            : " DROP FOREIGN KEY $key";
 
         return new self;
     }
@@ -198,6 +198,10 @@ class QueryBuilder
      */
     public function after(string $column): self
     {
+        if (static::connection()->getDriver() !== DatabaseDriver::SQLITE) {
+            return $this;
+        }
+
         self::$query .= " AFTER $column";
 
         return $this;
@@ -208,6 +212,10 @@ class QueryBuilder
      */
     public function first(): self
     {
+        if (static::connection()->getDriver() !== DatabaseDriver::SQLITE) {
+            return $this;
+        }
+
         self::$query .= ' FIRST';
 
         return $this;
@@ -215,18 +223,21 @@ class QueryBuilder
 
     public function column(string $name, string $type): self
     {
-        self::$query .= "$name $type NOT NULL, ";
+        self::$query .= "$name $type, ";
 
         return $this;
     }
 
     public function autoIncrement(): self
     {
+        if (static::connection()->getDriver() === DatabaseDriver::PGSQL) {
+            return $this;
+        }
+
         self::$query = rtrim(self::$query, ', ');
 
-        self::$query .= match ($this->driver()) {
+        self::$query .= match (static::connection()->getDriver()) {
             DatabaseDriver::MYSQL => ' AUTO_INCREMENT, ',
-            DatabaseDriver::PGSQL => ' SERIAL, ',
             default => ' AUTOINCREMENT, ',
         };
 
@@ -241,9 +252,18 @@ class QueryBuilder
         return $this;
     }
 
-    public function nullable(): self
+    public function null(): self
     {
-        self::$query = str_replace('NOT NULL, ', 'NULL, ', self::$query);
+        self::$query = rtrim(self::$query, ', ');
+        self::$query .= ' NULL, ';
+
+        return $this;
+    }
+
+    public function notNull(): self
+    {
+        self::$query = rtrim(self::$query, ', ');
+        self::$query .= ' NOT NULL, ';
 
         return $this;
     }
@@ -317,7 +337,7 @@ class QueryBuilder
 
     public function timestamps(): self
     {
-        self::$query .= match ($this->driver()) {
+        self::$query .= match (static::connection()->getDriver()) {
             DatabaseDriver::MYSQL => ' created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, ',
             DatabaseDriver::PGSQL => ' created_at TIMESTAMP NOT NULL DEFAULT NOW(), updated_at TIMESTAMP NOT NULL DEFAULT NOW(), ',
             default => " created_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')), updated_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')), ",
@@ -330,7 +350,7 @@ class QueryBuilder
     {
         self::$query = rtrim(self::$query, ', ').')';
 
-        if ($this->driver() === DatabaseDriver::MYSQL) {
+        if (static::connection()->getDriver() === DatabaseDriver::MYSQL) {
             self::$query .= " ENGINE='".config('database.mysql.engine')."'";
         }
 
@@ -406,7 +426,7 @@ class QueryBuilder
         return $this;
     }
 
-    public function notNull(): self
+    public function isNotNull(): self
     {
         self::$query .= ' IS NOT NULL ';
 
@@ -543,7 +563,11 @@ class QueryBuilder
         self::$query .= " LIMIT $limit";
 
         if (! is_null($offset)) {
-            self::$query .= ", $offset";
+            if (static::connection()->getDriver() === DatabaseDriver::PGSQL) {
+                self::$query .= " OFFSET $offset";
+            } else {
+                self::$query .= ", $offset";
+            }
         }
 
         return $this;
@@ -641,7 +665,7 @@ class QueryBuilder
     public function execute(): false|PDOStatement
     {
         $this->trimQuery();
-        $stmt = Connection::getInstance()->executeQuery(self::$query, self::$args);
+        $stmt = static::connection()->executeQuery(self::$query, self::$args);
         self::setQuery('');
 
         return $stmt;
@@ -659,7 +683,14 @@ class QueryBuilder
 
     public static function lastInsertedId(): false|string
     {
-        return Connection::getInstance()->getPDO()->lastInsertId();
+        $pdo = static::connection()->getPDO();
+
+        if (static::connection()->getDriver() === DatabaseDriver::PGSQL) {
+            return $pdo->lastInsertId(self::$table.'_id_seq');
+
+        }
+
+        return $pdo->lastInsertId();
     }
 
     public function trimQuery(): void

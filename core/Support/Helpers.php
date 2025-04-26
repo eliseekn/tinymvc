@@ -454,13 +454,29 @@ if (! function_exists('__')) {
 }
 
 if (! function_exists('get_file_extension')) {
+    /**
+     * Get file extension
+     */
     function get_file_extension(string $file): string
     {
         return pathinfo($file, PATHINFO_EXTENSION);
     }
 }
 
+if (! function_exists('get_dirname')) {
+    /**
+     * Get file dirrectory path
+     */
+    function get_dirname(string $file): string
+    {
+        return pathinfo($file, PATHINFO_DIRNAME);
+    }
+}
+
 if (! function_exists('get_file_name')) {
+    /**
+     * Get filename only
+     */
     function get_file_name(string $file): string
     {
         return pathinfo($file, PATHINFO_FILENAME);
@@ -468,6 +484,9 @@ if (! function_exists('get_file_name')) {
 }
 
 if (! function_exists('get_file_basename')) {
+    /**
+     * Get filename and extension
+     */
     function get_file_basename(string $file): string
     {
         return pathinfo($file, PATHINFO_BASENAME);

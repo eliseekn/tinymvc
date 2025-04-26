@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Core\Console\Database;
 
-use Core\Database\Connection\Connection;
+use Core\Database\QueryBuilder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Helper\TableSeparator;
@@ -34,7 +34,7 @@ class Query extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $stmt = Connection::getInstance()->executeQuery($input->getArgument('query'));
+        $stmt = QueryBuilder::connection()->executeQuery($input->getArgument('query'));
         $output->writeln('<bg=blue;options=bold> INFO </> Query executed.');
         $output->writeln('');
 

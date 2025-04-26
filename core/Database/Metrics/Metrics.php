@@ -69,10 +69,7 @@ class Metrics
 
     public function __construct(protected string $table)
     {
-        $this->driver = config('app.env') === 'test'
-            ? config('tests.db.driver')
-            : config('database.driver');
-
+        $this->driver = QueryBuilder::connection()->getDriver();
         $this->qb = QueryBuilder::table($this->table);
         $this->dateColumn = $this->table.'.created_at';
         $this->period = Period::MONTH->value;
@@ -819,7 +816,7 @@ class Metrics
         return "$this->aggregate($this->column) as $name";
     }
 
-    protected function asLabel(string $label = null, bool $format = true): string
+    protected function asLabel(?string $label = null, bool $format = true): string
     {
         if (is_null($this->labelColumn)) {
             $label = ! $format ? $label : $this->formatPeriod($label);

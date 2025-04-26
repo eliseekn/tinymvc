@@ -39,10 +39,10 @@ class Testing extends Command
 
         Config::updateEnv([
             'APP_ENV' => AppEnv::TEST,
-            'APP_URL' => config('tests.url.protocol').config('tests.url.host').':'.config('tests.url.port').'/',
+            'APP_URL' => config('testing.url.protocol').config('testing.url.host').':'.config('testing.url.port').'/',
         ]);
 
-        $server = new Process(['php', '-S', config('tests.url.host').':'.config('tests.url.port')]);
+        $server = new Process(['php', '-S', config('testing.url.host').':'.config('testing.url.port')]);
         $server->setTimeout(null);
         $server->start();
 
@@ -61,8 +61,8 @@ class Testing extends Command
         }
 
         $phpunit = new Process($args, null, [
-            'PANTHER_NO_HEADLESS' => ! config('tests.browser.headless') ? '1' : '0',
-            'PANTHER_ERROR_SCREENSHOT_DIR' => config('tests.browser.screenshots_dir'),
+            'PANTHER_NO_HEADLESS' => ! config('testing.browser.headless') ? '1' : '0',
+            'PANTHER_ERROR_SCREENSHOT_DIR' => config('testing.browser.screenshots_dir'),
         ]);
         $phpunit->setTimeout(null);
         $phpunit->start();

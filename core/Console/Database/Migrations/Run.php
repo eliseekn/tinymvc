@@ -11,9 +11,8 @@ declare(strict_types=1);
 
 namespace Core\Console\Database\Migrations;
 
-use Core\Database\Connection\Connection;
-use Core\Database\Migration;
 use Core\Database\QueryBuilder;
+use Core\Database\Schema;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -43,8 +42,8 @@ class Run extends Command
     {
         $this->getApplication()->find('db:create')->run(new ArrayInput([]), $output);
 
-        if (! Connection::getInstance()->tableExists('migrations')) {
-            Migration::createTable('migrations')
+        if (! QueryBuilder::connection()->tableExists('migrations')) {
+            Schema::createTable('migrations')
                 ->addPrimaryKey()
                 ->addString('name')
                 ->run();
@@ -92,7 +91,7 @@ class Run extends Command
 
     protected function isMigrated(string $migration): bool
     {
-        if (! Connection::getInstance()->tableExists('migrations')) {
+        if (! QueryBuilder::connection()->tableExists('migrations')) {
             return false;
         }
 

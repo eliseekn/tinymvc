@@ -11,22 +11,22 @@ declare(strict_types=1);
 
 namespace App\Database\Migrations;
 
-use Core\Database\Migration;
+use Core\Database\Schema;
 
 class UsersTable_20250313135908
 {
     public function up(): void
     {
-        Migration::alterTable('users')
+        Schema::alterTable('users')
             ->deleteColumn('role')
             ->run();
 
-        Migration::alterTable('users')
+        Schema::alterTable('users')
             ->addColumn()
-            ->addBigInt('role_id')->nullable()
+            ->addBigInt('role_id')->null()
             ->run();
 
-        Migration::alterTable('users')
+        Schema::alterTable('users')
             ->addForeignKey('role_id', 'users_role')->references('roles', 'id')
             ->run();
     }

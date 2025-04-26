@@ -11,22 +11,22 @@ declare(strict_types=1);
 
 namespace App\Database\Migrations;
 
-use Core\Database\Migration;
+use Core\Database\Schema;
 
 class RolesTable_20250313135833
 {
     public function up(): void
     {
-        Migration::createTable('roles')
-            ->addPrimaryKey()
-            ->addString('name')->unique()
+        Schema::createTable('roles')
+            ->addPrimaryKey()->notNull()
+            ->addString('name')->notNull()->unique()
             ->run();
     }
 
     public function down(): void
     {
-        Migration::disableForeignKeyCheck();
-        Migration::dropTable('roles');
-        Migration::enableForeignKeyCheck();
+        Schema::disableForeignKeyCheck();
+        Schema::dropTable('roles');
+        Schema::enableForeignKeyCheck();
     }
 }

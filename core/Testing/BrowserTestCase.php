@@ -30,8 +30,8 @@ use Symfony\Component\Panther\PantherTestCaseTrait;
  */
 abstract class BrowserTestCase extends TestCase
 {
-    use PantherTestCaseTrait;
     use DatabaseTestCase;
+    use PantherTestCaseTrait;
 
     public Client $client;
 
@@ -42,8 +42,8 @@ abstract class BrowserTestCase extends TestCase
         parent::setUp();
 
         $this->client = static::createPantherClient([
-            'browser' => config('tests.browser.name'),
-            'external_base_uri' => config('tests.url.protocol').config('tests.url.host').':'.config('tests.url.port'),
+            'browser' => config('testing.browser.name'),
+            'external_base_uri' => config('testing.url.protocol').config('testing.url.host').':'.config('testing.url.port'),
         ]);
 
         $this->client->manage()->window()->setSize(
@@ -53,7 +53,7 @@ abstract class BrowserTestCase extends TestCase
 
     public function url(string $uri): string
     {
-        return config('tests.url.protocol').config('tests.url.host').':'.config('tests.url.port').'/'.ltrim($uri, '/');
+        return config('testing.url.protocol').config('tests.url.host').':'.config('tests.url.port').'/'.ltrim($uri, '/');
     }
 
     public function visit(string $url, string $method = HttpMethod::GET): self
@@ -65,7 +65,7 @@ abstract class BrowserTestCase extends TestCase
 
     public function takeScreenshot(): self
     {
-        $saveAs = storage(config('tests.browser.screenshots_dir'))
+        $saveAs = storage(config('testing.browser.screenshots_dir'))
             ->file(uniqid('screenshot_', true).'.png');
 
         $this->client->takeScreenshot($saveAs);
@@ -85,7 +85,7 @@ abstract class BrowserTestCase extends TestCase
     {
         $element = trim($element);
 
-        $webDriver = '' === $element || '/' !== $element[0]
+        $webDriver = $element === '' || $element[0] !== '/'
             ? WebDriverBy::cssSelector($element)
             : WebDriverBy::xpath($element);
 
@@ -284,9 +284,9 @@ abstract class BrowserTestCase extends TestCase
     /**
      * @throws NoSuchElementException
      */
-    public function assertSelectorAttributeContains(string $selector, string $attribute, string $text = null): self
+    public function assertSelectorAttributeContains(string $selector, string $attribute, ?string $text = null): self
     {
-        if (null === $text) {
+        if ($text === null) {
             $this->assertNull($this->getAttribute($selector, $attribute));
 
             return $this;

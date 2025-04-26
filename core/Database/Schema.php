@@ -15,18 +15,11 @@ use Core\Enums\DatabaseDriver;
 use PDOStatement;
 
 /**
- * Manage migrations tables.
+ * Manage schemes
  */
-class Migration
+class Schema
 {
     protected static QueryBuilder $qb;
-
-    public static function driver(): string
-    {
-        return config('app.env') === 'test'
-            ? config('tests.db.driver')
-            : config('database.driver');
-    }
 
     public static function createTable(string $name): self
     {
@@ -85,7 +78,7 @@ class Migration
 
     public static function disableForeignKeyCheck(): false|PDOStatement
     {
-        $query = match (static::driver()) {
+        $query = match (QueryBuilder::connection()->getDriver()) {
             DatabaseDriver::MYSQL => 'SET foreign_key_checks = 0',
             DatabaseDriver::PGSQL => 'SET session_replication_role = replica',
             default => 'PRAGMA foreign_keys = OFF',
@@ -96,9 +89,9 @@ class Migration
 
     public static function enableForeignKeyCheck(): false|PDOStatement
     {
-        $query = match (static::driver()) {
+        $query = match (QueryBuilder::connection()->getDriver()) {
             DatabaseDriver::MYSQL => 'SET foreign_key_checks = 1',
-            DatabaseDriver::PGSQL => 'SET session_replication_role = DEFAULT',
+            DatabaseDriver::PGSQL => 'SET session_replication_role = origin',
             default => 'PRAGMA foreign_keys = ON',
         };
 
@@ -121,6 +114,12 @@ class Migration
 
     public function addInt(string $name, int $size = 11, bool $unsigned = false): self
     {
+        if (QueryBuilder::connection()->getDriver() === DatabaseDriver::PGSQL) {
+            self::$qb->column($name, 'INT');
+
+            return $this;
+        }
+
         self::$qb->column($name, "INT($size)".($unsigned ? ' UNSIGNED' : ''));
 
         return $this;
@@ -128,6 +127,12 @@ class Migration
 
     public function addTinyInt(string $name, int $size = 4, bool $unsigned = false): self
     {
+        if (QueryBuilder::connection()->getDriver() === DatabaseDriver::PGSQL) {
+            self::$qb->column($name, 'SMALLINT');
+
+            return $this;
+        }
+
         self::$qb->column($name, "TINYINT($size)".($unsigned ? ' UNSIGNED' : ''));
 
         return $this;
@@ -135,6 +140,12 @@ class Migration
 
     public function addSmallInt(string $name, int $size = 6, bool $unsigned = false): self
     {
+        if (QueryBuilder::connection()->getDriver() === DatabaseDriver::PGSQL) {
+            self::$qb->column($name, 'SMALLINT');
+
+            return $this;
+        }
+
         self::$qb->column($name, "SMALLINT($size)".($unsigned ? ' UNSIGNED' : ''));
 
         return $this;
@@ -142,6 +153,12 @@ class Migration
 
     public function addMediumInt(string $name, int $size = 8, bool $unsigned = false): self
     {
+        if (QueryBuilder::connection()->getDriver() === DatabaseDriver::PGSQL) {
+            self::$qb->column($name, 'INT');
+
+            return $this;
+        }
+
         self::$qb->column($name, "MEDIUMINT($size)".($unsigned ? ' UNSIGNED' : ''));
 
         return $this;
@@ -149,14 +166,40 @@ class Migration
 
     public function addBigInt(string $name, int $size = 20, bool $unsigned = false): self
     {
+        if (QueryBuilder::connection()->getDriver() === DatabaseDriver::PGSQL) {
+            self::$qb->column($name, 'BIGINT');
+
+            return $this;
+        }
+
         self::$qb->column($name, "BIGINT($size)".($unsigned ? ' UNSIGNED' : ''));
+
+        return $this;
+    }
+
+    public function addSerial(string $name): self
+    {
+        self::$qb->column($name, 'SERIAL');
+
+        return $this;
+    }
+
+    public function addBigSerial(string $name): self
+    {
+        self::$qb->column($name, 'BIGSERIAL');
 
         return $this;
     }
 
     public function addFloat(string $name, int $size = 10, int $precision = 2): self
     {
-        self::$qb->column($name, "FLOAT($size, $precision)");
+        if (QueryBuilder::connection()->getDriver() === DatabaseDriver::PGSQL) {
+            self::$qb->column($name, "NUMERIC($size, $precision)");
+        } elseif (QueryBuilder::connection()->getDriver() === DatabaseDriver::SQLITE) {
+            self::$qb->column($name, 'REAL');
+        } else {
+            self::$qb->column($name, "FLOAT($size, $precision)");
+        }
 
         return $this;
     }
@@ -261,6 +304,10 @@ class Migration
 
     public function addDateTime(string $name): self
     {
+        if (QueryBuilder::connection()->getDriver() === DatabaseDriver::PGSQL) {
+            return $this->addTimestamp($name);
+        }
+
         self::$qb->column($name, 'DATETIME');
 
         return $this;
@@ -345,19 +392,31 @@ class Migration
 
     public function addPrimaryKey(string $column = 'id', bool $autoIncrement = true): self
     {
-        $pk = self::driver() === DatabaseDriver::MYSQL ? $this->addBigInt($column) : $this->addInteger($column);
+        $self = match (QueryBuilder::connection()->getDriver()) {
+            DatabaseDriver::MYSQL => $this->addBigInt($column),
+            DatabaseDriver::SQLITE => $this->addInteger($column),
+            default => $this->addBigSerial($column)
+        };
+
         self::$qb->primaryKey();
 
         if ($autoIncrement) {
-            $pk->autoIncrement();
+            $self->autoIncrement();
         }
 
-        return $pk;
+        return $self;
     }
 
-    public function nullable(): self
+    public function null(): self
     {
-        self::$qb->nullable();
+        self::$qb->null();
+
+        return $this;
+    }
+
+    public function notNull(): self
+    {
+        self::$qb->notNull();
 
         return $this;
     }
@@ -378,8 +437,12 @@ class Migration
 
     public function run(): false|PDOStatement
     {
-        if (str_contains(self::$qb->toSQL()[0], 'CREATE')) {
+        if (str_contains(self::$qb->toSQL()[0], 'CREATE TABLE')) {
             return self::$qb->timestamps()->migrate();
+        }
+
+        if (str_contains(self::$qb->toSQL()[0], 'ALTER TABLE')) {
+
         }
 
         return self::$qb->flush()->execute();

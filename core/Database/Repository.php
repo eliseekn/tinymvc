@@ -169,7 +169,7 @@ class Repository
         return QueryBuilder::table($this->table)->insert($items)->execute()->rowCount() > 0;
     }
 
-    public function insertGetId(array $items): int|null
+    public function insertGetId(array $items): ?int
     {
         if (! $this->insert($items)) {
             return null;
@@ -632,7 +632,7 @@ class Repository
 
     public function paginate(int $items_per_page, int $page = 1): Pagination
     {
-        list($query, $args) = $this->qb->toSQL();
+        [$query, $args] = $this->qb->toSQL();
 
         $total_items = count(QueryBuilder::setQuery($query, $args)->fetchAll());
         $pager = new Pagination($total_items, $items_per_page, $page);

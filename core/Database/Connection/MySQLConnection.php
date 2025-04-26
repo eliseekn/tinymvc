@@ -22,10 +22,10 @@ class MySQLConnection implements ConnectionInterface
     /**
      * @throws PDOException
      */
-    public function __construct()
+    public function __construct(public array $db)
     {
         try {
-            $this->pdo = new PDO('mysql:host='.config('database.mysql.host').';port='.config('database.mysql.port'), config('database.mysql.username'), config('database.mysql.password'));
+            $this->pdo = new PDO('mysql:host='.$db['host'].';port='.$db['port'], $db['username'], $db['password']);
             $this->pdo->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, 'SET NAMES '.config('database.mysql.charset').' COLLATE '.config('database.mysql.collation'));
             $this->pdo->setAttribute(PDO::MYSQL_ATTR_FOUND_ROWS, true);
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -40,13 +40,6 @@ class MySQLConnection implements ConnectionInterface
     public function getPDO(): PDO
     {
         return $this->pdo;
-    }
-
-    private function getDB(): string
-    {
-        return config('app.env') === 'test'
-            ? config('database.name').config('tests.db.suffix')
-            : config('database.name');
     }
 
     /**
@@ -66,7 +59,6 @@ class MySQLConnection implements ConnectionInterface
      */
     public function executeQuery(string $query, ?array $args = null): false|PDOStatement
     {
-
         try {
             $stmt = $this->pdo->prepare(trim($query));
             $stmt->execute($args);
@@ -80,21 +72,20 @@ class MySQLConnection implements ConnectionInterface
     public function schemaExists(string $name): bool
     {
         $stmt = $this->executeQuery('SELECT schema_name FROM information_schema.schemata WHERE schema_name = ?', [$name]);
+
         return $stmt->fetch() !== false;
     }
 
     public function tableExists(string $name): bool
     {
-        $stmt = $this->executeQuery('SELECT * FROM information_schema.tables WHERE table_schema = ? AND table_name = ? LIMIT 1', [$this->getDB(), $name]);
+        $stmt = $this->executeQuery('SELECT * FROM information_schema.tables WHERE table_schema = ? AND table_name = ? LIMIT 1', [$this->db['name'], $name]);
+
         return $stmt->fetch() !== false;
     }
 
     public function createSchema(string $name): void
     {
-        $this->executeStatement(
-            '
-            CREATE DATABASE '.$name.' CHARACTER SET '.config('database.mysql.charset').
-            ' COLLATE '.config('database.mysql.collation')
+        $this->executeStatement('CREATE DATABASE '.$name.' CHARACTER SET '.config('database.mysql.charset').' COLLATE '.config('database.mysql.collation')
         );
     }
 

@@ -20,24 +20,53 @@ use PDOStatement;
  */
 class Connection
 {
-    /**
-     * @var Connection
-     */
     protected static ?Connection $instance = null;
 
-    protected MySQLConnection|SQLiteConnection $db;
+    protected ConnectionInterface $db;
 
-    private function __construct()
+    public function __construct(array $db = [])
     {
-        $driver = config('app.env') === 'test'
-            ? config('tests.db.driver')
-            : config('database.driver');
+        $db = empty($db) ? self::getDB() : $db;
 
-        $this->db = match ($driver) {
-            DatabaseDriver::PGSQL => new PostgreSQLConnection,
-            DatabaseDriver::SQLITE => new SQLiteConnection,
-            default => new MySQLConnection
+        $this->db = match (self::getDriver()) {
+            DatabaseDriver::PGSQL => new PostgreSQLConnection(self::getDB()),
+            DatabaseDriver::SQLITE => new SQLiteConnection(self::getDB()),
+            default => new MySQLConnection(self::getDB())
         };
+    }
+
+    public static function getDB(): array
+    {
+        $driver = self::getDriver();
+
+        if ($driver === DatabaseDriver::SQLITE) {
+            return [
+                'driver' => DatabaseDriver::SQLITE,
+                'name' => config('storage.sqlite').config("database.$driver.name").'.db',
+                'memory' => config("database.$driver.memory"),
+            ];
+        }
+
+        return [
+            'driver' => $driver,
+            'host' => config("database.$driver.host"),
+            'port' => config("database.$driver.port"),
+            'name' => config("database.$driver.name"),
+            'username' => config("database.$driver.username"),
+            'password' => config("database.$driver.password"),
+        ];
+    }
+
+    public static function getDriver(): string
+    {
+        return config('app.env') === 'test'
+            ? config('database.testing.driver')
+            : config('database.driver');
+    }
+
+    public static function getDBName(): string
+    {
+        return self::getDB()['name'];
     }
 
     public static function getInstance(): self
@@ -46,6 +75,13 @@ class Connection
             // @phpstan-ignore-next-line
             self::$instance = new static;
         }
+
+        return self::$instance;
+    }
+
+    public static function setInstance(Connection $instance): self
+    {
+        self::$instance = $instance;
 
         return self::$instance;
     }
@@ -62,6 +98,7 @@ class Connection
 
     public function schemaExists(string $name): bool
     {
+
         return $this->db->schemaExists($name);
     }
 

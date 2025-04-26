@@ -14,15 +14,10 @@ declare(strict_types=1);
  */
 
 return [
-    'db' => [
-        'driver' => 'sqlite',
-        'suffix' => '_test',
-    ],
-
     'url' => [
-        'protocol' => 'http://',
-        'host' => '127.0.0.1',
-        'port' => 8889,
+        'protocol' => env('TESTING_URL_PROTOCOL', 'http://'),
+        'host' => env('TESTING_URL_HOST', '127.0.0.1'),
+        'port' => env('TESTING_UL_PORT', 8889),
     ],
 
     'browser' => [

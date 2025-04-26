@@ -11,23 +11,23 @@ declare(strict_types=1);
 
 namespace App\Database\Migrations;
 
-use Core\Database\Migration;
+use Core\Database\Schema;
 
 class TokensTable_20210403034738
 {
     public function up(): void
     {
-        Migration::createTable('tokens')
-            ->addPrimaryKey()
-            ->addString('email')
-            ->addString('value')->unique()
-            ->addDateTime('expires_at')->nullable()
-            ->addString('description')
+        Schema::createTable('tokens')
+            ->addPrimaryKey()->notNull()
+            ->addString('email')->notNull()
+            ->addString('value')->notNull()->unique()
+            ->addDateTime('expires_at')->null()
+            ->addString('description')->notNull()
             ->run();
     }
 
     public function down(): void
     {
-        Migration::dropTable('tokens');
+        Schema::dropTable('tokens');
     }
 }

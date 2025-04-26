@@ -9,31 +9,50 @@
 
 declare(strict_types=1);
 
+use Core\Enums\DatabaseDriver;
+
 /*
  * Database configuration
  */
 
 return [
-    'driver' => env('DB_DRIVER', 'sqlite'),
+    'driver' => env('DB_DRIVER', DatabaseDriver::SQLITE),
     'table_prefix' => '',
-    'name' => env('DB_NAME', 'tinymvc'),
 
     'mysql' => [
+        'driver' => DatabaseDriver::MYSQL,
         'host' => env('DB_HOST', '127.0.0.1'),
+        'port' => env('DB_PORT', '3306'),
+        'name' => env('DB_NAME', 'tinymvc'),
         'username' => env('DB_USERNAME', 'root'),
-        'password' => env('DB_PASSWORD', 'root'),
+        'password' => env('DB_PASSWORD', ''),
         'charset' => 'utf8',
         'collation' => 'utf8_unicode_ci',
         'engine' => 'InnoDB',
     ],
 
     'pgsql' => [
+        'driver' => DatabaseDriver::PGSQL,
         'host' => env('DB_HOST', '127.0.0.1'),
-        'username' => env('DB_USERNAME', 'root'),
-        'password' => env('DB_PASSWORD', 'root'),
+        'port' => env('DB_PORT', '5432'),
+        'name' => env('DB_NAME', 'tinymvc'),
+        'username' => env('DB_USERNAME', 'pgsql'),
+        'password' => env('DB_PASSWORD', 'password'),
     ],
 
     'sqlite' => [
+        'driver' => DatabaseDriver::SQLITE,
+        'name' => env('DB_NAME', 'tinymvc'),
+        'memory' => false,
+    ],
+
+    'testing' => [
+        'driver' => env('TESTING_DB_DRIVER', DatabaseDriver::SQLITE),
+        'name' => env('TESTING_DB_NAME', 'tinymvc_test'),
+        'host' => env('TESTING_DB_HOST', ''),
+        'port' => env('TESTING_DB_PORT', ''),
+        'username' => env('TESTING_DB_USERNAME', ''),
+        'password' => env('TESTING_DB_PASSWORD', ''),
         'memory' => false,
     ],
 ];

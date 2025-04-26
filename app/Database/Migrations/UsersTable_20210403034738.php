@@ -11,24 +11,24 @@ declare(strict_types=1);
 
 namespace App\Database\Migrations;
 
-use Core\Database\Migration;
+use Core\Database\Schema;
 
 class UsersTable_20210403034738
 {
     public function up(): void
     {
-        Migration::createTable('users')
-            ->addPrimaryKey()
-            ->addString('name')
-            ->addString('email')->unique()
-            ->addString('password')
-            ->addDateTime('email_verified_at')->nullable()
+        Schema::createTable('users')
+            ->addPrimaryKey()->notNull()
+            ->addString('name')->notNull()
+            ->addString('email')->notNull()->unique()
+            ->addString('password')->notNull()
+            ->addDateTime('email_verified_at')->null()
             ->addString('role')
             ->run();
     }
 
     public function down(): void
     {
-        Migration::dropTable('users');
+        Schema::dropTable('users');
     }
 }

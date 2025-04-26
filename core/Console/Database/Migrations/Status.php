@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Core\Console\Database\Migrations;
 
-use Core\Database\Connection\Connection;
 use Core\Database\QueryBuilder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -50,7 +49,7 @@ class Status extends Command
 
     protected function isMigrated(string $migration): bool
     {
-        if (! Connection::getInstance()->tableExists('migrations')) {
+        if (! QueryBuilder::connection()->tableExists('migrations')) {
             return false;
         }
 

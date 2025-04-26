@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Core\Console\Database;
 
-use Core\Database\Connection\Connection;
+use Core\Database\QueryBuilder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -32,15 +32,11 @@ class Delete extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $connection = Connection::getInstance();
+        $connection = QueryBuilder::connection();
         $databases = $input->getArgument('database');
 
         if (empty($databases)) {
-            $db = config('app.env') !== 'test'
-                ? config('database.name')
-                : config('database.name').config('tests.db.suffix');
-
-            $databases = [$db];
+            $databases = [get_file_name(QueryBuilder::connection()->getDBName())];
         }
 
         foreach ($databases as $database) {

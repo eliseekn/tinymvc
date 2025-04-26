@@ -10,19 +10,19 @@ declare(strict_types=1);
 
 namespace App\Database\Migrations;
 
-use Core\Database\Migration;
+use Core\Database\Schema;
 
 class CLASSNAME
 {         
     public function up(): void
     {
-        Migration::createTable('TABLE_NAME')
+        Schema::createTable('TABLE_NAME')
             ->addPrimaryKey()
             ->run();
     }
     
     public function down(): void
     {
-        Migration::dropTable('TABLE_NAME');
+        Schema::dropTable('TABLE_NAME');
     }
 }

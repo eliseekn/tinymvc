@@ -19,39 +19,34 @@ class SQLiteConnection implements ConnectionInterface
 {
     protected PDO $pdo;
 
+    protected bool $memory;
+
     /**
      * @throws PDOException
      */
-    public function __construct()
+    public function __construct(public array $db)
     {
+        $this->memory = isset($db['memory']) && $db['memory'] === true;
+        $dsn = $this->memory ? ':memory:' : $db['name'];
+
         try {
-            $this->pdo = new PDO('sqlite:'.$this->getDB());
+            $this->pdo = new PDO('sqlite:'.$dsn);
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
             $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
             $this->pdo->setAttribute(PDO::ATTR_ORACLE_NULLS, PDO::NULL_EMPTY_STRING);
 
-            if (config('database.sqlite.memory')) {
+            if ($this->memory) {
                 $this->pdo->setAttribute(PDO::ATTR_PERSISTENT, true);
             }
         } catch (PDOException $e) {
-            throw new PDOException($e->getMessage());
+            throw new PDOException($e->getMessage(), (int) $e->getCode(), $e->getPrevious());
         }
     }
 
     public function getPDO(): PDO
     {
         return $this->pdo;
-    }
-
-    private function getDB(): string
-    {
-        if (config('app.env') === 'test') {
-            return config('storage.sqlite').config('database.name').config('tests.db.suffix').'.db';
-        }
-
-        return config('database.sqlite.memory') ? ':memory:'
-            : config('storage.sqlite').config('database.name').'.db';
     }
 
     /**
@@ -83,25 +78,30 @@ class SQLiteConnection implements ConnectionInterface
 
     public function schemaExists(string $name): bool
     {
-        return config('database.sqlite.memory') || storage(config('storage.sqlite'))->isFile($name);
+        if ($this->memory) {
+            return true;
+        }
+
+        return storage(config('storage.sqlite'))->isFile($name.'.db');
     }
 
     public function tableExists(string $name): bool
     {
         $stmt = $this->executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name = ?", [$name]);
+
         return $stmt->fetch() !== false;
     }
 
     public function createSchema(string $name): void
     {
-        if (! config('database.sqlite.memory')) {
+        if (! $this->memory) {
             storage(config('storage.sqlite'))->writeFile($name.'.db', '');
         }
     }
 
     public function deleteSchema(string $name): void
     {
-        if (! config('database.sqlite.memory')) {
+        if (! $this->memory) {
             storage(config('storage.sqlite'))->deleteFile($name.'.db');
         }
     }

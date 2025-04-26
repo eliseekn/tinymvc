@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Core\Console\Database;
 
-use Core\Database\Connection\Connection;
+use Core\Database\QueryBuilder;
 use Core\Enums\DatabaseDriver;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -34,12 +34,8 @@ class Show extends Command
     {
         $rows = [];
 
-        $driver = config('app.env') === 'test'
-            ? config('tests.db.driver')
-            : config('database.driver');
-
-        if ($driver === DatabaseDriver::MYSQL) {
-            $databases = Connection::getInstance()->executeQuery('SHOW DATABASES')->fetchAll();
+        if (QueryBuilder::connection()->getDriver() === DatabaseDriver::MYSQL) {
+            $databases = QueryBuilder::connection()->executeQuery('SHOW DATABASES')->fetchAll();
 
             foreach ($databases as $db) {
                 $rows[] = [$db->Database];
