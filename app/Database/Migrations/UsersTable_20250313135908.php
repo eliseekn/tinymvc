@@ -27,7 +27,7 @@ class UsersTable_20250313135908
             ->run();
 
         Schema::alterTable('users')
-            ->addForeignKey('role_id', 'users_role')->references('roles', 'id')
+            ->addConstraintForeignKey('users_role', 'role_id')->references('roles', 'id')
             ->run();
     }
 }

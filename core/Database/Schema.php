@@ -334,16 +334,37 @@ class Schema
         return $this;
     }
 
-    public function foreignKey(string $column, string $name): self
+    public function constraint(string $name): self
     {
-        self::$qb->foreignKey('fk_'.$name, $column);
+        self::$qb->constraint('fk_'.$name);
 
         return $this;
     }
 
-    public function addForeignKey(string $column, string $name): self
+    public function addConstraint(string $name): self
     {
-        self::$qb->addForeignKey('fk_'.$name, $column);
+        self::$qb->addConstraint('fk_'.$name);
+
+        return $this;
+    }
+
+    public function foreignKey(string $column): self
+    {
+        self::$qb->foreignKey($column);
+
+        return $this;
+    }
+
+    public function addConstraintForeignKey(string $name, string $column): self
+    {
+        self::$qb->addConstraint($name)->foreignKey($column);
+
+        return $this;
+    }
+
+    public function constraintForeignKey(string $name, string $column): self
+    {
+        self::$qb->constraint($name)->foreignKey($column);
 
         return $this;
     }
@@ -435,13 +456,17 @@ class Schema
         return $this;
     }
 
-    public function run(): false|PDOStatement
+    public function run(): bool|PDOStatement
     {
         if (str_contains(self::$qb->toSQL()[0], 'CREATE TABLE')) {
             return self::$qb->timestamps()->migrate();
         }
 
-        if (str_contains(self::$qb->toSQL()[0], 'ALTER TABLE')) {
+        if (
+            str_contains(self::$qb->toSQL()[0], 'ADD CONSTRAINT') &&
+            QueryBuilder::connection()->getDriver() === DatabaseDriver::SQLITE
+        ) {
+            return true;
 
         }
 

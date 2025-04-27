@@ -284,16 +284,24 @@ class QueryBuilder
         return $this;
     }
 
-    public function foreignKey(string $name, string $column): self
+    public function constraint(string $name): self
     {
-        self::$query .= " CONSTRAINT $name FOREIGN KEY ($column)";
+        self::$query .= " CONSTRAINT $name";
+
+        return $this;
+
+    }
+
+    public function addConstraint(string $name): self
+    {
+        self::$query .= " ADD CONSTRAINT $name";
 
         return $this;
     }
 
-    public function addForeignKey(string $name, string $column): self
+    public function foreignKey(string $column): self
     {
-        self::$query .= " ADD CONSTRAINT $name FOREIGN KEY ($column)";
+        self::$query .= " FOREIGN KEY ($column)";
 
         return $this;
     }

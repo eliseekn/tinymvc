@@ -74,6 +74,8 @@ class Testing extends Command
 
                 if (preg_match('/^OK \(\d+ tests?, \d+ assertions?\)$/', $line)) {
                     $output->writeln('<bg=green;fg=black> '.$line.'</>');
+                } elseif ($line === 'ERRORS!' || $line === 'FAILURES!') {
+                    $output->writeln('<bg=red;fg=black> '.$line.'</>');
                 } elseif (in_array($line, ['.', 'F', 'E'])) {
                     $output->write($line);
                 } else {
