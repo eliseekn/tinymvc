@@ -36,7 +36,7 @@ class Create extends Command
         $databases = $input->getArgument('database');
 
         if (empty($databases)) {
-            $databases = [get_file_name(QueryBuilder::connection()->getDBName())];
+            $databases = [get_filename(QueryBuilder::connection()->getDBName())];
         }
 
         foreach ($databases as $database) {

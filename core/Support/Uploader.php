@@ -34,7 +34,7 @@ class Uploader
 
     public function getFilename(): string
     {
-        return get_file_name($this->getOriginalFilename());
+        return get_filename($this->getOriginalFilename());
     }
 
     public function getTempFilename(): string

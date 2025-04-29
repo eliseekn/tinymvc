@@ -56,7 +56,7 @@ class Run extends Command
             : storage(config('storage.migrations'))->getFiles();
 
         foreach ($migrations as $migration) {
-            $this->migrate($output, get_file_name($migration));
+            $this->migrate($output, get_filename($migration));
         }
 
         if ($input->getOption('seed')) {

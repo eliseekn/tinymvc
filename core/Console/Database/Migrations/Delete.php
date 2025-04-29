@@ -39,7 +39,7 @@ class Delete extends Command
         }
 
         foreach ($migrations as $migration) {
-            $this->delete($output, get_file_name($migration));
+            $this->delete($output, get_filename($migration));
         }
 
         return Command::SUCCESS;

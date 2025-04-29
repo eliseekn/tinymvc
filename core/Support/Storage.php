@@ -88,7 +88,7 @@ class Storage
 
     public function getFileName(string $filename): string
     {
-        return get_file_name(self::$path .= $filename);
+        return get_filename(self::$path .= $filename);
     }
 
     public function createDir(string $pathname = '', bool $recursive = false, int $mode = 0777): bool

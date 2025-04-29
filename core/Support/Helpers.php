@@ -473,11 +473,11 @@ if (! function_exists('get_dirname')) {
     }
 }
 
-if (! function_exists('get_file_name')) {
+if (! function_exists('get_filename')) {
     /**
      * Get filename only
      */
-    function get_file_name(string $file): string
+    function get_filename(string $file): string
     {
         return pathinfo($file, PATHINFO_FILENAME);
     }

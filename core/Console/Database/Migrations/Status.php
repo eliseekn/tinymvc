@@ -35,8 +35,8 @@ class Status extends Command
         $files = storage(config('storage.migrations'))->getFiles();
 
         foreach ($files as $table) {
-            $status = $this->isMigrated(get_file_name($table)) ? 'Yes' : '<fg=red>No</>';
-            $rows[] = [get_file_name($table), $status];
+            $status = $this->isMigrated(get_filename($table)) ? 'Yes' : '<fg=red>No</>';
+            $rows[] = [get_filename($table), $status];
         }
 
         $table = new Table($output);
