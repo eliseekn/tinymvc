@@ -6,9 +6,9 @@ namespace App\Enums;
 
 enum TokenDescription: string
 {
-    public const PASSWORD_RESET = 'password_reset';
+    const PASSWORD_RESET = 'password_reset';
 
-    public const EMAIL_VERIFICATION = 'email_verification';
+    const EMAIL_VERIFICATION = 'email_verification';
 
-    public const AUTHENTICATION = 'authentication';
+    const AUTHENTICATION = 'authentication';
 }
