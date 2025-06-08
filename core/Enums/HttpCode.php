@@ -1,12 +1,18 @@
 <?php
 
+/**
+ * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
+ * @license MIT (https://opensource.org/licenses/MIT)
+ *
+ * @link https://github.com/eliseekn/tinymvc
+ */
+
 declare(strict_types=1);
 
 namespace Core\Enums;
 
 enum HttpCode: int
 {
-    // 1xx: Informational
     public const CONTINUE = 100;
 
     public const SWITCHING_PROTOCOLS = 101;
@@ -15,7 +21,6 @@ enum HttpCode: int
 
     public const EARLY_HINTS = 103;
 
-    // 2xx: Success
     public const OK = 200;
 
     public const CREATED = 201;
@@ -36,7 +41,6 @@ enum HttpCode: int
 
     public const IM_USED = 226;
 
-    // 3xx: Redirection
     public const MULTIPLE_CHOICES = 300;
 
     public const MOVED_PERMANENTLY = 301;
@@ -53,7 +57,6 @@ enum HttpCode: int
 
     public const PERMANENT_REDIRECT = 308;
 
-    // 4xx: Client Errors
     public const BAD_REQUEST = 400;
 
     public const UNAUTHORIZED = 401;
@@ -112,7 +115,6 @@ enum HttpCode: int
 
     public const UNAVAILABLE_FOR_LEGAL_REASONS = 451;
 
-    // 5xx: Server Errors
     public const INTERNAL_SERVER_ERROR = 500;
 
     public const NOT_IMPLEMENTED = 501;

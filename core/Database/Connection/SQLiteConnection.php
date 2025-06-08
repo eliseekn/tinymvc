@@ -66,8 +66,6 @@ class SQLiteConnection implements ConnectionInterface
      */
     public function executeQuery(string $query, ?array $args = null): false|PDOStatement
     {
-        error_log($query);
-
         try {
             $stmt = $this->pdo->prepare(trim($query));
             $stmt->execute($args);

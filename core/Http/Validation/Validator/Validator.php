@@ -16,6 +16,7 @@ use Core\Enums\ResponseStatus;
 use Core\Exceptions\InvalidJsonDataException;
 use Core\Http\Request;
 use Core\Http\Response;
+use Core\Http\Validation\Rule\RuleInterface;
 use Exception;
 use GUMP;
 use Spatie\StructureDiscoverer\Discover;
@@ -38,11 +39,14 @@ class Validator implements ValidatorInterface
 
         if (! empty($rules)) {
             foreach ($rules as $rule) {
+                /** @var RuleInterface $rule */
                 $rule = new $rule;
 
                 GUMP::add_validator(
+                    // @phpstan-ignore-next-line
                     $rule->name,
                     $rule->rule(...),
+                    // @phpstan-ignore-next-line
                     $rule->errorMessage
                 );
             }
@@ -78,7 +82,7 @@ class Validator implements ValidatorInterface
                 'status' => ResponseStatus::ERROR,
                 'data' => $this->errors(),
             ])
-            ->send(HttpCode::BAD_REQUEST);
+                ->send(HttpCode::BAD_REQUEST);
         }
 
         $response
@@ -134,7 +138,7 @@ class Validator implements ValidatorInterface
         return $errors;
     }
 
-    public function inputs(string|array $name = null): array|string|null
+    public function inputs(string|array|null $name = null): array|string|null
     {
         $validated = [];
         $inputs = array_keys($this->rules());

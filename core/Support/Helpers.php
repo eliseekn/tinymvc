@@ -542,7 +542,6 @@ if (! function_exists('dispatch')) {
     function dispatch(object $event): void
     {
         if ($event instanceof EventInterface) {
-            // @phpstan-ignore-next-line
             $event->dispatch();
         }
     }
