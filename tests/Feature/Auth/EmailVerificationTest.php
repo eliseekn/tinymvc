@@ -42,7 +42,7 @@ class EmailVerificationTest extends FeatureTestCase
 
         $token = Token::factory()->create([
             'email' => $user->get('email'),
-            'description' => TokenDescription::EMAIL_VERIFICATION,
+            'description' => TokenDescription::EMAIL_VERIFICATION->value,
         ]);
 
         $this

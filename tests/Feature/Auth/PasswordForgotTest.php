@@ -43,7 +43,7 @@ class PasswordForgotTest extends FeatureTestCase
 
         $token = Token::factory()->create([
             'email' => $user->get('email'),
-            'description' => TokenDescription::PASSWORD_RESET,
+            'description' => TokenDescription::PASSWORD_RESET->value,
         ]);
 
         $this

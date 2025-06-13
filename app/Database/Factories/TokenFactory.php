@@ -30,7 +30,7 @@ class TokenFactory extends Factory
             'email' => faker()->unique()->email(),
             'value' => generate_token(),
             'expires_at' => carbon()->addHour()->toDateTimeString(),
-            'description' => TokenDescription::PASSWORD_RESET,
+            'description' => TokenDescription::PASSWORD_RESET->value,
         ];
     }
 }

@@ -88,22 +88,18 @@ class Maker
         $name = self::removeUnderscore($name);
 
         if ($suffix === 'migration') {
-            $suffix = 'table';
+            return [lcfirst($name), 'Version'.date('YmdHis')];
         }
 
         $suffix = self::removeUnderscore($suffix);
         $class = $name.ucfirst($suffix);
-
-        if (strpos($class, 'Table')) {
-            $class .= date('_YmdHis');
-        }
 
         return [lcfirst($name), $class];
     }
 
     public static function createController(string $controller, ?string $namespace = null): bool
     {
-        list(, $class) = self::generateClass($controller, 'controller', true, true);
+        [, $class] = self::generateClass($controller, 'controller', true, true);
 
         $data = self::stubs()->readFile('Controller.stub');
         $data = self::addNamespace($data, 'App\Http\Controllers', $namespace);
@@ -120,7 +116,7 @@ class Maker
 
     public static function createModel(string $model, ?string $namespace = null): bool
     {
-        list($name, $class) = self::generateClass($model);
+        [$name, $class] = self::generateClass($model);
 
         $data = self::stubs()->addPath('database')->readFile('Model.stub');
         $data = self::addNamespace($data, 'App\Database\Models', $namespace);
@@ -138,7 +134,7 @@ class Maker
 
     public static function createMigration(string $migration): bool
     {
-        list($name, $class) = self::generateClass($migration, 'migration');
+        [$name, $class] = self::generateClass($migration, 'migration');
 
         $data = self::stubs()->addPath('database')->readFile('Migration.stub');
         $data = str_replace('CLASSNAME', $class, $data);
@@ -149,7 +145,7 @@ class Maker
 
     public static function createSeeder(string $seeder): bool
     {
-        list($name, $class) = self::generateClass($seeder, 'seeder', true, true);
+        [$name, $class] = self::generateClass($seeder, 'seeder', true, true);
 
         $data = self::stubs()->addPath('database')->readFile('Seeder.stub');
         $data = str_replace('CLASSNAME', self::fixPlural($class, true), $data);
@@ -160,7 +156,7 @@ class Maker
 
     public static function createFactory(string $factory, ?string $namespace = null): bool
     {
-        list($name, $class) = self::generateClass($factory, 'factory', true, true);
+        [$name, $class] = self::generateClass($factory, 'factory', true, true);
 
         $data = self::stubs()->addPath('database')->readFile('Factory.stub');
         $data = self::addNamespace($data, 'App\Database\Factories', $namespace);
@@ -178,7 +174,7 @@ class Maker
 
     public static function createEvent(string $event): bool
     {
-        list(, $class) = self::generateClass(base_name: $event, singular: true, force_singular: true);
+        [, $class] = self::generateClass($event, singular: true, force_singular: true);
         $className = self::fixPlural($class.'Event', true);
 
         $data = self::stubs()->addPath('events')->readFile('Event.stub');
@@ -206,7 +202,7 @@ class Maker
 
     public static function createHelper(string $helper): bool
     {
-        list(, $class) = self::generateClass($helper, 'helper', true);
+        [, $class] = self::generateClass($helper, 'helper', true);
 
         $data = self::stubs()->readFile('Helper.stub');
         $data = str_replace('CLASSNAME', $class, $data);
@@ -216,7 +212,7 @@ class Maker
 
     public static function createException(string $exception, string $message): bool
     {
-        list(, $class) = self::generateClass($exception, 'exception', true);
+        [, $class] = self::generateClass($exception, 'exception', true);
 
         $data = self::stubs()->readFile('Exception.stub');
         $data = str_replace('CLASSNAME', $class, $data);
@@ -225,9 +221,19 @@ class Maker
         return storage(config('storage.exceptions'))->writeFile($class.'.php', $data);
     }
 
+    public static function createEnum(string $enum): bool
+    {
+        [, $class] = self::generateClass($enum, singular: true);
+
+        $data = self::stubs()->readFile('Enum.stub');
+        $data = str_replace('ENUM_NAME', $class, $data);
+
+        return storage(config('storage.enums'))->writeFile($class.'.php', $data);
+    }
+
     public static function createTest(string $test, ?string $namespace = null): bool
     {
-        list(, $class) = self::generateClass($test, 'test', true);
+        [, $class] = self::generateClass($test, 'test', true);
 
         $data = self::stubs()->addPath('tests')->readFile('FeatureTest.stub');
         $data = str_replace('CLASSNAME', $class, $data);
@@ -240,7 +246,7 @@ class Maker
 
     public static function createUnitTest(string $test, ?string $namespace = null): bool
     {
-        list(, $class) = self::generateClass($test, 'test', true);
+        [, $class] = self::generateClass($test, 'test', true);
 
         $data = self::stubs()->addPath('tests')->readFile('UnitTest.stub');
         $data = str_replace('CLASSNAME', $class, $data);
@@ -253,7 +259,7 @@ class Maker
 
     public static function createBrowserTest(string $test, ?string $namespace = null): bool
     {
-        list(, $class) = self::generateClass($test, 'test', true);
+        [, $class] = self::generateClass($test, 'test', true);
 
         $data = self::stubs()->addPath('tests')->readFile('BrowserTest.stub');
         $data = str_replace('CLASSNAME', $class, $data);
@@ -266,7 +272,7 @@ class Maker
 
     public static function createValidator(string $validator, ?string $namespace = null): bool
     {
-        list(, $class) = self::generateClass($validator, 'validator', true);
+        [, $class] = self::generateClass($validator, 'validator', true);
 
         $data = self::stubs()->addPath('validators')->readFile('Validator.stub');
         $data = self::addNamespace($data, 'App\Http\Validation\Validators', $namespace);
@@ -283,7 +289,7 @@ class Maker
 
     public static function createRule(string $rule): bool
     {
-        list($name, $class) = self::generateClass(base_name: $rule, singular: true);
+        [$name, $class] = self::generateClass($rule, singular: true);
 
         $data = self::stubs()->addPath('validators')->readFile('Rule.stub');
         $data = self::addNamespace($data, 'App\Http\Validation\Rules');
@@ -297,7 +303,7 @@ class Maker
 
     public static function createMiddleware(string $middleware): bool
     {
-        list(, $class) = self::generateClass($middleware, singular: true);
+        [, $class] = self::generateClass($middleware, singular: true);
 
         $data = self::stubs()->readFile('Middleware.stub');
         $data = str_replace('CLASSNAME', $class, $data);
@@ -307,7 +313,7 @@ class Maker
 
     public static function createMail(string $mail): bool
     {
-        list($name, $class) = self::generateClass($mail, 'mail', force_singular: true);
+        [$name, $class] = self::generateClass($mail, 'mail', force_singular: true);
 
         $data = self::stubs()->readFile('Mail.stub');
         $data = str_replace('CLASSNAME', $class, $data);
@@ -346,7 +352,7 @@ class Maker
 
     public static function createConsole(string $console, string $command, string $description, ?string $namespace = null): bool
     {
-        list(, $class) = self::generateClass($console, '', true);
+        [, $class] = self::generateClass($console, '', true);
 
         $data = self::stubs()->readFile('Console.stub');
         $data = self::addNamespace($data, 'App\Console', $namespace);
@@ -365,8 +371,8 @@ class Maker
 
     public static function createUseCase(string $model, string $type, OutputInterface $output, ?string $namespace = null): bool
     {
-        list($name) = self::generateClass($model, 'use_case', true, true);
-        list($type, $class) = self::generateClass($type, 'use_case', true, true);
+        [$name] = self::generateClass($model, 'use_case', true, true);
+        [$type, $class] = self::generateClass($type, 'use_case', true, true);
 
         $namespace = is_null($namespace) ? ucfirst($name) : $namespace.'\\'.ucfirst($name);
         $class = str_replace(['Index', 'Show'], ['GetCollection', 'GetItem'], $class);

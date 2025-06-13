@@ -81,7 +81,7 @@ class Auth
         $token = Token::factory()->create([
             'email' => $email,
             'value' => generate_token(),
-            'description' => TokenDescription::AUTHENTICATION,
+            'description' => TokenDescription::AUTHENTICATION->value,
         ]);
 
         return encrypt($token->get('value'));

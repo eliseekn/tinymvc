@@ -23,8 +23,11 @@ class Model
 {
     use Notifiable;
 
+    protected readonly Repository $repository;
+
     public function __construct(protected readonly string $table, protected array $attributes = [])
     {
+        $this->repository = new Repository($this->table);
     }
 
     public function getTable(): string
@@ -37,27 +40,27 @@ class Model
      */
     public function findBy(string $column, $operator = null, $value = null): ?self
     {
-        return (new Repository($this->table))->findWhere($column, $operator, $value);
+        return $this->repository->findWhere($column, $operator, $value);
     }
 
     public function getAll(array|string $columns): array
     {
-        return (new Repository($this->table))->selectAll($columns);
+        return $this->repository->selectAll($columns);
     }
 
     public function first(array|string $columns): ?self
     {
-        return (new Repository($this->table))->select($columns)->first();
+        return $this->repository->select($columns)->first();
     }
 
     public function last(array|string $columns): ?self
     {
-        return (new Repository($this->table))->select($columns)->last();
+        return $this->repository->select($columns)->last();
     }
 
     public function take(int $count, ?Closure $subQuery = null): array
     {
-        return (new Repository($this->table))
+        return $this->repository
             ->select('*')
             ->subQueryWhen(! is_null($subQuery), $subQuery)
             ->take($count);
@@ -65,7 +68,7 @@ class Model
 
     public function oldest(array|string $columns, string $column = 'created_at', ?Closure $subQuery = null): array
     {
-        return (new Repository($this->table))
+        return $this->repository
             ->select($columns)
             ->subQueryWhen(! is_null($subQuery), $subQuery)
             ->oldest($column)
@@ -74,7 +77,7 @@ class Model
 
     public function newest(array|string $columns, string $column = 'created_at', ?Closure $subQuery = null): array
     {
-        return (new Repository($this->table))
+        return $this->repository
             ->select($columns)
             ->subQueryWhen(! is_null($subQuery), $subQuery)
             ->newest($column)
@@ -83,12 +86,12 @@ class Model
 
     public function select(array|string $columns): Repository
     {
-        return (new Repository($this->table))->select($columns);
+        return $this->repository->select($columns);
     }
 
     public function count(string $column = 'id', ?Closure $subQuery = null): string|array|int
     {
-        $data = (new Repository($this->table))
+        $data = $this->repository
             ->count($column)
             ->subQueryWhen(! is_null($subQuery), $subQuery)
             ->get();
@@ -98,7 +101,7 @@ class Model
 
     public function sum(string $column, ?Closure $subQuery = null): string|array|int
     {
-        $data = (new Repository($this->table))
+        $data = $this->repository
             ->sum($column)
             ->subQueryWhen(! is_null($subQuery), $subQuery)
             ->get();
@@ -108,7 +111,7 @@ class Model
 
     public function average(string $column, ?Closure $subQuery = null): string|int|array
     {
-        $data = (new Repository($this->table))
+        $data = $this->repository
             ->average($column)
             ->subQueryWhen(! is_null($subQuery), $subQuery)
             ->get();
@@ -118,7 +121,7 @@ class Model
 
     public function max(string $column, ?Closure $subQuery = null): string|int|array
     {
-        $data = (new Repository($this->table))
+        $data = $this->repository
             ->max($column)
             ->subQueryWhen(! is_null($subQuery), $subQuery)
             ->get();
@@ -128,7 +131,7 @@ class Model
 
     public function min(string $column, ?Closure $subQuery = null): string|int|array
     {
-        $data = (new Repository($this->table))
+        $data = $this->repository
             ->min($column)
             ->subQueryWhen(! is_null($subQuery), $subQuery)
             ->get();
@@ -138,7 +141,7 @@ class Model
 
     public function metrics(): Metrics
     {
-        return (new Repository($this->table))->metrics();
+        return $this->repository->metrics();
     }
 
     /**
@@ -146,7 +149,7 @@ class Model
      */
     public function create(array $data): self|false
     {
-        $id = (new Repository($this->table))->insertGetId($data);
+        $id = $this->repository->insertGetId($data);
 
         return is_null($id) ? false : $this->findBy('id', $id);
     }
@@ -167,7 +170,7 @@ class Model
             $column = $this->getColumnFromTable($table);
         }
 
-        return (new Repository($this->table))
+        return $this->repository
             ->select('*')
             ->where($column, $this->getId())
             ->get();
@@ -184,7 +187,7 @@ class Model
             $column = $this->getColumnFromTable($table);
         }
 
-        return (new Repository($this->table))
+        return $this->repository
             ->select('*')
             ->where($column, $this->getId())
             ->getAll();
@@ -233,7 +236,7 @@ class Model
         return $this;
     }
 
-    public function get(string|array $attributes = null): int|string|array|null
+    public function get(string|array|null $attributes = null): int|string|array|null
     {
         if (is_null($attributes)) {
             return $this->attributes;
@@ -251,7 +254,7 @@ class Model
      */
     public function update(array $data): bool
     {
-        return (new Repository($this->table))->updateIfExists($this->getId(), $data);
+        return $this->repository->updateIfExists($this->getId(), $data);
     }
 
     /**
@@ -259,7 +262,7 @@ class Model
      */
     public function delete(): bool
     {
-        return (new Repository($this->table))->deleteIfExists($this->getId());
+        return $this->repository->deleteIfExists($this->getId());
     }
 
     /**

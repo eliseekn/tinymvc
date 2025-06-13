@@ -18,7 +18,7 @@ final class NotifyUseCase extends UseCase
     {
         $tokenValue = generate_token(15);
         $email = $this->request->inputs('email');
-        $token = Token::findByDescription($email, TokenDescription::PASSWORD_RESET);
+        $token = Token::findByDescription($email, TokenDescription::PASSWORD_RESET->value);
 
         if ($token) {
             $token->update(['value' => $tokenValue]);
@@ -27,7 +27,7 @@ final class NotifyUseCase extends UseCase
                 'email' => $email,
                 'value' => $tokenValue,
                 'expires_at' => carbon()->addHour()->toDateTimeString(),
-                'description' => TokenDescription::PASSWORD_RESET,
+                'description' => TokenDescription::PASSWORD_RESET->value,
             ]);
         }
 

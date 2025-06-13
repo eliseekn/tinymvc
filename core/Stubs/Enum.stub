@@ -9,15 +9,14 @@
 
 declare(strict_types=1);
 
-namespace NAMESPACE;
+namespace App\Enums;
 
-use App\Database\Models\MODEL_NAME;
-use Core\Support\UseCase;
-
-final class CLASSNAME extends UseCase
+enum ENUM_NAME: string
 {
-  public function handle(): array|false
-	{
-        return MODEL_NAME::all();
-	}
+    case ENUM_CASE = 'CASE_VALUE';
+
+    public static function values(): array
+    {
+        return array_column(self::cases(), 'value');
+    }
 }

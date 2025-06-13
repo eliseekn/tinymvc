@@ -1,14 +1,26 @@
 <?php
 
+/**
+ * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
+ * @license MIT (https://opensource.org/licenses/MIT)
+ *
+ * @link https://github.com/eliseekn/tinymvc
+ */
+
 declare(strict_types=1);
 
 namespace App\Enums;
 
 enum TokenDescription: string
 {
-    public const PASSWORD_RESET = 'password_reset';
+    case PASSWORD_RESET = 'password_reset';
 
-    public const EMAIL_VERIFICATION = 'email_verification';
+    case EMAIL_VERIFICATION = 'email_verification';
 
-    public const AUTHENTICATION = 'authentication';
+    case AUTHENTICATION = 'authentication';
+
+    public static function values(): array
+    {
+        return array_column(self::cases(), 'value');
+    }
 }

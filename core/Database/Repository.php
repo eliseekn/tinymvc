@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Core\Database;
 
 use Closure;
+use Core\Database\Connection\Connection;
 use Core\Database\Metrics\Metrics;
 use Core\Exceptions\InvalidSQLQueryException;
 use Core\Support\Pagination;
@@ -175,7 +176,7 @@ class Repository
             return null;
         }
 
-        $id = QueryBuilder::lastInsertedId();
+        $id = Connection::getInstance()->lastInsertedId($this->getTable());
 
         return (int) $id ?: null;
     }

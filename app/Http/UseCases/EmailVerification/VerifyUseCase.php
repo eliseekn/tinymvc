@@ -30,7 +30,7 @@ final class VerifyUseCase extends UseCase
         }
 
         $email = $this->request->queries('email');
-        $token = Token::findByDescription($email, TokenDescription::EMAIL_VERIFICATION);
+        $token = Token::findByDescription($email, TokenDescription::EMAIL_VERIFICATION->value);
 
         if (! $token || $token->get('value') !== $this->request->queries('token')) {
             $this->response->data(__('alert.invalid_password_reset_link'))->send(HttpCode::BAD_REQUEST);

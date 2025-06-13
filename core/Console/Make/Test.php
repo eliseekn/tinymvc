@@ -38,7 +38,7 @@ class Test extends Command
         $tests = $input->getArgument('test');
 
         foreach ($tests as $test) {
-            list(, $class) = Maker::generateClass($test, 'test', true);
+            [, $class] = Maker::generateClass($test, 'test', true);
 
             if ($input->getOption('unit')) {
                 $result = Maker::createUnitTest($test, $input->getOption('namespace'));

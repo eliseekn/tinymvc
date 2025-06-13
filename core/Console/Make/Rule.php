@@ -34,7 +34,7 @@ class Rule extends Command
         $rules = $input->getArgument('rule');
 
         foreach ($rules as $rule) {
-            list(, $class) = Maker::generateClass(base_name: $rule, singular: true);
+            [, $class] = Maker::generateClass($rule, singular: true);
 
             if (! Maker::createRule($rule)) {
                 $output->writeln('<bg=red;options=bold> ERROR </> Failed to create request rule <options=bold>'.$class.'</>.');

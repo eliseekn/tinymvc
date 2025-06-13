@@ -17,7 +17,6 @@ return [
     'core' => [
         new \Core\Console\Database\Create,
         new \Core\Console\Database\Delete,
-        new \Core\Console\Database\Show,
         new \Core\Console\Database\Query,
         new \Core\Console\Database\Migrations\Delete,
         new \Core\Console\Database\Migrations\Status,
@@ -43,6 +42,7 @@ return [
         new \Core\Console\Make\Exception,
         new \Core\Console\Make\Event,
         new \Core\Console\Make\Listener,
+        new \Core\Console\Make\Enum,
 
         new \Core\Console\App\EncryptionKey,
         new \Core\Console\App\Environnement,

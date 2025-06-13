@@ -36,7 +36,7 @@ class Migration extends Command
         $migrations = $input->getArgument('migration');
 
         foreach ($migrations as $migration) {
-            list(, $class) = Maker::generateClass($migration, 'migration');
+            [, $class] = Maker::generateClass($migration, 'migration');
 
             if (! Maker::createMigration($migration)) {
                 $output->writeln('<bg=red;options=bold> ERROR </> Failed to create migration <options=bold>'.$class.'</>.');
@@ -47,7 +47,7 @@ class Migration extends Command
 
         if ($input->getOption('seeder')) {
             foreach ($migrations as $migration) {
-                list(, $class) = Maker::generateClass($migration, 'seeder', true, true);
+                [, $class] = Maker::generateClass($migration, 'seeder', true, true);
 
                 if (! Maker::createSeeder($migration)) {
                     $output->writeln('<bg=red;options=bold> ERROR </> Failed to create seeder <options=bold>'.Maker::fixPlural($class, true).'</>.');

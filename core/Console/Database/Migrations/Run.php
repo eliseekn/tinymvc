@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Core\Console\Database\Migrations;
 
+use Core\Database\Connection\Connection;
 use Core\Database\QueryBuilder;
 use Core\Database\Schema;
 use Symfony\Component\Console\Command\Command;
@@ -42,7 +43,7 @@ class Run extends Command
     {
         $this->getApplication()->find('db:create')->run(new ArrayInput([]), $output);
 
-        if (! QueryBuilder::connection()->tableExists('migrations')) {
+        if (! Connection::getInstance()->tableExists('migrations')) {
             Schema::createTable('migrations')
                 ->addPrimaryKey()
                 ->addString('name')
@@ -91,7 +92,7 @@ class Run extends Command
 
     protected function isMigrated(string $migration): bool
     {
-        if (! QueryBuilder::connection()->tableExists('migrations')) {
+        if (! Connection::getInstance()->tableExists('migrations')) {
             return false;
         }
 

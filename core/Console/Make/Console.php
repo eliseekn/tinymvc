@@ -35,7 +35,7 @@ class Console extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        list(, $class) = Maker::generateClass($input->getArgument('console'), '', true);
+        [, $class] = Maker::generateClass($input->getArgument('console'), '', true);
 
         if (! Maker::createConsole(
             $input->getArgument('console'),

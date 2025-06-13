@@ -27,7 +27,7 @@ class LoginValidator extends Validator
     public function rules(): array
     {
         return Rule::add('email', [Rule::REQUIRED, Rule::EMAIL, Rule::maxLen(255)])
-            ->add('password', [Rule::REQUIRED, Rule::maxLen(255)])
+            ->add('password', Rule::REQUIRED)
             ->make();
     }
 }

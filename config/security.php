@@ -15,7 +15,7 @@ declare(strict_types=1);
 
 return [
     'encryption' => [
-        'key' => env('ENCRYPTION_KEY'),
+        'key' => env('APP_ENCRYPTION_KEY'),
         'cookies' => true,
     ],
 

@@ -34,7 +34,7 @@ class Event extends Command
         $events = $input->getArgument('event');
 
         foreach ($events as $event) {
-            list(, $class) = Maker::generateClass(base_name: $event, singular: true, force_singular: true);
+            [, $class] = Maker::generateClass($event, singular: true, force_singular: true);
 
             if (! Maker::createEvent($event)) {
                 $output->writeln('<bg=red;options=bold> ERROR </> Failed to create event  <options=bold>'.Maker::fixPlural($class.'Event', true).'</>.');

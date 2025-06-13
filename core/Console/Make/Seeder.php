@@ -34,7 +34,7 @@ class Seeder extends Command
         $seeders = $input->getArgument('seeder');
 
         foreach ($seeders as $seeder) {
-            list(, $class) = Maker::generateClass($seeder, 'seeder', true, true);
+            [, $class] = Maker::generateClass($seeder, 'seeder', true, true);
 
             if (! Maker::createSeeder($seeder)) {
                 $output->writeln('<bg=red;options=bold> ERROR </> Failed to create seeder <options=bold>'.Maker::fixPlural($class, true).'</>.');

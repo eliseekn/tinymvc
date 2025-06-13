@@ -11,12 +11,13 @@ declare(strict_types=1);
 
 namespace Core\Console\Database;
 
-use Core\Database\QueryBuilder;
+use Core\Database\Connection\Connection;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -30,11 +31,12 @@ class Query extends Command
     {
         $this->setDescription('Execute MySQL query and fetch results');
         $this->addArgument('query', InputArgument::REQUIRED, 'The query string to execute (inside "")');
+        $this->addOption('connection', null, InputOption::VALUE_OPTIONAL, 'The name of connection to use (default: mysql)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $stmt = QueryBuilder::connection()->executeQuery($input->getArgument('query'));
+        $stmt = Connection::getInstance($input->getOption('connection'))->executeQuery($input->getArgument('query'));
         $output->writeln('<bg=blue;options=bold> INFO </> Query executed.');
         $output->writeln('');
 

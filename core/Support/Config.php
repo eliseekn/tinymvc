@@ -19,22 +19,6 @@ use Exception;
  */
 class Config
 {
-    public static function saveEnv(array $config): bool
-    {
-        if (empty($config)) {
-            return false;
-        }
-
-        $data = '';
-
-        foreach ($config as $key => $value) {
-            $data .= "$key=$value";
-            putenv($data);
-        }
-
-        return storage()->writeFile('.env', $data);
-    }
-
     /**
      * @throws Exception
      */
@@ -51,7 +35,7 @@ class Config
                 continue;
             }
 
-            list($key, $value) = explode('=', trim($line), 2);
+            [$key, $value] = explode('=', trim($line), 2);
             putenv("$key=$value");
         }
     }
@@ -67,10 +51,12 @@ class Config
 
         foreach ($lines as $line) {
             if (str_contains(trim($line), '#') || trim($line) === '') {
+                $data .= "\n$line\n";
+
                 continue;
             }
 
-            list($key, $value) = explode('=', trim($line), 2);
+            [$key, $value] = explode('=', trim($line), 2);
 
             if (array_key_exists($key, $config)) {
                 $value = trim($config[$key]);
@@ -90,7 +76,7 @@ class Config
         return $data === false ? $default : $data;
     }
 
-    public static function readFile(string $path, string $key = null, $default = null): mixed
+    public static function readFile(string $path, ?string $key = null, $default = null): mixed
     {
         $path = require $path;
         $data = new Data($path);

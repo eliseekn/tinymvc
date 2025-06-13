@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Core\Database\Metrics;
 
 use Closure;
+use Core\Database\Connection\Connection;
 use Core\Database\Metrics\Enums\Aggregate;
 use Core\Database\Metrics\Enums\Period;
 use Core\Database\QueryBuilder;
@@ -69,7 +70,7 @@ class Metrics
 
     public function __construct(protected string $table)
     {
-        $this->driver = QueryBuilder::connection()->getDriver();
+        $this->driver = Connection::getInstance()->getDriver();
         $this->qb = QueryBuilder::table($this->table);
         $this->dateColumn = $this->table.'.created_at';
         $this->period = Period::MONTH->value;

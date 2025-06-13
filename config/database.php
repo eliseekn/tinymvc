@@ -16,7 +16,7 @@ use Core\Enums\DatabaseDriver;
  */
 
 return [
-    'driver' => env('DB_DRIVER', DatabaseDriver::SQLITE),
+    'connection' => env('DB_CONNECTION', 'mysql'),
     'table_prefix' => '',
 
     'mysql' => [
@@ -36,8 +36,9 @@ return [
         'host' => env('DB_HOST', '127.0.0.1'),
         'port' => env('DB_PORT', '5432'),
         'name' => env('DB_NAME', 'tinymvc'),
-        'username' => env('DB_USERNAME', 'pgsql'),
+        'username' => env('DB_USERNAME', 'postgres'),
         'password' => env('DB_PASSWORD', 'password'),
+        'encoding' => 'utf8',
     ],
 
     'sqlite' => [
@@ -46,13 +47,13 @@ return [
         'memory' => false,
     ],
 
-    'testing' => [
-        'driver' => env('TESTING_DB_DRIVER', DatabaseDriver::SQLITE),
-        'name' => env('TESTING_DB_NAME', 'tinymvc_test'),
-        'host' => env('TESTING_DB_HOST', ''),
-        'port' => env('TESTING_DB_PORT', ''),
-        'username' => env('TESTING_DB_USERNAME', ''),
-        'password' => env('TESTING_DB_PASSWORD', ''),
-        'memory' => false,
+    'custom' => [
+        'driver' => DatabaseDriver::PGSQL,
+        'host' => '127.0.0.1',
+        'port' => '5432',
+        'name' => 'pharma_delivery',
+        'username' => 'postgres',
+        'password' => 'password',
+        'encoding' => 'utf8',
     ],
 ];

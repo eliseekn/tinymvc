@@ -94,7 +94,6 @@ class Validator implements ValidatorInterface
 
     public function validationSucceeded(Request $request, ?Response $response = null): void
     {
-        //
     }
 
     public function rules(): array

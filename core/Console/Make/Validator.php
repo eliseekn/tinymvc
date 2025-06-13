@@ -36,7 +36,7 @@ class Validator extends Command
         $validators = $input->getArgument('validator');
 
         foreach ($validators as $validator) {
-            list(, $class) = Maker::generateClass($validator, 'validator', true);
+            [, $class] = Maker::generateClass($validator, 'validator', true);
 
             if (! Maker::createValidator($validator, $input->getOption('namespace'))) {
                 $output->writeln('<bg=red;options=bold> ERROR </> Failed to create request validator <options=bold>'.$class.'</>.');

@@ -29,7 +29,7 @@ class UserFactory extends Factory
     {
         return [
             'name' => faker()->name(),
-            'email' => faker()->unique()->email(),
+            'email' => faker()->unique()->safeEmail(),
             'password' => bcrypt('password'),
             'email_verified_at' => null,
             'role_id' => Role::findByName(UserRole::USER->value)?->getId(),

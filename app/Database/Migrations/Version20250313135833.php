@@ -13,21 +13,20 @@ namespace App\Database\Migrations;
 
 use Core\Database\Schema;
 
-class TokensTable_20210403034738
+class Version20250313135833
 {
     public function up(): void
     {
-        Schema::createTable('tokens')
+        Schema::createTable('roles')
             ->addPrimaryKey()->notNull()
-            ->addString('email')->notNull()
-            ->addString('value')->notNull()->unique()
-            ->addDateTime('expires_at')->null()
-            ->addString('description')->notNull()
+            ->addString('name')->notNull()->unique()
             ->run();
     }
 
     public function down(): void
     {
-        Schema::dropTable('tokens');
+        Schema::disableForeignKeyCheck();
+        Schema::dropTable('roles');
+        Schema::enableForeignKeyCheck();
     }
 }

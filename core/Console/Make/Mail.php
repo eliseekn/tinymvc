@@ -34,7 +34,7 @@ class Mail extends Command
         $mails = $input->getArgument('mail');
 
         foreach ($mails as $mail) {
-            list(, $class) = Maker::generateClass($mail, 'mail', force_singular: true);
+            [, $class] = Maker::generateClass($mail, 'mail', force_singular: true);
 
             if (! Maker::createMail($mail)) {
                 $output->writeln('<bg=red;options=bold> ERROR </> Failed to create mail <options=bold>'.$class.'</>.');

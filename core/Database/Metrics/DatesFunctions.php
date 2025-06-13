@@ -207,7 +207,6 @@ trait DatesFunctions
     protected function getLabelsData(): array
     {
         $result = [];
-
         $labelColumn = explode('.', $this->labelColumn)[1];
 
         if (! empty($this->missingDataLabels)) {

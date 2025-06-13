@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Core\Database\Connection;
 
+use Core\Database\DB;
 use PDO;
 use PDOException;
 use PDOStatement;
@@ -24,10 +25,10 @@ class SQLiteConnection implements ConnectionInterface
     /**
      * @throws PDOException
      */
-    public function __construct(public array $db)
+    public function __construct(public DB $db)
     {
-        $this->memory = isset($db['memory']) && $db['memory'] === true;
-        $dsn = $this->memory ? ':memory:' : $db['name'];
+        $this->memory = isset($db->memory) && $db->memory === true;
+        $dsn = $this->memory ? ':memory:' : $db->name;
 
         try {
             $this->pdo = new PDO('sqlite:'.$dsn);
@@ -76,7 +77,7 @@ class SQLiteConnection implements ConnectionInterface
         return $stmt;
     }
 
-    public function schemaExists(string $name): bool
+    public function databaseExists(string $name): bool
     {
         if ($this->memory) {
             return true;
@@ -92,14 +93,14 @@ class SQLiteConnection implements ConnectionInterface
         return $stmt->fetch() !== false;
     }
 
-    public function createSchema(string $name): void
+    public function createDatabase(string $name): void
     {
         if (! $this->memory) {
             storage(config('storage.sqlite'))->writeFile($name.'.db', '');
         }
     }
 
-    public function deleteSchema(string $name): void
+    public function deleteDatabase(string $name): void
     {
         if (! $this->memory) {
             storage(config('storage.sqlite'))->deleteFile($name.'.db');

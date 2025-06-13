@@ -19,11 +19,11 @@ interface ConnectionInterface
 
     public function executeQuery(string $query, array $args);
 
-    public function schemaExists(string $name);
+    public function databaseExists(string $name);
 
     public function tableExists(string $name);
 
-    public function createSchema(string $name);
+    public function createDatabase(string $name);
 
-    public function deleteSchema(string $name);
+    public function deleteDatabase(string $name);
 }

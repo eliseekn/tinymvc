@@ -18,7 +18,7 @@ final class ResetUseCase extends UseCase
         }
 
         $email = $this->request->queries('email');
-        $token = Token::findByDescription($email, TokenDescription::PASSWORD_RESET);
+        $token = Token::findByDescription($email, TokenDescription::PASSWORD_RESET->value);
 
         if (! $token || $token->get('value') !== $this->request->queries('token')) {
             $this->response->data(__('alert.invalid_password_reset_link'))->send(HttpCode::BAD_REQUEST);

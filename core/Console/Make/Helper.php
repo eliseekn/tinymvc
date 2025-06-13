@@ -34,7 +34,7 @@ class Helper extends Command
         $helpers = $input->getArgument('helper');
 
         foreach ($helpers as $helper) {
-            list(, $class) = Maker::generateClass($helper, 'helper', true);
+            [, $class] = Maker::generateClass($helper, 'helper', true);
 
             if (! Maker::createHelper($helper)) {
                 $output->writeln('<bg=red;options=bold> ERROR </> Failed to create helper <options=bold>'.$class.'</>.');

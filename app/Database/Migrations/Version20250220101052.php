@@ -13,13 +13,13 @@ namespace App\Database\Migrations;
 
 use Core\Database\Schema;
 
-class UsersTable_20250220101052
+class Version20250220101052
 {
     public function up(): void
     {
         Schema::alterTable('users')
             ->addColumn()
-            ->addString('avatar')->null()
+            ->addString('avatar')->null()->after('email_verified_at')
             ->run();
     }
 }

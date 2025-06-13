@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Core\Database\Connection;
 
+use Core\Database\DB;
+use Core\Enums\AppEnv;
 use Core\Enums\DatabaseDriver;
 use PDO;
 use PDOStatement;
@@ -24,66 +26,89 @@ class Connection
 
     protected ConnectionInterface $db;
 
-    public function __construct(array $db = [])
-    {
-        $db = empty($db) ? self::getDB() : $db;
+    protected static ?string $dbConnection = null;
 
-        $this->db = match (self::getDriver()) {
-            DatabaseDriver::PGSQL => new PostgreSQLConnection(self::getDB()),
-            DatabaseDriver::SQLITE => new SQLiteConnection(self::getDB()),
-            default => new MySQLConnection(self::getDB())
+    public function __construct(?string $dbConnection = null)
+    {
+        static::$dbConnection = $dbConnection;
+        $db = static::getDB();
+
+        $this->db = match (static::getDriver()) {
+            DatabaseDriver::PGSQL => new PostgreSQLConnection($db),
+            DatabaseDriver::SQLITE => new SQLiteConnection($db),
+            default => new MySQLConnection($db)
         };
     }
 
-    public static function getDB(): array
+    public static function getDB(): DB
     {
-        $driver = self::getDriver();
+        $driver = static::getDriver();
+
+        $config = config('app.env') === AppEnv::TEST
+            ? 'testing.database'
+            : 'database.'.static::getDBConnection();
+
+        $db = new DB;
+        $db->driver = $driver;
+        $db->host = config($config.'.host');
+        $db->port = config($config.'.port');
+        $db->name = config($config.'.name');
+        $db->username = config($config.'.username');
+        $db->password = config($config.'.password');
 
         if ($driver === DatabaseDriver::SQLITE) {
-            return [
-                'driver' => DatabaseDriver::SQLITE,
-                'name' => config('storage.sqlite').config("database.$driver.name").'.db',
-                'memory' => config("database.$driver.memory"),
-            ];
+            $db->name = config('storage.sqlite').config($config.'.name').'.db';
+            $db->memory = config($config.'.memory');
         }
 
-        return [
-            'driver' => $driver,
-            'host' => config("database.$driver.host"),
-            'port' => config("database.$driver.port"),
-            'name' => config("database.$driver.name"),
-            'username' => config("database.$driver.username"),
-            'password' => config("database.$driver.password"),
-        ];
+        if ($driver === DatabaseDriver::MYSQL) {
+            $db->charset = config($config.'.charset');
+            $db->collation = config($config.'.collation');
+            $db->engine = config($config.'.engine');
+        }
+
+        if ($driver === DatabaseDriver::PGSQL) {
+            $db->encoding = config($config.'.encoding');
+        }
+
+        return $db;
+    }
+
+    public static function getDBConnection(): string
+    {
+        if (config('app.env') === AppEnv::TEST) {
+            return config('testing.database');
+        }
+
+        if (! is_null(static::$dbConnection)) {
+            return static::$dbConnection;
+        }
+
+        return config('database.connection');
     }
 
     public static function getDriver(): string
     {
-        return config('app.env') === 'test'
-            ? config('database.testing.driver')
-            : config('database.driver');
+        return config('app.env') === AppEnv::TEST
+            ? config('testing.database.driver')
+            : config('database.'.static::getDBConnection().'.driver');
     }
 
-    public static function getDBName(): string
+    public static function getInstance(?string $dbConnection = null): self
     {
-        return self::getDB()['name'];
-    }
-
-    public static function getInstance(): self
-    {
-        if (is_null(self::$instance)) {
+        if (is_null(static::$instance)) {
             // @phpstan-ignore-next-line
-            self::$instance = new static;
+            static::$instance = new static($dbConnection);
         }
 
-        return self::$instance;
+        return static::$instance;
     }
 
     public static function setInstance(Connection $instance): self
     {
-        self::$instance = $instance;
+        static::$instance = $instance;
 
-        return self::$instance;
+        return static::$instance;
     }
 
     public function executeStatement(string $query): false|int
@@ -96,10 +121,10 @@ class Connection
         return $this->db->executeQuery($query, $args);
     }
 
-    public function schemaExists(string $name): bool
+    public function databaseExists(string $name): bool
     {
 
-        return $this->db->schemaExists($name);
+        return $this->db->databaseExists($name);
     }
 
     public function tableExists(string $name): bool
@@ -107,18 +132,27 @@ class Connection
         return $this->db->tableExists($name);
     }
 
-    public function createSchema(string $name): void
+    public function createDatabase(string $name): void
     {
-        $this->db->createSchema($name);
+        $this->db->createDatabase($name);
     }
 
-    public function deleteSchema(string $name): void
+    public function deleteDatabase(string $name): void
     {
-        $this->db->deleteSchema($name);
+        $this->db->deleteDatabase($name);
     }
 
     public function getPDO(): PDO
     {
         return $this->db->getPDO();
+    }
+
+    public function lastInsertedId(string $table): false|string
+    {
+        if (static::getDriver() === DatabaseDriver::PGSQL) {
+            return $this->getPDO()->lastInsertId($table.'_id_seq');
+        }
+
+        return $this->getPDO()->lastInsertId();
     }
 }

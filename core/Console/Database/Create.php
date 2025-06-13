@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Core\Console\Database;
 
-use Core\Database\QueryBuilder;
+use Core\Database\Connection\Connection;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -32,19 +32,19 @@ class Create extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $connection = QueryBuilder::connection();
+        $connection = Connection::getInstance();
         $databases = $input->getArgument('database');
 
         if (empty($databases)) {
-            $databases = [get_filename(QueryBuilder::connection()->getDBName())];
+            $databases = [get_filename($connection->getDB()->name)];
         }
 
         foreach ($databases as $database) {
-            if ($connection->schemaExists($database)) {
+            if ($connection->databaseExists($database)) {
                 $output->writeln('<bg=bright-yellow;fg=black> WARN </> Database <options=bold>'.$database.'</> already exists.');
             } else {
 
-                $connection->createSchema($database);
+                $connection->createDatabase($database);
                 $output->writeln('<bg=blue;options=bold> INFO </> Database <options=bold>'.$database.'</> has been created.');
             }
         }

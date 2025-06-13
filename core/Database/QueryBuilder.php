@@ -27,114 +27,105 @@ class QueryBuilder
 
     protected static string $table;
 
-    public static function connection(array $db = []): Connection
+    protected static Connection $connection;
+
+    public static function connection(?string $dbConnection = null): self
     {
-        if (empty($db)) {
-            return Connection::getInstance();
+        static::$connection = is_null($dbConnection)
+            ? Connection::getInstance()
+            : Connection::setInstance(new Connection($dbConnection));
+
+        return new self;
+    }
+
+    protected static function setTable(string $name): string
+    {
+        return config('database.table_prefix').$name;
+    }
+
+    public static function table(string $name, ?string $dbConnection = null): self
+    {
+        static::$table = static::setTable($name);
+        static::$args = [];
+
+        return static::connection($dbConnection);
+    }
+
+    public static function createTable(string $name, ?string $dbConnection = null): self
+    {
+        static::$query = 'CREATE TABLE '.static::setTable($name).' (';
+
+        return static::connection($dbConnection);
+    }
+
+    public static function dropTable(string $name, ?string $dbConnection = null): self
+    {
+        static::$query = 'DROP TABLE IF EXISTS '.static::setTable($name);
+
+        if (static::$connection->getDriver() === DatabaseDriver::PGSQL) {
+            static::$query .= ' CASCADE';
         }
 
-        return Connection::setInstance(new Connection($db));
+        return static::connection($dbConnection);
     }
 
-    public static function setTable(string $name): string
+    public static function alter(string $table, ?string $dbConnection = null): self
     {
-        if (static::connection()->getDriver() === DatabaseDriver::SQLITE) {
-            return config('database.table_prefix').$name;
-        }
+        static::$query = 'ALTER TABLE '.static::setTable($table);
 
-        return static::connection()->getDBName().'.'.config('database.table_prefix').$name;
+        return static::connection($dbConnection);
     }
 
-    public static function table(string $name): self
+    public static function dropForeign(string $key, ?string $dbConnection = null): self
     {
-        self::$table = self::setTable($name);
-        self::$args = [];
-
-        return new self;
-    }
-
-    public static function createTable(string $name): self
-    {
-        self::$query = 'CREATE TABLE '.self::setTable($name).' (';
-
-        return new self;
-    }
-
-    public static function dropTable(string $name): self
-    {
-        self::$query = 'DROP TABLE IF EXISTS '.self::setTable($name);
-
-        if (static::connection()->getDriver() === DatabaseDriver::PGSQL) {
-            self::$query .= ' CASCADE';
-        }
-
-        return new self;
-    }
-
-    public static function alter(string $table): self
-    {
-        self::$query = 'ALTER TABLE '.self::setTable($table);
-
-        return new self;
-    }
-
-    public static function dropForeign(string $key): self
-    {
-        self::$query .= static::connection()->getDriver() === DatabaseDriver::PGSQL
+        static::$query .= static::$connection->getDriver() === DatabaseDriver::PGSQL
             ? " DROP CONSTRAINT $key"
             : " DROP FOREIGN KEY $key";
 
-        return new self;
+        return static::connection($dbConnection);
     }
 
-    public static function addColumn(): self
+    public static function addColumn(?string $dbConnection = null): self
     {
-        self::$query .= ' ADD COLUMN ';
+        static::$query .= ' ADD COLUMN ';
 
-        return new self;
+        return static::connection($dbConnection);
     }
 
-    public static function renameColumn(string $old, string $new): self
+    public static function renameColumn(string $old, string $new, ?string $dbConnection = null): self
     {
-        self::$query .= " RENAME COLUMN $old TO $new";
+        static::$query .= " RENAME COLUMN $old TO $new";
 
-        return new self;
+        return static::connection($dbConnection);
     }
 
-    public static function updateColumn(string $column): self
+    public static function deleteColumn(string $column, ?string $dbConnection = null): self
     {
-        self::$query .= " CHANGE $column ";
+        static::$query .= " DROP COLUMN $column";
 
-        return new self;
-    }
-
-    public static function deleteColumn(string $column): self
-    {
-        self::$query .= " DROP COLUMN $column";
-
-        return new self;
+        return static::connection($dbConnection);
     }
 
     public function select(array|string $columns): self
     {
         $columns = parse_array($columns);
-        self::$query = 'SELECT ';
+        static::$query = 'SELECT ';
 
         foreach ($columns as $column) {
-            self::$query .= "$column, ";
+            static::$query .= "$column, ";
         }
 
-        self::$query = rtrim(self::$query, ', ');
-        self::$query .= ' FROM '.self::$table;
+        static::$query = rtrim(static::$query, ', ');
+        static::$query .= ' FROM '.static::$table;
 
         return $this;
     }
 
     public function selectRaw(string $query, array $args = []): self
     {
-        self::$query = 'SELECT '.$query;
-        self::$args = array_merge(self::$args, $args);
-        self::$query .= ' FROM '.self::$table;
+        static::$query = 'SELECT '.$query;
+        static::$args = array_merge(static::$args, $args);
+        static::$query .= ' FROM '.static::$table;
 
         return $this;
     }
@@ -146,44 +137,44 @@ class QueryBuilder
 
     public function insert(array $items): self
     {
-        self::$query = 'INSERT INTO '.self::$table.' (';
+        static::$query = 'INSERT INTO '.static::$table.' (';
 
         foreach ($items as $key => $value) {
-            self::$query .= "$key, ";
+            static::$query .= "$key, ";
         }
 
-        self::$query = rtrim(self::$query, ', ');
-        self::$query .= ') VALUES (';
+        static::$query = rtrim(static::$query, ', ');
+        static::$query .= ') VALUES (';
 
         foreach ($items as $key => $value) {
-            self::$query .= '?, ';
-            self::$args[] = $value;
+            static::$query .= '?, ';
+            static::$args[] = $value;
         }
 
-        self::$query = rtrim(self::$query, ', ');
-        self::$query .= ')';
+        static::$query = rtrim(static::$query, ', ');
+        static::$query .= ')';
 
         return $this;
     }
 
     public function update(array $items): self
     {
-        self::$query = 'UPDATE '.self::$table.' SET ';
+        static::$query = 'UPDATE '.static::$table.' SET ';
         $items = array_merge($items, ['updated_at' => carbon()->toDateTimeString()]);
 
         foreach ($items as $key => $value) {
-            self::$query .= "$key = ?, ";
-            self::$args[] = $value;
+            static::$query .= "$key = ?, ";
+            static::$args[] = $value;
         }
 
-        self::$query = rtrim(self::$query, ', ');
+        static::$query = rtrim(static::$query, ', ');
 
         return $this;
     }
 
     public function delete(): self
     {
-        self::$query = 'DELETE FROM '.self::$table;
+        static::$query = 'DELETE FROM '.static::$table;
 
         return $this;
     }
@@ -193,50 +184,46 @@ class QueryBuilder
         return $this->delete()->where($column, $operator, $value);
     }
 
-    /**
-     * Add after attribute.
-     */
     public function after(string $column): self
     {
-        if (static::connection()->getDriver() !== DatabaseDriver::SQLITE) {
+        if (static::$connection->getDriver() !== DatabaseDriver::MYSQL) {
             return $this;
         }
 
-        self::$query .= " AFTER $column";
+        static::$query = rtrim(static::$query, ', ');
+        static::$query .= " AFTER $column, ";
 
         return $this;
     }
 
-    /**
-     * Add first attribute.
-     */
     public function first(): self
     {
-        if (static::connection()->getDriver() !== DatabaseDriver::SQLITE) {
+        if (static::$connection->getDriver() !== DatabaseDriver::MYSQL) {
             return $this;
         }
 
-        self::$query .= ' FIRST';
+        static::$query = rtrim(static::$query, ', ');
+        static::$query .= ' FIRST, ';
 
         return $this;
     }
 
     public function column(string $name, string $type): self
     {
-        self::$query .= "$name $type, ";
+        static::$query .= "$name $type, ";
 
         return $this;
     }
 
     public function autoIncrement(): self
     {
-        if (static::connection()->getDriver() === DatabaseDriver::PGSQL) {
+        if (static::$connection->getDriver() === DatabaseDriver::PGSQL) {
             return $this;
         }
 
-        self::$query = rtrim(self::$query, ', ');
+        static::$query = rtrim(static::$query, ', ');
 
-        self::$query .= match (static::connection()->getDriver()) {
+        static::$query .= match (static::$connection->getDriver()) {
             DatabaseDriver::MYSQL => ' AUTO_INCREMENT, ',
             default => ' AUTOINCREMENT, ',
         };
@@ -246,47 +233,47 @@ class QueryBuilder
 
     public function primaryKey(): self
     {
-        self::$query = rtrim(self::$query, ', ');
-        self::$query .= ' PRIMARY KEY, ';
+        static::$query = rtrim(static::$query, ', ');
+        static::$query .= ' PRIMARY KEY, ';
 
         return $this;
     }
 
     public function null(): self
     {
-        self::$query = rtrim(self::$query, ', ');
-        self::$query .= ' NULL, ';
+        static::$query = rtrim(static::$query, ', ');
+        static::$query .= ' NULL, ';
 
         return $this;
     }
 
     public function notNull(): self
     {
-        self::$query = rtrim(self::$query, ', ');
-        self::$query .= ' NOT NULL, ';
+        static::$query = rtrim(static::$query, ', ');
+        static::$query .= ' NOT NULL, ';
 
         return $this;
     }
 
     public function unique(): self
     {
-        self::$query = rtrim(self::$query, ', ');
-        self::$query .= ' UNIQUE, ';
+        static::$query = rtrim(static::$query, ', ');
+        static::$query .= ' UNIQUE, ';
 
         return $this;
     }
 
     public function default(string|int $default): self
     {
-        self::$query = rtrim(self::$query, ', ');
-        self::$query .= " DEFAULT '$default', ";
+        static::$query = rtrim(static::$query, ', ');
+        static::$query .= " DEFAULT '$default', ";
 
         return $this;
     }
 
     public function constraint(string $name): self
     {
-        self::$query .= " CONSTRAINT $name";
+        static::$query .= " CONSTRAINT $name";
 
         return $this;
 
@@ -294,58 +281,58 @@ class QueryBuilder
 
     public function addConstraint(string $name): self
     {
-        self::$query .= " ADD CONSTRAINT $name";
+        static::$query .= " ADD CONSTRAINT $name";
 
         return $this;
     }
 
     public function foreignKey(string $column): self
     {
-        self::$query .= " FOREIGN KEY ($column)";
+        static::$query .= " FOREIGN KEY ($column)";
 
         return $this;
     }
 
     public function references(string $table, string $column): self
     {
-        self::$query .= ' REFERENCES '.self::setTable($table)."($column)";
+        static::$query .= ' REFERENCES '.static::setTable($table)."($column)";
 
         return $this;
     }
 
     public function onUpdateCascade(): self
     {
-        self::$query = rtrim(self::$query, ', ');
-        self::$query .= ' ON UPDATE CASCADE, ';
+        static::$query = rtrim(static::$query, ', ');
+        static::$query .= ' ON UPDATE CASCADE, ';
 
         return $this;
     }
 
     public function onDeleteCascade(): self
     {
-        self::$query = rtrim(self::$query, ', ');
-        self::$query .= ' ON DELETE CASCADE, ';
+        static::$query = rtrim(static::$query, ', ');
+        static::$query .= ' ON DELETE CASCADE, ';
 
         return $this;
     }
 
     public function onUpdateSetNull(): self
     {
-        self::$query .= ' ON UPDATE SET NULL, ';
+        static::$query .= ' ON UPDATE SET NULL, ';
 
         return $this;
     }
 
     public function onDeleteSetNull(): self
     {
-        self::$query .= ' ON DELETE SET NULL, ';
+        static::$query .= ' ON DELETE SET NULL, ';
 
         return $this;
     }
 
     public function timestamps(): self
     {
-        self::$query .= match (static::connection()->getDriver()) {
+        static::$query .= match (static::$connection->getDriver()) {
             DatabaseDriver::MYSQL => ' created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, ',
             DatabaseDriver::PGSQL => ' created_at TIMESTAMP NOT NULL DEFAULT NOW(), updated_at TIMESTAMP NOT NULL DEFAULT NOW(), ',
             default => " created_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')), updated_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')), ",
@@ -356,10 +343,10 @@ class QueryBuilder
 
     public function migrate(): false|PDOStatement
     {
-        self::$query = rtrim(self::$query, ', ').')';
+        static::$query = rtrim(static::$query, ', ').')';
 
-        if (static::connection()->getDriver() === DatabaseDriver::MYSQL) {
-            self::$query .= " ENGINE='".config('database.mysql.engine')."'";
+        if (static::$connection->getDriver() === DatabaseDriver::MYSQL) {
+            static::$query .= " ENGINE='".static::$connection->getDB()->engine."'";
         }
 
         return $this->execute();
@@ -372,8 +359,8 @@ class QueryBuilder
             $operator = '=';
         }
 
-        self::$query .= " WHERE $column $operator ? ";
-        self::$args[] = $value;
+        static::$query .= " WHERE $column $operator ? ";
+        static::$args[] = $value;
 
         return $this;
     }
@@ -400,43 +387,43 @@ class QueryBuilder
             $operator = '=';
         }
 
-        self::$query .= " WHERE NOT $column $operator ? ";
-        self::$args[] = $value;
+        static::$query .= " WHERE NOT $column $operator ? ";
+        static::$args[] = $value;
 
         return $this;
     }
 
     public function whereColumn(string $column): self
     {
-        self::$query .= " WHERE $column ";
+        static::$query .= " WHERE $column ";
 
         return $this;
     }
 
     public function orColumn(string $column): self
     {
-        self::$query .= " OR $column ";
+        static::$query .= " OR $column ";
 
         return $this;
     }
 
     public function andColumn(string $column): self
     {
-        self::$query .= " AND $column ";
+        static::$query .= " AND $column ";
 
         return $this;
     }
 
     public function isNull(): self
     {
-        self::$query .= ' IS NULL ';
+        static::$query .= ' IS NULL ';
 
         return $this;
     }
 
     public function isNotNull(): self
     {
-        self::$query .= ' IS NOT NULL ';
+        static::$query .= ' IS NOT NULL ';
 
         return $this;
     }
@@ -447,12 +434,12 @@ class QueryBuilder
 
         foreach ($values as $value) {
             $items .= '?, ';
-            self::$args[] = $value;
+            static::$args[] = $value;
         }
 
         $items = rtrim($items, ', ');
 
-        self::$query .= ' IN ('.$items.') ';
+        static::$query .= ' IN ('.$items.') ';
 
         return $this;
     }
@@ -463,40 +450,40 @@ class QueryBuilder
 
         foreach ($values as $value) {
             $items .= '?, ';
-            self::$args[] = $value;
+            static::$args[] = $value;
         }
 
         $items = rtrim($items, ', ');
 
-        self::$query .= ' NOT IN ('.$items.') ';
+        static::$query .= ' NOT IN ('.$items.') ';
 
         return $this;
     }
 
     public function between($start, $end): self
     {
-        self::$query .= " BETWEEN $start AND $end ";
+        static::$query .= " BETWEEN $start AND $end ";
 
         return $this;
     }
 
     public function notBetween($start, $end): self
     {
-        self::$query .= " NOT BETWEEN $start AND $end ";
+        static::$query .= " NOT BETWEEN $start AND $end ";
 
         return $this;
     }
 
     public function like($value): self
     {
-        self::$query .= " LIKE '%$value%' ";
+        static::$query .= " LIKE '%$value%' ";
 
         return $this;
     }
 
     public function notLike($value): self
     {
-        self::$query .= " NOT LIKE '%$value%' ";
+        static::$query .= " NOT LIKE '%$value%' ";
 
         return $this;
     }
@@ -508,8 +495,8 @@ class QueryBuilder
             $operator = '=';
         }
 
-        self::$query .= " AND $column $operator ? ";
-        self::$args[] = $value;
+        static::$query .= " AND $column $operator ? ";
+        static::$args[] = $value;
 
         return $this;
     }
@@ -521,8 +508,8 @@ class QueryBuilder
             $operator = '=';
         }
 
-        self::$query .= " OR $column $operator ? ";
-        self::$args[] = $value;
+        static::$query .= " OR $column $operator ? ";
+        static::$args[] = $value;
 
         return $this;
     }
@@ -534,8 +521,8 @@ class QueryBuilder
             $operator = '=';
         }
 
-        self::$query .= " HAVING $column $operator ? ";
-        self::$args[] = $value;
+        static::$query .= " HAVING $column $operator ? ";
+        static::$args[] = $value;
 
         return $this;
     }
@@ -547,7 +534,7 @@ class QueryBuilder
 
     public function orderBy(string $column, string $direction): self
     {
-        self::$query .= " ORDER BY $column ".strtoupper($direction);
+        static::$query .= " ORDER BY $column ".strtoupper($direction);
 
         return $this;
     }
@@ -555,26 +542,26 @@ class QueryBuilder
     public function groupBy(array|string $columns): self
     {
         $columns = parse_array($columns);
-        self::$query .= ' GROUP BY ';
+        static::$query .= ' GROUP BY ';
 
         foreach ($columns as $column) {
-            self::$query .= "$column, ";
+            static::$query .= "$column, ";
         }
 
-        self::$query = rtrim(self::$query, ', ');
+        static::$query = rtrim(static::$query, ', ');
 
         return $this;
     }
 
     public function limit(int $limit, ?int $offset = null): self
     {
-        self::$query .= " LIMIT $limit";
+        static::$query .= " LIMIT $limit";
 
         if (! is_null($offset)) {
-            if (static::connection()->getDriver() === DatabaseDriver::PGSQL) {
-                self::$query .= " OFFSET $offset";
+            if (static::$connection->getDriver() === DatabaseDriver::PGSQL) {
+                static::$query .= " OFFSET $offset";
             } else {
-                self::$query .= ", $offset";
+                static::$query .= ", $offset";
             }
         }
 
@@ -583,35 +570,35 @@ class QueryBuilder
 
     public function innerJoin(string $table, string $first_column, string $operator, string $second_column): self
     {
-        self::$query .= ' INNER JOIN '.self::setTable($table)." ON $first_column $operator $second_column";
+        static::$query .= ' INNER JOIN '.static::setTable($table)." ON $first_column $operator $second_column";
 
         return $this;
     }
 
     public function leftJoin(string $table, string $first_column, string $operator, string $second_column): self
     {
-        self::$query .= ' LEFT JOIN '.self::setTable($table)." ON $first_column $operator $second_column";
+        static::$query .= ' LEFT JOIN '.static::setTable($table)." ON $first_column $operator $second_column";
 
         return $this;
     }
 
     public function rightJoin(string $table, string $first_column, string $operator, string $second_column): self
     {
-        self::$query .= ' RIGHT JOIN '.self::setTable($table)." ON $first_column $operator $second_column";
+        static::$query .= ' RIGHT JOIN '.static::setTable($table)." ON $first_column $operator $second_column";
 
         return $this;
     }
 
     public function fullJoin(string $table, string $first_column, string $operator, string $second_column): self
     {
-        self::$query .= ' FULL JOIN '.self::setTable($table)." ON $first_column $operator $second_column";
+        static::$query .= ' FULL JOIN '.static::setTable($table)." ON $first_column $operator $second_column";
 
         return $this;
     }
 
     public function outerJoin(string $table, string $first_column, string $operator, string $second_column): self
     {
-        self::$query .= ' FULL OUTER JOIN '.self::setTable($table)." ON $first_column $operator $second_column";
+        static::$query .= ' FULL OUTER JOIN '.static::setTable($table)." ON $first_column $operator $second_column";
 
         return $this;
     }
@@ -621,7 +608,7 @@ class QueryBuilder
      */
     public function flush(): self
     {
-        self::$query = rtrim(self::$query, ', ');
+        static::$query = rtrim(static::$query, ', ');
 
         return $this;
     }
@@ -635,21 +622,21 @@ class QueryBuilder
     {
         $this->trimQuery();
 
-        return [self::$query, self::$args];
+        return [static::$query, static::$args];
     }
 
-    public static function setQuery(string $query, array $args = []): self
+    public static function setQuery(string $query, array $args = [], ?string $dbConnection = null): self
     {
-        self::$query = $query;
-        self::$args = $args;
+        static::$query = $query;
+        static::$args = $args;
 
-        return new self;
+        return static::connection($dbConnection);
     }
 
     public function rawQuery(string $query, array $args = []): self
     {
-        self::$query .= ' '.$query;
-        self::$args = array_merge(self::$args, $args);
+        static::$query .= ' '.$query;
+        static::$args = array_merge(static::$args, $args);
 
         return $this;
     }
@@ -673,8 +660,8 @@ class QueryBuilder
     public function execute(): false|PDOStatement
     {
         $this->trimQuery();
-        $stmt = static::connection()->executeQuery(self::$query, self::$args);
-        self::setQuery('');
+        $stmt = static::$connection->executeQuery(static::$query, static::$args);
+        static::setQuery('');
 
         return $stmt;
     }
@@ -689,22 +676,10 @@ class QueryBuilder
         return $this->execute()->fetchAll();
     }
 
-    public static function lastInsertedId(): false|string
-    {
-        $pdo = static::connection()->getPDO();
-
-        if (static::connection()->getDriver() === DatabaseDriver::PGSQL) {
-            return $pdo->lastInsertId(self::$table.'_id_seq');
-
-        }
-
-        return $pdo->lastInsertId();
-    }
-
     public function trimQuery(): void
     {
-        self::$query = trim(self::$query);
-        self::$query = str_replace('  ', ' ', self::$query);
+        static::$query = trim(static::$query);
+        static::$query = str_replace('  ', ' ', static::$query);
     }
 
     public function dd(): void

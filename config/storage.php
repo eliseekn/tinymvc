@@ -40,4 +40,5 @@ return [
     'useCases' => absolute_path('app.Http.UseCases'),
     'events' => absolute_path('app.Events'),
     'assets' => absolute_path('resources.assets'),
+    'enums' => absolute_path('app.Enums'),
 ];

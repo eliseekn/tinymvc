@@ -36,7 +36,7 @@ class Factory extends Command
         $factories = $input->getArgument('factory');
 
         foreach ($factories as $factory) {
-            list(, $class) = Maker::generateClass($factory, 'factory', true, true);
+            [, $class] = Maker::generateClass($factory, 'factory', true, true);
 
             if (! Maker::createFactory($factory, $input->getOption('namespace'))) {
                 $output->writeln('<bg=red;options=bold> ERROR </> Failed to create factory <options=bold>'.Maker::fixPlural($class, true).'</>.');

@@ -30,7 +30,7 @@ class EncryptionKey extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        Config::updateEnv(['ENCRYPTION_KEY' => generate_token()]);
+        Config::updateEnv(['APP_ENCRYPTION_KEY' => generate_token()]);
 
         $output->writeln('<bg=blue;options=bold> INFO </> Application encryption key has been generated.');
 

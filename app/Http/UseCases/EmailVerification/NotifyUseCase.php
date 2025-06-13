@@ -24,7 +24,7 @@ final class NotifyUseCase extends UseCase
     public function handle(string $email): void
     {
         $tokenValue = generate_token(15);
-        $token = Token::findByDescription($email, TokenDescription::EMAIL_VERIFICATION);
+        $token = Token::findByDescription($email, TokenDescription::EMAIL_VERIFICATION->value);
 
         if ($token) {
             $token->update(['value' => $tokenValue]);
@@ -33,7 +33,7 @@ final class NotifyUseCase extends UseCase
                 'email' => $email,
                 'value' => $tokenValue,
                 'expires_at' => carbon()->addDay()->toDateTimeString(),
-                'description' => TokenDescription::EMAIL_VERIFICATION,
+                'description' => TokenDescription::EMAIL_VERIFICATION->value,
             ]);
         }
 

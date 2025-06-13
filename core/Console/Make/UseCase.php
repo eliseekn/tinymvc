@@ -43,7 +43,7 @@ class UseCase extends Command
         $types = array_map(fn ($type) => strtolower($type), $types);
 
         foreach ($types as $type) {
-            list(, $class) = Maker::generateClass($type, 'use_case', true, true);
+            [, $class] = Maker::generateClass($type, 'use_case', true, true);
             $class = str_replace(['Index', 'Show'], ['GetCollection', 'GetItem'], $class);
 
             if (! Maker::createUseCase($input->getArgument('model'), $type, $output, $input->getOption('namespace'))) {
