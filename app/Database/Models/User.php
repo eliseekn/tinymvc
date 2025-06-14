@@ -43,8 +43,9 @@ class User extends Model
     public static function findAllByRole(string $role): array
     {
         return (new self)
-            ->select('email')
-            ->where('role_id', Role::findByName($role)->getId())
+            ->select(['users.email', 'roles.name'])
+            ->join('roles', 'users.role_id', '=', 'roles.id')
+            ->where('roles.name', $role)
             ->getAll();
     }
 

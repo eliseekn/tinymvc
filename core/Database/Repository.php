@@ -51,9 +51,9 @@ class Repository
         return $this->select($columns)->getAll();
     }
 
-    public function selectRaw(string $query, array $args = []): self
+    public function selectRaw(string $query): self
     {
-        $this->qb = QueryBuilder::table($this->table)->selectRaw($query, $args);
+        $this->qb = QueryBuilder::table($this->table)->selectRaw($query);
 
         return $this;
     }
