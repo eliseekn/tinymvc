@@ -106,35 +106,6 @@ class QueryBuilder
         return static::connection($dbConnection);
     }
 
-    public function select(array|string $columns): self
-    {
-        $columns = parse_array($columns);
-        static::$query = 'SELECT ';
-
-        foreach ($columns as $column) {
-            static::$query .= "$column, ";
-        }
-
-        static::$query = rtrim(static::$query, ', ');
-        static::$query .= ' FROM '.static::$table;
-
-        return $this;
-    }
-
-    public function selectRaw(string $query, array $args = []): self
-    {
-        static::$query = 'SELECT '.$query;
-        static::$args = array_merge(static::$args, $args);
-        static::$query .= ' FROM '.static::$table;
-
-        return $this;
-    }
-
-    public function selectWhere(string $column, $operator = null, $value = null): self
-    {
-        return $this->select('*')->where($column, $operator, $value);
-    }
-
     public function insert(array $items): self
     {
         static::$query = 'INSERT INTO '.static::$table.' (';
@@ -350,6 +321,34 @@ class QueryBuilder
         }
 
         return $this->execute();
+    }
+
+    public function select(array|string $columns): self
+    {
+        $columns = parse_array($columns);
+        static::$query = 'SELECT ';
+
+        foreach ($columns as $column) {
+            static::$query .= "$column, ";
+        }
+
+        static::$query = rtrim(static::$query, ', ');
+        static::$query .= ' FROM '.static::$table;
+
+        return $this;
+    }
+
+    public function selectRaw(string $query): self
+    {
+        static::$query = 'SELECT '.$query;
+        static::$query .= ' FROM '.static::$table;
+
+        return $this;
+    }
+
+    public function selectWhere(string $column, $operator = null, $value = null): self
+    {
+        return $this->select('*')->where($column, $operator, $value);
     }
 
     public function where(string $column, $operator = null, $value = null): self
