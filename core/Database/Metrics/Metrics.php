@@ -73,7 +73,7 @@ class Metrics
         $this->driver = Connection::getInstance()->getDriver();
         $this->qb = QueryBuilder::table($this->table);
         $this->dateColumn = $this->table.'.created_at';
-        $this->period = Period::MONTH->value;
+        $this->period = null;
         $this->aggregate = Aggregate::COUNT->value;
         $this->year = carbon()->year;
         $this->month = carbon()->month;
@@ -619,14 +619,14 @@ class Metrics
 
     public function dateColumn(string $column): self
     {
-        $this->dateColumn = $this->table.'.'.$column;
+        $this->dateColumn = $column;
 
         return $this;
     }
 
     public function labelColumn(string $column): self
     {
-        $this->labelColumn = $this->table.'.'.$column;
+        $this->labelColumn = $column;
 
         return $this;
     }
