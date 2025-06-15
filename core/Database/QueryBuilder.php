@@ -15,6 +15,7 @@ use Closure;
 use Core\Database\Connection\Connection;
 use Core\Enums\DatabaseDriver;
 use Core\Enums\JoinMethod;
+use Core\Exceptions\InvalidSQLQueryException;
 use PDOStatement;
 
 /**
@@ -334,6 +335,10 @@ class QueryBuilder
 
     public function addSelect(array|string $columns): self
     {
+        if (! str_contains(static::$query, 'SELECT')) {
+            throw new InvalidSQLQueryException;
+        }
+
         $columns = parse_array($columns);
         static::$query = str_replace('SELECT ', 'SELECT '.implode(',', $columns).',', static::$query);
 
@@ -380,17 +385,9 @@ class QueryBuilder
         return $this->rawQuery(' OR '.$query, $args);
     }
 
-    public function whereNot(string $column, $operator = null, $value = null): self
+    public function whereNot(string $query, array $args = []): self
     {
-        if (! is_null($operator) && is_null($value)) {
-            $value = $operator;
-            $operator = '=';
-        }
-
-        static::$query .= " WHERE NOT $column $operator ? ";
-        static::$args[] = $value;
-
-        return $this;
+        return $this->rawQuery(" WHERE NOT ($query) ", $args);
     }
 
     public function whereColumn(string $column): self
@@ -578,6 +575,10 @@ class QueryBuilder
 
     public function addJoin(string $table, string $first_column, string $operator, string $second_column, string $method = JoinMethod::INNER): self
     {
+        if (! str_contains(static::$query, 'FROM')) {
+            throw new InvalidSQLQueryException;
+        }
+
         $query = trim(preg_replace('/\s+/', ' ', static::$query));
         $query = preg_replace('/\sFROM\s+[^ ]+/i', ' FROM '.static::$table.' '.$method.' JOIN '.static::setTable($table)." ON $first_column $operator $second_column", $query);
 

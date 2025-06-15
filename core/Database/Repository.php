@@ -26,9 +26,7 @@ class Repository
 {
     protected QueryBuilder $qb;
 
-    public function __construct(protected readonly string $table)
-    {
-    }
+    public function __construct(protected readonly string $table) {}
 
     public function getTable(): string
     {
@@ -412,13 +410,9 @@ class Repository
         return $this;
     }
 
-    public function whereNot(string $column, $operator = null, $value = null): self
+    public function whereNot(string $query, array $args = []): self
     {
-        if (is_null($operator) && ! is_null($value)) {
-            $this->qb->whereNot($column, $value);
-        } else {
-            $this->qb->whereNot($column, $operator, $value);
-        }
+        $this->qb->whereNot($query, $args);
 
         return $this;
     }
