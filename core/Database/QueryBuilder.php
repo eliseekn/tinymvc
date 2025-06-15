@@ -14,6 +14,7 @@ namespace Core\Database;
 use Closure;
 use Core\Database\Connection\Connection;
 use Core\Enums\DatabaseDriver;
+use Core\Enums\JoinMethod;
 use PDOStatement;
 
 /**
@@ -326,22 +327,22 @@ class QueryBuilder
     public function select(array|string $columns): self
     {
         $columns = parse_array($columns);
-        static::$query = 'SELECT ';
+        static::$query = 'SELECT '.implode(',', $columns).' FROM '.static::$table;
 
-        foreach ($columns as $column) {
-            static::$query .= "$column, ";
-        }
+        return $this;
+    }
 
-        static::$query = rtrim(static::$query, ', ');
-        static::$query .= ' FROM '.static::$table;
+    public function addSelect(array|string $columns): self
+    {
+        $columns = parse_array($columns);
+        static::$query = str_replace('SELECT ', 'SELECT '.implode(',', $columns).',', static::$query);
 
         return $this;
     }
 
     public function selectRaw(string $query): self
     {
-        static::$query = 'SELECT '.$query;
-        static::$query .= ' FROM '.static::$table;
+        static::$query = 'SELECT '.$query.' FROM '.static::$table;
 
         return $this;
     }
@@ -541,13 +542,7 @@ class QueryBuilder
     public function groupBy(array|string $columns): self
     {
         $columns = parse_array($columns);
-        static::$query .= ' GROUP BY ';
-
-        foreach ($columns as $column) {
-            static::$query .= "$column, ";
-        }
-
-        static::$query = rtrim(static::$query, ', ');
+        static::$query .= ' GROUP BY '.implode(',', $columns);
 
         return $this;
     }
@@ -567,37 +562,26 @@ class QueryBuilder
         return $this;
     }
 
-    public function innerJoin(string $table, string $first_column, string $operator, string $second_column): self
+    public function join(string $table, string $first_column, string $operator, string $second_column, string $method = JoinMethod::INNER): self
     {
-        static::$query .= ' INNER JOIN '.static::setTable($table)." ON $first_column $operator $second_column";
+        static::$query .= " $method JOIN ".static::setTable($table)." ON $first_column $operator $second_column";
 
         return $this;
     }
 
-    public function leftJoin(string $table, string $first_column, string $operator, string $second_column): self
+    public function crossJoin(string $table): self
     {
-        static::$query .= ' LEFT JOIN '.static::setTable($table)." ON $first_column $operator $second_column";
+        static::$query .= " CROSS JOIN $table";
 
         return $this;
     }
 
-    public function rightJoin(string $table, string $first_column, string $operator, string $second_column): self
+    public function addJoin(string $table, string $first_column, string $operator, string $second_column, string $method = JoinMethod::INNER): self
     {
-        static::$query .= ' RIGHT JOIN '.static::setTable($table)." ON $first_column $operator $second_column";
+        $query = trim(preg_replace('/\s+/', ' ', static::$query));
+        $query = preg_replace('/\sFROM\s+[^ ]+/i', ' FROM '.static::$table.' '.$method.' JOIN '.static::setTable($table)." ON $first_column $operator $second_column", $query);
 
-        return $this;
-    }
-
-    public function fullJoin(string $table, string $first_column, string $operator, string $second_column): self
-    {
-        static::$query .= ' FULL JOIN '.static::setTable($table)." ON $first_column $operator $second_column";
-
-        return $this;
-    }
-
-    public function outerJoin(string $table, string $first_column, string $operator, string $second_column): self
-    {
-        static::$query .= ' FULL OUTER JOIN '.static::setTable($table)." ON $first_column $operator $second_column";
+        static::$query = $query;
 
         return $this;
     }

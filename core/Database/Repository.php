@@ -14,6 +14,7 @@ namespace Core\Database;
 use Closure;
 use Core\Database\Connection\Connection;
 use Core\Database\Metrics\Metrics;
+use Core\Enums\JoinMethod;
 use Core\Exceptions\InvalidSQLQueryException;
 use Core\Support\Pagination;
 use PDOStatement;
@@ -37,6 +38,13 @@ class Repository
     public function select(array|string $columns): self
     {
         $this->qb = QueryBuilder::table($this->table)->select($columns);
+
+        return $this;
+    }
+
+    public function addSelect(array|string $columns): self
+    {
+        $this->qb->addSelect($columns);
 
         return $this;
     }
@@ -558,10 +566,23 @@ class Repository
         return $this;
     }
 
-    public function join(string $table, string $first_column, string $operator, string $second_column, string $method = 'inner'): self
+    public function join(string $table, string $first_column, string $operator, string $second_column, string $method = JoinMethod::INNER): self
     {
-        $method = $method.'Join';
-        $this->qb->$method($table, $second_column, $operator, $first_column);
+        $this->qb->join($table, $second_column, $operator, $first_column, $method);
+
+        return $this;
+    }
+
+    public function addJoin(string $table, string $first_column, string $operator, string $second_column, string $method = JoinMethod::INNER): self
+    {
+        $this->qb->addJoin($table, $first_column, $operator, $second_column.$method);
+
+        return $this;
+    }
+
+    public function crossJoin(string $table): self
+    {
+        $this->qb->crossJoin($table);
 
         return $this;
     }
