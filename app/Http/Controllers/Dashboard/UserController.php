@@ -47,12 +47,12 @@ class UserController extends Controller
     }
 
     #[Route(
-        HttpMethod::GET,
-        '/dashboard/users/{user}/edit',
-        ['auth', 'verified', 'admin'],
-        'users.edit',
-        ['user' => RouteParameter::NUMBER],
-        ['user' => ['users', 'id']]
+        methods: HttpMethod::GET,
+        uri: '/dashboard/users/{user}/edit',
+        middlewares: ['auth', 'verified', 'admin'],
+        name: 'users.edit',
+        parameters: ['user' => RouteParameter::NUMBER],
+        bindings: ['user' => ['users', 'id']]
     )]
     public function edit(?Model $user = null): void
     {
@@ -68,12 +68,12 @@ class UserController extends Controller
     }
 
     #[Route(
-        HttpMethod::PATCH,
-        '/dashboard/users/{user}',
-        ['auth', 'verified', 'admin'],
-        'users.update',
-        ['user' => RouteParameter::NUMBER],
-        ['user' => ['users', 'id']]
+        methods: HttpMethod::PATCH,
+        uri: '/dashboard/users/{user}',
+        middlewares: ['auth', 'verified', 'admin'],
+        name: 'users.update',
+        parameters: ['user' => RouteParameter::NUMBER],
+        bindings: ['user' => ['users', 'id']]
     )]
     public function update(UpdateUseCase $useCase, UpdateValidator $validator, ?Model $user = null): void
     {
@@ -86,12 +86,12 @@ class UserController extends Controller
     }
 
     #[Route(
-        HttpMethod::DELETE,
-        '/dashboard/users/{user}/delete',
-        ['auth', 'verified', 'admin'],
-        'users.delete',
-        ['user' => RouteParameter::NUMBER],
-        ['user' => ['users', 'id']]
+        methods: HttpMethod::DELETE,
+        uri: '/dashboard/users/{user}/delete',
+        middlewares: ['auth', 'verified', 'admin'],
+        name: 'users.delete',
+        parameters: ['user' => RouteParameter::NUMBER],
+        bindings: ['user' => ['users', 'id']]
     )]
     public function delete(?Model $user = null): void
     {

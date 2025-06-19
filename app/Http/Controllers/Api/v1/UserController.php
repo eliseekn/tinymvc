@@ -33,9 +33,9 @@ class UserController extends Controller
     }
 
     #[Route(
-        HttpMethod::GET,
-        '/api/v1/users/{user}',
-        ['api'],
+        methods: HttpMethod::GET,
+        uri: '/api/v1/users/{user}',
+        middlewares: ['api'],
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
@@ -58,9 +58,9 @@ class UserController extends Controller
     }
 
     #[Route(
-        HttpMethod::PATCH,
-        '/api/v1/users/{user}',
-        ['api', 'admin'],
+        methods: HttpMethod::PATCH,
+        uri: '/api/v1/users/{user}',
+        middlewares: ['api', 'admin'],
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
@@ -81,9 +81,9 @@ class UserController extends Controller
     }
 
     #[Route(
-        HttpMethod::DELETE,
-        '/api/v1/users/{user}',
-        ['api', 'admin'],
+        methods: HttpMethod::DELETE,
+        uri: '/api/v1/users/{user}',
+        middlewares: ['api', 'admin'],
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
