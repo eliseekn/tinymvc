@@ -76,7 +76,7 @@ class Testing extends Command
                     $output->writeln('<bg=green;fg=black> '.$line.'</>');
                 } elseif ($line === 'ERRORS!' || $line === 'FAILURES!') {
                     $output->writeln('<bg=red;fg=black> '.$line.'</>');
-                } elseif (in_array($line, ['.', 'F', 'E'])) {
+                } elseif (in_array($line, ['.', 'F', 'E', 'R', 'S', 'I'])) {
                     $output->write($line);
                 } else {
                     $output->writeln($line);
