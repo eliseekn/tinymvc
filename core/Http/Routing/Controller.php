@@ -29,7 +29,8 @@ class Controller
         public Response $response,
         public Session $session,
         public Cookies $cookies
-    ) {}
+    ) {
+    }
 
     public function redirectToUrl(string $uri, array $queries = []): void
     {

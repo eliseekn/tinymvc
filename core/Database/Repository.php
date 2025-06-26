@@ -26,7 +26,9 @@ class Repository
 {
     protected QueryBuilder $qb;
 
-    public function __construct(protected readonly string $table) {}
+    public function __construct(protected readonly string $table)
+    {
+    }
 
     public function getTable(): string
     {
