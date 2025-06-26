@@ -29,15 +29,14 @@ class Controller
         public Response $response,
         public Session $session,
         public Cookies $cookies
-    ) {
-    }
+    ) {}
 
     public function redirectToUrl(string $uri, array $queries = []): void
     {
         $this->response->url($uri, $queries)->send();
     }
 
-    public function redirectRoute(string $route, array $params = []): void
+    public function redirectToRoute(string $route, array $params = []): void
     {
         $this->response->route($route, $params)->send();
     }

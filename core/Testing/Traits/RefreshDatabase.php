@@ -11,18 +11,15 @@ declare(strict_types=1);
 
 namespace Core\Testing\Traits;
 
-use Symfony\Component\Process\Process;
+use Core\Support\Console;
 
 /**
- * Automatically reset migrations database.
+ * Automatically reset database migrations.
  */
 trait RefreshDatabase
 {
     public function refreshDatabase(): void
     {
-        $process = new Process(['php', 'console', 'migrations:reset']);
-        $process->setTimeout(null);
-        $process->disableOutput();
-        $process->run();
+        Console::run('migrations:reset');
     }
 }

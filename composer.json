@@ -39,7 +39,9 @@
         "spatie/php-structure-discoverer": "dev-main",
         "psy/psysh": "@stable",
         "symfony/mime": "7.3.x-dev",
-        "doctrine/dbal": "4.3.x-dev"
+        "doctrine/dbal": "4.3.x-dev",
+        "standaniels/image-generator": "dev-master",
+        "dompdf/dompdf": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",

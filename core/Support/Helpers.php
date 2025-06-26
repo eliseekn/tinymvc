@@ -23,6 +23,7 @@ use Core\Http\Routing\View;
 use Core\Http\Session;
 use Core\Support\Config;
 use Core\Support\Encryption;
+use Core\Support\File;
 use Core\Support\Storage;
 use Faker\Factory;
 
@@ -257,7 +258,7 @@ if (! function_exists('route_uri')) {
 
 if (! function_exists('route')) {
     /**
-     * Get route absolute url.
+     * Get absolute route url.
      *
      * @throws Exception
      */
@@ -459,7 +460,7 @@ if (! function_exists('get_file_extension')) {
      */
     function get_file_extension(string $file): string
     {
-        return pathinfo($file, PATHINFO_EXTENSION);
+        return File::getExtension($file);
     }
 }
 
@@ -469,7 +470,7 @@ if (! function_exists('get_dirname')) {
      */
     function get_dirname(string $file): string
     {
-        return pathinfo($file, PATHINFO_DIRNAME);
+        return File::getDirname($file);
     }
 }
 
@@ -479,7 +480,7 @@ if (! function_exists('get_filename')) {
      */
     function get_filename(string $file): string
     {
-        return pathinfo($file, PATHINFO_FILENAME);
+        return File::getName($file);
     }
 }
 
@@ -489,7 +490,7 @@ if (! function_exists('get_file_basename')) {
      */
     function get_file_basename(string $file): string
     {
-        return pathinfo($file, PATHINFO_BASENAME);
+        return File::getBasename($file);
     }
 }
 

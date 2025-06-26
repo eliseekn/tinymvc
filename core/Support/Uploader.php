@@ -24,8 +24,7 @@ class Uploader
     public function __construct(
         private readonly array $file = [],
         private readonly array $allowed_extensions = []
-    ) {
-    }
+    ) {}
 
     public function getOriginalFilename(): string
     {
@@ -34,7 +33,12 @@ class Uploader
 
     public function getFilename(): string
     {
-        return get_filename($this->getOriginalFilename());
+        return File::getName($this->getOriginalFilename());
+    }
+
+    public function getFileBasename(): string
+    {
+        return File::getBasename($this->getOriginalFilename());
     }
 
     public function getTempFilename(): string
@@ -49,7 +53,7 @@ class Uploader
 
     public function getFileExtension(): string
     {
-        return get_file_extension($this->getOriginalFilename());
+        return File::getExtension($this->getOriginalFilename());
     }
 
     public function isAllowed(): bool
@@ -127,7 +131,7 @@ class Uploader
         $destination = $destination ?? config('storage.uploads');
         $this->filename = $filename ?? $this->getOriginalFilename();
 
-        //create destination directory if not exists
+        // create destination directory if not exists
         if (! storage($destination)->isDir()) {
             if (! storage($destination)->createDir('', true)) {
                 return false;

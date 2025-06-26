@@ -14,6 +14,7 @@ namespace Core\Console\Database\Migrations;
 use Core\Database\Connection\Connection;
 use Core\Database\QueryBuilder;
 use Core\Database\Schema;
+use Core\Support\File;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -57,7 +58,7 @@ class Run extends Command
             : storage(config('storage.migrations'))->getFiles();
 
         foreach ($migrations as $migration) {
-            $this->migrate($output, get_filename($migration));
+            $this->migrate($output, File::getName($migration));
         }
 
         if ($input->getOption('seed')) {

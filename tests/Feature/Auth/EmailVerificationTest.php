@@ -13,7 +13,6 @@ namespace Tests\Feature\Auth;
 
 use App\Database\Models\Token;
 use App\Database\Models\User;
-use App\Database\Seeders\RoleSeeder;
 use App\Enums\TokenDescription;
 use Core\Testing\FeatureTestCase;
 use Core\Testing\Traits\RefreshDatabase;
@@ -21,13 +20,6 @@ use Core\Testing\Traits\RefreshDatabase;
 class EmailVerificationTest extends FeatureTestCase
 {
     use RefreshDatabase;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        RoleSeeder::run();
-    }
 
     protected function tearDown(): void
     {

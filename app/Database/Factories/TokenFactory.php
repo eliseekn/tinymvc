@@ -17,11 +17,9 @@ use Core\Database\Factory\Factory;
 
 class TokenFactory extends Factory
 {
-    public string $model = Token::class;
-
     public function __construct(int $count = 1)
     {
-        parent::__construct($this->model, $count);
+        parent::__construct(Token::class, $count);
     }
 
     public function data(): array

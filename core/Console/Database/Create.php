@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Core\Console\Database;
 
 use Core\Database\Connection\Connection;
+use Core\Support\File;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -36,7 +37,7 @@ class Create extends Command
         $databases = $input->getArgument('database');
 
         if (empty($databases)) {
-            $databases = [get_filename($connection->getDB()->name)];
+            $databases = [File::getName($connection->getDB()->name)];
         }
 
         foreach ($databases as $database) {

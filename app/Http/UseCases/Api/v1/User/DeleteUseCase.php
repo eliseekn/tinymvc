@@ -18,8 +18,6 @@ final class DeleteUseCase extends UseCase
 {
     public function handle(int $id): bool
     {
-        $user = User::find($id);
-
-        return $user && $user->delete();
+        return User::find($id)?->delete();
     }
 }

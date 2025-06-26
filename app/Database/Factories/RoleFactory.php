@@ -17,11 +17,9 @@ use Core\Database\Factory\Factory;
 
 class RoleFactory extends Factory
 {
-    public string $model = Role::class;
-
     public function __construct(int $count = 1)
     {
-        parent::__construct($this->model, $count);
+        parent::__construct(Role::class, $count);
     }
 
     public function data(): array

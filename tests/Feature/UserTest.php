@@ -12,24 +12,21 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Database\Models\User;
-use App\Database\Seeders\RoleSeeder;
+use Core\Support\File;
 use Core\Testing\FeatureTestCase;
 use Core\Testing\Traits\RefreshDatabase;
+use Exception;
 
 class UserTest extends FeatureTestCase
 {
     use RefreshDatabase;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        RoleSeeder::run();
-    }
-
     protected function tearDown(): void
     {
         parent::tearDown();
+
+        storage(config('storage.tmp'))->deleteFile('avatar.jpg');
+        storage(config('storage.uploads'))->deleteFile('avatar.jpg');
 
         $this->refreshDatabase();
     }
@@ -37,15 +34,20 @@ class UserTest extends FeatureTestCase
     public function test_can_update_profile(): void
     {
         $user = User::factory()->create();
+        $avatar = storage(config('storage.tmp'))->file('avatar.jpg');
+
+        if (! File::generateImage($avatar, 100, 100)) {
+            throw new Exception('Failed to generate image file.');
+        }
 
         $this
             ->auth($user)
             ->patch('/dashboard/profile', [
-                'avatar' => $this->file(storage(config('storage.tmp'))->file('avatar.jpg')),
+                'avatar' => $this->file($avatar),
             ])
             ->assertStatusFound()
-            ->assertDatabaseHas('users', ['avatar' => User::find($user->getId())->get('avatar')]);
+            ->assertDatabaseHas('users', ['avatar' => File::getBasename($avatar)]);
 
-        $this->assertFileExists(storage(config('storage.uploads'))->file('avatar.jpg'));
+        $this->assertFileExists($avatar);
     }
 }

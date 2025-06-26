@@ -13,6 +13,7 @@ namespace Core\Console\Database\Migrations;
 
 use Core\Database\Connection\Connection;
 use Core\Database\QueryBuilder;
+use Core\Support\File;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -40,7 +41,7 @@ class Delete extends Command
         }
 
         foreach ($migrations as $migration) {
-            $this->delete($output, get_filename($migration));
+            $this->delete($output, File::getName($migration));
         }
 
         return Command::SUCCESS;

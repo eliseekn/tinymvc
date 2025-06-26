@@ -23,8 +23,7 @@ class AccountCreatedMail extends Mail
 
     public function send(): bool
     {
-        return $this
-            ->mailer
+        return $this->mailer
             ->from(config('mailer.sender.email'), config('mailer.sender.name'))
             ->replyTo(config('mailer.sender.email'), config('mailer.sender.name'))
             ->subject('Account created')

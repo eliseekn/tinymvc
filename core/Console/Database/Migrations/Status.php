@@ -13,6 +13,7 @@ namespace Core\Console\Database\Migrations;
 
 use Core\Database\Connection\Connection;
 use Core\Database\QueryBuilder;
+use Core\Support\File;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -36,8 +37,8 @@ class Status extends Command
         $files = storage(config('storage.migrations'))->getFiles();
 
         foreach ($files as $table) {
-            $status = $this->isMigrated(get_filename($table)) ? 'Yes' : '<fg=red>No</>';
-            $rows[] = [get_filename($table), $status];
+            $status = $this->isMigrated(File::getName($table)) ? 'Yes' : '<fg=red>No</>';
+            $rows[] = [File::getName($table), $status];
         }
 
         $table = new Table($output);

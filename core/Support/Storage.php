@@ -78,17 +78,17 @@ class Storage
 
     public function getFileExtension(string $filename): string
     {
-        return get_file_extension(self::$path .= $filename);
+        return File::getExtension(self::$path .= $filename);
     }
 
-    public function getFileBaseName(string $filename): string
+    public function getFileBasename(string $filename): string
     {
-        return get_file_basename(self::$path .= $filename);
+        return File::getBasename(self::$path .= $filename);
     }
 
-    public function getFileName(string $filename): string
+    public function getFilename(string $filename): string
     {
-        return get_filename(self::$path .= $filename);
+        return File::getName(self::$path .= $filename);
     }
 
     public function createDir(string $pathname = '', bool $recursive = false, int $mode = 0777): bool

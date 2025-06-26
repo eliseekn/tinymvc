@@ -1,4 +1,4 @@
-FROM php:8.1-fpm
+FROM php:8.2-fpm
 
 RUN apt update -y && apt upgrade -y
 RUN apt install -y git curl libpng-dev libonig-dev libxml2-dev zip unzip

@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Core\Http\Middlewares;
 
+use Core\Enums\AppEnv;
 use Core\Exceptions\InvalidCsrfTokenException;
 use Core\Exceptions\MissingCsrfTokenException;
 use Core\Http\Request;
@@ -26,7 +27,7 @@ class CsrfProtection
      */
     public function handle(Request $request): void
     {
-        if (config('app.env') === 'test') {
+        if (config('app.env') === AppEnv::TEST) {
             return;
         }
 

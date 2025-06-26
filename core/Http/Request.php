@@ -14,6 +14,7 @@ namespace Core\Http;
 use Core\Exceptions\RouteParameterException;
 use Core\Exceptions\RoutesPathsNotDefinedException;
 use Core\Http\Routing\Route;
+use Core\Support\File;
 use Core\Support\Uploader;
 
 /**
@@ -141,7 +142,7 @@ class Request
     {
         $uri = $this->fullUri();
 
-        //removes queries from uri
+        // removes queries from uri
         if (strpos($uri, '?')) {
             $uri = substr($uri, strpos($uri, '/'), strpos($uri, '?'));
         }
@@ -347,7 +348,7 @@ class Request
                     finfo_close($fileInfo);
 
                     $_FILES[$fieldName] = [
-                        'name' => get_file_basename($fileName),
+                        'name' => File::getBasename($fileName),
                         'type' => $mimeType,
                         'tmp_name' => $tmpFilePath,
                         'error' => 0,
