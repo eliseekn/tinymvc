@@ -68,18 +68,19 @@ class Auth
 
         if (! $token) {
             $user = null;
+
             return false;
         }
 
-        $user = User::findByEmail($token->get('email'));
+        $user = User::findByIdentifier($token->get('identifier'));
 
         return ! is_null($user);
     }
 
-    public static function createToken(string $email): string
+    public static function createToken(string $identifier): string
     {
         $token = Token::factory()->create([
-            'email' => $email,
+            'identifier' => $identifier,
             'value' => generate_token(),
             'description' => TokenDescription::AUTHENTICATION->value,
         ]);
@@ -100,7 +101,7 @@ class Auth
             return '';
         }
 
-        list($method, $token) = $request->getHttpAuth();
+        [$method, $token] = $request->getHttpAuth();
 
         return trim($method) !== HttpAuthMethod::BEARER ? '' : decrypt($token);
     }
@@ -123,7 +124,7 @@ class Auth
         return cookies()->has('user');
     }
 
-    public static function user(Request $request): Model|null
+    public static function user(Request $request): ?Model
     {
         if (session()->has('user')) {
             $user = session()->get('user');

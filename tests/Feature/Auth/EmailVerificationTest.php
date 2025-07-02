@@ -33,7 +33,7 @@ class EmailVerificationTest extends FeatureTestCase
         $user = User::factory()->create(['email_verified_at' => null]);
 
         $token = Token::factory()->create([
-            'email' => $user->get('email'),
+            'identifier' => $user->get('email'),
             'description' => TokenDescription::EMAIL_VERIFICATION->value,
         ]);
 

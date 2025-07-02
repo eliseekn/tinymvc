@@ -33,11 +33,11 @@ class Token extends Model
         return (new self)->findBy('value', $value);
     }
 
-    public static function findByDescription(string $email, string $description): ?Model
+    public static function findByDescription(string $identifier, string $description): ?Model
     {
         return (new self)
             ->select('*')
-            ->where('email', $email)
+            ->where('identifier', $identifier)
             ->and('description', $description)
             ->first();
     }

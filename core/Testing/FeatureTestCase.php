@@ -303,19 +303,30 @@ abstract class FeatureTestCase extends TestCase
         return $this;
     }
 
-    public function dump(): void
+    public function dump(bool $log = false): void
     {
-        error_log($this->getBody());
+        if ($log) {
+            error_log($this->getBody());
+        }
+
         dd($this->getBody());
     }
 
-    public function dumpHeaders(): void
+    public function dumpHeaders(bool $log = false): void
     {
+        if ($log) {
+            error_log($this->getHeaders());
+        }
+
         dd($this->getHeaders());
     }
 
-    public function dumpSession(): void
+    public function dumpSession(bool $log = false): void
     {
+        if ($log) {
+            error_log($this->getSession());
+        }
+
         dd($this->getSession());
     }
 }

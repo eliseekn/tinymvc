@@ -19,7 +19,7 @@ class Version20210403034739
     {
         Schema::createTable('tokens')
             ->addPrimaryKey()->notNull()
-            ->addString('email')->notNull()
+            ->addString('identifier')->notNull()
             ->addString('value')->notNull()->unique()
             ->addDateTime('expires_at')->null()
             ->addString('description')->notNull()
