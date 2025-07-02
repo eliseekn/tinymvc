@@ -56,7 +56,7 @@ class User extends Model
         return (new self)
             ->select(['users.*', 'roles.name AS role'])
             ->join('roles', 'users.role_id', '=', 'roles.id')
-            ->whereNotEquals('users.id', $userId)
+            ->where('users.id', '<>', $userId)
             ->subQueryWhen(! is_null($search), function (Repository $r) use ($search) {
                 $r->andRaw("(users.name LIKE '%$search%' OR email LIKE '%$search%')");
             })
