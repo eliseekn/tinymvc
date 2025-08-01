@@ -11,32 +11,34 @@ declare(strict_types=1);
 
 namespace App\Http\Validation\Validators;
 
+use App\Http\Validation\Rules\Password;
 use App\Http\Validation\Rules\Unique;
-use Core\Http\Validation\Rule\Rule;
+use Core\Http\Validation\Rule\Rules;
 use Core\Http\Validation\Validator\Validator;
 
 class UpdateProfileValidator extends Validator
 {
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     /**
      * Validation rules
      */
     public function rules(): array
     {
-        return Rule::add('name', Rule::maxLen(255))
+        return Rules::add('name', [Rules::SOMETIMES, Rules::max(255)])
             ->add('email', [
-                Rule::EMAIL,
-                Rule::maxLen(255),
-                Rule::custom(Unique::class, [
+                Rules::SOMETIMES,
+                Rules::EMAIL,
+                Rules::max(255),
+                Rules::custom(new Unique, [
                     'users',
-                    auth()->get('id'),
+                    auth()->getId(),
                 ]),
             ])
-            ->add('password', Rule::maxLen(255))
+            ->add('password', [
+                Rules::SOMETIMES,
+                Rules::between(8, 10),
+                Rules::custom(new Password),
+
+            ])
             ->make();
     }
 }

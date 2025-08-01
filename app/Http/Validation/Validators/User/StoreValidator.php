@@ -12,37 +12,33 @@ declare(strict_types=1);
 namespace App\Http\Validation\Validators\User;
 
 use App\Http\Validation\Rules\Exists;
+use App\Http\Validation\Rules\Password;
 use App\Http\Validation\Rules\Unique;
-use Core\Http\Validation\Rule\Rule;
+use Core\Http\Validation\Rule\Rules;
 use Core\Http\Validation\Validator\Validator;
 
 class StoreValidator extends Validator
 {
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     /**
      * Validation rules.
      */
     public function rules(): array
     {
-        return Rule::add('name', [Rule::REQUIRED, Rule::maxLen(255)])
+        return Rules::add('name', [Rules::REQUIRED, Rules::max(255)])
             ->add('email', [
-                Rule::REQUIRED,
-                Rule::EMAIL,
-                Rule::maxLen(255),
-                Rule::custom(Unique::class, 'users'),
+                Rules::REQUIRED,
+                Rules::EMAIL,
+                Rules::max(255),
+                Rules::custom(new Unique, 'users'),
             ])
             ->add('password', [
-                Rule::REQUIRED,
-                Rule::maxLen(255),
-                Rule::minLen(8),
+                Rules::REQUIRED,
+                Rules::between(8, 10),
+                Rules::custom(new Password),
             ])
             ->add('role_id', [
-                Rule::REQUIRED,
-                Rule::custom(Exists::class, ['roles', 'id']),
+                Rules::REQUIRED,
+                Rules::custom(new Exists, ['roles', 'id']),
             ])
             ->make();
     }

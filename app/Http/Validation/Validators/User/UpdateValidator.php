@@ -13,31 +13,30 @@ namespace App\Http\Validation\Validators\User;
 
 use App\Http\Validation\Rules\Exists;
 use App\Http\Validation\Rules\Unique;
-use Core\Http\Validation\Rule\Rule;
+use Core\Http\Validation\Rule\Rules;
 use Core\Http\Validation\Validator\Validator;
 
 class UpdateValidator extends Validator
 {
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     /**
      * Validation rules.
      */
     public function rules(): array
     {
-        return Rule::add('name', Rule::maxLen(255))
+        return Rules::add('name', [Rules::SOMETIMES, Rules::max(255)])
             ->add('email', [
-                Rule::EMAIL,
-                Rule::maxLen(255),
-                Rule::custom(Unique::class, [
+                Rules::SOMETIMES,
+                Rules::EMAIL,
+                Rules::max(255),
+                Rules::custom(new Unique, [
                     'users',
-                    request()->routeParam('user'),
+                    $this->request->routeParam('user'),
                 ]),
             ])
-            ->add('role_id', Rule::custom(Exists::class, ['roles', 'id']))
+            ->add('role_id', [
+                Rules::SOMETIMES,
+                Rules::custom(new Exists, ['roles', 'id']),
+            ])
             ->make();
     }
 }
