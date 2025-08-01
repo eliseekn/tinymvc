@@ -16,8 +16,8 @@ use Core\Support\UseCase;
 
 final class CLASSNAME extends UseCase
 {
-  public function handle(): array|false
-	{
-        return MODEL_NAME::all();
-	}
+    public function handle(): array|false
+    {
+        return MODEL_NAME::findAll();
+    }
 }

@@ -11,14 +11,12 @@ declare(strict_types=1);
 
 namespace NAMESPACE;
 
-use App\Database\Models\MODEL_NAME;
-use Core\Database\Model;
 use Core\Support\UseCase;
 
 final class CLASSNAME extends UseCase
 {
-    public function handle(): Model
-	{
-        return new MODEL_NAME();
-	}
+    public function handle(): void
+    {
+        return;
+    }
 }
