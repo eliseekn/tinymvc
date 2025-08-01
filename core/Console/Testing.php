@@ -13,6 +13,7 @@ namespace Core\Console;
 
 use Core\Enums\AppEnv;
 use Core\Support\Config;
+use Core\Support\Console;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -41,6 +42,8 @@ class Testing extends Command
             'APP_ENV' => AppEnv::TEST,
             'APP_URL' => config('testing.url.protocol').config('testing.url.host').':'.config('testing.url.port').'/',
         ]);
+
+        Console::run('migrations:reset');
 
         $server = new Process(['php', '-S', config('testing.url.host').':'.config('testing.url.port')]);
         $server->setTimeout(null);

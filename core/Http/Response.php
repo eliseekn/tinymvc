@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Core\Http;
 
+use Core\Enums\AppEnv;
 use Core\Enums\HttpCode;
 use Core\Exceptions\FileNotFoundException;
 use Core\Exceptions\InvalidJsonDataException;
@@ -90,7 +91,7 @@ class Response
 
         end($history);
 
-        if (config('app.env') === 'test' && prev($history) === false) {
+        if (config('app.env') === AppEnv::TEST && prev($history) === false) {
             return $this->url('/');
         }
 
@@ -182,7 +183,7 @@ class Response
 
     public function send(int $code = HttpCode::FOUND): void
     {
-        if (config('app.env') === 'test') {
+        if (config('app.env') === AppEnv::TEST) {
             header('Session:'.json_encode($_SESSION));
         }
 

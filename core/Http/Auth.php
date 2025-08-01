@@ -15,6 +15,7 @@ use App\Database\Models\Token;
 use App\Database\Models\User;
 use App\Enums\TokenDescription;
 use Core\Database\Model;
+use Core\Enums\AppEnv;
 use Core\Enums\HttpAuthMethod;
 use Core\Support\Encryption;
 
@@ -112,7 +113,7 @@ class Auth
             return true;
         }
 
-        if ($request->isJson() || config('app.env') === 'test') {
+        if ($request->isJson() || config('app.env') === AppEnv::TEST) {
             return self::checkToken(self::getToken($request), $user);
         }
 
@@ -133,14 +134,10 @@ class Auth
                 return null;
             }
 
-            return User::find($user['id']);
+            return User::findByIdentifier($user[config('security.auth.identifier')]);
         }
 
-        if (! self::checkToken(self::getToken($request), $user)) {
-            return null;
-        }
-
-        return $user;
+        return $request->auth();
     }
 
     public static function forget(): void

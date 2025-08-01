@@ -16,7 +16,7 @@ use Core\Http\Routing\Controller;
 class CLASSNAME extends Controller
 {
     public function __invoke(): void
-	{
+    {
         $this->response('Hello from CLASSNAME');
-	}
+    }
 }

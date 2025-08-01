@@ -18,7 +18,8 @@ class CLASSNAME
     public function up(): void
     {
         Schema::createTable('TABLE_NAME')
-            ->addPrimaryKey()
+            ->addPrimaryKey()->notNull()
+            ->addDefaultTimestamps()
             ->run();
     }
     

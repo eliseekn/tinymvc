@@ -12,8 +12,7 @@ declare(strict_types=1);
 use Carbon\Carbon;
 use Core\Database\Model;
 use Core\Event\EventInterface;
-use Core\Exceptions\RouteNameNotDefinedException;
-use Core\Exceptions\RouteParameterException;
+use Core\Exceptions\RouteException;
 use Core\Exceptions\ViewNotFoundException;
 use Core\Http\Auth;
 use Core\Http\Cookies;
@@ -230,7 +229,7 @@ if (! function_exists('route_uri')) {
         }
 
         if (empty($uri)) {
-            throw new RouteNameNotDefinedException($uri);
+            throw RouteException::noNameDefined($uri);
         }
 
         $uri = preg_replace_callback('/\{([a-zA-Z0-9_-]+)\??\}/', function ($matches) use ($routeParams, $params) {
@@ -270,7 +269,7 @@ if (! function_exists('route')) {
 
 if (! function_exists('route_parameters_to_regex')) {
     /**
-     * @throws RouteParameterException
+     * @throws RouteException
      */
     function route_parameters_to_regex(string $route, array $routeParams, &$result): string
     {
@@ -281,7 +280,7 @@ if (! function_exists('route_parameters_to_regex')) {
             $optional = str_contains($matches[0], '?');
 
             if (! isset($routeParams[$param])) {
-                throw new RouteParameterException("No pattern defined for parameter: $param");
+                throw RouteException::noParameterNotDefined($param);
             }
 
             $result[$param] = null;
@@ -296,7 +295,7 @@ if (! function_exists('resolve_binding')) {
     /**
      * Resolve route model binding
      *
-     * @throws RouteParameterException
+     * @throws RouteException
      */
     function resolve_route_binding(string $route, array $routeParams, array $binding): array
     {

@@ -37,4 +37,20 @@ trait DatabaseTestCase
 
         return $this;
     }
+
+    public function assertDatabaseHasCount(string $table, int $expected, string $column = 'id'): self
+    {
+        $result = (new Repository($table))->metrics()->count($column)->metrics();
+        $this->assertEquals((int) $result, $expected);
+
+        return $this;
+    }
+
+    public function assertDatabaseDoesNotHaveCount(string $table, int $expected, string $column = 'id'): self
+    {
+        $result = (new Repository($table))->metrics()->count($column)->metrics();
+        $this->assertEquals((int) $result, $expected);
+
+        return $this;
+    }
 }

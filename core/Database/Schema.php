@@ -343,6 +343,16 @@ class Schema
         return $this;
     }
 
+    /**
+     * Add created_at and updated_at timestamps
+     */
+    public function addDefaultTimestamps(): self
+    {
+        static::$qb->timestamps();
+
+        return $this;
+    }
+
     public function addYear(string $name): self
     {
         if (Connection::getInstance()->getDriver() !== DatabaseDriver::MYSQL) {
@@ -388,16 +398,12 @@ class Schema
 
     public function addConstraintForeignKey(string $name, string $column): self
     {
-        static::$qb->addConstraint($name)->foreignKey($column);
-
-        return $this;
+        return $this->addConstraint($name)->foreignKey($column);
     }
 
-    public function constraintForeignKey(string $name, string $column): self
+    public function setConstraintForeignKey(string $name, string $column): self
     {
-        static::$qb->constraint($name)->foreignKey($column);
-
-        return $this;
+        return $this->constraint($name)->foreignKey($column);
     }
 
     public function references(string $table, string $column): self
@@ -490,7 +496,7 @@ class Schema
     public function run(): bool|PDOStatement
     {
         if (str_contains(static::$qb->toSQL()[0], 'CREATE TABLE')) {
-            return static::$qb->timestamps()->migrate();
+            return static::$qb->migrate();
         }
 
         if (
@@ -498,7 +504,6 @@ class Schema
             Connection::getInstance()->getDriver() === DatabaseDriver::SQLITE
         ) {
             return true;
-
         }
 
         return static::$qb->flush()->execute();

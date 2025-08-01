@@ -14,11 +14,8 @@ namespace Core\Http\Routing;
 use Closure;
 use Core\Enums\HttpMethod;
 use Core\Exceptions\ControllerNotFoundException;
-use Core\Exceptions\InvalidRouteHandlerException;
 use Core\Exceptions\MiddlewareNotFoundException;
-use Core\Exceptions\RouteHandlerNotDefinedException;
-use Core\Exceptions\RoutesNotDefinedException;
-use Core\Exceptions\RoutesPathsNotDefinedException;
+use Core\Exceptions\RouteException;
 use Core\Http\Middlewares\CsrfProtection;
 use Core\Http\Request;
 use Core\Http\Response;
@@ -47,6 +44,7 @@ class Router
 
         if (preg_match('#^'.$route.'$#', $request->method().' '.$request->uri(), $params)) {
             array_shift($params);
+
             return true;
         }
 
@@ -76,7 +74,7 @@ class Router
     }
 
     /**
-     * @throws InvalidRouteHandlerException
+     * @throws RouteException
      * @throws ControllerNotFoundException
      */
     protected static function executeHandler(Closure|array|string $handler, array $params, array $bindings): void
@@ -88,7 +86,7 @@ class Router
         }
 
         if (is_array($handler)) {
-            list($controller, $action) = $handler;
+            [$controller, $action] = $handler;
 
             if (class_exists($controller) && method_exists($controller, $action)) {
                 (new DependencyInjection)->resolve($controller, $action, $params, $bindings);
@@ -110,15 +108,12 @@ class Router
         }
 
         // @phpstan-ignore-next-line
-        throw new InvalidRouteHandlerException;
+        throw RouteException::invalidHandler($handler);
     }
 
     /**
      * @throws MiddlewareNotFoundException
-     * @throws InvalidRouteHandlerException
-     * @throws RoutesNotDefinedException
-     * @throws RoutesPathsNotDefinedException
-     * @throws RouteHandlerNotDefinedException
+     * @throws RouteException
      * @throws ControllerNotFoundException
      * @throws Exception
      */
@@ -129,7 +124,7 @@ class Router
         $routes = Route::getAll();
 
         if (empty($routes)) {
-            throw new RoutesNotDefinedException;
+            throw RouteException::noRoutesDefined();
         }
 
         foreach ($routes as $route => $options) {
@@ -138,7 +133,7 @@ class Router
 
             if (self::match($request, $route, $params, $options['parameters'] ?? [])) {
                 if (! isset($options['handler'])) {
-                    throw new RouteHandlerNotDefinedException($route);
+                    throw RouteException::noHandlerDefined($route);
                 }
 
                 if (! $request->uriContains('api')) {

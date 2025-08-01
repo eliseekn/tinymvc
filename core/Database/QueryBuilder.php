@@ -268,7 +268,7 @@ class QueryBuilder
 
     public function references(string $table, string $column): self
     {
-        static::$query .= ' REFERENCES '.static::setTable($table)."($column)";
+        static::$query .= ' REFERENCES '.static::setTable($table)."($column), ";
 
         return $this;
     }
@@ -306,9 +306,9 @@ class QueryBuilder
     public function timestamps(): self
     {
         static::$query .= match (static::$connection->getDriver()) {
-            DatabaseDriver::MYSQL => ' created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, ',
-            DatabaseDriver::PGSQL => ' created_at TIMESTAMP NOT NULL DEFAULT NOW(), updated_at TIMESTAMP NOT NULL DEFAULT NOW(), ',
-            default => " created_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')), updated_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')), ",
+            DatabaseDriver::MYSQL => ' created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP NULL, ',
+            DatabaseDriver::PGSQL => ' created_at TIMESTAMP NOT NULL DEFAULT NOW(), updated_at TIMESTAMP NULL, ',
+            default => " created_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')), updated_at TIMESTAMP NULL, ",
         };
 
         return $this;

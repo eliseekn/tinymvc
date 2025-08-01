@@ -90,7 +90,7 @@ abstract class FeatureTestCase extends TestCase
 
     public function auth(Model $user): self
     {
-        $this->token = Auth::createToken($user->get('email'));
+        $this->token = Auth::createToken($user->get(config('security.auth.identifier')));
         $this->headers = array_merge($this->headers, ['Authorization' => HttpAuthMethod::BEARER.' '.$this->token]);
 
         return $this;

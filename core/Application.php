@@ -13,11 +13,8 @@ namespace Core;
 
 use Core\Event\Event;
 use Core\Exceptions\ControllerNotFoundException;
-use Core\Exceptions\InvalidRouteHandlerException;
 use Core\Exceptions\MiddlewareNotFoundException;
-use Core\Exceptions\RouteHandlerNotDefinedException;
-use Core\Exceptions\RoutesNotDefinedException;
-use Core\Exceptions\RoutesPathsNotDefinedException;
+use Core\Exceptions\RouteException;
 use Core\Http\Routing\Router;
 use Core\Support\Whoops;
 
@@ -28,11 +25,8 @@ class Application
 {
     /**
      * @throws MiddlewareNotFoundException
-     * @throws InvalidRouteHandlerException
-     * @throws RoutesNotDefinedException
-     * @throws RoutesPathsNotDefinedException
+     * @throws RouteException
      * @throws ControllerNotFoundException
-     * @throws RouteHandlerNotDefinedException
      */
     public function run(): void
     {

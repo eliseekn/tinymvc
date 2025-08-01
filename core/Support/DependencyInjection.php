@@ -101,11 +101,11 @@ class DependencyInjection
                 // @phpstan-ignore-next-line
                 if (! $dependency->isBuiltin()) {
                     if (is_subclass_of($class, Validator::class)) {
-                        $class = (new $class)->validate(new Request, new Response);
+                        $class = $class::make()->validate(new Request, new Response);
                     } elseif (is_subclass_of($class, UseCase::class)) {
                         $class = new $class(new Request, new Response, new Session, new Cookies);
                     } elseif ($class === Model::class) {
-                        list($table, $column, $value) = array_values($bindings[$bindingKey]);
+                        [$table, $column, $value] = array_values($bindings[$bindingKey]);
                         $class = (new $class($table))->findBy($column, $value);
                         $bindingKey++;
                     } else {

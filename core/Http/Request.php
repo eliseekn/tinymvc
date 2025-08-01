@@ -11,8 +11,11 @@ declare(strict_types=1);
 
 namespace Core\Http;
 
-use Core\Exceptions\RouteParameterException;
-use Core\Exceptions\RoutesPathsNotDefinedException;
+use App\Database\Models\Token;
+use App\Database\Models\User;
+use Core\Database\Model;
+use Core\Enums\HttpAuthMethod;
+use Core\Exceptions\RouteException;
 use Core\Http\Routing\Route;
 use Core\Support\File;
 use Core\Support\Uploader;
@@ -151,8 +154,7 @@ class Request
     }
 
     /**
-     * @throws RoutesPathsNotDefinedException
-     * @throws RouteParameterException
+     * @throws RouteException
      */
     public function routeParam(string $name): mixed
     {
@@ -278,6 +280,24 @@ class Request
         }
 
         return $result;
+    }
+
+    public function auth(): ?Model
+    {
+        if (empty($this->getHttpAuth())) {
+            return null;
+        }
+
+        [$method, $token] = $this->getHttpAuth();
+
+        $token = trim($method) !== HttpAuthMethod::BEARER ? '' : decrypt($token);
+        $token = Token::findByValue($token);
+
+        if (! $token) {
+            return null;
+        }
+
+        return User::findByIdentifier($token->get('identifier'));
     }
 
     /**

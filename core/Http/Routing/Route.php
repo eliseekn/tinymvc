@@ -14,7 +14,7 @@ namespace Core\Http\Routing;
 use Closure;
 use Core\Enums\HttpMethod;
 use Core\Enums\RouteParameter;
-use Core\Exceptions\RoutesPathsNotDefinedException;
+use Core\Exceptions\RouteException;
 use Core\Http\Response;
 use Core\Http\Routing\Attributes\Route as RouteAttribute;
 use ReflectionClass;
@@ -181,7 +181,7 @@ class Route
         }
 
         foreach (self::$tmp_routes as $route => $options) {
-            list($method, $uri) = explode(' ', $route, 2);
+            [$method, $uri] = explode(' ', $route, 2);
             $_route = implode(' ', [$method, $prefix.$uri]);
             $_route = self::format($_route);
             self::$tmp_routes = self::updateRoute($route, $_route);
@@ -251,11 +251,12 @@ class Route
     }
 
     /**
-     * @throws RoutesPathsNotDefinedException
+     * @throws RouteException
      */
     public static function getAll(): array
     {
         self::load();
+
         return self::$routes;
     }
 
@@ -297,14 +298,14 @@ class Route
     }
 
     /**
-     * @throws RoutesPathsNotDefinedException
+     * @throws RouteException
      */
     public static function load(): void
     {
         self::loadFromAttributes();
 
         if (empty(config('routes')) && empty(self::$routes)) {
-            throw new RoutesPathsNotDefinedException;
+            throw RouteException::noPathsDefined();
         }
 
         if (! empty(config('routes'))) {
