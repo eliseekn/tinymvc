@@ -35,29 +35,24 @@ class Client implements ClientInterface
         $curl_array = [];
         $curl_multi = curl_multi_init();
         $errors = [];
-
         $url = parse_array($url);
 
         foreach ($url as $key => $_url) {
             $curl_array[$key] = curl_init();
             $curl = $curl_array[$key];
 
-            //set options
             curl_setopt($curl, CURLOPT_URL, $_url);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl, CURLOPT_TIMEOUT_MS, 300000);
 
-            //set method
             if (strtoupper($method) !== HttpMethod::GET) {
                 curl_setopt($curl, CURLOPT_CUSTOMREQUEST, strtoupper($method));
             }
 
-            // set json headers
             if ($json) {
                 $headers = array_merge($headers, ['Content-Type' => 'application/json']);
             }
 
-            //set data
             if (! empty($data)) {
                 if ($json) {
                     curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
@@ -69,7 +64,6 @@ class Client implements ClientInterface
                 }
             }
 
-            //set headers
             if (! empty($headers)) {
                 $_headers = [];
 
@@ -80,7 +74,6 @@ class Client implements ClientInterface
                 curl_setopt($curl, CURLOPT_HTTPHEADER, $_headers);
             }
 
-            //retrieves response headers
             curl_setopt(
                 $curl,
                 CURLOPT_HEADERFUNCTION,
@@ -107,7 +100,6 @@ class Client implements ClientInterface
             curl_multi_exec($curl_multi, $i);
         } while ($i);
 
-        //retrieves response
         foreach ($curl_array as $key => $curl) {
             $response[$key] = curl_multi_getcontent($curl);
             $status_code[$key] = curl_getinfo($curl, CURLINFO_HTTP_CODE);
