@@ -46,14 +46,4 @@ return [
         'name' => env('DB_NAME', 'tinymvc'),
         'memory' => false,
     ],
-
-    'custom' => [
-        'driver' => DatabaseDriver::PGSQL,
-        'host' => '127.0.0.1',
-        'port' => '5432',
-        'name' => 'pharma_delivery',
-        'username' => 'postgres',
-        'password' => 'password',
-        'encoding' => 'utf8',
-    ],
 ];
