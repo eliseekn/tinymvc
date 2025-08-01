@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Core\Console\Make;
 
 use Core\Support\Storage;
-use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Create templates from stubs.
@@ -369,27 +368,32 @@ class Maker
         return $storage->writeFile($class.'.php', $data);
     }
 
-    public static function createUseCase(string $model, string $type, OutputInterface $output, ?string $namespace = null): bool
+    public static function createUseCase(string $type, ?string $model = null, ?string $namespace = null): bool
     {
-        [$name] = self::generateClass($model, 'use_case', true, true);
         [$type, $class] = self::generateClass($type, 'use_case', true, true);
-
-        $namespace = is_null($namespace) ? ucfirst($name) : $namespace.'\\'.ucfirst($name);
         $class = str_replace(['Index', 'Show'], ['GetCollection', 'GetItem'], $class);
 
-        if (in_array($type, ['index', 'show', 'store', 'update', 'delete'])) {
-            $data = self::stubs()->addPath('useCases')->readFile($type.'.stub');
-        } else {
-            $data = self::stubs()->addPath('useCases')->readFile('blank.stub');
+        if (is_null($model)) {
+            $type = 'blank';
+        }
+
+        $data = self::stubs()->addPath('useCases')->readFile($type.'.stub');
+
+        if (! is_null($model)) {
+            [$name] = self::generateClass($model, 'use_case', true, true);
+            $namespace = is_null($namespace) ? ucfirst($name) : $namespace.'\\'.ucfirst($name);
+            $data = str_replace('$MODEL_NAME', '$'.self::fixPlural($name, true), $data);
+            $data = str_replace('MODEL_NAME', self::fixPlural(ucfirst($name), true), $data);
         }
 
         $data = self::addNamespace($data, 'App\Http\UseCases', $namespace);
         $data = str_replace('CLASSNAME', $class, $data);
-        $data = str_replace('$MODEL_NAME', '$'.self::fixPlural($name, true), $data);
-        $data = str_replace('MODEL_NAME', self::fixPlural(ucfirst($name), true), $data);
 
         $storage = storage(config('storage.useCases'));
-        $storage = $storage->addPath(str_replace('\\', '/', $namespace));
+
+        if (! is_null($namespace)) {
+            $storage = $storage->addPath(str_replace('\\', '/', $namespace));
+        }
 
         return $storage->writeFile($class.'.php', $data);
     }
