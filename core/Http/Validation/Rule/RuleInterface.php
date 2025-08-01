@@ -13,5 +13,5 @@ namespace Core\Http\Validation\Rule;
 
 interface RuleInterface
 {
-    public function rule(string $field, array $input, array $params, $value): bool;
+    public function check(mixed $value): bool;
 }

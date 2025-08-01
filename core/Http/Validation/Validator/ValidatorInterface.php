@@ -27,4 +27,8 @@ interface ValidatorInterface
     public function rules();
 
     public function messages();
+
+    public function validationSucceeded(Request $request, ?Response $response = null);
+
+    public function validationFailed(Request $request, ?Response $response = null);
 }

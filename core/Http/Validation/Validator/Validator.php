@@ -13,87 +13,102 @@ namespace Core\Http\Validation\Validator;
 
 use Core\Enums\HttpCode;
 use Core\Enums\ResponseStatus;
-use Core\Exceptions\InvalidJsonDataException;
 use Core\Http\Request;
 use Core\Http\Response;
-use Core\Http\Validation\Rule\RuleInterface;
-use Exception;
-use GUMP;
+use Somnambulist\Components\Validation\Factory as RakitValidator;
+use Somnambulist\Components\Validation\Rule;
+use Somnambulist\Components\Validation\Validation;
 use Spatie\StructureDiscoverer\Discover;
 
 /**
- * Request fields validator.
+ * Request data validator.
  */
 class Validator implements ValidatorInterface
 {
-    /**
-     * @throws Exception
-     */
+    protected Request $request;
+
+    protected Validation $validation;
+
+    protected RakitValidator $validator;
+
     public function __construct(
         protected array $rules = [],
         protected array $messages = [],
-        protected array $inputs = [],
-        protected mixed $errors = null,
     ) {
+        $this->validator = new RakitValidator;
         $rules = Discover::in(config('storage.rules'))->classes()->get();
 
         if (! empty($rules)) {
             foreach ($rules as $rule) {
-                /** @var RuleInterface $rule */
+                /** @var Rule $rule */
                 $rule = new $rule;
 
-                GUMP::add_validator(
-                    // @phpstan-ignore-next-line
-                    $rule->name,
-                    $rule->rule(...),
-                    // @phpstan-ignore-next-line
-                    $rule->errorMessage
-                );
+                $this->validator->addRule($rule->name(), $rule);
             }
         }
     }
 
-    /**
-     * @throws Exception
-     */
-    public function validate(Request $request, ?Response $response = null): self
+    public static function make(array $rules = [], array $messages = []): static
     {
-        $this->inputs = $request->inputs();
-        $this->rules = empty($this->rules) ? $this->rules() : $this->rules;
-        $this->messages = empty($this->messages) ? $this->messages() : $this->messages;
-        $this->errors = GUMP::is_valid($this->inputs, $this->rules, $this->messages);
+        // @phpstan-ignore-next-line
+        return new static($rules, $messages);
+    }
+
+    public function validate(Request $request, ?Response $response = null)
+    {
+        $this->request = $request;
+
+        if (empty($this->rules)) {
+            $this->rules = $this->rules();
+        }
+
+        if (empty($this->messages)) {
+            $this->messages = $this->messages();
+        }
+
+        $this->validation = $this->validator->make(
+            $request->inputs(),
+            $this->rules,
+        );
+
+        $this->formatErrorMessages();
+
+        $this->validation->validate();
 
         if ($this->failed() && ! is_null($response)) {
             $this->validationFailed($request, $response);
         }
 
-        $this->validationSucceeded($request, $response);
+        if (! is_null($response)) {
+            $this->validationSucceeded($request, $response);
+        }
 
         return $this;
     }
 
-    /**
-     * @throws InvalidJsonDataException
-     */
-    public function validationFailed(Request $request, ?Response $response = null): void
+    public function failed(): bool
     {
-        if ($request->isJson()) {
-            $response?->json([
-                'status' => ResponseStatus::ERROR,
-                'data' => $this->errors(),
-            ])
-                ->send(HttpCode::BAD_REQUEST);
-        }
-
-        $response
-            ?->back()
-            ->withErrors($this->errors())
-            ->withInputs($this->inputs)
-            ->send();
+        return $this->validation->fails();
     }
 
-    public function validationSucceeded(Request $request, ?Response $response = null): void
+    public function errors(): array
     {
+        return $this->validation->errors()->firstOfAll(dotNotation: true);
+    }
+
+    public function inputs(string|array|null $name = null): array|string|null
+    {
+        $inputs = $this->validation->getValidData();
+
+        if (is_null($name)) {
+            return $inputs;
+        }
+
+        if (is_string($name)) {
+            return $inputs[$name] ?? null;
+        }
+
+        return array_intersect_key($inputs, array_flip($name));
     }
 
     public function rules(): array
@@ -106,58 +121,34 @@ class Validator implements ValidatorInterface
         return [];
     }
 
-    public function failed(): bool
+    public function validationFailed(Request $request, ?Response $response = null): void
     {
-        return is_array($this->errors);
+        $this->request = $request;
+
+        if ($request->isJson()) {
+            $response?->json([
+                'status' => ResponseStatus::ERROR,
+                'data' => $this->errors(),
+            ])->send(HttpCode::BAD_REQUEST);
+        }
+
+        $response?->back()
+            ->withErrors($this->errors())
+            ->withInputs($this->validation->getValidatedData())
+            ->send();
     }
 
-    /**
-     * Generate errors messages array according to input field name.
-     *
-     * To work properly on custom errors messages you must explicitly define the
-     * input field name as {field} in your error message string
-     */
-    public function errors(): array
+    public function validationSucceeded(Request $request, ?Response $response = null): void
     {
-        $errors = [];
-
-        if (! $this->failed()) {
-            return $errors;
-        }
-
-        foreach ($this->errors as $error) {
-            foreach ($this->inputs as $key => $value) {
-                if (strpos(strtolower($error), strval($key))) {
-                    $error = str_replace(['<span class="gump-field">', '</span>'], ['', ''], $error);
-                    $errors = array_merge($errors, [$key => $error]);
-                }
-            }
-        }
-
-        return $errors;
+        $this->request = $request;
     }
 
-    public function inputs(string|array|null $name = null): array|string|null
+    protected function formatErrorMessages()
     {
-        $validated = [];
-        $inputs = array_keys($this->rules());
-
-        foreach ($inputs as $input) {
-            foreach ($this->inputs as $key => $value) {
-                if ($input === $key) {
-                    $validated = array_merge($validated, [$key => $value]);
-                }
+        foreach ($this->messages as $input => $messages) {
+            foreach ($messages as $rule => $message) {
+                $this->validation->messages()->replace(config('app.lang'), $input.':'.$rule, $message);
             }
         }
-
-        if (is_null($name)) {
-            return $validated;
-        }
-
-        if (is_string($name)) {
-            return $validated[$name] ?? null;
-        }
-
-        return array_intersect_key($validated, array_flip($name));
     }
 }
