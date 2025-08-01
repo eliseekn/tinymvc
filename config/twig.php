@@ -19,7 +19,7 @@ return [
 
     'extensions' => [
         'functions' => [
-            'is_user_admin' => 'is_user_admin',
+            'is_admin' => 'is_admin',
         ],
         'filters' => [],
         'globals' => [],
