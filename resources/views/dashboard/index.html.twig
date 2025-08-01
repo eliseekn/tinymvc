@@ -134,16 +134,14 @@
 				} else {
 					Swal.fire({
 						html: `
-                            <p class="mt-3">Define period :</p>
+                <div>
+                    <label for="start_date" class="form-label">From</label>
+                    <input type="date" id="start_date" name="start_date" class="swal2-input">
+                </div>
 
-                            <div>
-                                <label for="start_date" class="form-label text-start">Start</label>
-                                <input type="date" id="start_date" name="start_date" class="swal2-input">
-                            </div>
-
-                            <label for="end_date" class="form-label text-start">End&nbsp;&nbsp;</label>
-                            <input type="date" id="end_date" name="end_date" class="swal2-input">
-                        `,
+                <label for="end_date" class="form-label">To&nbsp;&nbsp;&nbsp;&nbsp</label>
+                <input type="date" id="end_date" name="end_date" class="swal2-input">
+            `,
 						preConfirm: () => {
 							const startDate = Swal.getPopup().querySelector('#start_date').value
 							const endDate = Swal.getPopup().querySelector('#end_date').value

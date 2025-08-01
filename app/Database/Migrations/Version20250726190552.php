@@ -13,12 +13,13 @@ namespace App\Database\Migrations;
 
 use Core\Database\Schema;
 
-class Version20250313135908
+class Version20250726190552
 {
     public function up(): void
     {
         Schema::alterTable('users')
-            ->deleteColumn('role')
+            ->addColumn()
+            ->addBigInt('role_id')->null()->after('email_verified_at')
             ->run();
     }
 }

@@ -24,6 +24,7 @@ class Version20210403034738
             ->addString('password')->notNull()
             ->addDateTime('email_verified_at')->null()
             ->addString('role')
+            ->addDefaultTimestamps()
             ->run();
     }
 

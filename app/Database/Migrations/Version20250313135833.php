@@ -20,6 +20,7 @@ class Version20250313135833
         Schema::createTable('roles')
             ->addPrimaryKey()->notNull()
             ->addString('name')->notNull()->unique()
+            ->addDefaultTimestamps()
             ->run();
     }
 

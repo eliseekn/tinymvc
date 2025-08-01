@@ -13,12 +13,12 @@ namespace App\Database\Migrations;
 
 use Core\Database\Schema;
 
-class Version20250313135908
+class Version20250726190651
 {
     public function up(): void
     {
         Schema::alterTable('users')
-            ->deleteColumn('role')
+            ->addConstraintForeignKey('users_role', 'role_id')->references('roles', 'id')
             ->run();
     }
 }

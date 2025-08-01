@@ -23,6 +23,7 @@ class Version20210403034739
             ->addString('value')->notNull()->unique()
             ->addDateTime('expires_at')->null()
             ->addString('description')->notNull()
+            ->addDefaultTimestamps()
             ->run();
     }
 
