@@ -12,14 +12,22 @@ declare(strict_types=1);
 namespace NAMESPACE;
 
 use Core\Http\Validation\Rule\RuleInterface;
+use Somnambulist\Components\Validation\Rule;
 
-class CLASSNAME implements RuleInterface
+class CLASSNAME extends Rule implements RuleInterface
 {
-    public string $name = 'RULE_NAME';
-    public string $errorMessage = '';
+    public ?string $name = 'RULE_NAME';
 
-    public function rule(string $field, array $input, array $params, $value) : bool
+    public string $message = 'rule.RULE_NAME';
+
+    public array $fillableParams = [];
+
+    public function check(mixed $value): bool
     {
+        $this->assertHasRequiredParameters([]);
+
+        $field = $this->attribute->key();
+
         return true;
     }
 }
