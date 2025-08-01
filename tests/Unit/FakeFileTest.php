@@ -14,7 +14,7 @@ namespace Tests\Unit;
 use Core\Support\File;
 use PHPUnit\Framework\TestCase;
 
-class FileTest extends TestCase
+class FakeFileTest extends TestCase
 {
     public function test_can_generate_image(): void
     {
