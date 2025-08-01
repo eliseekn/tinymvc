@@ -11,15 +11,50 @@ declare(strict_types=1);
 
 namespace Core\Exceptions;
 
+use Closure;
 use Exception;
 
 /**
- * This exception occurs when route name is not defined.
+ * Route exceptions
  */
-class RouteParameterException extends Exception
+class RouteException extends Exception
 {
-    public function __construct(string $message)
+    public static function noParameterNotDefined(string $parameter): self
     {
-        parent::__construct($message);
+        return new self("No pattern defined for parameter '$parameter'");
+    }
+
+    public static function noHandlerDefined(string $route): self
+    {
+        return new self("No handler defined for route '$route'");
+    }
+
+    public static function noNameDefined(string $name): self
+    {
+        return new self("Route name '$name' is not defined");
+    }
+
+    public static function noRoutesDefined(): self
+    {
+        return new self('No routes defined in ./routes');
+    }
+
+    public static function noPathsDefined(): self
+    {
+        return new self('No routes paths defined in "./config/routes.php"');
+    }
+
+    public static function invalidHandler(Closure|array|string $handler): self
+    {
+        if (is_callable($handler)) {
+
+            return new self('Invalid route handler');
+        }
+
+        if (is_array($handler)) {
+            $handler = json_encode($handler);
+        }
+
+        return new self("Invalid route handler '$handler'");
     }
 }
