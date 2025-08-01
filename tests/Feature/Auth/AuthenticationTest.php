@@ -51,7 +51,7 @@ class AuthenticationTest extends FeatureTestCase
 
     public function test_user_can_register(): void
     {
-        $user = User::factory()->make(['password' => 'password']);
+        $user = User::factory()->make(['password' => 'Passw0rd']);
 
         $this
             ->post('/register', $user->get())

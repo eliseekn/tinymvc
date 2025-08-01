@@ -40,7 +40,7 @@ class PasswordForgotTest extends FeatureTestCase
 
         $this
             ->get('/password/reset?email='.$user->get('email').'&token='.$token->get('value'))
-            ->assertDatabaseDoesNotHave('tokens', $token->get());
+            ->assertDatabaseDoesNotHave('tokens', $token->get(['identifier', 'value']));
     }
 
     public function test_can_update_password(): void

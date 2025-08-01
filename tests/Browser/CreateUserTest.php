@@ -75,7 +75,7 @@ class CreateUserTest extends BrowserTestCase
         $data = [
             'name' => faker()->name(),
             'email' => faker()->unique()->safeEmail(),
-            'password' => 'password',
+            'password' => 'Passw0rd',
         ];
 
         $this->client->submit(
