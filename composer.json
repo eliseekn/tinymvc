@@ -1,57 +1,60 @@
 {
-    "name": "eliseekn/tinymvc",
-    "description": "TinyMVC is a PHP framework based on MVC architecture that helps you build easily and quickly powerful web applications and RESTful API.",
-    "type": "project",
-    "license": "MIT",
-    "keywords": ["php-framework", "mvc"],
-    "authors": [
-        {
-            "name": "N'Guessan Kouadio Elisée",
-            "email": "eliseekn@gmail.com",
-            "homepage": "https://eliseekn.netlify.app",
-            "role": "Developer"
-        }
-    ],
-    "minimum-stability": "dev",
-    "autoload": {
-        "files": [
-            "app/Helpers.php",
-            "core/Support/Helpers.php"
-        ],
-        "psr-4": {
-            "App\\" : "app/",
-            "Core\\" : "core/",
-            "Tests\\" : "tests/"
-        }
-    },
-    "config": {
-        "optimize-autoloader": true
-    },
-    "require": {
-        "php": "^8.1",
-        "wixel/gump": "^1.11",
-        "phpmailer/phpmailer": "^6.1",
-        "nesbot/carbon": "^2.41",
-        "twig/twig": "^3.0",
-        "symfony/console": "^5.2",
-        "dflydev/dot-access-data": "^3.0",
-        "symfony/process": "^5.3",
-        "spatie/php-structure-discoverer": "dev-main",
-        "psy/psysh": "@stable",
-        "symfony/mime": "7.3.x-dev",
-        "doctrine/dbal": "4.3.x-dev",
-        "standaniels/image-generator": "dev-master",
-        "dompdf/dompdf": "dev-master"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^9.5",
-        "symfony/var-dumper": "^5.2",
-        "filp/whoops": "^2.12",
-        "fakerphp/faker": "^1.15",
-        "phpstan/phpstan": "2.0.x-dev",
-        "friendsofphp/php-cs-fixer": "dev-master",
-        "symfony/panther": "^1.0",
-        "symfony/finder": "7.3.x-dev",
-        "symfony/test-pack": "v1.1.0"
+  "name": "eliseekn/tinymvc",
+  "description": "TinyMVC is a PHP framework based on MVC architecture that helps you build easily and quickly powerful web applications and RESTful API.",
+  "type": "project",
+  "license": "MIT",
+  "keywords": [
+    "php-framework",
+    "mvc"
+  ],
+  "authors": [
+    {
+      "name": "N'Guessan Kouadio Elisée",
+      "email": "eliseekn@gmail.com",
+      "homepage": "https://eliseekn.netlify.app",
+      "role": "Developer"
     }
+  ],
+  "minimum-stability": "dev",
+  "autoload": {
+    "files": [
+      "app/Helpers.php",
+      "core/Support/Helpers.php"
+    ],
+    "psr-4": {
+      "App\\": "app/",
+      "Core\\": "core/",
+      "Tests\\": "tests/"
+    }
+  },
+  "config": {
+    "optimize-autoloader": true
+  },
+  "require": {
+    "php": "^8.4",
+    "phpmailer/phpmailer": "^6.1",
+    "nesbot/carbon": "^2.41",
+    "twig/twig": "^3.0",
+    "symfony/console": "^5.2",
+    "dflydev/dot-access-data": "^3.0",
+    "symfony/process": "^5.3",
+    "spatie/php-structure-discoverer": "dev-main",
+    "psy/psysh": "@stable",
+    "symfony/mime": "7.3.x-dev",
+    "doctrine/dbal": "4.3.x-dev",
+    "standaniels/image-generator": "dev-master",
+    "dompdf/dompdf": "dev-master",
+    "somnambulist/validation": "dev-main"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5",
+    "symfony/var-dumper": "^5.2",
+    "filp/whoops": "^2.12",
+    "fakerphp/faker": "^1.15",
+    "phpstan/phpstan": "2.0.x-dev",
+    "friendsofphp/php-cs-fixer": "dev-master",
+    "symfony/panther": "^1.0",
+    "symfony/finder": "7.3.x-dev",
+    "symfony/test-pack": "v1.1.0"
+  }
 }
