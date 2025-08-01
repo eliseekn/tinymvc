@@ -11,47 +11,20 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Database\Models\User;
+use App\Http\UseCases\Api\v1\Auth\LoginUseCase;
+use App\Http\UseCases\Api\v1\Auth\LogoutUseCase;
 use App\Http\Validation\Validators\Auth\LoginValidator;
-use Core\Enums\HttpCode;
-use Core\Enums\ResponseStatus;
-use Core\Http\Auth;
 use Core\Http\Routing\Controller;
-use Core\Support\Encryption;
 
 class AuthController extends Controller
 {
-    public function login(LoginValidator $validator): void
+    public function login(LoginUseCase $useCase, LoginValidator $validator): void
     {
-        $data = $validator->inputs();
-        $user = User::findByEmail($data['email']);
-
-        if (! $user || ! Encryption::check($data['password'], $user->get('password'))) {
-            $this->jsonResponse([
-                'status' => ResponseStatus::ERROR,
-                'message' => 'Email or password is incorrect',
-            ], HttpCode::UNAUTHORIZED);
-        }
-
-        $this->jsonResponse([
-            'status' => ResponseStatus::SUCCESS,
-            'token' => Auth::createToken($user->get('email')),
-            'user' => $user->get(),
-        ]);
+        $useCase->handle($validator->inputs());
     }
 
-    public function logout(): void
+    public function logout(LogoutUseCase $useCase): void
     {
-        if (! Auth::deleteToken($this->request)) {
-            $this->jsonResponse([
-                'status' => ResponseStatus::ERROR,
-                'message' => 'Failed to logout',
-            ], HttpCode::INTERNAL_SERVER_ERROR);
-        }
-
-        $this->jsonResponse([
-            'status' => ResponseStatus::SUCCESS,
-            'message' => 'Logout successfully',
-        ]);
+        $useCase->handle();
     }
 }
