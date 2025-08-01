@@ -20,7 +20,7 @@ class CheckIfUserAdmin
 {
     public function handle(Request $request, Response $response): void
     {
-        if (! is_user_admin()) {
+        if (! is_admin()) {
             if ($request->isJson()) {
                 $response->json([
                     'status' => ResponseStatus::ERROR,
