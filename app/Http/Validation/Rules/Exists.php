@@ -13,18 +13,23 @@ namespace App\Http\Validation\Rules;
 
 use Core\Database\Repository;
 use Core\Http\Validation\Rule\RuleInterface;
+use Somnambulist\Components\Validation\Rule;
 
-class Exists implements RuleInterface
+class Exists extends Rule implements RuleInterface
 {
-    public string $name = 'exists';
+    public ?string $name = 'exists';
 
-    public string $errorMessage = 'This {field} does not exists in database';
+    public string $message = ':attribute does not exists';
 
-    public function rule(string $field, array $input, array $params, $value): bool
+    public array $fillableParams = ['table', 'column'];
+
+    public function check(mixed $value): bool
     {
-        return (new Repository($params[0]))
+        $this->assertHasRequiredParameters(['table', 'column']);
+
+        return (new Repository($this->params['table']))
             ->select('*')
-            ->where($params[1], $value)
+            ->where($this->params['column'], $value)
             ->exists();
     }
 }

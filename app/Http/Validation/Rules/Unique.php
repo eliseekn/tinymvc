@@ -14,29 +14,36 @@ namespace App\Http\Validation\Rules;
 use Core\Database\Repository;
 use Core\Exceptions\ModelNotFoundException;
 use Core\Http\Validation\Rule\RuleInterface;
+use Somnambulist\Components\Validation\Rule;
 
-class Unique implements RuleInterface
+class Unique extends Rule implements RuleInterface
 {
-    public string $name = 'unique';
+    public ?string $name = 'unique';
 
-    public string $errorMessage = 'This {field} is already registered';
+    public string $message = ':attribute has already been used';
 
-    public function rule(string $field, array $input, array $params, $value): bool
+    public array $fillableParams = ['table', 'column'];
+
+    public function check(mixed $value): bool
     {
-        if (! isset($params[1])) {
-            return ! (new Repository($params[0]))
+        $this->assertHasRequiredParameters(['table']);
+
+        $field = $this->attribute->key();
+
+        if (! isset($this->params['column'])) {
+            return ! (new Repository($this->params['table']))
                 ->select($field)
                 ->where($field, $value)
-                ->first();
+                ->exists();
         }
 
-        $model = (new Repository($params[0]))
+        $model = (new Repository($this->params['table']))
             ->select($field)
-            ->where('id', $params[1])
+            ->where('id', $this->params['column'])
             ->first();
 
         if (! $model) {
-            throw new ModelNotFoundException($params[0]);
+            throw new ModelNotFoundException($this->params['table']);
         }
 
         return $model->get($field) === $value;
