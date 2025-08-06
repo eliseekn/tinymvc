@@ -11,18 +11,27 @@ declare(strict_types=1);
 
 namespace App\Http\UseCases\User;
 
-use App\Database\Models\User;
-use Core\Database\Model;
-use Core\Support\UseCase;
+use App\Http\Services\FileUploadService;
+use Core\Support\Alert;
 
-final class UpdateUseCase extends UseCase
+final class UpdateUseCase
 {
-    public function handle(array $data, string $email): Model|false
+    public function __construct(public FileUploadService $fileUploadService)
     {
-        $user = User::findByEmail($email);
+    }
 
-        if (! $user) {
-            return false;
+    public function handle(array $data): void
+    {
+        $user = request()->auth();
+        $file = request()->files('avatar', ['png', 'jpg', 'jpeg']);
+
+        if (! $file->isEmpty() && ! $this->fileUploadService->handle($file, $filename)) {
+            Alert::toast('Failed to upload avatar image')->error();
+            response()->back()->send();
+        }
+
+        if (isset($filename)) {
+            $data['avatar'] = $filename;
         }
 
         if (! empty($data['password'])) {
@@ -31,6 +40,14 @@ final class UpdateUseCase extends UseCase
             unset($data['password']);
         }
 
-        return $user->set($data)->save();
+        if (! $user->set($data)->save()) {
+            Alert::toast('Failed to update profile')->error();
+            response()->back()->send();
+        }
+
+        session()->create('user', $user->get());
+
+        Alert::toast('Profile updated')->success();
+        response()->back()->send();
     }
 }

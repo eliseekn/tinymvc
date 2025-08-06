@@ -14,22 +14,21 @@ namespace App\Http\UseCases\Api\v1\User;
 use App\Database\Models\User;
 use Core\Enums\HttpCode;
 use Core\Enums\ResponseStatus;
-use Core\Support\UseCase;
 
-final class StoreUseCase extends UseCase
+final class StoreUseCase
 {
     public function handle(array $data): void
     {
         $data['password'] = bcrypt($data['password']);
 
         if (! User::factory()->create($data)) {
-            $this->response->json([
+            response()->json([
                 'status' => ResponseStatus::ERROR,
                 'message' => 'Failed to create user',
             ])->send(HttpCode::INTERNAL_SERVER_ERROR);
         }
 
-        $this->response->json([
+        response()->json([
             'status' => ResponseStatus::SUCCESS,
             'message' => 'User created',
         ])->send(HttpCode::CREATED);

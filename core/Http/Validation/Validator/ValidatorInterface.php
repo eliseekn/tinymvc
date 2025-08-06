@@ -11,12 +11,9 @@ declare(strict_types=1);
 
 namespace Core\Http\Validation\Validator;
 
-use Core\Http\Request;
-use Core\Http\Response;
-
 interface ValidatorInterface
 {
-    public function validate(Request $request, Response $response);
+    public function validate();
 
     public function failed();
 
@@ -28,7 +25,7 @@ interface ValidatorInterface
 
     public function messages();
 
-    public function validationSucceeded(Request $request, ?Response $response = null);
+    public function validationSucceeded();
 
-    public function validationFailed(Request $request, ?Response $response = null);
+    public function validationFailed();
 }

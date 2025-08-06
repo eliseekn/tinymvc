@@ -13,22 +13,20 @@ namespace App\Http\Middlewares;
 
 use Core\Enums\HttpCode;
 use Core\Enums\ResponseStatus;
-use Core\Http\Request;
-use Core\Http\Response;
 
 class CheckIfUserAdmin
 {
-    public function handle(Request $request, Response $response): void
+    public function handle(): void
     {
         if (! is_admin()) {
-            if ($request->isJson()) {
-                $response->json([
+            if (request()->isJson()) {
+                response()->json([
                     'status' => ResponseStatus::ERROR,
                     'message' => __('alert.forbidden'),
                 ])->send(HttpCode::FORBIDDEN);
             }
 
-            $response->data(__('alert.forbidden'))->send(HttpCode::FORBIDDEN);
+            response()->data(__('alert.forbidden'))->send(HttpCode::FORBIDDEN);
         }
     }
 }

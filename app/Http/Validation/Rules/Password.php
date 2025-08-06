@@ -18,11 +18,11 @@ class Password extends Rule implements RuleInterface
 {
     public ?string $name = 'passowrd';
 
-    public string $message = ':attribute must contains at least one uppercase letter, one lowercase letter and one digit';
+    public string $message = ':attribute must contains at least one uppercase letter, one lowercase letter, one special character (_-=+~!@#$%^&*) and one digit';
 
     public function check(mixed $value): bool
     {
-        if (preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]+$/', $value)) {
+        if (preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[-_=+~!@#$%^&*])[a-zA-Z\d\-_=+~!@#$%^&*]+$/', $value)) {
             return true;
 
         }

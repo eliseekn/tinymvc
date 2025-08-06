@@ -9,26 +9,33 @@
 
 declare(strict_types=1);
 
-namespace App\Http\UseCases\Api\v1\Auth;
+namespace App\Http\UseCases\Api\v1\User;
 
+use Core\Database\Model;
 use Core\Enums\HttpCode;
 use Core\Enums\ResponseStatus;
-use Core\Http\Auth;
 
-final class LogoutUseCase
+final class UpdateUseCase
 {
-    public function handle(): void
+    public function handle(array $data, Model $user): void
     {
-        if (! Auth::deleteToken()) {
+        if (! empty($data['password'])) {
+            $data['password'] = bcrypt($data['password']);
+        } else {
+            unset($data['password']);
+        }
+
+        if (! $user->set($data)->save()) {
             response()->json([
                 'status' => ResponseStatus::ERROR,
-                'message' => 'Failed to logout',
+                'message' => 'Failed to update user',
             ])->send(HttpCode::INTERNAL_SERVER_ERROR);
         }
 
         response()->json([
             'status' => ResponseStatus::SUCCESS,
-            'message' => 'Logout successfully',
+            'message' => 'User updated',
+            'user' => $user->get(),
         ])->send(HttpCode::OK);
     }
 }

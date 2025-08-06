@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Http\UseCases\User;
 
 use App\Database\Models\User;
-use Core\Support\UseCase;
 
-final class GetCollectionUseCase extends UseCase
+final class GetCollectionUseCase
 {
-    public function handle(array $query): void
+    public function handle(): void
     {
-        $this
-            ->response
+        $query = request()->queries();
+
+        response()
             ->view('dashboard.users.index', [
                 'users' => User::findAllPaginate(
                     $query['perPage'] ?? 10,

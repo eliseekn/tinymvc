@@ -15,7 +15,6 @@ use Closure;
 use Core\Enums\HttpMethod;
 use Core\Enums\RouteParameter;
 use Core\Exceptions\RouteException;
-use Core\Http\Response;
 use Core\Http\Routing\Attributes\Route as RouteAttribute;
 use ReflectionClass;
 use ReflectionMethod;
@@ -113,8 +112,8 @@ class Route
 
     public static function view(string $uri, string $view, array $params = []): self
     {
-        return self::get($uri, function (Response $response) use ($view, $params) {
-            $response->view($view, $params)->send();
+        return self::get($uri, function () use ($view, $params) {
+            response()->view($view, $params)->send();
         });
     }
 

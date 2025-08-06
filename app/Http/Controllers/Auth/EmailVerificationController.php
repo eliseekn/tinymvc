@@ -13,8 +13,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\UseCases\EmailVerification\NotifyUseCase;
 use App\Http\UseCases\EmailVerification\VerifyUseCase;
-use App\Http\UseCases\User\UpdateUseCase;
-use App\Http\Validation\Validators\EmailValidator;
+use App\Http\Validation\Validators\Auth\EmailValidator;
 use Core\Enums\HttpMethod;
 use Core\Http\Routing\Attributes\Route;
 use Core\Http\Routing\Controller;
@@ -27,7 +26,7 @@ class EmailVerificationController extends Controller
     #[Route(HttpMethod::GET, '/email/notify')]
     public function index(): void
     {
-        $this->response->view('auth.notify')->send();
+        response()->view('auth.notify')->send();
     }
 
     #[Route(HttpMethod::POST, '/email/notify')]
@@ -37,8 +36,8 @@ class EmailVerificationController extends Controller
     }
 
     #[Route(HttpMethod::GET, '/email/verify')]
-    public function verify(VerifyUseCase $verifyUseCase, UpdateUseCase $updateUseCase): void
+    public function verify(VerifyUseCase $verifyUseCase): void
     {
-        $verifyUseCase->handle($updateUseCase);
+        $verifyUseCase->handle();
     }
 }

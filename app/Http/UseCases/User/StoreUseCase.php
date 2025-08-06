@@ -14,9 +14,8 @@ namespace App\Http\UseCases\User;
 use App\Database\Models\User;
 use App\Events\UserCreated\UserCreatedEvent;
 use Core\Support\Alert;
-use Core\Support\UseCase;
 
-final class StoreUseCase extends UseCase
+final class StoreUseCase
 {
     public function handle(array $data): void
     {
@@ -32,6 +31,6 @@ final class StoreUseCase extends UseCase
         dispatch(new UserCreatedEvent($user, $password));
 
         Alert::toast('User created')->success();
-        $this->response->back()->send();
+        response()->back()->send();
     }
 }

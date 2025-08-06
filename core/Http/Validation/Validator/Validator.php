@@ -14,7 +14,6 @@ namespace Core\Http\Validation\Validator;
 use Core\Enums\HttpCode;
 use Core\Enums\ResponseStatus;
 use Core\Http\Request;
-use Core\Http\Response;
 use Somnambulist\Components\Validation\Factory as RakitValidator;
 use Somnambulist\Components\Validation\Rule;
 use Somnambulist\Components\Validation\Validation;
@@ -25,8 +24,6 @@ use Spatie\StructureDiscoverer\Discover;
  */
 class Validator implements ValidatorInterface
 {
-    protected Request $request;
-
     protected Validation $validation;
 
     protected RakitValidator $validator;
@@ -54,10 +51,8 @@ class Validator implements ValidatorInterface
         return new static($rules, $messages);
     }
 
-    public function validate(Request $request, ?Response $response = null)
+    public function validate()
     {
-        $this->request = $request;
-
         if (empty($this->rules)) {
             $this->rules = $this->rules();
         }
@@ -67,7 +62,7 @@ class Validator implements ValidatorInterface
         }
 
         $this->validation = $this->validator->make(
-            $request->inputs(),
+            request()->inputs(),
             $this->rules,
         );
 
@@ -75,13 +70,11 @@ class Validator implements ValidatorInterface
 
         $this->validation->validate();
 
-        if ($this->failed() && ! is_null($response)) {
-            $this->validationFailed($request, $response);
+        if ($this->failed()) {
+            $this->validationFailed();
         }
 
-        if (! is_null($response)) {
-            $this->validationSucceeded($request, $response);
-        }
+        $this->validationSucceeded();
 
         return $this;
     }
@@ -121,26 +114,24 @@ class Validator implements ValidatorInterface
         return [];
     }
 
-    public function validationFailed(Request $request, ?Response $response = null): void
+    public function validationFailed(): void
     {
-        $this->request = $request;
-
-        if ($request->isJson()) {
-            $response?->json([
+        if (request()->isJson()) {
+            response()->json([
                 'status' => ResponseStatus::ERROR,
                 'data' => $this->errors(),
             ])->send(HttpCode::BAD_REQUEST);
         }
 
-        $response?->back()
+        response()->back()
             ->withErrors($this->errors())
             ->withInputs($this->validation->getValidatedData())
             ->send();
     }
 
-    public function validationSucceeded(Request $request, ?Response $response = null): void
+    public function validationSucceeded(): void
     {
-        $this->request = $request;
+        //
     }
 
     protected function formatErrorMessages()

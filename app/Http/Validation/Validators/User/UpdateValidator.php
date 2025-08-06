@@ -30,7 +30,7 @@ class UpdateValidator extends Validator
                 Rules::max(255),
                 Rules::custom(new Unique, [
                     'users',
-                    $this->request->routeParam('user'),
+                    request()->routeParam('user'),
                 ]),
             ])
             ->add('role_id', [

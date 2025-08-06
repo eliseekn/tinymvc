@@ -25,7 +25,7 @@ class DashboardController extends Controller
     #[Route(HttpMethod::GET, '/dashboard', ['auth', 'verified'], 'dashboard.index')]
     public function __invoke(): void
     {
-        $period = $this->request->queries('period', 'day');
+        $period = request()->queries('period', 'day');
 
         if (str_contains($period, '~')) {
             $period = explode('~', $period, 2);

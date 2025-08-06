@@ -22,4 +22,8 @@ return [
     \App\Events\UserCreated\UserCreatedEvent::class => [
         \App\Events\UserCreated\SendUserPasswordNotification::class,
     ],
+
+    \App\Events\ModelNotFound\ModelNotFoundEvent::class => [
+        \App\Events\ModelNotFound\SendNotFoundResponse::class,
+    ],
 ];

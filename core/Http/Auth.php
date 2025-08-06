@@ -29,14 +29,14 @@ class Auth
         return session()->get('auth_attempts', 0);
     }
 
-    public static function attempt(Response $response, Request $request, &$user): bool
+    public static function attempt(&$user): bool
     {
         session()->push('auth_attempts', 1, 0);
-        $credentials = $request->only([config('security.auth.identifier'), 'password']);
+        $credentials = request()->only([config('security.auth.identifier'), 'password']);
 
         if (! self::checkCredentials($credentials[config('security.auth.identifier')], $credentials['password'], $user)) {
             if (config('security.auth.max_attempts') > 0 && self::getAttempts() >= config('security.auth.max_attempts')) {
-                $response
+                response()
                     ->back()
                     ->with('auth_attempts_timeout', carbon()->addMinutes(config('security.auth.unlock_timeout'))->toDateTimeString())
                     ->send();
@@ -49,7 +49,7 @@ class Auth
         session()->regenerate();
         session()->create('user', $user->get());
 
-        if ($request->hasInput('remember')) {
+        if (request()->hasInput('remember')) {
             cookies()->create('user', $user->get('email'), 3600 * 24 * 365);
         }
 
@@ -89,32 +89,32 @@ class Auth
         return encrypt($token->get('value'));
     }
 
-    public static function deleteToken(Request $request): bool
+    public static function deleteToken(): bool
     {
-        $token = Token::findByValue(self::getToken($request));
+        $token = Token::findByValue(self::getToken());
 
         return $token && $token->delete();
     }
 
-    public static function getToken(Request $request): string
+    public static function getToken(): string
     {
-        if (empty($request->getHttpAuth())) {
+        if (empty(request()->getHttpAuth())) {
             return '';
         }
 
-        [$method, $token] = $request->getHttpAuth();
+        [$method, $token] = request()->getHttpAuth();
 
         return trim($method) !== HttpAuthMethod::BEARER ? '' : decrypt($token);
     }
 
-    public static function check(Request $request): bool
+    public static function check(): bool
     {
         if (session()->has('user')) {
             return true;
         }
 
-        if ($request->isJson() || config('app.env') === AppEnv::TEST) {
-            return self::checkToken(self::getToken($request), $user);
+        if (request()->isJson() || config('app.env') === AppEnv::TEST) {
+            return self::checkToken(self::getToken(), $user);
         }
 
         return false;
@@ -125,7 +125,7 @@ class Auth
         return cookies()->has('user');
     }
 
-    public static function user(Request $request): ?Model
+    public static function user(): ?Model
     {
         if (session()->has('user')) {
             $user = session()->get('user');
@@ -137,7 +137,7 @@ class Auth
             return User::findByIdentifier($user[config('security.auth.identifier')]);
         }
 
-        return $request->auth();
+        return request()->auth();
     }
 
     public static function forget(): void

@@ -9,15 +9,14 @@ use App\Enums\TokenDescription;
 use App\Mails\PasswordResetMail;
 use Core\Notification\Notification;
 use Core\Support\Alert;
-use Core\Support\UseCase;
 use Exception;
 
-final class NotifyUseCase extends UseCase
+final class NotifyUseCase
 {
     public function handle(): void
     {
         $tokenValue = generate_token(15);
-        $email = $this->request->inputs('email');
+        $email = request()->inputs('email');
         $token = Token::findByDescription($email, TokenDescription::PASSWORD_RESET->value);
 
         if ($token) {
@@ -40,6 +39,6 @@ final class NotifyUseCase extends UseCase
             Alert::default(__('alert.password_reset_link_not_sent'))->success();
         }
 
-        $this->response->back()->send();
+        response()->back()->send();
     }
 }

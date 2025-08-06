@@ -13,20 +13,19 @@ namespace App\Http\UseCases;
 
 use Core\Http\Auth;
 use Core\Support\Alert;
-use Core\Support\UseCase;
 
-final class LoginUseCase extends UseCase
+final class LoginUseCase
 {
     public function handle(array $data): void
     {
-        if (Auth::attempt($this->response, $this->request, $user)) {
+        if (Auth::attempt($user)) {
             Alert::toast(__('alert.welcome', ['name' => $user->get('name')]))->success();
-            $this->response->url('/dashboard')->send();
+            response()->url('/dashboard')->send();
         }
 
         Alert::default(__('alert.login_failed'))->error();
 
-        $this->response
+        response()
             ->url('/login')
             ->withInputs($data)
             ->withErrors([__('alert.login_failed')])

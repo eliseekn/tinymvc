@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Validation\Validators;
+namespace App\Http\Validation\Validators\Auth;
 
 use Core\Http\Validation\Rule\Rules;
 use Core\Http\Validation\Validator\Validator;

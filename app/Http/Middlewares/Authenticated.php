@@ -12,8 +12,6 @@ declare(strict_types=1);
 namespace App\Http\Middlewares;
 
 use Core\Http\Auth;
-use Core\Http\Request;
-use Core\Http\Response;
 use Core\Support\Alert;
 
 /**
@@ -21,15 +19,15 @@ use Core\Support\Alert;
  */
 class Authenticated
 {
-    public function handle(Request $request, Response $response): void
+    public function handle(): void
     {
-        if (! Auth::check($request)) {
+        if (! Auth::check()) {
             Auth::forget();
             Alert::default(__('alert.not_logged'))->error();
 
-            $response
+            response()
                 ->url('/login')
-                ->intended($request->fullUri())
+                ->intended(request()->fullUri())
                 ->withErrors([__('alert.not_logged')])
                 ->send();
         }

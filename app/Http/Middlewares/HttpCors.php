@@ -11,16 +11,14 @@ declare(strict_types=1);
 
 namespace App\Http\Middlewares;
 
-use Core\Http\Response;
-
 /**
  * Manage HTTP CORS.
  */
 class HttpCors
 {
-    public function handle(Response $response): void
+    public function handle(): void
     {
-        $response->addHeaders([
+        response()->addHeaders([
             'Access-Control-Allow-Origin' => '*',
             'Access-Control-Allow-Headers' => '*',
             'Access-Control-Allow-Methods' => '*',

@@ -14,7 +14,6 @@ namespace App\Http\Controllers\Dashboard;
 use App\Database\Models\Role;
 use App\Http\UseCases\User\GetCollectionUseCase;
 use App\Http\UseCases\User\StoreUseCase;
-use App\Http\UseCases\User\UpdateUseCase;
 use App\Http\Validation\Validators\User\StoreValidator;
 use App\Http\Validation\Validators\User\UpdateValidator;
 use Core\Database\Model;
@@ -26,13 +25,23 @@ use Core\Support\Alert;
 
 class UserController extends Controller
 {
-    #[Route(HttpMethod::GET, '/dashboard/users', ['auth', 'verified'], 'users.index')]
+    #[Route(
+        methods: HttpMethod::GET,
+        uri: '/dashboard/users',
+        middlewares: ['auth', 'verified'],
+        name: 'users.index'
+    )]
     public function index(GetCollectionUseCase $useCase): void
     {
-        $useCase->handle($this->request->queries());
+        $useCase->handle();
     }
 
-    #[Route(HttpMethod::GET, '/dashboard/users/create', ['auth', 'verified', 'admin'], 'users.create')]
+    #[Route(
+        methods: HttpMethod::GET,
+        uri: '/dashboard/users/create',
+        middlewares: ['auth', 'verified', 'admin'],
+        name: 'users.create'
+    )]
     public function create(): void
     {
         $this->render('dashboard.users.create', [
@@ -40,7 +49,12 @@ class UserController extends Controller
         ]);
     }
 
-    #[Route(HttpMethod::POST, '/dashboard/users', ['auth', 'verified', 'admin'], 'users.store')]
+    #[Route(
+        methods: HttpMethod::POST,
+        uri: '/dashboard/users',
+        middlewares: ['auth', 'verified', 'admin'],
+        name: 'users.store'
+    )]
     public function store(StoreUseCase $useCase, StoreValidator $validator): void
     {
         $useCase->handle($validator->inputs());
@@ -54,13 +68,8 @@ class UserController extends Controller
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
-    public function edit(?Model $user = null): void
+    public function edit(Model $user): void
     {
-        if (! $user) {
-            Alert::toast('User not found')->error();
-            $this->redirectBack();
-        }
-
         $this->render('dashboard.users.edit', [
             'user' => $user,
             'roles' => Role::findAll(),
@@ -75,14 +84,14 @@ class UserController extends Controller
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
-    public function update(UpdateUseCase $useCase, UpdateValidator $validator, ?Model $user = null): void
+    public function update(UpdateValidator $validator, Model $user): void
     {
-        if (! $user || ! $useCase->handle($validator->inputs(), $user->get('email'))) {
+        if (! $user->set($validator->inputs())->save()) {
             Alert::toast('Failed to update user')->error();
         }
 
         Alert::toast('User updated')->success();
-        $this->response->back()->send();
+        $this->redirectBack();
     }
 
     #[Route(
@@ -93,13 +102,13 @@ class UserController extends Controller
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
-    public function delete(?Model $user = null): void
+    public function delete(Model $user): void
     {
-        if (! $user || ! $user->delete()) {
+        if (! $user->delete()) {
             Alert::toast('Failed to delete user')->error();
         }
 
         Alert::toast('User deleted')->success();
-        $this->response->back()->send();
+        $this->redirectBack();
     }
 }

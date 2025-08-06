@@ -15,9 +15,8 @@ use App\Database\Models\User;
 use App\Events\UserRegistered\UserRegisteredEvent;
 use App\Http\UseCases\EmailVerification\NotifyUseCase;
 use Core\Support\Alert;
-use Core\Support\UseCase;
 
-final class RegisterUseCase extends UseCase
+final class RegisterUseCase
 {
     public function handle(array $data, NotifyUseCase $notifyUseCase): void
     {
@@ -32,6 +31,6 @@ final class RegisterUseCase extends UseCase
         dispatch(new UserRegisteredEvent($user));
 
         Alert::default(__('alert.account_created'))->success();
-        $this->response->view('auth.login')->send();
+        response()->view('auth.login')->send();
     }
 }

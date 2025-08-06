@@ -11,12 +11,9 @@ declare(strict_types=1);
 
 namespace Core\Support;
 
+use App\Events\ModelNotFound\ModelNotFoundEvent;
 use Closure;
 use Core\Database\Model;
-use Core\Http\Cookies;
-use Core\Http\Request;
-use Core\Http\Response;
-use Core\Http\Session;
 use Core\Http\Validation\Validator\Validator;
 use ReflectionClass;
 use ReflectionException;
@@ -101,15 +98,18 @@ class DependencyInjection
                 // @phpstan-ignore-next-line
                 if (! $dependency->isBuiltin()) {
                     if (is_subclass_of($class, Validator::class)) {
-                        $class = $class::make()->validate(new Request, new Response);
-                    } elseif (is_subclass_of($class, UseCase::class)) {
-                        $class = new $class(new Request, new Response, new Session, new Cookies);
+                        $class = $class::make()->validate();
                     } elseif ($class === Model::class) {
                         [$table, $column, $value] = array_values($bindings[$bindingKey]);
                         $class = (new $class($table))->findBy($column, $value);
+
+                        if (is_null($class)) {
+                            dispatch(new ModelNotFoundEvent($table, $column, $value));
+                        }
+
                         $bindingKey++;
                     } else {
-                        $class = new $class;
+                        $class = $this->resolveClass($class);
                     }
 
                     $dependencies[] = $class;
@@ -118,5 +118,26 @@ class DependencyInjection
         }
 
         return $dependencies;
+    }
+
+    public function resolveClass(string $class, array $dependencies = []): ?object
+    {
+        $reflector = new ReflectionClass($class);
+        $constructor = $reflector->getConstructor();
+        $parameters = $constructor?->getParameters() ?? [];
+
+        foreach ($parameters as $parameter) {
+            $dependency = $parameter->getType();
+
+            // @phpstan-ignore-next-line
+            $class = $dependency->getName();
+            array_unshift($dependencies, new $class);
+        }
+
+        if (empty($dependencies)) {
+            return $reflector->newInstance();
+        }
+
+        return $reflector->newInstanceArgs($dependencies);
     }
 }

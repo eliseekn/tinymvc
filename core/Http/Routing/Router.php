@@ -17,8 +17,6 @@ use Core\Exceptions\ControllerNotFoundException;
 use Core\Exceptions\MiddlewareNotFoundException;
 use Core\Exceptions\RouteException;
 use Core\Http\Middlewares\CsrfProtection;
-use Core\Http\Request;
-use Core\Http\Response;
 use Core\Support\DependencyInjection;
 use Exception;
 
@@ -27,7 +25,7 @@ use Exception;
  */
 class Router
 {
-    protected static function match(Request $request, string $route, &$params, array $routeParams = []): bool
+    protected static function match(string $route, &$params, array $routeParams = []): bool
     {
         $route = preg_replace_callback('/\{([a-zA-Z0-9_-]+)\??\}/', function ($matches) use ($routeParams) {
             $param = $matches[1];
@@ -42,7 +40,7 @@ class Router
             return $optional ? "?$pattern?" : $pattern;
         }, $route);
 
-        if (preg_match('#^'.$route.'$#', $request->method().' '.$request->uri(), $params)) {
+        if (preg_match('#^'.$route.'$#', request()->method().' '.request()->uri(), $params)) {
             array_shift($params);
 
             return true;
@@ -54,10 +52,10 @@ class Router
     /**
      * @throws MiddlewareNotFoundException
      */
-    protected static function executeMiddlewares(Request $request, array $middlewares): void
+    protected static function executeMiddlewares(array $middlewares): void
     {
-        if (in_array(strtoupper($request->method()), [HttpMethod::POST, HttpMethod::PATCH, HttpMethod::PUT])) {
-            if (! in_array($request->uri(), config('security.csrf_excluded_uri'))) {
+        if (in_array(strtoupper(request()->method()), [HttpMethod::POST, HttpMethod::PATCH, HttpMethod::PUT])) {
+            if (! in_array(request()->uri(), config('security.csrf_excluded_uri'))) {
                 (new DependencyInjection)->resolve(CsrfProtection::class, 'handle');
             }
         }
@@ -119,8 +117,6 @@ class Router
      */
     public static function dispatch(): void
     {
-        $request = new Request;
-        $response = new Response;
         $routes = Route::getAll();
 
         if (empty($routes)) {
@@ -128,20 +124,20 @@ class Router
         }
 
         foreach ($routes as $route => $options) {
-            $request_method = $request->inputs('_method', $request->method());
-            $request->method($request_method);
+            $request_method = request()->inputs('_method', request()->method());
+            request()->method($request_method);
 
-            if (self::match($request, $route, $params, $options['parameters'] ?? [])) {
+            if (self::match($route, $params, $options['parameters'] ?? [])) {
                 if (! isset($options['handler'])) {
                     throw RouteException::noHandlerDefined($route);
                 }
 
-                if (! $request->uriContains('api')) {
-                    session()->push('history', [$request->uri()]);
+                if (! request()->uriContains('api')) {
+                    session()->push('history', [request()->uri()]);
                 }
 
                 if (isset($options['middlewares'])) {
-                    self::executeMiddlewares($request, $options['middlewares']);
+                    self::executeMiddlewares($options['middlewares']);
                 }
 
                 $bindings = resolve_route_binding($route, $options['parameters'] ?? [], $options['bindings'] ?? []);
@@ -150,6 +146,6 @@ class Router
             }
         }
 
-        $response->view(config('errors.views.404'))->send();
+        response()->view(config('errors.views.404'))->send();
     }
 }

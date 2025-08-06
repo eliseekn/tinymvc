@@ -17,6 +17,7 @@ use Core\Exceptions\ViewNotFoundException;
 use Core\Http\Auth;
 use Core\Http\Cookies;
 use Core\Http\Request;
+use Core\Http\Response;
 use Core\Http\Routing\Route;
 use Core\Http\Routing\View;
 use Core\Http\Session;
@@ -118,7 +119,7 @@ if (! function_exists('auth')) {
      */
     function auth(): ?Model
     {
-        return Auth::user(request());
+        return Auth::user();
     }
 }
 
@@ -140,12 +141,16 @@ if (! function_exists('generate_csrf_token')) {
 }
 
 if (! function_exists('request')) {
-    /**
-     * Generate crsf token html input tag.
-     */
     function request(): Request
     {
         return new Request;
+    }
+}
+
+if (! function_exists('response')) {
+    function response(): Response
+    {
+        return new Response;
     }
 }
 

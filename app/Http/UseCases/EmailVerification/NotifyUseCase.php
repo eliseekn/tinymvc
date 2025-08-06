@@ -16,10 +16,9 @@ use App\Enums\TokenDescription;
 use App\Mails\VerificationMail;
 use Core\Notification\Notification;
 use Core\Support\Alert;
-use Core\Support\UseCase;
 use Exception;
 
-final class NotifyUseCase extends UseCase
+final class NotifyUseCase
 {
     public function handle(string $email): void
     {
@@ -44,10 +43,10 @@ final class NotifyUseCase extends UseCase
             report($e);
             $token->delete();
             Alert::default(__('alert.email_verification_link_not_sent'))->error();
-            $this->response->url('/signup')->send();
+            response()->url('/signup')->send();
         }
 
         Alert::default(__('alert.email_verification_link_sent'))->success();
-        $this->response->url('/email/notify')->send();
+        response()->url('/email/notify')->send();
     }
 }

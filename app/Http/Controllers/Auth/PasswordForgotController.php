@@ -14,8 +14,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\UseCases\PasswordReset\NotifyUseCase;
 use App\Http\UseCases\PasswordReset\ResetUseCase;
 use App\Http\UseCases\PasswordReset\UpdatePasswordUseCase;
-use App\Http\UseCases\User\UpdateUseCase;
-use App\Http\Validation\Validators\Auth\LoginValidator;
+use App\Http\Validation\Validators\Auth\UpdatePasswordValidator;
 use Core\Enums\HttpMethod;
 use Core\Http\Routing\Attributes\Route;
 use Core\Http\Routing\Controller;
@@ -23,7 +22,7 @@ use Core\Http\Routing\Controller;
 /**
  * Manage password forgot.
  */
-class ForgotPasswordController extends Controller
+class PasswordForgotController extends Controller
 {
     #[Route(HttpMethod::POST, '/password/notify')]
     public function notify(NotifyUseCase $useCase): void
@@ -38,8 +37,8 @@ class ForgotPasswordController extends Controller
     }
 
     #[Route(HttpMethod::POST, '/password/update')]
-    public function update(UpdatePasswordUseCase $useCase, LoginValidator $validator, UpdateUseCase $updateUseCase): void
+    public function update(UpdatePasswordUseCase $useCase, UpdatePasswordValidator $validator): void
     {
-        $useCase->handle($updateUseCase, $validator->inputs());
+        $useCase->handle($validator->inputs());
     }
 }

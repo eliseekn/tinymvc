@@ -21,7 +21,7 @@ class CLASSNAME extends Validator
      */
     public function rules(): array
     {
-        return Rule::add('column', [Rules::REQUIRED, Rules::max(255)])
+        return Rules::add('column', [Rules::REQUIRED, Rules::max(255)])
            ->make();
     }
 

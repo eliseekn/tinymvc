@@ -12,15 +12,13 @@ declare(strict_types=1);
 namespace App\Http\Middlewares;
 
 use Core\Http\Auth;
-use Core\Http\Request;
-use Core\Http\Response;
 
 class RedirectIfLogged
 {
-    public function handle(Request $request, Response $response): void
+    public function handle(): void
     {
-        if (Auth::check($request)) {
-            $response->url(config('security.redirect_if_logged'))->send();
+        if (Auth::check()) {
+            response()->url(config('security.redirect_if_logged'))->send();
         }
     }
 }

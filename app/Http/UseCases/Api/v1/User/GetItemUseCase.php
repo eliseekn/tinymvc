@@ -9,15 +9,17 @@
 
 declare(strict_types=1);
 
-namespace NAMESPACE;
+namespace App\Http\UseCases\Api\v1\User;
 
-use App\Database\Models\MODEL_NAME;
 use Core\Database\Model;
+use Core\Enums\HttpCode;
 
-final class CLASSNAME
+final class GetItemUseCase
 {
-    public function handle(array $data): Model|false
+    public function handle(Model $user): void
     {
-        return MODEL_NAME::factory()->create($data);
+        response()
+            ->json($user->get())
+            ->send(HttpCode::OK);
     }
 }

@@ -16,22 +16,21 @@ use Core\Enums\HttpCode;
 use Core\Enums\ResponseStatus;
 use Core\Http\Auth;
 use Core\Support\Encryption;
-use Core\Support\UseCase;
 
-final class LoginUseCase extends UseCase
+final class LoginUseCase
 {
     public function handle(array $data): void
     {
         $user = User::findByEmail($data['email']);
 
         if (! $user || ! Encryption::check($data['password'], $user->get('password'))) {
-            $this->response->json([
+            response()->json([
                 'status' => ResponseStatus::ERROR,
                 'message' => 'Email or password is incorrect',
             ])->send(HttpCode::UNAUTHORIZED);
         }
 
-        $this->response->json([
+        response()->json([
             'status' => ResponseStatus::SUCCESS,
             'token' => Auth::createToken($user->get(config('security.auth.identifier'))),
             'user' => $user->get(),

@@ -24,7 +24,7 @@ class RegisterController extends Controller
     #[Route(HttpMethod::GET, '/signup', ['remember'])]
     public function index(): void
     {
-        if (! Auth::check($this->request)) {
+        if (! Auth::check()) {
             $this->render('auth.signup');
         }
 

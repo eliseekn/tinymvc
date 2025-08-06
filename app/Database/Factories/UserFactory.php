@@ -28,7 +28,7 @@ class UserFactory extends Factory
         return [
             'name' => faker()->name(),
             'email' => faker()->unique()->safeEmail(),
-            'password' => bcrypt('password'),
+            'password' => bcrypt('P@ssw0rd'),
             'email_verified_at' => null,
             'role_id' => Role::findByName(UserRole::USER->value)?->getId(),
             'avatar' => null,

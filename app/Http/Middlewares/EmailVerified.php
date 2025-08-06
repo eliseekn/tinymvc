@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace App\Http\Middlewares;
 
-use Core\Http\Request;
-use Core\Http\Response;
 use Core\Support\Alert;
 
 /**
@@ -20,14 +18,14 @@ use Core\Support\Alert;
  */
 class EmailVerified
 {
-    public function handle(Request $request, Response $response): void
+    public function handle(): void
     {
         if (config('security.auth.email_verification') && is_null(auth()->get('email_verified_at'))) {
             Alert::default(__('alert.email_not_verified'))->error();
 
-            $response
+            response()
                 ->url('/email/notify')
-                ->intended($request->fullUri())
+                ->intended(request()->fullUri())
                 ->send();
         }
     }

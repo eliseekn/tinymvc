@@ -4,22 +4,21 @@ declare(strict_types=1);
 
 namespace App\Http\UseCases\PasswordReset;
 
-use App\Http\UseCases\User\UpdateUseCase;
+use App\Database\Models\User;
 use Core\Support\Alert;
-use Core\Support\UseCase;
 
-final class UpdatePasswordUseCase extends UseCase
+final class UpdatePasswordUseCase
 {
-    public function handle(UpdateUseCase $updateUseCase, array $data): void
+    public function handle(array $data): void
     {
-        $user = $updateUseCase->handle(['password' => $data['password']], $data['email']);
+        $user = User::findByEmail($data['email']);
 
-        if (! $user) {
+        if (! $user->set(['password' => bcrypt($data['password'])])->save()) {
             Alert::default(__('alert.password_not_reset'))->error();
-            $this->response->back()->send();
+            response()->back()->send();
         }
 
         Alert::default(__('alert.password_reset'))->success();
-        $this->response->url('/login')->send();
+        response()->url('/login')->send();
     }
 }

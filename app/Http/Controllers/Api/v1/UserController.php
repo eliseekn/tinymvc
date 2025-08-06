@@ -11,15 +11,15 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\Http\UseCases\Api\v1\User\DeleteUseCase;
 use App\Http\UseCases\Api\v1\User\GetCollectionUseCase;
+use App\Http\UseCases\Api\v1\User\GetItemUseCase;
 use App\Http\UseCases\Api\v1\User\StoreUseCase;
-use App\Http\UseCases\User\UpdateUseCase;
+use App\Http\UseCases\Api\v1\User\UpdateUseCase;
 use App\Http\Validation\Validators\User\StoreValidator;
 use App\Http\Validation\Validators\User\UpdateValidator;
 use Core\Database\Model;
-use Core\Enums\HttpCode;
 use Core\Enums\HttpMethod;
-use Core\Enums\ResponseStatus;
 use Core\Enums\RouteParameter;
 use Core\Http\Routing\Attributes\Route;
 use Core\Http\Routing\Controller;
@@ -29,7 +29,7 @@ class UserController extends Controller
     #[Route(HttpMethod::GET, '/api/v1/users', ['api'])]
     public function index(GetCollectionUseCase $useCase): void
     {
-        $useCase->handle($this->request->queries());
+        $useCase->handle();
     }
 
     #[Route(
@@ -39,16 +39,9 @@ class UserController extends Controller
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
-    public function show(?Model $user = null): void
+    public function show(GetItemUseCase $useCase, Model $user): void
     {
-        if (! $user) {
-            $this->jsonResponse([
-                'status' => ResponseStatus::ERROR,
-                'message' => 'User not found',
-            ], HttpCode::NOT_FOUND);
-        }
-
-        $this->jsonResponse($user->get());
+        $useCase->handle($user);
     }
 
     #[Route(HttpMethod::POST, '/api/v1/users', ['api', 'admin'])]
@@ -64,20 +57,9 @@ class UserController extends Controller
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
-    public function update(UpdateUseCase $useCase, UpdateValidator $validator, ?Model $user = null): void
+    public function update(UpdateUseCase $useCase, UpdateValidator $validator, Model $user): void
     {
-        if (! $user || ! $useCase->handle($validator->inputs(), $user->get('email'))) {
-            $this->jsonResponse([
-                'status' => ResponseStatus::ERROR,
-                'message' => 'Failed to update user',
-            ], HttpCode::INTERNAL_SERVER_ERROR);
-        }
-
-        $this->jsonResponse([
-            'status' => ResponseStatus::SUCCESS,
-            'message' => 'User updated',
-            'user' => $user->get(),
-        ]);
+        $useCase->handle($validator->inputs(), $user);
     }
 
     #[Route(
@@ -87,18 +69,8 @@ class UserController extends Controller
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
-    public function delete(?Model $user = null): void
+    public function delete(DeleteUseCase $useCase, Model $user): void
     {
-        if (! $user || ! $user->delete()) {
-            $this->jsonResponse([
-                'status' => ResponseStatus::ERROR,
-                'message' => 'Failed to delete user',
-            ], HttpCode::INTERNAL_SERVER_ERROR);
-        }
-
-        $this->jsonResponse([
-            'status' => ResponseStatus::SUCCESS,
-            'message' => 'User delete',
-        ]);
+        $useCase->handle($user);
     }
 }

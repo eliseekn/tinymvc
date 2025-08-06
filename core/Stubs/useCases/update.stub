@@ -13,13 +13,12 @@ namespace NAMESPACE;
 
 use App\Database\Models\MODEL_NAME;
 use Core\Database\Model;
-use Core\Support\UseCase;
 
-final class CLASSNAME extends UseCase
+final class CLASSNAME
 {
-  public function handle(array $data, int $id): Model|false
-	{
+    public function handle(array $data, int $id): Model|false
+    {
         $MODEL_NAME = MODEL_NAME::find($id);
         return $MODEL_NAME && $MODEL_NAME->set($data)->save();
-	}
+    }
 }

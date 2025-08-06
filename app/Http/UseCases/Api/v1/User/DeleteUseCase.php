@@ -11,13 +11,24 @@ declare(strict_types=1);
 
 namespace App\Http\UseCases\Api\v1\User;
 
-use App\Database\Models\User;
-use Core\Support\UseCase;
+use Core\Database\Model;
+use Core\Enums\HttpCode;
+use Core\Enums\ResponseStatus;
 
-final class DeleteUseCase extends UseCase
+final class DeleteUseCase
 {
-    public function handle(int $id): bool
+    public function handle(Model $user): void
     {
-        return User::find($id)?->delete();
+        if (! $user->delete()) {
+            response()->json([
+                'status' => ResponseStatus::ERROR,
+                'message' => 'Failed to delete user',
+            ])->send(HttpCode::INTERNAL_SERVER_ERROR);
+        }
+
+        response()->json([
+            'status' => ResponseStatus::SUCCESS,
+            'message' => 'User delete',
+        ])->send(HttpCode::OK);
     }
 }

@@ -28,6 +28,7 @@ class Response
         public $data = null,
         public array $headers = []
     ) {
+        new Session;
     }
 
     public function addHeaders(array $headers): self

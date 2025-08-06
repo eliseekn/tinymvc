@@ -15,41 +15,33 @@ use Core\Enums\HttpCode;
 use Core\Exceptions\FileNotFoundException;
 use Core\Exceptions\InvalidJsonDataException;
 use Core\Exceptions\InvalidResponseDataException;
-use Core\Http\Cookies;
-use Core\Http\Request;
-use Core\Http\Response;
-use Core\Http\Session;
 use Core\Http\Validation\Validator\Validator;
 use Exception;
 
 class Controller
 {
-    public function __construct(
-        public Request $request,
-        public Response $response,
-        public Session $session,
-        public Cookies $cookies
-    ) {
+    public function __construct()
+    {
     }
 
     public function redirectToUrl(string $uri, array $queries = []): void
     {
-        $this->response->url($uri, $queries)->send();
+        response()->url($uri, $queries)->send();
     }
 
     public function redirectToRoute(string $route, array $params = []): void
     {
-        $this->response->route($route, $params)->send();
+        response()->route($route, $params)->send();
     }
 
     public function redirectBack(): void
     {
-        $this->response->back()->send();
+        response()->back()->send();
     }
 
     public function render(string $view, array $data = []): void
     {
-        $this->response->view($view, $data)->send(HttpCode::OK);
+        response()->view($view, $data)->send(HttpCode::OK);
     }
 
     /**
@@ -57,7 +49,7 @@ class Controller
      */
     public function response(string $data, int $code = HttpCode::OK): void
     {
-        $this->response->data($data)->send($code);
+        response()->data($data)->send($code);
     }
 
     /**
@@ -65,7 +57,7 @@ class Controller
      */
     public function jsonResponse(array $data, int $code = HttpCode::OK): void
     {
-        $this->response->json($data)->send($code);
+        response()->json($data)->send($code);
     }
 
     /**
@@ -73,7 +65,7 @@ class Controller
      */
     public function downloadResponse(string $filename, int $code = HttpCode::OK): void
     {
-        $this->response->download($filename)->send($code);
+        response()->download($filename)->send($code);
     }
 
     /**
@@ -81,8 +73,6 @@ class Controller
      */
     public function validate(Validator $validator): array
     {
-        return $validator
-            ->validate($this->request, $this->response)
-            ->inputs();
+        return $validator->validate()->inputs();
     }
 }
