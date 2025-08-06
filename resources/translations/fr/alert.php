@@ -38,4 +38,5 @@ return [
     'bad_request' => 'Requête invalide',
     'forbidden' => 'Forbidden',
     'account_not_found' => 'Ce compte est inexistant',
+    'model_not_found' => 'Aucun résultat trouvé pour `{table}` avec `{column}={value}`',
 ];

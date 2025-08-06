@@ -38,4 +38,5 @@ return [
     'bad_request' => 'Bad Request',
     'forbidden' => 'Forbidden',
     'account_not_found' => 'This account was not found',
+    'model_not_found' => 'No result found for `{table}` with `{column}={value}`',
 ];
