@@ -43,7 +43,7 @@ class AuthenticationTest extends FeatureTestCase
         $this
             ->post('/login', [
                 'email' => $user->get('email'),
-                'password' => 'password',
+                'password' => 'P@ssw0rd',
             ])
             ->assertSessionDoesNotHaveErrors()
             ->assertSessionHas('user', $user->get());
@@ -51,7 +51,7 @@ class AuthenticationTest extends FeatureTestCase
 
     public function test_user_can_register(): void
     {
-        $user = User::factory()->make(['password' => 'Passw0rd']);
+        $user = User::factory()->make(['password' => 'P@ssw0rd']);
 
         $this
             ->post('/register', $user->get())
@@ -65,7 +65,7 @@ class AuthenticationTest extends FeatureTestCase
 
         $this->post('/login', [
             'email' => $user->get('email'),
-            'password' => 'password',
+            'password' => 'P@ssw0rd',
         ]);
 
         $this

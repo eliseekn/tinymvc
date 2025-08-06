@@ -34,7 +34,7 @@ class AuthenticationTest extends FeatureTestCase
         $this
             ->postJson('/api/v1/login', [
                 'email' => $user->get('email'),
-                'password' => 'password',
+                'password' => 'P@ssw0rd',
             ])
             ->assertStatusOk()
             ->assertJsonContains([

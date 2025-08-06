@@ -44,7 +44,7 @@ class UserTest extends FeatureTestCase
             'role_id' => Role::findByName(UserRole::ADMIN->value)?->getId(),
         ]);
         $user = User::factory()->make([
-            'password' => 'Passw0rd',
+            'password' => 'P@ssw0rd',
             'role_id' => Role::findByName(UserRole::USER->value)?->getId(),
         ]);
 

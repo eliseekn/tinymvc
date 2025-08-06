@@ -51,7 +51,7 @@ class CreateUserTest extends BrowserTestCase
                 ->selectButton('Submit')
                 ->form([
                     'email' => $user->get('email'),
-                    'password' => 'password',
+                    'password' => 'P@ssw0rd',
                 ])
         );
 
@@ -75,7 +75,7 @@ class CreateUserTest extends BrowserTestCase
         $data = [
             'name' => faker()->name(),
             'email' => faker()->unique()->safeEmail(),
-            'password' => 'Passw0rd',
+            'password' => 'P@ssw0rd',
         ];
 
         $this->client->submit(

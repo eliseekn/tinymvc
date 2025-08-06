@@ -50,9 +50,9 @@ class PasswordForgotTest extends FeatureTestCase
         $this
             ->post('/password/update', [
                 'email' => $user->get('email'),
-                'password' => 'new_password',
+                'password' => 'new_P@ssw0rd',
             ])
             ->assertRedirectedToUrl('/login')
-            ->assertTrue(Encryption::check('new_password', User::find($user->getId())->get('password')));
+            ->assertTrue(Encryption::check('new_P@ssw0rd', User::find($user->getId())->get('password')));
     }
 }

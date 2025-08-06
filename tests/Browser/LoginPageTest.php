@@ -47,7 +47,7 @@ class LoginPageTest extends BrowserTestCase
                 ->selectButton('Submit')
                 ->form([
                     'email' => $user->get('email'),
-                    'password' => 'password',
+                    'password' => 'P@ssw0rd',
                 ])
         );
 
