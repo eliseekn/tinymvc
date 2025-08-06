@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace NAMESPACE;
 
-use Core\Events\EventInterface;
-use Core\Events\Dispatchable;
+use Core\Event\EventInterface;
+use Core\Event\Dispatchable;
 
 class CLASSNAME implements EventInterface
 {
