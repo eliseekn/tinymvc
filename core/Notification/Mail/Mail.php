@@ -11,13 +11,16 @@ declare(strict_types=1);
 
 namespace Core\Notification\Mail;
 
-use Core\Notification\Mail\Mailer\MailerInterface;
+use Core\Notification\Mail\Mailer\Mailer;
 use Core\Notification\NotificationInterface;
 
 class Mail implements NotificationInterface
 {
-    public function __construct(public MailerInterface $mailer)
+    public Mailer $mailer;
+
+    public function __construct()
     {
+        $this->mailer = new Mailer;
     }
 
     public function to(string $address, string $name = ''): self

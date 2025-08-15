@@ -12,13 +12,12 @@ declare(strict_types=1);
 namespace App\Mails;
 
 use Core\Notifications\Mail\Mail;
-use Core\Notifications\Mail\Mailer\Mailer;
 
 class CLASSNAME extends Mail
 {
     public function __construct()
     {
-        parent::__construct(new Mailer());
+        parent::__construct();
     }
 
     public function send(): bool

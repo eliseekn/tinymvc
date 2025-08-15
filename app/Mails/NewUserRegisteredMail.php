@@ -13,13 +13,12 @@ namespace App\Mails;
 
 use Core\Database\Model;
 use Core\Notification\Mail\Mail;
-use Core\Notification\Mail\Mailer\Mailer;
 
 class NewUserRegisteredMail extends Mail
 {
     public function __construct(public Model $user, public string $url)
     {
-        parent::__construct(new Mailer);
+        parent::__construct();
     }
 
     public function send(): bool

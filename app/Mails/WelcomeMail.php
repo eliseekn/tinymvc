@@ -12,13 +12,12 @@ declare(strict_types=1);
 namespace App\Mails;
 
 use Core\Notification\Mail\Mail;
-use Core\Notification\Mail\Mailer\Mailer;
 
 class WelcomeMail extends Mail
 {
     public function __construct(public string $name)
     {
-        parent::__construct(new Mailer);
+        parent::__construct();
     }
 
     public function send(): bool
