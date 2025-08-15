@@ -32,7 +32,7 @@ return [
         new \Core\Console\Make\Seeder,
         new \Core\Console\Make\Factory,
         new \Core\Console\Make\View,
-        new \Core\Console\Make\Mail,
+        new \Core\Console\Make\Notification,
         new \Core\Console\Make\Middleware,
         new \Core\Console\Make\Console,
         new \Core\Console\Make\Password,

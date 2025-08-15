@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace App\Mails;
+namespace App\Notifications\Mails;
 
 use Core\Notification\Mail\Mail;
 
@@ -20,11 +20,11 @@ class WelcomeMail extends Mail
         parent::__construct();
     }
 
-    public function send(): bool
+    public function send(?string $message = null): bool
     {
         return $this->mailer
-            ->from(config('mailer.sender.email'), config('mailer.sender.name'))
-            ->replyTo(config('mailer.sender.email'), config('mailer.sender.name'))
+            ->from(config('notifications.mail.sender.email'), config('notifications.mail.sender.name'))
+            ->replyTo(config('notifications.mail.sender.email'), config('notifications.mail.sender.name'))
             ->subject(__('email.welcome_subject'))
             ->html('emails.welcome', ['name' => $this->name])
             ->send();

@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace App\Events\UserRegistered;
 
-use App\Mails\WelcomeMail;
+use App\Notifications\Mails\WelcomeMail;
 
 class SendWelcomeNotification
 {

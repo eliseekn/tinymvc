@@ -13,7 +13,7 @@ namespace App\Events\UserRegistered;
 
 use App\Database\Models\User;
 use App\Enums\UserRole;
-use App\Mails\NewUserRegisteredMail;
+use App\Notifications\Mails\NewUserRegisteredMail;
 
 class SendAdminNotification
 {

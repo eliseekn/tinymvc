@@ -14,7 +14,7 @@ namespace App\Http\UseCases\EmailVerification;
 use App\Database\Models\Token;
 use App\Database\Models\User;
 use App\Enums\TokenDescription;
-use App\Mails\WelcomeMail;
+use App\Notifications\Mails\WelcomeMail;
 use Core\Enums\HttpCode;
 use Core\Notification\Notification;
 use Core\Support\Alert;

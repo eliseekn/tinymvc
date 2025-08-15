@@ -19,16 +19,16 @@ class Notification
     {
     }
 
-    public static function send(NotificationInterface $mail): self
+    public static function send(NotificationInterface $notifiable): self
     {
         // @phpstan-ignore-next-line
-        return new static($mail);
+        return new static($notifiable);
     }
 
     /**
      * @throws NotificationNotSentException
      */
-    public function to(string $recipient): void
+    public function to(string|array $recipient): void
     {
         $this->notifiable->to($recipient);
 

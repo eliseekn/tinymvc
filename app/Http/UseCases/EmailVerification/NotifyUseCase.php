@@ -13,7 +13,7 @@ namespace App\Http\UseCases\EmailVerification;
 
 use App\Database\Models\Token;
 use App\Enums\TokenDescription;
-use App\Mails\VerificationMail;
+use App\Notifications\Mails\VerificationMail;
 use Core\Notification\Notification;
 use Core\Support\Alert;
 use Exception;

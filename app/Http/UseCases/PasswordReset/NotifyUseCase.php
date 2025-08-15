@@ -6,7 +6,7 @@ namespace App\Http\UseCases\PasswordReset;
 
 use App\Database\Models\Token;
 use App\Enums\TokenDescription;
-use App\Mails\PasswordResetMail;
+use App\Notifications\Mails\PasswordResetMail;
 use Core\Notification\Notification;
 use Core\Support\Alert;
 use Exception;

@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Core\Console\Make;
 
+use Core\Enums\NotificationType;
 use Core\Support\Storage;
 
 /**
@@ -310,15 +311,19 @@ class Maker
         return storage(config('storage.middlewares'))->writeFile($class.'.php', $data);
     }
 
-    public static function createMail(string $mail): bool
+    public static function createNotification(string $notification, string $type): bool
     {
-        [$name, $class] = self::generateClass($mail, 'mail', force_singular: true);
+        [$name, $class] = self::generateClass($notification, $type, force_singular: true);
 
-        $data = self::stubs()->readFile('Mail.stub');
+        $data = self::stubs()->addPath('notifications')->readFile(ucfirst($type).'.stub');
         $data = str_replace('CLASSNAME', $class, $data);
         $data = str_replace('RESOURCE_NAME', $name, $data);
 
-        if (! storage(config('storage.mails'))->writeFile($class.'.php', $data)) {
+        if ($type === NotificationType::SMS) {
+            return storage(config('storage.notifications.sms'))->writeFile($class.'.php', $data);
+        }
+
+        if (! storage(config('storage.notifications.mails'))->writeFile($class.'.php', $data)) {
             return false;
         }
 

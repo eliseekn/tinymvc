@@ -9,38 +9,38 @@
 
 declare(strict_types=1);
 
-namespace Core\Notification\Mail\Mailer;
+namespace Core\Notification\Mail;
 
 use Exception;
-use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\PHPMailer as _PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 
 /**
  * Send emails using PHPMailer.
  */
-class Mailer implements MailerInterface
+class PHPMailer implements MailerInterface
 {
-    private PHPMailer $phpMailer;
+    private _PHPMailer $phpMailer;
 
     public function __construct()
     {
-        $this->phpMailer = new PHPMailer(true);
+        $this->phpMailer = new _PHPMailer(true);
         $this->phpMailer->Debugoutput = 'error_log';
-        $this->phpMailer->CharSet = PHPMailer::CHARSET_UTF8;
+        $this->phpMailer->CharSet = _PHPMailer::CHARSET_UTF8;
 
         $this->phpMailer->SMTPDebug = SMTP::DEBUG_OFF;
         $this->phpMailer->isSMTP();
-        $this->phpMailer->Host = config('mailer.smtp.host');
-        $this->phpMailer->Port = config('mailer.smtp.port');
-        $this->phpMailer->SMTPAuth = config('mailer.smtp.auth');
+        $this->phpMailer->Host = config('notifications.mail.smtp.host');
+        $this->phpMailer->Port = config('notifications.mail.smtp.port');
+        $this->phpMailer->SMTPAuth = config('notifications.mail.smtp.auth');
 
         if ($this->phpMailer->SMTPAuth) {
-            $this->phpMailer->Username = config('mailer.smtp.username');
-            $this->phpMailer->Password = config('mailer.smtp.password');
+            $this->phpMailer->Username = config('notifications.mail.smtp.username');
+            $this->phpMailer->Password = config('notifications.mail.smtp.password');
         }
 
-        if (config('mailer.smtp.secure')) {
-            $this->phpMailer->SMTPSecure = config('mailer.smtp.tls') ? PHPMailer::ENCRYPTION_STARTTLS : PHPMailer::ENCRYPTION_SMTPS;
+        if (config('notifications.mail.smtp.secure')) {
+            $this->phpMailer->SMTPSecure = config('notifications.mail.smtp.tls') ? _PHPMailer::ENCRYPTION_STARTTLS : _PHPMailer::ENCRYPTION_SMTPS;
         } else {
             $this->phpMailer->SMTPAutoTLS = false;
             $this->phpMailer->SMTPSecure = '';
@@ -50,9 +50,14 @@ class Mailer implements MailerInterface
     /**
      * @throws \PHPMailer\PHPMailer\Exception
      */
-    public function to(string $address, string $name = ''): self
+    public function to(string|array $address, string|array $name = []): self
     {
-        $this->phpMailer->addAddress($address, $name);
+        $address = parse_array($address);
+        $name = parse_array($name);
+
+        foreach ($address as $key => $addr) {
+            $this->phpMailer->addAddress($addr, $name[$key]);
+        }
 
         return $this;
     }

@@ -11,26 +11,25 @@ declare(strict_types=1);
 
 namespace Core\Notification\Mail;
 
-use Core\Notification\Mail\Mailer\Mailer;
 use Core\Notification\NotificationInterface;
 
 class Mail implements NotificationInterface
 {
-    public Mailer $mailer;
+    protected PHPMailer $mailer;
 
     public function __construct()
     {
-        $this->mailer = new Mailer;
+        $this->mailer = new PHPMailer;
     }
 
-    public function to(string $address, string $name = ''): self
+    public function to(string|array $recipient, string|array $name = []): self
     {
-        $this->mailer->to($address, $name);
+        $this->mailer->to($recipient, $name);
 
         return $this;
     }
 
-    public function send(): bool
+    public function send(?string $message = null): bool
     {
         return $this->mailer->send();
     }

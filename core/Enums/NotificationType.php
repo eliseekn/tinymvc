@@ -9,11 +9,11 @@
 
 declare(strict_types=1);
 
-namespace Core\Notification;
+namespace Core\Enums;
 
-interface NotificationInterface
+enum NotificationType: string
 {
-    public function to(string|array $recipient, string|array $name = []);
+    public const MAIL = 'mail';
 
-    public function send(?string $message = null);
+    public const SMS = 'sms';
 }
