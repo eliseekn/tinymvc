@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
+ * @license MIT (https://opensource.org/licenses/MIT)
+ *
+ * @link https://github.com/eliseekn/tinymvc
+ */
+
+declare(strict_types=1);
+
+namespace App\Notifications\Sms;
+
+use Core\Notification\Sms\Sms;
+
+class CLASSNAME extends Sms
+{
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    public function send(?string $message = null): bool
+    {
+        return $this->twilio
+            ->from('+0000000000')
+            ->send($messge);
+    }
+}
