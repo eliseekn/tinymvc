@@ -51,7 +51,7 @@ class Validator implements ValidatorInterface
         return new static($rules, $messages);
     }
 
-    public function validate()
+    public function validate(): self
     {
         if (empty($this->rules)) {
             $this->rules = $this->rules();

@@ -32,7 +32,7 @@ final class LoginUseCase
 
         response()->json([
             'status' => ResponseStatus::SUCCESS,
-            'token' => Auth::createToken($user->get(config('security.auth.identifier'))),
+            'token' => Auth::createToken($user),
             'user' => $user->get(),
         ])->send(HttpCode::OK);
     }

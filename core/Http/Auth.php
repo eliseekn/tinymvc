@@ -78,10 +78,10 @@ class Auth
         return ! is_null($user);
     }
 
-    public static function createToken(string $identifier): string
+    public static function createToken(Model $user): string
     {
         $token = Token::factory()->create([
-            'identifier' => $identifier,
+            'identifier' => $user->get(config('security.auth.identifier')),
             'value' => generate_token(),
             'description' => TokenDescription::AUTHENTICATION->value,
         ]);

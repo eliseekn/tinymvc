@@ -17,8 +17,10 @@ use Core\Database\Model;
 use Core\Enums\HttpAuthMethod;
 use Core\Exceptions\RouteException;
 use Core\Http\Routing\Route;
+use Core\Http\Validation\Validator\Validator;
 use Core\Support\File;
 use Core\Support\Uploader;
+use Exception;
 
 /**
  * Handle HTTP requests.
@@ -384,5 +386,13 @@ class Request
         }
 
         return $data;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function validate(array $rules = [], array $messages = []): Validator
+    {
+        return Validator::make($rules, $messages)->validate();
     }
 }
