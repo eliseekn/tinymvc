@@ -17,7 +17,7 @@ final class DeleteUseCase
 {
     public function handle(): void
     {
-        $user = request()->auth();
+        $user = auth();
 
         if (! storage(config('storage.uploads'))->deleteFile($user->get('avatar'))) {
             Alert::toast('Failed to delete avatar')->error();

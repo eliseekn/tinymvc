@@ -87,13 +87,6 @@ class QueryBuilder
         return static::connection($dbConnection);
     }
 
-    public static function addColumn(?string $dbConnection = null): self
-    {
-        static::$query .= ' ADD COLUMN ';
-
-        return static::connection($dbConnection);
-    }
-
     public static function renameColumn(string $old, string $new, ?string $dbConnection = null): self
     {
         static::$query .= " RENAME COLUMN $old TO $new";
@@ -101,7 +94,7 @@ class QueryBuilder
         return static::connection($dbConnection);
     }
 
-    public static function deleteColumn(string $column, ?string $dbConnection = null): self
+    public static function dropColumn(string $column, ?string $dbConnection = null): self
     {
         static::$query .= " DROP COLUMN $column";
 
@@ -341,6 +334,23 @@ class QueryBuilder
 
         $columns = parse_array($columns);
         static::$query = str_replace('SELECT ', 'SELECT '.implode(',', $columns).',', static::$query);
+
+        return $this;
+    }
+
+    public function addWhere(string $column, $operator = null, $value = null, string $glue = 'AND'): self
+    {
+        if (! str_contains(static::$query, 'WHERE')) {
+            throw new InvalidSQLQueryException;
+        }
+
+        if (! is_null($operator) && is_null($value)) {
+            $value = $operator;
+            $operator = '=';
+        }
+
+        static::$query = str_replace('WHERE ', "WHERE $column $operator ? $glue ", static::$query);
+        static::$args[] = $value;
 
         return $this;
     }
@@ -632,7 +642,7 @@ class QueryBuilder
         return $this;
     }
 
-    public function subQueryWhen(bool $condition, ?Closure $callback = null): self
+    public function when(bool $condition, ?Closure $callback = null): self
     {
         if ($condition === true) {
             $this->subQuery($callback);

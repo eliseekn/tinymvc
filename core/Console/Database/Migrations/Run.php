@@ -47,7 +47,7 @@ class Run extends Command
         if (! Connection::getInstance()->tableExists('migrations')) {
             Schema::createTable('migrations')
                 ->addPrimaryKey()
-                ->addString('name')
+                ->addVarChar('name')
                 ->run();
 
             $output->writeln('<bg=blue;options=bold> INFO </> Migrations tables have been created.');

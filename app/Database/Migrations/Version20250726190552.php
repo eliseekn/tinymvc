@@ -18,7 +18,6 @@ class Version20250726190552
     public function up(): void
     {
         Schema::alterTable('users')
-            ->addColumn()
             ->addBigInt('role_id')->null()->after('email_verified_at')
             ->run();
     }

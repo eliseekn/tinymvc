@@ -22,7 +22,7 @@ final class UpdateUseCase
 
     public function handle(array $data): void
     {
-        $user = request()->auth();
+        $user = auth();
         $file = request()->files('avatar', ['png', 'jpg', 'jpeg']);
 
         if (! $file->isEmpty() && ! $this->fileUploadService->handle($file, $filename)) {

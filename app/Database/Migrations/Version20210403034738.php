@@ -19,11 +19,11 @@ class Version20210403034738
     {
         Schema::createTable('users')
             ->addPrimaryKey()->notNull()
-            ->addString('name')->notNull()
-            ->addString('email')->notNull()->unique()
-            ->addString('password')->notNull()
+            ->addVarchar('name')->notNull()
+            ->addVarchar('email')->notNull()->unique()
+            ->addVarchar('password')->notNull()
             ->addDateTime('email_verified_at')->null()
-            ->addString('role')
+            ->addVarchar('role')
             ->addDefaultTimestamps()
             ->run();
     }

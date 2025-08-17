@@ -647,7 +647,7 @@ class Metrics
                 ->selectRaw($this->asData())
                 ->whereColumn($this->formatDateColumn())
                 ->between($this->period[0], $this->period[1])
-                ->subQueryWhen(! is_null($this->subQuery), $this->subQuery)
+                ->when(! is_null($this->subQuery), $this->subQuery)
                 ->fetch();
         }
 
@@ -656,53 +656,53 @@ class Metrics
                 ->selectRaw($this->asData())
                 ->where($this->formatPeriod(Period::YEAR->value), $this->year)
                 ->and($this->formatPeriod(Period::MONTH->value), $this->month)
-                ->subQueryWhen($this->count === 1, function (QueryBuilder $qb) {
+                ->when($this->count === 1, function (QueryBuilder $qb) {
                     $qb->and($this->formatPeriod(Period::TODAY->value), $this->day);
                 })
-                ->subQueryWhen($this->count > 1, function (QueryBuilder $qb) {
+                ->when($this->count > 1, function (QueryBuilder $qb) {
                     $qb->andColumn($this->formatPeriod(Period::TODAY->value))
                         ->between($this->getDayPeriod()[0], $this->getDayPeriod()[1]);
                 })
-                ->subQueryWhen(! is_null($this->subQuery), $this->subQuery)
+                ->when(! is_null($this->subQuery), $this->subQuery)
                 ->fetch(),
 
             Period::WEEK->value => $this->qb
                 ->selectRaw($this->asData())
                 ->where($this->formatPeriod(Period::YEAR->value), $this->year)
                 ->and($this->formatPeriod(Period::MONTH->value), $this->month)
-                ->subQueryWhen($this->count === 1, function (QueryBuilder $qb) {
+                ->when($this->count === 1, function (QueryBuilder $qb) {
                     $qb->and($this->formatPeriod(Period::WEEK->value), $this->day);
                 })
-                ->subQueryWhen($this->count > 1, function (QueryBuilder $qb) {
+                ->when($this->count > 1, function (QueryBuilder $qb) {
                     $qb->andColumn($this->formatPeriod(Period::WEEK->value))
                         ->between($this->getWeekPeriod()[0], $this->getWeekPeriod()[1]);
                 })
-                ->subQueryWhen(! is_null($this->subQuery), $this->subQuery)
+                ->when(! is_null($this->subQuery), $this->subQuery)
                 ->fetch(),
 
             Period::MONTH->value => $this->qb
                 ->selectRaw($this->asData())
                 ->where($this->formatPeriod(Period::YEAR->value), $this->year)
-                ->subQueryWhen($this->count === 1, function (QueryBuilder $qb) {
+                ->when($this->count === 1, function (QueryBuilder $qb) {
                     $qb->and($this->formatPeriod(Period::MONTH->value), $this->day);
                 })
-                ->subQueryWhen($this->count > 1, function (QueryBuilder $qb) {
+                ->when($this->count > 1, function (QueryBuilder $qb) {
                     $qb->andColumn($this->formatPeriod(Period::MONTH->value))
                         ->between($this->getMonthPeriod()[0], $this->getMonthPeriod()[1]);
                 })
-                ->subQueryWhen(! is_null($this->subQuery), $this->subQuery)
+                ->when(! is_null($this->subQuery), $this->subQuery)
                 ->fetch(),
 
             Period::YEAR->value => $this->qb
                 ->select($this->asData())
-                ->subQueryWhen($this->count === 1, function (QueryBuilder $qb) {
+                ->when($this->count === 1, function (QueryBuilder $qb) {
                     $qb->where($this->formatPeriod(Period::YEAR->value), $this->year);
                 })
-                ->subQueryWhen($this->count > 1, function (QueryBuilder $qb) {
+                ->when($this->count > 1, function (QueryBuilder $qb) {
                     $qb->whereColumn($this->formatPeriod(Period::YEAR->value))
                         ->between(carbon()->subYears($this->count)->year, $this->year);
                 })
-                ->subQueryWhen(! is_null($this->subQuery), $this->subQuery)
+                ->when(! is_null($this->subQuery), $this->subQuery)
                 ->fetch(),
 
             default => $this->qb
@@ -722,7 +722,7 @@ class Metrics
                 ->selectRaw($this->asData().', '.$this->asLabel($this->formatDateColumn()).$this->groupedData)
                 ->whereColumn($this->formatDateColumn())
                 ->between($this->period[0], $this->period[1])
-                ->subQueryWhen(! is_null($this->subQuery), $this->subQuery)
+                ->when(! is_null($this->subQuery), $this->subQuery)
                 ->groupBy('label')
                 ->orderBy('label', 'asc')
                 ->fetchAll();
@@ -733,14 +733,14 @@ class Metrics
                 ->selectRaw($this->asData().', '.$this->asLabel(Period::DAY->value).$this->groupedData)
                 ->where($this->formatPeriod(Period::YEAR->value), $this->year)
                 ->and($this->formatPeriod(Period::MONTH->value), $this->month)
-                ->subQueryWhen($this->count === 1, function (QueryBuilder $qb) {
+                ->when($this->count === 1, function (QueryBuilder $qb) {
                     $qb->and($this->formatPeriod(Period::TODAY->value), $this->day);
                 })
-                ->subQueryWhen($this->count > 1, function (QueryBuilder $qb) {
+                ->when($this->count > 1, function (QueryBuilder $qb) {
                     $qb->andColumn($this->formatPeriod(Period::TODAY->value))
                         ->between($this->getDayPeriod()[0], $this->getDayPeriod()[1]);
                 })
-                ->subQueryWhen(! is_null($this->subQuery), $this->subQuery)
+                ->when(! is_null($this->subQuery), $this->subQuery)
                 ->groupBy('label')
                 ->orderBy('label', 'asc')
                 ->fetchAll(),
@@ -749,14 +749,14 @@ class Metrics
                 ->selectRaw($this->asData().', '.$this->asLabel(Period::WEEK->value).$this->groupedData)
                 ->where($this->formatPeriod(Period::YEAR->value), $this->year)
                 ->and($this->formatPeriod(Period::MONTH->value), $this->month)
-                ->subQueryWhen($this->count === 1, function (QueryBuilder $qb) {
+                ->when($this->count === 1, function (QueryBuilder $qb) {
                     $qb->and($this->formatPeriod(Period::WEEK->value), $this->week);
                 })
-                ->subQueryWhen($this->count > 1, function (QueryBuilder $qb) {
+                ->when($this->count > 1, function (QueryBuilder $qb) {
                     $qb->andColumn($this->formatPeriod(Period::WEEK->value))
                         ->between($this->getWeekPeriod()[0], $this->getWeekPeriod()[1]);
                 })
-                ->subQueryWhen(! is_null($this->subQuery), $this->subQuery)
+                ->when(! is_null($this->subQuery), $this->subQuery)
                 ->groupBy('label')
                 ->orderBy('label', 'asc')
                 ->fetchAll(),
@@ -764,28 +764,28 @@ class Metrics
             Period::MONTH->value => $this->qb
                 ->selectRaw($this->asData().', '.$this->asLabel(Period::MONTH->value).$this->groupedData)
                 ->where($this->formatPeriod(Period::YEAR->value), $this->year)
-                ->subQueryWhen($this->count === 1, function (QueryBuilder $qb) {
+                ->when($this->count === 1, function (QueryBuilder $qb) {
                     $qb->and($this->formatPeriod(Period::MONTH->value), $this->month);
                 })
-                ->subQueryWhen($this->count > 1, function (QueryBuilder $qb) {
+                ->when($this->count > 1, function (QueryBuilder $qb) {
                     $qb->andColumn($this->formatPeriod(Period::MONTH->value))
                         ->between($this->getMonthPeriod()[0], $this->getMonthPeriod()[1]);
                 })
-                ->subQueryWhen(! is_null($this->subQuery), $this->subQuery)
+                ->when(! is_null($this->subQuery), $this->subQuery)
                 ->groupBy('label')
                 ->orderBy('label', 'asc')
                 ->fetchAll(),
 
             Period::YEAR->value => $this->qb
                 ->selectRaw($this->asData().', '.$this->asLabel(Period::YEAR->value).$this->groupedData)
-                ->subQueryWhen($this->count === 1, function (QueryBuilder $qb) {
+                ->when($this->count === 1, function (QueryBuilder $qb) {
                     $qb->where($this->formatPeriod(Period::YEAR->value), $this->year);
                 })
-                ->subQueryWhen($this->count > 1, function (QueryBuilder $qb) {
+                ->when($this->count > 1, function (QueryBuilder $qb) {
                     $qb->whereColumn($this->formatPeriod(Period::YEAR->value))
                         ->between(carbon()->subYears($this->count)->year, $this->year);
                 })
-                ->subQueryWhen(! is_null($this->subQuery), $this->subQuery)
+                ->when(! is_null($this->subQuery), $this->subQuery)
                 ->groupBy('label')
                 ->orderBy('label', 'asc')
                 ->fetchAll(),

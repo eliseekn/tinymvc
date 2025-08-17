@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Core\Support;
 
 use Core\Database\Model;
-use Core\Http\Request;
 
 /**
  * Generate pagination from database.
@@ -166,8 +165,7 @@ class Pagination
      */
     private function uri(int $page): string
     {
-        $request = new Request;
-        $uri = $request->fullUri();
+        $uri = request()->fullUri();
         $queries = '';
 
         if (str_contains($uri, '?')) {
@@ -177,6 +175,6 @@ class Pagination
         parse_str($queries, $queryArray);
         $queryArray['page'] = $page;
 
-        return $request->uri().'?'.http_build_query($queryArray);
+        return request()->uri().'?'.http_build_query($queryArray);
     }
 }

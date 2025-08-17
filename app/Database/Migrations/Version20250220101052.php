@@ -18,8 +18,7 @@ class Version20250220101052
     public function up(): void
     {
         Schema::alterTable('users')
-            ->addColumn()
-            ->addString('avatar')->null()->after('email_verified_at')
+            ->addVarChar('avatar')->null()->after('email_verified_at')
             ->run();
     }
 }

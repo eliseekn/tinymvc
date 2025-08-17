@@ -62,7 +62,7 @@ class Model
     {
         return $this->repository
             ->select('*')
-            ->subQueryWhen(! is_null($subQuery), $subQuery)
+            ->when(! is_null($subQuery), $subQuery)
             ->take($count);
     }
 
@@ -70,7 +70,7 @@ class Model
     {
         return $this->repository
             ->select($columns)
-            ->subQueryWhen(! is_null($subQuery), $subQuery)
+            ->when(! is_null($subQuery), $subQuery)
             ->oldest($column)
             ->getAll();
     }
@@ -79,7 +79,7 @@ class Model
     {
         return $this->repository
             ->select($columns)
-            ->subQueryWhen(! is_null($subQuery), $subQuery)
+            ->when(! is_null($subQuery), $subQuery)
             ->newest($column)
             ->getAll();
     }
@@ -93,7 +93,7 @@ class Model
     {
         $data = $this->repository
             ->count($column)
-            ->subQueryWhen(! is_null($subQuery), $subQuery)
+            ->when(! is_null($subQuery), $subQuery)
             ->get();
 
         return ! $data ? 0 : $data->get('value');
@@ -103,7 +103,7 @@ class Model
     {
         $data = $this->repository
             ->sum($column)
-            ->subQueryWhen(! is_null($subQuery), $subQuery)
+            ->when(! is_null($subQuery), $subQuery)
             ->get();
 
         return ! $data ? 0 : $data->get('value');
@@ -113,7 +113,7 @@ class Model
     {
         $data = $this->repository
             ->average($column)
-            ->subQueryWhen(! is_null($subQuery), $subQuery)
+            ->when(! is_null($subQuery), $subQuery)
             ->get();
 
         return ! $data ? 0 : $data->get('value');
@@ -123,7 +123,7 @@ class Model
     {
         $data = $this->repository
             ->max($column)
-            ->subQueryWhen(! is_null($subQuery), $subQuery)
+            ->when(! is_null($subQuery), $subQuery)
             ->get();
 
         return ! $data ? 0 : $data->get('value');
@@ -133,7 +133,7 @@ class Model
     {
         $data = $this->repository
             ->min($column)
-            ->subQueryWhen(! is_null($subQuery), $subQuery)
+            ->when(! is_null($subQuery), $subQuery)
             ->get();
 
         return ! $data ? 0 : $data->get('value');

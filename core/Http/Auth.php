@@ -137,7 +137,17 @@ class Auth
             return User::findByIdentifier($user[config('security.auth.identifier')]);
         }
 
-        return request()->auth();
+        if (empty(request()->getHttpAuth())) {
+            return null;
+        }
+
+        $token = Token::findByValue(self::getToken());
+
+        if (! $token) {
+            return null;
+        }
+
+        return User::findByIdentifier($token->get('identifier'));
     }
 
     public static function forget(): void

@@ -49,6 +49,13 @@ class Repository
         return $this;
     }
 
+    public function addWhere(string $column, $operator = null, $value = null): self
+    {
+        $this->qb->addWhere($column, $operator, $value);
+
+        return $this;
+    }
+
     public function selectOne(array|string $columns): ?Model
     {
         return $this->select($columns)->get();
@@ -704,7 +711,7 @@ class Repository
         return $this;
     }
 
-    public function subQueryWhen(bool $condition, ?Closure $callback = null): self
+    public function when(bool $condition, ?Closure $callback = null): self
     {
         if ($condition) {
             $this->subQuery($callback);

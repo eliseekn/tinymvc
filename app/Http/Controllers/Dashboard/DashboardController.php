@@ -22,8 +22,13 @@ use Core\Http\Routing\Controller;
 
 class DashboardController extends Controller
 {
-    #[Route(HttpMethod::GET, '/dashboard', ['auth', 'verified'], 'dashboard.index')]
-    public function __invoke(): void
+    #[Route(
+        methods: HttpMethod::GET,
+        uri: '/dashboard',
+        middlewares: ['auth', 'verified'],
+        name: 'dashboard.index')
+    ]
+    public function __invoke(User $user): void
     {
         $period = request()->queries('period', 'day');
 
@@ -36,7 +41,7 @@ class DashboardController extends Controller
             'totalUsersToday' => (new User)->metrics()->countByDay(count: 1)->metricsWithVariations(1, Period::DAY->value),
             'usersTrends' => $this->trends((new User)->metrics()->fillMissingData(), $period),
             'usersRolesTrends' => $this->trendsByRoles(
-                (new User)
+                $user
                     ->metrics()
                     ->subQuery(function (QueryBuilder $q) {
                         $q->addJoin('roles', 'users.role_id', '=', 'roles.id');

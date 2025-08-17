@@ -11,10 +11,6 @@ declare(strict_types=1);
 
 namespace Core\Http;
 
-use App\Database\Models\Token;
-use App\Database\Models\User;
-use Core\Database\Model;
-use Core\Enums\HttpAuthMethod;
 use Core\Exceptions\RouteException;
 use Core\Http\Routing\Route;
 use Core\Http\Validation\Validator\Validator;
@@ -46,7 +42,7 @@ class Request
         return $this->headers('CONTENT_TYPE') === 'application/json';
     }
 
-    public function host(): mixed
+    public function host(): string
     {
         return $this->headers('HTTP_HOST', '');
     }
@@ -282,24 +278,6 @@ class Request
         }
 
         return $result;
-    }
-
-    public function auth(): ?Model
-    {
-        if (empty($this->getHttpAuth())) {
-            return null;
-        }
-
-        [$method, $token] = $this->getHttpAuth();
-
-        $token = trim($method) !== HttpAuthMethod::BEARER ? '' : decrypt($token);
-        $token = Token::findByValue($token);
-
-        if (! $token) {
-            return null;
-        }
-
-        return User::findByIdentifier($token->get('identifier'));
     }
 
     /**

@@ -18,7 +18,7 @@ class Version20250313135908
     public function up(): void
     {
         Schema::alterTable('users')
-            ->deleteColumn('role')
+            ->dropColumn('role')
             ->run();
     }
 }
