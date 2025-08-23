@@ -25,9 +25,9 @@ interface MailerInterface
 
     public function subject(string $subject);
 
-    public function body(string $message, bool $html);
+    public function text(string $body);
 
-    public function html(string $view, array $data = []);
+    public function html(string $body, array $data = []);
 
     public function attachment(string $attachment, string $filename);
 

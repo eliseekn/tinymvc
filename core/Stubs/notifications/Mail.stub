@@ -23,8 +23,8 @@ class CLASSNAME extends Mail
     public function send(?string $message = null): bool
     {
         return $this->mailer
-            ->from(config('mailer.sender.email'), config('mailer.sender.name'))
-            ->replyTo(config('mailer.sender.email'), config('mailer.sender.name'))
+            ->from(config('notifications.mail.sender.email'), config('notifications.mail.sender.name'))
+            ->replyTo(config('notifications.mail.sender.email'), config('notifications.mail.sender.name'))
             ->subject('Subject')
             ->html('emails.RESOURCE_NAME')
             ->send();

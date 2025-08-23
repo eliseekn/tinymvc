@@ -85,9 +85,14 @@ class PHPMailer implements MailerInterface
     /**
      * @throws \PHPMailer\PHPMailer\Exception
      */
-    public function cc(string $address, string $name = ''): self
+    public function cc(string|array $address, string|array $name = []): self
     {
-        $this->phpMailer->addCC($address, $name);
+        $address = parse_array($address);
+        $name = parse_array($name);
+
+        foreach ($address as $key => $addr) {
+            $this->phpMailer->addCC($addr, $name[$key]);
+        }
 
         return $this;
     }
@@ -95,9 +100,14 @@ class PHPMailer implements MailerInterface
     /**
      * @throws \PHPMailer\PHPMailer\Exception
      */
-    public function bcc(string $address, string $name = ''): self
+    public function bcc(string|array $address, string|array $name = []): self
     {
-        $this->phpMailer->addBCC($address, $name);
+        $address = parse_array($address);
+        $name = parse_array($name);
+
+        foreach ($address as $key => $addr) {
+            $this->phpMailer->addBCC($addr, $name[$key]);
+        }
 
         return $this;
     }
@@ -109,20 +119,19 @@ class PHPMailer implements MailerInterface
         return $this;
     }
 
-    public function body(string $message, bool $html = true): self
+    public function text(string $body): self
     {
-        $this->phpMailer->Body = $message;
-
-        if ($html) {
-            $this->phpMailer->isHTML();
-        }
+        $this->phpMailer->Body = $body;
 
         return $this;
     }
 
-    public function html(string $view, array $data = []): self
+    public function html(string $body, array $data = []): self
     {
-        return $this->body(view($view, $data));
+        $this->phpMailer->Body = view($body, $data);
+        $this->phpMailer->isHTML();
+
+        return $this;
     }
 
     /**

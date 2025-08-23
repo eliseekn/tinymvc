@@ -14,7 +14,7 @@ namespace App\Database\Migrations;
 use Core\Database\Schema;
 
 class CLASSNAME
-{         
+{
     public function up(): void
     {
         Schema::createTable('TABLE_NAME')
@@ -22,7 +22,7 @@ class CLASSNAME
             ->addDefaultTimestamps()
             ->run();
     }
-    
+
     public function down(): void
     {
         Schema::dropTable('TABLE_NAME');
