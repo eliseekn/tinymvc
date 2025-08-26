@@ -54,8 +54,8 @@ class View
 
         try {
             return $twig->render($view, array_merge($data, [
-                'inputs' => (object)session()->pull('inputs'),
-                'errors' => (object)session()->pull('errors'),
+                'inputs' => (object) session()->pull('inputs'),
+                'errors' => (object) session()->pull('errors'),
                 'alert' => session()->pull('alert'),
             ]));
         } catch (Exception $e) {

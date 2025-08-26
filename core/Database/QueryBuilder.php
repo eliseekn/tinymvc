@@ -35,7 +35,7 @@ class QueryBuilder
     {
         static::$connection = is_null($dbConnection)
             ? Connection::getInstance()
-            : Connection::setInstance(new Connection($dbConnection));
+            : new Connection($dbConnection);
 
         return new self;
     }
