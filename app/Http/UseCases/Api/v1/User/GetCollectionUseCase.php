@@ -18,16 +18,13 @@ final class GetCollectionUseCase
 {
     public function handle(): void
     {
-        $query = request()->queries();
-
         response()
             ->json(
                 User::findAllPaginate(
-                    $query['perPage'] ?? 10,
-                    $query['page'] ?? 1,
-                    $query['search'] ?? null,
-                )->getItemsAsArray()
-            )
+                    (int) request()->queries('perPage', 10),
+                    (int) request()->queries('page', 1),
+                    request()->queries('search')
+                )->getItemsAsArray())
             ->send(HttpCode::OK);
     }
 }

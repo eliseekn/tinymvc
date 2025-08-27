@@ -655,15 +655,15 @@ class Repository
         return $this->range(0, $count);
     }
 
-    public function paginate(int $items_per_page, int $page = 1): Pagination
+    public function paginate(int $perPage, int $page = 1): Pagination
     {
         [$query, $args] = $this->qb->toSQL();
 
-        $total_items = count(QueryBuilder::setQuery($query, $args)->fetchAll());
-        $pager = new Pagination($total_items, $items_per_page, $page);
+        $totalItems = count(QueryBuilder::setQuery($query, $args)->fetchAll());
+        $pager = new Pagination($totalItems, $perPage, $page);
 
-        $items = $items_per_page > 0
-            ? QueryBuilder::setQuery($query, $args)->limit($pager->getFirstItem(), $items_per_page)->fetchAll()
+        $items = $perPage > 0
+            ? QueryBuilder::setQuery($query, $args)->limit($pager->getFirstItem(), $perPage)->fetchAll()
             : QueryBuilder::setQuery($query, $args)->fetchAll();
 
         $items = array_map(fn ($item) => new Model($this->table, (array) $item), $items);

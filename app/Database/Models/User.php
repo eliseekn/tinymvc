@@ -49,7 +49,7 @@ class User extends Model
             ->getAll();
     }
 
-    public static function findAllPaginate($perPage, $page, ?string $search = null): Pagination
+    public static function findAllPaginate(int $perPage, int $page, ?string $search = null): Pagination
     {
         $userId = auth()?->getId();
 
@@ -61,6 +61,6 @@ class User extends Model
                 $r->andRaw("(users.name LIKE '%$search%' OR email LIKE '%$search%')");
             })
             ->orderDesc('users.created_at')
-            ->paginate((int) $perPage, (int) $page);
+            ->paginate($perPage, $page);
     }
 }
