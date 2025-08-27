@@ -23,7 +23,6 @@ class Cache
     {
         $this->cache = match (static::getDriver()) {
             CacheDriver::REDIS => new Redis,
-            CacheDriver::DATABASE => new Database,
             default => new File
         };
     }

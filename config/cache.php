@@ -22,10 +22,6 @@ return [
         'driver' => CacheDriver::FILE,
     ],
 
-    'database' => [
-        'driver' => CacheDriver::DATABASE,
-    ],
-
     'redis' => [
         'driver' => CacheDriver::REDIS,
         'scheme' => env('REDIS_SCHEME', 'tcp'),

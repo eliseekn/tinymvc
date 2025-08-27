@@ -15,7 +15,5 @@ enum CacheDriver: string
 {
     public const REDIS = 'redis';
 
-    public const DATABASE = 'database';
-
     public const FILE = 'file';
 }
