@@ -17,17 +17,18 @@ return [
     'encryption' => [
         'key' => env('APP_ENCRYPTION_KEY'),
         'cookies' => true,
+        'cache' => false,
     ],
 
     'auth' => [
         'max_attempts' => false,
-        'unlock_timeout' => 1, //in minutes
+        'unlock_timeout' => 1, // in minutes
         'email_verification' => false,
-        'identifier' => 'email',
+        'identifier' => env('AUTH_IDENTIFIER', 'email'),
     ],
 
     'session' => [
-        'lifetime' => 3600 * 5, //in seconds
+        'lifetime' => 3600 * 5, // in seconds
     ],
 
     'csrf_excluded_uri' => [

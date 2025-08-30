@@ -4,9 +4,11 @@
   "type": "project",
   "license": "MIT",
   "keywords": [
-    "php-framework",
+    "php",
+    "framework",
     "mvc"
   ],
+  "version": "1.0",
   "authors": [
     {
       "name": "N'Guessan Kouadio Elisée",
