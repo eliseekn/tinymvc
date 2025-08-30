@@ -20,7 +20,7 @@ class File implements CacheInterface
 
     public function __construct()
     {
-        $this->storage = Storage::path(config('storage.cache'));
+        $this->storage = storage(config('storage.cache'));
     }
 
     public function set(string $key, mixed $data, ?int $time = null): void

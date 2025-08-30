@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Core\Http\Routing;
 
 use Core\Exceptions\ViewNotFoundException;
-use Core\Support\Storage;
 use Core\Support\TwigExtensions;
 use Exception;
 use Twig\Environment;
@@ -32,7 +31,7 @@ class View
      */
     public static function getContent(string $view, array $data = []): string
     {
-        $path = Storage::path(config('storage.views'));
+        $path = storage(config('storage.views'));
         $view = real_path($view).'.html.twig';
 
         if (! $path->isFile($view)) {
