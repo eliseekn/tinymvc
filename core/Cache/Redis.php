@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Core\Cache;
 
+use Core\Support\Encryption;
 use Predis\Client;
 
 class Redis implements CacheInterface
@@ -28,8 +29,13 @@ class Redis implements CacheInterface
 
     public function set(string $key, mixed $data, ?int $time = null): void
     {
+        $data = serialize($data);
 
-        $this->client->set($key, serialize($data), $time);
+        if (config('secruty.encryption.cache')) {
+            $data = Encryption::encrypt($data);
+        }
+
+        $this->client->set($key, $data, $time);
     }
 
     public function get(string $key): mixed
@@ -37,6 +43,10 @@ class Redis implements CacheInterface
         $data = $this->client->get($key);
 
         if (! is_null($data)) {
+            if (config('secruty.encryption.cache')) {
+                $data = Encryption::decrypt($data);
+            }
+
             return unserialize($data);
         }
 

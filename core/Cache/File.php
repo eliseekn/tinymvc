@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Core\Cache;
 
+use Core\Support\Encryption;
 use Core\Support\Storage;
 
 class File implements CacheInterface
@@ -24,7 +25,13 @@ class File implements CacheInterface
 
     public function set(string $key, mixed $data, ?int $time = null): void
     {
-        $this->storage->writeFile(md5($key), serialize($data));
+        $data = serialize($data);
+
+        if (config('secruty.encryption.cache')) {
+            $data = Encryption::encrypt($data);
+        }
+
+        $this->storage->writeFile(md5($key), $data);
     }
 
     public function get(string $key): mixed
@@ -32,6 +39,10 @@ class File implements CacheInterface
         $data = $this->storage->readFile(md5($key));
 
         if ($data !== '') {
+            if (config('secruty.encryption.cache')) {
+                $data = Encryption::decrypt($data);
+            }
+
             return unserialize($data);
         }
 
