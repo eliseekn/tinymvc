@@ -86,6 +86,7 @@ class TwigExtensions extends AbstractExtension implements GlobalsInterface
                 new TwigFunction('cookies', 'cookies'),
                 new TwigFunction('carbon', 'carbon'),
                 new TwigFunction('request', 'request'),
+                new TwigFunction('response', 'response'),
                 new TwigFunction('dd', 'dd'),
                 new TwigFunction('get_filename', 'get_filename'),
                 new TwigFunction('get_file_extension', 'get_file_extension'),
