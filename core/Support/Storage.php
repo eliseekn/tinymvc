@@ -20,39 +20,37 @@ class Storage
 
     public static function init(): void
     {
-        $storage = Storage::path(absolute_path('storage'));
+        $storage = Storage::setPath(absolute_path('storage'));
 
         if (! $storage->isDir()) {
             $storage->createDir();
         }
 
-        if (! $storage->path(config('storage.logs'))->isDir()) {
+        if (! $storage->setPath(config('storage.logs'))->isDir()) {
             $storage->createDir();
         }
 
-        if (! $storage->path(config('storage.cache'))->isDir()) {
+        if (! $storage->setPath(config('storage.cache'))->isDir()) {
             $storage->createDir();
         }
 
-        if (! $storage->path(config('storage.sqlite'))->isDir()) {
+        if (! $storage->setPath(config('storage.sqlite'))->isDir()) {
             $storage->createDir();
         }
 
-        if (! $storage->path(config('storage.tmp'))->isDir()) {
+        if (! $storage->setPath(config('storage.tmp'))->isDir()) {
             $storage->createDir();
         }
 
-        if (! $storage->path(config('storage.uploads'))->isDir()) {
+        if (! $storage->setPath(config('storage.uploads'))->isDir()) {
             $storage->createDir();
         }
     }
 
     /**
-     * Set storage path.
-     *
      * @phpstan-ignore-next-line
      */
-    public static function path(string $path = APP_ROOT): self
+    public static function setPath(string $path = APP_ROOT): self
     {
         self::$path = $path;
 

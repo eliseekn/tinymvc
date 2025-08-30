@@ -91,7 +91,7 @@ if (! function_exists('storage')) {
     // @phpstan-ignore-next-line
     function storage(string $path = APP_ROOT): Storage
     {
-        return Storage::path($path);
+        return Storage::setPath($path);
     }
 }
 
@@ -115,7 +115,7 @@ if (! function_exists('auth_attempts_exceeded')) {
 
 if (! function_exists('auth')) {
     /**
-     * Get authenticated user session data.
+     * Get authenticated user data.
      */
     function auth(): ?Model
     {
@@ -530,9 +530,9 @@ if (! function_exists('carbon')) {
 }
 
 if (! function_exists('faker')) {
-    function faker()
+    function faker(?string $lang = null)
     {
-        return Factory::create(config('app.lang'));
+        return Factory::create(is_null($lang) ? config('app.lang') : $lang);
     }
 }
 

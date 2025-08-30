@@ -31,10 +31,8 @@ return [
     'rules' => absolute_path('app.Http.Validation.Rules'),
     'logs' => absolute_path('storage.logs'),
     'cache' => absolute_path('storage.cache'),
-    'notifications' => [
-        'mails' => absolute_path('app.Notifications.Mails'),
-        'sms' => absolute_path('app.Notifications.Sms'),
-    ],
+    'mails' => absolute_path('app.Notifications.Mails'),
+    'sms' => absolute_path('app.Notifications.Sms'),
     'helpers' => absolute_path('app.Helpers'),
     'exceptions' => absolute_path('app.Exceptions'),
     'tests' => absolute_path('tests'),

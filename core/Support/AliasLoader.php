@@ -24,7 +24,7 @@ class AliasLoader
 
     public function register(): self
     {
-        $classes = require storage()->addPath('vendor/composer')->file('autoload_classmap.php');
+        $classes = require storage()->addPath('vendor.composer')->file('autoload_classmap.php');
 
         foreach ($classes as $class => $file) {
             $alias = explode('\\', $class);
