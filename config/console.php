@@ -14,6 +14,9 @@ declare(strict_types=1);
  */
 
 return [
+    /*
+     * System console commands
+    */
     'core' => [
         new \Core\Console\Database\Create,
         new \Core\Console\Database\Delete,
@@ -46,8 +49,9 @@ return [
 
         new \Core\Console\App\EncryptionKey,
         new \Core\Console\App\Environnement,
+        new \Core\Console\App\Config,
 
-        new \Core\Console\ClearTwigCache,
+        new \Core\Console\ClearCache,
         new \Core\Console\Server,
         new \Core\Console\Testing,
         new \Core\Console\ClearLogs,
@@ -56,9 +60,7 @@ return [
     ],
 
     /*
-     * Write your customs console commands here
+     * Customs console commands
      */
-    'app' => [
-        //
-    ],
+    'app' => [],
 ];
