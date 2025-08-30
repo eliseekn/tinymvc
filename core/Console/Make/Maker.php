@@ -320,10 +320,10 @@ class Maker
         $data = str_replace('RESOURCE_NAME', $name, $data);
 
         if ($type === NotificationType::SMS) {
-            return storage(config('storage.notifications.sms'))->writeFile($class.'.php', $data);
+            return storage(config('storage.sms'))->writeFile($class.'.php', $data);
         }
 
-        if (! storage(config('storage.notifications.mails'))->writeFile($class.'.php', $data)) {
+        if (! storage(config('storage.mails'))->writeFile($class.'.php', $data)) {
             return false;
         }
 

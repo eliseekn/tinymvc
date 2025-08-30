@@ -16,21 +16,24 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Clear twig templates cache.
+ * Clear cache.
  */
-class ClearTwigCache extends Command
+class ClearCache extends Command
 {
-    protected static $defaultName = 'clear:twig-cache';
+    protected static $defaultName = 'clear:cache';
 
     protected function configure(): void
     {
-        $this->setDescription('Clear twig templates cache');
+        $this->setDescription('Clear cache');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        storage(config('storage.cache'))->deleteDir();
-        $output->writeln('<bg=blue;options=bold> INFO </> Twig templates cache has been cleared.');
+        if (storage(config('storage.cache'))->deleteDir()) {
+            $output->writeln('<bg=blue;options=bold> INFO </> Cache has been cleared.');
+        } else {
+            $output->writeln('<bg=red;options=bold> ERROR </> Failed to clear cache.');
+        }
 
         return Command::SUCCESS;
     }
