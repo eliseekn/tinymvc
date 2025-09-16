@@ -26,4 +26,9 @@ enum HttpMethod: string
     public const DELETE = 'DELETE';
 
     public const ANY = 'GET|POST|DELETE|PUT|OPTIONS|PATCH';
+
+    public static function group(array $methods): string
+    {
+        return implode('|', $methods);
+    }
 }

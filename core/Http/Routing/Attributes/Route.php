@@ -17,7 +17,7 @@ use Attribute;
 class Route
 {
     public function __construct(
-        public string $methods,
+        public string|array $methods,
         public ?string $uri = null,
         public ?array $middlewares = null,
         public ?string $name = null,

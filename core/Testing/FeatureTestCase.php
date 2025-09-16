@@ -312,12 +312,12 @@ abstract class FeatureTestCase extends TestCase
         dd($this->getBody());
     }
 
-    public function dumpHeaders(bool $log = false): void
+    public function dumpHeaders(): void
     {
         dd($this->getHeaders());
     }
 
-    public function dumpSession(bool $log = false): void
+    public function dumpSession(): void
     {
         dd($this->getSession());
     }

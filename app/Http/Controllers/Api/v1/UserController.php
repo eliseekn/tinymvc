@@ -51,7 +51,7 @@ class UserController extends Controller
     }
 
     #[Route(
-        methods: HttpMethod::PATCH,
+        methods: [HttpMethod::PATCH, HttpMethod::PUT],
         uri: '/api/v1/users/{user}',
         middlewares: ['api', 'admin'],
         parameters: ['user' => RouteParameter::NUMBER],

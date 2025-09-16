@@ -12,7 +12,9 @@ declare(strict_types=1);
 namespace Core\Http\Routing;
 
 use Closure;
+use Core\Enums\HttpCode;
 use Core\Enums\HttpMethod;
+use Core\Enums\ResponseStatus;
 use Core\Exceptions\ControllerNotFoundException;
 use Core\Exceptions\MiddlewareNotFoundException;
 use Core\Exceptions\RouteException;
@@ -40,8 +42,10 @@ class Router
             return $optional ? "?$pattern?" : $pattern;
         }, $route);
 
+        $route = preg_replace('/^([A-Z|]+) /', '(?:$1) ', $route);
+
         if (preg_match('#^'.$route.'$#', request()->method().' '.request()->uri(), $params)) {
-            array_shift($params);
+            array_unshift($params);
 
             return true;
         }
@@ -146,6 +150,13 @@ class Router
             }
         }
 
-        response()->view(config('errors.views.404'))->send();
+        if (request()->isJson()) {
+            response()->json([
+                'status' => ResponseStatus::ERROR,
+                'message' => 'Not found',
+            ])->send(HttpCode::NOT_FOUND);
+        }
+
+        response()->view(config('errors.views.404'))->send(HttpCode::NOT_FOUND);
     }
 }

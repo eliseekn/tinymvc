@@ -309,6 +309,9 @@ if (! function_exists('resolve_binding')) {
 
         $route = route_parameters_to_regex($route, $routeParams, $result);
 
+        // Handle HTTP method patterns consistently with Router::match()
+        $route = preg_replace('/^([A-Z|]+) /', '(?:$1) ', $route);
+
         if (! preg_match('#^'.$route.'$#', request()->method().' '.request()->uri(), $matches)) {
             return $params;
         }

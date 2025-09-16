@@ -13,6 +13,7 @@ namespace Core\Http\Routing;
 
 use Closure;
 use Core\Enums\HttpMethod;
+use Core\Enums\RouteName;
 use Core\Enums\RouteParameter;
 use Core\Exceptions\RouteException;
 use Core\Http\Routing\Attributes\Route as RouteAttribute;
@@ -78,29 +79,37 @@ class Route
         return self::add(HttpMethod::ANY.' '.$uri, $handler);
     }
 
-    public static function all(string $name, string $controller, array $excepts = []): self
+    public static function all(string $name, string $controller, string $identifier = 'id', array $excepts = []): self
     {
-        return self::group(function () use ($name, $excepts) {
-            if (! in_array('index', $excepts)) {
-                self::get('/'.$name, 'index')->name('index');
+        return self::group(function () use ($name, $identifier, $excepts) {
+            if (! in_array(RouteName::INDEX, $excepts)) {
+                self::get('/'.$name, RouteName::INDEX)->name(RouteName::INDEX);
             }
-            if (! in_array('create', $excepts)) {
-                self::get('/'.$name, 'create')->name('create');
+            if (! in_array(RouteName::CREATE, $excepts)) {
+                self::get('/'.$name, RouteName::CREATE)->name(RouteName::CREATE);
             }
-            if (! in_array('store', $excepts)) {
-                self::post('/'.$name, 'store')->name('store');
+            if (! in_array(RouteName::STORE, $excepts)) {
+                self::post('/'.$name, RouteName::STORE)->name(RouteName::STORE);
             }
-            if (! in_array('update', $excepts)) {
-                self::match('PATCH|PUT', '/'.$name.'/{id:num}', 'update')->name('update');
+            if (! in_array(RouteName::UPDATE, $excepts)) {
+                self::match(HttpMethod::group([HttpMethod::PATCH, HttpMethod::PUT]), '/'.$name."/{$identifier}", RouteName::UPDATE)
+                    ->whereParameters([$identifier => RouteParameter::NUMBER])
+                    ->name(RouteName::UPDATE);
             }
-            if (! in_array('show', $excepts)) {
-                self::get('/'.$name.'/{id:num}', 'show')->name('show');
+            if (! in_array(RouteName::SHOW, $excepts)) {
+                self::get('/'.$name."/{$identifier}", RouteName::SHOW)
+                    ->whereParameters([$identifier => RouteParameter::NUMBER])
+                    ->name(RouteName::SHOW);
             }
-            if (! in_array('edit', $excepts)) {
-                self::get('/'.$name.'/{id:num}/edit', 'edit')->name('edit');
+            if (! in_array(RouteName::EDIT, $excepts)) {
+                self::get('/'.$name."/{$identifier}/".RouteName::EDIT, RouteName::EDIT)
+                    ->whereParameters([$identifier => RouteParameter::NUMBER])
+                    ->name(RouteName::EDIT);
             }
-            if (! in_array('delete', $excepts)) {
-                self::delete('/'.$name.'/{id:num}', 'delete')->name('delete');
+            if (! in_array(RouteName::DELETE, $excepts)) {
+                self::delete('/'.$name."/{$identifier}", RouteName::DELETE)
+                    ->whereParameters([$identifier => RouteParameter::NUMBER])
+                    ->name(RouteName::DELETE);
             }
         })->byController($controller)->byName($name);
     }
@@ -272,7 +281,8 @@ class Route
 
                 foreach ($attributes as $attribute) {
                     $attribute = $attribute->newInstance();
-                    $route = self::match($attribute->methods, $attribute->uri ?? '/'.$method->getName(), [$controller, $method->getName()]);
+                    $_methods = implode('|', parse_array($attribute->methods));
+                    $route = self::match($_methods, $attribute->uri ?? '/'.$method->getName(), [$controller, $method->getName()]);
 
                     if ($attribute->middlewares) {
                         $route->middleware($attribute->middlewares);
