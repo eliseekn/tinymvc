@@ -19,12 +19,12 @@ return [
     'url' => [
         'protocol' => env('TESTING_URL_PROTOCOL', 'http://'),
         'host' => env('TESTING_URL_HOST', '127.0.0.1'),
-        'port' => env('TESTING_UL_PORT', 8889),
+        'port' => env('TESTING_URL_PORT', 8889),
     ],
 
     'browser' => [
         'name' => \Symfony\Component\Panther\PantherTestCase::FIREFOX,
-        'headless' => true,
+        'headless' => false,
         'screenshots_dir' => config('storage.tmp'),
     ],
 
