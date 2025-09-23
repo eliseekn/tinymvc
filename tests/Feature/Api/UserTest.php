@@ -123,7 +123,7 @@ class UserTest extends FeatureTestCase
         $this
             ->auth($admin)
             ->deleteJson('/api/v1/users/'.$user->getId())
-            ->assertStatusOk()
+            ->assertStatusEquals(HttpCode::NO_CONTENT)
             ->assertJsonContains(['status' => ResponseStatus::SUCCESS])
             ->assertDatabaseDoesNotHave('users', ['name' => $user->get('name')]);
     }

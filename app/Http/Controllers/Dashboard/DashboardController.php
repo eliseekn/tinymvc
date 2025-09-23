@@ -37,9 +37,9 @@ class DashboardController extends Controller
         }
 
         $this->render('dashboard.index', [
-            'totalUsers' => $this->metrics((new User)->metrics(), $period),
-            'totalUsersToday' => (new User)->metrics()->countByDay(count: 1)->metricsWithVariations(1, Period::DAY->value),
-            'usersTrends' => $this->trends((new User)->metrics()->fillMissingData(), $period),
+            'totalUsers' => $this->metrics($user->metrics(), $period),
+            'totalUsersToday' => $user->metrics()->countByDay(count: 1)->metricsWithVariations(1, Period::DAY->value),
+            'usersTrends' => $this->trends($user->metrics()->fillMissingData(), $period),
             'usersRolesTrends' => $this->trendsByRoles(
                 $user
                     ->metrics()

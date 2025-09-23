@@ -29,6 +29,6 @@ final class DeleteUseCase
         response()->json([
             'status' => ResponseStatus::SUCCESS,
             'message' => 'User delete',
-        ])->send(HttpCode::OK);
+        ])->send(HttpCode::NO_CONTENT);
     }
 }
