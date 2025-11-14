@@ -46,6 +46,7 @@ return [
         new \Core\Console\Make\Event,
         new \Core\Console\Make\Listener,
         new \Core\Console\Make\Enum,
+        new \Core\Console\Make\Task,
 
         new \Core\Console\App\EncryptionKey,
         new \Core\Console\App\Environnement,
@@ -57,6 +58,13 @@ return [
         new \Core\Console\ClearLogs,
         new \Core\Console\Routes,
         new \Core\Console\Shell,
+
+        new \Core\Console\Task\Run,
+        new \Core\Console\Task\TaskList,
+        new \Core\Console\Task\Cleanup,
+        new \Core\Console\Task\Watch,
+        new \Core\Console\Task\Cancel,
+        new \Core\Console\Task\Load,
     ],
 
     /*

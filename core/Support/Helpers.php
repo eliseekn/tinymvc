@@ -10,6 +10,7 @@
 declare(strict_types=1);
 
 use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use Core\Database\Model;
 use Core\Event\EventInterface;
 use Core\Exceptions\RouteException;
@@ -526,7 +527,7 @@ if (! function_exists('parse_array')) {
 }
 
 if (! function_exists('carbon')) {
-    function carbon($time = null, $tz = null)
+    function carbon($time = null, $tz = null): CarbonInterface
     {
         return Carbon::parse($time, $tz);
     }

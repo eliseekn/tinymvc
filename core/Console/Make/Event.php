@@ -36,7 +36,7 @@ class Event extends Command
         foreach ($events as $event) {
             [, $class] = Maker::generateClass($event, singular: true, force_singular: true);
 
-            if (! Maker::createEvent($event)) {
+            if (! $this->createEvent($event)) {
                 $output->writeln('<bg=red;options=bold> ERROR </> Failed to create event  <options=bold>'.Maker::fixPlural($class.'Event', true).'</>.');
             } else {
                 $output->writeln('<bg=blue;options=bold> INFO </> Event <options=bold>'.Maker::fixPlural($class.'Event', true).'</> has been created.');
@@ -44,5 +44,20 @@ class Event extends Command
         }
 
         return Command::SUCCESS;
+    }
+
+    public function createEvent(string $event): bool
+    {
+        [, $class] = Maker::generateClass($event, singular: true, force_singular: true);
+        $className = Maker::fixPlural($class.'Event', true);
+
+        $data = Maker::stubs()->addPath('events')->readFile('Event.stub');
+        $data = Maker::addNamespace($data, "App\Events\\".Maker::fixPlural($class, true));
+        $data = str_replace('CLASSNAME', $className, $data);
+
+        $storage = storage(config('storage.events'));
+        $storage = $storage->addPath(Maker::fixPlural($class, true));
+
+        return $storage->writeFile($className.'.php', $data);
     }
 }

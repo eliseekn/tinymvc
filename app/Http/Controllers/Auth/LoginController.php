@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\UseCases\LoginUseCase;
+use App\Http\UseCases\Auth\LoginUseCase;
 use App\Http\Validation\Validators\Auth\LoginValidator;
 use Core\Enums\HttpMethod;
 use Core\Http\Routing\Attributes\Route;

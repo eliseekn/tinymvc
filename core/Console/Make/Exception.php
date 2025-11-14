@@ -38,12 +38,23 @@ class Exception extends Command
 
         [, $class] = Maker::generateClass($exception);
 
-        if (! Maker::createException($exception, $message)) {
+        if (! $this->createException($exception, $message)) {
             $output->writeln('<bg=red;options=bold> ERROR </> Failed to create exception <options=bold>'.$class.'</>.');
         } else {
             $output->writeln('<bg=blue;options=bold> INFO </> Exception <options=bold>'.$class.'</> has been created.');
         }
 
         return Command::SUCCESS;
+    }
+
+    public function createException(string $exception, string $message): bool
+    {
+        [, $class] = Maker::generateClass($exception, 'exception', true);
+
+        $data = Maker::stubs()->readFile('Exception.stub');
+        $data = str_replace('CLASSNAME', $class, $data);
+        $data = str_replace('MESSAGE', $message, $data);
+
+        return storage(config('storage.exceptions'))->writeFile($class.'.php', $data);
     }
 }

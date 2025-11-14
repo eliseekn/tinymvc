@@ -9,12 +9,11 @@
 
 declare(strict_types=1);
 
-namespace Core\Cache;
+namespace Core\Cache\Storage;
 
-use Core\Support\Encryption;
 use Predis\Client;
 
-class Redis implements CacheInterface
+class Redis implements StorageInterface
 {
     protected Client $client;
 
@@ -24,15 +23,16 @@ class Redis implements CacheInterface
             'scheme' => config('cache.redis.scheme'),
             'host' => config('cache.redis.host'),
             'port' => config('cache.redis.port'),
+            'password' => config('cache.redis.password'),
         ]);
     }
 
-    public function set(string $key, mixed $data, ?int $time = null): void
+    public function store(string $key, mixed $data, ?int $time = null): void
     {
         $data = serialize($data);
 
         if (config('secruty.encryption.cache')) {
-            $data = Encryption::encrypt($data);
+            $data = encrypt($data);
         }
 
         $this->client->set($key, $data, $time);
@@ -44,7 +44,7 @@ class Redis implements CacheInterface
 
         if (! is_null($data)) {
             if (config('secruty.encryption.cache')) {
-                $data = Encryption::decrypt($data);
+                $data = decrypt($data);
             }
 
             return unserialize($data);

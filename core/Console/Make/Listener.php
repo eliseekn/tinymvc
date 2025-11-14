@@ -36,12 +36,25 @@ class Listener extends Command
         $listener = Maker::removeUnderscore($listener);
         $event = $input->getArgument('event');
 
-        if (! Maker::createListener($listener, $event)) {
+        if (! $this->createListener($listener, $event)) {
             $output->writeln('<bg=red;options=bold> ERROR </> Failed to create listener <options=bold>'.$listener.'</>.');
         } else {
             $output->writeln('<bg=blue;options=bold> INFO </> Listener <options=bold>'.$listener.'</> has been created.');
         }
 
         return Command::SUCCESS;
+    }
+
+    public function createListener(string $listener, string $event): bool
+    {
+        $data = Maker::stubs()->addPath('events')->readFile('Listener.stub');
+        $data = Maker::addNamespace($data, "App\Events\\".$event);
+        $data = str_replace('CLASSNAME', $listener, $data);
+        $data = str_replace('EVENT', $event.'Event', $data);
+
+        $storage = storage(config('storage.events'));
+        $storage = $storage->addPath($event);
+
+        return $storage->writeFile($listener.'.php', $data);
     }
 }

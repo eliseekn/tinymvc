@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\UseCases;
+namespace App\Http\UseCases\Auth;
 
 use Core\Http\Auth;
 use Core\Support\Alert;

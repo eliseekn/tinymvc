@@ -36,7 +36,7 @@ class Middleware extends Command
         foreach ($middlewares as $middleware) {
             [, $class] = Maker::generateClass($middleware, singular: true);
 
-            if (! Maker::createMiddleware($middleware)) {
+            if (! $this->createMiddleware($middleware)) {
                 $output->writeln('<bg=red;options=bold> ERROR </> Failed to create middleware <options=bold>'.$class.'</>.');
             } else {
                 $output->writeln('<bg=blue;options=bold> INFO </> Middleware <options=bold>'.$class.'</> has been created.');
@@ -44,5 +44,15 @@ class Middleware extends Command
         }
 
         return Command::SUCCESS;
+    }
+
+    public function createMiddleware(string $middleware): bool
+    {
+        [, $class] = Maker::generateClass($middleware, singular: true);
+
+        $data = Maker::stubs()->readFile('Middleware.stub');
+        $data = str_replace('CLASSNAME', $class, $data);
+
+        return storage(config('storage.middlewares'))->writeFile($class.'.php', $data);
     }
 }

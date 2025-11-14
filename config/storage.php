@@ -42,4 +42,5 @@ return [
     'events' => absolute_path('app.Events'),
     'assets' => absolute_path('resources.assets'),
     'enums' => absolute_path('app.Enums'),
+    'tasks' => absolute_path('app.Tasks'),
 ];

@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Core\Console\Make;
 
+use Core\Enums\NotificationType;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -38,7 +39,7 @@ class Notification extends Command
         foreach ($notifications as $notification) {
             [, $class] = Maker::generateClass($notification, $type, force_singular: true);
 
-            if (! Maker::createNotification($notification, $type)) {
+            if (! $this->createNotification($notification, $type)) {
                 $output->writeln('<bg=red;options=bold> ERROR </> Failed to create notification <options=bold>'.$class.'</>.');
             } else {
                 $output->writeln('<bg=blue;options=bold> INFO </> Notification <options=bold>'.$class.'</> has been created.');
@@ -46,5 +47,28 @@ class Notification extends Command
         }
 
         return Command::SUCCESS;
+    }
+
+    public function createNotification(string $notification, string $type): bool
+    {
+        [$name, $class] = Maker::generateClass($notification, $type, force_singular: true);
+
+        $data = Maker::stubs()->addPath('notifications')->readFile(ucfirst($type).'.stub');
+        $data = str_replace('CLASSNAME', $class, $data);
+        $data = str_replace('RESOURCE_NAME', $name, $data);
+
+        if ($type === NotificationType::SMS) {
+            return storage(config('storage.sms'))->writeFile($class.'.php', $data);
+        }
+
+        if (! storage(config('storage.mails'))->writeFile($class.'.php', $data)) {
+            return false;
+        }
+
+        $data = Maker::stubs()->addPath('views')->readFile('email.stub');
+
+        return storage(config('storage.views'))
+            ->addPath('emails')
+            ->writeFile($name.'.html.twig', $data);
     }
 }

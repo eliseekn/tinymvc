@@ -36,7 +36,7 @@ class Enum extends Command
         foreach ($enums as $enum) {
             [, $class] = Maker::generateClass($enum, singular: true);
 
-            if (! Maker::createEnum($enum)) {
+            if (! $this->createEnum($enum)) {
                 $output->writeln('<bg=red;options=bold> ERROR </> Failed to create enum <options=bold>'.$class.'</>.');
             } else {
                 $output->writeln('<bg=blue;options=bold> INFO </> Enum <options=bold>'.$class.'</> has been created.');
@@ -44,5 +44,15 @@ class Enum extends Command
         }
 
         return Command::SUCCESS;
+    }
+
+    public static function createEnum(string $enum): bool
+    {
+        [, $class] = Maker::generateClass($enum, singular: true);
+
+        $data = Maker::stubs()->readFile('Enum.stub');
+        $data = str_replace('ENUM_NAME', $class, $data);
+
+        return storage(config('storage.enums'))->writeFile($class.'.php', $data);
     }
 }

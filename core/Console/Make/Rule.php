@@ -36,7 +36,7 @@ class Rule extends Command
         foreach ($rules as $rule) {
             [, $class] = Maker::generateClass($rule, singular: true);
 
-            if (! Maker::createRule($rule)) {
+            if (! $this->createRule($rule)) {
                 $output->writeln('<bg=red;options=bold> ERROR </> Failed to create request rule <options=bold>'.$class.'</>.');
             } else {
                 $output->writeln('<bg=blue;options=bold> INFO </> Request rule <options=bold>'.$class.'</> has been created.');
@@ -44,5 +44,19 @@ class Rule extends Command
         }
 
         return Command::SUCCESS;
+    }
+
+    public function createRule(string $rule): bool
+    {
+        [$name, $class] = Maker::generateClass($rule, singular: true);
+
+        $data = Maker::stubs()->addPath('validators')->readFile('Rule.stub');
+        $data = Maker::addNamespace($data, 'App\Http\Validation\Rules');
+        $data = str_replace('CLASSNAME', $class, $data);
+        $data = str_replace('RULE_NAME', strtolower($name), $data);
+
+        $storage = storage(config('storage.rules'));
+
+        return $storage->writeFile($class.'.php', $data);
     }
 }

@@ -17,6 +17,7 @@ use Core\Exceptions\MiddlewareNotFoundException;
 use Core\Exceptions\RouteException;
 use Core\Http\Routing\Router;
 use Core\Support\Whoops;
+use Core\Task\Task;
 
 /**
  * Main application.
@@ -32,6 +33,7 @@ class Application
     {
         Whoops::register();
         Event::load();
+        Task::load();
         Router::dispatch();
     }
 }

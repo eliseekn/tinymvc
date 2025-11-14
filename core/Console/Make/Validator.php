@@ -38,7 +38,7 @@ class Validator extends Command
         foreach ($validators as $validator) {
             [, $class] = Maker::generateClass($validator, 'validator', true);
 
-            if (! Maker::createValidator($validator, $input->getOption('namespace'))) {
+            if (! $this->createValidator($validator, $input->getOption('namespace'))) {
                 $output->writeln('<bg=red;options=bold> ERROR </> Failed to create request validator <options=bold>'.$class.'</>.');
             } else {
                 $output->writeln('<bg=blue;options=bold> INFO </> Request validator <options=bold>'.$class.'</> has been created.');
@@ -46,5 +46,22 @@ class Validator extends Command
         }
 
         return Command::SUCCESS;
+    }
+
+    public function createValidator(string $validator, ?string $namespace = null): bool
+    {
+        [, $class] = Maker::generateClass($validator, 'validator', true);
+
+        $data = Maker::stubs()->addPath('validators')->readFile('Validator.stub');
+        $data = Maker::addNamespace($data, 'App\Http\Validation\Validators', $namespace);
+        $data = str_replace('CLASSNAME', $class, $data);
+
+        $storage = storage(config('storage.validators'));
+
+        if (! is_null($namespace)) {
+            $storage = $storage->addPath(str_replace('\\', '/', $namespace));
+        }
+
+        return $storage->writeFile($class.'.php', $data);
     }
 }

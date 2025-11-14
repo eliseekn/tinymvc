@@ -41,11 +41,11 @@ class Test extends Command
             [, $class] = Maker::generateClass($test, 'test', true);
 
             if ($input->getOption('unit')) {
-                $result = Maker::createUnitTest($test, $input->getOption('namespace'));
+                $result = $this->createUnitTest($test, $input->getOption('namespace'));
             } elseif ($input->getOption('browser')) {
-                $result = Maker::createBrowserTest($test, $input->getOption('namespace'));
+                $result = $this->createBrowserTest($test, $input->getOption('namespace'));
             } else {
-                $result = Maker::createTest($test, $input->getOption('namespace'));
+                $result = $this->createTest($test, $input->getOption('namespace'));
             }
 
             if (! $result) {
@@ -56,5 +56,44 @@ class Test extends Command
         }
 
         return Command::SUCCESS;
+    }
+
+    public function createTest(string $test, ?string $namespace = null): bool
+    {
+        [, $class] = Maker::generateClass($test, 'test', true);
+
+        $data = Maker::stubs()->addPath('tests')->readFile('FeatureTest.stub');
+        $data = str_replace('CLASSNAME', $class, $data);
+        $data = Maker::addNamespace($data, 'Tests\Feature', $namespace);
+
+        return storage(config('storage.tests'))
+            ->addPath('Feature')->addPath($namespace ?? '')
+            ->writeFile($class.'.php', $data);
+    }
+
+    public function createUnitTest(string $test, ?string $namespace = null): bool
+    {
+        [, $class] = Maker::generateClass($test, 'test', true);
+
+        $data = Maker::stubs()->addPath('tests')->readFile('UnitTest.stub');
+        $data = str_replace('CLASSNAME', $class, $data);
+        $data = Maker::addNamespace($data, 'Tests\Unit', $namespace);
+
+        return storage(config('storage.tests'))
+            ->addPath('Unit')->addPath($namespace ?? '')
+            ->writeFile($class.'.php', $data);
+    }
+
+    public function createBrowserTest(string $test, ?string $namespace = null): bool
+    {
+        [, $class] = Maker::generateClass($test, 'test', true);
+
+        $data = Maker::stubs()->addPath('tests')->readFile('BrowserTest.stub');
+        $data = str_replace('CLASSNAME', $class, $data);
+        $data = Maker::addNamespace($data, 'Tests\Browser', $namespace);
+
+        return storage(config('storage.tests'))
+            ->addPath('Browser')->addPath($namespace ?? '')
+            ->writeFile($class.'.php', $data);
     }
 }

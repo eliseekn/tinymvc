@@ -38,7 +38,7 @@ class View extends Command
 
         if (is_null($input->getOption('extends'))) {
             foreach ($views as $view) {
-                if (! Maker::createView(null, $view, $input->getOption('path'))) {
+                if (! $this->createView(null, $view, $input->getOption('path'))) {
                     $output->writeln('<bg=red;options=bold> ERROR </> Failed to create view layout <options=bold>'.$view.'</>.');
                 } else {
                     $output->writeln('<bg=blue;options=bold> INFO </> View layout <options=bold>'.$view.'</> has been created.');
@@ -49,7 +49,7 @@ class View extends Command
         }
 
         foreach ($views as $view) {
-            if (! Maker::createView($view, $input->getOption('extends'), $input->getOption('path'))) {
+            if (! $this->createView($view, $input->getOption('extends'), $input->getOption('path'))) {
                 $output->writeln('<bg=red;options=bold> ERROR </> Failed to create view template <options=bold>'.$view.'</>.');
             } else {
                 $output->writeln('<bg=blue;options=bold> INFO </> View template <options=bold>'.$view.'</> has been created.');
@@ -57,5 +57,25 @@ class View extends Command
         }
 
         return Command::SUCCESS;
+    }
+
+    public function createView(?string $view, ?string $layout, ?string $path = null): bool
+    {
+        $data = is_null($view) && ! is_null($layout)
+            ? Maker::stubs()->addPath('views')->readFile('layout.stub')
+            : Maker::stubs()->addPath('views')->readFile('blank.stub');
+
+        $data = str_replace('LAYOUT_NAME', '{% extends "layouts/'.$layout.'.html.twig" %}', $data);
+        $data = is_null($view) ? $data : str_replace('RESOURCE_NAME', $view, $data);
+
+        $storage = storage(config('storage.views'));
+
+        $storage = is_null($view) && ! is_null($layout)
+            ? $storage->addPath('layouts')
+            : $storage->addPath($path ?? '');
+
+        $view = is_null($view) && ! is_null($layout) ? $layout : $view;
+
+        return $storage->writeFile($view.'.html.twig', $data);
     }
 }

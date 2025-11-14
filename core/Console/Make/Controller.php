@@ -38,7 +38,7 @@ class Controller extends Command
         foreach ($controllers as $controller) {
             [, $class] = Maker::generateClass($controller, 'controller', true, true);
 
-            if (! Maker::createController($controller, $input->getOption('namespace'))) {
+            if (! $this->createController($controller, $input->getOption('namespace'))) {
                 $output->writeln('<bg=red;options=bold> ERROR </> Failed to create controller <options=bold>'.$class.'</>.');
             } else {
                 $output->writeln('<bg=blue;options=bold> INFO </> Controller <options=bold>'.$class.'</> has been created.');
@@ -46,5 +46,22 @@ class Controller extends Command
         }
 
         return Command::SUCCESS;
+    }
+
+    public function createController(string $controller, ?string $namespace = null): bool
+    {
+        [, $class] = Maker::generateClass($controller, 'controller', true, true);
+
+        $data = Maker::stubs()->readFile('Controller.stub');
+        $data = Maker::addNamespace($data, 'App\Http\Controllers', $namespace);
+        $data = str_replace('CLASSNAME', $class, $data);
+
+        $storage = storage(config('storage.controllers'));
+
+        if (! is_null($namespace)) {
+            $storage = $storage->addPath(str_replace('\\', '/', $namespace));
+        }
+
+        return $storage->writeFile($class.'.php', $data);
     }
 }

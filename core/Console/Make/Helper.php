@@ -36,7 +36,7 @@ class Helper extends Command
         foreach ($helpers as $helper) {
             [, $class] = Maker::generateClass($helper, 'helper', true);
 
-            if (! Maker::createHelper($helper)) {
+            if (! $this->createHelper($helper)) {
                 $output->writeln('<bg=red;options=bold> ERROR </> Failed to create helper <options=bold>'.$class.'</>.');
             } else {
                 $output->writeln('<bg=blue;options=bold> INFO </> Helper <options=bold>'.$class.'</> has been created.');
@@ -44,5 +44,15 @@ class Helper extends Command
         }
 
         return Command::SUCCESS;
+    }
+
+    public function createHelper(string $helper): bool
+    {
+        [, $class] = Maker::generateClass($helper, 'helper', true);
+
+        $data = Maker::stubs()->readFile('Helper.stub');
+        $data = str_replace('CLASSNAME', $class, $data);
+
+        return storage(config('storage.helpers'))->writeFile($class.'.php', $data);
     }
 }

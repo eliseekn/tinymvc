@@ -1,9 +1,6 @@
 test:
 	@php console test
 
-dc-up:
-	docker-compose up
-
 lint:
 	./vendor/bin/phpstan analyse --memory-limit=2G
 

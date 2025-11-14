@@ -45,7 +45,7 @@ class UseCase extends Command
             [, $class] = Maker::generateClass($type, 'use_case', true, true);
             $class = str_replace(['Index', 'Show'], ['GetCollection', 'GetItem'], $class);
 
-            if (! Maker::createUseCase($type, $input->getOption('model'), $input->getOption('namespace'))) {
+            if (! $this->createUseCase($type, $input->getOption('model'), $input->getOption('namespace'))) {
                 $output->writeln('<bg=red;options=bold> ERROR </> Failed to create use case <options=bold>'.$class.'</>.');
             } else {
                 $output->writeln('<bg=blue;options=bold> INFO </> Use case <options=bold>'.$class.'</> has been created.');
@@ -53,5 +53,35 @@ class UseCase extends Command
         }
 
         return Command::SUCCESS;
+    }
+
+    public function createUseCase(string $type, ?string $model = null, ?string $namespace = null): bool
+    {
+        [$type, $class] = Maker::generateClass($type, 'use_case', true, true);
+        $class = str_replace(['Index', 'Show'], ['GetCollection', 'GetItem'], $class);
+
+        if (is_null($model)) {
+            $type = 'blank';
+        }
+
+        $data = Maker::stubs()->addPath('useCases')->readFile($type.'.stub');
+
+        if (! is_null($model)) {
+            [$name] = Maker::generateClass($model, 'use_case', true, true);
+            $namespace = is_null($namespace) ? ucfirst($name) : $namespace.'\\'.ucfirst($name);
+            $data = str_replace('$MODEL_NAME', '$'.Maker::fixPlural($name, true), $data);
+            $data = str_replace('MODEL_NAME', Maker::fixPlural(ucfirst($name), true), $data);
+        }
+
+        $data = Maker::addNamespace($data, 'App\Http\UseCases', $namespace);
+        $data = str_replace('CLASSNAME', $class, $data);
+
+        $storage = storage(config('storage.useCases'));
+
+        if (! is_null($namespace)) {
+            $storage = $storage->addPath(str_replace('\\', '/', $namespace));
+        }
+
+        return $storage->writeFile($class.'.php', $data);
     }
 }

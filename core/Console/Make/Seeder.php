@@ -36,7 +36,7 @@ class Seeder extends Command
         foreach ($seeders as $seeder) {
             [, $class] = Maker::generateClass($seeder, 'seeder', true, true);
 
-            if (! Maker::createSeeder($seeder)) {
+            if (! $this->createSeeder($seeder)) {
                 $output->writeln('<bg=red;options=bold> ERROR </> Failed to create seeder <options=bold>'.Maker::fixPlural($class, true).'</>.');
             } else {
                 $output->writeln('<bg=blue;options=bold> INFO </> Seeder <options=bold>'.Maker::fixPlural($class, true).'</> has been created.');
@@ -44,5 +44,16 @@ class Seeder extends Command
         }
 
         return Command::SUCCESS;
+    }
+
+    public function createSeeder(string $seeder): bool
+    {
+        [$name, $class] = Maker::generateClass($seeder, 'seeder', true, true);
+
+        $data = Maker::stubs()->addPath('database')->readFile('Seeder.stub');
+        $data = str_replace('CLASSNAME', Maker::fixPlural($class, true), $data);
+        $data = str_replace('MODEL_NAME', Maker::fixPlural(ucfirst($name), true), $data);
+
+        return storage(config('storage.seeders'))->writeFile(Maker::fixPlural($class, true).'.php', $data);
     }
 }

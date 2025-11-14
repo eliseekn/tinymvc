@@ -77,7 +77,7 @@ class Connection
     public static function getDBConnection(): string
     {
         if (config('app.env') === AppEnv::TEST) {
-            return config('testing.database');
+            return config('database.testing');
         }
 
         if (! is_null(static::$dbConnection)) {
@@ -90,7 +90,7 @@ class Connection
     public static function getDriver(): string
     {
         return config('app.env') === AppEnv::TEST
-            ? config('testing.database.driver')
+            ? config('database.testing.driver')
             : config('database.'.static::getDBConnection().'.driver');
     }
 

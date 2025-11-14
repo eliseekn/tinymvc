@@ -37,7 +37,7 @@ class Console extends Command
     {
         [, $class] = Maker::generateClass($input->getArgument('console'), '', true);
 
-        if (! Maker::createConsole(
+        if (! $this->createConsole(
             $input->getArgument('console'),
             $input->getOption('command'),
             $input->getOption('description'),
@@ -49,5 +49,24 @@ class Console extends Command
         }
 
         return Command::SUCCESS;
+    }
+
+    public function createConsole(string $console, string $command, string $description, ?string $namespace = null): bool
+    {
+        [, $class] = Maker::generateClass($console, '', true);
+
+        $data = Maker::stubs()->readFile('Console.stub');
+        $data = Maker::addNamespace($data, 'App\Console', $namespace);
+        $data = str_replace('CLASSNAME', $class, $data);
+        $data = str_replace('COMMAND_NAME', $command, $data);
+        $data = str_replace('COMMAND_DESCRIPTION', $description, $data);
+
+        $storage = storage(config('storage.console'));
+
+        if (! is_null($namespace)) {
+            $storage = $storage->addPath(str_replace('\\', '/', $namespace));
+        }
+
+        return $storage->writeFile($class.'.php', $data);
     }
 }

@@ -9,8 +9,6 @@
 
 declare(strict_types=1);
 
-use Core\Enums\DatabaseDriver;
-
 /*
  * Testing configuration
  */
@@ -26,15 +24,5 @@ return [
         'name' => \Symfony\Component\Panther\PantherTestCase::FIREFOX,
         'headless' => true,
         'screenshots_dir' => config('storage.tmp'),
-    ],
-
-    'database' => [
-        'driver' => env('TESTING_DB_DRIVER', DatabaseDriver::SQLITE),
-        'name' => env('TESTING_DB_NAME', 'tinymvc_test'),
-        'host' => env('TESTING_DB_HOST', ''),
-        'port' => env('TESTING_DB_PORT', ''),
-        'username' => env('TESTING_DB_USERNAME', ''),
-        'password' => env('TESTING_DB_PASSWORD', ''),
-        'memory' => false,
     ],
 ];

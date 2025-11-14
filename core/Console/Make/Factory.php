@@ -38,7 +38,7 @@ class Factory extends Command
         foreach ($factories as $factory) {
             [, $class] = Maker::generateClass($factory, 'factory', true, true);
 
-            if (! Maker::createFactory($factory, $input->getOption('namespace'))) {
+            if (! $this->createFactory($factory, $input->getOption('namespace'))) {
                 $output->writeln('<bg=red;options=bold> ERROR </> Failed to create factory <options=bold>'.Maker::fixPlural($class, true).'</>.');
             } else {
                 $output->writeln('<bg=blue;options=bold> INFO </> Factory <options=bold>'.Maker::fixPlural($class, true).'</> has been created.');
@@ -46,5 +46,23 @@ class Factory extends Command
         }
 
         return Command::SUCCESS;
+    }
+
+    public function createFactory(string $factory, ?string $namespace = null): bool
+    {
+        [$name, $class] = Maker::generateClass($factory, 'factory', true, true);
+
+        $data = Maker::stubs()->addPath('database')->readFile('Factory.stub');
+        $data = Maker::addNamespace($data, 'App\Database\Factories', $namespace);
+        $data = str_replace('CLASSNAME', Maker::fixPlural($class, true), $data);
+        $data = str_replace('MODEL_NAME', Maker::fixPlural(ucfirst($name), true), $data);
+
+        $storage = storage(config('storage.factories'));
+
+        if (! is_null($namespace)) {
+            $storage = $storage->addPath(str_replace('\\', '/', $namespace));
+        }
+
+        return $storage->writeFile(Maker::fixPlural($class, true).'.php', $data);
     }
 }

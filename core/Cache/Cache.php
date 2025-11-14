@@ -11,13 +11,16 @@ declare(strict_types=1);
 
 namespace Core\Cache;
 
+use Core\Cache\Storage\File;
+use Core\Cache\Storage\Redis;
+use Core\Cache\Storage\StorageInterface;
 use Core\Enums\CacheDriver;
 
 class Cache
 {
     protected static ?Cache $instance = null;
 
-    protected CacheInterface $cache;
+    protected StorageInterface $cache;
 
     public function __construct()
     {
@@ -42,9 +45,9 @@ class Cache
         return config('cache.'.config('cache.connection').'.driver');
     }
 
-    public function set(string $key, mixed $data, ?int $time = null): void
+    public function store(string $key, mixed $data, ?int $time = null): void
     {
-        $this->cache->set($key, $data, $time);
+        $this->cache->store($key, $data, $time);
     }
 
     public function get(string $key): mixed
@@ -75,7 +78,7 @@ class Cache
             return $cache->get($key);
         }
 
-        $cache->set($key, $data, $time);
+        $cache->store($key, $data, $time);
 
         return $data;
     }

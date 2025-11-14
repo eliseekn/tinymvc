@@ -56,7 +56,7 @@ class PHPMailer implements MailerInterface
         $name = parse_array($name);
 
         foreach ($address as $key => $addr) {
-            $this->phpMailer->addAddress($addr, $name[$key]);
+            $this->phpMailer->addAddress($addr, $name[$key] ?? '');
         }
 
         return $this;

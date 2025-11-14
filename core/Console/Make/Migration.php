@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Core\Console\Make;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -38,7 +39,7 @@ class Migration extends Command
         foreach ($migrations as $migration) {
             [, $class] = Maker::generateClass($migration, 'migration');
 
-            if (! Maker::createMigration($migration)) {
+            if (! $this->createMigration($migration)) {
                 $output->writeln('<bg=red;options=bold> ERROR </> Failed to create migration <options=bold>'.$class.'</>.');
             } else {
                 $output->writeln('<bg=blue;options=bold> INFO </> Migration <options=bold>'.$class.'</> has been created.');
@@ -47,16 +48,21 @@ class Migration extends Command
 
         if ($input->getOption('seeder')) {
             foreach ($migrations as $migration) {
-                [, $class] = Maker::generateClass($migration, 'seeder', true, true);
-
-                if (! Maker::createSeeder($migration)) {
-                    $output->writeln('<bg=red;options=bold> ERROR </> Failed to create seeder <options=bold>'.Maker::fixPlural($class, true).'</>.');
-                } else {
-                    $output->writeln('<bg=blue;options=bold> INFO </> Seeder <options=bold>'.Maker::fixPlural($class, true).'</> has been created.');
-                }
+                $this->getApplication()->find('make:seeder')->run(new ArrayInput(['seeder' => [$migration]]), $output);
             }
         }
 
         return Command::SUCCESS;
+    }
+
+    public function createMigration(string $migration): bool
+    {
+        [$name, $class] = Maker::generateClass($migration, 'migration');
+
+        $data = Maker::stubs()->addPath('database')->readFile('Migration.stub');
+        $data = str_replace('CLASSNAME', $class, $data);
+        $data = str_replace('TABLE_NAME', $name, $data);
+
+        return storage(config('storage.migrations'))->writeFile($class.'.php', $data);
     }
 }

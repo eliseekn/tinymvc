@@ -9,12 +9,11 @@
 
 declare(strict_types=1);
 
-namespace Core\Cache;
+namespace Core\Cache\Storage;
 
-use Core\Support\Encryption;
 use Core\Support\Storage;
 
-class File implements CacheInterface
+class File implements StorageInterface
 {
     protected Storage $storage;
 
@@ -23,12 +22,12 @@ class File implements CacheInterface
         $this->storage = storage(config('storage.cache'));
     }
 
-    public function set(string $key, mixed $data, ?int $time = null): void
+    public function store(string $key, mixed $data, ?int $time = null): void
     {
         $data = serialize($data);
 
         if (config('secruty.encryption.cache')) {
-            $data = Encryption::encrypt($data);
+            $data = encrypt($data);
         }
 
         $this->storage->writeFile(md5($key), $data);
@@ -40,7 +39,7 @@ class File implements CacheInterface
 
         if ($data !== '') {
             if (config('secruty.encryption.cache')) {
-                $data = Encryption::decrypt($data);
+                $data = decrypt($data);
             }
 
             return unserialize($data);

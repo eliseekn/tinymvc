@@ -9,10 +9,17 @@
 
 declare(strict_types=1);
 
+use App\Tasks\SendEmail;
 use Core\Http\Routing\Route;
+use Core\Task\Task;
 
 /*
  * Web routes
  */
 
 Route::view('/', 'index')->register();
+
+Route::get('/task/queue', function () {
+    Task::schedule(new SendEmail)->at(carbon()->addMinutes(2)->timestamp);
+    response()->data('Hello world !')->send();
+})->register();

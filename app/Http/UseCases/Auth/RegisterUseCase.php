@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\UseCases\User;
+namespace App\Http\UseCases\Auth;
 
 use App\Database\Models\User;
 use App\Events\UserRegistered\UserRegisteredEvent;

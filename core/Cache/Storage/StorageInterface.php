@@ -9,11 +9,11 @@
 
 declare(strict_types=1);
 
-namespace Core\Cache;
+namespace Core\Cache\Storage;
 
-interface CacheInterface
+interface StorageInterface
 {
-    public function set(string $key, mixed $data, ?int $time = null): void;
+    public function store(string $key, mixed $data, ?int $time = null): void;
 
     public function get(string $key): mixed;
 

@@ -42,9 +42,9 @@ class Model extends Command
         $models = $input->getArgument('model');
 
         foreach ($models as $model) {
-            list($name, $class) = Maker::generateClass($model);
+            [$name, $class] = Maker::generateClass($model);
 
-            if (! Maker::createModel($name, $input->getOption('namespace'))) {
+            if (! $this->createModel($name, $input->getOption('namespace'))) {
                 $output->writeln('<bg=red;options=bold> ERROR </>  Failed to create model <options=bold>'.Maker::fixPlural($class, true).'</>.');
             } else {
                 $output->writeln('<bg=blue;options=bold> INFO </> Model <options=bold>'.Maker::fixPlural($class, true).'</> has been created.');
@@ -78,5 +78,23 @@ class Model extends Command
         }
 
         return Command::SUCCESS;
+    }
+
+    public function createModel(string $model, ?string $namespace = null): bool
+    {
+        [$name, $class] = Maker::generateClass($model);
+
+        $data = Maker::stubs()->addPath('database')->readFile('Model.stub');
+        $data = Maker::addNamespace($data, 'App\Database\Models', $namespace);
+        $data = str_replace('CLASSNAME', Maker::fixPlural($class, true), $data);
+        $data = str_replace('TABLE_NAME', $name, $data);
+
+        $storage = storage(config('storage.models'));
+
+        if (! is_null($namespace)) {
+            $storage = $storage->addPath(str_replace('\\', '/', $namespace));
+        }
+
+        return $storage->writeFile(Maker::fixPlural($class, true).'.php', $data);
     }
 }
