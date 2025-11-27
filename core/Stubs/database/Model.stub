@@ -23,24 +23,29 @@ class CLASSNAME extends Model
         parent::__construct('TABLE_NAME');
     }
 
+    public static function query(): Model
+    {
+        return new self;
+    }
+
     public static function find(int $id): ?Model
     {
-        return (new self)->findBy('id', $id);
+        return self::query()->findBy('id', $id);
     }
 
     public static function findByColumn(string $column): ?Model
     {
-        return (new self)->findBy('column', $column);
+        return self::query()->findBy('column', $column);
     }
 
     public static function findAll(): array
     {
-        return (new self)->getAll('*');
+        return self::query()->getAll('*');
     }
 
     public static function findAllByColumn(string $column): array
     {
-        return (new self)
+        return self::query()
             ->select('*')
             ->where('column', $column)
             ->getAll();

@@ -25,24 +25,37 @@ class User extends Model
         parent::__construct('users');
     }
 
+    public static function query(): Model
+    {
+        return new self;
+    }
+
     public static function find(int $id): ?Model
     {
-        return (new self)->findBy('id', $id);
+        return self::query()->findBy('id', $id);
     }
 
     public static function findByEmail(string $email): ?Model
     {
-        return (new self)->findBy('email', $email);
+        return self::query()->findBy('email', $email);
+    }
+
+    public static function findAllByEmailVerifiedAt(string $column): array
+    {
+        return self::query()
+            ->select('*')
+            ->where('column', $column)
+            ->getAll();
     }
 
     public static function findByIdentifier(string $value): ?Model
     {
-        return (new self)->findBy(config('security.auth.identifier'), $value);
+        return self::query()->findBy(config('security.auth.identifier'), $value);
     }
 
     public static function findAllByRole(string $role): array
     {
-        return (new self)
+        return self::query()
             ->select(['users.email', 'roles.name'])
             ->join('roles', 'users.role_id', '=', 'roles.id')
             ->where('roles.name', $role)
@@ -53,7 +66,7 @@ class User extends Model
     {
         $userId = auth()?->getId();
 
-        return (new self)
+        return self::query()
             ->select(['users.*', 'roles.name AS role'])
             ->join('roles', 'users.role_id', '=', 'roles.id')
             ->where('users.id', '<>', $userId)

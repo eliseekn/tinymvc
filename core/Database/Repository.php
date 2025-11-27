@@ -26,9 +26,7 @@ class Repository
 {
     protected QueryBuilder $qb;
 
-    public function __construct(protected readonly string $table)
-    {
-    }
+    public function __construct(protected readonly string $table) {}
 
     public function getTable(): string
     {
@@ -431,6 +429,14 @@ class Repository
      */
     public function whereGreater(string $column, $value): self
     {
+        return $this->where($column, '>', $value);
+    }
+
+    /**
+     * @throws InvalidSQLQueryException
+     */
+    public function whereGreaterOrEqual(string $column, $value): self
+    {
         return $this->where($column, '>=', $value);
     }
 
@@ -438,6 +444,14 @@ class Repository
      * @throws InvalidSQLQueryException
      */
     public function andGreater(string $column, $value): self
+    {
+        return $this->and($column, '>', $value);
+    }
+
+    /**
+     * @throws InvalidSQLQueryException
+     */
+    public function andGreaterOrEqual(string $column, $value): self
     {
         return $this->and($column, '>=', $value);
     }
@@ -447,13 +461,29 @@ class Repository
      */
     public function orGreater(string $column, $value): self
     {
-        return $this->or($column, '>=', $value);
+        return $this->or($column, '>', $value);
+    }
+
+    /**
+     * @throws InvalidSQLQueryException
+     */
+    public function orGreaterOrEqual(string $column, $value): self
+    {
+        return $this->and($column, '>=', $value);
     }
 
     /**
      * @throws InvalidSQLQueryException
      */
     public function whereLower(string $column, $value): self
+    {
+        return $this->where($column, '<', $value);
+    }
+
+    /**
+     * @throws InvalidSQLQueryException
+     */
+    public function whereLowerOrEqual(string $column, $value): self
     {
         return $this->where($column, '<=', $value);
     }
@@ -463,6 +493,14 @@ class Repository
      */
     public function andLower(string $column, $value): self
     {
+        return $this->and($column, '<', $value);
+    }
+
+    /**
+     * @throws InvalidSQLQueryException
+     */
+    public function andLowerOrEqual(string $column, $value): self
+    {
         return $this->and($column, '<=', $value);
     }
 
@@ -470,6 +508,14 @@ class Repository
      * @throws InvalidSQLQueryException
      */
     public function orLower(string $column, $value): self
+    {
+        return $this->or($column, '<', $value);
+    }
+
+    /**
+     * @throws InvalidSQLQueryException
+     */
+    public function orLowerOrEqual(string $column, $value): self
     {
         return $this->or($column, '<=', $value);
     }

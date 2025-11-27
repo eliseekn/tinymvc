@@ -40,7 +40,10 @@ final class VerifyUseCase
         }
 
         $token->delete();
-        $user = User::findByEmail($email)->set(['email_verified_at' => carbon()->toDateTimeString()])->save();
+
+        $user = User::findByEmail($email)
+            ->set(['email_verified_at' => carbon()->toDateTimeString()])
+            ->save();
 
         if (! $user) {
             Alert::default(__('alert.account_not_found'))->error();

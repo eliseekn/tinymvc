@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace App\Http\Validation\Rules;
 
-use Core\Database\Repository;
+use Core\Database\QueryBuilder;
 use Core\Exceptions\ModelNotFoundException;
 use Core\Http\Validation\Rule\RuleInterface;
 use Somnambulist\Components\Validation\Rule;
@@ -31,21 +31,21 @@ class Unique extends Rule implements RuleInterface
         $field = $this->attribute->key();
 
         if (! isset($this->params['column'])) {
-            return ! (new Repository($this->params['table']))
+            return ! QueryBuilder::table($this->params['table'])
                 ->select($field)
                 ->where($field, $value)
                 ->exists();
         }
 
-        $model = (new Repository($this->params['table']))
+        $result = QueryBuilder::table($this->params['table'])
             ->select($field)
             ->where('id', $this->params['column'])
-            ->first();
+            ->fetch();
 
-        if (! $model) {
+        if (! $result) {
             throw new ModelNotFoundException($this->params['table']);
         }
 
-        return $model->get($field) === $value;
+        return $value === $result->$field;
     }
 }

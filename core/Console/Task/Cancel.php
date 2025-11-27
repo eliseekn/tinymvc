@@ -33,7 +33,7 @@ class Cancel extends Command
 
         foreach ($keys as $key) {
             if (Task::cancel($key)) {
-                $output->writeln('<bg=bright-yellow;fg=black> WARN </> Failed to cancal task <options=bold>'.$key.'</>.');
+                $output->writeln('<bg=bright-yellow;fg=black> WARN </> Failed to cancel task <options=bold>'.$key.'</>.');
             } else {
                 $output->writeln('<bg=blue;options=bold> INFO </> Task <options=bold>'.$key.'</> has been cancled.');
             }

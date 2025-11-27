@@ -20,10 +20,10 @@ class Redis implements StorageInterface
     public function __construct()
     {
         $this->client = new Client([
-            'scheme' => config('cache.redis.scheme'),
-            'host' => config('cache.redis.host'),
-            'port' => config('cache.redis.port'),
-            'password' => config('cache.redis.password'),
+            'scheme' => config('redis.scheme'),
+            'host' => config('redis.host'),
+            'port' => config('redis.port'),
+            'password' => config('redis.password'),
         ]);
     }
 

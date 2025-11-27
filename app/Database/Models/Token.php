@@ -23,19 +23,24 @@ class Token extends Model
         parent::__construct('tokens');
     }
 
+    public static function query(): Model
+    {
+        return new self;
+    }
+
     public static function find(int $id): ?Model
     {
-        return (new self)->findBy('id', $id);
+        return self::query()->findBy('id', $id);
     }
 
     public static function findByValue(string $value): ?Model
     {
-        return (new self)->findBy('value', $value);
+        return self::query()->findBy('value', $value);
     }
 
     public static function findByDescription(string $identifier, string $description): ?Model
     {
-        return (new self)
+        return self::query()
             ->select('*')
             ->where('identifier', $identifier)
             ->and('description', $description)

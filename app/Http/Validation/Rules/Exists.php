@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace App\Http\Validation\Rules;
 
-use Core\Database\Repository;
+use Core\Database\QueryBuilder;
 use Core\Http\Validation\Rule\RuleInterface;
 use Somnambulist\Components\Validation\Rule;
 
@@ -27,8 +27,8 @@ class Exists extends Rule implements RuleInterface
     {
         $this->assertHasRequiredParameters(['table', 'column']);
 
-        return (new Repository($this->params['table']))
-            ->select('*')
+        return QueryBuilder::table($this->params['table'])
+            ->select($this->params['column'])
             ->where($this->params['column'], $value)
             ->exists();
     }

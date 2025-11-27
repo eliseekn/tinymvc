@@ -16,109 +16,111 @@ use Core\Enums\TaskStatus;
 
 class Database implements StorageInterface
 {
-    public function store(string $key, string $task, string $executionTime): void
+    public function store(string $id, string $task, string $executionTime): void
     {
         QueryBuilder::table('tasks')->insert([
-            '_key' => $key,
+            'id' => $id,
             'class' => $task,
             'status' => TaskStatus::PENDING,
             'execution_time' => $executionTime,
         ])->execute();
     }
 
-    public function get(string $key): ?array
+    public function get(string $id): ?array
     {
         $result = QueryBuilder::table('tasks')
             ->select('*')
-            ->where('_key', $key)
+            ->where('id', $id)
             ->fetch();
 
         return (array) $result;
     }
 
-    public function update(string $key, array $data): bool
+    public function update(string $id, array $data): bool
     {
         $result = QueryBuilder::table('tasks')
             ->update($data)
-            ->where('_key', $key)
+            ->where('id', $id)
             ->execute();
 
         return $result !== false;
     }
 
-    public function markAsCompleted(string $key): bool
+    public function markAsCompleted(string $id): bool
     {
-        return $this->update($key, ['status' => TaskStatus::COMPLETED]);
+        return $this->update($id, [
+            'status' => TaskStatus::COMPLETED,
+            'retry_at' => null,
+        ]);
     }
 
-    public function markAsFailed(string $key): bool
+    public function markAsFailed(string $id): bool
     {
-        return $this->update($key, ['status' => TaskStatus::FAILED]);
+        return $this->update($id, ['status' => TaskStatus::FAILED]);
     }
 
-    public function markAsCancelled(string $key): bool
+    public function markAsCancelled(string $id): bool
     {
-        return $this->update($key, ['status' => TaskStatus::FAILED]);
+        return $this->update($id, ['status' => TaskStatus::CANCELLED]);
     }
 
-    public function markAsRunning(string $key, int $lastRun): bool
+    public function markAsRunning(string $id, int $lastRun): bool
     {
-        return $this->update($key, [
+        return $this->update($id, [
             'status' => TaskStatus::RUNNING,
             'last_run' => $lastRun,
+            'retry_at' => null,
         ]);
     }
 
-    public function markAsPending(string $key): bool
+    public function markAsPending(string $id, ?int $retryAt = null): bool
     {
-        return $this->update($key, [
-            'status' => TaskStatus::PENDING,
-        ]);
+        $data = ['status' => TaskStatus::PENDING];
+
+        if ($retryAt !== null) {
+            $data['retry_at'] = $retryAt;
+        }
+
+        return $this->update($id, $data);
     }
 
-    public function updateRetries(string $key): void
+    public function updateRetries(string $id): void
     {
-        $task = $this->get($key);
+        $task = $this->get($id);
 
         if (! $task) {
             return;
         }
 
-        $this->update($key, [
+        $this->update($id, [
             'retries' => $task['retries'] + 1,
         ]);
     }
 
     public function getPending(): array
     {
-        $result = QueryBuilder::table('tasks')
+        return QueryBuilder::table('tasks')
             ->select('*')
             ->where('status', TaskStatus::PENDING)
             ->fetchAll();
-
-        return (array) $result;
     }
 
     public function getRunnable(): array
     {
-        $result = QueryBuilder::table('tasks')
+        return QueryBuilder::table('tasks')
             ->select('*')
             ->whereColumn('status')->notIn([
                 TaskStatus::CANCELLED,
                 TaskStatus::RUNNING,
             ])
             ->fetchAll();
-
-        return (array) $result;
     }
 
     public function getAll(): array
     {
-        $result = QueryBuilder::table('tasks')
+        return QueryBuilder::table('tasks')
             ->select('*')
             ->fetchAll();
-
-        return (array) $result;
     }
 
     public function exists(string $task, string $executionTime): bool
@@ -130,11 +132,12 @@ class Database implements StorageInterface
             ->exists();
     }
 
-    public function cleanup(): int
+    public function cleanup(): bool
     {
-        return QueryBuilder::table('tasks')
+        $result = QueryBuilder::table('tasks')
             ->delete()
-            ->execute()
-            ->rowCount();
+            ->execute();
+
+        return $result !== false;
     }
 }

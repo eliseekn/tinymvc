@@ -28,7 +28,7 @@ final class NotifyUseCase
         if ($token) {
             $token->update(['value' => $tokenValue]);
         } else {
-            $token = (new Token)->create([
+            $token = Token::query()->create([
                 'identifier' => $email,
                 'value' => $tokenValue,
                 'expires_at' => carbon()->addDay()->toDateTimeString(),
@@ -41,6 +41,7 @@ final class NotifyUseCase
             Alert::default(__('alert.password_reset_link_sent'))->success();
         } catch (Exception $e) {
             report($e);
+
             $token->delete();
             Alert::default(__('alert.email_verification_link_not_sent'))->error();
             response()->url('/signup')->send();

@@ -15,108 +15,6 @@ use Somnambulist\Components\Validation\Rule as ValidationRule;
 
 class Rules
 {
-    public const REQUIRED = 'required';
-
-    public const REQUIRED_IF = 'required_if';
-
-    public const REQUIRED_UNLESS = 'required_unless';
-
-    public const REQUIRED_WITH = 'required_with';
-
-    public const REQUIRED_WITHOUT = 'required_without';
-
-    public const REQUIRED_WITH_ALL = 'required_with_all';
-
-    public const REQUIRED_WITHOUT_ALL = 'required_without_all';
-
-    public const MIMES = 'mimes';
-
-    public const EMAIL = 'email';
-
-    public const ALPHA = 'alpha';
-
-    public const ALPHA_NUMERIC = 'alpha_num';
-
-    public const ALPHA_DASH = 'alpha_dash';
-
-    public const ALPHA_SPACES = 'alpha_spaces';
-
-    public const NUMERIC = 'numeric';
-
-    public const INTEGER = 'integer';
-
-    public const DIGITS = 'digits';
-
-    public const DIGITS_BETWEEN = 'digits_between';
-
-    public const URL = 'url';
-
-    public const JSON = 'json';
-
-    public const MAX = 'max';
-
-    public const MIN = 'min';
-
-    public const IN = 'in';
-
-    public const NOT_IN = 'not_in';
-
-    public const LENGTH = 'length';
-
-    public const BETWEEN = 'between';
-
-    public const BOOLEAN = 'boolean';
-
-    public const DATE = 'date';
-
-    public const EXTENSION = 'extension';
-
-    public const REGEX = 'regex';
-
-    public const NULLABLE = 'nullable';
-
-    public const SOMETIMES = 'sometimes';
-
-    public const ARRAY = 'array';
-
-    public const STRING = 'string';
-
-    public const UPLOADED_FILE = 'uploaded_file';
-
-    public const IP = 'ip';
-
-    public const IPV4 = 'ipv4';
-
-    public const IPV6 = 'ipv6';
-
-    public const AFTER = 'after';
-
-    public const BEFORE = 'before';
-
-    public const PRESENT = 'present';
-
-    public const ACCEPTED = 'accepted';
-
-    public const REJECTED = 'rejected';
-
-    public const SAME = 'same';
-
-    public const DIFFERENT = 'different';
-
-    public const FLOAT = 'float';
-
-    public const UUID = 'uuid';
-
-    public const PROHIBITED = 'prohibited';
-
-    public const PROHIBITED_IF = 'prohibited_if';
-
-    public const PROHIBITED_UNLESS = 'prohibited_unless';
-
-    public const UPPERCASE = 'uppercase';
-
-    public const LOWERCASE = 'lowercase';
-
     protected static array $rules = [];
 
     public static function add(string $name, array|string $rules): static
@@ -130,6 +28,236 @@ class Rules
     public function make(): array
     {
         return static::$rules;
+    }
+
+    public static function required(): string
+    {
+        return 'required';
+    }
+
+    public static function requiredWithAll(): string
+    {
+        return 'required_with_all';
+    }
+
+    public static function requiredWithoutAll(): string
+    {
+        return 'required_without_all';
+    }
+
+    public static function email(): string
+    {
+        return 'email';
+    }
+
+    public static function alpha(): string
+    {
+        return 'alpha';
+    }
+
+    public static function alphaNumeric(): string
+    {
+        return 'alpha_num';
+    }
+
+    public static function alphaDash(): string
+    {
+        return 'alpha_dash';
+    }
+
+    public static function alphaSpaces(): string
+    {
+        return 'alpha_spaces';
+    }
+
+    public static function numeric(): string
+    {
+        return 'numeric';
+    }
+
+    public static function integer(): string
+    {
+        return 'integer';
+    }
+
+    public static function digitsConst(): string
+    {
+        return 'digits';
+    }
+
+    public static function digitsBetweenConst(): string
+    {
+        return 'digits_between';
+    }
+
+    public static function url(): string
+    {
+        return 'url';
+    }
+
+    public static function json(): string
+    {
+        return 'json';
+    }
+
+    public static function maxConst(): string
+    {
+        return 'max';
+    }
+
+    public static function minConst(): string
+    {
+        return 'min';
+    }
+
+    public static function inConst(): string
+    {
+        return 'in';
+    }
+
+    public static function notInConst(): string
+    {
+        return 'not_in';
+    }
+
+    public static function lengthConst(): string
+    {
+        return 'length';
+    }
+
+    public static function betweenConst(): string
+    {
+        return 'between';
+    }
+
+    public static function booleanConst(): string
+    {
+        return 'boolean';
+    }
+
+    public static function dateConst(): string
+    {
+        return 'date';
+    }
+
+    public static function extensionConst(): string
+    {
+        return 'extension';
+    }
+
+    public static function regexConst(): string
+    {
+        return 'regex';
+    }
+
+    public static function nullable(): string
+    {
+        return 'nullable';
+    }
+
+    public static function sometimes(): string
+    {
+        return 'sometimes';
+    }
+
+    public static function array(): string
+    {
+        return 'array';
+    }
+
+    public static function string(): string
+    {
+        return 'string';
+    }
+
+    public static function uploadedFile(): string
+    {
+        return 'uploaded_file';
+    }
+
+    public static function ip(): string
+    {
+        return 'ip';
+    }
+
+    public static function ipv4(): string
+    {
+        return 'ipv4';
+    }
+
+    public static function ipv6(): string
+    {
+        return 'ipv6';
+    }
+
+    public static function afterConst(): string
+    {
+        return 'after';
+    }
+
+    public static function beforeConst(): string
+    {
+        return 'before';
+    }
+
+    public static function present(): string
+    {
+        return 'present';
+    }
+
+    public static function accepted(): string
+    {
+        return 'accepted';
+    }
+
+    public static function rejected(): string
+    {
+        return 'rejected';
+    }
+
+    public static function sameConst(): string
+    {
+        return 'same';
+    }
+
+    public static function differentConst(): string
+    {
+        return 'different';
+    }
+
+    public static function float(): string
+    {
+        return 'float';
+    }
+
+    public static function uuid(): string
+    {
+        return 'uuid';
+    }
+
+    public static function prohibited(): string
+    {
+        return 'prohibited';
+    }
+
+    public static function prohibitedIf(): string
+    {
+        return 'prohibited_if';
+    }
+
+    public static function prohibitedUnless(): string
+    {
+        return 'prohibited_unless';
+    }
+
+    public static function uppercase(): string
+    {
+        return 'uppercase';
+    }
+
+    public static function lowercase(): string
+    {
+        return 'lowercase';
     }
 
     public function after(string $data): string

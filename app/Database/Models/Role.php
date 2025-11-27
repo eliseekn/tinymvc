@@ -23,21 +23,26 @@ class Role extends Model
         parent::__construct('roles');
     }
 
+    public static function query(): Model
+    {
+        return new self;
+    }
+
     public static function findByName(string $name): ?Model
     {
-        return (new self)->findBy('name', $name);
+        return self::query()->findBy('name', $name);
     }
 
     public static function findAll(): array
     {
-        return (new self)
+        return self::query()
             ->select('*')
             ->getAll();
     }
 
     public static function findAllByName(): array
     {
-        return (new self)
+        return self::query()
             ->select('name')
             ->getAll();
     }

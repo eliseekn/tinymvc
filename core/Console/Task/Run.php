@@ -32,9 +32,9 @@ class Run extends Command
 
         foreach ($tasks as $task) {
             if ($task['status'] === TaskStatus::COMPLETED) {
-                $output->writeln('<bg=blue;options=bold> INFO </> Task '.$task['_key'].' completed successfully.');
+                $output->writeln('<bg=blue;options=bold> INFO </> Task '.$task['id'].' completed successfully.');
             } else {
-                $output->writeln('<bg=red;options=bold> ERROR </> Task '.$task['_key'].' failed.');
+                $output->writeln('<bg=red;options=bold> ERROR </> Task '.$task['id'].' failed.');
             }
         }
 

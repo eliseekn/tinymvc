@@ -27,9 +27,11 @@ class Cleanup extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $deleted = Task::cleanup();
-
-        $output->writeln('<bg=blue;options=bold> INFO </> Cleaned up '.$deleted.' tasks.');
+        if (Task::cleanup()) {
+            $output->writeln('<bg=blue;options=bold> INFO </> Tasks has been cleaned up.');
+        } else {
+            $output->writeln('<bg=bright-yellow;fg=black> WARN </> Failed to cleanup tasks.');
+        }
 
         return Command::SUCCESS;
     }

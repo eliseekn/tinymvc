@@ -16,7 +16,7 @@ use Somnambulist\Components\Validation\Rule;
 
 class Password extends Rule implements RuleInterface
 {
-    public ?string $name = 'passowrd';
+    public ?string $name = 'password';
 
     public string $message = ':attribute must contains at least one uppercase letter, one lowercase letter, one special character (_-=+~!@#$%^&*) and one digit';
 

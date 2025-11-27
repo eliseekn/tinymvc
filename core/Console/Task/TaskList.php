@@ -32,15 +32,16 @@ class TaskList extends Command
         $tasks = Task::getAll();
 
         $table = new Table($output);
-        $table->setHeaders(['Key', 'Status', 'Execution time', 'Last run', 'Retries']);
+        $table->setHeaders(['ID', 'Status', 'Execution time', 'Last run', 'Retries', 'Next retry']);
 
         foreach ($tasks as $task) {
             $table->addRow([
-                $task->_key,
+                $task->id,
                 $this->colorizeStatus($task->status),
                 $this->formatTime($task->execution_time),
                 is_null($task->last_run) ? '-' : date('Y-m-d H:i:s', $task->last_run),
                 $task->retries,
+                is_null($task->retry_at) ? '-' : date('Y-m-d H:i:s', $task->retry_at),
             ]);
         }
 

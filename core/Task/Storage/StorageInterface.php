@@ -13,23 +13,23 @@ namespace Core\Task\Storage;
 
 interface StorageInterface
 {
-    public function store(string $key, string $task, string $executionTime): void;
+    public function store(string $id, string $task, string $executionTime): void;
 
-    public function get(string $key): ?array;
+    public function get(string $id): ?array;
 
-    public function update(string $key, array $data): bool;
+    public function update(string $id, array $data): bool;
 
-    public function markAsCompleted(string $key): bool;
+    public function markAsCompleted(string $id): bool;
 
-    public function markAsFailed(string $key): bool;
+    public function markAsFailed(string $id): bool;
 
-    public function markAsCancelled(string $key): bool;
+    public function markAsCancelled(string $id): bool;
 
-    public function markAsRunning(string $key, int $lastRun): bool;
+    public function markAsRunning(string $id, int $lastRun): bool;
 
-    public function markAsPending(string $key): bool;
+    public function markAsPending(string $id, ?int $retryAt = null): bool;
 
-    public function updateRetries(string $key): void;
+    public function updateRetries(string $id): void;
 
     public function getPending(): array;
 
@@ -39,5 +39,5 @@ interface StorageInterface
 
     public function exists(string $task, string $executionTime): bool;
 
-    public function cleanup(): int;
+    public function cleanup(): bool;
 }

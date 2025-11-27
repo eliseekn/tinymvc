@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace App\Http\UseCases\Auth;
 
+use App\Database\Models\User;
 use Core\Http\Auth;
 use Core\Support\Alert;
 
@@ -18,6 +19,8 @@ final class LoginUseCase
 {
     public function handle(array $data): void
     {
+        $user = User::findByEmail($data['email']);
+
         if (Auth::attempt($user)) {
             Alert::toast(__('alert.welcome', ['name' => $user->get('name')]))->success();
             response()->url('/dashboard')->send();

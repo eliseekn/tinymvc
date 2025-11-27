@@ -42,7 +42,7 @@ class Cache
 
     public static function getDriver(): string
     {
-        return config('cache.'.config('cache.connection').'.driver');
+        return config('cache.driver');
     }
 
     public function store(string $key, mixed $data, ?int $time = null): void

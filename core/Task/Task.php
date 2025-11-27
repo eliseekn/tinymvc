@@ -45,23 +45,23 @@ class Task
 
     public static function getDriver(): string
     {
-        return config('tasks.storage.'.config('tasks.storage.connection').'.driver');
+        return config('tasks.driver');
     }
 
     public static function dispatch(TaskInterface $task): void
     {
         $instance = static::getInstance();
-        $key = $instance->generateKey();
+        $id = uniqid();
 
-        $instance->storage->store($key, $task::class, 'at:'.carbon()->timestamp);
-        $taskData = $instance->storage->get($key);
+        $instance->storage->store($id, $task::class, 'at:'.carbon()->timestamp);
+        $taskData = $instance->storage->get($id);
         $instance->processTask($taskData);
     }
 
     public static function queue(TaskInterface $task, string $executionTime): void
     {
         $instance = static::getInstance();
-        $instance->storage->store($instance->generateKey(), $task::class, $executionTime);
+        $instance->storage->store(uniqid(), $task::class, $executionTime);
     }
 
     public static function process(): array
@@ -81,19 +81,19 @@ class Task
         return $results;
     }
 
-    public static function cancel(string $key): bool
+    public static function cancel(string $id): bool
     {
         $instance = static::getInstance();
-        $taskData = $instance->storage->get($key);
+        $taskData = $instance->storage->get($id);
 
         if ($taskData === null || $taskData['status'] !== TaskStatus::PENDING) {
             return false;
         }
 
-        return $instance->storage->markAsCancelled($key);
+        return $instance->storage->markAsCancelled($id);
     }
 
-    public static function cleanup(): int
+    public static function cleanup(): bool
     {
         $instance = static::getInstance();
 
@@ -116,15 +116,16 @@ class Task
 
     private function processTask(array $taskData): array
     {
-        $key = $taskData['_key'];
+        $id = $taskData['id'];
         $class = $taskData['class'];
         $retries = $taskData['retries'];
+        $executionTime = $taskData['execution_time'];
 
         if (! $this->shouldRun($taskData)) {
             return [];
         }
 
-        $this->storage->markAsRunning($key, time());
+        $this->storage->markAsRunning($id, time());
 
         try {
             ob_start();
@@ -135,26 +136,26 @@ class Task
 
             ob_clean();
 
-            $this->storage->markAsCompleted($key);
+            $this->storage->markAsCompleted($id);
             $task->handleCompleted();
         } catch (Exception $e) {
             report($e);
 
-            $this->storage->markAsFailed($key);
+            $this->storage->markAsFailed($id);
             $task->handleFailed();
 
-            if (config('tasks.retries') > 0 && $retries <= config('tasks.retries')) {
-                $this->storage->markAsPending($key);
-                $this->storage->updateRetries($key);
+            if ($this->isRepetitiveTask($executionTime) && $retries >= config('tasks.retries.max')) {
+                $this->storage->update($id, ['retries' => 0]);
+            }
+
+            if (config('tasks.retries.max') > 0 && $retries < config('tasks.retries.max')) {
+                $retryAt = time() + (int) config('tasks.retries.delay');
+                $this->storage->markAsPending($id, $retryAt);
+                $this->storage->updateRetries($id);
             }
         }
 
-        return $this->storage->get($key);
-    }
-
-    private function generateKey(): string
-    {
-        return uniqid();
+        return $this->storage->get($id);
     }
 
     public static function schedule(TaskInterface $task): Scheduler
@@ -176,11 +177,29 @@ class Task
         }
     }
 
+    private function isRepetitiveTask(string $executionTime): bool
+    {
+        return str_starts_with($executionTime, 'daily:')
+            || str_starts_with($executionTime, 'weekly:')
+            || str_starts_with($executionTime, 'monthly:')
+            || str_starts_with($executionTime, 'every:')
+            || str_starts_with($executionTime, 'cron:');
+    }
+
     private function shouldRun(array $taskData): bool
     {
         $executionTime = $taskData['execution_time'];
         $lastRun = $taskData['last_run'];
+        $retryAt = $taskData['retry_at'];
         $now = time();
+
+        if ($retryAt !== null) {
+            if ($now < $retryAt) {
+                return false;
+            }
+
+            return true;
+        }
 
         if (str_starts_with($executionTime, 'at:')) {
             $time = substr($executionTime, 3);

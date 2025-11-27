@@ -23,15 +23,15 @@ class RegisterValidator extends Validator
      */
     public function rules(): array
     {
-        return Rules::add('name', [Rules::REQUIRED, Rules::max(255)])
+        return Rules::add('name', [Rules::required(), Rules::max(255)])
             ->add('email', [
-                Rules::REQUIRED,
-                Rules::EMAIL,
+                Rules::required(),
+                Rules::email(),
                 Rules::max(255),
                 Rules::custom(new Unique, 'users'),
             ])
             ->add('password', [
-                Rules::REQUIRED,
+                Rules::required(),
                 Rules::between(8, 10),
                 Rules::custom(new Password),
             ])

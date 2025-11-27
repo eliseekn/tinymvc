@@ -22,8 +22,8 @@ class EmailValidator extends Validator
     public function rules(): array
     {
         return Rules::add('email', [
-            Rules::REQUIRED,
-            Rules::EMAIL,
+            Rules::required(),
+            Rules::email(),
             Rules::max(255),
         ])
             ->make();

@@ -9,8 +9,7 @@
 
 declare(strict_types=1);
 
-use App\Tasks\SendEmail;
-use Core\Enums\TaskDriver;
+use App\Tasks\DeleteUnverifiedUsers;
 use Core\Task\Schedule\Schedule;
 
 /*
@@ -18,25 +17,14 @@ use Core\Task\Schedule\Schedule;
  */
 
 return [
-    'storage' => [
-        'connection' => env('TASK_CONNECTION', 'database'),
+    'driver' => env('TASK_DRIVER', 'database'),
 
-        'database' => [
-            'driver' => TaskDriver::DATABASE,
-        ],
-
-        'redis' => [
-            'driver' => TaskDriver::REDIS,
-            'scheme' => env('REDIS_SCHEME', 'tcp'),
-            'host' => env('REDIS_HOST', '127.0.0.1'),
-            'port' => env('REDIS_PORT', 6379),
-            'password' => env('REDIS_PASSWORD'),
-        ],
+    'retries' => [
+        'max' => 2,
+        'delay' => 60, // in seconds
     ],
 
     'schedules' => [
-        SendEmail::class => Schedule::at(carbon()->addMinutes(2)->timestamp),
+        DeleteUnverifiedUsers::class => Schedule::everyMinutes(),
     ],
-
-    'retries' => 2,
 ];

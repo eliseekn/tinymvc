@@ -13,7 +13,7 @@ namespace App\Database\Migrations;
 
 use Core\Database\Schema;
 
-class Version20210403034738
+final class Version20210403034738
 {
     public function up(): void
     {

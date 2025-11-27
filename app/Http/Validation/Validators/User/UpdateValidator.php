@@ -23,10 +23,10 @@ class UpdateValidator extends Validator
      */
     public function rules(): array
     {
-        return Rules::add('name', [Rules::SOMETIMES, Rules::max(255)])
+        return Rules::add('name', [Rules::sometimes(), Rules::max(255)])
             ->add('email', [
-                Rules::SOMETIMES,
-                Rules::EMAIL,
+                Rules::sometimes(),
+                Rules::email(),
                 Rules::max(255),
                 Rules::custom(new Unique, [
                     'users',
@@ -34,7 +34,7 @@ class UpdateValidator extends Validator
                 ]),
             ])
             ->add('role_id', [
-                Rules::SOMETIMES,
+                Rules::sometimes(),
                 Rules::custom(new Exists, ['roles', 'id']),
             ])
             ->make();

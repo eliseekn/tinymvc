@@ -13,13 +13,12 @@ namespace App\Database\Migrations;
 
 use Core\Database\Schema;
 
-class Version20250927091526
+final class Version20250927091526
 {
     public function up(): void
     {
         Schema::createTable('tasks')
-            ->addPrimaryKey()->notNull()
-            ->addVarChar('_key')->notNull()
+            ->addVarChar('id')->notNull()
             ->addVarChar('class')->notNull()
             ->addVarChar('execution_time')->notNull()
             ->addVarChar('status')->notNull()
