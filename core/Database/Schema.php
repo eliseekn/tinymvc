@@ -33,6 +33,11 @@ class Schema
         return new self;
     }
 
+    public static function createIndex(string $column): void
+    {
+        QueryBuilder::createIndex($column)->execute();
+    }
+
     public static function alterTable(string $table): self
     {
         static::$qb = QueryBuilder::alter($table);

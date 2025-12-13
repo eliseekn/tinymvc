@@ -58,6 +58,13 @@ class QueryBuilder
         return static::connection($dbConnection);
     }
 
+    public static function createIndex(string $column, ?string $dbConnection = null): self
+    {
+        static::$query = "CREATE INDEX 'idx_".static::$table."_$column ON ".static::$table."($column)";
+
+        return static::connection($dbConnection);
+    }
+
     public static function dropTable(string $name, ?string $dbConnection = null): self
     {
         static::$query = 'DROP TABLE IF EXISTS '.static::setTable($name);
@@ -552,17 +559,15 @@ class QueryBuilder
         return $this;
     }
 
-    public function limit(int $limit, ?int $offset = null): self
+    public function limit(int $count, ?int $offset = null): self
     {
-        static::$query .= " LIMIT $limit";
+        if (is_null($offset)) {
+            static::$query .= " LIMIT $count";
 
-        if (! is_null($offset)) {
-            if (static::$connection->getDriver() === DatabaseDriver::PGSQL) {
-                static::$query .= " OFFSET $offset";
-            } else {
-                static::$query .= ", $offset";
-            }
+            return $this;
         }
+
+        static::$query .= " LIMIT $count OFFSET $offset";
 
         return $this;
     }
@@ -658,9 +663,15 @@ class QueryBuilder
         return $stmt;
     }
 
-    public function fetch(): mixed
+    public function fetch(?string $column = null): mixed
     {
-        return $this->execute()->fetch();
+        $result = $this->execute()->fetch();
+
+        if (! is_null($column)) {
+            return $result->$column;
+        }
+
+        return $result;
     }
 
     public function fetchAll(): array
