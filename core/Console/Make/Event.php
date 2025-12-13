@@ -21,10 +21,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Event extends Command
 {
-    protected static $defaultName = 'make:event';
-
     protected function configure(): void
     {
+        $this->setName('make:event');
         $this->setDescription('Create new event');
         $this->addArgument('event', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'The name of event table (separated by space if many)');
     }

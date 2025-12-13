@@ -21,10 +21,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Enum extends Command
 {
-    protected static $defaultName = 'make:enum';
-
     protected function configure(): void
     {
+        $this->setName('make:enum');
         $this->setDescription('Create new enum');
         $this->addArgument('enum', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'The name of enum (separated by space if many)');
     }

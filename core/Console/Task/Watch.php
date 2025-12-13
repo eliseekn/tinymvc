@@ -18,20 +18,19 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Watch extends Command
 {
-    protected static $defaultName = 'tasks:watch';
-
     private bool $shouldStop = false;
 
     protected function configure(): void
     {
+        $this->setName('tasks:watch');
         $this->setDescription('Run task watcher');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (function_exists('pcntl_signal')) {
-            pcntl_signal(SIGTERM, [$this, 'handleSignal']);
-            pcntl_signal(SIGINT, [$this, 'handleSignal']);
+            pcntl_signal(SIGTERM, [$this, 'onSignal']);
+            pcntl_signal(SIGINT, [$this, 'onSignal']);
         }
 
         $output->writeln('<info>Starting tasks watcher...</info>');
@@ -56,7 +55,7 @@ class Watch extends Command
         return Command::SUCCESS;
     }
 
-    public function handleSignal(int $signal): void
+    private function onSignal(): void
     {
         $this->shouldStop = true;
     }

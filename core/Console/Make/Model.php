@@ -23,10 +23,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Model extends Command
 {
-    protected static $defaultName = 'make:model';
-
     protected function configure(): void
     {
+        $this->setName('make:model');
         $this->setDescription('Create new model');
         $this->addArgument('model', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'The name of model (separated by space if many)');
         $this->addOption('migration', 'm', InputOption::VALUE_NONE, 'Create new migration');

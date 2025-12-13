@@ -22,10 +22,9 @@ use Symfony\Component\Process\Process;
  */
 class Server extends Command
 {
-    protected static $defaultName = 'serve';
-
     protected function configure(): void
     {
+        $this->setName('serve');
         $this->setDescription('Start a local server development');
         $this->addOption('host', null, InputOption::VALUE_OPTIONAL, 'Specify server host');
         $this->addOption('port', null, InputOption::VALUE_OPTIONAL, 'Specify server port');

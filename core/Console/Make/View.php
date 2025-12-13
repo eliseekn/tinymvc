@@ -22,10 +22,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class View extends Command
 {
-    protected static $defaultName = 'make:view';
-
     protected function configure(): void
     {
+        $this->setName('make:view');
         $this->setDescription('Create new view template');
         $this->addArgument('view', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'The name of view or layout (separated by space if many)');
         $this->addOption('extends', null, InputOption::VALUE_REQUIRED, 'Extends from layout');

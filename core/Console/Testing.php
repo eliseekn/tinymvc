@@ -25,10 +25,9 @@ use Symfony\Component\Process\Process;
  */
 class Testing extends Command
 {
-    protected static $defaultName = 'test';
-
     protected function configure(): void
     {
+        $this->setName('test');
         $this->setDescription('Run tests cases');
         $this->addArgument('test', InputArgument::OPTIONAL, 'Specify test name');
         $this->addArgument('filter', InputArgument::OPTIONAL, 'Specify test case');

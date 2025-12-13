@@ -22,10 +22,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Controller extends Command
 {
-    protected static $defaultName = 'make:controller';
-
     protected function configure(): void
     {
+        $this->setName('make:controller');
         $this->setDescription('Create new controller');
         $this->addArgument('controller', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'The name of controller (separated by space if many)');
         $this->addOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Specify namespace (base: App\Http\Controllers)');

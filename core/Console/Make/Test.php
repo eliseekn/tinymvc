@@ -22,10 +22,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Test extends Command
 {
-    protected static $defaultName = 'make:test';
-
     protected function configure(): void
     {
+        $this->setName('make:test');
         $this->setDescription('Create new test case');
         $this->addArgument('test', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'The name of test (separated by space if many)');
         $this->addOption('unit', 'u', InputOption::VALUE_NONE, 'Setup for unit test');

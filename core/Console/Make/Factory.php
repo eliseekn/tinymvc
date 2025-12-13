@@ -22,10 +22,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Factory extends Command
 {
-    protected static $defaultName = 'make:factory';
-
     protected function configure(): void
     {
+        $this->setName('make:factory');
         $this->setDescription('Create new model factory');
         $this->addArgument('factory', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'The name of model factory table (separated by space if many)');
         $this->addOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Specify namespace (base: App\Database\Factories)');

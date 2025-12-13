@@ -24,10 +24,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Reset extends Command
 {
-    protected static $defaultName = 'migrations:reset';
-
     protected function configure(): void
     {
+        $this->setName('migrations:reset');
         $this->setDescription('Reset migrations');
         $this->addArgument('migration', InputArgument::OPTIONAL | InputArgument::IS_ARRAY, 'The name of migrations (separated by space if many)');
         $this->addOption('seed', null, InputOption::VALUE_NONE, 'Insert all seeds');

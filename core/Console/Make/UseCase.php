@@ -21,10 +21,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class UseCase extends Command
 {
-    protected static $defaultName = 'make:use-case';
-
     protected function configure(): void
     {
+        $this->setName('make:use-case');
         $this->setDescription('Create new use case');
         $this->addOption('model', null, InputOption::VALUE_OPTIONAL, 'The name of model');
         $this->addOption('type', null, InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'Specify use case type (index, show, store, update, delete or custom name)');

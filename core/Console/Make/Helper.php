@@ -21,10 +21,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Helper extends Command
 {
-    protected static $defaultName = 'make:helper';
-
     protected function configure(): void
     {
+        $this->setName('make:helper');
         $this->setDescription('Create new helper');
         $this->addArgument('helper', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'The name of helper (separated by space if many)');
     }

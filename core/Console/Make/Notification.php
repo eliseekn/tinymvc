@@ -22,10 +22,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Notification extends Command
 {
-    protected static $defaultName = 'make:notification';
-
     protected function configure(): void
     {
+        $this->setName('make:notification');
         $this->setDescription('Create new mail');
         $this->addArgument('type', InputArgument::REQUIRED, 'The type of notification');
         $this->addArgument('notification', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'The name of notification (separated by space if many)');

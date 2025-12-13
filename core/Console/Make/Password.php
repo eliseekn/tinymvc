@@ -21,10 +21,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Password extends Command
 {
-    protected static $defaultName = 'make:password';
-
     protected function configure(): void
     {
+        $this->setName('make:password');
         $this->setDescription('Generate hashed password');
         $this->addArgument('password', InputArgument::REQUIRED, 'The password to hash');
     }

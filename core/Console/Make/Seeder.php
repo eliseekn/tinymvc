@@ -21,10 +21,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Seeder extends Command
 {
-    protected static $defaultName = 'make:seeder';
-
     protected function configure(): void
     {
+        $this->setName('make:seeder');
         $this->setDescription('Create new seeder');
         $this->addArgument('seeder', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'The name of the model (separated by space if many)');
     }

@@ -21,10 +21,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Listener extends Command
 {
-    protected static $defaultName = 'make:listener';
-
     protected function configure(): void
     {
+        $this->setName('make:listener');
         $this->setDescription('Create new event listener');
         $this->addArgument('listener', InputArgument::REQUIRED, 'The name of event listener');
         $this->addArgument('event', InputArgument::REQUIRED, 'Event name');

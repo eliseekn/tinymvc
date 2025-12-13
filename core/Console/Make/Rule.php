@@ -21,10 +21,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Rule extends Command
 {
-    protected static $defaultName = 'make:rule';
-
     protected function configure(): void
     {
+        $this->setName('make:rule');
         $this->setDescription('Create new custom validator rule');
         $this->addArgument('rule', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'The name of rule (separated by space if many)');
     }

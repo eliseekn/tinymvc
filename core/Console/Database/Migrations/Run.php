@@ -28,10 +28,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Run extends Command
 {
-    protected static $defaultName = 'migrations:run';
-
     protected function configure(): void
     {
+        $this->setName('migrations:run');
         $this->setDescription('Run migrations');
         $this->addArgument('migration', InputArgument::OPTIONAL | InputArgument::IS_ARRAY, 'The name of migrations (separated by space if many)');
         $this->addOption('seed', null, InputOption::VALUE_NONE, 'Run seeders');

@@ -20,10 +20,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class TaskList extends Command
 {
-    protected static $defaultName = 'tasks:list';
-
     protected function configure(): void
     {
+        $this->setName('tasks:list');
         $this->setDescription('Get all task');
     }
 

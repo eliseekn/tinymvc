@@ -25,10 +25,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Query extends Command
 {
-    protected static $defaultName = 'db:query';
-
     protected function configure(): void
     {
+        $this->setName('db:query');
         $this->setDescription('Execute MySQL query and fetch results');
         $this->addArgument('query', InputArgument::REQUIRED, 'The query string to execute (inside "")');
         $this->addOption('connection', null, InputOption::VALUE_OPTIONAL, 'The name of connection to use (default: mysql)');

@@ -22,10 +22,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Validator extends Command
 {
-    protected static $defaultName = 'make:validator';
-
     protected function configure(): void
     {
+        $this->setName('make:validator');
         $this->setDescription('Create new request validator');
         $this->addArgument('validator', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'The name of validator (separated by space if many)');
         $this->addOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Specify namespace (base: App\Http\Validators)');

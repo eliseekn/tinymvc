@@ -18,10 +18,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Load extends Command
 {
-    protected static $defaultName = 'tasks:load';
-
     protected function configure(): void
     {
+        $this->setName('tasks:load');
         $this->setDescription('Load schedules tasks');
     }
 

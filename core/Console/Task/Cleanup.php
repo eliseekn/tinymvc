@@ -18,10 +18,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Cleanup extends Command
 {
-    protected static $defaultName = 'tasks:cleanup';
-
     protected function configure(): void
     {
+        $this->setName('tasks:cleanup');
         $this->setDescription('Clean up old completed and failed tasks');
     }
 

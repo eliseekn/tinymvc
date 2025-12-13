@@ -21,10 +21,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Middleware extends Command
 {
-    protected static $defaultName = 'make:middleware';
-
     protected function configure(): void
     {
+        $this->setName('make:middleware');
         $this->setDescription('Create new middleware');
         $this->addArgument('middleware', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'The name of middleware (separated by space if many)');
     }

@@ -22,10 +22,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Exception extends Command
 {
-    protected static $defaultName = 'make:exception';
-
     protected function configure(): void
     {
+        $this->setName('make:exception');
         $this->setDescription('Create new custom exception');
         $this->addArgument('exception', InputArgument::REQUIRED, 'The name of exception');
         $this->addOption('message', 'm', InputOption::VALUE_REQUIRED, 'The exception message');

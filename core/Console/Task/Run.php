@@ -19,10 +19,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Run extends Command
 {
-    protected static $defaultName = 'tasks:run';
-
     protected function configure(): void
     {
+        $this->setName('tasks:run');
         $this->setDescription('Process pending tasks from the queue');
     }
 

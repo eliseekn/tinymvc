@@ -22,10 +22,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Console extends Command
 {
-    protected static $defaultName = 'make:console';
-
     protected function configure(): void
     {
+        $this->setName('make:console');
         $this->setDescription('Create new console command');
         $this->addArgument('console', InputArgument::REQUIRED, 'The console class name');
         $this->addOption('command', null, InputOption::VALUE_REQUIRED, 'The console name');

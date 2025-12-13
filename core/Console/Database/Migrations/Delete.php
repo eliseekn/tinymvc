@@ -24,10 +24,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Delete extends Command
 {
-    protected static $defaultName = 'migrations:delete';
-
     protected function configure(): void
     {
+        $this->setName('migrations:delete');
         $this->setDescription('Delete migrations');
         $this->addArgument('migration', InputArgument::OPTIONAL | InputArgument::IS_ARRAY, 'The name of migrations (separated by space if many)');
     }

@@ -23,10 +23,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Environnement extends Command
 {
-    protected static $defaultName = 'app:env';
-
     protected function configure(): void
     {
+        $this->setName('app:env');
         $this->setDescription('Define application environnement');
         $this->addArgument('name', InputArgument::REQUIRED, 'Specify application environnement (test, local or prod)');
     }

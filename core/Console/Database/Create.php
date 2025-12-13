@@ -23,10 +23,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Create extends Command
 {
-    protected static $defaultName = 'db:create';
-
     protected function configure(): void
     {
+        $this->setName('db:create');
         $this->setDescription('Create new database');
         $this->addArgument('database', InputArgument::IS_ARRAY | InputArgument::OPTIONAL, 'The name of database (separated by space if many) or leave empty to for application database');
     }

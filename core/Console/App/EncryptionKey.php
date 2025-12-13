@@ -21,10 +21,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class EncryptionKey extends Command
 {
-    protected static $defaultName = 'app:key';
-
     protected function configure(): void
     {
+        $this->setName('app:key');
         $this->setDescription('Generate application encryption key');
     }
 

@@ -23,10 +23,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Routes extends Command
 {
-    protected static $defaultName = 'routes';
-
     protected function configure(): void
     {
+        $this->setName('routes');
         $this->setDescription('Display registered routes list');
     }
 

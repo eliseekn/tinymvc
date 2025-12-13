@@ -23,10 +23,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Delete extends Command
 {
-    protected static $defaultName = 'db:delete';
-
     protected function configure(): void
     {
+        $this->setName('db:delete');
         $this->setDescription('Delete database');
         $this->addArgument('database', InputArgument::IS_ARRAY, 'The name of database (separated by space if many)');
     }

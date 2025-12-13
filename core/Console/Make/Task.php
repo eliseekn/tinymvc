@@ -18,10 +18,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Task extends Command
 {
-    protected static $defaultName = 'make:task';
-
     protected function configure(): void
     {
+        $this->setName('make:task');
         $this->setDescription('Create new task');
         $this->addArgument('task', InputArgument::REQUIRED, 'The task name');
     }

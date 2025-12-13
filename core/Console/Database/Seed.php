@@ -22,10 +22,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Seed extends Command
 {
-    protected static $defaultName = 'db:seed';
-
     protected function configure(): void
     {
+        $this->setName('db:seed');
         $this->setDescription('Run seeders');
         $this->addArgument('seeder', InputArgument::OPTIONAL | InputArgument::IS_ARRAY, 'The name of seeders (separated by space if many)');
     }

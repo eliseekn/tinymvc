@@ -24,10 +24,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Config extends Command
 {
-    protected static $defaultName = 'app:config';
-
     protected function configure(): void
     {
+        $this->setName('app:config');
         $this->setDescription('Show application configuration');
     }
 

@@ -19,10 +19,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Cancel extends Command
 {
-    protected static $defaultName = 'tasks:cancel';
-
     protected function configure(): void
     {
+        $this->setName('tasks:cancel');
         $this->setDescription('Cancel task by key value');
         $this->addArgument('key', InputArgument::IS_ARRAY | InputArgument::OPTIONAL, 'The key of task (separated by space if many)');
     }

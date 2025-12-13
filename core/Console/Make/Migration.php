@@ -23,10 +23,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Migration extends Command
 {
-    protected static $defaultName = 'make:migration';
-
     protected function configure(): void
     {
+        $this->setName('make:migration');
         $this->setDescription('Create new migration');
         $this->addArgument('migration', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'The name of migration table (separated by space if many)');
         $this->addOption('seeder', null, InputOption::VALUE_NONE, 'Create seeder');

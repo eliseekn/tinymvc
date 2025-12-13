@@ -20,10 +20,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ClearLogs extends Command
 {
-    protected static $defaultName = 'clear:logs';
-
     protected function configure(): void
     {
+        $this->setName('clear:logs');
         $this->setDescription('Clear saved logs');
     }
 

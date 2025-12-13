@@ -20,10 +20,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ClearCache extends Command
 {
-    protected static $defaultName = 'clear:cache';
-
     protected function configure(): void
     {
+        $this->setName('clear:cache');
         $this->setDescription('Clear cache');
     }
 

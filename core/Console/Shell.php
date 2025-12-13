@@ -21,10 +21,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Shell extends Command
 {
-    protected static $defaultName = 'shell';
-
     protected function configure(): void
     {
+        $this->setName('shell');
         $this->setDescription('Start a interactive PHP shell');
     }
 

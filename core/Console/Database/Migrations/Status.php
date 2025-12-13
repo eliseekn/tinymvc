@@ -24,10 +24,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Status extends Command
 {
-    protected static $defaultName = 'migrations:status';
-
     protected function configure(): void
     {
+        $this->setName('migrations:status');
         $this->setDescription('Display migrations status');
     }
 
