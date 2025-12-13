@@ -127,11 +127,12 @@ class Task
 
         $this->storage->markAsRunning($id, time());
 
+        /** @var \Core\Task\TaskInterface */
+        $task = new $class;
+
         try {
             ob_start();
 
-            /** @var \Core\Task\TaskInterface */
-            $task = new $class;
             $task->handle();
 
             ob_clean();
@@ -374,7 +375,7 @@ class Task
         return true;
     }
 
-    private function cronFieldMatches(string $field, int $current, int $min): bool
+    private function cronFieldMatches(string $field, int $current, int $min, int $max): bool
     {
         if ($field === '*') {
             return true;
@@ -385,7 +386,7 @@ class Task
             $step = (int) $step;
 
             if ($range === '*') {
-                return ($current - $min) % $step === 0;
+                return $current >= $min && $current <= $max && ($current - $min) % $step === 0;
             }
 
             if (str_contains($range, '-')) {
@@ -398,7 +399,7 @@ class Task
 
             $start = (int) $range;
 
-            return $current >= $start && ($current - $start) % $step === 0;
+            return $current >= $start && $current <= $max && ($current - $start) % $step === 0;
         }
 
         if (str_contains($field, '-')) {
