@@ -26,7 +26,9 @@ class Repository
 {
     protected QueryBuilder $qb;
 
-    public function __construct(protected readonly string $table) {}
+    public function __construct(protected readonly string $table)
+    {
+    }
 
     public function getTable(): string
     {
@@ -689,27 +691,25 @@ class Repository
         return ! $rows ? null : $rows[0];
     }
 
-    public function range(int $start, int $end): array
-    {
-        $this->qb->limit($start, $end);
-
-        return $this->getAll();
-    }
-
     public function take(int $count): array
     {
-        return $this->range(0, $count);
+        $this->qb->limit($count);
+
+        return $this->getAll();
     }
 
     public function paginate(int $perPage, int $page = 1): Pagination
     {
         [$query, $args] = $this->qb->toSQL();
 
-        $totalItems = count(QueryBuilder::setQuery($query, $args)->fetchAll());
+        $countQuery = preg_replace('/\s+(ORDER BY|LIMIT|OFFSET)\s+.+$/i', '', $query);
+        $countQuery = "SELECT COUNT(*) as total FROM ({$countQuery}) as count_wrapper";
+        $totalItems = (int) QueryBuilder::setQuery($countQuery, $args)->fetch('total');
+
         $pager = new Pagination($totalItems, $perPage, $page);
 
         $items = $perPage > 0
-            ? QueryBuilder::setQuery($query, $args)->limit($pager->getFirstItem(), $perPage)->fetchAll()
+            ? QueryBuilder::setQuery($query, $args)->limit($perPage, $pager->getFirstItem())->fetchAll()
             : QueryBuilder::setQuery($query, $args)->fetchAll();
 
         $items = array_map(fn ($item) => new Model($this->table, (array) $item), $items);
@@ -729,6 +729,29 @@ class Repository
         $rows = $this->execute()->fetchAll();
 
         return ! $rows ? [] : array_map(fn ($row) => new Model($this->table, (array) $row), $rows);
+    }
+
+    public function chunk(int $count, Closure $callback): void
+    {
+        [$query, $args] = $this->qb->toSQL();
+
+        $offset = 0;
+
+        while (true) {
+            $rows = QueryBuilder::setQuery($query, $args)
+                ->limit($count, $offset)
+                ->fetchAll();
+
+            if (empty($rows)) {
+                break;
+            }
+
+            foreach ($rows as $row) {
+                $callback(new Model($this->table, (array) $row));
+            }
+
+            $offset += $count;
+        }
     }
 
     public function toSQL(): array
