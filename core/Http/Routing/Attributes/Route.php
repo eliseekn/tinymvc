@@ -23,5 +23,6 @@ class Route
         public ?string $name = null,
         public ?array $parameters = null,
         public ?array $bindings = null,
-    ) {}
+    ) {
+    }
 }
