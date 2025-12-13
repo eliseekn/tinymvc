@@ -25,6 +25,6 @@ return [
     ],
 
     'schedules' => [
-        DeleteUnverifiedUsers::class => Schedule::everyMinutes(),
+        DeleteUnverifiedUsers::class => Schedule::daily(),
     ],
 ];

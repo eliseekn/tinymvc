@@ -11,7 +11,8 @@ declare(strict_types=1);
 
 namespace App\Tasks;
 
-use App\Database\Models\User;
+use Core\Database\Model;
+use Core\Database\Repository;
 use Core\Task\TaskInterface;
 
 final class DeleteUnverifiedUsers implements TaskInterface
@@ -19,11 +20,14 @@ final class DeleteUnverifiedUsers implements TaskInterface
     public function handle(): void
     {
         if (config('security.auth.email_verification')) {
-            User::query()
-                ->select(['created_at',  'email_verified_at'])
+            ((new Repository('users')))
+                ->select(['id', 'email_verified_at', 'created_at'])
                 ->whereNull('email_verified_at')
-                ->andGreaterOrEqual('created_at', carbon()->addWeek()->toDateTimeString())
-                ->delete();
+                ->chunk(100, function (Model $user) {
+                    if (carbon($user->get('created_at'))->addWeek()->lte(carbon()->toDateTimeString())) {
+                        $user->delete();
+                    }
+                });
         }
     }
 

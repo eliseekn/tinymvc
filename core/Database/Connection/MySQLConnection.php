@@ -13,6 +13,7 @@ namespace Core\Database\Connection;
 
 use Core\Database\DB;
 use PDO;
+use Pdo\Mysql;
 use PDOException;
 use PDOStatement;
 
@@ -27,8 +28,8 @@ class MySQLConnection implements ConnectionInterface
     {
         try {
             $this->pdo = new PDO('mysql:host='.$db->host.';port='.$db->port.';dbname='.$db->name, $db->username, $db->password);
-            $this->pdo->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, 'SET NAMES '.$db->charset.' COLLATE '.$db->collation);
-            $this->pdo->setAttribute(PDO::MYSQL_ATTR_FOUND_ROWS, true);
+            $this->pdo->setAttribute(Mysql::ATTR_INIT_COMMAND, 'SET NAMES '.$db->charset.' COLLATE '.$db->collation);
+            $this->pdo->setAttribute(Mysql::ATTR_FOUND_ROWS, true);
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
             $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);

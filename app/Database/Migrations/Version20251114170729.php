@@ -18,7 +18,7 @@ final class Version20251114170729
     public function up(): void
     {
         Schema::alterTable('tasks')
-            ->addInt('retry_at')->null()
+            ->addInt('retry_at')->null()->after('retries')
             ->run();
     }
 }

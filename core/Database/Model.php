@@ -58,10 +58,10 @@ class Model
         return $this->repository->select($columns)->last();
     }
 
-    public function take(int $count, ?Closure $subQuery = null): array
+    public function take(array|string $columns, int $count, ?Closure $subQuery = null): array
     {
         return $this->repository
-            ->select('*')
+            ->select($columns)
             ->when(! is_null($subQuery), $subQuery)
             ->take($count);
     }
