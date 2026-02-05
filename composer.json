@@ -48,7 +48,8 @@
     "dompdf/dompdf": "^3.0",
     "somnambulist/validation": "^1.12.2",
     "twilio/sdk": "^8.3",
-    "predis/predis": "^2.2"
+    "predis/predis": "^2.2",
+    "symfony/panther": "^2.4"
   },
   "require-dev": {
     "phpunit/phpunit": "^11.5",
@@ -57,7 +58,6 @@
     "fakerphp/faker": "^1.24",
     "phpstan/phpstan": "^2.0",
     "friendsofphp/php-cs-fixer": "^3.68",
-    "symfony/panther": "^2.1",
     "symfony/finder": "^7.2",
     "symfony/test-pack": "^1.1"
   }
