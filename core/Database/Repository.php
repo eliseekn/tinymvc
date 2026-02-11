@@ -26,9 +26,7 @@ class Repository
 {
     protected QueryBuilder $qb;
 
-    public function __construct(protected readonly string $table)
-    {
-    }
+    public function __construct(protected readonly string $table) {}
 
     public function getTable(): string
     {
@@ -675,6 +673,11 @@ class Repository
     public function exists(): bool
     {
         return $this->qb->exists();
+    }
+
+    public function notExists(): bool
+    {
+        return $this->qb->notExists();
     }
 
     public function first(): ?Model

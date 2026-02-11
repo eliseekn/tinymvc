@@ -31,10 +31,10 @@ class Unique extends Rule implements RuleInterface
         $field = $this->attribute->key();
 
         if (! isset($this->params['column'])) {
-            return ! QueryBuilder::table($this->params['table'])
+            return QueryBuilder::table($this->params['table'])
                 ->select($field)
                 ->where($field, $value)
-                ->exists();
+                ->notExists();
         }
 
         $result = QueryBuilder::table($this->params['table'])

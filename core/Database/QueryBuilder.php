@@ -615,6 +615,11 @@ class QueryBuilder
         return $this->fetch() !== false;
     }
 
+    public function notExists(): bool
+    {
+        return $this->fetch() === false;
+    }
+
     public function toSQL(): array
     {
         $this->trimQuery();

@@ -13,7 +13,6 @@ namespace Core\Http\Validation\Validator;
 
 use Core\Enums\HttpCode;
 use Core\Enums\ResponseStatus;
-use Core\Http\Request;
 use Somnambulist\Components\Validation\Factory as RakitValidator;
 use Somnambulist\Components\Validation\Rule;
 use Somnambulist\Components\Validation\Validation;
@@ -70,7 +69,7 @@ class Validator implements ValidatorInterface
 
         $this->validation->validate();
 
-        if ($this->failed()) {
+        if ($this->validation->fails()) {
             $this->validationFailed();
         }
 
