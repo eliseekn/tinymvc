@@ -1,0 +1,29 @@
+{
+    "_hash": "92d5aaac4296528c87b356bf5ee571622e114d27c739c6b88df5c092eea0d03d",
+    "patches": {
+        "somnambulist/validation": [
+            {
+                "package": "somnambulist/validation",
+                "description": "Fix null array offset in resolveAttributeName",
+                "url": "patches/somnambulist-validation-fix-null-array-offset.patch",
+                "sha256": "c28dbc52352b9910dc732185a9f56c4f6a4cc2b6594925ab41bf155157f818f7",
+                "depth": 1,
+                "extra": {
+                    "provenance": "root"
+                }
+            }
+        ],
+        "standaniels/image-generator": [
+            {
+                "package": "standaniels/image-generator",
+                "description": "Fix PHP 8.5 deprecations: implicit nullable params and imagedestroy",
+                "url": "patches/standaniels-image-generator-fix-deprecations.patch",
+                "sha256": "a0a352f816cc15c515e5a44259140549545b1d38b8f4d55774b425fd99179021",
+                "depth": 1,
+                "extra": {
+                    "provenance": "root"
+                }
+            }
+        ]
+    }
+}

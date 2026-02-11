@@ -77,10 +77,10 @@ class AuthenticationTest extends FeatureTestCase
 
     public function test_user_can_not_register_twice(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['password' => 'P@ssw0rd']);
 
         $this
-            ->post('/register', $user->get())
+            ->post('/register', $user->get(['name', 'email', 'password']))
             ->assertSessionHasErrors();
     }
 }

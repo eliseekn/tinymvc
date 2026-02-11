@@ -1,0 +1,33 @@
+diff -u a/src/Image.php b/src/Image.php
+--- a/src/Image.php
++++ b/src/Image.php
+@@ -32,7 +32,7 @@
+      * @param string|null $path If null, the image will be written to the directory used for temporary files.
+      * @return Image
+      */
+-    public static function create(Canvas $canvas, string $path = null)
++    public static function create(Canvas $canvas, ?string $path = null)
+     {
+         if (null === $path) {
+             $path = tempnam(sys_get_temp_dir(), 'img');
+@@ -46,8 +46,6 @@
+             throw new \RuntimeException('Failed to save image.');
+         }
+
+-        imagedestroy($image);
+-
+         return new static($path);
+     }
+
+diff -u a/src/Canvas.php b/src/Canvas.php
+--- a/src/Canvas.php
++++ b/src/Canvas.php
+@@ -94,7 +94,7 @@
+      * @param string|null $path If null, the image will be written to the directory used for temporary files.
+      * @return Image
+      */
+-    public function generate(string $path = null)
++    public function generate(?string $path = null)
+     {
+         return Image::create($this, $path);
+     }

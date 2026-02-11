@@ -345,7 +345,7 @@ class Request
 
                     $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
                     $mimeType = finfo_file($fileInfo, $tmpFilePath);
-                    finfo_close($fileInfo);
+                    unset($fileInfo);
 
                     $_FILES[$fieldName] = [
                         'name' => File::getBasename($fileName),

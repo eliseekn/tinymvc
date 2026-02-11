@@ -30,7 +30,10 @@
     }
   },
   "config": {
-    "optimize-autoloader": true
+    "optimize-autoloader": true,
+    "allow-plugins": {
+      "cweagans/composer-patches": true
+    }
   },
   "require": {
     "php": "^8.4",
@@ -49,7 +52,18 @@
     "somnambulist/validation": "^1.12.2",
     "twilio/sdk": "^8.3",
     "predis/predis": "^2.2",
-    "symfony/panther": "^2.4"
+    "symfony/panther": "^2.4",
+    "cweagans/composer-patches": "*"
+  },
+  "extra": {
+    "patches": {
+      "somnambulist/validation": {
+        "Fix null array offset in resolveAttributeName": "patches/somnambulist-validation-fix-null-array-offset.patch"
+      },
+      "standaniels/image-generator": {
+        "Fix PHP 8.5 deprecations: implicit nullable params and imagedestroy": "patches/standaniels-image-generator-fix-deprecations.patch"
+      }
+    }
   },
   "require-dev": {
     "phpunit/phpunit": "^11.5",

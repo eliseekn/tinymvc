@@ -1,0 +1,13 @@
+--- a/src/Validation.php
++++ b/src/Validation.php
+@@ -340,7 +340,9 @@
+
+     protected function resolveAttributeName(Attribute $attribute): string
+     {
+-        return $this->aliases[$attribute->key()] ?? $this->aliases[$attribute->parent()?->key()] ?? $attribute->key();
++        $parentKey = $attribute->parent()?->key();
++
++        return $this->aliases[$attribute->key()] ?? ($parentKey !== null ? ($this->aliases[$parentKey] ?? null) : null) ?? $attribute->key();
+     }
+
+     protected function resolveMessage(Attribute $attribute, Rule $rule, mixed $value): ErrorMessage
