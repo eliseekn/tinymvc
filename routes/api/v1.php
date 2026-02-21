@@ -10,6 +10,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Api\v1\AuthController;
+use App\Http\Middlewares\ApiAuth;
 use Core\Http\Routing\Route;
 
 /*
@@ -19,7 +20,7 @@ use Core\Http\Routing\Route;
 Route::group(function () {
     Route::group(function () {
         Route::post('/login', 'login');
-        Route::post('/logout', 'logout')->middleware('api');
+        Route::post('/logout', 'logout')->middleware(ApiAuth::class);
     })->byController(AuthController::class);
 })
     ->byPrefix('/api/v1')

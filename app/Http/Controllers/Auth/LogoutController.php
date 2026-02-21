@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Middlewares\Authenticated;
 use Core\Enums\HttpMethod;
 use Core\Http\Auth;
 use Core\Http\Routing\Attributes\Route;
@@ -19,7 +20,11 @@ use Core\Support\Alert;
 
 class LogoutController extends Controller
 {
-    #[Route(HttpMethod::POST, '/logout', ['auth'])]
+    #[Route(
+        methods: HttpMethod::POST,
+        uri: '/logout',
+        middlewares: [Authenticated::class]
+    )]
     public function __invoke(): void
     {
         Auth::forget();

@@ -13,6 +13,8 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Database\Models\User;
 use App\Enums\UserRole;
+use App\Http\Middlewares\Authenticated;
+use App\Http\Middlewares\EmailVerified;
 use Core\Database\Metrics\Enums\Period;
 use Core\Database\Metrics\Metrics;
 use Core\Database\QueryBuilder;
@@ -25,7 +27,7 @@ class DashboardController extends Controller
     #[Route(
         methods: HttpMethod::GET,
         uri: '/dashboard',
-        middlewares: ['auth', 'verified'],
+        middlewares: [Authenticated::class, EmailVerified::class],
         name: 'dashboard.index')
     ]
     public function __invoke(User $user): void

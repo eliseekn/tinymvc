@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Http\Middlewares\Authenticated;
+use App\Http\Middlewares\EmailVerified;
 use App\Http\UseCases\User\DeleteUseCase;
 use App\Http\UseCases\User\UpdateUseCase;
 use App\Http\Validation\Validators\UpdateProfileValidator;
@@ -20,19 +22,19 @@ use Core\Http\Routing\Controller;
 
 class ProfileController extends Controller
 {
-    #[Route(HttpMethod::GET, '/dashboard/profile', ['auth', 'verified'], 'profile.index')]
+    #[Route(HttpMethod::GET, '/dashboard/profile', [Authenticated::class, EmailVerified::class], 'profile.index')]
     public function index(): void
     {
         $this->render('dashboard.profile');
     }
 
-    #[Route(HttpMethod::PATCH, '/dashboard/profile', ['auth', 'verified'], 'profile.update')]
+    #[Route(HttpMethod::PATCH, '/dashboard/profile', [Authenticated::class, EmailVerified::class], 'profile.update')]
     public function update(UpdateUseCase $useCase, UpdateProfileValidator $validator): void
     {
         $useCase->handle($validator->inputs());
     }
 
-    #[Route(HttpMethod::DELETE, '/dashboard/profile/avatar', ['auth', 'verified'], 'profile.delete_avatar')]
+    #[Route(HttpMethod::DELETE, '/dashboard/profile/avatar', [Authenticated::class, EmailVerified::class], 'profile.delete_avatar')]
     public function deleteAvatar(DeleteUseCase $useCase): void
     {
         $useCase->handle();

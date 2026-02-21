@@ -12,6 +12,9 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Dashboard;
 
 use App\Database\Models\Role;
+use App\Http\Middlewares\Authenticated;
+use App\Http\Middlewares\CheckIfUserAdmin;
+use App\Http\Middlewares\EmailVerified;
 use App\Http\UseCases\User\GetCollectionUseCase;
 use App\Http\UseCases\User\StoreUseCase;
 use App\Http\Validation\Validators\User\StoreValidator;
@@ -28,7 +31,7 @@ class UserController extends Controller
     #[Route(
         methods: HttpMethod::GET,
         uri: '/dashboard/users',
-        middlewares: ['auth', 'verified'],
+        middlewares: [Authenticated::class, EmailVerified::class],
         name: 'users.index'
     )]
     public function index(GetCollectionUseCase $useCase): void
@@ -39,7 +42,7 @@ class UserController extends Controller
     #[Route(
         methods: HttpMethod::GET,
         uri: '/dashboard/users/create',
-        middlewares: ['auth', 'verified', 'admin'],
+        middlewares: [Authenticated::class, EmailVerified::class, CheckIfUserAdmin::class],
         name: 'users.create'
     )]
     public function create(): void
@@ -52,7 +55,7 @@ class UserController extends Controller
     #[Route(
         methods: HttpMethod::POST,
         uri: '/dashboard/users',
-        middlewares: ['auth', 'verified', 'admin'],
+        middlewares: [Authenticated::class, EmailVerified::class, CheckIfUserAdmin::class],
         name: 'users.store'
     )]
     public function store(StoreUseCase $useCase, StoreValidator $validator): void
@@ -63,7 +66,7 @@ class UserController extends Controller
     #[Route(
         methods: HttpMethod::GET,
         uri: '/dashboard/users/{user}/edit',
-        middlewares: ['auth', 'verified', 'admin'],
+        middlewares: [Authenticated::class, EmailVerified::class, CheckIfUserAdmin::class],
         name: 'users.edit',
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
@@ -79,7 +82,7 @@ class UserController extends Controller
     #[Route(
         methods: HttpMethod::PATCH,
         uri: '/dashboard/users/{user}',
-        middlewares: ['auth', 'verified', 'admin'],
+        middlewares: [Authenticated::class, EmailVerified::class, CheckIfUserAdmin::class],
         name: 'users.update',
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
@@ -97,7 +100,7 @@ class UserController extends Controller
     #[Route(
         methods: HttpMethod::DELETE,
         uri: '/dashboard/users/{user}/delete',
-        middlewares: ['auth', 'verified', 'admin'],
+        middlewares: [Authenticated::class, EmailVerified::class, CheckIfUserAdmin::class],
         name: 'users.delete',
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]

@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Middlewares\RedirectAfterLogin;
+use App\Http\Middlewares\RememberUser;
 use App\Http\UseCases\Auth\LoginUseCase;
 use App\Http\Validation\Validators\Auth\LoginValidator;
 use Core\Enums\HttpMethod;
@@ -19,7 +21,11 @@ use Core\Http\Routing\Controller;
 
 class LoginController extends Controller
 {
-    #[Route(HttpMethod::GET, '/login', ['remember', 'redirect'])]
+    #[Route(
+        methods: HttpMethod::GET,
+        uri: '/login',
+        middlewares: [RememberUser::class, RedirectAfterLogin::class]
+    )]
     public function index(): void
     {
         $this->render('auth.login');

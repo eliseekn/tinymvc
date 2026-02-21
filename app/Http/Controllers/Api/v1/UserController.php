@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\Http\Middlewares\ApiAuth;
+use App\Http\Middlewares\CheckIfUserAdmin;
 use App\Http\UseCases\Api\v1\User\DeleteUseCase;
 use App\Http\UseCases\Api\v1\User\GetCollectionUseCase;
 use App\Http\UseCases\Api\v1\User\GetItemUseCase;
@@ -26,7 +28,7 @@ use Core\Http\Routing\Controller;
 
 class UserController extends Controller
 {
-    #[Route(HttpMethod::GET, '/api/v1/users', ['api'])]
+    #[Route(HttpMethod::GET, '/api/v1/users', [ApiAuth::class])]
     public function index(GetCollectionUseCase $useCase): void
     {
         $useCase->handle();
@@ -35,7 +37,7 @@ class UserController extends Controller
     #[Route(
         methods: HttpMethod::GET,
         uri: '/api/v1/users/{user}',
-        middlewares: ['api'],
+        middlewares: [ApiAuth::class],
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
@@ -44,7 +46,7 @@ class UserController extends Controller
         $useCase->handle($user);
     }
 
-    #[Route(HttpMethod::POST, '/api/v1/users', ['api', 'admin'])]
+    #[Route(HttpMethod::POST, '/api/v1/users', [ApiAuth::class, CheckIfUserAdmin::class])]
     public function store(StoreUseCase $useCase, StoreValidator $validator): void
     {
         $useCase->handle($validator->inputs());
@@ -53,7 +55,7 @@ class UserController extends Controller
     #[Route(
         methods: [HttpMethod::PATCH, HttpMethod::PUT],
         uri: '/api/v1/users/{user}',
-        middlewares: ['api', 'admin'],
+        middlewares: [ApiAuth::class, CheckIfUserAdmin::class],
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
@@ -65,7 +67,7 @@ class UserController extends Controller
     #[Route(
         methods: HttpMethod::DELETE,
         uri: '/api/v1/users/{user}',
-        middlewares: ['api', 'admin'],
+        middlewares: [ApiAuth::class, CheckIfUserAdmin::class],
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
