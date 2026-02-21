@@ -25,6 +25,7 @@ return [
         'unlock_timeout' => 1, // in minutes
         'email_verification' => false,
         'identifier' => env('AUTH_IDENTIFIER', 'email'),
+        'redirect_after_login' => '/dashboard',
     ],
 
     'session' => [
@@ -35,6 +36,4 @@ return [
         '/logout',
         '/api/logout',
     ],
-
-    'redirect_if_logged' => '/dashboard',
 ];
