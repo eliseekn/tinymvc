@@ -38,16 +38,15 @@ final class NotifyUseCase
 
         try {
             Notification::send(new VerificationMail($email, $tokenValue))->to($email);
-            Alert::default(__('alert.password_reset_link_sent'))->success();
+
+            Alert::default(__('alert.email_verification_link_sent'))->success();
+            response()->url('/email/notify')->send();
         } catch (Exception $e) {
             report($e);
 
             $token->delete();
             Alert::default(__('alert.email_verification_link_not_sent'))->error();
-            response()->url('/signup')->send();
+            response()->url('/login')->send();
         }
-
-        Alert::default(__('alert.email_verification_link_sent'))->success();
-        response()->url('/email/notify')->send();
     }
 }
