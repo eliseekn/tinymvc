@@ -12,6 +12,8 @@ declare(strict_types=1);
 namespace Tests\Feature\Auth;
 
 use App\Database\Models\User;
+use App\Events\UserRegistered\UserRegisteredEvent;
+use Core\Event\Event;
 use Core\Testing\FeatureTestCase;
 use Core\Testing\Traits\RefreshDatabase;
 
@@ -51,12 +53,16 @@ class AuthenticationTest extends FeatureTestCase
 
     public function test_user_can_register(): void
     {
+        Event::fake(UserRegisteredEvent::class);
+
         $user = User::factory()->make(['password' => 'P@ssw0rd']);
 
         $this
             ->post('/register', $user->get())
             ->assertSessionDoesNotHaveErrors()
             ->assertDatabaseHas('users', $user->get(['name', 'email']));
+
+        Event::assertDispatched(UserRegisteredEvent::class);
     }
 
     public function test_user_can_logout(): void

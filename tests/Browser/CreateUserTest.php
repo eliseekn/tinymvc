@@ -15,6 +15,8 @@ use App\Database\Models\Role;
 use App\Database\Models\User;
 use App\Database\Seeders\RoleSeeder;
 use App\Enums\UserRole;
+use App\Events\UserCreated\UserCreatedEvent;
+use Core\Event\Event;
 use Core\Testing\BrowserTestCase;
 use Core\Testing\Traits\RefreshDatabase;
 
@@ -38,6 +40,8 @@ class CreateUserTest extends BrowserTestCase
 
     public function test_can_create(): void
     {
+        Event::fake(UserCreatedEvent::class);
+
         $user = User::factory()->create([
             'role_id' => Role::findByName(UserRole::ADMIN->value)?->getId(),
         ]);
@@ -87,5 +91,7 @@ class CreateUserTest extends BrowserTestCase
 
         $this->assertEquals('User created', $this->crawler->filter('.alert.alert-success')->text());
         $this->assertDatabaseHas('users', ['email' => $data['email']]);
+
+        Event::assertDispatched(UserCreatedEvent::class);
     }
 }

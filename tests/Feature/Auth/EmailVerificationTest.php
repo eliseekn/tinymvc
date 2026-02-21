@@ -14,6 +14,10 @@ namespace Tests\Feature\Auth;
 use App\Database\Models\Token;
 use App\Database\Models\User;
 use App\Enums\TokenDescription;
+use App\Events\UserRegistered\UserRegisteredEvent;
+use App\Notifications\Mails\VerificationMail;
+use Core\Event\Event;
+use Core\Notification\Notification;
 use Core\Testing\FeatureTestCase;
 use Core\Testing\Traits\RefreshDatabase;
 
@@ -26,6 +30,27 @@ class EmailVerificationTest extends FeatureTestCase
         parent::tearDown();
 
         $this->refreshDatabase();
+    }
+
+    public function test_can_send_vetification_email(): void
+    {
+        if (! config('security.auth.email_verification')) {
+            $this->markTestSkipped('Email verification has not been enabled.');
+
+            return;
+        }
+
+        $user = User::factory()->make(['password' => 'P@ssw0rd']);
+
+        event::fake(userregisteredevent::class);
+        Notification::fake(VerificationMail::class, $user->get('email'));
+
+        $this
+            ->post('/register', $user->get())
+            ->assertSessionDoesNotHaveErrors()
+            ->assertDatabaseHas('users', $user->get(['name', 'email']));
+
+        Notification::assertSent(VerificationMail::class, $user->get('email'));
     }
 
     public function test_can_verify_email(): void
