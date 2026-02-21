@@ -306,6 +306,7 @@ if (! function_exists('resolve_binding')) {
     function resolve_route_binding(string $route, array $routeParams, array $binding): array
     {
         $params = [];
+        $result = [];
         $bindingsResolved = [];
 
         $route = route_parameters_to_regex($route, $routeParams, $result);
