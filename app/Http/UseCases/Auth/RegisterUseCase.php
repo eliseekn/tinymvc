@@ -24,11 +24,11 @@ final class RegisterUseCase
 
         $user = User::factory()->create($data);
 
+        dispatch(new UserRegisteredEvent($user));
+
         if (config('security.auth.email_verification')) {
             $notifyUseCase->handle($user->get('email'));
         }
-
-        dispatch(new UserRegisteredEvent($user));
 
         Alert::default(__('alert.account_created'))->success();
         response()->view('auth.login')->send();

@@ -73,6 +73,6 @@ class FakeEvent
     public static function clear(): void
     {
         static::storage()->deleteFile('events.json');
-        static::storage()->deleteFile('dispatched_events.json', '');
+        static::storage()->deleteFile('dispatched_events.json');
     }
 }

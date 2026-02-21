@@ -75,6 +75,6 @@ class FakeNotification
     public static function clear(): void
     {
         static::storage()->deleteFile('notifications.json');
-        static::storage()->deleteFile('dispatched_notifications.json', '');
+        static::storage()->deleteFile('sent_notifications.json');
     }
 }

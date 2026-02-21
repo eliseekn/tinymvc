@@ -28,7 +28,7 @@ final class NotifyUseCase
         if ($token) {
             $token->update(['value' => $tokenValue]);
         } else {
-            $token = Token::query()->create([
+            $token = Token::factory()->create([
                 'identifier' => $email,
                 'value' => $tokenValue,
                 'expires_at' => carbon()->addDay()->toDateTimeString(),

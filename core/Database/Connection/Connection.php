@@ -45,7 +45,7 @@ class Connection
         $driver = static::getDriver();
 
         $config = config('app.env') === AppEnv::TEST
-            ? 'testing.database'
+            ? 'database.testing'
             : 'database.'.static::getDBConnection();
 
         $db = new DB;

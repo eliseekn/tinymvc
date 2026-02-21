@@ -42,7 +42,7 @@ class EmailVerificationTest extends FeatureTestCase
 
         $user = User::factory()->make(['password' => 'P@ssw0rd']);
 
-        event::fake(userregisteredevent::class);
+        Event::fake(UserRegisteredEvent::class);
         Notification::fake(VerificationMail::class, $user->get('email'));
 
         $this
@@ -50,6 +50,7 @@ class EmailVerificationTest extends FeatureTestCase
             ->assertSessionDoesNotHaveErrors()
             ->assertDatabaseHas('users', $user->get(['name', 'email']));
 
+        Event::assertDispatched(UserRegisteredEvent::class);
         Notification::assertSent(VerificationMail::class, $user->get('email'));
     }
 
