@@ -65,9 +65,7 @@ class Router
         }
 
         foreach ($middlewares as $middleware) {
-            $middleware = config('middlewares.'.$middleware);
-
-            if (! class_exists($middleware) && ! method_exists($middleware, 'handle')) {
+            if (! class_exists($middleware) || ! method_exists($middleware, 'handle')) {
                 throw new MiddlewareNotFoundException($middleware);
             }
 
@@ -130,6 +128,7 @@ class Router
         foreach ($routes as $route => $options) {
             $request_method = request()->inputs('_method', request()->method());
             request()->method($request_method);
+            $params = [];
 
             if (self::match($route, $params, $options['parameters'] ?? [])) {
                 if (! isset($options['handler'])) {
