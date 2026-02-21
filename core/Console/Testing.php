@@ -51,11 +51,13 @@ class Testing extends Command
         $args = ['php', 'vendor/bin/phpunit'];
 
         if (! is_null($input->getArgument('test'))) {
-            $filename = str_contains($input->getArgument('test'), '.php')
-                ? $input->getArgument('test')
-                : $input->getArgument('test').'.php';
+            $tests = $input->getArgument('test');
 
-            $args = array_merge($args, ['tests'.DIRECTORY_SEPARATOR.$filename]);
+            if (storage(config('storage.tests'))->isFile($tests.'.php')) {
+                $tests = $input->getArgument('test').'.php';
+            }
+
+            $args = array_merge($args, ['tests'.DIRECTORY_SEPARATOR.$tests]);
         }
 
         if (! is_null($input->getArgument('filter'))) {
