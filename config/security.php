@@ -21,9 +21,9 @@ return [
     ],
 
     'auth' => [
-        'max_attempts' => false,
-        'unlock_timeout' => 1, // in minutes
-        'email_verification' => false,
+        'max_attempts' => env('AUTH_MAX_ATTEMPTS', 0),
+        'unlock_timeout' => env('AUTH_UNLOCK_TIMEOUT', 1), // in minutes
+        'email_verification' => env('AUTH_EMAIL_VERIFICATION', false, FILTER_VALIDATE_BOOLEAN),
         'identifier' => env('AUTH_IDENTIFIER', 'email'),
         'redirect_after_login' => '/dashboard',
     ],

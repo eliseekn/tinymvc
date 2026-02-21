@@ -22,7 +22,7 @@ return [
 
     'browser' => [
         'name' => \Symfony\Component\Panther\PantherTestCase::FIREFOX,
-        'headless' => true,
+        'headless' => env('TESTING_BROWSER_HEADLESS', true, FILTER_VALIDATE_BOOLEAN),
         'screenshots_dir' => config('storage.tmp'),
     ],
 ];

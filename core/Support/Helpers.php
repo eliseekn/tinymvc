@@ -99,7 +99,7 @@ if (! function_exists('storage')) {
 if (! function_exists('auth_attempts_exceeded')) {
     function auth_attempts_exceeded(): bool
     {
-        if (! config('security.auth.max_attempts')) {
+        if (config('security.auth.max_attempts') === 0) {
             return false;
         }
 
@@ -507,9 +507,15 @@ if (! function_exists('env')) {
     /**
      * Get environnement variable key.
      */
-    function env(string $key, $default = null): mixed
+    function env(string $key, $default = null, ?int $filter = null): mixed
     {
-        return Config::readEnv($key, $default);
+        $data = Config::readEnv($key, $default);
+
+        if (! is_null($filter)) {
+            return filter_var($data, $filter);
+        }
+
+        return $data;
     }
 }
 
