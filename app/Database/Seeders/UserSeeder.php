@@ -26,10 +26,8 @@ class UserSeeder
             'email_verified_at' => carbon()->toDateTimeString(),
         ]);
 
-        for ($i = 0; $i < 10; $i++) {
-            User::factory()->create([
-                'created_at' => carbon(faker()->dateTimeBetween('-24 months'))->toDateTimeString(),
-            ]);
-        }
+        User::factory(10)->create([
+            'created_at' => carbon(faker()->dateTimeBetween('-24 months'))->toDateTimeString(),
+        ]);
     }
 }
