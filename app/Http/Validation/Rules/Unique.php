@@ -30,14 +30,15 @@ class Unique extends Rule implements RuleInterface
 
         $field = $this->attribute->key();
         $table = $this->params['table'];
-        $column = $this->params['column'];
 
         if (! isset($this->params['column'])) {
             return (new Repository($table))
                 ->select($field)
-                ->where($field, $this->params['value'])
+                ->where($field, $value)
                 ->notExists();
         }
+
+        $column = $this->params['column'];
 
         $model = (new Repository($table))
             ->select([$column, $field])
