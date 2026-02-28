@@ -30,6 +30,7 @@ class UpdateProfileValidator extends Validator
                 Rules::max(255),
                 Rules::custom(new Unique, [
                     'users',
+                    'id',
                     auth()->getId(),
                 ]),
             ])

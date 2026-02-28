@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace App\Http\Validation\Rules;
 
-use Core\Database\QueryBuilder;
+use Core\Database\Repository;
 use Core\Exceptions\ModelNotFoundException;
 use Core\Http\Validation\Rule\RuleInterface;
 use Somnambulist\Components\Validation\Rule;
@@ -22,30 +22,41 @@ class Unique extends Rule implements RuleInterface
 
     public string $message = ':attribute has already been used';
 
-    public array $fillableParams = ['table', 'column'];
+    public array $fillableParams = ['table', 'column', 'value'];
 
     public function check(mixed $value): bool
     {
         $this->assertHasRequiredParameters(['table']);
 
         $field = $this->attribute->key();
+        $table = $this->params['table'];
+        $column = $this->params['column'];
 
         if (! isset($this->params['column'])) {
-            return QueryBuilder::table($this->params['table'])
+            return (new Repository($table))
                 ->select($field)
-                ->where($field, $value)
+                ->where($field, $this->params['value'])
                 ->notExists();
         }
 
-        $result = QueryBuilder::table($this->params['table'])
-            ->select($field)
-            ->where('id', $this->params['column'])
-            ->fetch();
+        $model = (new Repository($table))
+            ->select([$column, $field])
+            ->where($column, $this->params['value'])
+            ->get();
 
-        if (! $result) {
-            throw new ModelNotFoundException($this->params['table']);
+        if (! $model) {
+            throw new ModelNotFoundException($table);
         }
 
-        return $value === $result->$field;
+        $existing = (new Repository($table))
+            ->select([$column, $field])
+            ->where($field, $value)
+            ->get();
+
+        if (! $existing || $model->get($column) === $existing->get($column)) {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -18,8 +18,8 @@ use Exception;
  */
 class ModelNotFoundException extends Exception
 {
-    public function __construct(string $model)
+    public function __construct(string $table)
     {
-        parent::__construct("Model $model not found");
+        parent::__construct("Model not found for table $table");
     }
 }

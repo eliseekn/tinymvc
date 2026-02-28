@@ -90,7 +90,7 @@ class Validator implements ValidatorInterface
 
     public function inputs(string|array|null $name = null): array|string|null
     {
-        $inputs = $this->validation->getValidData();
+        $inputs = $this->validation->getValidatedData();
 
         if (is_null($name)) {
             return $inputs;
