@@ -59,7 +59,11 @@ class Config
             [$key, $value] = explode('=', trim($line), 2);
 
             if (array_key_exists($key, $config)) {
-                $value = trim($config[$key]);
+                if (is_bool($config[$key])) {
+                    $value = $config[$key] ? 'true' : 'false';
+                } else {
+                    $value = trim((string) $config[$key]);
+                }
             }
 
             $data .= "$key=$value\n";

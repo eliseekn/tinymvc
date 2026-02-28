@@ -18,6 +18,7 @@ use App\Events\UserRegistered\UserRegisteredEvent;
 use App\Notifications\Mails\VerificationMail;
 use Core\Event\Event;
 use Core\Notification\Notification;
+use Core\Support\Config;
 use Core\Testing\FeatureTestCase;
 use Core\Testing\Traits\RefreshDatabase;
 
@@ -34,11 +35,9 @@ class EmailVerificationTest extends FeatureTestCase
 
     public function test_can_send_vetification_email(): void
     {
-        if (! config('security.auth.email_verification')) {
-            $this->markTestSkipped('Email verification has not been enabled.');
+        $emailVerification = config('security.auth.email_verification');
 
-            return;
-        }
+        Config::updateEnv(['AUTH_EMAIL_VERIFICATION' => true]);
 
         $user = User::factory()->make(['password' => 'P@ssw0rd']);
 
@@ -52,6 +51,8 @@ class EmailVerificationTest extends FeatureTestCase
 
         Event::assertDispatched(UserRegisteredEvent::class);
         Notification::assertSent(VerificationMail::class, $user->get('email'));
+
+        Config::updateEnv(['AUTH_EMAIL_VERIFICATION' => $emailVerification]);
     }
 
     public function test_can_verify_email(): void
