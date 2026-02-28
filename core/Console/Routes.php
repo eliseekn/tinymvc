@@ -35,13 +35,12 @@ class Routes extends Command
         $routes = Route::getAll();
 
         foreach ($routes as $route => $options) {
-            list($method, $uri) = explode(' ', $route, 2);
+            [$method, $uri] = explode(' ', $route, 2);
             $handler = $options['handler'];
-            $middlewares = $options['middlewares'] ?? '';
             $name = $options['name'] ?? '';
 
             if (is_array($handler)) {
-                list($controller, $action) = $handler;
+                [$controller, $action] = $handler;
                 $handler = $controller.'@'.$action;
             }
 
@@ -49,15 +48,11 @@ class Routes extends Command
                 $handler = 'Closure';
             }
 
-            if (! empty($middlewares)) {
-                $middlewares = implode(', ', $middlewares);
-            }
-
-            $rows[] = [$method, $uri, $handler, $middlewares, $name];
+            $rows[] = [$method, $uri, $handler, $name];
         }
 
         $table = new Table($output);
-        $table->setHeaders(['Method', 'Uri', 'Handler', 'Middlewares', 'Name']);
+        $table->setHeaders(['Method', 'Uri', 'Handler', 'Name']);
         $table->setRows($rows);
         $table->render();
 

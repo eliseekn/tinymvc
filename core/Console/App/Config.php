@@ -13,6 +13,7 @@ namespace Core\Console\App;
 
 use Core\Cache\Cache;
 use Core\Database\Connection\Connection;
+use Core\Task\Task;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Helper\TableSeparator;
@@ -44,11 +45,15 @@ class Config extends Command
             new TableSeparator,
             ['Database driver', Connection::getDriver()],
             ['Cache driver', Cache::getDriver()],
+            ['Task driver', Task::getDriver()],
             ['Errors logging', config('errors.log') ? '<fg=green>Yes</>' : '<fg=red>No</>'],
             new TableSeparator,
             ['Cache encryption', config('security.encryption.cache') ? '<fg=green>Yes</>' : '<fg=red>No</>'],
             ['Cookies encryption', config('security.encryption.cookies') ? '<fg=green>Yes</>' : '<fg=red>No</>'],
             ['Session lifetime', config('security.session.lifetime').'s'],
+            new TableSeparator,
+            ['Auth identifier', config('security.auth.identifier')],
+            ['Email verification', config('security.auth.email_verification') ? '<fg=green>Yes</>' : '<fg=red>No</>'],
         ];
 
         $table = new Table($output);
