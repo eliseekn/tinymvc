@@ -9,7 +9,7 @@ TinyMVC is a PHP framework based on MVC architecture that helps you build easily
 
 ```
 PHP ^8.4
-Yarn or NPM
+Node ^20.20
 ```
 
 ## Installation
@@ -22,7 +22,7 @@ In your terminal :
 composer create-project eliseekn/tinymvc project-name
 ```
 
-2. Install packages dependencies
+1. Install packages dependencies
 
 In your terminal :
 
@@ -42,7 +42,7 @@ cp .env.example .env
 php console app:setup
 ```
 
-3. Setup database
+1. Setup database
 
 In your terminal :
 
@@ -50,7 +50,7 @@ In your terminal :
 php console migrations:run --seed
 ```
 
-4. Start a local server development
+1. Start a local server development
 
 In your terminal :
 
