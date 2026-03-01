@@ -47,12 +47,6 @@ return [
         'memory' => false,
     ],
 
-    'storage' => [
-        'driver' => DatabaseDriver::SQLITE,
-        'name' => 'tinymvc_storage',
-        'memory' => false,
-    ],
-
     'testing' => [
         'driver' => env('TESTING_DB_DRIVER', DatabaseDriver::SQLITE),
         'name' => env('TESTING_DB_NAME', 'tinymvc_test'),
