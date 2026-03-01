@@ -11,9 +11,6 @@ declare(strict_types=1);
 
 namespace Core\Console\App;
 
-use Core\Cache\Cache;
-use Core\Database\Connection\Connection;
-use Core\Task\Task;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Helper\TableSeparator;
@@ -34,7 +31,7 @@ class Config extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $rows = [
-            ['TinyMVC version', \Composer\InstalledVersions::getPrettyVersion('eliseekn/tinymvc')],
+            ['TinyMVC version', APP_VERSION],
             ['PHP version', PHP_VERSION],
             new TableSeparator,
             ['App name', config('app.name')],
@@ -43,9 +40,9 @@ class Config extends Command
             ['Language', config('app.lang')],
             ['Errors display', config('errors.display') ? '<fg=green>Yes</>' : '<fg=red>No</>'],
             new TableSeparator,
-            ['Database driver', Connection::getDriver()],
-            ['Cache driver', Cache::getDriver()],
-            ['Task driver', Task::getDriver()],
+            ['Database connection', config('database.connection')],
+            ['Cache driver', config('cache.driver')],
+            ['Task driver', config('tasks.driver')],
             ['Errors logging', config('errors.log') ? '<fg=green>Yes</>' : '<fg=red>No</>'],
             new TableSeparator,
             ['Cache encryption', config('security.encryption.cache') ? '<fg=green>Yes</>' : '<fg=red>No</>'],

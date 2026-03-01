@@ -17,6 +17,7 @@ use Core\Support\Storage;
  */
 
 const APP_ROOT = __DIR__.DIRECTORY_SEPARATOR;
+const APP_VERSION = '1.0.0-beta-2';
 
 set_time_limit(0);
 
