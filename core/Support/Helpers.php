@@ -433,6 +433,30 @@ if (! function_exists('generate_token')) {
     }
 }
 
+if (! function_exists('random_string')) {
+    /*
+     * @link https://www.geeksforgeeks.org/php/generating-random-string-using-php/
+     */
+    function random_string(int $length, bool $withSpecialCharacters = false): string
+    {
+        $specialCharacters = '~`!@#$%^&*()_-+={}\|/?.><,;:';
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+        if ($withSpecialCharacters) {
+            $characters .= $specialCharacters;
+        }
+
+        $result = '';
+
+        for ($i = 0; $i < $length; $i++) {
+            $j = random_int(0, strlen($characters) - 1);
+            $result .= $characters[$j];
+        }
+
+        return $result;
+    }
+}
+
 if (! function_exists('config')) {
     /**
      * Read configuration.
