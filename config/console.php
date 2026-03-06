@@ -39,6 +39,7 @@ return [
         new \Core\Console\Make\Middleware,
         new \Core\Console\Make\Console,
         new \Core\Console\Make\Password,
+        new \Core\Console\Make\Hash,
         new \Core\Console\Make\Helper,
         new \Core\Console\Make\Test,
         new \Core\Console\Make\UseCase,
@@ -70,5 +71,7 @@ return [
     /*
      * Customs console commands
      */
-    'app' => [],
+    'app' => [
+        new \App\Console\GenerateRandomQuote,
+    ],
 ];
