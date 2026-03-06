@@ -20,21 +20,21 @@ use StanDaniels\ImageGenerator\Image as ImageGenerator;
  */
 abstract class File
 {
-    public static function generateImage(string $filename, int $width, int $height): bool
+    public static function generateImage(string $filepath, int $width, int $height): bool
     {
-        ImageGenerator::create(Canvas::create($width, $height), $filename);
+        ImageGenerator::create(Canvas::create($width, $height), $filepath);
 
-        return storage(File::getDirname($filename))->isFile(DIRECTORY_SEPARATOR.File::getBasename($filename));
+        return storage(File::getDirname($filepath))->isFile(DIRECTORY_SEPARATOR.File::getBasename($filepath));
     }
 
-    public static function generatePDF(string $filename): bool
+    public static function generatePDF(string $filepath, string $html): bool
     {
         $dompdf = new Dompdf;
-        $dompdf->loadHtml('TinyMVC');
+        $dompdf->loadHtml($html);
         $dompdf->render();
         $output = $dompdf->output();
 
-        return storage(File::getDirname($filename))->writeFile(DIRECTORY_SEPARATOR.File::getBasename($filename), $output);
+        return storage(File::getDirname($filepath))->writeFile(DIRECTORY_SEPARATOR.File::getBasename($filepath), $output);
     }
 
     /**
