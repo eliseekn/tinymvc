@@ -48,12 +48,12 @@ abstract class FeatureTestCase extends TestCase
 
     protected function getBody(): string
     {
-        return $this->client->getBody()[0];
+        return $this->client->getBody();
     }
 
     protected function getStatusCode(): int
     {
-        return $this->client->getStatusCode()[0];
+        return $this->client->getStatusCode();
     }
 
     protected function getHeaders(?string $key = null): mixed

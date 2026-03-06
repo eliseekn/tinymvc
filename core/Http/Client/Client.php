@@ -12,111 +12,51 @@ declare(strict_types=1);
 namespace Core\Http\Client;
 
 use Core\Enums\HttpMethod;
-use CURLFile;
+use Exception;
+use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\Mime\Part\DataPart;
+use Symfony\Component\Mime\Part\Multipart\FormDataPart;
 
 /**
- * Send asynchronous HTTP requests using curl.
+ * Send concurrent HTTP requests using Symfony HTTP Client.
  */
 class Client implements ClientInterface
 {
     protected static array $response = [];
 
-    /**
-     * @link   https://niraeth.com/php-quick-function-for-asynchronous-multi-curl/
-     *         https://stackoverflow.com/questions/9183178/can-php-curl-retrieve-response-headers-and-body-in-a-single-request
-     *         https://www.codexworld.com/post-receive-json-data-using-php-curl/
-     *         https://stackoverflow.com/questions/13420952/php-curl-delete-request
-     */
-    public static function send(string $method, array|string $url, array $data = [], array $headers = [], bool $json = false): self
+    public static function send(string $method, string $url, array $data = [], array $headers = [], bool $json = false): self
     {
-        $response_headers = [];
-        $response = [];
-        $status_code = [];
-        $curl_array = [];
-        $curl_multi = curl_multi_init();
-        $errors = [];
-        $url = parse_array($url);
+        $client = HttpClient::create();
+        $options = ['timeout' => 300];
 
-        foreach ($url as $key => $_url) {
-            $curl_array[$key] = curl_init();
-            $curl = $curl_array[$key];
+        if ($json && empty($data)) {
+            $headers['Content-Type'] = 'application/json';
+        }
 
-            curl_setopt($curl, CURLOPT_URL, $_url);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($curl, CURLOPT_TIMEOUT_MS, 300000);
+        if (! empty($headers)) {
+            $options['headers'] = $headers;
+        }
 
-            if (strtoupper($method) !== HttpMethod::GET) {
-                curl_setopt($curl, CURLOPT_CUSTOMREQUEST, strtoupper($method));
-            }
-
+        if (! empty($data)) {
             if ($json) {
-                $headers = array_merge($headers, ['Content-Type' => 'application/json']);
+                $options['json'] = $data;
+            } elseif (self::isMultipart($data)) {
+                $formData = new FormDataPart($data);
+                $options['headers'] = array_merge($options['headers'] ?? [], $formData->getPreparedHeaders()->toArray());
+                $options['body'] = $formData->bodyToIterable();
+            } else {
+                $options['body'] = $data;
             }
-
-            if (! empty($data)) {
-                if ($json) {
-                    curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
-                } elseif (self::isMultipart($data)) {
-                    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-                    $headers = array_merge($headers, ['Content-Type' => 'multipart/form-data']);
-                } else {
-                    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-                }
-            }
-
-            if (! empty($headers)) {
-                $_headers = [];
-
-                foreach ($headers as $_key => $value) {
-                    $_headers[] = "$_key:$value";
-                }
-
-                curl_setopt($curl, CURLOPT_HTTPHEADER, $_headers);
-            }
-
-            curl_setopt(
-                $curl,
-                CURLOPT_HEADERFUNCTION,
-                function ($curl, $header) use (&$response_headers, $key) {
-                    $len = strlen($header);
-                    $header = explode(':', $header, 2);
-
-                    if (count($header) < 2) {
-                        return $len;
-                    }
-
-                    $response_headers[$key][strtolower(trim($header[0]))][] = trim($header[1]);
-
-                    return $len;
-                }
-            );
-
-            curl_multi_add_handle($curl_multi, $curl);
         }
 
-        $i = null;
+        try {
+            $response = $client->request(strtoupper($method), $url, $options);
 
-        do {
-            curl_multi_exec($curl_multi, $i);
-        } while ($i);
-
-        foreach ($curl_array as $key => $curl) {
-            $response[$key] = curl_multi_getcontent($curl);
-            $status_code[$key] = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-            $errors[$key] = curl_error($curl);
-            curl_multi_remove_handle($curl_multi, $curl);
-        }
-
-        curl_multi_close($curl_multi);
-
-        self::$response['headers'] = $response_headers;
-        self::$response['body'] = $response;
-        self::$response['status_code'] = $status_code;
-
-        if (! empty($errors)) {
-            foreach ($errors as $error) {
-                error_log($error);
-            }
+            self::$response['headers'] = $response->getHeaders(false);
+            self::$response['body'] = $response->getContent(false);
+            self::$response['status_code'] = $response->getStatusCode();
+        } catch (Exception $e) {
+            report($e);
         }
 
         return new self;
@@ -125,7 +65,7 @@ class Client implements ClientInterface
     protected static function isMultipart(array $data): bool
     {
         foreach ($data as $value) {
-            if ($value instanceof CURLFile) {
+            if ($value instanceof DataPart) {
                 return true;
             }
         }
@@ -133,32 +73,32 @@ class Client implements ClientInterface
         return false;
     }
 
-    public static function get(array|string $url, array $headers = [], bool $json = false): self
+    public static function get(string $url, array $headers = [], bool $json = false): self
     {
         return self::send(HttpMethod::GET, $url, [], $headers, json: $json);
     }
 
-    public static function post(array|string $url, array $data = [], array $headers = [], bool $json = false): self
+    public static function post(string $url, array $data = [], array $headers = [], bool $json = false): self
     {
         return self::send(HttpMethod::POST, $url, $data, $headers, $json);
     }
 
-    public static function put(array|string $url, array $data = [], array $headers = [], bool $json = false): self
+    public static function put(string $url, array $data = [], array $headers = [], bool $json = false): self
     {
         return self::send(HttpMethod::PUT, $url, $data, $headers, $json);
     }
 
-    public static function delete(array|string $url, array $headers = [], bool $json = false): self
+    public static function delete(string $url, array $headers = [], bool $json = false): self
     {
         return self::send(HttpMethod::DELETE, $url, [], $headers, json: $json);
     }
 
-    public static function options(array|string $url, array $data = [], array $headers = [], bool $json = false): self
+    public static function options(string $url, array $data = [], array $headers = [], bool $json = false): self
     {
         return self::send(HttpMethod::OPTIONS, $url, $data, $headers, $json);
     }
 
-    public static function patch(array|string $url, array $data = [], array $headers = [], bool $json = false): self
+    public static function patch(string $url, array $data = [], array $headers = [], bool $json = false): self
     {
         return self::send(HttpMethod::PATCH, $url, $data, $headers, $json);
     }
@@ -171,6 +111,12 @@ class Client implements ClientInterface
     public function getBody(): mixed
     {
         return self::$response['body'];
+
+    }
+
+    public function getBodyAsJson(): mixed
+    {
+        return json_decode(self::$response['body'], true);
     }
 
     public function getStatusCode(): mixed

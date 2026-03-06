@@ -53,7 +53,8 @@
     "twilio/sdk": "^8.3",
     "predis/predis": "^2.2",
     "symfony/panther": "^2.4",
-    "cweagans/composer-patches": "*"
+    "cweagans/composer-patches": "*",
+    "symfony/http-client": "8.0.x-dev"
   },
   "extra": {
     "patches": {
