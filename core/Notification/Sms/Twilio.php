@@ -25,8 +25,8 @@ class Twilio implements SmsInterface
     public function __construct()
     {
         $this->twilioClient = new TwilioClient(
-            config('notifications.twilio.account_sid'),
-            config('notifications.twilio.auth_token')
+            config('services.twilio.account_sid'),
+            config('services.twilio.auth_token')
         );
     }
 
