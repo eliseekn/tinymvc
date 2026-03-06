@@ -31,7 +31,7 @@ class FakeFileTest extends TestCase
     {
         $filename = storage(config('storage.tmp'))->file('test.pdf');
 
-        File::generatePDF($filename);
+        File::generatePDF($filename, 'TinyMVC');
 
         $this->assertFileExists($filename);
 

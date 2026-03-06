@@ -11,14 +11,12 @@ declare(strict_types=1);
 
 namespace Tests\Browser;
 
-use App\Database\Models\Role;
-use App\Database\Models\User;
 use App\Database\Seeders\RoleSeeder;
-use App\Enums\UserRole;
 use App\Events\UserCreated\UserCreatedEvent;
 use Core\Event\Event;
 use Core\Testing\BrowserTestCase;
 use Core\Testing\Traits\RefreshDatabase;
+use Tests\Fixtures;
 
 class CreateUserTest extends BrowserTestCase
 {
@@ -42,9 +40,7 @@ class CreateUserTest extends BrowserTestCase
     {
         Event::fake(UserCreatedEvent::class);
 
-        $user = User::factory()->create([
-            'role_id' => Role::findByName(UserRole::ADMIN->value)?->getId(),
-        ]);
+        $admin = Fixtures::createAdmin();
 
         $this
             ->visit('/login')
@@ -54,7 +50,7 @@ class CreateUserTest extends BrowserTestCase
             $this->crawler
                 ->selectButton('Submit')
                 ->form([
-                    'email' => $user->get('email'),
+                    'email' => $admin->get('email'),
                     'password' => 'P@ssw0rd',
                 ])
         );

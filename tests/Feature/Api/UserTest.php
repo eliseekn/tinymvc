@@ -19,6 +19,7 @@ use Core\Enums\HttpCode;
 use Core\Enums\ResponseStatus;
 use Core\Testing\FeatureTestCase;
 use Core\Testing\Traits\RefreshDatabase;
+use Tests\Fixtures;
 
 class UserTest extends FeatureTestCase
 {
@@ -40,16 +41,13 @@ class UserTest extends FeatureTestCase
 
     public function test_can_store(): void
     {
-        $admin = User::factory()->create([
-            'role_id' => Role::findByName(UserRole::ADMIN->value)?->getId(),
-        ]);
         $user = User::factory()->make([
             'password' => 'P@ssw0rd',
             'role_id' => Role::findByName(UserRole::USER->value)?->getId(),
         ]);
 
         $this
-            ->auth($admin)
+            ->auth(Fixtures::createAdmin())
             ->postJson('/api/v1/users', $user->get())
             ->assertStatusEquals(HttpCode::CREATED)
             ->assertJsonContains([
@@ -61,13 +59,10 @@ class UserTest extends FeatureTestCase
 
     public function test_can_get_collection(): void
     {
-        $admin = User::factory()->create([
-            'role_id' => Role::findByName(UserRole::ADMIN->value)?->getId(),
-        ]);
         $users = User::factory(10)->create();
 
         $this
-            ->auth($admin)
+            ->auth(Fixtures::createAdmin())
             ->getJson('/api/v1/users')
             ->assertStatusOk()
             ->assertJsonContains([
@@ -80,13 +75,10 @@ class UserTest extends FeatureTestCase
 
     public function test_can_get_item(): void
     {
-        $admin = User::factory()->create([
-            'role_id' => Role::findByName(UserRole::ADMIN->value)?->getId(),
-        ]);
         $user = User::factory()->create();
 
         $this
-            ->auth($admin)
+            ->auth(Fixtures::createAdmin())
             ->getJson('/api/v1/users/'.$user->getId())
             ->assertStatusOk()
             ->assertJsonContains([
@@ -97,16 +89,13 @@ class UserTest extends FeatureTestCase
 
     public function test_can_update(): void
     {
-        $admin = User::factory()->create([
-            'role_id' => Role::findByName(UserRole::ADMIN->value)?->getId(),
-        ]);
         $user = User::factory()->create([
             'role_id' => Role::findByName(UserRole::USER->value)?->getId(),
         ]);
         $name = faker()->name();
 
         $this
-            ->auth($admin)
+            ->auth(Fixtures::createAdmin())
             ->patchJson('/api/v1/users/'.$user->getId(), ['name' => $name])
             ->assertStatusOk()
             ->assertJsonContains(['user' => $user->set(['name' => $name])->get()])
@@ -115,13 +104,10 @@ class UserTest extends FeatureTestCase
 
     public function test_can_delete(): void
     {
-        $admin = User::factory()->create([
-            'role_id' => Role::findByName(UserRole::ADMIN->value)?->getId(),
-        ]);
         $user = User::factory()->create();
 
         $this
-            ->auth($admin)
+            ->auth(Fixtures::createAdmin())
             ->deleteJson('/api/v1/users/'.$user->getId())
             ->assertStatusEquals(HttpCode::NO_CONTENT)
             ->assertJsonContains(['status' => ResponseStatus::SUCCESS])
