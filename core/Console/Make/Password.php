@@ -17,20 +17,23 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Generate hashed password.
+ * Generate password.
  */
 class Password extends Command
 {
     protected function configure(): void
     {
         $this->setName('make:password');
-        $this->setDescription('Generate hashed password');
-        $this->addArgument('password', InputArgument::REQUIRED, 'The password to hash');
+        $this->setDescription('Generate random password');
+        $this->addArgument('length', InputArgument::REQUIRED, 'The password length');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln('<info>'.bcrypt($input->getArgument('password')).'</info>');
+        $password = random_string((int) $input->getArgument('length'), true);
+
+        $output->writeln('<comment>Raw</comment>: <info>'.$password.'</info>');
+        $output->writeln('<comment>Hashed</comment>: <info>'.bcrypt($password).'</info>');
 
         return Command::SUCCESS;
     }

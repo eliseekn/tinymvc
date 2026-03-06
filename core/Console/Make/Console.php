@@ -27,7 +27,7 @@ class Console extends Command
         $this->setName('make:console');
         $this->setDescription('Create new console command');
         $this->addArgument('console', InputArgument::REQUIRED, 'The console class name');
-        $this->addOption('command', null, InputOption::VALUE_REQUIRED, 'The console name');
+        $this->addOption('command', null, InputOption::VALUE_REQUIRED, 'The console command name');
         $this->addOption('description', null, InputOption::VALUE_REQUIRED, 'The console description (inside "")');
         $this->addOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Specify namespace (base: App\Console)');
     }
