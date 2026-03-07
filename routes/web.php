@@ -16,3 +16,5 @@ use Core\Http\Routing\Route;
  */
 
 Route::view('/', 'index')->register();
+
+Route::view('/api/docs', 'docs.index')->register();

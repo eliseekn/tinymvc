@@ -73,5 +73,6 @@ return [
      */
     'app' => [
         new \App\Console\GenerateRandomQuote,
+        new \App\Console\GenerateApiDoc,
     ],
 ];

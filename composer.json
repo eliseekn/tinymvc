@@ -54,7 +54,8 @@
     "predis/predis": "^2.2",
     "symfony/panther": "^2.4",
     "cweagans/composer-patches": "*",
-    "symfony/http-client": "8.0.x-dev"
+    "symfony/http-client": "8.0.x-dev",
+    "goldspecdigital/oooas": "dev-master"
   },
   "extra": {
     "patches": {
@@ -63,6 +64,9 @@
       },
       "standaniels/image-generator": {
         "Fix PHP 8.5 deprecations: implicit nullable params and imagedestroy": "patches/standaniels-image-generator-fix-deprecations.patch"
+      },
+      "goldspecdigital/oooas": {
+        "Fix PHP 8.4 implicit nullable parameter deprecations": "patches/goldspecdigital-oooas-fix-nullable-deprecations.patch"
       }
     }
   },

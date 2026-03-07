@@ -10,5 +10,5 @@ format:
 serve:
 	@php console serve
 
-reset-db:
-	@php console migrations:reset --seed
+doc:
+	@php console doc:generate
