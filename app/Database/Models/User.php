@@ -67,13 +67,12 @@ class User extends Model
         $userId = auth()?->getId();
 
         return self::query()
-            ->select(['users.*', 'roles.name AS role'])
-            ->join('roles', 'users.role_id', '=', 'roles.id')
-            ->where('users.id', '<>', $userId)
+            ->select('*')
+            ->where('id', '<>', $userId)
             ->when(! is_null($search), function (Repository $r) use ($search) {
-                $r->andRaw("(users.name LIKE '%$search%' OR email LIKE '%$search%')");
+                $r->andRaw("(name LIKE '%$search%' OR email LIKE '%$search%')");
             })
-            ->orderDesc('users.created_at')
+            ->orderDesc('created_at')
             ->paginate($perPage, $page);
     }
 }

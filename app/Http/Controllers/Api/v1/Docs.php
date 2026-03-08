@@ -27,8 +27,11 @@ abstract class Docs
         return [
             self::login(),
             self::logout(),
+
             self::users(),
-            self::usersItem(),
+            self::user(),
+
+            self::roles(),
         ];
     }
 
@@ -127,9 +130,9 @@ abstract class Docs
                     ->tags('Users')
                     ->security(self::bearerAuth())
                     ->parameters(
-                        Parameter::query('page')->schema(Schema::integer())->description('Page number'),
-                        Parameter::query('perPage')->schema(Schema::integer())->description('Items per page'),
-                        Parameter::query('search')->schema(Schema::string())->description('Search term'),
+                        Parameter::query()->name('page')->schema(Schema::integer())->description('Page number')->required(false),
+                        Parameter::query()->name('perPage')->schema(Schema::integer())->description('Items per page')->required(false),
+                        Parameter::query()->name('search')->schema(Schema::string())->description('Search term')->required(false),
                     )
                     ->responses(
                         Response::create()->statusCode(200)->description('OK'),
@@ -154,15 +157,17 @@ abstract class Docs
                         self::jsonResponse(201, 'User created', Schema::object()->properties(
                             Schema::string('status'),
                             Schema::string('message'),
+                            Schema::object('data'),
                         )),
                         self::errorResponse(500, 'Server error'),
                     )
             );
     }
 
-    private static function usersItem(): PathItem
+    private static function user(): PathItem
     {
-        $userParam = Parameter::path('user')
+        $userParam = Parameter::path()
+            ->name('user')
             ->required(true)
             ->schema(Schema::integer())
             ->description('User ID');
@@ -171,13 +176,13 @@ abstract class Docs
             ->route('/users/{user}')
             ->operations(
                 Operation::get()
-                    ->operationId('getUser')
+                    ->operationId('getUserItem')
                     ->tags('Users')
                     ->security(self::bearerAuth())
                     ->parameters($userParam)
                     ->responses(
                         Response::create()->statusCode(200)->description('OK'),
-                        self::errorResponse(404, 'User not found'),
+                        self::errorResponse(404, 'Not found'),
                     ),
                 Operation::patch()
                     ->operationId('updateUser')
@@ -197,7 +202,7 @@ abstract class Docs
                         self::jsonResponse(200, 'User updated', Schema::object()->properties(
                             Schema::string('status'),
                             Schema::string('message'),
-                            Schema::object('user'),
+                            Schema::object('data'),
                         )),
                         self::errorResponse(500, 'Server error'),
                     ),
@@ -213,6 +218,20 @@ abstract class Docs
                         )),
                         self::errorResponse(500, 'Server error'),
                     )
+            );
+    }
+
+    private static function roles(): PathItem
+    {
+        return PathItem::create()
+            ->route('/roles')
+            ->operations(
+                Operation::get()
+                    ->operationId('getRolesCollection')
+                    ->tags('Roles')
+                    ->responses(
+                        Response::create()->statusCode(200)->description('OK'),
+                    ),
             );
     }
 }
