@@ -59,7 +59,7 @@ class Router
     protected static function executeMiddlewares(array $middlewares): void
     {
         if (in_array(strtoupper(request()->method()), [HttpMethod::POST, HttpMethod::PATCH, HttpMethod::PUT])) {
-            if (! in_array(request()->uri(), config('security.csrf_excluded_uri'))) {
+            if (! request()->isJson() && ! in_array(request()->uri(), config('security.csrf_excluded_uri'))) {
                 (new DependencyInjection)->resolve(CsrfProtection::class, 'handle');
             }
         }
