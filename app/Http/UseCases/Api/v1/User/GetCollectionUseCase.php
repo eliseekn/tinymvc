@@ -12,19 +12,21 @@ declare(strict_types=1);
 namespace App\Http\UseCases\Api\v1\User;
 
 use App\Database\Models\User;
+use App\Http\Resources\UserResource;
 use Core\Enums\HttpCode;
 
 final class GetCollectionUseCase
 {
     public function handle(): void
     {
+        $data = User::findAllPaginate(
+            (int) request()->queries('perPage', 10),
+            (int) request()->queries('page', 1),
+            request()->queries('search')
+        );
+
         response()
-            ->json(
-                User::findAllPaginate(
-                    (int) request()->queries('perPage', 10),
-                    (int) request()->queries('page', 1),
-                    request()->queries('search')
-                )->getItemsAsArray())
+            ->json(new UserResource($data)->handle())
             ->send(HttpCode::OK);
     }
 }

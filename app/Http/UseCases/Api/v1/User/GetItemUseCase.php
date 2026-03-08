@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace App\Http\UseCases\Api\v1\User;
 
+use App\Http\Resources\UserResource;
 use Core\Database\Model;
 use Core\Enums\HttpCode;
 
@@ -19,7 +20,7 @@ final class GetItemUseCase
     public function handle(Model $user): void
     {
         response()
-            ->json($user->get())
+            ->json(new UserResource($user)->handle())
             ->send(HttpCode::OK);
     }
 }

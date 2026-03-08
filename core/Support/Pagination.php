@@ -44,16 +44,21 @@ class Pagination
 
         return [
             'data' => $items,
-            'pagination' => array_merge(
-                $this->pagination, [
-                    'first_page_url' => $this->firstPageUrl(),
-                    'last_page_url' => $this->lastPageUrl(),
-                    'current_page_url' => $this->pageUrl($this->pagination['current_page']),
-                    'next_page_url' => $this->nextPageUrl(),
-                    'previous_page_url' => $this->previousPageUrl(),
-                ]
-            ),
+            'meta' => $this->getMeta(),
         ];
+    }
+
+    public function getMeta(): array
+    {
+        return array_merge(
+            $this->pagination, [
+                'first_page_url' => $this->firstPageUrl(),
+                'last_page_url' => $this->lastPageUrl(),
+                'current_page_url' => $this->pageUrl($this->pagination['current_page']),
+                'next_page_url' => $this->nextPageUrl(),
+                'previous_page_url' => $this->previousPageUrl(),
+            ]
+        );
     }
 
     public function setItems(array $items): self
