@@ -34,6 +34,5 @@ return [
 
     'csrf_excluded_uri' => [
         '/logout',
-        '/api/logout',
     ],
 ];

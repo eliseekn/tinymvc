@@ -709,15 +709,15 @@ class Repository
         $countQuery = "SELECT COUNT(*) as total FROM ({$countQuery}) as count_wrapper";
         $totalItems = (int) QueryBuilder::setQuery($countQuery, $args)->fetch('total');
 
-        $pager = new Pagination($totalItems, $perPage, $page);
+        $pagination = new Pagination($totalItems, $perPage, $page);
 
         $items = $perPage > 0
-            ? QueryBuilder::setQuery($query, $args)->limit($perPage, $pager->getFirstItem())->fetchAll()
+            ? QueryBuilder::setQuery($query, $args)->limit($perPage, $pagination->getFirstItem())->fetchAll()
             : QueryBuilder::setQuery($query, $args)->fetchAll();
 
         $items = array_map(fn ($item) => new Model($this->table, (array) $item), $items);
 
-        return $pager->setItems($items);
+        return $pagination->setItems($items);
     }
 
     public function get(): ?Model

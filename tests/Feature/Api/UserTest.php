@@ -53,6 +53,7 @@ class UserTest extends FeatureTestCase
             ->assertJsonContains([
                 'status' => ResponseStatus::SUCCESS,
                 'message' => 'User created',
+                'data' => $user->get(),
             ])
             ->assertDatabaseHas('users', ['name' => $user->get('name')]);
     }
@@ -98,7 +99,7 @@ class UserTest extends FeatureTestCase
             ->auth(Fixtures::createAdmin())
             ->patchJson('/api/v1/users/'.$user->getId(), ['name' => $name])
             ->assertStatusOk()
-            ->assertJsonContains(['user' => $user->set(['name' => $name])->get()])
+            ->assertJsonContains(['data' => $user->set(['name' => $name])->get()])
             ->assertDatabaseHas('users', ['name' => $name]);
     }
 
