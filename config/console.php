@@ -48,6 +48,7 @@ return [
         new \Core\Console\Make\Listener,
         new \Core\Console\Make\Enum,
         new \Core\Console\Make\Task,
+        new \Core\Console\Make\Resource,
 
         new \Core\Console\App\EncryptionKey,
         new \Core\Console\App\Environnement,
