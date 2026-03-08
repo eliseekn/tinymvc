@@ -9,8 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Core\Notification\Sms;
+namespace Core\Services;
 
+use Core\Notification\Sms\SmsInterface;
 use Twilio\Exceptions\TwilioException;
 use Twilio\Rest\Client as TwilioClient;
 

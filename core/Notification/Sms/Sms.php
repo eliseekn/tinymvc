@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Core\Notification\Sms;
 
 use Core\Notification\NotificationInterface;
+use Core\Services\Twilio;
 
 class Sms implements NotificationInterface
 {

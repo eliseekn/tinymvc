@@ -9,8 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Core\Notification\Mail;
+namespace Core\Services;
 
+use Core\Notification\Mail\MailerInterface;
 use Exception;
 use PHPMailer\PHPMailer\PHPMailer as _PHPMailer;
 use PHPMailer\PHPMailer\SMTP;

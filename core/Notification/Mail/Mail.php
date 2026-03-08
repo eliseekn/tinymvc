@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Core\Notification\Mail;
 
 use Core\Notification\NotificationInterface;
+use Core\Services\PHPMailer;
 
 class Mail implements NotificationInterface
 {
