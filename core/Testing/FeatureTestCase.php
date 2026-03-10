@@ -43,7 +43,7 @@ abstract class FeatureTestCase extends TestCase
 
     protected function url(string $uri): string
     {
-        return config('testing.url.host').':'.config('testing.url.port').'/'.ltrim($uri, '/');
+        return config('testing.url.protocol').config('testing.url.host').':'.config('testing.url.port').'/'.ltrim($uri, '/');
     }
 
     protected function getBody(): string
@@ -64,7 +64,7 @@ abstract class FeatureTestCase extends TestCase
             return [];
         }
 
-        return is_null($key) ? $headers[0] : $headers[0][$key][0];
+        return is_null($key) ? $headers : $headers[$key][0];
     }
 
     protected function getSession(?string $key = null): mixed

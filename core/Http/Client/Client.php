@@ -16,13 +16,14 @@ use Exception;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\Mime\Part\DataPart;
 use Symfony\Component\Mime\Part\Multipart\FormDataPart;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 /**
  * Send concurrent HTTP requests using Symfony HTTP Client.
  */
 class Client implements ClientInterface
 {
-    protected static array $response = [];
+    protected static ResponseInterface $response;
 
     public static function send(string $method, string $url, array $data = [], array $headers = [], bool $json = false): self
     {
@@ -50,11 +51,7 @@ class Client implements ClientInterface
         }
 
         try {
-            $response = $client->request(strtoupper($method), $url, $options);
-
-            self::$response['headers'] = $response->getHeaders(false);
-            self::$response['body'] = $response->getContent(false);
-            self::$response['status_code'] = $response->getStatusCode();
+            self::$response = $client->request(strtoupper($method), $url, $options);
         } catch (Exception $e) {
             report($e);
         }
@@ -105,22 +102,22 @@ class Client implements ClientInterface
 
     public function getHeaders(): mixed
     {
-        return self::$response['headers'];
+        return self::$response->getHeaders(false);
     }
 
     public function getBody(): mixed
     {
-        return self::$response['body'];
+        return self::$response->getContent(false);
 
     }
 
     public function getBodyAsJson(): mixed
     {
-        return json_decode(self::$response['body'], true);
+        return json_decode(self::$response->getContent(false), true);
     }
 
     public function getStatusCode(): mixed
     {
-        return self::$response['status_code'];
+        return self::$response->getStatusCode();
     }
 }
