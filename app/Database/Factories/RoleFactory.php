@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace App\Database\Factories;
 
 use App\Database\Models\Role;
-use App\Enums\UserRole;
 use Core\Database\Factory\Factory;
 
 class RoleFactory extends Factory
@@ -25,7 +24,7 @@ class RoleFactory extends Factory
     public function data(): array
     {
         return [
-            'name' => UserRole::USER->value,
+            'name' => faker()->word(),
         ];
     }
 }
