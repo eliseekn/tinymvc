@@ -12,25 +12,20 @@ declare(strict_types=1);
 namespace Core\Task\Storage;
 
 use Core\Enums\TaskStatus;
-use Predis\Client;
+use Core\Services\Redis as RedisService;
 
 class Redis implements StorageInterface
 {
-    protected Client $client;
+    private RedisService $redisService;
 
     public function __construct()
     {
-        $this->client = new Client([
-            'scheme' => config('services.redis.scheme'),
-            'host' => config('services.redis.host'),
-            'port' => config('services.redis.port'),
-            'password' => config('services.redis.password'),
-        ]);
+        $this->redisService = new RedisService;
     }
 
     public function store(string $id, string $task, string $executionTime): void
     {
-        $data = serialize([
+        $this->redisService->set($id, [
             'id' => $id,
             'class' => $task,
             'status' => TaskStatus::PENDING,
@@ -39,32 +34,22 @@ class Redis implements StorageInterface
             'last_run' => null,
             'retry_at' => null,
         ]);
-
-        $this->client->set($id, $data);
     }
 
     public function get(string $id): ?array
     {
-        $data = $this->client->get($id);
-
-        if (! is_null($data)) {
-            return unserialize($data);
-        }
-
-        return null;
+        return $this->redisService->get($id);
     }
 
     public function update(string $id, array $data): bool
     {
-        $_data = $this->get($id);
+        $_data = $this->redisService->get($id);
 
         if (is_null($_data)) {
             return false;
         }
 
-        $data = serialize(array_merge($_data, $data));
-
-        $this->client->set($id, $data);
+        $this->redisService->set($id, array_merge($_data, $data));
 
         return true;
     }
@@ -122,35 +107,26 @@ class Redis implements StorageInterface
 
     public function getPending(): array
     {
-        $tasks = $this->getAll();
+        $tasks = $this->redisService->getAll();
 
         return array_filter($tasks, fn ($task) => $task->status === TaskStatus::PENDING);
     }
 
     public function getRunnable(): array
     {
-        $tasks = $this->getAll();
+        $tasks = $this->redisService->getAll();
 
         return array_filter($tasks, fn ($task) => $task->status !== TaskStatus::CANCELLED && $task->status !== TaskStatus::RUNNING);
     }
 
     public function getAll(): array
     {
-        $result = [];
-        $keys = $this->client->keys('*');
-
-        foreach ($keys as $key) {
-            $data = $this->client->get($key);
-
-            $result[] = (object) array_merge(['id' => $key], unserialize($data));
-        }
-
-        return $result;
+        return $this->redisService->getAll();
     }
 
     public function exists(string $task, string $executionTime): bool
     {
-        $tasks = $this->getAll();
+        $tasks = $this->redisService->getAll();
 
         $result = array_filter($tasks, fn ($t) => $t->class === $task && $t->execution_time === $executionTime);
 
@@ -159,8 +135,8 @@ class Redis implements StorageInterface
 
     public function cleanup(): bool
     {
-        $this->client->flushall();
-        $tasks = $this->getAll();
+        $this->redisService->flushall();
+        $tasks = $this->redisService->getAll();
 
         return count($tasks) === 0;
     }

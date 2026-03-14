@@ -11,60 +11,39 @@ declare(strict_types=1);
 
 namespace Core\Cache\Storage;
 
-use Predis\Client;
+use Core\Services\Redis as RedisService;
 
 class Redis implements StorageInterface
 {
-    protected Client $client;
+    private RedisService $redisService;
 
     public function __construct()
     {
-        $this->client = new Client([
-            'scheme' => config('services.redis.scheme'),
-            'host' => config('services.redis.host'),
-            'port' => config('services.redis.port'),
-            'password' => config('services.redis.password'),
-        ]);
+        $this->redisService = new RedisService;
     }
 
-    public function store(string $key, mixed $data, ?int $time = null): void
+    public function store(string $key, mixed $data, ?int $expire = null): void
     {
-        $data = serialize($data);
-
-        if (config('secruty.encryption.cache')) {
-            $data = encrypt($data);
-        }
-
-        $this->client->set($key, $data, $time);
+        $this->redisService->set($key, $data, $expire);
     }
 
     public function get(string $key): mixed
     {
-        $data = $this->client->get($key);
-
-        if (! is_null($data)) {
-            if (config('secruty.encryption.cache')) {
-                $data = decrypt($data);
-            }
-
-            return unserialize($data);
-        }
-
-        return null;
+        return $this->redisService->get($key);
     }
 
     public function delete(string $key): void
     {
-        $this->client->del($key);
+        $this->delete($key);
     }
 
     public function deleteAll(): void
     {
-        $this->client->flushall();
+        $this->redisService->flushall();
     }
 
     public function has(string $key): bool
     {
-        return $this->client->exists($key) === 1;
+        return $this->redisService->exists($key);
     }
 }

@@ -22,7 +22,7 @@ class File implements StorageInterface
         $this->storage = storage(config('storage.cache'));
     }
 
-    public function store(string $key, mixed $data, ?int $time = null): void
+    public function store(string $key, mixed $data, ?int $expire = null): void
     {
         $data = serialize($data);
 

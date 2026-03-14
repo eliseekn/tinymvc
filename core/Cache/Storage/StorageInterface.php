@@ -13,7 +13,7 @@ namespace Core\Cache\Storage;
 
 interface StorageInterface
 {
-    public function store(string $key, mixed $data, ?int $time = null): void;
+    public function store(string $key, mixed $data, ?int $expire = null): void;
 
     public function get(string $key): mixed;
 
