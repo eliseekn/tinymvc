@@ -31,7 +31,7 @@ class Redis
     {
         $data = serialize($data);
 
-        if (config('secruty.encryption.cache')) {
+        if (config('security.encryption.cache')) {
             $data = encrypt($data);
         }
 
@@ -47,7 +47,7 @@ class Redis
         $data = $this->client->get($key);
 
         if (! is_null($data)) {
-            if (config('secruty.encryption.cache')) {
+            if (config('security.encryption.cache')) {
                 $data = decrypt($data);
             }
 

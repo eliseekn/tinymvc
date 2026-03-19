@@ -26,7 +26,7 @@ class File implements StorageInterface
     {
         $data = serialize($data);
 
-        if (config('secruty.encryption.cache')) {
+        if (config('security.encryption.cache')) {
             $data = encrypt($data);
         }
 
@@ -38,7 +38,7 @@ class File implements StorageInterface
         $data = $this->storage->readFile(md5($key));
 
         if ($data !== '') {
-            if (config('secruty.encryption.cache')) {
+            if (config('security.encryption.cache')) {
                 $data = decrypt($data);
             }
 
