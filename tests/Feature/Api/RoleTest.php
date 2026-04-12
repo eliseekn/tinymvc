@@ -28,14 +28,15 @@ class RoleTest extends FeatureTestCase
 
     public function test_can_get_collection(): void
     {
-        $roles = Role::factory(10)->create();
+        $role = Role::factory()->create();
+        Role::factory()->create();
 
         $this
             ->getJson('/api/v1/roles')
             ->assertStatusOk()
             ->assertJsonContains([
                 [
-                    'name' => $roles[0]->get('name'),
+                    'name' => $role->get('name'),
                 ],
             ]);
     }
