@@ -96,7 +96,7 @@
 	</form>
 </div>
 
-<form method="POST" action="{{ route('profile.delete_avatar') }}" id="delete-avatar-form">
+<form method="POST" action="{{ route('profile.delete.avatar') }}" id="delete-avatar-form">
 	{{ csrf_token_input()|raw }}
 	{{ method_input('delete')|raw }}
 </form>

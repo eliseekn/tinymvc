@@ -34,7 +34,7 @@ class ProfileController extends Controller
         $useCase->handle($validator->inputs());
     }
 
-    #[Route(HttpMethod::DELETE, '/dashboard/profile/avatar', [Authenticated::class, EmailVerified::class], 'profile.delete_avatar')]
+    #[Route(HttpMethod::DELETE, '/dashboard/profile/avatar', [Authenticated::class, EmailVerified::class], 'profile.delete.avatar')]
     public function deleteAvatar(DeleteUseCase $useCase): void
     {
         $useCase->handle();
