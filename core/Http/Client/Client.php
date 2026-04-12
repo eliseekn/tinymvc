@@ -28,7 +28,7 @@ class Client implements ClientInterface
     public static function send(string $method, string $url, array $data = [], array $headers = [], bool $json = false): self
     {
         $client = HttpClient::create();
-        $options = ['timeout' => 300];
+        $options = ['timeout' => 300, 'max_redirects' => 0];
 
         if ($json && empty($data)) {
             $headers['Content-Type'] = 'application/json';

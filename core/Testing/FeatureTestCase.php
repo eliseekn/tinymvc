@@ -17,8 +17,8 @@ use Core\Enums\HttpCode;
 use Core\Http\Auth;
 use Core\Http\Client\Client;
 use Core\Testing\Traits\DatabaseTestCase;
-use CURLFile;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Mime\Part\DataPart;
 
 /**
  * Manage application tests.
@@ -96,9 +96,9 @@ abstract class FeatureTestCase extends TestCase
         return $this;
     }
 
-    public function file(string $filename, ?string $mime_type = null, ?string $name = null): CURLFile
+    public function file(string $filename, ?string $mime_type = null, ?string $name = null): DataPart
     {
-        return new CURLFile($filename, $mime_type, $name);
+        return DataPart::fromPath($filename, $name, $mime_type);
     }
 
     public function get(string $uri, array $headers = []): self
@@ -216,6 +216,13 @@ abstract class FeatureTestCase extends TestCase
     public function assertStatusBadRequest(): self
     {
         $this->assertStatusEquals(HttpCode::BAD_REQUEST);
+
+        return $this;
+    }
+
+    public function assertStatusServerError(): self
+    {
+        $this->assertStatusEquals(HttpCode::INTERNAL_SERVER_ERROR);
 
         return $this;
     }

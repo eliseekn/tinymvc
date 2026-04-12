@@ -332,7 +332,7 @@ class Request
                 continue;
             }
 
-            if (str_contains($block, 'application/octet-stream')) {
+            if (str_contains($block, 'filename=')) {
                 if (preg_match('/name="([^"]+)"; filename="([^"]+)"/', $block, $fileMatches)) {
                     $fieldName = $fileMatches[1];
                     $fileName = $fileMatches[2];
@@ -345,6 +345,7 @@ class Request
 
                     $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
                     $mimeType = finfo_file($fileInfo, $tmpFilePath);
+
                     unset($fileInfo);
 
                     $_FILES[$fieldName] = [
