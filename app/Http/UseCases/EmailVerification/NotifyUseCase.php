@@ -31,7 +31,6 @@ final class NotifyUseCase
             $token = Token::factory()->create([
                 'identifier' => $email,
                 'value' => $tokenValue,
-                'expires_at' => carbon()->addDay()->toDateTimeString(),
                 'description' => TokenDescription::EMAIL_VERIFICATION->value,
             ]);
         }

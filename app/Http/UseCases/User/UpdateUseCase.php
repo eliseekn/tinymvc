@@ -16,9 +16,7 @@ use Core\Support\Alert;
 
 final class UpdateUseCase
 {
-    public function __construct(public FileUploadService $fileUploadService)
-    {
-    }
+    public function __construct(public FileUploadService $fileUploadService) {}
 
     public function handle(array $data): void
     {
