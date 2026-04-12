@@ -28,6 +28,6 @@ final class ResetUseCase
         }
 
         $token->delete();
-        response()->view('auth.password.new', compact('email'))->send();
+        response()->view('auth.password.new', compact('email'))->send(HttpCode::OK);
     }
 }

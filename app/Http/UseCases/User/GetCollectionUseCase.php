@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace App\Http\UseCases\User;
 
 use App\Database\Models\User;
+use Core\Enums\HttpCode;
 
 final class GetCollectionUseCase
 {
@@ -25,6 +26,6 @@ final class GetCollectionUseCase
                     request()->queries('search')
                 ),
             ])
-            ->send();
+            ->send(HttpCode::OK);
     }
 }
