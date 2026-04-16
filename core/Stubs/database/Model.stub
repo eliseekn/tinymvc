@@ -18,9 +18,9 @@ class CLASSNAME extends Model
 {
     use HasFactory;
 
-    public function __construct()
+    public function __construct(public array $attributes = [])
     {
-        parent::__construct('TABLE_NAME');
+        parent::__construct('TABLE_NAME', $attributes);
     }
 
     public static function query(): Model
