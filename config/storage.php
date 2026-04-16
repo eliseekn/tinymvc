@@ -44,4 +44,5 @@ return [
     'enums' => absolute_path('app.Enums'),
     'tasks' => absolute_path('app.Tasks'),
     'resources' => absolute_path('app.Http.Resources'),
+    'observers' => absolute_path('app.Observers'),
 ];
