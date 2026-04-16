@@ -22,7 +22,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class GenerateApiDoc extends Command
+class GenerateApiDocumentation extends Command
 {
     private array $versions = [
         'v1' => DocsV1::class,
@@ -30,7 +30,7 @@ class GenerateApiDoc extends Command
 
     protected function configure(): void
     {
-        $this->setName('doc:generate');
+        $this->setName('api:doc');
         $this->setDescription('Generate OpenAPI documentation');
     }
 
