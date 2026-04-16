@@ -24,10 +24,10 @@ class UserSeeder
             'email' => 'admin@tiny.mvc',
             'role_id' => Role::findByName(UserRole::ADMIN->value)->getId(),
             'email_verified_at' => carbon()->toDateTimeString(),
-        ]);
+        ], true);
 
         User::factory(10)->create([
             'created_at' => carbon(faker()->dateTimeBetween('-24 months'))->toDateTimeString(),
-        ]);
+        ], true);
     }
 }
