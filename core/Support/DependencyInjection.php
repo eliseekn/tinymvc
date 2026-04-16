@@ -11,9 +11,9 @@ declare(strict_types=1);
 
 namespace Core\Support;
 
-use App\Events\ModelNotFound\ModelNotFoundEvent;
 use Closure;
 use Core\Database\Model;
+use Core\Event\Events\ModelNotFound\ModelNotFoundEvent;
 use Core\Http\Validation\Validator\Validator;
 use ReflectionClass;
 use ReflectionException;
@@ -131,7 +131,10 @@ class DependencyInjection
 
             // @phpstan-ignore-next-line
             $class = $dependency->getName();
-            array_unshift($dependencies, new $class);
+
+            if (! $dependency->isBuiltin()) {
+                array_unshift($dependencies, new $class);
+            }
         }
 
         if (empty($dependencies)) {
