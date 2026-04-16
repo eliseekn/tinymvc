@@ -9,6 +9,8 @@
 
 declare(strict_types=1);
 
+use Symfony\Component\Panther\PantherTestCase;
+
 /*
  * Testing configuration
  */
@@ -21,7 +23,7 @@ return [
     ],
 
     'browser' => [
-        'name' => \Symfony\Component\Panther\PantherTestCase::FIREFOX,
+        'name' => PantherTestCase::FIREFOX,
         'headless' => env('TESTING_BROWSER_HEADLESS', true, FILTER_VALIDATE_BOOLEAN),
         'screenshots_dir' => config('storage.tmp'),
     ],

@@ -9,6 +9,52 @@
 
 declare(strict_types=1);
 
+use App\Console\GenerateApiDocumentation;
+use App\Console\GenerateRandomQuote;
+use Core\Console\App\Config;
+use Core\Console\App\EncryptionKey;
+use Core\Console\App\Environnement;
+use Core\Console\ClearCache;
+use Core\Console\ClearLogs;
+use Core\Console\Database\Create;
+use Core\Console\Database\Delete;
+use Core\Console\Database\Migrations\Reset;
+use Core\Console\Database\Migrations\Status;
+use Core\Console\Database\Query;
+use Core\Console\Database\Seed;
+use Core\Console\Make\Console;
+use Core\Console\Make\Controller;
+use Core\Console\Make\Enum;
+use Core\Console\Make\Event;
+use Core\Console\Make\Exception;
+use Core\Console\Make\Factory;
+use Core\Console\Make\Hash;
+use Core\Console\Make\Helper;
+use Core\Console\Make\Listener;
+use Core\Console\Make\Middleware;
+use Core\Console\Make\Migration;
+use Core\Console\Make\Model;
+use Core\Console\Make\Notification;
+use Core\Console\Make\Observer;
+use Core\Console\Make\Password;
+use Core\Console\Make\Rule;
+use Core\Console\Make\Seeder;
+use Core\Console\Make\Task;
+use Core\Console\Make\Test;
+use Core\Console\Make\UseCase;
+use Core\Console\Make\Validator;
+use Core\Console\Make\View;
+use Core\Console\Routes;
+use Core\Console\Server;
+use Core\Console\Shell;
+use Core\Console\Task\Cancel;
+use Core\Console\Task\Cleanup;
+use Core\Console\Task\Load;
+use Core\Console\Task\Run;
+use Core\Console\Task\TaskList;
+use Core\Console\Task\Watch;
+use Core\Console\Testing;
+
 /*
  * Console commands
  */
@@ -18,62 +64,63 @@ return [
      * System console commands
     */
     'core' => [
-        new \Core\Console\Database\Create,
-        new \Core\Console\Database\Delete,
-        new \Core\Console\Database\Query,
-        new \Core\Console\Database\Migrations\Delete,
-        new \Core\Console\Database\Migrations\Status,
-        new \Core\Console\Database\Migrations\Run,
-        new \Core\Console\Database\Migrations\Reset,
-        new \Core\Console\Database\Seed,
+        new Create,
+        new Delete,
+        new Query,
+        new Core\Console\Database\Migrations\Delete,
+        new Status,
+        new Core\Console\Database\Migrations\Run,
+        new Reset,
+        new Seed,
 
-        new \Core\Console\Make\Migration,
-        new \Core\Console\Make\Model,
-        new \Core\Console\Make\Controller,
-        new \Core\Console\Make\Validator,
-        new \Core\Console\Make\Rule,
-        new \Core\Console\Make\Seeder,
-        new \Core\Console\Make\Factory,
-        new \Core\Console\Make\View,
-        new \Core\Console\Make\Notification,
-        new \Core\Console\Make\Middleware,
-        new \Core\Console\Make\Console,
-        new \Core\Console\Make\Password,
-        new \Core\Console\Make\Hash,
-        new \Core\Console\Make\Helper,
-        new \Core\Console\Make\Test,
-        new \Core\Console\Make\UseCase,
-        new \Core\Console\Make\Exception,
-        new \Core\Console\Make\Event,
-        new \Core\Console\Make\Listener,
-        new \Core\Console\Make\Enum,
-        new \Core\Console\Make\Task,
-        new \Core\Console\Make\Resource,
+        new Migration,
+        new Model,
+        new Controller,
+        new Validator,
+        new Rule,
+        new Seeder,
+        new Factory,
+        new View,
+        new Notification,
+        new Middleware,
+        new Console,
+        new Password,
+        new Hash,
+        new Helper,
+        new Test,
+        new UseCase,
+        new Exception,
+        new Event,
+        new Listener,
+        new Enum,
+        new Task,
+        new Core\Console\Make\Resource,
+        new Observer,
 
-        new \Core\Console\App\EncryptionKey,
-        new \Core\Console\App\Environnement,
-        new \Core\Console\App\Config,
+        new EncryptionKey,
+        new Environnement,
+        new Config,
 
-        new \Core\Console\ClearCache,
-        new \Core\Console\Server,
-        new \Core\Console\Testing,
-        new \Core\Console\ClearLogs,
-        new \Core\Console\Routes,
-        new \Core\Console\Shell,
+        new ClearCache,
+        new Server,
+        new Testing,
+        new ClearLogs,
+        new Routes,
+        new Shell,
 
-        new \Core\Console\Task\Run,
-        new \Core\Console\Task\TaskList,
-        new \Core\Console\Task\Cleanup,
-        new \Core\Console\Task\Watch,
-        new \Core\Console\Task\Cancel,
-        new \Core\Console\Task\Load,
+        new Run,
+        new TaskList,
+        new Cleanup,
+        new Watch,
+        new Cancel,
+        new Load,
     ],
 
     /*
      * Customs console commands
      */
     'app' => [
-        new \App\Console\GenerateRandomQuote,
-        new \App\Console\GenerateApiDoc,
+        new GenerateRandomQuote,
+        new GenerateApiDocumentation,
     ],
 ];

@@ -9,21 +9,29 @@
 
 declare(strict_types=1);
 
+use App\Events\UserCreated\SendUserPasswordNotification;
+use App\Events\UserCreated\UserCreatedEvent;
+use App\Events\UserRegistered\SendAdminNotification;
+use App\Events\UserRegistered\SendWelcomeNotification;
+use App\Events\UserRegistered\UserRegisteredEvent;
+use Core\Event\Events\ModelNotFound\ModelNotFoundEvent;
+use Core\Event\Events\ModelNotFound\SendNotFoundResponse;
+
 /*
  * Events listeners
  */
 
 return [
-    \App\Events\UserRegistered\UserRegisteredEvent::class => [
-        \App\Events\UserRegistered\SendWelcomeNotification::class,
-        \App\Events\UserRegistered\SendAdminNotification::class,
+    UserRegisteredEvent::class => [
+        SendWelcomeNotification::class,
+        SendAdminNotification::class,
     ],
 
-    \App\Events\UserCreated\UserCreatedEvent::class => [
-        \App\Events\UserCreated\SendUserPasswordNotification::class,
+    UserCreatedEvent::class => [
+        SendUserPasswordNotification::class,
     ],
 
-    \App\Events\ModelNotFound\ModelNotFoundEvent::class => [
-        \App\Events\ModelNotFound\SendNotFoundResponse::class,
+    ModelNotFoundEvent::class => [
+        SendNotFoundResponse::class,
     ],
 ];
