@@ -18,9 +18,9 @@ class Token extends Model
 {
     use HasFactory;
 
-    public function __construct()
+    public function __construct(public array $attributes = [])
     {
-        parent::__construct('tokens');
+        parent::__construct('tokens', $attributes);
     }
 
     public static function query(): Model

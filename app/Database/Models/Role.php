@@ -18,9 +18,9 @@ class Role extends Model
 {
     use HasFactory;
 
-    public function __construct()
+    public function __construct(public array $attributes = [])
     {
-        parent::__construct('roles');
+        parent::__construct('roles', $attributes);
     }
 
     public static function query(): Model
