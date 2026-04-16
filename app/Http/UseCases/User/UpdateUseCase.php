@@ -38,7 +38,7 @@ final class UpdateUseCase
             unset($data['password']);
         }
 
-        if (! $user->set($data)->save()) {
+        if (! $user->update($data)) {
             Alert::toast('Failed to update profile')->error();
             response()->back()->send();
         }
