@@ -15,6 +15,7 @@ use Core\Enums\NotificationType;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -26,14 +27,14 @@ class Notification extends Command
     {
         $this->setName('make:notification');
         $this->setDescription('Create new mail');
-        $this->addArgument('type', InputArgument::REQUIRED, 'The type of notification');
         $this->addArgument('notification', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'The name of notification (separated by space if many)');
+        $this->addOption('type', null, InputOption::VALUE_REQUIRED, 'The type of notification (sms or mail)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $notifications = $input->getArgument('notification');
-        $type = $input->getArgument('type');
+        $type = $input->getOption('type');
 
         foreach ($notifications as $notification) {
             [, $class] = Maker::generateClass($notification, $type, force_singular: true);
@@ -54,7 +55,7 @@ class Notification extends Command
 
         $data = Maker::stubs()->addPath('notifications')->readFile(ucfirst($type).'.stub');
         $data = str_replace('CLASSNAME', $class, $data);
-        $data = str_replace('RESOURCE_NAME', $name, $data);
+        $data = str_replace('RESOURCE_NAME', $notification, $data);
 
         if ($type === NotificationType::SMS) {
             return storage(config('storage.sms'))->writeFile($class.'.php', $data);
@@ -68,6 +69,6 @@ class Notification extends Command
 
         return storage(config('storage.views'))
             ->addPath('emails')
-            ->writeFile($name.'.html.twig', $data);
+            ->writeFile($notification.'.html.twig', $data);
     }
 }
