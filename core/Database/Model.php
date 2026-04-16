@@ -15,6 +15,7 @@ use Closure;
 use Core\Database\Metrics\Metrics;
 use Core\Exceptions\InvalidSQLQueryException;
 use Core\Notification\Notifiable;
+use Core\Observer\Observer;
 
 /**
  * Manage database models.
@@ -25,7 +26,7 @@ class Model
 
     protected readonly Repository $repository;
 
-    public function __construct(protected readonly string $table, protected array $attributes = [])
+    public function __construct(protected readonly string $table, protected array $attributes = [], protected array $updatedAttributes = [])
     {
         $this->repository = new Repository($this->table);
     }
@@ -33,6 +34,23 @@ class Model
     public function getTable(): string
     {
         return $this->table;
+    }
+
+    public function wasUpdated(string|array $attributes): bool
+    {
+        if (is_string($attributes)) {
+            return isset($this->updatedAttributes[$attributes]) && $this->updatedAttributes[$attributes] !== $this->attributes[$attributes];
+        }
+
+        $result = false;
+
+        foreach ($attributes as $attribute) {
+            if (isset($this->updatedAttributes[$attribute])) {
+                $result = isset($this->updatedAttributes[$attributes]) && $this->updatedAttributes[$attributes] !== $this->attributes[$attributes];
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -147,11 +165,25 @@ class Model
     /**
      * @throws InvalidSQLQueryException
      */
-    public function create(array $data): self|false
+    public function create(array $data, bool $withoutEvent = false): self|false
     {
         $id = $this->repository->insertGetId($data);
 
-        return is_null($id) ? false : $this->findBy('id', $id);
+        if (is_null($id)) {
+            return false;
+        }
+
+        $model = $this->findBy('id', $id);
+
+        if (is_null($model)) {
+            return false;
+        }
+
+        if (! $withoutEvent) {
+            Observer::created($model);
+        }
+
+        return $model;
     }
 
     public function getId(): int
@@ -230,6 +262,10 @@ class Model
     public function set(array $attributes): self
     {
         foreach ($attributes as $key => $value) {
+            if (isset($this->attributes[$key])) {
+                $this->updatedAttributes[$key] = $this->attributes[$key];
+            }
+
             $this->attributes[$key] = $value;
         }
 
@@ -252,17 +288,37 @@ class Model
     /**
      * @throws InvalidSQLQueryException
      */
-    public function update(array $data): bool
+    public function update(array $data, bool $withoutEvent = false): bool
     {
-        return $this->repository->updateIfExists($this->getId(), $data);
+        $result = $this->repository->updateIfExists($this->getId(), $data);
+
+        if (! $result) {
+            return false;
+        }
+
+        if (! $withoutEvent) {
+            Observer::updated(new self($this->getTable(), $this->attributes, empty($this->updatedAttributes) ? $data : $this->updatedAttributes));
+        }
+
+        return true;
     }
 
     /**
      * @throws InvalidSQLQueryException
      */
-    public function delete(): bool
+    public function delete(bool $withoutEvent = false): bool
     {
-        return $this->repository->deleteIfExists($this->getId());
+        $result = $this->repository->deleteIfExists($this->getId());
+
+        if (! $result) {
+            return false;
+        }
+
+        if (! $withoutEvent) {
+            Observer::deleted($this);
+        }
+
+        return true;
     }
 
     /**
