@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace App\Notifications\Mails;
 
-use Core\Notifications\Mail\Mail;
+use Core\Notification\Mail\Mail;
 
 class CLASSNAME extends Mail
 {
