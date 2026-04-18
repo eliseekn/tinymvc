@@ -11,14 +11,13 @@ declare(strict_types=1);
 
 namespace App\Http\UseCases\User;
 
+use Core\Database\Model;
 use Core\Support\Alert;
 
-final class DeleteUseCase
+final class DeleteAvatarUseCase
 {
-    public function handle(): void
+    public function handle(Model $user): void
     {
-        $user = auth();
-
         if (! storage(config('storage.uploads'))->deleteFile($user->get('avatar'))) {
             Alert::toast('Failed to delete avatar')->error();
             response()->back()->send();
