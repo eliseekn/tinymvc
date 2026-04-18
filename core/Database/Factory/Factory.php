@@ -47,14 +47,14 @@ class Factory
         }, $this->class);
     }
 
-    public function create(array $data = []): Model|false|array
+    public function create(array $data = [], bool $withoutEvent = false): Model|false|array
     {
         $class = $this->make($data);
 
         if (! is_array($class)) {
-            return $class->create($class->get());
+            return $class->create($class->get(), $withoutEvent);
         }
 
-        return array_map(fn ($c) => $c->create($c->get()), $class);
+        return array_map(fn ($c) => $c->create($c->get(), $withoutEvent), $class);
     }
 }
