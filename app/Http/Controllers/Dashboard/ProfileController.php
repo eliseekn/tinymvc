@@ -13,7 +13,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Middlewares\Authenticated;
 use App\Http\Middlewares\EmailVerified;
-use App\Http\UseCases\User\DeleteUseCase;
+use App\Http\UseCases\User\DeleteAvatarUseCase;
 use App\Http\UseCases\User\UpdateUseCase;
 use App\Http\Validation\Validators\UpdateProfileValidator;
 use Core\Enums\HttpMethod;
@@ -31,12 +31,12 @@ class ProfileController extends Controller
     #[Route(HttpMethod::PATCH, '/dashboard/profile', [Authenticated::class, EmailVerified::class], 'profile.update')]
     public function update(UpdateUseCase $useCase, UpdateProfileValidator $validator): void
     {
-        $useCase->handle($validator->inputs());
+        $useCase->handle(auth(), $validator->inputs());
     }
 
     #[Route(HttpMethod::DELETE, '/dashboard/profile/avatar', [Authenticated::class, EmailVerified::class], 'profile.delete.avatar')]
-    public function deleteAvatar(DeleteUseCase $useCase): void
+    public function deleteAvatar(DeleteAvatarUseCase $useCase): void
     {
-        $useCase->handle();
+        $useCase->handle(auth());
     }
 }
