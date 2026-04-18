@@ -22,6 +22,6 @@ abstract class Fixtures
     {
         return User::factory()->create(array_merge($attributes, [
             'role_id' => Role::findByName(UserRole::ADMIN->value)?->getId(),
-        ]));
+        ]), true);
     }
 }
