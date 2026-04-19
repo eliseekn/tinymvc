@@ -1,0 +1,42 @@
+{% extends "layouts/dashboard.html.twig" %}
+
+{% block title %}
+	Roles | Edit
+{% endblock %}
+
+{% block description %}
+	Edit role
+{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+	<h1>Edit role</h1>
+</div>
+
+<div class="card shadow">
+	<form method="post" action="{{ url('/dashboard/roles/' ~ role.getId()) }}">
+		{{ csrf_token_input()|raw }}
+		{{ method_input('patch')|raw }}
+
+		<div class="card-body">
+			<div class="modal-body">
+				<div class="mb-3">
+					<label for="name" class="form-label">{{ __('form.name') }}</label>
+					<input type="text" class="form-control {{ errors.name ? 'is-invalid' }}" value="{{ inputs.name ?: role.get('name') }}" aria-describedby="name-error" name="name" id="name" autofocus>
+
+					{% if errors.name is not empty %}
+						<div id="name-error" class="invalid-feedback">
+							{{ errors.name }}
+						</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+
+		<div class="card-footer">
+			<button type="submit" class="btn btn-primary spinner me-3">Submit</button>
+			<a href="{{ url('dashboard/roles') }}" class="btn btn-secondary">Cancel</a>
+		</div>
+	</form>
+</div>
+{% endblock %}

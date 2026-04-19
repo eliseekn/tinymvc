@@ -1,0 +1,97 @@
+{% extends "layouts/dashboard.html.twig" %}
+
+{% block title %}
+	Roles
+{% endblock %}
+
+{% block description %}
+	Roles
+{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+	<h1>Roles</h1>
+
+	<a class="btn btn-primary" href="{{ route('roles.create') }}">
+		Add new
+	</a>
+</div>
+
+<div class="card shadow">
+	<div class="card-body">
+		{% include "partials/table/toolbar.html.twig" with {show: false} %}
+
+		<div class="table-responsive">
+			<table class="table table-border table-hover">
+				<thead>
+					<tr>
+						<th scope="col">{{ __('form.name') }}</th>
+						<th scope="col">Users</th>
+						<th scope="col">Created at</th>
+						<th scope="col"></th>
+					</tr>
+				</thead>
+
+				<tbody>
+				{% if roles is empty %}
+				<tr>
+					<td>No result found.</td>
+				</tr>
+				{% endif %}
+
+				{% for role in roles.getItems() %}
+					<tr>
+						<td>
+              <span>{{ role.get('name') }}</span>
+						</td>
+						<td>{{ role.get('users') }}</td>
+						<td>{{ carbon(role.get('created_at')).locale(config('app.lang')).isoFormat('Do MMM YYYY') }}</td>
+						<td>
+							<div class="d-flex align-items-center">
+								<a class="btn btn-sm" href="{{ route('roles.edit', {'role': role.getId()}) }}">
+									<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+										<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+										<path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+									</svg>
+								</a>
+
+                {% if role.get('users') == 0 %}
+                <form method="POST" action="{{ route('roles.delete', {'role': role.getId()}) }}">
+                    {{ csrf_token_input()|raw }}
+                    {{ method_input('delete')|raw }}
+
+                    <button type="submit" class="btn btn-sm delete">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-danger">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                      </svg>
+                    </button>
+								</form>
+                {% endif %}
+							</div>
+						</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	{% include "partials/table/pagination.html.twig" with {data: roles} %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			document
+				.querySelectorAll('.delete')
+				?.forEach(el => {
+					el.addEventListener('click', e => {
+						e.preventDefault()
+						displayConfirmMessage('Are you sure you want to delete this role?', el.parentElement)
+					})
+				})
+		})
+	</script>
+{% endblock %}
