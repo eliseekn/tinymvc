@@ -326,7 +326,21 @@ class QueryBuilder
     public function select(array|string $columns): self
     {
         $columns = parse_array($columns);
-        static::$query = 'SELECT '.implode(',', $columns).' FROM '.static::$table;
+        static::$query = 'SELECT '.implode(',', parse_array($columns)).' FROM '.static::$table;
+
+        return $this;
+    }
+
+    public function union(): self
+    {
+        static::$query = 'UNION ';
+
+        return $this;
+    }
+
+    public function unionAll(): self
+    {
+        static::$query = 'UNION ALL ';
 
         return $this;
     }
@@ -338,7 +352,7 @@ class QueryBuilder
         }
 
         $columns = parse_array($columns);
-        static::$query = str_replace('SELECT ', 'SELECT '.implode(',', $columns).',', static::$query);
+        static::$query = str_replace('SELECT ', 'SELECT '.implode(',', parse_array($columns)).',', static::$query);
 
         return $this;
     }
@@ -544,9 +558,9 @@ class QueryBuilder
         return $this->rawQuery(' HAVING '.$query, $args);
     }
 
-    public function orderBy(string $column, string $direction): self
+    public function orderBy(array|string $columns, string $direction): self
     {
-        static::$query .= " ORDER BY $column ".strtoupper($direction);
+        static::$query .= ' ORDER BY  '.implode(',', parse_array($columns)).' '.strtoupper($direction);
 
         return $this;
     }
@@ -554,7 +568,7 @@ class QueryBuilder
     public function groupBy(array|string $columns): self
     {
         $columns = parse_array($columns);
-        static::$query .= ' GROUP BY '.implode(',', $columns);
+        static::$query .= ' GROUP BY '.implode(',', parse_array($columns));
 
         return $this;
     }

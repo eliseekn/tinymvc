@@ -636,21 +636,21 @@ class Repository
         return $this;
     }
 
-    public function orderBy(string $column, string $direction): self
+    public function orderBy(array|string $columns, string $direction): self
     {
-        $this->qb->orderBy($column, $direction);
+        $this->qb->orderBy($columns, $direction);
 
         return $this;
     }
 
-    public function orderDesc(string $column = 'id'): self
+    public function orderDesc(array|string $columns = 'id'): self
     {
-        return $this->orderBy($column, 'desc');
+        return $this->orderBy($columns, 'desc');
     }
 
-    public function orderAsc(string $column = 'id'): self
+    public function orderAsc(array|string $columns = 'id'): self
     {
-        return $this->orderBy($column, 'asc');
+        return $this->orderBy($columns, 'asc');
     }
 
     public function newest(string $column = 'created_at'): self
