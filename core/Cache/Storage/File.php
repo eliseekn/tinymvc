@@ -50,15 +50,17 @@ class File implements StorageInterface
 
     public function delete(string $key): void
     {
-        $this->storage->deleteFile(md5($key));
+        if ($this->storage->isFile(md5($key))) {
+            $this->storage->deleteFile(md5($key));
+        }
     }
 
     public function deleteAll(): void
     {
         $keys = $this->storage->getFiles();
 
-        foreach ($keys as $key) {
-            $this->storage->deleteFile($key);
+        foreach ($keys as $_key) {
+            $this->delete($_key);
         }
     }
 
