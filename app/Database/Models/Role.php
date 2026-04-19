@@ -13,6 +13,8 @@ namespace App\Database\Models;
 
 use Core\Database\Factory\HasFactory;
 use Core\Database\Model;
+use Core\Enums\JoinMethod;
+use Core\Support\Pagination;
 
 class Role extends Model
 {
@@ -45,5 +47,17 @@ class Role extends Model
         return self::query()
             ->select('name')
             ->getAll();
+    }
+
+    public static function findAllPaginate(): Pagination
+    {
+        $perPage = (int) request()->queries('per_page', 10);
+        $page = (int) request()->queries('page', 1);
+
+        return self::query()
+            ->select(['roles.*', 'COUNT(users.id) AS users'])
+            ->join('users', 'users.role_id', '=', 'roles.id', JoinMethod::LEFT)
+            ->groupBy('roles.id')
+            ->paginate($perPage, $page);
     }
 }

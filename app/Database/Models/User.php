@@ -62,17 +62,21 @@ class User extends Model
             ->getAll();
     }
 
-    public static function findAllPaginate(int $perPage, int $page, ?string $search = null): Pagination
+    public static function findAllPaginate(): Pagination
     {
         $userId = auth()?->getId();
+        $perPage = (int) request()->queries('per_page', 10);
+        $page = (int) request()->queries('page', 1);
+        $search = request()->queries('search');
 
         return self::query()
-            ->select('*')
-            ->where('id', '<>', $userId)
+            ->select(['users.*', 'roles.name AS role'])
+            ->join('roles', 'roles.id', '=', 'users.role_id')
+            ->where('users.id', '<>', $userId)
             ->when(! is_null($search), function (Repository $r) use ($search) {
-                $r->andRaw("(name LIKE '%$search%' OR email LIKE '%$search%')");
+                $r->andRaw("(users.name LIKE '%$search%' OR users.email LIKE '%$search%')");
             })
-            ->orderDesc('created_at')
+            ->orderDesc('users.created_at')
             ->paginate($perPage, $page);
     }
 }
