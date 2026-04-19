@@ -13,6 +13,7 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Database\Models\Role;
 use App\Http\Resources\RoleResource;
+use Core\Cache\Cache;
 use Core\Enums\HttpCode;
 use Core\Enums\HttpMethod;
 use Core\Http\Routing\Attributes\Route;
@@ -23,8 +24,12 @@ class RoleController extends Controller
     #[Route(HttpMethod::GET, '/api/v1/roles')]
     public function __invoke(): void
     {
-        response()
-            ->json(new RoleResource(Role::findAll())->handle())
-            ->send(HttpCode::OK);
+        $data = Cache::read(
+            'roles',
+            new RoleResource(Role::findAll())->handle(),
+            carbon()->addDay()->timestamp
+        );
+
+        response()->json($data)->send(HttpCode::OK);
     }
 }
