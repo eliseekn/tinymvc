@@ -20,7 +20,7 @@ class CLASSNAME implements ObserverInterface
 
     public static function created(Model $model): void {}
 
-    public static function updated(Model $old, Model $new): void {}
+    public static function updated(Model $model): void {}
 
     public static function deleted(Model $model): void {}
 }

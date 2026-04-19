@@ -13,6 +13,7 @@ namespace NAMESPACE;
 
 use Core\Database\Model;
 use Core\Database\Factory\HasFactory;
+use Core\Support\Pagination;
 
 class CLASSNAME extends Model
 {
@@ -49,5 +50,15 @@ class CLASSNAME extends Model
             ->select('*')
             ->where('column', $column)
             ->getAll();
+    }
+
+    public static function findAllPaginate(): Pagination
+    {
+        $perPage = (int) request()->queries('perPage', 10);
+        $page = (int) request()->queries('page', 1);
+
+        return self::query()
+            ->select('*')
+            ->paginate($perPage, $page);
     }
 }
