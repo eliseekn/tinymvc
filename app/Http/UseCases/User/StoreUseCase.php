@@ -26,6 +26,7 @@ final class StoreUseCase
 
         if (! $user) {
             Alert::toast('Failed to create user')->error();
+            response()->back()->send();
         }
 
         dispatch(new UserCreatedEvent($user, $password));
