@@ -45,9 +45,9 @@ class Cache
         return config('cache.driver');
     }
 
-    public function store(string $key, mixed $data, ?int $time = null): void
+    public function store(string $key, mixed $data, ?int $expire = null): void
     {
-        $this->cache->store($key, $data, $time);
+        $this->cache->store($key, $data, $expire);
     }
 
     public function get(string $key): mixed
@@ -70,7 +70,7 @@ class Cache
         return $this->cache->has($key);
     }
 
-    public static function read(string $key, mixed $data, ?int $time = null): mixed
+    public static function read(string $key, mixed $data, ?int $expire = null): mixed
     {
         $cache = static::getInstance();
 
@@ -78,8 +78,18 @@ class Cache
             return $cache->get($key);
         }
 
-        $cache->store($key, $data, $time);
+        $cache->store($key, $data, $expire);
 
         return $data;
+    }
+
+    public static function forget(array|string $keys): void
+    {
+        $cache = static::getInstance();
+        $keys = parse_array($keys);
+
+        foreach ($keys as $_key) {
+            $cache->delete($_key);
+        }
     }
 }
