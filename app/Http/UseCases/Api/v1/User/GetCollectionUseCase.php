@@ -20,7 +20,7 @@ final class GetCollectionUseCase
     public function handle(): void
     {
         $data = User::findAllPaginate(
-            (int) request()->queries('perPage', 10),
+            (int) request()->queries('per_page', 10),
             (int) request()->queries('page', 1),
             request()->queries('search')
         );

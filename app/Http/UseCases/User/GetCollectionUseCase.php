@@ -20,11 +20,7 @@ final class GetCollectionUseCase
     {
         response()
             ->view('dashboard.users.index', [
-                'users' => User::findAllPaginate(
-                    (int) request()->queries('perPage', 10),
-                    (int) request()->queries('page', 1),
-                    request()->queries('search')
-                ),
+                'users' => User::findAllPaginate(),
             ])
             ->send(HttpCode::OK);
     }

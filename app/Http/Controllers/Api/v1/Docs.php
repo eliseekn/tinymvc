@@ -131,7 +131,7 @@ abstract class Docs
                     ->security(self::bearerAuth())
                     ->parameters(
                         Parameter::query()->name('page')->schema(Schema::integer())->description('Page number')->required(false),
-                        Parameter::query()->name('perPage')->schema(Schema::integer())->description('Items per page')->required(false),
+                        Parameter::query()->name('per_page')->schema(Schema::integer())->description('Items per page')->required(false),
                         Parameter::query()->name('search')->schema(Schema::string())->description('Search term')->required(false),
                     )
                     ->responses(
