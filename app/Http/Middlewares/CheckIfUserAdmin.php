@@ -29,6 +29,6 @@ class CheckIfUserAdmin
             ])->send(HttpCode::FORBIDDEN);
         }
 
-        response()->data(__('alert.forbidden'))->send(HttpCode::FORBIDDEN);
+        response()->back(__('alert.forbidden'))->send();
     }
 }
