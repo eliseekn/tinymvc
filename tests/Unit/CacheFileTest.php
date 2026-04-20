@@ -25,16 +25,12 @@ class CacheFileTest extends TestCase
         Config::updateEnv(['CACHE_DRIVER' => CacheDriver::FILE]);
 
         $key = uniqid();
-        $cache = new Cache;
-
-        $cache->store($key, ['key' => $key, 'value' => config('app.name')]);
-
-        $data = $cache->get($key);
+        $data = Cache::read($key, ['key' => $key, 'value' => config('app.name')]);
 
         $this->assertEquals($data['key'], $key);
         $this->assertEquals($data['value'], config('app.name'));
 
-        $cache->delete($key);
+        Cache::forget($key);
 
         Config::updateEnv(['CACHE_DRIVER' => $driver]);
     }
