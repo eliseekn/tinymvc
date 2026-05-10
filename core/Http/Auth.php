@@ -29,7 +29,7 @@ class Auth
         return session()->get('auth_attempts', 0);
     }
 
-    public static function attempt(&$user): bool
+    public static function attempt(?Model &$user): bool
     {
         session()->push('auth_attempts', 1, 0);
         $credentials = request()->only([config('security.auth.identifier'), 'password']);
@@ -56,14 +56,14 @@ class Auth
         return true;
     }
 
-    public static function checkCredentials(string $identifier, string $password, &$user): bool
+    public static function checkCredentials(string $identifier, string $password, ?Model &$user): bool
     {
         $user = User::findByIdentifier($identifier);
 
         return $user && Encryption::check($password, $user->get('password'));
     }
 
-    public static function checkToken(string $token, &$user): bool
+    public static function checkToken(string $token, ?Model &$user): bool
     {
         $token = Token::findByValue($token);
 

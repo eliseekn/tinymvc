@@ -28,9 +28,9 @@ abstract class Schedule
         return "weekly:{$day}:{$time}";
     }
 
-    public static function monthly(int $day = 1, string $time = '00:00'): string
+    public static function monthly(int $month = 1, string $time = '00:00'): string
     {
-        return "monthly:{$day}:{$time}";
+        return "monthly:{$month }:{$time}";
     }
 
     public static function everyMinutes(int $minutes = 1): string
