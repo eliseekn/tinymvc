@@ -12,7 +12,7 @@
 <h1 class="mb-3">Edit profile</h1>
 
 <div class="card shadow">
-	<form method="post" action="{{ route('profile.update') }}" enctype="multipart/form-data">
+	<form method="post" action="{{ route('profile.update', {user: auth().getId()}) }}" enctype="multipart/form-data">
 		{{ csrf_token_input()|raw }}
 		{{ method_input('patch')|raw }}
 
@@ -96,7 +96,7 @@
 	</form>
 </div>
 
-<form method="POST" action="{{ route('profile.delete.avatar') }}" id="delete-avatar-form">
+<form method="POST" action="{{ route('profile.delete.avatar', {user: auth().getId()}) }}" id="delete-avatar-form">
 	{{ csrf_token_input()|raw }}
 	{{ method_input('delete')|raw }}
 </form>
