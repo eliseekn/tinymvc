@@ -17,6 +17,7 @@ use App\Http\UseCases\User\DeleteAvatarUseCase;
 use App\Http\UseCases\User\UpdateUseCase;
 use App\Http\Validation\Validators\UpdateProfileValidator;
 use Core\Enums\HttpMethod;
+use Core\Enums\RouteParameter;
 use Core\Http\Routing\Attributes\Route;
 use Core\Http\Routing\Controller;
 
@@ -28,15 +29,29 @@ class ProfileController extends Controller
         $this->render('dashboard.profile');
     }
 
-    #[Route(HttpMethod::PATCH, '/dashboard/profile', [Authenticated::class, EmailVerified::class], 'profile.update')]
+    #[Route(
+        methods: HttpMethod::PATCH,
+        uri: '/dashboard/profile/{user}',
+        middlewares: [Authenticated::class, EmailVerified::class],
+        name: 'profile.update',
+        parameters: ['user' => RouteParameter::NUMBER],
+        bindings: ['user' => ['users', 'id']]
+    )]
     public function update(UpdateUseCase $useCase, UpdateProfileValidator $validator): void
     {
-        $useCase->handle(auth(), $validator->inputs());
+        $useCase->handle($validator->inputs());
     }
 
-    #[Route(HttpMethod::DELETE, '/dashboard/profile/avatar', [Authenticated::class, EmailVerified::class], 'profile.delete.avatar')]
+    #[Route(
+        methods: HttpMethod::DELETE,
+        uri: '/dashboard/profile/{user}/avatar',
+        middlewares: [Authenticated::class, EmailVerified::class],
+        name: 'profile.delete.avatar',
+        parameters: ['user' => RouteParameter::NUMBER],
+        bindings: ['user' => ['users', 'id']]
+    )]
     public function deleteAvatar(DeleteAvatarUseCase $useCase): void
     {
-        $useCase->handle(auth());
+        $useCase->handle();
     }
 }

@@ -27,9 +27,20 @@ abstract class Docs
         return [
             self::login(),
             self::logout(),
+            self::register(),
+
+            self::emailNotify(),
+            self::emailVerify(),
+
+            self::passwordNotify(),
+            self::passwordReset(),
+            self::passwordUpdate(),
 
             self::users(),
             self::user(),
+
+            self::profile(),
+            self::profileAvatar(),
 
             self::roles(),
         ];
@@ -120,6 +131,165 @@ abstract class Docs
             );
     }
 
+    private static function register(): PathItem
+    {
+        return PathItem::create()
+            ->route('/register')
+            ->operations(
+                Operation::post()
+                    ->operationId('register')
+                    ->tags('Auth')
+                    ->requestBody(
+                        self::jsonBody(
+                            Schema::object()
+                                ->properties(
+                                    Schema::string('name'),
+                                    Schema::string('email'),
+                                    Schema::string('password')->format(Schema::FORMAT_PASSWORD),
+                                )
+                                ->required('name', 'email', 'password')
+                        )
+                    )
+                    ->responses(
+                        self::jsonResponse(200, 'Account created', Schema::object()->properties(
+                            Schema::string('status'),
+                            Schema::string('message'),
+                        )),
+                        self::errorResponse(422, 'Validation error'),
+                        self::errorResponse(500, 'Server error'),
+                    )
+            );
+    }
+
+    private static function emailNotify(): PathItem
+    {
+        return PathItem::create()
+            ->route('/email/notify')
+            ->operations(
+                Operation::post()
+                    ->operationId('emailNotify')
+                    ->tags('Email Verification')
+                    ->requestBody(
+                        self::jsonBody(
+                            Schema::object()
+                                ->properties(
+                                    Schema::string('email'),
+                                )
+                                ->required('email')
+                        )
+                    )
+                    ->responses(
+                        self::jsonResponse(200, 'Verification link sent', Schema::object()->properties(
+                            Schema::string('status'),
+                            Schema::string('message'),
+                        )),
+                        self::errorResponse(422, 'Validation error'),
+                        self::errorResponse(500, 'Server error'),
+                    )
+            );
+    }
+
+    private static function emailVerify(): PathItem
+    {
+        return PathItem::create()
+            ->route('/email/verify')
+            ->operations(
+                Operation::get()
+                    ->operationId('emailVerify')
+                    ->tags('Email Verification')
+                    ->parameters(
+                        Parameter::query()->name('token')->schema(Schema::string())->description('Verification token')->required(true),
+                        Parameter::query()->name('email')->schema(Schema::string())->description('User email')->required(true),
+                    )
+                    ->responses(
+                        self::jsonResponse(200, 'Email verified', Schema::object()->properties(
+                            Schema::string('status'),
+                            Schema::string('message'),
+                        )),
+                        self::errorResponse(400, 'Invalid or expired token'),
+                    )
+            );
+    }
+
+    private static function passwordNotify(): PathItem
+    {
+        return PathItem::create()
+            ->route('/password/notify')
+            ->operations(
+                Operation::post()
+                    ->operationId('passwordNotify')
+                    ->tags('Password Reset')
+                    ->requestBody(
+                        self::jsonBody(
+                            Schema::object()
+                                ->properties(
+                                    Schema::string('email'),
+                                )
+                                ->required('email')
+                        )
+                    )
+                    ->responses(
+                        self::jsonResponse(200, 'Password reset link sent', Schema::object()->properties(
+                            Schema::string('status'),
+                            Schema::string('message'),
+                        )),
+                        self::errorResponse(422, 'Validation error'),
+                        self::errorResponse(500, 'Server error'),
+                    )
+            );
+    }
+
+    private static function passwordReset(): PathItem
+    {
+        return PathItem::create()
+            ->route('/password/reset')
+            ->operations(
+                Operation::get()
+                    ->operationId('passwordReset')
+                    ->tags('Password Reset')
+                    ->parameters(
+                        Parameter::query()->name('token')->schema(Schema::string())->description('Reset token')->required(true),
+                        Parameter::query()->name('email')->schema(Schema::string())->description('User email')->required(true),
+                    )
+                    ->responses(
+                        self::jsonResponse(200, 'Token valid', Schema::object()->properties(
+                            Schema::string('status'),
+                            Schema::string('message'),
+                        )),
+                        self::errorResponse(400, 'Invalid or expired token'),
+                    )
+            );
+    }
+
+    private static function passwordUpdate(): PathItem
+    {
+        return PathItem::create()
+            ->route('/password/update')
+            ->operations(
+                Operation::post()
+                    ->operationId('passwordUpdate')
+                    ->tags('Password Reset')
+                    ->requestBody(
+                        self::jsonBody(
+                            Schema::object()
+                                ->properties(
+                                    Schema::string('email'),
+                                    Schema::string('password')->format(Schema::FORMAT_PASSWORD),
+                                )
+                                ->required('email', 'password')
+                        )
+                    )
+                    ->responses(
+                        self::jsonResponse(200, 'Password updated', Schema::object()->properties(
+                            Schema::string('status'),
+                            Schema::string('message'),
+                        )),
+                        self::errorResponse(422, 'Validation error'),
+                        self::errorResponse(500, 'Server error'),
+                    )
+            );
+    }
+
     private static function users(): PathItem
     {
         return PathItem::create()
@@ -166,7 +336,7 @@ abstract class Docs
 
     private static function user(): PathItem
     {
-        $userParam = Parameter::path()
+        $param = Parameter::path()
             ->name('user')
             ->required(true)
             ->schema(Schema::integer())
@@ -179,7 +349,7 @@ abstract class Docs
                     ->operationId('getUserItem')
                     ->tags('Users')
                     ->security(self::bearerAuth())
-                    ->parameters($userParam)
+                    ->parameters($param)
                     ->responses(
                         Response::create()->statusCode(200)->description('OK'),
                         self::errorResponse(404, 'Not found'),
@@ -188,7 +358,7 @@ abstract class Docs
                     ->operationId('updateUser')
                     ->tags('Users')
                     ->security(self::bearerAuth())
-                    ->parameters($userParam)
+                    ->parameters($param)
                     ->requestBody(
                         self::jsonBody(
                             Schema::object()->properties(
@@ -210,12 +380,77 @@ abstract class Docs
                     ->operationId('deleteUser')
                     ->tags('Users')
                     ->security(self::bearerAuth())
-                    ->parameters($userParam)
+                    ->parameters($param)
                     ->responses(
-                        self::jsonResponse(204, 'User deleted', Schema::object()->properties(
+                        self::jsonResponse(200, 'User deleted', Schema::object()->properties(
                             Schema::string('status'),
                             Schema::string('message'),
                         )),
+                        self::errorResponse(404, 'Not found'),
+                        self::errorResponse(500, 'Server error'),
+                    )
+            );
+    }
+
+    private static function profile(): PathItem
+    {
+        $param = Parameter::path()
+            ->name('user')
+            ->required(true)
+            ->schema(Schema::integer())
+            ->description('User ID');
+
+        return PathItem::create()
+            ->route('/account/{user}/profile')
+            ->operations(
+                Operation::patch()
+                    ->operationId('updateProfile')
+                    ->tags('Profile')
+                    ->security(self::bearerAuth())
+                    ->parameters($param)
+                    ->requestBody(
+                        self::jsonBody(
+                            Schema::object()->properties(
+                                Schema::string('name'),
+                                Schema::string('email'),
+                                Schema::integer('role_id'),
+                            )
+                        )
+                    )
+                    ->responses(
+                        self::jsonResponse(200, 'Profile updated', Schema::object()->properties(
+                            Schema::string('status'),
+                            Schema::string('message'),
+                            Schema::object('data'),
+                        )),
+                        self::errorResponse(404, 'Not found'),
+                        self::errorResponse(500, 'Server error'),
+                    )
+            );
+    }
+
+    private static function profileAvatar(): PathItem
+    {
+        $param = Parameter::path()
+            ->name('user')
+            ->required(true)
+            ->schema(Schema::integer())
+            ->description('User ID');
+
+        return PathItem::create()
+            ->route('/account/{user}/profile/avatar')
+            ->operations(
+                Operation::delete()
+                    ->operationId('deleteProfileAvatar')
+                    ->tags('Profile')
+                    ->security(self::bearerAuth())
+                    ->parameters($param)
+                    ->responses(
+                        self::jsonResponse(200, 'Avatar deleted', Schema::object()->properties(
+                            Schema::string('status'),
+                            Schema::string('message'),
+                        )),
+                        self::errorResponse(404, 'Not found'),
                         self::errorResponse(500, 'Server error'),
                     )
             );

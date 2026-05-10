@@ -12,15 +12,15 @@ declare(strict_types=1);
 namespace App\Http\UseCases\User;
 
 use App\Http\Services\FileUploadService;
-use Core\Database\Model;
 use Core\Support\Alert;
 
 final class UpdateUseCase
 {
     public function __construct(public FileUploadService $fileUploadService) {}
 
-    public function handle(Model $user, array $data): void
+    public function handle(array $data): void
     {
+        $user = auth();
         $file = request()->files('avatar', ['png', 'jpg', 'jpeg']);
 
         if (! $file->isEmpty() && ! $this->fileUploadService->handle($file, $filename)) {

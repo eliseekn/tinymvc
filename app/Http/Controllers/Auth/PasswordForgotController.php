@@ -14,10 +14,12 @@ namespace App\Http\Controllers\Auth;
 use App\Http\UseCases\PasswordReset\NotifyUseCase;
 use App\Http\UseCases\PasswordReset\ResetUseCase;
 use App\Http\UseCases\PasswordReset\UpdatePasswordUseCase;
+use App\Http\Validation\Validators\Auth\EmailValidator;
 use App\Http\Validation\Validators\Auth\UpdatePasswordValidator;
 use Core\Enums\HttpMethod;
 use Core\Http\Routing\Attributes\Route;
 use Core\Http\Routing\Controller;
+use Core\Support\Alert;
 
 /**
  * Manage password forgot.
@@ -25,9 +27,15 @@ use Core\Http\Routing\Controller;
 class PasswordForgotController extends Controller
 {
     #[Route(HttpMethod::POST, '/password/notify')]
-    public function notify(NotifyUseCase $useCase): void
+    public function notify(EmailValidator $validator, NotifyUseCase $useCase): void
     {
-        $useCase->handle();
+        if ($useCase->handle($validator->inputs('email'))) {
+            Alert::default(__('alert.password_reset_link_sent'))->success();
+        } else {
+            Alert::default(__('alert.password_reset_link_not_sent'))->success();
+        }
+
+        $this->redirectBack();
     }
 
     #[Route(HttpMethod::GET, '/password/reset')]
@@ -39,6 +47,12 @@ class PasswordForgotController extends Controller
     #[Route(HttpMethod::POST, '/password/update')]
     public function update(UpdatePasswordUseCase $useCase, UpdatePasswordValidator $validator): void
     {
-        $useCase->handle($validator->inputs());
+        if (! $useCase->handle($validator->inputs())) {
+            Alert::default(__('alert.password_not_reset'))->error();
+            response()->back()->send();
+        }
+
+        Alert::default(__('alert.password_reset'))->success();
+        response()->url('/login')->send();
     }
 }

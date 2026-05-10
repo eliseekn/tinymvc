@@ -15,37 +15,25 @@ use App\Database\Models\Token;
 use App\Enums\TokenDescription;
 use App\Notifications\Mails\VerificationMail;
 use Core\Notification\Notification;
-use Core\Support\Alert;
 use Exception;
 
 final class NotifyUseCase
 {
-    public function handle(string $email): void
+    public function handle(string $email): bool
     {
         $tokenValue = generate_token(15);
-        $token = Token::findByDescription($email, TokenDescription::EMAIL_VERIFICATION->value);
-
-        if ($token) {
-            $token->update(['value' => $tokenValue]);
-        } else {
-            $token = Token::factory()->create([
-                'identifier' => $email,
-                'value' => $tokenValue,
-                'description' => TokenDescription::EMAIL_VERIFICATION->value,
-            ]);
-        }
+        $token = Token::generate($email, TokenDescription::EMAIL_VERIFICATION->value, $tokenValue);
 
         try {
             Notification::send(new VerificationMail($email, $tokenValue))->to($email);
 
-            Alert::default(__('alert.email_verification_link_sent'))->success();
-            response()->url('/email/notify')->send();
+            return true;
         } catch (Exception $e) {
             report($e);
 
             $token->delete();
-            Alert::default(__('alert.email_verification_link_not_sent'))->error();
-            response()->url('/login')->send();
+
+            return false;
         }
     }
 }

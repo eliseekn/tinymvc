@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\UseCases\User;
+namespace App\Http\UseCases\Role;
 
 use Core\Database\Model;
 use Core\Support\Alert;

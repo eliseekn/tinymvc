@@ -17,6 +17,7 @@ use App\Http\Validation\Validators\Auth\EmailValidator;
 use Core\Enums\HttpMethod;
 use Core\Http\Routing\Attributes\Route;
 use Core\Http\Routing\Controller;
+use Core\Support\Alert;
 
 /**
  * Manage email verification link.
@@ -32,7 +33,13 @@ class EmailVerificationController extends Controller
     #[Route(HttpMethod::POST, '/email/notify')]
     public function notify(EmailValidator $validator, NotifyUseCase $useCase): void
     {
-        $useCase->handle($validator->inputs('email'));
+        if ($useCase->handle($validator->inputs('email'))) {
+            Alert::default(__('alert.email_verification_link_sent'))->success();
+            response()->url('/email/notify')->send();
+        }
+
+        Alert::default(__('alert.email_verification_link_not_sent'))->error();
+        response()->url('/login')->send();
     }
 
     #[Route(HttpMethod::GET, '/email/verify')]

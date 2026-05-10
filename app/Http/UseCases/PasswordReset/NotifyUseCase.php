@@ -8,37 +8,25 @@ use App\Database\Models\Token;
 use App\Enums\TokenDescription;
 use App\Notifications\Mails\PasswordResetMail;
 use Core\Notification\Notification;
-use Core\Support\Alert;
 use Exception;
 
 final class NotifyUseCase
 {
-    public function handle(): void
+    public function handle(string $email): bool
     {
         $tokenValue = generate_token(15);
-        $email = request()->inputs('email');
-        $token = Token::findByDescription($email, TokenDescription::PASSWORD_RESET->value);
-
-        if ($token) {
-            $token->update(['value' => $tokenValue]);
-        } else {
-            $token = Token::factory()->create([
-                'identifier' => $email,
-                'value' => $tokenValue,
-                'description' => TokenDescription::PASSWORD_RESET->value,
-            ]);
-        }
+        $token = Token::generate($email, TokenDescription::PASSWORD_RESET->value, $tokenValue);
 
         try {
             Notification::send(new PasswordResetMail($email, $tokenValue))->to($email);
-            Alert::default(__('alert.password_reset_link_sent'))->success();
+
+            return true;
         } catch (Exception $e) {
             report($e);
 
             $token->delete();
-            Alert::default(__('alert.password_reset_link_not_sent'))->success();
-        }
 
-        response()->back()->send();
+            return false;
+        }
     }
 }
