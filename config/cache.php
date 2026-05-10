@@ -9,10 +9,12 @@
 
 declare(strict_types=1);
 
+use Core\Enums\CacheDriver;
+
 /*
  * Cache configuration
  */
 
 return [
-    'driver' => env('CACHE_DRIVER', 'file'),
+    'driver' => env('CACHE_DRIVER', CacheDriver::FILE),
 ];

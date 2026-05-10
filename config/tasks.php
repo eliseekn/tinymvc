@@ -9,7 +9,9 @@
 
 declare(strict_types=1);
 
+use App\Tasks\DeleteExpiredToken;
 use App\Tasks\DeleteUnverifiedUsers;
+use Core\Enums\TaskDriver;
 use Core\Task\Schedule\Schedule;
 
 /*
@@ -17,7 +19,7 @@ use Core\Task\Schedule\Schedule;
  */
 
 return [
-    'driver' => env('TASK_DRIVER', 'database'),
+    'driver' => env('TASK_DRIVER', TaskDriver::DATABASE),
 
     'retries' => [
         'max' => 2,
@@ -26,5 +28,6 @@ return [
 
     'schedules' => [
         DeleteUnverifiedUsers::class => Schedule::daily(),
+        DeleteExpiredToken::class => Schedule::everyHours(),
     ],
 ];

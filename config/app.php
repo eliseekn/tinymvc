@@ -9,13 +9,15 @@
 
 declare(strict_types=1);
 
+use Core\Enums\AppEnv;
+
 /*
  * Application configuration
  */
 
 return [
     'home' => '/',
-    'env' => env('APP_ENV', \Core\Enums\AppEnv::LOCAL),
+    'env' => env('APP_ENV', AppEnv::LOCAL),
     'name' => env('APP_NAME', 'TinyMVC'),
     'url' => env('APP_URL', 'http://127.0.0.1:8888/'),
     'lang' => env('APP_LANG', 'en'),
