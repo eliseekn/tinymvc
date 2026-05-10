@@ -35,7 +35,13 @@ class Query extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $stmt = Connection::getInstance($input->getOption('connection'))->executeQuery($input->getArgument('query'));
+        $query = $input->getArgument('query');
+        $stmt = Connection::getInstance($input->getOption('connection'))->executeQuery($query);
+
+        if (! str_contains('select', strtolower($query))) {
+            return Command::SUCCESS;
+        }
+
         $output->writeln('<bg=blue;options=bold> INFO </> Query executed.');
         $output->writeln('');
 
