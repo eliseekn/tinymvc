@@ -46,7 +46,7 @@ class Model
 
         foreach ($attributes as $attribute) {
             if (isset($this->updatedAttributes[$attribute])) {
-                $result = isset($this->updatedAttributes[$attributes]) && $this->updatedAttributes[$attributes] !== $this->attributes[$attributes];
+                $result = isset($this->updatedAttributes[$attributes]) && $this->updatedAttributes[$attribute] !== $this->attributes[$attribute];
             }
         }
 
