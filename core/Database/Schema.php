@@ -25,6 +25,13 @@ class Schema
 
     protected static bool $alterMode;
 
+    public function query(string $query, ?string $dbConnection = null): self
+    {
+        static::$qb = QueryBuilder::setQuery(query: $query, dbConnection: $dbConnection);
+
+        return new self;
+    }
+
     public static function createTable(string $name): self
     {
         static::$qb = QueryBuilder::createTable($name);
