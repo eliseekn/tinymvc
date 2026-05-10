@@ -46,4 +46,21 @@ class Token extends Model
             ->and('description', $description)
             ->first();
     }
+
+    public static function generate(string $identifier, string $description, string $value): ?Model
+    {
+        $token = self::findByDescription($identifier, $description);
+
+        if ($token) {
+            $token->update(['value' => $value]);
+
+            return $token;
+        }
+
+        return Token::factory()->create([
+            'identifier' => $identifier,
+            'value' => $value,
+            'description' => $description,
+        ]);
+    }
 }

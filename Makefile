@@ -10,5 +10,5 @@ format:
 serve:
 	@php console serve
 
-doc:
-	@php console doc:generate
+api-doc:
+	@php console api:doc
