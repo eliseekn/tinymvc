@@ -16,11 +16,14 @@ use App\Http\Middlewares\CheckIfUserAdmin;
 use App\Http\UseCases\Api\v1\User\DeleteUseCase;
 use App\Http\UseCases\Api\v1\User\UpdateUseCase;
 use App\Http\Validation\Validators\User\UpdateValidator;
+use App\Policies\ProfilePolicy;
 use Core\Database\Model;
 use Core\Enums\HttpMethod;
+use Core\Enums\RouteName;
 use Core\Enums\RouteParameter;
 use Core\Http\Routing\Attributes\Route;
 use Core\Http\Routing\Controller;
+use Core\Policy\Policy;
 
 class ProfileController extends Controller
 {
@@ -33,7 +36,9 @@ class ProfileController extends Controller
     )]
     public function update(UpdateUseCase $useCase, UpdateValidator $validator, Model $user): void
     {
-        $useCase->handle($validator->inputs(), $user);
+        Policy::authorize(new ProfilePolicy, RouteName::UPDATE, $user);
+
+        $useCase->handle($validator->inputs());
     }
 
     #[Route(
@@ -45,6 +50,8 @@ class ProfileController extends Controller
     )]
     public function delete(DeleteUseCase $useCase, Model $user): void
     {
+        Policy::authorize(new ProfilePolicy, RouteName::DELETE, $user);
+
         $useCase->handle($user);
     }
 }

@@ -37,6 +37,7 @@ use Core\Console\Make\Model;
 use Core\Console\Make\Notification;
 use Core\Console\Make\Observer;
 use Core\Console\Make\Password;
+use Core\Console\Make\Policy;
 use Core\Console\Make\Rule;
 use Core\Console\Make\Seeder;
 use Core\Console\Make\Task;
@@ -96,6 +97,7 @@ return [
         new Task,
         new Core\Console\Make\Resource,
         new Observer,
+        new Policy,
 
         new EncryptionKey,
         new Environnement,

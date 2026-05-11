@@ -45,4 +45,5 @@ return [
     'tasks' => absolute_path('app.Tasks'),
     'resources' => absolute_path('app.Http.Resources'),
     'observers' => absolute_path('app.Observers'),
+    'policies' => absolute_path('app.Policies'),
 ];

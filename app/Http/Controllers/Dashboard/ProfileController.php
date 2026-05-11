@@ -16,10 +16,14 @@ use App\Http\Middlewares\EmailVerified;
 use App\Http\UseCases\User\DeleteAvatarUseCase;
 use App\Http\UseCases\User\UpdateUseCase;
 use App\Http\Validation\Validators\UpdateProfileValidator;
+use App\Policies\ProfilePolicy;
+use Core\Database\Model;
 use Core\Enums\HttpMethod;
+use Core\Enums\RouteName;
 use Core\Enums\RouteParameter;
 use Core\Http\Routing\Attributes\Route;
 use Core\Http\Routing\Controller;
+use Core\Policy\Policy;
 
 class ProfileController extends Controller
 {
@@ -37,8 +41,10 @@ class ProfileController extends Controller
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
-    public function update(UpdateUseCase $useCase, UpdateProfileValidator $validator): void
+    public function update(UpdateUseCase $useCase, UpdateProfileValidator $validator, Model $user): void
     {
+        Policy::authorize(new ProfilePolicy, RouteName::UPDATE, $user);
+
         $useCase->handle($validator->inputs());
     }
 
@@ -50,8 +56,10 @@ class ProfileController extends Controller
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
-    public function deleteAvatar(DeleteAvatarUseCase $useCase): void
+    public function deleteAvatar(DeleteAvatarUseCase $useCase, Model $user): void
     {
+        Policy::authorize(new ProfilePolicy, RouteName::DELETE, $user);
+
         $useCase->handle();
     }
 }

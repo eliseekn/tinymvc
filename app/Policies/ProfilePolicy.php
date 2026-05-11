@@ -1,0 +1,53 @@
+<?php
+
+/**
+ * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
+ * @license MIT (https://opensource.org/licenses/MIT)
+ *
+ * @link https://github.com/eliseekn/tinymvc
+ */
+
+declare(strict_types=1);
+
+namespace App\Policies;
+
+use Core\Database\Model;
+use Core\Policy\PolicyInterface;
+
+class ProfilePolicy implements PolicyInterface
+{
+    public function index(): bool
+    {
+        return true;
+    }
+
+    public function create(): bool
+    {
+        return true;
+    }
+
+    public function store(): bool
+    {
+        return true;
+    }
+
+    public function update(Model $model): bool
+    {
+        return auth()->getId() === $model->getId();
+    }
+
+    public function edit(Model $model): bool
+    {
+        return true;
+    }
+
+    public function show(Model $model): bool
+    {
+        return true;
+    }
+
+    public function delete(Model $model): bool
+    {
+        return auth()->getId() === $model->getId();
+    }
+}
