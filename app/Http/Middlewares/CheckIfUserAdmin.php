@@ -29,6 +29,6 @@ class CheckIfUserAdmin
             ])->send(HttpCode::FORBIDDEN);
         }
 
-        response()->back(__('alert.forbidden'))->send();
+        response()->view(config('errors.views.403'))->send();
     }
 }
