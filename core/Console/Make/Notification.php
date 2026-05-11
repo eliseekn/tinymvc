@@ -51,7 +51,7 @@ class Notification extends Command
 
     public function createNotification(string $notification, string $type): bool
     {
-        [$name, $class] = Maker::generateClass($notification, $type, force_singular: true);
+        [, $class] = Maker::generateClass($notification, $type, force_singular: true);
 
         $data = Maker::stubs()->addPath('notifications')->readFile(ucfirst($type).'.stub');
         $data = str_replace('CLASSNAME', $class, $data);

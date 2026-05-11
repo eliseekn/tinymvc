@@ -12,14 +12,15 @@ declare(strict_types=1);
 namespace App\Http\UseCases\Api\v1\User;
 
 use App\Http\Resources\UserResource;
-use Core\Database\Model;
 use Core\Enums\HttpCode;
 use Core\Enums\ResponseStatus;
 
 final class UpdateUseCase
 {
-    public function handle(array $data, Model $user): void
+    public function handle(array $data): void
     {
+        $user = auth();
+
         if (! empty($data['password'])) {
             $data['password'] = bcrypt($data['password']);
         } else {
