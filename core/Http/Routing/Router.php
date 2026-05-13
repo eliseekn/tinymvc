@@ -27,7 +27,7 @@ use Exception;
  */
 class Router
 {
-    protected static function match(string $route, &$params, array $routeParams = []): bool
+    protected static function match(string $route, array &$params, array $routeParams = []): bool
     {
         $route = preg_replace_callback('/\{([a-zA-Z0-9_-]+)\??\}/', function ($matches) use ($routeParams) {
             $param = $matches[1];
