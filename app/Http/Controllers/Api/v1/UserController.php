@@ -11,16 +11,18 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\Database\Models\User;
 use App\Http\Middlewares\ApiAuth;
 use App\Http\Middlewares\CheckIfUserAdmin;
-use App\Http\UseCases\Api\v1\User\DeleteUseCase;
-use App\Http\UseCases\Api\v1\User\GetCollectionUseCase;
-use App\Http\UseCases\Api\v1\User\GetItemUseCase;
-use App\Http\UseCases\Api\v1\User\StoreUseCase;
-use App\Http\UseCases\Api\v1\User\UpdateUseCase;
+use App\Http\Resources\UserResource;
 use App\Http\Validation\Validators\User\StoreValidator;
 use App\Http\Validation\Validators\User\UpdateValidator;
+use App\UseCases\Api\v1\User\DeleteUseCase;
+use App\UseCases\Api\v1\User\GetItemUseCase;
+use App\UseCases\Api\v1\User\StoreUseCase;
+use App\UseCases\Api\v1\User\UpdateUseCase;
 use Core\Database\Model;
+use Core\Enums\HttpCode;
 use Core\Enums\HttpMethod;
 use Core\Enums\RouteParameter;
 use Core\Http\Routing\Attributes\Route;
@@ -29,9 +31,13 @@ use Core\Http\Routing\Controller;
 class UserController extends Controller
 {
     #[Route(HttpMethod::GET, '/api/v1/users', [ApiAuth::class])]
-    public function index(GetCollectionUseCase $useCase): void
+    public function index(): void
     {
-        $useCase->handle();
+        $data = User::findAllPaginate();
+
+        response()
+            ->json(new UserResource($data)->handle())
+            ->send(HttpCode::OK);
     }
 
     #[Route(

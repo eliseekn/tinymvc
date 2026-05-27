@@ -38,7 +38,7 @@ return [
     'tests' => absolute_path('tests'),
     'console' => absolute_path('app.Console'),
     'sqlite' => absolute_path('storage.sqlite'),
-    'useCases' => absolute_path('app.Http.UseCases'),
+    'useCases' => absolute_path('app.UseCases'),
     'events' => absolute_path('app.Events'),
     'assets' => absolute_path('resources.assets'),
     'enums' => absolute_path('app.Enums'),

@@ -13,7 +13,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Middlewares\RedirectAfterLogin;
 use App\Http\Middlewares\RememberUser;
-use App\Http\UseCases\Auth\LoginUseCase;
+use App\UseCases\Auth\LoginUseCase;
 use App\Http\Validation\Validators\Auth\LoginValidator;
 use Core\Enums\HttpMethod;
 use Core\Http\Routing\Attributes\Route;

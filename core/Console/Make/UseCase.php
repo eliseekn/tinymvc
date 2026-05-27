@@ -27,7 +27,7 @@ class UseCase extends Command
         $this->setDescription('Create new use case');
         $this->addOption('model', null, InputOption::VALUE_OPTIONAL, 'The name of model');
         $this->addOption('type', null, InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'Specify use case type (index, show, store, update, delete or custom name)');
-        $this->addOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Specify namespace (base: App\Http\UseCases)');
+        $this->addOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Specify namespace (base: App\UseCases)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -72,7 +72,7 @@ class UseCase extends Command
             $data = str_replace('MODEL_NAME', Maker::fixPlural(ucfirst($name), true), $data);
         }
 
-        $data = Maker::addNamespace($data, 'App\Http\UseCases', $namespace);
+        $data = Maker::addNamespace($data, 'App\UseCases', $namespace);
         $data = str_replace('CLASSNAME', $class, $data);
 
         $storage = storage(config('storage.useCases'));

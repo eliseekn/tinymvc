@@ -12,13 +12,13 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Dashboard;
 
 use App\Database\Models\Role;
+use App\Database\Models\User;
 use App\Http\Middlewares\Authenticated;
 use App\Http\Middlewares\CheckIfUserAdmin;
 use App\Http\Middlewares\EmailVerified;
-use App\Http\UseCases\User\GetCollectionUseCase;
-use App\Http\UseCases\User\StoreUseCase;
 use App\Http\Validation\Validators\User\StoreValidator;
 use App\Http\Validation\Validators\User\UpdateValidator;
+use App\UseCases\User\StoreUseCase;
 use Core\Database\Model;
 use Core\Enums\HttpMethod;
 use Core\Enums\RouteParameter;
@@ -34,9 +34,11 @@ class UserController extends Controller
         middlewares: [Authenticated::class, EmailVerified::class],
         name: 'users.index'
     )]
-    public function index(GetCollectionUseCase $useCase): void
+    public function index(): void
     {
-        $useCase->handle();
+        $this->render('dashboard.users.index', [
+            'users' => User::findAllPaginate(),
+        ]);
     }
 
     #[Route(

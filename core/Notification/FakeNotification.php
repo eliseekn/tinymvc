@@ -33,9 +33,9 @@ class FakeNotification
         $names = parse_array($name);
         $sent = static::sentNotifications();
 
-        foreach ($names as $name) {
-            if (array_key_exists($name, static::notifications())) {
-                $sent[$name] = $recipient;
+        foreach ($names as $_name) {
+            if (array_key_exists($_name, static::notifications())) {
+                $sent[$_name] = $recipient;
             }
         }
 

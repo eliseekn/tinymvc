@@ -12,8 +12,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Middlewares\RememberUser;
-use App\Http\UseCases\Auth\RegisterUseCase;
-use App\Http\UseCases\EmailVerification\NotifyUseCase;
+use App\UseCases\Auth\RegisterUseCase;
+use App\UseCases\EmailVerification\NotifyUseCase;
 use App\Http\Validation\Validators\Auth\RegisterValidator;
 use Core\Enums\HttpMethod;
 use Core\Http\Auth;

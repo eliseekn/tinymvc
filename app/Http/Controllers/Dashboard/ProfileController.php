@@ -13,17 +13,15 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Middlewares\Authenticated;
 use App\Http\Middlewares\EmailVerified;
-use App\Http\UseCases\User\DeleteAvatarUseCase;
-use App\Http\UseCases\User\UpdateUseCase;
 use App\Http\Validation\Validators\UpdateProfileValidator;
 use App\Policies\ProfilePolicy;
+use App\UseCases\User\DeleteAvatarUseCase;
+use App\UseCases\User\UpdateUseCase;
 use Core\Database\Model;
 use Core\Enums\HttpMethod;
-use Core\Enums\RouteName;
 use Core\Enums\RouteParameter;
 use Core\Http\Routing\Attributes\Route;
 use Core\Http\Routing\Controller;
-use Core\Policy\Policy;
 
 class ProfileController extends Controller
 {
@@ -43,7 +41,7 @@ class ProfileController extends Controller
     )]
     public function update(UpdateUseCase $useCase, UpdateProfileValidator $validator, Model $user): void
     {
-        Policy::authorize(new ProfilePolicy, RouteName::UPDATE, $user);
+        $user->authorize(new ProfilePolicy)->onUpdate();
 
         $useCase->handle($validator->inputs());
     }
@@ -58,7 +56,7 @@ class ProfileController extends Controller
     )]
     public function deleteAvatar(DeleteAvatarUseCase $useCase, Model $user): void
     {
-        Policy::authorize(new ProfilePolicy, RouteName::DELETE, $user);
+        $user->authorize(new ProfilePolicy)->onDelete();
 
         $useCase->handle();
     }

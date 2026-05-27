@@ -32,9 +32,7 @@ class Route
 
     public static array $routes = [];
 
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     private static function add(string $route, Closure|array|string $handler): self
     {
@@ -133,7 +131,7 @@ class Route
         return $this;
     }
 
-    public static function group($callback): self
+    public static function group(Closure $callback): self
     {
         call_user_func($callback);
 

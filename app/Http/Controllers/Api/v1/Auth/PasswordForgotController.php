@@ -11,9 +11,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\v1\Auth;
 
-use App\Http\UseCases\Api\v1\ResetPasswordUseCase;
-use App\Http\UseCases\PasswordReset\NotifyUseCase;
-use App\Http\UseCases\PasswordReset\UpdatePasswordUseCase;
+use App\UseCases\Api\v1\ResetPasswordUseCase;
+use App\UseCases\PasswordReset\NotifyUseCase;
+use App\UseCases\PasswordReset\UpdatePasswordUseCase;
 use App\Http\Validation\Validators\Auth\EmailValidator;
 use App\Http\Validation\Validators\Auth\UpdatePasswordValidator;
 use Core\Enums\HttpCode;

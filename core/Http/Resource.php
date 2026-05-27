@@ -30,6 +30,8 @@ class Resource
         }
 
         if (is_array($this->resource)) {
+            $data = [];
+
             foreach ($this->resource as $item) {
                 $data[] = $this->toArray($item);
             }

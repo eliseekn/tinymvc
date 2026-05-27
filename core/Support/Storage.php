@@ -94,7 +94,7 @@ class Storage
         return mkdir(self::$path.$pathname, $mode, $recursive);
     }
 
-    public function writeFile(string $filename, $content, bool $append = false): bool
+    public function writeFile(string $filename, mixed $content, bool $append = false): bool
     {
         if (! $this->isDir() && ! $this->createDir(recursive: true)) {
             return false;

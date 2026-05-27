@@ -16,6 +16,7 @@ use Core\Enums\HttpCode;
 use Core\Exceptions\FileNotFoundException;
 use Core\Exceptions\InvalidJsonDataException;
 use Core\Exceptions\InvalidResponseDataException;
+use Core\Support\Alert;
 use Exception;
 
 /**
@@ -104,9 +105,16 @@ class Response
         return $this->with('intended', $uri);
     }
 
-    public function with(string $key, $data): self
+    public function with(string $key, mixed $data): self
     {
         session()->create($key, $data);
+
+        return $this;
+    }
+
+    public function withAlert(string $type, string|array $message, string $display, bool $dismiss = true): self
+    {
+        Alert::alert($message, $display, $dismiss);
 
         return $this;
     }

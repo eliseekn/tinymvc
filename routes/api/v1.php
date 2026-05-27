@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\Api\v1\AuthController;
+use App\Http\Controllers\Api\v1\Auth\AuthController;
 use App\Http\Middlewares\ApiAuth;
 use Core\Http\Routing\Route;
 

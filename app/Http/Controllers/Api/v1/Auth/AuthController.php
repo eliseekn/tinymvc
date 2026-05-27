@@ -11,24 +11,45 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\v1\Auth;
 
-use App\Http\UseCases\Api\v1\Auth\LoginUseCase;
-use App\Http\UseCases\Api\v1\Auth\LogoutUseCase;
-use App\Http\UseCases\Api\v1\Auth\RegisterUseCase;
-use App\Http\UseCases\EmailVerification\NotifyUseCase;
+use App\Exceptions\InvalidCredentialsException;
 use App\Http\Validation\Validators\Auth\LoginValidator;
 use App\Http\Validation\Validators\Auth\RegisterValidator;
+use App\UseCases\Api\v1\Auth\LoginUseCase;
+use App\UseCases\Api\v1\Auth\RegisterUseCase;
+use App\UseCases\EmailVerification\NotifyUseCase;
+use Core\Enums\HttpCode;
+use Core\Enums\ResponseStatus;
+use Core\Http\Auth;
 use Core\Http\Routing\Controller;
 
 class AuthController extends Controller
 {
     public function login(LoginUseCase $useCase, LoginValidator $validator): void
     {
-        $useCase->handle($validator->inputs());
+        try {
+            $data = $useCase->handle($validator->inputs());
+
+            $this->jsonResponse([
+                'status' => ResponseStatus::SUCCESS,
+                'token' => $data['token'],
+                'user' => $data['user'],
+            ], HttpCode::OK);
+        } catch (InvalidCredentialsException $e) {
+            $this->jsonResponse([
+                'status' => ResponseStatus::ERROR,
+                'message' => 'Email or password is incorrect',
+            ], HttpCode::UNAUTHORIZED);
+        }
     }
 
-    public function logout(LogoutUseCase $useCase): void
+    public function logout(): void
     {
-        $useCase->handle();
+        Auth::deleteToken();
+
+        $this->jsonResponse([
+            'status' => ResponseStatus::SUCCESS,
+            'message' => 'Logout successfully',
+        ], HttpCode::OK);
     }
 
     public function register(RegisterUseCase $useCase, NotifyUseCase $notifyUseCase, RegisterValidator $valitator): void

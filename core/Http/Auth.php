@@ -49,7 +49,7 @@ class Auth
         session()->regenerate();
         session()->create('user', $user->get());
 
-        if (request()->hasInput('remember')) {
+        if (request()->inputs()->has('remember')) {
             cookies()->create('user', $user->get('email'), 3600 * 24 * 365);
         }
 

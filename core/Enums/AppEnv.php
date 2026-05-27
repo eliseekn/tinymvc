@@ -15,6 +15,8 @@ enum AppEnv: string
 {
     public const LOCAL = 'local';
 
+    public const STAGING = 'staging';
+
     public const PROD = 'prod';
 
     public const TEST = 'test';

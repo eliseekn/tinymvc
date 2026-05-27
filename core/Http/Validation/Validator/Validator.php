@@ -61,7 +61,7 @@ class Validator implements ValidatorInterface
         }
 
         $this->validation = $this->validator->make(
-            request()->inputs(),
+            request()->inputs()->get(),
             $this->rules,
         );
 

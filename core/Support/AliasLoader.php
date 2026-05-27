@@ -15,7 +15,7 @@ class AliasLoader
 {
     protected array $classes = [];
 
-    protected function loadClass($class): void
+    protected function loadClass(string $class): void
     {
         if (isset($this->classes[$class]) && class_exists($this->classes[$class])) {
             class_alias($this->classes[$class], $class);

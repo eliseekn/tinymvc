@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\UseCases\EmailVerification\NotifyUseCase;
-use App\Http\UseCases\EmailVerification\VerifyUseCase;
+use App\UseCases\EmailVerification\NotifyUseCase;
+use App\UseCases\EmailVerification\VerifyUseCase;
 use App\Http\Validation\Validators\Auth\EmailValidator;
 use Core\Enums\HttpMethod;
 use Core\Http\Routing\Attributes\Route;

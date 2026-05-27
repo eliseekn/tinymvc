@@ -330,12 +330,12 @@ class Rules
         return "regex:$pattern";
     }
 
-    public static function requiredIfField(string $field, $value): string
+    public static function requiredIfField(string $field, string|array $value): string
     {
         return "required_if:$field,".implode(',', parse_array($value));
     }
 
-    public static function requiredUnless(string $field, $value): string
+    public static function requiredUnless(string $field, string|array $value): string
     {
         return "required_unless:$field,".implode(',', parse_array($value));
     }

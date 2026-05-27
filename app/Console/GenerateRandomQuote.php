@@ -26,8 +26,7 @@ class GenerateRandomQuote extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $client = Client::get('https://zenquotes.io/api/random');
-        $response = $client->getBodyAsJson();
+        $response = Client::get('https://zenquotes.io/api/random')->getBodyAsJson();
 
         $output->writeln(sprintf('"%s" %s', '<fg=blue;options=bold>'.$response[0]['q'].'</>', '<fg=white;options=bold>'.$response[0]['a'].'</>'));
 

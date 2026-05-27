@@ -16,6 +16,8 @@ use Core\Database\Metrics\Metrics;
 use Core\Exceptions\InvalidSQLQueryException;
 use Core\Notification\Notifiable;
 use Core\Observer\Observer;
+use Core\Policy\Policy;
+use Core\Policy\PolicyInterface;
 
 /**
  * Manage database models.
@@ -359,5 +361,10 @@ class Model
         }
 
         return $table.'_id';
+    }
+
+    public function authorize(PolicyInterface $policy): Policy
+    {
+        return Policy::authorize($policy, $this);
     }
 }

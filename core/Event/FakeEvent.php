@@ -31,7 +31,7 @@ class FakeEvent
         $names = parse_array($name);
         $dispatched = static::dispatchedEvents();
 
-        foreach ($names as $name) {
+        foreach ($names as $_name) {
             if (in_array($name, static::events())) {
                 $dispatched[] = $name;
             }

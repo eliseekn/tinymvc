@@ -11,11 +11,17 @@ declare(strict_types=1);
 
 namespace Core\Event;
 
+use Core\Event\Events\ModelNotFound\ModelNotFoundEvent;
+use Core\Event\Events\ModelNotFound\SendNotFoundResponse;
 use PHPUnit\Framework\Assert;
 
 class Event
 {
-    protected static array $events = [];
+    protected static array $events = [
+        ModelNotFoundEvent::class => [
+            SendNotFoundResponse::class,
+        ],
+    ];
 
     public static function load(): void
     {
@@ -50,7 +56,7 @@ class Event
     {
         $names = parse_array($name);
 
-        foreach ($names as $name) {
+        foreach ($names as $_name) {
             Assert::assertTrue(
                 in_array($name, FakeEvent::dispatchedEvents()),
             );
@@ -63,7 +69,7 @@ class Event
     {
         $names = parse_array($name);
 
-        foreach ($names as $name) {
+        foreach ($names as $_name) {
             Assert::assertFalse(
                 in_array($name, FakeEvent::dispatchedEvents()),
             );

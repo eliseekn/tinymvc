@@ -15,9 +15,7 @@ use Exception as BaseException;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
 
-class Exception extends BaseException
-{
-}
+class Exception extends BaseException {}
 
 /**
  * Register Whoops.

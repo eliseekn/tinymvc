@@ -32,7 +32,7 @@ class DashboardController extends Controller
     ]
     public function __invoke(User $user): void
     {
-        $period = request()->queries('period', 'day');
+        $period = request()->queries()->get('period', 'day');
 
         if (str_contains($period, '~')) {
             $period = explode('~', $period, 2);

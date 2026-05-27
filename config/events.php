@@ -14,8 +14,6 @@ use App\Events\UserCreated\UserCreatedEvent;
 use App\Events\UserRegistered\SendAdminNotification;
 use App\Events\UserRegistered\SendWelcomeNotification;
 use App\Events\UserRegistered\UserRegisteredEvent;
-use Core\Event\Events\ModelNotFound\ModelNotFoundEvent;
-use Core\Event\Events\ModelNotFound\SendNotFoundResponse;
 
 /*
  * Events listeners
@@ -29,9 +27,5 @@ return [
 
     UserCreatedEvent::class => [
         SendUserPasswordNotification::class,
-    ],
-
-    ModelNotFoundEvent::class => [
-        SendNotFoundResponse::class,
     ],
 ];

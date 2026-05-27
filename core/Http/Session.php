@@ -35,7 +35,7 @@ class Session
         session_regenerate_id(true);
     }
 
-    public function create(string $name, $data): void
+    public function create(string $name, mixed $data): void
     {
         $_SESSION[strtolower(config('app.name')).'_'.$name] = $data;
     }
@@ -73,7 +73,7 @@ class Session
     /**
      * Add data to session or create if empty.
      */
-    public function push(string $name, $data, $default = null): void
+    public function push(string $name, mixed $data, $default = null): void
     {
         $stored_data = $this->get($name, $default);
 

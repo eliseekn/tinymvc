@@ -23,6 +23,8 @@ use Exception;
  */
 class Request
 {
+    public array $attributes;
+
     public function headers(?string $key = null, $default = null): mixed
     {
         $header = is_null($key) ? $_SERVER : ($_SERVER[$key] ?? '');
@@ -47,7 +49,16 @@ class Request
         return $this->headers('HTTP_HOST', '');
     }
 
-    public function queries(?string $key = null, $default = null): array|string|int|bool|null
+    public function get(?string $key = null, $default = null): Uploader|array|string|int|bool|null
+    {
+        if (is_null($key)) {
+            return $this->attributes;
+        }
+
+        return empty($this->attributes[$key]) ? $default : $this->attributes[$key];
+    }
+
+    public function queries(): self
     {
         $result = $_GET;
 
@@ -57,14 +68,12 @@ class Request
             }
         }
 
-        if (is_null($key)) {
-            return $result;
-        }
+        $this->attributes = $result;
 
-        return empty($result[$key]) ? $default : $result[$key];
+        return $this;
     }
 
-    public function inputs(?string $key = null, $default = null): array|string|int|null
+    public function inputs(): self
     {
         $result = array_merge($_POST, $this->raw());
 
@@ -74,11 +83,9 @@ class Request
             }
         }
 
-        if (is_null($key)) {
-            return $result;
-        }
+        $this->attributes = $result;
 
-        return empty($result[$key]) ? $default : $result[$key];
+        return $this;
     }
 
     public function files(string $input, array $allowed_extensions = []): Uploader|array
@@ -192,25 +199,13 @@ class Request
         return $this->headers('REMOTE_ADDR', '');
     }
 
-    public function hasQuery(array|string $items): bool
+    public function has(array|string $items): bool
     {
         $items = parse_array($items);
         $result = false;
 
         foreach ($items as $item) {
-            $result = ! is_null($this->queries($item));
-        }
-
-        return $result;
-    }
-
-    public function hasInput(array|string $items): bool
-    {
-        $items = parse_array($items);
-        $result = false;
-
-        foreach ($items as $item) {
-            $result = ! is_null($this->inputs($item));
+            $result = ! is_null($this->attributes[$item]);
         }
 
         return $result;
@@ -219,27 +214,27 @@ class Request
     public function filled(array|string $items): bool
     {
         $items = parse_array($items);
-        $result = $this->hasInput($items);
+        $result = $this->has($items);
 
         if (! $result) {
             return false;
         }
 
         foreach ($items as $item) {
-            $result = ! empty($this->inputs($item));
+            $result = ! empty($this->attributes[$item]);
         }
 
         return $result;
     }
 
-    public function setInput(string $item, $value): void
+    public function setInput(string $item, mixed $value): void
     {
         if (isset($_POST[$item])) {
             $_POST[$item] = $value;
         }
     }
 
-    public function setQuery(string $item, $value): void
+    public function setQuery(string $item, mixed $value): void
     {
         if (isset($_GET[$item])) {
             $_GET[$item] = $value;
@@ -252,8 +247,8 @@ class Request
         $result = [];
 
         foreach ($items as $item) {
-            if ($this->hasInput($item)) {
-                $result = array_merge($result, [$item => $this->inputs($item)]);
+            if ($this->has($item)) {
+                $result = array_merge($result, [$item => $this->attributes[$item]]);
             }
         }
 
@@ -265,14 +260,14 @@ class Request
         $items = parse_array($items);
         $result = [];
 
-        if (empty($this->inputs())) {
+        if (empty($this->attributes)) {
             return $result;
         }
 
         foreach ($items as $item) {
-            foreach ($this->inputs() as $key => $input) {
+            foreach ($this->attributes as $key => $attribute) {
                 if ($item !== $key) {
-                    $result = array_merge($result, [$key => $input]);
+                    $result = array_merge($result, [$key => $attribute]);
                 }
             }
         }

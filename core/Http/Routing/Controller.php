@@ -18,8 +18,6 @@ use Core\Exceptions\InvalidResponseDataException;
 
 class Controller
 {
-    public function __construct() {}
-
     public function redirectToUrl(string $uri, array $queries = []): void
     {
         response()->url($uri, $queries)->send();

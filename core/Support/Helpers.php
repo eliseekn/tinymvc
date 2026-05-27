@@ -277,7 +277,7 @@ if (! function_exists('route_parameters_to_regex')) {
     /**
      * @throws RouteException
      */
-    function route_parameters_to_regex(string $route, array $routeParams, &$result): string
+    function route_parameters_to_regex(string $route, array $routeParams, array &$result): string
     {
         $result = [];
 

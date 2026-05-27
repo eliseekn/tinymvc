@@ -126,7 +126,7 @@ class Router
         }
 
         foreach ($routes as $route => $options) {
-            $request_method = request()->inputs('_method', request()->method());
+            $request_method = request()->inputs()->get('_method', request()->method());
             request()->method($request_method);
             $params = [];
 

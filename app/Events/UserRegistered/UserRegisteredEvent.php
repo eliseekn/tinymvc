@@ -19,7 +19,5 @@ class UserRegisteredEvent implements EventInterface
 {
     use Dispatchable;
 
-    public function __construct(public Model $user)
-    {
-    }
+    public function __construct(public Model $user) {}
 }
