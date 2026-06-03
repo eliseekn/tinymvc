@@ -12,15 +12,15 @@ declare(strict_types=1);
 namespace App\UseCases\User;
 
 use App\Helpers\FileUploadHelper;
+use Core\Database\Model;
 use Core\Support\Alert;
 
 final class UpdateUseCase
 {
     public function __construct(private readonly FileUploadHelper $fileUploadHelper) {}
 
-    public function handle(array $data): void
+    public function handle(array $data, Model $user): void
     {
-        $user = auth();
         $file = request()->files('avatar', ['png', 'jpg', 'jpeg']);
 
         if (! $this->fileUploadHelper->handle($file)) {

@@ -11,13 +11,15 @@ declare(strict_types=1);
 
 namespace App\UseCases\User;
 
+use App\Policies\ProfilePolicy;
+use Core\Database\Model;
 use Core\Support\Alert;
 
 final class DeleteAvatarUseCase
 {
-    public function handle(): void
+    public function handle(Model $user): void
     {
-        $user = auth();
+        $user->authorize(new ProfilePolicy)->onDelete();
 
         if (! storage(config('storage.uploads'))->deleteFile($user->get('avatar'))) {
             Alert::toast('Failed to delete avatar')->error();
