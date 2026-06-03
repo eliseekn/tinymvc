@@ -24,14 +24,14 @@ final class VerifyUseCase
 {
     public function handle(): void
     {
-        if (! request()->hasQuery(['email', 'token'])) {
+        if (! request()->queries()->has(['email', 'token'])) {
             response()->data(__('alert.bad_request'))->send(HttpCode::BAD_REQUEST);
         }
 
-        $email = request()->queries('email');
+        $email = request()->queries()->get('email');
         $token = Token::findByDescription($email, TokenDescription::EMAIL_VERIFICATION->value);
 
-        if (! $token || $token->get('value') !== request()->queries('token')) {
+        if (! $token || $token->get('value') !== request()->queries()->get('token')) {
             response()->data(__('alert.invalid_password_reset_link'))->send(HttpCode::BAD_REQUEST);
         }
 

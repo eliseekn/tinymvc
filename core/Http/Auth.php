@@ -32,7 +32,7 @@ class Auth
     public static function attempt(?Model &$user): bool
     {
         session()->push('auth_attempts', 1, 0);
-        $credentials = request()->only([config('security.auth.identifier'), 'password']);
+        $credentials = request()->inputs()->only([config('security.auth.identifier'), 'password']);
 
         if (! self::checkCredentials($credentials[config('security.auth.identifier')], $credentials['password'], $user)) {
             if (config('security.auth.max_attempts') > 0 && self::getAttempts() >= config('security.auth.max_attempts')) {
