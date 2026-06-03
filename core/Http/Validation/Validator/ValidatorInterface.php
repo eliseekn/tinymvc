@@ -19,7 +19,7 @@ interface ValidatorInterface
 
     public function errors();
 
-    public function inputs();
+    public function validated();
 
     public function rules();
 
@@ -28,4 +28,12 @@ interface ValidatorInterface
     public function validationSucceeded();
 
     public function validationFailed();
+
+    public function authorize();
+
+    public function beforeValidation();
+
+    public function afterValidation();
+
+    public static function make(array $rules = [], array $messages = []);
 }
