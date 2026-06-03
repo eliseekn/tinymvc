@@ -49,7 +49,7 @@ class Request
         return $this->headers('HTTP_HOST', '');
     }
 
-    public function get(?string $key = null, $default = null): Uploader|array|string|int|bool|null
+    public function get(?string $key = null, $default = null): array|string|int|bool|null
     {
         if (is_null($key)) {
             return $this->attributes;
