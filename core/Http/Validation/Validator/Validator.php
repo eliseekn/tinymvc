@@ -27,12 +27,15 @@ class Validator implements ValidatorInterface
 
     protected RakitValidator $validator;
 
+    protected array $inputs;
+
     public function __construct(
         protected array $rules = [],
         protected array $messages = [],
     ) {
         $this->validator = new RakitValidator;
         $rules = Discover::in(config('storage.rules'))->classes()->get();
+        $this->inputs = request()->inputs()->get();
 
         if (! empty($rules)) {
             foreach ($rules as $rule) {
@@ -50,6 +53,21 @@ class Validator implements ValidatorInterface
         return new static($rules, $messages);
     }
 
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    public function beforeValidation(): array
+    {
+        return [];
+    }
+
+    public function afterValidation(): array
+    {
+        return [];
+    }
+
     public function validate(): self
     {
         if (empty($this->rules)) {
@@ -60,10 +78,9 @@ class Validator implements ValidatorInterface
             $this->messages = $this->messages();
         }
 
-        $this->validation = $this->validator->make(
-            request()->inputs()->get(),
-            $this->rules,
-        );
+        $this->inputs = array_merge($this->inputs, $this->beforeValidation());
+
+        $this->validation = $this->validator->make($this->inputs, $this->rules);
 
         $this->formatErrorMessages();
 
@@ -88,9 +105,10 @@ class Validator implements ValidatorInterface
         return $this->validation->errors()->firstOfAll(dotNotation: true);
     }
 
-    public function inputs(string|array|null $name = null): array|string|null
+    public function validated(string|array|null $name = null): array|string|null
     {
         $inputs = $this->validation->getValidatedData();
+        $inputs = array_merge($inputs, $this->afterValidation());
 
         if (is_null($name)) {
             return $inputs;
