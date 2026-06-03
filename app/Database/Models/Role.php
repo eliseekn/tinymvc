@@ -51,8 +51,8 @@ class Role extends Model
 
     public static function findAllPaginate(): Pagination
     {
-        $perPage = (int) request()->queries('per_page', 10);
-        $page = (int) request()->queries('page', 1);
+        $perPage = (int) request()->queries()->get('per_page', 10);
+        $page = (int) request()->queries()->get('page', 1);
 
         return self::query()
             ->select(['roles.*', 'COUNT(users.id) AS users'])

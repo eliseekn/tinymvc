@@ -65,9 +65,9 @@ class User extends Model
     public static function findAllPaginate(): Pagination
     {
         $userId = auth()?->getId();
-        $perPage = (int) request()->queries('per_page', 10);
-        $page = (int) request()->queries('page', 1);
-        $search = request()->queries('search');
+        $perPage = (int) request()->queries()->get('per_page', 10);
+        $page = (int) request()->queries()->get('page', 1);
+        $search = request()->queries()->get('search');
 
         return self::query()
             ->select(['users.*', 'roles.name AS role'])
