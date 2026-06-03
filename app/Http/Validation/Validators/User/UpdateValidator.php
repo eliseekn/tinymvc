@@ -26,16 +26,18 @@ class UpdateValidator extends Validator
         return Rules::add('name', [Rules::sometimes(), Rules::max(255)])
             ->add('email', [
                 Rules::sometimes(),
+                Rules::required(),
                 Rules::email(),
                 Rules::max(255),
                 Rules::custom(new Unique, [
                     'users',
                     'id',
-                    request()->routeParam('user'),
+                    (int) request()->routeParam('user'),
                 ]),
             ])
             ->add('role_id', [
                 Rules::sometimes(),
+                Rules::required(),
                 Rules::custom(new Exists, ['roles', 'id']),
             ])
             ->make();

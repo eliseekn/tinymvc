@@ -21,6 +21,10 @@ class UpdateValidator extends Validator
      */
     public function rules(): array
     {
-        return Rules::add('name', [Rules::sometimes(), Rules::max(255)])->make();
+        return Rules::add('name', [
+            Rules::sometimes(),
+            Rules::required(),
+            Rules::max(255),
+        ])->make();
     }
 }

@@ -18,6 +18,11 @@ use Core\Http\Validation\Validator\Validator;
 
 class UpdateProfileValidator extends Validator
 {
+    public function authorize(): bool
+    {
+        return (int) request()->routeParam('user') === auth()->getId();
+    }
+
     /**
      * Validation rules
      */
@@ -26,19 +31,20 @@ class UpdateProfileValidator extends Validator
         return Rules::add('name', [Rules::sometimes(), Rules::max(255)])
             ->add('email', [
                 Rules::sometimes(),
+                Rules::required(),
                 Rules::email(),
                 Rules::max(255),
                 Rules::custom(new Unique, [
                     'users',
                     'id',
-                    auth()->getId(),
+                    (int) request()->routeParam('user'),
                 ]),
             ])
             ->add('password', [
                 Rules::sometimes(),
+                Rules::required(),
                 Rules::between(8, 10),
                 Rules::custom(new Password),
-
             ])
             ->make();
     }
