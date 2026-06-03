@@ -14,7 +14,6 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Middlewares\Authenticated;
 use App\Http\Middlewares\EmailVerified;
 use App\Http\Validation\Validators\UpdateProfileValidator;
-use App\Policies\ProfilePolicy;
 use App\UseCases\User\DeleteAvatarUseCase;
 use App\UseCases\User\UpdateUseCase;
 use Core\Database\Model;
@@ -41,9 +40,7 @@ class ProfileController extends Controller
     )]
     public function update(UpdateUseCase $useCase, UpdateProfileValidator $validator, Model $user): void
     {
-        $user->authorize(new ProfilePolicy)->onUpdate();
-
-        $useCase->handle($validator->inputs());
+        $useCase->handle($validator->validated(), $user);
     }
 
     #[Route(
@@ -56,8 +53,6 @@ class ProfileController extends Controller
     )]
     public function deleteAvatar(DeleteAvatarUseCase $useCase, Model $user): void
     {
-        $user->authorize(new ProfilePolicy)->onDelete();
-
-        $useCase->handle();
+        $useCase->handle($user);
     }
 }

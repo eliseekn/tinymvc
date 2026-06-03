@@ -55,7 +55,7 @@ class UserController extends Controller
     #[Route(HttpMethod::POST, '/api/v1/users', [ApiAuth::class, CheckIfUserAdmin::class])]
     public function store(StoreUseCase $useCase, StoreValidator $validator): void
     {
-        $useCase->handle($validator->inputs());
+        $useCase->handle($validator->validated());
     }
 
     #[Route(
@@ -67,7 +67,7 @@ class UserController extends Controller
     )]
     public function update(UpdateUseCase $useCase, UpdateValidator $validator, Model $user): void
     {
-        $useCase->handle($validator->inputs(), $user);
+        $useCase->handle($validator->validated(), $user);
     }
 
     #[Route(

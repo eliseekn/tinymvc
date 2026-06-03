@@ -11,9 +11,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\v1\Auth;
 
+use App\Http\Validation\Validators\Auth\EmailValidator;
 use App\UseCases\Api\v1\VerifyEmailUseCase;
 use App\UseCases\EmailVerification\NotifyUseCase;
-use App\Http\Validation\Validators\Auth\EmailValidator;
 use Core\Enums\HttpCode;
 use Core\Enums\HttpMethod;
 use Core\Enums\ResponseStatus;
@@ -25,7 +25,7 @@ class EmailVerificationController extends Controller
     #[Route(HttpMethod::POST, '/api/v1/email/notify')]
     public function notify(EmailValidator $validator, NotifyUseCase $useCase): void
     {
-        if ($useCase->handle($validator->inputs('email'))) {
+        if ($useCase->handle($validator->validated('email'))) {
             response()->json([
                 'status' => ResponseStatus::SUCCESS,
                 'message' => __('alert.email_verification_link_sent'),

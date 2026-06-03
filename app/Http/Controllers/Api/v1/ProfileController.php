@@ -13,9 +13,8 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Middlewares\ApiAuth;
 use App\Http\Middlewares\CheckIfUserAdmin;
-use App\Http\Validation\Validators\User\UpdateValidator;
-use App\Policies\ProfilePolicy;
-use App\UseCases\Api\v1\User\DeleteUseCase;
+use App\Http\Validation\Validators\UpdateProfileValidator;
+use App\UseCases\Api\v1\User\DeleteAvatarUseCase;
 use App\UseCases\Api\v1\User\UpdateUseCase;
 use Core\Database\Model;
 use Core\Enums\HttpMethod;
@@ -32,11 +31,9 @@ class ProfileController extends Controller
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
-    public function update(UpdateUseCase $useCase, UpdateValidator $validator, Model $user): void
+    public function update(UpdateUseCase $useCase, UpdateProfileValidator $validator, Model $user): void
     {
-        $user->authorize(new ProfilePolicy)->onUpdate();
-
-        $useCase->handle($validator->inputs(), $user);
+        $useCase->handle($validator->validated(), $user);
     }
 
     #[Route(
@@ -46,10 +43,8 @@ class ProfileController extends Controller
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
-    public function delete(DeleteUseCase $useCase, Model $user): void
+    public function delete(DeleteAvatarUseCase $useCase, Model $user): void
     {
-        $user->authorize(new ProfilePolicy)->onDelete();
-
         $useCase->handle($user);
     }
 }

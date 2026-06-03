@@ -13,8 +13,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Middlewares\RedirectAfterLogin;
 use App\Http\Middlewares\RememberUser;
-use App\UseCases\Auth\LoginUseCase;
 use App\Http\Validation\Validators\Auth\LoginValidator;
+use App\UseCases\Auth\LoginUseCase;
 use Core\Enums\HttpMethod;
 use Core\Http\Routing\Attributes\Route;
 use Core\Http\Routing\Controller;
@@ -34,6 +34,6 @@ class LoginController extends Controller
     #[Route(HttpMethod::POST, '/login')]
     public function login(LoginUseCase $useCase, LoginValidator $validator): void
     {
-        $useCase->handle($validator->inputs());
+        $useCase->handle($validator->validated());
     }
 }

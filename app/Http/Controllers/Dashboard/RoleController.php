@@ -15,10 +15,10 @@ use App\Database\Models\Role;
 use App\Http\Middlewares\Authenticated;
 use App\Http\Middlewares\CheckIfUserAdmin;
 use App\Http\Middlewares\EmailVerified;
-use App\UseCases\Role\GetCollectionUseCase;
-use App\UseCases\Role\StoreUseCase;
 use App\Http\Validation\Validators\Role\StoreValidator;
 use App\Http\Validation\Validators\Role\UpdateValidator;
+use App\UseCases\Role\GetCollectionUseCase;
+use App\UseCases\Role\StoreUseCase;
 use Core\Database\Model;
 use Core\Enums\HttpMethod;
 use Core\Enums\RouteParameter;
@@ -60,7 +60,7 @@ class RoleController extends Controller
     )]
     public function store(StoreUseCase $useCase, StoreValidator $validator): void
     {
-        $useCase->handle($validator->inputs());
+        $useCase->handle($validator->validated());
     }
 
     #[Route(
@@ -89,7 +89,7 @@ class RoleController extends Controller
     )]
     public function update(UpdateValidator $validator, Model $role): void
     {
-        if (! $role->set($validator->inputs())->save()) {
+        if (! $role->set($validator->validated())->save()) {
             Alert::toast('Failed to update role')->error();
         }
 

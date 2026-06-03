@@ -27,7 +27,7 @@ class AuthController extends Controller
     public function login(LoginUseCase $useCase, LoginValidator $validator): void
     {
         try {
-            $data = $useCase->handle($validator->inputs());
+            $data = $useCase->handle($validator->validated());
 
             $this->jsonResponse([
                 'status' => ResponseStatus::SUCCESS,
@@ -54,6 +54,6 @@ class AuthController extends Controller
 
     public function register(RegisterUseCase $useCase, NotifyUseCase $notifyUseCase, RegisterValidator $valitator): void
     {
-        $useCase->handle($valitator->inputs(), $notifyUseCase);
+        $useCase->handle($valitator->validated(), $notifyUseCase);
     }
 }

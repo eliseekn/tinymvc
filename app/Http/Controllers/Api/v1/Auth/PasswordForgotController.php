@@ -11,11 +11,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\v1\Auth;
 
+use App\Http\Validation\Validators\Auth\EmailValidator;
+use App\Http\Validation\Validators\Auth\UpdatePasswordValidator;
 use App\UseCases\Api\v1\ResetPasswordUseCase;
 use App\UseCases\PasswordReset\NotifyUseCase;
 use App\UseCases\PasswordReset\UpdatePasswordUseCase;
-use App\Http\Validation\Validators\Auth\EmailValidator;
-use App\Http\Validation\Validators\Auth\UpdatePasswordValidator;
 use Core\Enums\HttpCode;
 use Core\Enums\HttpMethod;
 use Core\Enums\ResponseStatus;
@@ -30,7 +30,7 @@ class PasswordForgotController extends Controller
     #[Route(HttpMethod::POST, '/api/v1/password/notify')]
     public function notify(EmailValidator $validator, NotifyUseCase $useCase): void
     {
-        if ($useCase->handle($validator->inputs('email'))) {
+        if ($useCase->handle($validator->validated('email'))) {
             response()->json([
                 'status' => ResponseStatus::SUCCESS,
                 'message' => __('alert.password_reset_link_sent'),
@@ -52,7 +52,7 @@ class PasswordForgotController extends Controller
     #[Route(HttpMethod::POST, '/api/v1/password/update')]
     public function update(UpdatePasswordUseCase $useCase, UpdatePasswordValidator $validator): void
     {
-        if (! $useCase->handle($validator->inputs())) {
+        if (! $useCase->handle($validator->validated())) {
             response()->json([
                 'status' => ResponseStatus::ERROR,
                 'message' => __('alert.password_not_reset'),

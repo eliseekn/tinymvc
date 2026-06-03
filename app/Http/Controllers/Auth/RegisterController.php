@@ -12,9 +12,9 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Middlewares\RememberUser;
+use App\Http\Validation\Validators\Auth\RegisterValidator;
 use App\UseCases\Auth\RegisterUseCase;
 use App\UseCases\EmailVerification\NotifyUseCase;
-use App\Http\Validation\Validators\Auth\RegisterValidator;
 use Core\Enums\HttpMethod;
 use Core\Http\Auth;
 use Core\Http\Routing\Attributes\Route;
@@ -35,6 +35,6 @@ class RegisterController extends Controller
     #[Route(HttpMethod::POST)]
     public function register(RegisterUseCase $useCase, NotifyUseCase $notifyUseCase, RegisterValidator $validator): void
     {
-        $useCase->handle($validator->inputs(), $notifyUseCase);
+        $useCase->handle($validator->validated(), $notifyUseCase);
     }
 }

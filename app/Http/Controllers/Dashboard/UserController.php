@@ -62,7 +62,7 @@ class UserController extends Controller
     )]
     public function store(StoreUseCase $useCase, StoreValidator $validator): void
     {
-        $useCase->handle($validator->inputs());
+        $useCase->handle($validator->validated());
     }
 
     #[Route(
@@ -91,7 +91,7 @@ class UserController extends Controller
     )]
     public function update(UpdateValidator $validator, Model $user): void
     {
-        if (! $user->set($validator->inputs())->save()) {
+        if (! $user->set($validator->validated())->save()) {
             Alert::toast('Failed to update user')->error();
         }
 
