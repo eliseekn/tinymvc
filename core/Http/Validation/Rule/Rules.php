@@ -35,14 +35,34 @@ class Rules
         return 'required';
     }
 
-    public static function requiredWithAll(): string
+    public static function requiredIf(string $field, string|array $value): string
     {
-        return 'required_with_all';
+        return "required_if:$field,".implode(',', parse_array($value));
     }
 
-    public static function requiredWithoutAll(): string
+    public static function requiredWithAll(array $fields): string
     {
-        return 'required_without_all';
+        return 'required_with_all:'.implode(',', parse_array($fields));
+    }
+
+    public static function requiredWithoutAll(array $fields): string
+    {
+        return 'required_without_all:'.implode(',', parse_array($fields));
+    }
+
+    public static function requiredUnless(string $field, string|array $value): string
+    {
+        return "required_unless:$field,".implode(',', parse_array($value));
+    }
+
+    public static function requiredWith(array $fields): string
+    {
+        return 'required_with:'.implode(',', $fields);
+    }
+
+    public static function requiredWithout(array $fields): string
+    {
+        return 'required_without:'.implode(',', $fields);
     }
 
     public static function email(): string
@@ -128,11 +148,6 @@ class Rules
     public static function betweenConst(): string
     {
         return 'between';
-    }
-
-    public static function booleanConst(): string
-    {
-        return 'boolean';
     }
 
     public static function dateConst(): string
@@ -290,9 +305,9 @@ class Rules
         return 'not_in:'.implode(',', $data);
     }
 
-    public static function boolean(bool $strict = false): string
+    public static function boolean(): string
     {
-        return $strict ? 'boolean:strict' : 'boolean';
+        return 'boolean';
     }
 
     public static function max(int $value): string
@@ -328,26 +343,6 @@ class Rules
     public static function regex(string $pattern): string
     {
         return "regex:$pattern";
-    }
-
-    public static function requiredIfField(string $field, string|array $value): string
-    {
-        return "required_if:$field,".implode(',', parse_array($value));
-    }
-
-    public static function requiredUnless(string $field, string|array $value): string
-    {
-        return "required_unless:$field,".implode(',', parse_array($value));
-    }
-
-    public static function requiredWith(array $fields): string
-    {
-        return 'required_with:'.implode(',', $fields);
-    }
-
-    public static function requiredWithout(array $fields): string
-    {
-        return 'required_without:'.implode(',', $fields);
     }
 
     public static function same(string $field): string
