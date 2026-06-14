@@ -12,26 +12,18 @@ declare(strict_types=1);
 namespace App\UseCases\Auth;
 
 use App\Database\Models\User;
+use App\Exceptions\InvalidCredentialsException;
+use Core\Database\Model;
 use Core\Http\Auth;
-use Core\Support\Alert;
 
 final class LoginUseCase
 {
-    public function handle(array $data): void
+    public function handle(array $data, ?Model &$user): void
     {
         $user = User::findByEmail($data['email']);
 
-        if (Auth::attempt($user)) {
-            Alert::toast(__('alert.welcome', ['name' => $user->get('name')]))->success();
-            response()->url('/dashboard')->send();
+        if (! Auth::attempt($user)) {
+            throw new InvalidCredentialsException;
         }
-
-        Alert::default(__('alert.login_failed'))->error();
-
-        response()
-            ->url('/login')
-            ->withInputs($data)
-            ->withErrors([__('alert.login_failed')])
-            ->send();
     }
 }

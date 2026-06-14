@@ -11,7 +11,8 @@ declare(strict_types=1);
 
 namespace App\Http\Middlewares;
 
-use Core\Support\Alert;
+use Core\Enums\Alert\MessageType;
+use Core\Http\Response\RedirectResponse;
 
 /**
  * Check if email has been verified.
@@ -21,11 +22,10 @@ class EmailVerified
     public function handle(): void
     {
         if (config('security.auth.email_verification') && is_null(auth()->get('email_verified_at'))) {
-            Alert::default(__('alert.email_not_verified'))->error();
-
-            response()
+            new RedirectResponse()
                 ->url('/email/notify')
                 ->intended(request()->fullUri())
+                ->withAlert(MessageType::ERROR, __('alert.email_not_verified'))
                 ->send();
         }
     }

@@ -11,12 +11,10 @@ declare(strict_types=1);
 
 namespace Core\Http;
 
-use Core\Exceptions\RouteException;
 use Core\Http\Routing\Route;
 use Core\Http\Validation\Validator\Validator;
 use Core\Support\File;
 use Core\Support\Uploader;
-use Exception;
 
 /**
  * Handle HTTP requests.
@@ -24,6 +22,11 @@ use Exception;
 class Request
 {
     public array $attributes;
+
+    public function __construct()
+    {
+        new Session;
+    }
 
     public function headers(?string $key = null, $default = null): mixed
     {
@@ -158,9 +161,6 @@ class Request
         return $uri;
     }
 
-    /**
-     * @throws RouteException
-     */
     public function routeParam(string $name): mixed
     {
         $result = [];
@@ -362,9 +362,6 @@ class Request
         return $data;
     }
 
-    /**
-     * @throws Exception
-     */
     public function validate(array $rules = [], array $messages = []): Validator
     {
         return Validator::make($rules, $messages)->validate();

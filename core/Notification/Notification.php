@@ -11,12 +11,14 @@ declare(strict_types=1);
 
 namespace Core\Notification;
 
-use Core\Exceptions\NotificationNotSentException;
+use Core\Exceptions\CoreException;
 use PHPUnit\Framework\Assert;
 
 class Notification
 {
-    public function __construct(public NotificationInterface $notifiable) {}
+    public function __construct(public NotificationInterface $notifiable)
+    {
+    }
 
     public static function send(NotificationInterface $notifiable): self
     {
@@ -24,9 +26,6 @@ class Notification
         return new static($notifiable);
     }
 
-    /**
-     * @throws NotificationNotSentException
-     */
     public function to(string|array $recipient): void
     {
         if (array_key_exists($this->notifiable::class, FakeNotification::notifications())) {
@@ -38,7 +37,7 @@ class Notification
         $this->notifiable->to($recipient);
 
         if (! $this->notifiable->send()) {
-            throw new NotificationNotSentException;
+            throw new CoreException('Failed to send notification');
         }
     }
 

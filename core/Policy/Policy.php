@@ -15,10 +15,14 @@ use Core\Database\Model;
 use Core\Enums\HttpCode;
 use Core\Enums\ResponseStatus;
 use Core\Enums\RouteName;
+use Core\Http\Response\JsonResponse;
+use Core\Http\Response\ViewResponse;
 
 class Policy
 {
-    public function __construct(private PolicyInterface $policy, private Model $model) {}
+    public function __construct(private PolicyInterface $policy, private Model $model)
+    {
+    }
 
     public static function authorize(PolicyInterface $policy, Model $model): self
     {
@@ -66,13 +70,13 @@ class Policy
 
         if (! $result) {
             if (request()->isJson()) {
-                response()->json([
+                new JsonResponse([
                     'status' => ResponseStatus::ERROR,
                     'message' => 'Unauthorized',
-                ])->send(HttpCode::FORBIDDEN);
+                ], HttpCode::FORBIDDEN)->send();
             }
 
-            response()->view(config('errors.views.403'))->send(HttpCode::FORBIDDEN);
+            new ViewResponse(config('errors.views.403'))->send();
         }
     }
 }

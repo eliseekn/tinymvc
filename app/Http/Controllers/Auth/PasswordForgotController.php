@@ -16,10 +16,11 @@ use App\Http\Validation\Validators\Auth\UpdatePasswordValidator;
 use App\UseCases\PasswordReset\NotifyUseCase;
 use App\UseCases\PasswordReset\ResetUseCase;
 use App\UseCases\PasswordReset\UpdatePasswordUseCase;
+use Core\Enums\Alert\MessageType;
 use Core\Enums\HttpMethod;
+use Core\Http\Response\BaseResponse;
 use Core\Http\Routing\Attributes\Route;
 use Core\Http\Routing\Controller;
-use Core\Support\Alert;
 
 /**
  * Manage password forgot.
@@ -27,32 +28,39 @@ use Core\Support\Alert;
 class PasswordForgotController extends Controller
 {
     #[Route(HttpMethod::POST, '/password/notify')]
-    public function notify(EmailValidator $validator, NotifyUseCase $useCase): void
+    public function notify(EmailValidator $validator, NotifyUseCase $useCase): BaseResponse
     {
-        if ($useCase->handle($validator->validated('email'))) {
-            Alert::default(__('alert.password_reset_link_sent'))->success();
-        } else {
-            Alert::default(__('alert.password_reset_link_not_sent'))->success();
-        }
+        $useCase->handle($validator->validated('email'));
 
-        $this->redirectBack();
+        return $this
+            ->redirectResponse()
+            ->toBack()
+            ->withAlert(MessageType::SUCCESS, __('alert.password_reset_link_sent'));
     }
 
     #[Route(HttpMethod::GET, '/password/reset')]
-    public function reset(ResetUseCase $useCase): void
+    public function reset(ResetUseCase $useCase): BaseResponse
     {
         $useCase->handle();
+
+        return $this->viewResponse('auth.password.new', [
+            'email' => request()->queries()->get('email'),
+        ]);
     }
 
     #[Route(HttpMethod::POST, '/password/update')]
-    public function update(UpdatePasswordUseCase $useCase, UpdatePasswordValidator $validator): void
+    public function update(UpdatePasswordUseCase $useCase, UpdatePasswordValidator $validator): BaseResponse
     {
         if (! $useCase->handle($validator->validated())) {
-            Alert::default(__('alert.password_not_reset'))->error();
-            response()->back()->send();
+            return $this
+                ->redirectResponse()
+                ->toBack()
+                ->withAlert(MessageType::ERROR, __('alert.password_not_reset'));
         }
 
-        Alert::default(__('alert.password_reset'))->success();
-        response()->url('/login')->send();
+        return $this
+            ->redirectResponse()
+            ->toUrl('/login')
+            ->withAlert(MessageType::SUCCESS, __('alert.password_reset'));
     }
 }

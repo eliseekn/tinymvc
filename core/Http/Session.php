@@ -75,22 +75,22 @@ class Session
      */
     public function push(string $name, mixed $data, $default = null): void
     {
-        $stored_data = $this->get($name, $default);
+        $storedData = $this->get($name, $default);
 
-        if (empty($stored_data)) {
-            $stored_data = $data;
+        if (empty($storedData)) {
+            $storedData = $data;
         } else {
-            if (is_array($stored_data)) {
-                $stored_data = array_merge($stored_data, $data);
-            } elseif (is_string($stored_data)) {
-                $stored_data .= $data;
-            } elseif (is_numeric($stored_data)) {
-                $stored_data += $data;
-            } elseif (is_object($stored_data)) {
-                $stored_data = (object) array_merge((array) $stored_data, (array) $data);
+            if (is_array($storedData)) {
+                $storedData = array_merge($storedData, $data);
+            } elseif (is_string($storedData)) {
+                $storedData .= $data;
+            } elseif (is_numeric($storedData)) {
+                $storedData += $data;
+            } elseif (is_object($storedData)) {
+                $storedData = (object) array_merge((array) $storedData, (array) $data);
             }
         }
 
-        $_SESSION[strtolower(config('app.name')).'_'.$name] = $stored_data;
+        $_SESSION[strtolower(config('app.name')).'_'.$name] = $storedData;
     }
 }

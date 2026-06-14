@@ -14,33 +14,26 @@ namespace App\Http\Controllers\Api\v1\Auth;
 use App\Http\Validation\Validators\Auth\EmailValidator;
 use App\UseCases\Api\v1\VerifyEmailUseCase;
 use App\UseCases\EmailVerification\NotifyUseCase;
-use Core\Enums\HttpCode;
 use Core\Enums\HttpMethod;
-use Core\Enums\ResponseStatus;
+use Core\Http\Response\BaseResponse;
 use Core\Http\Routing\Attributes\Route;
 use Core\Http\Routing\Controller;
 
 class EmailVerificationController extends Controller
 {
     #[Route(HttpMethod::POST, '/api/v1/email/notify')]
-    public function notify(EmailValidator $validator, NotifyUseCase $useCase): void
+    public function notify(EmailValidator $validator, NotifyUseCase $useCase): BaseResponse
     {
-        if ($useCase->handle($validator->validated('email'))) {
-            response()->json([
-                'status' => ResponseStatus::SUCCESS,
-                'message' => __('alert.email_verification_link_sent'),
-            ])->send(HttpCode::OK);
-        }
+        $useCase->handle($validator->validated('email'));
 
-        response()->json([
-            'status' => ResponseStatus::ERROR,
-            'message' => __('alert.email_verification_link_not_sent'),
-        ])->send(HttpCode::INTERNAL_SERVER_ERROR);
+        return $this->successJsonResponse(__('alert.email_verification_link_sent'));
     }
 
     #[Route(HttpMethod::GET, '/api/v1/email/verify')]
-    public function verify(VerifyEmailUseCase $useCase): void
+    public function verify(VerifyEmailUseCase $useCase): BaseResponse
     {
         $useCase->handle();
+
+        return $this->successJsonResponse(__('alert.email_verified_at'));
     }
 }

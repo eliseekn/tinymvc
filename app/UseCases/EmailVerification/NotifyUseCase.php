@@ -15,25 +15,14 @@ use App\Database\Models\Token;
 use App\Enums\TokenDescription;
 use App\Notifications\Mails\VerificationMail;
 use Core\Notification\Notification;
-use Exception;
 
 final class NotifyUseCase
 {
-    public function handle(string $email): bool
+    public function handle(string $email): void
     {
         $tokenValue = generate_token(15);
-        $token = Token::generate($email, TokenDescription::EMAIL_VERIFICATION->value, $tokenValue);
+        Token::generate($email, TokenDescription::EMAIL_VERIFICATION->value, $tokenValue);
 
-        try {
-            Notification::send(new VerificationMail($email, $tokenValue))->to($email);
-
-            return true;
-        } catch (Exception $e) {
-            report($e);
-
-            $token->delete();
-
-            return false;
-        }
+        Notification::send(new VerificationMail($email, $tokenValue))->to($email);
     }
 }

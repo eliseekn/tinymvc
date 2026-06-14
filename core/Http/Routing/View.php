@@ -11,9 +11,8 @@ declare(strict_types=1);
 
 namespace Core\Http\Routing;
 
-use Core\Exceptions\ViewNotFoundException;
+use Core\Exceptions\CoreException;
 use Core\Support\TwigExtensions;
-use Exception;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
@@ -25,9 +24,6 @@ class View
 {
     /**
      * Retrieves view template content.
-     *
-     * @throws ViewNotFoundException
-     * @throws Exception
      */
     public static function getContent(string $view, array $data = []): string
     {
@@ -35,7 +31,7 @@ class View
         $view = real_path($view).'.html.twig';
 
         if (! $path->isFile($view)) {
-            throw new ViewNotFoundException($path->file($view));
+            throw new CoreException('View '.$path->file($view).' not found');
         }
 
         $loader = new FilesystemLoader($path->getPath());
@@ -51,14 +47,10 @@ class View
             $twig->addExtension(new DebugExtension);
         }
 
-        try {
-            return $twig->render($view, array_merge($data, [
-                'inputs' => (object) session()->pull('inputs'),
-                'errors' => (object) session()->pull('errors'),
-                'alert' => session()->pull('alert'),
-            ]));
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage(), $e->getCode(), $e);
-        }
+        return $twig->render($view, array_merge($data, [
+            'inputs' => (object) session()->pull('inputs'),
+            'errors' => (object) session()->pull('errors'),
+            'alert' => session()->pull('alert'),
+        ]));
     }
 }

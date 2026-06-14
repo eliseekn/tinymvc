@@ -17,17 +17,24 @@ use App\Http\Validation\Validators\UpdateProfileValidator;
 use App\UseCases\User\DeleteAvatarUseCase;
 use App\UseCases\User\UpdateUseCase;
 use Core\Database\Model;
+use Core\Enums\Alert\MessageType;
 use Core\Enums\HttpMethod;
 use Core\Enums\RouteParameter;
+use Core\Http\Response\BaseResponse;
 use Core\Http\Routing\Attributes\Route;
 use Core\Http\Routing\Controller;
 
 class ProfileController extends Controller
 {
-    #[Route(HttpMethod::GET, '/dashboard/profile', [Authenticated::class, EmailVerified::class], 'profile.index')]
-    public function index(): void
+    #[Route(
+        methods: HttpMethod::GET,
+        uri: '/dashboard/profile',
+        middlewares: [Authenticated::class, EmailVerified::class],
+        name: 'profile.index'
+    )]
+    public function index(): BaseResponse
     {
-        $this->render('dashboard.profile');
+        return $this->viewResponse('dashboard.profile');
     }
 
     #[Route(
@@ -38,9 +45,14 @@ class ProfileController extends Controller
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
-    public function update(UpdateUseCase $useCase, UpdateProfileValidator $validator, Model $user): void
+    public function update(UpdateUseCase $useCase, UpdateProfileValidator $validator, Model $user): BaseResponse
     {
         $useCase->handle($validator->validated(), $user);
+
+        return $this
+            ->redirectResponse()
+            ->toBack()
+            ->withToast(MessageType::SUCCESS, 'Profile updated');
     }
 
     #[Route(
@@ -51,8 +63,13 @@ class ProfileController extends Controller
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
-    public function deleteAvatar(DeleteAvatarUseCase $useCase, Model $user): void
+    public function deleteAvatar(DeleteAvatarUseCase $useCase, Model $user): BaseResponse
     {
         $useCase->handle($user);
+
+        return $this
+            ->redirectResponse()
+            ->toBack()
+            ->withToast(MessageType::SUCCESS, 'Profile updated');
     }
 }

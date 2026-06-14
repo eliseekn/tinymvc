@@ -15,6 +15,7 @@ use Core\Enums\HttpAuthMethod;
 use Core\Enums\HttpCode;
 use Core\Enums\ResponseStatus;
 use Core\Http\Auth;
+use Core\Http\Response\JsonResponse;
 
 /**
  * Authenticate user by api token.
@@ -24,26 +25,26 @@ class ApiAuth
     public function handle(): void
     {
         if (empty(request()->getHttpAuth())) {
-            response()->json([
+            new JsonResponse([
                 'status' => ResponseStatus::ERROR,
                 'message' => __('alert.auth_required'),
-            ])->send(HttpCode::UNAUTHORIZED);
+            ], HttpCode::UNAUTHORIZED)->send();
         }
 
         [$method, $token] = request()->getHttpAuth();
 
         if (trim($method) !== HttpAuthMethod::BEARER) {
-            response()->json([
+            new JsonResponse([
                 'status' => ResponseStatus::ERROR,
                 'message' => __('alert.invalid_auth_method'),
-            ])->send(HttpCode::BAD_REQUEST);
+            ], HttpCode::BAD_REQUEST)->send();
         }
 
         if (! Auth::checkToken(decrypt($token), $user)) {
-            response()->json([
+            new JsonResponse([
                 'status' => ResponseStatus::ERROR,
                 'message' => __('alert.invalid_credentials'),
-            ])->send(HttpCode::UNAUTHORIZED);
+            ], HttpCode::UNAUTHORIZED)->send();
         }
     }
 }

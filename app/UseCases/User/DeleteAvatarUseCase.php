@@ -11,29 +11,24 @@ declare(strict_types=1);
 
 namespace App\UseCases\User;
 
+use App\Exceptions\InternalServerException;
 use App\Policies\ProfilePolicy;
 use Core\Database\Model;
-use Core\Support\Alert;
 
 final class DeleteAvatarUseCase
 {
     public function handle(Model $user): void
     {
-        $user->authorize(new ProfilePolicy)->onDelete();
+        $user->isAuthorized(new ProfilePolicy)->onDelete();
 
         if (! storage(config('storage.uploads'))->deleteFile($user->get('avatar'))) {
-            Alert::toast('Failed to delete avatar')->error();
-            response()->back()->send();
+            throw new InternalServerException('Failed to delete avatar');
         }
 
         if (! $user->set(['avatar' => null])->save()) {
-            Alert::toast('Failed to update profile')->error();
-            response()->back()->send();
+            throw new InternalServerException('Failed to update profile');
         }
 
         session()->create('user', $user->get());
-        Alert::toast('Profile updated')->success();
-
-        response()->back()->send();
     }
 }

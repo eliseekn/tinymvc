@@ -14,10 +14,11 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Validation\Validators\Auth\EmailValidator;
 use App\UseCases\EmailVerification\NotifyUseCase;
 use App\UseCases\EmailVerification\VerifyUseCase;
+use Core\Enums\Alert\MessageType;
 use Core\Enums\HttpMethod;
+use Core\Http\Response\BaseResponse;
 use Core\Http\Routing\Attributes\Route;
 use Core\Http\Routing\Controller;
-use Core\Support\Alert;
 
 /**
  * Manage email verification link.
@@ -25,26 +26,30 @@ use Core\Support\Alert;
 class EmailVerificationController extends Controller
 {
     #[Route(HttpMethod::GET, '/email/notify')]
-    public function index(): void
+    public function index(): BaseResponse
     {
-        response()->view('auth.notify')->send();
+        return $this->viewResponse('auth.notify');
     }
 
     #[Route(HttpMethod::POST, '/email/notify')]
-    public function notify(EmailValidator $validator, NotifyUseCase $useCase): void
+    public function notify(EmailValidator $validator, NotifyUseCase $useCase): BaseResponse
     {
-        if ($useCase->handle($validator->validated('email'))) {
-            Alert::default(__('alert.email_verification_link_sent'))->success();
-            response()->url('/email/notify')->send();
-        }
+        $useCase->handle($validator->validated('email'));
 
-        Alert::default(__('alert.email_verification_link_not_sent'))->error();
-        response()->url('/login')->send();
+        return $this
+            ->redirectResponse()
+            ->toUrl('/email/notify')
+            ->withAlert(MessageType::SUCCESS, __('alert.email_verification_link_sent'));
     }
 
     #[Route(HttpMethod::GET, '/email/verify')]
-    public function verify(VerifyUseCase $verifyUseCase): void
+    public function verify(VerifyUseCase $verifyUseCase): BaseResponse
     {
         $verifyUseCase->handle();
+
+        return $this
+            ->redirectResponse()
+            ->toUrl('/login')
+            ->withToast(MessageType::SUCCESS, __('alert.email_verified_at'));
     }
 }

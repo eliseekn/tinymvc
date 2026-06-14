@@ -11,16 +11,14 @@ declare(strict_types=1);
 
 namespace App\UseCases\Api\v1\User;
 
-use App\Http\Resources\UserResource;
+use App\Policies\ProfilePolicy;
 use Core\Database\Model;
-use Core\Enums\HttpCode;
-use Core\Enums\ResponseStatus;
 
 final class UpdateUseCase
 {
-    public function handle(array $data, Model $user): void
+    public function handle(array $data, Model $user): bool
     {
-        $user = auth();
+        $user->isAuthorized(new ProfilePolicy)->onUpdate();
 
         if (! empty($data['password'])) {
             $data['password'] = bcrypt($data['password']);
@@ -28,17 +26,6 @@ final class UpdateUseCase
             unset($data['password']);
         }
 
-        if (! $user->set($data)->save()) {
-            response()->json([
-                'status' => ResponseStatus::ERROR,
-                'message' => 'Failed to update user',
-            ])->send(HttpCode::INTERNAL_SERVER_ERROR);
-        }
-
-        response()->json([
-            'status' => ResponseStatus::SUCCESS,
-            'message' => 'User updated',
-            'data' => new UserResource($user)->handle(),
-        ])->send(HttpCode::OK);
+        return $user->set($data)->save();
     }
 }

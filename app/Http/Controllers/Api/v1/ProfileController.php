@@ -13,12 +13,14 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Middlewares\ApiAuth;
 use App\Http\Middlewares\CheckIfUserAdmin;
+use App\Http\Resources\UserResource;
 use App\Http\Validation\Validators\UpdateProfileValidator;
 use App\UseCases\Api\v1\User\DeleteAvatarUseCase;
 use App\UseCases\Api\v1\User\UpdateUseCase;
 use Core\Database\Model;
 use Core\Enums\HttpMethod;
 use Core\Enums\RouteParameter;
+use Core\Http\Response\BaseResponse;
 use Core\Http\Routing\Attributes\Route;
 use Core\Http\Routing\Controller;
 
@@ -31,9 +33,9 @@ class ProfileController extends Controller
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
-    public function update(UpdateUseCase $useCase, UpdateProfileValidator $validator, Model $user): void
+    public function update(UpdateUseCase $useCase, UpdateProfileValidator $validator, Model $user): BaseResponse
     {
-        $useCase->handle($validator->validated(), $user);
+        return $this->processUpdatedProfile($user, $useCase->handle($validator->validated(), $user));
     }
 
     #[Route(
@@ -43,8 +45,20 @@ class ProfileController extends Controller
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
-    public function delete(DeleteAvatarUseCase $useCase, Model $user): void
+    public function delete(DeleteAvatarUseCase $useCase, Model $user): BaseResponse
     {
-        $useCase->handle($user);
+        return $this->processUpdatedProfile($user, $useCase->handle($user));
+    }
+
+    protected function processUpdatedProfile(Model $user, bool $updated): BaseResponse
+    {
+        if (! $updated) {
+            return $this->errorJsonResponse('Failed to update profile');
+        }
+
+        return $this->successJsonResponse([
+            'message' => 'Profile updated',
+            'data' => new UserResource($user)->handle(),
+        ]);
     }
 }

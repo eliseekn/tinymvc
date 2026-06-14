@@ -12,13 +12,16 @@ declare(strict_types=1);
 namespace App\Http\Middlewares;
 
 use Core\Http\Auth;
+use Core\Http\Response\RedirectResponse;
 
 class RedirectAfterLogin
 {
     public function handle(): void
     {
         if (Auth::check()) {
-            response()->url(config('security.auth.redirect_after_login'))->send();
+            new RedirectResponse()
+                ->toUrl(config('security.auth.redirect_after_login'))
+                ->send();
         }
     }
 }

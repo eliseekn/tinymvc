@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Core\Services;
 
 use Core\Notification\Mail\MailerInterface;
+use Core\Support\Logger;
 use Exception;
 use PHPMailer\PHPMailer\PHPMailer as _PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
@@ -150,7 +151,7 @@ class PHPMailer implements MailerInterface
         try {
             return $this->phpMailer->send();
         } catch (Exception $e) {
-            report($e);
+            Logger::exception($e);
 
             return false;
         }

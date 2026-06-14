@@ -11,49 +11,41 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\v1\Auth;
 
-use App\Exceptions\InvalidCredentialsException;
 use App\Http\Validation\Validators\Auth\LoginValidator;
 use App\Http\Validation\Validators\Auth\RegisterValidator;
 use App\UseCases\Api\v1\Auth\LoginUseCase;
-use App\UseCases\Api\v1\Auth\RegisterUseCase;
+use App\UseCases\Auth\RegisterUseCase;
 use App\UseCases\EmailVerification\NotifyUseCase;
 use Core\Enums\HttpCode;
 use Core\Enums\ResponseStatus;
 use Core\Http\Auth;
+use Core\Http\Response\BaseResponse;
 use Core\Http\Routing\Controller;
 
 class AuthController extends Controller
 {
-    public function login(LoginUseCase $useCase, LoginValidator $validator): void
+    public function login(LoginUseCase $useCase, LoginValidator $validator): BaseResponse
     {
-        try {
-            $data = $useCase->handle($validator->validated());
+        $data = $useCase->handle($validator->validated());
 
-            $this->jsonResponse([
-                'status' => ResponseStatus::SUCCESS,
-                'token' => $data['token'],
-                'user' => $data['user'],
-            ], HttpCode::OK);
-        } catch (InvalidCredentialsException $e) {
-            $this->jsonResponse([
-                'status' => ResponseStatus::ERROR,
-                'message' => 'Email or password is incorrect',
-            ], HttpCode::UNAUTHORIZED);
-        }
-    }
-
-    public function logout(): void
-    {
-        Auth::deleteToken();
-
-        $this->jsonResponse([
+        return $this->jsonResponse([
             'status' => ResponseStatus::SUCCESS,
-            'message' => 'Logout successfully',
+            'token' => $data['token'],
+            'user' => $data['user'],
         ], HttpCode::OK);
     }
 
-    public function register(RegisterUseCase $useCase, NotifyUseCase $notifyUseCase, RegisterValidator $valitator): void
+    public function logout(): BaseResponse
+    {
+        Auth::deleteToken();
+
+        return $this->successJsonResponse('Logout successfully', HttpCode::OK);
+    }
+
+    public function register(RegisterUseCase $useCase, NotifyUseCase $notifyUseCase, RegisterValidator $valitator): BaseResponse
     {
         $useCase->handle($valitator->validated(), $notifyUseCase);
+
+        return $this->successJsonResponse(__('alert.account_created'), HttpCode::OK);
     }
 }

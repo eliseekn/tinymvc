@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Core\Services;
 
 use Core\Notification\Sms\SmsInterface;
+use Core\Support\Logger;
 use Twilio\Exceptions\TwilioException;
 use Twilio\Rest\Client as TwilioClient;
 
@@ -55,7 +56,7 @@ class Twilio implements SmsInterface
 
             return true;
         } catch (TwilioException $e) {
-            report($e);
+            Logger::exception($e);
 
             return false;
         }

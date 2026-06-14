@@ -15,7 +15,7 @@ use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Core\Database\Metrics\Enums\Period;
 use Core\Enums\DatabaseDriver;
-use Core\Exceptions\InvalidDateFormatException;
+use Core\Exceptions\CoreException;
 use DateTime;
 
 trait DatesFunctions
@@ -127,7 +127,7 @@ trait DatesFunctions
             $d = DateTime::createFromFormat('Y-m-d', $date);
 
             if (! $d || $d->format('Y-m-d') !== $date) {
-                throw new InvalidDateFormatException;
+                throw new CoreException('Invalid date format. Valid date format is Y-m-d');
             }
         }
     }

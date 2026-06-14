@@ -13,6 +13,7 @@ namespace Core\Task;
 
 use Core\Enums\TaskDriver;
 use Core\Enums\TaskStatus;
+use Core\Support\Logger;
 use Core\Task\Schedule\Scheduler;
 use Core\Task\Storage\Database;
 use Core\Task\Storage\Redis;
@@ -127,7 +128,7 @@ class Task
 
         $this->storage->markAsRunning($id, time());
 
-        /** @var \Core\Task\TaskInterface */
+        /** @var TaskInterface */
         $task = new $class;
 
         try {
@@ -140,7 +141,7 @@ class Task
             $this->storage->markAsCompleted($id);
             $task->handleCompleted();
         } catch (Exception $e) {
-            report($e);
+            Logger::exception($e);
 
             $this->storage->markAsFailed($id);
             $task->handleFailed();

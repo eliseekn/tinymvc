@@ -14,38 +14,27 @@ namespace App\UseCases\Api\v1;
 use App\Database\Models\Token;
 use App\Database\Models\User;
 use App\Enums\TokenDescription;
+use App\Exceptions\Api\InvalidDataException;
 use App\Notifications\Mails\WelcomeMail;
-use Core\Enums\HttpCode;
-use Core\Enums\ResponseStatus;
 use Core\Notification\Notification;
-use Exception;
 
 final class VerifyEmailUseCase
 {
     public function handle(): void
     {
         if (! request()->queries()->has(['email', 'token'])) {
-            response()->json([
-                'status' => ResponseStatus::ERROR,
-                'message' => __('alert.bad_request'),
-            ])->send(HttpCode::BAD_REQUEST);
+            throw new InvalidDataException(__('alert.bad_request'));
         }
 
         $email = request()->queries()->get('email');
         $token = Token::findByDescription($email, TokenDescription::EMAIL_VERIFICATION->value);
 
         if (! $token || $token->get('value') !== request()->queries()->get('token')) {
-            response()->json([
-                'status' => ResponseStatus::ERROR,
-                'message' => __('alert.invalid_password_reset_link'),
-            ])->send(HttpCode::BAD_REQUEST);
+            throw new InvalidDataException(__('alert.invalid_password_reset_link'));
         }
 
         if (carbon($token->get('expires_at'))->lt(carbon())) {
-            response()->json([
-                'status' => ResponseStatus::ERROR,
-                'message' => __('alert.expired_password_reset_link'),
-            ])->send(HttpCode::BAD_REQUEST);
+            throw new InvalidDataException(__('alert.expired_password_reset_link'));
         }
 
         $token->delete();
@@ -55,26 +44,9 @@ final class VerifyEmailUseCase
             ->save();
 
         if (! $user) {
-            response()->json([
-                'status' => ResponseStatus::ERROR,
-                'message' => __('alert.account_not_found'),
-            ])->send(HttpCode::BAD_REQUEST);
+            throw new InvalidDataException(__('alert.account_not_found'));
         }
 
-        try {
-            Notification::send(new WelcomeMail($user->get('name')))->to($email);
-
-            response()->json([
-                'status' => ResponseStatus::ERROR,
-                'message' => __('alert.email_verified_at'),
-            ])->send(HttpCode::OK);
-        } catch (Exception $e) {
-            report($e);
-
-            response()->json([
-                'status' => ResponseStatus::ERROR,
-                'message' => __('alert.failed_email_verification'),
-            ])->send(HttpCode::INTERNAL_SERVER_ERROR);
-        }
+        Notification::send(new WelcomeMail($user->get('name')))->to($email);
     }
 }

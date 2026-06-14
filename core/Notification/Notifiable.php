@@ -11,16 +11,10 @@ declare(strict_types=1);
 
 namespace Core\Notification;
 
-use Exception;
-
 trait Notifiable
 {
     public function notify(NotificationInterface $notification, string $attribute = 'email'): void
     {
-        try {
-            Notification::send($notification)->to($this->get($attribute));
-        } catch (Exception $e) {
-            report($e);
-        }
+        Notification::send($notification)->to($this->get($attribute));
     }
 }

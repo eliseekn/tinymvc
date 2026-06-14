@@ -11,9 +11,10 @@ declare(strict_types=1);
 
 namespace App\UseCases\User;
 
+use App\Exceptions\InternalServerException;
 use App\Helpers\FileUploadHelper;
+use App\Policies\ProfilePolicy;
 use Core\Database\Model;
-use Core\Support\Alert;
 
 final class UpdateUseCase
 {
@@ -21,11 +22,12 @@ final class UpdateUseCase
 
     public function handle(array $data, Model $user): void
     {
+        $user->isAuthorized(new ProfilePolicy)->onUpdate();
+
         $file = request()->files('avatar', ['png', 'jpg', 'jpeg']);
 
         if (! $this->fileUploadHelper->handle($file)) {
-            Alert::toast('Failed to upload avatar image')->error();
-            response()->back()->send();
+            throw new InternalServerException('Failed to upload avatar image');
         }
 
         $data['avatar'] = $this->fileUploadHelper->filename;
@@ -37,13 +39,9 @@ final class UpdateUseCase
         }
 
         if (! $user->update($data)) {
-            Alert::toast('Failed to update profile')->error();
-            response()->back()->send();
+            throw new InternalServerException('Failed to update profile');
         }
 
         session()->create('user', $user->get());
-
-        Alert::toast('Profile updated')->success();
-        response()->back()->send();
     }
 }

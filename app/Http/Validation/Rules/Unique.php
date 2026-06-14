@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace App\Http\Validation\Rules;
 
 use Core\Database\Repository;
-use Core\Exceptions\ModelNotFoundException;
+use Core\Exceptions\CoreException;
 use Core\Http\Validation\Rule\RuleInterface;
 use Somnambulist\Components\Validation\Rule;
 
@@ -46,7 +46,7 @@ class Unique extends Rule implements RuleInterface
             ->get();
 
         if (! $model) {
-            throw new ModelNotFoundException($table);
+            throw new CoreException("Model not found for '$table'");
         }
 
         $existing = (new Repository($table))

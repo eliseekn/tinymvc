@@ -19,12 +19,14 @@ use App\Http\Middlewares\EmailVerified;
 use App\Http\Validation\Validators\User\StoreValidator;
 use App\Http\Validation\Validators\User\UpdateValidator;
 use App\UseCases\User\StoreUseCase;
+use App\UseCases\User\UpdateUseCase;
 use Core\Database\Model;
+use Core\Enums\Alert\MessageType;
 use Core\Enums\HttpMethod;
 use Core\Enums\RouteParameter;
+use Core\Http\Response\BaseResponse;
 use Core\Http\Routing\Attributes\Route;
 use Core\Http\Routing\Controller;
-use Core\Support\Alert;
 
 class UserController extends Controller
 {
@@ -34,9 +36,9 @@ class UserController extends Controller
         middlewares: [Authenticated::class, EmailVerified::class],
         name: 'users.index'
     )]
-    public function index(): void
+    public function index(): BaseResponse
     {
-        $this->render('dashboard.users.index', [
+        return $this->viewResponse('dashboard.users.index', [
             'users' => User::findAllPaginate(),
         ]);
     }
@@ -47,9 +49,9 @@ class UserController extends Controller
         middlewares: [Authenticated::class, EmailVerified::class, CheckIfUserAdmin::class],
         name: 'users.create'
     )]
-    public function create(): void
+    public function create(): BaseResponse
     {
-        $this->render('dashboard.users.create', [
+        return $this->viewResponse('dashboard.users.create', [
             'roles' => Role::findAll(),
         ]);
     }
@@ -60,9 +62,14 @@ class UserController extends Controller
         middlewares: [Authenticated::class, EmailVerified::class, CheckIfUserAdmin::class],
         name: 'users.store'
     )]
-    public function store(StoreUseCase $useCase, StoreValidator $validator): void
+    public function store(StoreUseCase $useCase, StoreValidator $validator): BaseResponse
     {
         $useCase->handle($validator->validated());
+
+        return $this
+            ->redirectResponse()
+            ->toBack()
+            ->withToast(MessageType::SUCCESS, 'User created');
     }
 
     #[Route(
@@ -73,9 +80,9 @@ class UserController extends Controller
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
-    public function edit(Model $user): void
+    public function edit(Model $user): BaseResponse
     {
-        $this->render('dashboard.users.edit', [
+        return $this->viewResponse('dashboard.users.edit', [
             'user' => $user,
             'roles' => Role::findAll(),
         ]);
@@ -89,14 +96,14 @@ class UserController extends Controller
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
-    public function update(UpdateValidator $validator, Model $user): void
+    public function update(UpdateUseCase $useCase, UpdateValidator $validator, Model $user): BaseResponse
     {
-        if (! $user->set($validator->validated())->save()) {
-            Alert::toast('Failed to update user')->error();
-        }
+        $useCase->handle($validator->validated(), $user);
 
-        Alert::toast('User updated')->success();
-        $this->redirectBack();
+        return $this
+            ->redirectResponse()
+            ->toBack()
+            ->withToast(MessageType::SUCCESS, 'User updated');
     }
 
     #[Route(
@@ -107,13 +114,18 @@ class UserController extends Controller
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
-    public function delete(Model $user): void
+    public function delete(Model $user): BaseResponse
     {
         if (! $user->delete()) {
-            Alert::toast('Failed to delete user')->error();
+            return $this
+                ->redirectResponse()
+                ->toBack()
+                ->withToast(MessageType::ERROR, 'Failed to delete user');
         }
 
-        Alert::toast('User deleted')->success();
-        $this->redirectBack();
+        return $this
+            ->redirectResponse()
+            ->toBack()
+            ->withToast(MessageType::SUCCESS, 'User deleted');
     }
 }

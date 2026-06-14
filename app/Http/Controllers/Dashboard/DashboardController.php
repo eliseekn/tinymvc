@@ -19,6 +19,7 @@ use Core\Database\Metrics\Enums\Period;
 use Core\Database\Metrics\Metrics;
 use Core\Database\QueryBuilder;
 use Core\Enums\HttpMethod;
+use Core\Http\Response\BaseResponse;
 use Core\Http\Routing\Attributes\Route;
 use Core\Http\Routing\Controller;
 
@@ -30,7 +31,7 @@ class DashboardController extends Controller
         middlewares: [Authenticated::class, EmailVerified::class],
         name: 'dashboard.index')
     ]
-    public function __invoke(User $user): void
+    public function __invoke(User $user): BaseResponse
     {
         $period = request()->queries()->get('period', 'day');
 
@@ -38,7 +39,7 @@ class DashboardController extends Controller
             $period = explode('~', $period, 2);
         }
 
-        $this->render('dashboard.index', [
+        return $this->viewResponse('dashboard.index', [
             'totalUsers' => $this->metrics($user->metrics(), $period),
             'totalUsersToday' => $user->metrics()->countByDay(count: 1)->metricsWithVariations(1, Period::DAY->value),
             'usersTrends' => $this->trends($user->metrics()->fillMissingData(), $period),

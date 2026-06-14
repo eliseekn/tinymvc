@@ -14,29 +14,28 @@ namespace App\UseCases\EmailVerification;
 use App\Database\Models\Token;
 use App\Database\Models\User;
 use App\Enums\TokenDescription;
+use App\Exceptions\InvalidDataException;
+use App\Exceptions\VerifyEmailException;
 use App\Notifications\Mails\WelcomeMail;
-use Core\Enums\HttpCode;
 use Core\Notification\Notification;
-use Core\Support\Alert;
-use Exception;
 
 final class VerifyUseCase
 {
     public function handle(): void
     {
         if (! request()->queries()->has(['email', 'token'])) {
-            response()->data(__('alert.bad_request'))->send(HttpCode::BAD_REQUEST);
+            throw new InvalidDataException(__('alert.bad_request'));
         }
 
         $email = request()->queries()->get('email');
         $token = Token::findByDescription($email, TokenDescription::EMAIL_VERIFICATION->value);
 
         if (! $token || $token->get('value') !== request()->queries()->get('token')) {
-            response()->data(__('alert.invalid_password_reset_link'))->send(HttpCode::BAD_REQUEST);
+            throw new InvalidDataException(__('alert.invalid_password_reset_link'));
         }
 
         if (carbon($token->get('expires_at'))->lt(carbon())) {
-            response()->data(__('alert.expired_password_reset_link'))->send(HttpCode::BAD_REQUEST);
+            throw new InvalidDataException(__('alert.expired_password_reset_link'));
         }
 
         $token->delete();
@@ -46,17 +45,9 @@ final class VerifyUseCase
             ->save();
 
         if (! $user) {
-            Alert::default(__('alert.account_not_found'))->error();
-            response()->url('/signup')->send();
+            throw new VerifyEmailException;
         }
 
-        try {
-            Notification::send(new WelcomeMail($user->get('name')))->to($email);
-            Alert::toast(__('alert.email_verified_at'))->success();
-        } catch (Exception $e) {
-            report($e);
-        }
-
-        response()->url('/login')->send();
+        Notification::send(new WelcomeMail($user->get('name')))->to($email);
     }
 }

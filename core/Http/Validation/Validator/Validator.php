@@ -13,6 +13,8 @@ namespace Core\Http\Validation\Validator;
 
 use Core\Enums\HttpCode;
 use Core\Enums\ResponseStatus;
+use Core\Http\Response\JsonResponse;
+use Core\Http\Response\RedirectResponse;
 use Somnambulist\Components\Validation\Factory as RakitValidator;
 use Somnambulist\Components\Validation\Rule;
 use Somnambulist\Components\Validation\Validation;
@@ -51,11 +53,6 @@ class Validator implements ValidatorInterface
     {
         // @phpstan-ignore-next-line
         return new static($rules, $messages);
-    }
-
-    public function authorize(): bool
-    {
-        return true;
     }
 
     public function beforeValidation(): array
@@ -134,15 +131,17 @@ class Validator implements ValidatorInterface
     public function validationFailed(): void
     {
         if (request()->isJson()) {
-            response()->json([
+            new JsonResponse([
                 'status' => ResponseStatus::ERROR,
                 'data' => $this->errors(),
-            ])->send(HttpCode::BAD_REQUEST);
+            ], HttpCode::BAD_REQUEST)->send();
         }
 
-        response()->back()
+        new RedirectResponse()
+            ->toBack()
             ->withErrors($this->errors())
             ->withInputs($this->validation->getValidatedData())
+            ->setStatusCode()
             ->send();
     }
 

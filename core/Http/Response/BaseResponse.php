@@ -9,28 +9,26 @@
 
 declare(strict_types=1);
 
-namespace Core\Http;
+namespace Core\Http\Response;
 
 use Core\Enums\AppEnv;
 use Core\Enums\HttpCode;
-use Core\Exceptions\FileNotFoundException;
-use Core\Exceptions\InvalidJsonDataException;
-use Core\Exceptions\InvalidResponseDataException;
+use Core\Exceptions\CoreException;
+use Core\Http\Auth;
 use Core\Support\Alert;
 use Exception;
 
 /**
  * Send HTTP response.
  */
-class Response
+class BaseResponse
 {
     public function __construct(
         public string $uri = '',
-        public $data = null,
-        public array $headers = []
-    ) {
-        new Session;
-    }
+        public mixed $data = null,
+        public array $headers = [],
+        public int $statusCode = HttpCode::FOUND
+    ) {}
 
     public function addHeaders(array $headers): self
     {
@@ -39,13 +37,17 @@ class Response
         return $this;
     }
 
-    /**
-     * @throws InvalidResponseDataException
-     */
+    public function setStatusCode(int $code = HttpCode::FOUND): self
+    {
+        $this->statusCode = $code;
+
+        return $this;
+    }
+
     public function data(string $data): self
     {
         if (empty($data)) {
-            throw new InvalidResponseDataException;
+            throw new CoreException('Invalid response data');
         }
 
         $this->addHeaders(['Content-Length' => strlen($data)]);
@@ -112,9 +114,16 @@ class Response
         return $this;
     }
 
-    public function withAlert(string $type, string|array $message, string $display, bool $dismiss = true): self
+    public function withAlert(string $type, string|array $message, bool $dismiss = true): self
     {
-        Alert::alert($message, $display, $dismiss);
+        Alert::default($message, $dismiss)->$type();
+
+        return $this;
+    }
+
+    public function withToast(string $type, string|array $message, bool $dismiss = true): self
+    {
+        Alert::toast($message, $dismiss)->$type();
 
         return $this;
     }
@@ -143,13 +152,17 @@ class Response
         return $this;
     }
 
-    /**
-     * @throws FileNotFoundException
-     */
+    public function forgetAuth(): self
+    {
+        Auth::forget();
+
+        return $this;
+    }
+
     public function download(string $filename): self
     {
         if (! file_exists($filename)) {
-            throw new FileNotFoundException($filename);
+            throw new CoreException("File $filename not found");
         }
 
         $this->addHeaders([
@@ -169,13 +182,10 @@ class Response
         return $this;
     }
 
-    /**
-     * @throws InvalidJsonDataException
-     */
     public function json(array $data): self
     {
         if (empty($data)) {
-            throw new InvalidJsonDataException;
+            throw new CoreException('Invalid json response data');
         }
 
         $data = json_encode($data);
@@ -190,13 +200,13 @@ class Response
         return $this;
     }
 
-    public function send(int $code = HttpCode::FOUND): void
+    public function send(): void
     {
         if (config('app.env') === AppEnv::TEST) {
             header('Session:'.json_encode($_SESSION));
         }
 
-        http_response_code($code);
+        http_response_code($this->statusCode);
 
         foreach ($this->headers as $key => $value) {
             header($key.':'.$value);

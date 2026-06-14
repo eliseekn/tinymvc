@@ -14,8 +14,6 @@ namespace App\UseCases\Auth;
 use App\Database\Models\User;
 use App\Events\UserRegistered\UserRegisteredEvent;
 use App\UseCases\EmailVerification\NotifyUseCase;
-use Core\Enums\HttpCode;
-use Core\Support\Alert;
 
 final class RegisterUseCase
 {
@@ -30,8 +28,5 @@ final class RegisterUseCase
         if (config('security.auth.email_verification')) {
             $notifyUseCase->handle($user->get('email'));
         }
-
-        Alert::default(__('alert.account_created'))->success();
-        response()->view('auth.login')->send(HttpCode::OK);
     }
 }

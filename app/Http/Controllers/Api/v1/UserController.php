@@ -17,27 +17,24 @@ use App\Http\Middlewares\CheckIfUserAdmin;
 use App\Http\Resources\UserResource;
 use App\Http\Validation\Validators\User\StoreValidator;
 use App\Http\Validation\Validators\User\UpdateValidator;
-use App\UseCases\Api\v1\User\DeleteUseCase;
-use App\UseCases\Api\v1\User\GetItemUseCase;
 use App\UseCases\Api\v1\User\StoreUseCase;
 use App\UseCases\Api\v1\User\UpdateUseCase;
 use Core\Database\Model;
 use Core\Enums\HttpCode;
 use Core\Enums\HttpMethod;
 use Core\Enums\RouteParameter;
+use Core\Http\Response\BaseResponse;
 use Core\Http\Routing\Attributes\Route;
 use Core\Http\Routing\Controller;
 
 class UserController extends Controller
 {
     #[Route(HttpMethod::GET, '/api/v1/users', [ApiAuth::class])]
-    public function index(): void
+    public function index(): BaseResponse
     {
         $data = User::findAllPaginate();
 
-        response()
-            ->json(new UserResource($data)->handle())
-            ->send(HttpCode::OK);
+        return $this->successJsonResponse(new UserResource($data)->handle());
     }
 
     #[Route(
@@ -47,15 +44,24 @@ class UserController extends Controller
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
-    public function show(GetItemUseCase $useCase, Model $user): void
+    public function show(Model $user): BaseResponse
     {
-        $useCase->handle($user);
+        return $this->successJsonResponse(new UserResource($user)->handle());
     }
 
     #[Route(HttpMethod::POST, '/api/v1/users', [ApiAuth::class, CheckIfUserAdmin::class])]
-    public function store(StoreUseCase $useCase, StoreValidator $validator): void
+    public function store(StoreUseCase $useCase, StoreValidator $validator): BaseResponse
     {
-        $useCase->handle($validator->validated());
+        $user = $useCase->handle($validator->validated());
+
+        if (! $user) {
+            return $this->errorJsonResponse('Failed to create user');
+        }
+
+        return $this->successJsonResponse([
+            'message' => 'User created',
+            'data' => new UserResource($user)->handle(),
+        ]);
     }
 
     #[Route(
@@ -65,9 +71,16 @@ class UserController extends Controller
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
-    public function update(UpdateUseCase $useCase, UpdateValidator $validator, Model $user): void
+    public function update(UpdateUseCase $useCase, UpdateValidator $validator, Model $user): BaseResponse
     {
-        $useCase->handle($validator->validated(), $user);
+        if (! $useCase->handle($validator->validated(), $user)) {
+            return $this->errorJsonResponse('Failed to update profile');
+        }
+
+        return $this->successJsonResponse([
+            'message' => 'Profile updated',
+            'data' => new UserResource($user)->handle(),
+        ]);
     }
 
     #[Route(
@@ -77,8 +90,12 @@ class UserController extends Controller
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
-    public function delete(DeleteUseCase $useCase, Model $user): void
+    public function delete(Model $user): BaseResponse
     {
-        $useCase->handle($user);
+        if (! $user->delete()) {
+            return $this->errorJsonResponse('Failed to delete user');
+        }
+
+        return $this->successJsonResponse('User delete', HttpCode::NO_CONTENT);
     }
 }

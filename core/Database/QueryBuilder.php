@@ -15,7 +15,7 @@ use Closure;
 use Core\Database\Connection\Connection;
 use Core\Enums\DatabaseDriver;
 use Core\Enums\JoinMethod;
-use Core\Exceptions\InvalidSQLQueryException;
+use Core\Exceptions\CoreException;
 use PDOStatement;
 
 /**
@@ -25,7 +25,7 @@ class QueryBuilder
 {
     protected static string $query;
 
-    protected static $args;
+    protected static array $args;
 
     protected static string $table;
 
@@ -348,7 +348,7 @@ class QueryBuilder
     public function addSelect(array|string $columns): self
     {
         if (! str_contains(static::$query, 'SELECT')) {
-            throw new InvalidSQLQueryException;
+            throw new CoreException('Invalid SQL query');
         }
 
         $columns = parse_array($columns);
@@ -360,7 +360,7 @@ class QueryBuilder
     public function addWhere(string $column, $operator = null, $value = null, string $glue = 'AND'): self
     {
         if (! str_contains(static::$query, 'WHERE')) {
-            throw new InvalidSQLQueryException;
+            throw new CoreException('Invalid SQL query');
         }
 
         if (! is_null($operator) && is_null($value)) {
@@ -486,28 +486,28 @@ class QueryBuilder
         return $this;
     }
 
-    public function between($start, $end): self
+    public function between(mixed $start, mixed $end): self
     {
         static::$query .= " BETWEEN $start AND $end ";
 
         return $this;
     }
 
-    public function notBetween($start, $end): self
+    public function notBetween(mixed $start, mixed $end): self
     {
         static::$query .= " NOT BETWEEN $start AND $end ";
 
         return $this;
     }
 
-    public function like($value): self
+    public function like(mixed $value): self
     {
         static::$query .= " LIKE '%$value%' ";
 
         return $this;
     }
 
-    public function notLike($value): self
+    public function notLike(mixed $value): self
     {
         static::$query .= " NOT LIKE '%$value%' ";
 
@@ -603,7 +603,7 @@ class QueryBuilder
     public function addJoin(string $table, string $first_column, string $operator, string $second_column, string $method = JoinMethod::INNER): self
     {
         if (! str_contains(static::$query, 'FROM')) {
-            throw new InvalidSQLQueryException;
+            throw new CoreException('Invalid SQL query');
         }
 
         $query = trim(preg_replace('/\s+/', ' ', static::$query));

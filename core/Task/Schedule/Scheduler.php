@@ -16,7 +16,9 @@ use Core\Task\TaskInterface;
 
 class Scheduler
 {
-    public function __construct(public TaskInterface $task) {}
+    public function __construct(public TaskInterface $task)
+    {
+    }
 
     protected function schedule(string $executionTime): void
     {

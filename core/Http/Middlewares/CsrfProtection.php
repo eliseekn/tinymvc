@@ -12,8 +12,7 @@ declare(strict_types=1);
 namespace Core\Http\Middlewares;
 
 use Core\Enums\AppEnv;
-use Core\Exceptions\InvalidCsrfTokenException;
-use Core\Exceptions\MissingCsrfTokenException;
+use Core\Exceptions\CoreException;
 use Exception;
 
 /**
@@ -31,11 +30,11 @@ class CsrfProtection
         }
 
         if (! request()->inputs()->filled('_csrf_token')) {
-            throw new MissingCsrfTokenException;
+            throw new CoreException('Missing csrf token');
         }
 
         if (! valid_csrf_token(request()->inputs()->get('_csrf_token'))) {
-            throw new InvalidCsrfTokenException;
+            throw new CoreException('Invalid csrf token ');
         }
     }
 }

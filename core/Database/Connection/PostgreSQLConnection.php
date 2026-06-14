@@ -20,9 +20,6 @@ class PostgreSQLConnection implements ConnectionInterface
 {
     protected PDO $pdo;
 
-    /**
-     * @throws PDOException
-     */
     public function __construct(public DB $db)
     {
         try {
@@ -40,9 +37,6 @@ class PostgreSQLConnection implements ConnectionInterface
         return $this->pdo;
     }
 
-    /**
-     * @throws PDOException
-     */
     public function executeStatement(string $query): false|int
     {
         try {
@@ -52,9 +46,6 @@ class PostgreSQLConnection implements ConnectionInterface
         }
     }
 
-    /**
-     * @throws PDOException
-     */
     public function executeQuery(string $query, ?array $args = null): false|PDOStatement
     {
         try {

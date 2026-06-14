@@ -19,5 +19,7 @@ class UserCreatedEvent implements EventInterface
 {
     use Dispatchable;
 
-    public function __construct(public Model $user, public string $password) {}
+    public function __construct(public Model $user, public string $password)
+    {
+    }
 }

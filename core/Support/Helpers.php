@@ -13,12 +13,11 @@ use Carbon\Carbon;
 use Carbon\CarbonInterface;
 use Core\Database\Model;
 use Core\Event\EventInterface;
-use Core\Exceptions\RouteException;
-use Core\Exceptions\ViewNotFoundException;
+use Core\Exceptions\CoreException;
 use Core\Http\Auth;
 use Core\Http\Cookies;
 use Core\Http\Request;
-use Core\Http\Response;
+use Core\Http\Response\BaseResponse;
 use Core\Http\Routing\Route;
 use Core\Http\Routing\View;
 use Core\Http\Session;
@@ -79,9 +78,6 @@ if (! function_exists('session')) {
  * View get content helper
  */
 if (! function_exists('view')) {
-    /**
-     * @throws ViewNotFoundException
-     */
     function view(string $view, array $data = []): string
     {
         return View::getContent($view, $data);
@@ -149,9 +145,9 @@ if (! function_exists('request')) {
 }
 
 if (! function_exists('response')) {
-    function response(): Response
+    function response(): BaseResponse
     {
-        return new Response;
+        return new BaseResponse;
     }
 }
 
@@ -218,9 +214,6 @@ if (! function_exists('url')) {
 }
 
 if (! function_exists('route_uri')) {
-    /**
-     * @throws Exception
-     */
     function route_uri(string $name, array $params = []): string
     {
         $uri = '';
@@ -235,7 +228,7 @@ if (! function_exists('route_uri')) {
         }
 
         if (empty($uri)) {
-            throw RouteException::noNameDefined($uri);
+            throw new CoreException("Route name '$uri' is not defined");
         }
 
         $uri = preg_replace_callback('/\{([a-zA-Z0-9_-]+)\??\}/', function ($matches) use ($routeParams, $params) {
@@ -247,11 +240,11 @@ if (! function_exists('route_uri')) {
             }
 
             if (! isset($params[$param])) {
-                throw new Exception('Missing required parameter');
+                throw new CoreException('Missing required parameter');
             }
 
             if (! preg_match('/^'.$routeParams[$param].'$/', (string) $params[$param])) {
-                throw new Exception('Invalid parameter type');
+                throw new CoreException('Invalid parameter type');
             }
 
             return $params[$param];
@@ -264,8 +257,6 @@ if (! function_exists('route_uri')) {
 if (! function_exists('route')) {
     /**
      * Get absolute route url.
-     *
-     * @throws Exception
      */
     function route(string $name, array $params = []): string
     {
@@ -274,9 +265,6 @@ if (! function_exists('route')) {
 }
 
 if (! function_exists('route_parameters_to_regex')) {
-    /**
-     * @throws RouteException
-     */
     function route_parameters_to_regex(string $route, array $routeParams, array &$result): string
     {
         $result = [];
@@ -286,7 +274,7 @@ if (! function_exists('route_parameters_to_regex')) {
             $optional = str_contains($matches[0], '?');
 
             if (! isset($routeParams[$param])) {
-                throw RouteException::noParameterNotDefined($param);
+                throw new CoreException("No pattern defined for parameter '$param'");
             }
 
             $result[$param] = null;
@@ -300,8 +288,6 @@ if (! function_exists('route_parameters_to_regex')) {
 if (! function_exists('resolve_binding')) {
     /**
      * Resolve route model binding
-     *
-     * @throws RouteException
      */
     function resolve_route_binding(string $route, array $routeParams, array $binding): array
     {
@@ -568,13 +554,6 @@ if (! function_exists('faker')) {
     function faker(?string $lang = null)
     {
         return Factory::create(is_null($lang) ? config('app.lang') : $lang);
-    }
-}
-
-if (! function_exists('report')) {
-    function report(Exception $e): void
-    {
-        error_log($e->getMessage());
     }
 }
 

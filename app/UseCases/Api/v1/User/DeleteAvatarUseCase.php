@@ -13,33 +13,18 @@ namespace App\UseCases\Api\v1\User;
 
 use App\Policies\ProfilePolicy;
 use Core\Database\Model;
-use Core\Enums\HttpCode;
-use Core\Enums\ResponseStatus;
+use Core\Support\Logger;
 
 final class DeleteAvatarUseCase
 {
-    public function handle(Model $user): void
+    public function handle(Model $user): bool
     {
-        $user->authorize(new ProfilePolicy)->onDelete();
+        $user->isAuthorized(new ProfilePolicy)->onDelete();
 
         if (! storage(config('storage.uploads'))->deleteFile($user->get('avatar'))) {
-            response()->json([
-                'status' => ResponseStatus::ERROR,
-                'message' => 'Failed to delete avatar',
-            ])->send(HttpCode::INTERNAL_SERVER_ERROR);
+            Logger::error('Failed to delete avatar');
         }
 
-        if (! $user->set(['avatar' => null])->save()) {
-            response()->json([
-                'status' => ResponseStatus::ERROR,
-                'message' => 'Failed to delete profile',
-            ])->send(HttpCode::INTERNAL_SERVER_ERROR);
-
-        }
-
-        response()->json([
-            'status' => ResponseStatus::SUCCESS,
-            'message' => 'Profile updated',
-        ])->send(HttpCode::OK);
+        return $user->set(['avatar' => null])->save();
     }
 }

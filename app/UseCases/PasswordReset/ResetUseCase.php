@@ -6,28 +6,25 @@ namespace App\UseCases\PasswordReset;
 
 use App\Database\Models\Token;
 use App\Enums\TokenDescription;
-use Core\Enums\HttpCode;
+use App\Exceptions\InvalidDataException;
 
 final class ResetUseCase
 {
     public function handle(): void
     {
         if (! request()->queries()->has(['email', 'token'])) {
-            response()->data(__('alert.bad_request'))->send(HttpCode::BAD_REQUEST);
+            throw new InvalidDataException(__('alert.bad_request'));
         }
 
         $email = request()->queries()->get('email');
         $token = Token::findByDescription($email, TokenDescription::PASSWORD_RESET->value);
 
         if (! $token || $token->get('value') !== request()->queries()->get('token')) {
-            response()->data(__('alert.invalid_password_reset_link'))->send(HttpCode::BAD_REQUEST);
+            throw new InvalidDataException(__('alert.invalid_password_reset_link'));
         }
 
         if (carbon($token->get('expires_at'))->lt(carbon())) {
-            response()->data(__('alert.expired_password_reset_link'))->send(HttpCode::BAD_REQUEST);
+            throw new InvalidDataException(__('alert.expired_password_reset_link'));
         }
-
-        $token->delete();
-        response()->view('auth.password.new', compact('email'))->send(HttpCode::OK);
     }
 }

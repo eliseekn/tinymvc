@@ -11,21 +11,18 @@ declare(strict_types=1);
 
 namespace Core\Support;
 
+use Core\Exceptions\CoreException;
 use Dflydev\DotAccessData\Data;
-use Exception;
 
 /**
  * Manage configurations.
  */
 class Config
 {
-    /**
-     * @throws Exception
-     */
     public static function loadEnv(): void
     {
         if (! storage()->isFile('.env')) {
-            throw new Exception('Copy ".env.example" file to ".env" then edit it or run "php console app:setup" console command to setup application');
+            throw new CoreException('Copy ".env.example" file to ".env" then edit it or run "php console app:setup" console command to setup application');
         }
 
         $lines = file(storage()->file('.env'), FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);

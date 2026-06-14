@@ -13,7 +13,7 @@ namespace Core\Notification;
 
 interface NotificationInterface
 {
-    public function to(string|array $recipient, string|array $name = []);
-
     public function send(?string $message = null);
+
+    public function to(string|array $recipient, string|array $name = []);
 }

@@ -18,11 +18,6 @@ use Core\Http\Validation\Validator\Validator;
 
 class UpdateProfileValidator extends Validator
 {
-    public function authorize(): bool
-    {
-        return (int) request()->routeParam('user') === auth()->getId();
-    }
-
     /**
      * Validation rules
      */

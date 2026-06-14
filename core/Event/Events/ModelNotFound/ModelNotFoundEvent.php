@@ -18,5 +18,7 @@ class ModelNotFoundEvent implements EventInterface
 {
     use Dispatchable;
 
-    public function __construct(public string $table, public string $column, public string $value) {}
+    public function __construct(public string $table, public string $column, public string $value)
+    {
+    }
 }

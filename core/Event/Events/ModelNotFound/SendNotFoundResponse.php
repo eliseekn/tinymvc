@@ -11,9 +11,11 @@ declare(strict_types=1);
 
 namespace Core\Event\Events\ModelNotFound;
 
+use Core\Enums\Alert\MessageType;
 use Core\Enums\HttpCode;
 use Core\Enums\ResponseStatus;
-use Core\Support\Alert;
+use Core\Http\Response\JsonResponse;
+use Core\Http\Response\RedirectResponse;
 
 class SendNotFoundResponse
 {
@@ -26,13 +28,16 @@ class SendNotFoundResponse
         ]);
 
         if (request()->isJson()) {
-            response()->json([
+            new JsonResponse([
                 'status' => ResponseStatus::ERROR,
                 'data' => $message,
-            ])->send(HttpCode::NOT_FOUND);
+            ], HttpCode::NOT_FOUND)->send();
         }
 
-        Alert::toast($message)->error();
-        response()->back()->send();
+        new RedirectResponse()
+            ->toBack()
+            ->withToast(MessageType::ERROR, $message)
+            ->setStatusCode()
+            ->send();
     }
 }

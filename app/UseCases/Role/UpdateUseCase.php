@@ -11,19 +11,15 @@ declare(strict_types=1);
 
 namespace App\UseCases\Role;
 
+use App\Exceptions\InternalServerException;
 use Core\Database\Model;
-use Core\Support\Alert;
 
 final class UpdateUseCase
 {
     public function handle(Model $role, array $data): void
     {
         if (! $role->update($data)) {
-            Alert::toast('Failed to update role')->error();
-            response()->back()->send();
+            throw new InternalServerException('Failed to update role');
         }
-
-        Alert::toast('Role updated')->success();
-        response()->back()->send();
     }
 }

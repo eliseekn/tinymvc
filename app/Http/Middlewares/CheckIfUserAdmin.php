@@ -13,6 +13,8 @@ namespace App\Http\Middlewares;
 
 use Core\Enums\HttpCode;
 use Core\Enums\ResponseStatus;
+use Core\Http\Response\JsonResponse;
+use Core\Http\Response\ViewResponse;
 
 class CheckIfUserAdmin
 {
@@ -23,12 +25,12 @@ class CheckIfUserAdmin
         }
 
         if (request()->isJson()) {
-            response()->json([
+            new JsonResponse([
                 'status' => ResponseStatus::ERROR,
                 'message' => __('alert.forbidden'),
-            ])->send(HttpCode::FORBIDDEN);
+            ], HttpCode::FORBIDDEN)->send();
         }
 
-        response()->view(config('errors.views.403'))->send();
+        new ViewResponse(config('errors.views.403'))->send();
     }
 }

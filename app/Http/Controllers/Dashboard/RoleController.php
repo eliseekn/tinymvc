@@ -17,14 +17,16 @@ use App\Http\Middlewares\CheckIfUserAdmin;
 use App\Http\Middlewares\EmailVerified;
 use App\Http\Validation\Validators\Role\StoreValidator;
 use App\Http\Validation\Validators\Role\UpdateValidator;
-use App\UseCases\Role\GetCollectionUseCase;
 use App\UseCases\Role\StoreUseCase;
+use App\UseCases\Role\UpdateUseCase;
+use Core\Cache\Cache;
 use Core\Database\Model;
+use Core\Enums\Alert\MessageType;
 use Core\Enums\HttpMethod;
 use Core\Enums\RouteParameter;
+use Core\Http\Response\BaseResponse;
 use Core\Http\Routing\Attributes\Route;
 use Core\Http\Routing\Controller;
-use Core\Support\Alert;
 
 class RoleController extends Controller
 {
@@ -34,9 +36,15 @@ class RoleController extends Controller
         middlewares: [Authenticated::class, EmailVerified::class],
         name: 'roles.index'
     )]
-    public function index(GetCollectionUseCase $useCase): void
+    public function index(): BaseResponse
     {
-        $useCase->handle();
+        $data = Cache::read(
+            'roles.dashboard',
+            Role::findAllPaginate(),
+            carbon()->addDay()->timestamp
+        );
+
+        return $this->viewResponse('dashboard.roles.index', ['roles' => $data]);
     }
 
     #[Route(
@@ -45,9 +53,9 @@ class RoleController extends Controller
         middlewares: [Authenticated::class, EmailVerified::class, CheckIfUserAdmin::class],
         name: 'roles.create'
     )]
-    public function create(): void
+    public function create(): BaseResponse
     {
-        $this->render('dashboard.roles.create', [
+        return $this->viewResponse('dashboard.roles.create', [
             'roles' => Role::findAll(),
         ]);
     }
@@ -58,9 +66,14 @@ class RoleController extends Controller
         middlewares: [Authenticated::class, EmailVerified::class, CheckIfUserAdmin::class],
         name: 'roles.store'
     )]
-    public function store(StoreUseCase $useCase, StoreValidator $validator): void
+    public function store(StoreUseCase $useCase, StoreValidator $validator): BaseResponse
     {
         $useCase->handle($validator->validated());
+
+        return $this
+            ->redirectResponse()
+            ->toBack()
+            ->withToast(MessageType::SUCCESS, 'Role created');
     }
 
     #[Route(
@@ -71,9 +84,9 @@ class RoleController extends Controller
         parameters: ['role' => RouteParameter::NUMBER],
         bindings: ['role' => ['roles', 'id']]
     )]
-    public function edit(Model $role): void
+    public function edit(Model $role): BaseResponse
     {
-        $this->render('dashboard.roles.edit', [
+        return $this->viewResponse('dashboard.roles.edit', [
             'role' => $role,
             'roles' => Role::findAll(),
         ]);
@@ -87,14 +100,14 @@ class RoleController extends Controller
         parameters: ['role' => RouteParameter::NUMBER],
         bindings: ['role' => ['roles', 'id']]
     )]
-    public function update(UpdateValidator $validator, Model $role): void
+    public function update(UpdateUseCase $useCase, UpdateValidator $validator, Model $role): BaseResponse
     {
-        if (! $role->set($validator->validated())->save()) {
-            Alert::toast('Failed to update role')->error();
-        }
+        $useCase->handle($role, $validator->validated());
 
-        Alert::toast('Role updated')->success();
-        $this->redirectBack();
+        return $this
+            ->redirectResponse()
+            ->toBack()
+            ->withToast(MessageType::SUCCESS, 'Role updated');
     }
 
     #[Route(
@@ -105,13 +118,18 @@ class RoleController extends Controller
         parameters: ['role' => RouteParameter::NUMBER],
         bindings: ['role' => ['roles', 'id']]
     )]
-    public function delete(Model $role): void
+    public function delete(Model $role): BaseResponse
     {
         if (! $role->delete()) {
-            Alert::toast('Failed to delete role')->error();
+            return $this
+                ->redirectResponse()
+                ->toBack()
+                ->withToast(MessageType::ERROR, 'Failed to delete role');
         }
 
-        Alert::toast('Role deleted')->success();
-        $this->redirectBack();
+        return $this
+            ->redirectResponse()
+            ->toBack()
+            ->withToast(MessageType::SUCCESS, 'Role deleted');
     }
 }

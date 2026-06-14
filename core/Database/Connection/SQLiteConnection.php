@@ -22,9 +22,6 @@ class SQLiteConnection implements ConnectionInterface
 
     protected bool $memory;
 
-    /**
-     * @throws PDOException
-     */
     public function __construct(public DB $db)
     {
         $this->memory = isset($db->memory) && $db->memory === true;
@@ -50,9 +47,6 @@ class SQLiteConnection implements ConnectionInterface
         return $this->pdo;
     }
 
-    /**
-     * @throws PDOException
-     */
     public function executeStatement(string $query): false|int
     {
         try {
@@ -62,9 +56,6 @@ class SQLiteConnection implements ConnectionInterface
         }
     }
 
-    /**
-     * @throws PDOException
-     */
     public function executeQuery(string $query, ?array $args = null): false|PDOStatement
     {
         try {

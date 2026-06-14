@@ -19,7 +19,9 @@ class UserObserver implements ObserverInterface
 {
     public static $table = 'users';
 
-    public static function created(Model $model): void {}
+    public static function created(Model $model): void
+    {
+    }
 
     public static function updated(Model $model): void
     {
@@ -28,5 +30,7 @@ class UserObserver implements ObserverInterface
         }
     }
 
-    public static function deleted(Model $model): void {}
+    public static function deleted(Model $model): void
+    {
+    }
 }

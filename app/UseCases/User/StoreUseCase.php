@@ -13,7 +13,7 @@ namespace App\UseCases\User;
 
 use App\Database\Models\User;
 use App\Events\UserCreated\UserCreatedEvent;
-use Core\Support\Alert;
+use App\Exceptions\InternalServerException;
 
 final class StoreUseCase
 {
@@ -25,13 +25,9 @@ final class StoreUseCase
         $user = User::factory()->create($data);
 
         if (! $user) {
-            Alert::toast('Failed to create user')->error();
-            response()->back()->send();
+            throw new InternalServerException('Failed to create user');
         }
 
         dispatch(new UserCreatedEvent($user, $password));
-
-        Alert::toast('User created')->success();
-        response()->back()->send();
     }
 }

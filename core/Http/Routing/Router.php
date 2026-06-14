@@ -15,12 +15,12 @@ use Closure;
 use Core\Enums\HttpCode;
 use Core\Enums\HttpMethod;
 use Core\Enums\ResponseStatus;
-use Core\Exceptions\ControllerNotFoundException;
-use Core\Exceptions\MiddlewareNotFoundException;
-use Core\Exceptions\RouteException;
+use Core\Exceptions\CoreException;
 use Core\Http\Middlewares\CsrfProtection;
+use Core\Http\Response\BaseResponse;
+use Core\Http\Response\JsonResponse;
+use Core\Http\Response\ViewResponse;
 use Core\Support\DependencyInjection;
-use Exception;
 
 /**
  * Routing system.
@@ -34,7 +34,7 @@ class Router
             $optional = str_contains($matches[0], '?');
 
             if (! isset($routeParams[$param])) {
-                throw new Exception("No pattern defined for parameter: $param");
+                throw new CoreException("No pattern defined for parameter: $param");
             }
 
             $pattern = $routeParams[$param];
@@ -53,9 +53,6 @@ class Router
         return false;
     }
 
-    /**
-     * @throws MiddlewareNotFoundException
-     */
     protected static function executeMiddlewares(array $middlewares): void
     {
         if (in_array(strtoupper(request()->method()), [HttpMethod::POST, HttpMethod::PATCH, HttpMethod::PUT])) {
@@ -66,63 +63,47 @@ class Router
 
         foreach ($middlewares as $middleware) {
             if (! class_exists($middleware) || ! method_exists($middleware, 'handle')) {
-                throw new MiddlewareNotFoundException($middleware);
+                throw new CoreException("Middleware $middleware not found");
             }
 
             (new DependencyInjection)->resolve($middleware, 'handle');
         }
     }
 
-    /**
-     * @throws RouteException
-     * @throws ControllerNotFoundException
-     */
-    protected static function executeHandler(Closure|array|string $handler, array $params, array $bindings): void
+    protected static function executeHandler(Closure|array|string $handler, array $params, array $bindings): mixed
     {
         if ($handler instanceof Closure) {
-            (new DependencyInjection)->resolveClosure($handler, $params, $bindings);
-
-            return;
+            return (new DependencyInjection)->resolveClosure($handler, $params, $bindings);
         }
 
         if (is_array($handler)) {
             [$controller, $action] = $handler;
 
             if (class_exists($controller) && method_exists($controller, $action)) {
-                (new DependencyInjection)->resolve($controller, $action, $params, $bindings);
-
-                return;
+                return (new DependencyInjection)->resolve($controller, $action, $params, $bindings);
             }
 
-            throw new ControllerNotFoundException("$controller@$action");
+            throw new CoreException("Controller $controller@$action not found");
         }
 
         if (is_string($handler)) {
             if (class_exists($handler)) {
-                (new DependencyInjection)->resolve($handler, '__invoke', $params, $bindings);
-
-                return;
+                return (new DependencyInjection)->resolve($handler, '__invoke', $params, $bindings);
             }
 
-            throw new ControllerNotFoundException($handler);
+            throw new CoreException("Controller $handler not found");
         }
 
         // @phpstan-ignore-next-line
-        throw RouteException::invalidHandler($handler);
+        throw new CoreException('Invalid route handler');
     }
 
-    /**
-     * @throws MiddlewareNotFoundException
-     * @throws RouteException
-     * @throws ControllerNotFoundException
-     * @throws Exception
-     */
     public static function dispatch(): void
     {
         $routes = Route::getAll();
 
         if (empty($routes)) {
-            throw RouteException::noRoutesDefined();
+            throw new CoreException('No routes defined in ./routes');
         }
 
         foreach ($routes as $route => $options) {
@@ -132,7 +113,7 @@ class Router
 
             if (self::match($route, $params, $options['parameters'] ?? [])) {
                 if (! isset($options['handler'])) {
-                    throw RouteException::noHandlerDefined($route);
+                    throw new CoreException("No handler defined for route '$route'");
                 }
 
                 if (! request()->uriContains('api')) {
@@ -145,17 +126,21 @@ class Router
 
                 $bindings = resolve_route_binding($route, $options['parameters'] ?? [], $options['bindings'] ?? []);
 
-                self::executeHandler($options['handler'], $params, $bindings);
+                $handler = self::executeHandler($options['handler'], $params, $bindings);
+
+                if ($handler instanceof BaseResponse) {
+                    $handler->send();
+                }
             }
         }
 
         if (request()->isJson()) {
-            response()->json([
+            new JsonResponse([
                 'status' => ResponseStatus::ERROR,
                 'message' => 'Not found',
-            ])->send(HttpCode::NOT_FOUND);
+            ], HttpCode::NOT_FOUND)->send();
         }
 
-        response()->view(config('errors.views.404'))->send(HttpCode::NOT_FOUND);
+        new ViewResponse(config('errors.views.404'), []);
     }
 }

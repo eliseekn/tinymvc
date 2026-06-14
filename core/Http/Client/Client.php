@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Core\Http\Client;
 
 use Core\Enums\HttpMethod;
+use Core\Support\Logger;
 use Exception;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\Mime\Part\DataPart;
@@ -53,7 +54,7 @@ class Client implements ClientInterface
         try {
             self::$response = $client->request(strtoupper($method), $url, $options);
         } catch (Exception $e) {
-            report($e);
+            Logger::exception($e);
         }
 
         return new self;

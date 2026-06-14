@@ -13,7 +13,6 @@ namespace Core\Database;
 
 use Closure;
 use Core\Database\Metrics\Metrics;
-use Core\Exceptions\InvalidSQLQueryException;
 use Core\Notification\Notifiable;
 use Core\Observer\Observer;
 use Core\Policy\Policy;
@@ -48,16 +47,13 @@ class Model
 
         foreach ($attributes as $attribute) {
             if (isset($this->updatedAttributes[$attribute])) {
-                $result = isset($this->updatedAttributes[$attributes]) && $this->updatedAttributes[$attribute] !== $this->attributes[$attribute];
+                $result = isset($this->updatedAttributes[$attribute]) && $this->updatedAttributes[$attribute] !== $this->attributes[$attribute];
             }
         }
 
         return $result;
     }
 
-    /**
-     * @throws InvalidSQLQueryException
-     */
     public function findBy(string $column, $operator = null, $value = null): ?self
     {
         return $this->repository->findWhere($column, $operator, $value);
@@ -164,9 +160,6 @@ class Model
         return $this->repository->metrics();
     }
 
-    /**
-     * @throws InvalidSQLQueryException
-     */
     public function create(array $data, bool $withoutEvent = false): self|false
     {
         $id = $this->repository->insertGetId($data);
@@ -195,8 +188,6 @@ class Model
 
     /**
      * Get relationship of the model.
-     *
-     * @throws InvalidSQLQueryException
      */
     public function hasOne(string $table, ?string $column = null): ?Model
     {
@@ -212,8 +203,6 @@ class Model
 
     /**
      * Get relationship of the model.
-     *
-     * @throws InvalidSQLQueryException
      */
     public function hasMany(string $table, ?string $column = null): array
     {
@@ -229,8 +218,6 @@ class Model
 
     /**
      * Get relationship belongs to the model.
-     *
-     * @throws InvalidSQLQueryException
      */
     public function belongsTo(string $table, ?string $column = null): ?Model
     {
@@ -246,8 +233,6 @@ class Model
 
     /**
      * Get relationship belongs to many the model.
-     *
-     * @throws InvalidSQLQueryException
      */
     public function belongsToMany(string $table, ?string $column = null): array
     {
@@ -287,9 +272,6 @@ class Model
         return array_intersect_key($this->attributes, array_flip($attributes));
     }
 
-    /**
-     * @throws InvalidSQLQueryException
-     */
     public function update(array $data, bool $withoutEvent = false): bool
     {
         $result = $this->repository->updateIfExists($this->getId(), $data);
@@ -305,9 +287,6 @@ class Model
         return true;
     }
 
-    /**
-     * @throws InvalidSQLQueryException
-     */
     public function delete(bool $withoutEvent = false): bool
     {
         $result = $this->repository->deleteIfExists($this->getId());
@@ -323,9 +302,6 @@ class Model
         return true;
     }
 
-    /**
-     * @throws InvalidSQLQueryException
-     */
     public function save(): self|false
     {
         if (empty($this->getId())) {
@@ -363,7 +339,7 @@ class Model
         return $table.'_id';
     }
 
-    public function authorize(PolicyInterface $policy): Policy
+    public function isAuthorized(PolicyInterface $policy): Policy
     {
         return Policy::authorize($policy, $this);
     }

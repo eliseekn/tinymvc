@@ -15,7 +15,7 @@ use Closure;
 use Core\Enums\HttpMethod;
 use Core\Enums\RouteName;
 use Core\Enums\RouteParameter;
-use Core\Exceptions\RouteException;
+use Core\Exceptions\CoreException;
 use Core\Http\Routing\Attributes\Route as RouteAttribute;
 use ReflectionClass;
 use ReflectionMethod;
@@ -32,7 +32,9 @@ class Route
 
     public static array $routes = [];
 
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 
     private static function add(string $route, Closure|array|string $handler): self
     {
@@ -256,9 +258,6 @@ class Route
         return array_combine($array_keys, self::$tmp_routes);
     }
 
-    /**
-     * @throws RouteException
-     */
     public static function getAll(): array
     {
         self::load();
@@ -304,15 +303,12 @@ class Route
         }
     }
 
-    /**
-     * @throws RouteException
-     */
     public static function load(): void
     {
         self::loadFromAttributes();
 
         if (empty(config('routes')) && empty(self::$routes)) {
-            throw RouteException::noPathsDefined();
+            throw new CoreException('No routes paths defined in "./config/routes.php"');
         }
 
         if (! empty(config('routes'))) {

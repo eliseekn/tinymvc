@@ -29,8 +29,6 @@ interface ValidatorInterface
 
     public function validationFailed();
 
-    public function authorize();
-
     public function beforeValidation();
 
     public function afterValidation();

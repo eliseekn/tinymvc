@@ -8,25 +8,14 @@ use App\Database\Models\Token;
 use App\Enums\TokenDescription;
 use App\Notifications\Mails\PasswordResetMail;
 use Core\Notification\Notification;
-use Exception;
 
 final class NotifyUseCase
 {
-    public function handle(string $email): bool
+    public function handle(string $email): void
     {
         $tokenValue = generate_token(15);
-        $token = Token::generate($email, TokenDescription::PASSWORD_RESET->value, $tokenValue);
+        Token::generate($email, TokenDescription::PASSWORD_RESET->value, $tokenValue);
 
-        try {
-            Notification::send(new PasswordResetMail($email, $tokenValue))->to($email);
-
-            return true;
-        } catch (Exception $e) {
-            report($e);
-
-            $token->delete();
-
-            return false;
-        }
+        Notification::send(new PasswordResetMail($email, $tokenValue))->to($email);
     }
 }
