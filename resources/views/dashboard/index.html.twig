@@ -14,17 +14,17 @@
 
 		<div>
 			<select id="users-trends" class="form-select">
-				<option value="day" {{ request().queries('period') == 'day' ? 'selected' : '' }}>This week</option>
-				<option value="last_week" {{ request().queries('period') == 'last_week' ? 'selected' : '' }}>Since last week</option>
-				<option value="week" {{ request().queries('period') == 'week' ? 'selected' : '' }}>This month</option>
-				<option value="last_month" {{ request().queries('period') == 'last_month' ? 'selected' : '' }}>Since last month</option>
-				<option value="quater_year" {{ request().queries('period') == 'quater_year' ? 'selected' : '' }}>This quater year</option>
-				<option value="half_year" {{ request().queries('period') == 'half_year' ? 'selected' : '' }}>This half year</option>
-				<option value="month" {{ request().queries('period') == 'month' ? 'selected' : '' }}>This year</option>
-				<option value="last_year" {{ request().queries('period') == 'last_year' ? 'selected' : '' }}>Since last year</option>
-				<option value="year" {{ request().queries('period') == 'year' ? 'selected' : '' }}>Last 5 years</option>
+				<option value="day" {{ request().queries.get('period') == 'day' ? 'selected' : '' }}>This week</option>
+				<option value="last_week" {{ request().queries.get('period') == 'last_week' ? 'selected' : '' }}>Since last week</option>
+				<option value="week" {{ request().queries.get('period') == 'week' ? 'selected' : '' }}>This month</option>
+				<option value="last_month" {{ request().queries.get('period') == 'last_month' ? 'selected' : '' }}>Since last month</option>
+				<option value="quater_year" {{ request().queries.get('period') == 'quater_year' ? 'selected' : '' }}>This quater year</option>
+				<option value="half_year" {{ request().queries.get('period') == 'half_year' ? 'selected' : '' }}>This half year</option>
+				<option value="month" {{ request().queries.get('period') == 'month' ? 'selected' : '' }}>This year</option>
+				<option value="last_year" {{ request().queries.get('period') == 'last_year' ? 'selected' : '' }}>Since last year</option>
+				<option value="year" {{ request().queries.get('period') == 'year' ? 'selected' : '' }}>Last 5 years</option>
 				{% set periods = ['last_week', 'day', 'week', 'quater_year', 'half_year', 'month', 'year', 'last_month', 'last_year'] %}
-				<option value="custom" {{ (request().queries('period') is not null and request().queries('period') not in periods) ? 'selected' : '' }}>Custom</option>
+				<option value="custom" {{ (request().queries.get('period') is not null and request().queries.get('period') not in periods) ? 'selected' : '' }}>Custom</option>
 			</select>
 		</div>
 	</div>
