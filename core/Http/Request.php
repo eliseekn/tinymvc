@@ -14,7 +14,7 @@ namespace Core\Http;
 use Core\Http\Routing\Route;
 use Core\Http\Validation\Validator\Validator;
 use Core\Support\File;
-use Core\Support\Uploader;
+use Core\Support\UploadedFile;
 
 /**
  * Handle HTTP requests.
@@ -91,34 +91,35 @@ class Request
         return $this;
     }
 
-    public function files(string $input, array $allowed_extensions = []): Uploader|array
+    public function files(string $input): array
     {
-        $files = [];
-
         if (empty($_FILES[$input])) {
-            return $files;
+            return [];
         }
 
         $count = is_array($_FILES[$input]['tmp_name']) ? count($_FILES[$input]['tmp_name']) : 1;
+        $files = [];
 
         if ($count === 1) {
-            return new Uploader([
+            $files[] = new UploadedFile([
                 'name' => $_FILES[$input]['name'],
                 'tmp_name' => $_FILES[$input]['tmp_name'],
                 'size' => $_FILES[$input]['size'],
                 'type' => $_FILES[$input]['type'],
                 'error' => $_FILES[$input]['error'],
-            ], $allowed_extensions);
+            ]);
+
+            return $files;
         }
 
         for ($i = 0; $i < $count; $i++) {
-            $files[] = new Uploader([
+            $files[] = new UploadedFile([
                 'name' => $_FILES[$input]['name'][$i],
                 'tmp_name' => $_FILES[$input]['tmp_name'][$i],
                 'size' => $_FILES[$input]['size'][$i],
                 'type' => $_FILES[$input]['type'][$i],
                 'error' => $_FILES[$input]['error'][$i],
-            ], $allowed_extensions);
+            ]);
         }
 
         return $files;
@@ -205,7 +206,7 @@ class Request
         $result = false;
 
         foreach ($items as $item) {
-            $result = ! is_null($this->attributes[$item]);
+            $result = ! empty($this->attributes[$item]);
         }
 
         return $result;
