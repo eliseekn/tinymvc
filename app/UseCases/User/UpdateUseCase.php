@@ -13,7 +13,6 @@ namespace App\UseCases\User;
 
 use App\Exceptions\InternalServerException;
 use App\Helpers\FileUploadHelper;
-use App\Policies\ProfilePolicy;
 use Core\Database\Model;
 
 final class UpdateUseCase
@@ -22,15 +21,15 @@ final class UpdateUseCase
 
     public function handle(array $data, Model $user): void
     {
-        $user->isAuthorized(new ProfilePolicy)->onUpdate();
+        $files = request()->files('avatar');
 
-        $file = request()->files('avatar', ['png', 'jpg', 'jpeg']);
+        if (! empty($files)) {
+            if (! $this->fileUploadHelper->handle($files[0])) {
+                throw new InternalServerException('Failed to upload avatar image');
+            }
 
-        if (! $this->fileUploadHelper->handle($file)) {
-            throw new InternalServerException('Failed to upload avatar image');
+            $data['avatar'] = $this->fileUploadHelper->filename;
         }
-
-        $data['avatar'] = $this->fileUploadHelper->filename;
 
         if (! empty($data['password'])) {
             $data['password'] = bcrypt($data['password']);
@@ -41,7 +40,5 @@ final class UpdateUseCase
         if (! $user->update($data)) {
             throw new InternalServerException('Failed to update profile');
         }
-
-        session()->create('user', $user->get());
     }
 }
