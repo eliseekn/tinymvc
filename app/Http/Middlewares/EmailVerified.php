@@ -23,7 +23,7 @@ class EmailVerified
     {
         if (config('security.auth.email_verification') && is_null(auth()->get('email_verified_at'))) {
             new RedirectResponse()
-                ->url('/email/notify')
+                ->toUrl('/email/notify')
                 ->intended(request()->fullUri())
                 ->withAlert(MessageType::ERROR, __('alert.email_not_verified'))
                 ->send();
