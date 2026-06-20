@@ -11,14 +11,11 @@ declare(strict_types=1);
 
 namespace Core\Notification;
 
-use Core\Exceptions\CoreException;
 use PHPUnit\Framework\Assert;
 
 class Notification
 {
-    public function __construct(public NotificationInterface $notifiable)
-    {
-    }
+    public function __construct(public NotificationInterface $notifiable) {}
 
     public static function send(NotificationInterface $notifiable): self
     {
@@ -34,11 +31,7 @@ class Notification
             return;
         }
 
-        $this->notifiable->to($recipient);
-
-        if (! $this->notifiable->send()) {
-            throw new CoreException('Failed to send notification');
-        }
+        $this->notifiable->to($recipient)->send();
     }
 
     public static function fake(string $name, string|array $recipient): void
