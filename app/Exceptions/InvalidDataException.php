@@ -14,7 +14,7 @@ namespace App\Exceptions;
 use Core\Enums\HttpCode;
 use Core\Exceptions\Interfaces\HasCustomHttpResponse;
 use Core\Http\Response\BaseResponse;
-use Core\Response\Traits\HttpResponse;
+use Core\Http\Response\Traits\HttpResponse;
 use Exception;
 
 class InvalidDataException extends Exception implements HasCustomHttpResponse

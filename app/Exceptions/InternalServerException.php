@@ -14,7 +14,7 @@ namespace App\Exceptions;
 use Core\Enums\Alert\MessageType;
 use Core\Exceptions\Interfaces\HasCustomHttpResponse;
 use Core\Http\Response\BaseResponse;
-use Core\Response\Traits\HttpResponse;
+use Core\Http\Response\Traits\HttpResponse;
 use Exception;
 
 class InternalServerException extends Exception implements HasCustomHttpResponse
@@ -31,6 +31,6 @@ class InternalServerException extends Exception implements HasCustomHttpResponse
         return $this
             ->redirectResponse()
             ->toBack()
-            ->withAlert(MessageType::ERROR, $this->getMessage());
+            ->withToast(MessageType::ERROR, $this->getMessage());
     }
 }
