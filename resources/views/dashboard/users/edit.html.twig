@@ -14,7 +14,7 @@
 </div>
 
 <div class="card shadow">
-  <form method="post" action="{{ route('users.edit', {user: user.getId()}) }}">
+  <form method="post" action="{{ route('users.update', {user: user.getId()}) }}">
 		{{ csrf_token_input()|raw }}
 		{{ method_input('patch')|raw }}
 
