@@ -12,8 +12,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Validation\Validators\Auth\EmailValidator;
-use App\UseCases\EmailVerification\NotifyUseCase;
 use App\UseCases\EmailVerification\VerifyUseCase;
+use App\UseCases\Shared\NotifyUseCase;
 use Core\Enums\Alert\MessageType;
 use Core\Enums\HttpMethod;
 use Core\Http\Response\BaseResponse;

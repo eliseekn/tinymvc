@@ -13,7 +13,7 @@ namespace App\Http\Controllers\Api\v1\Auth;
 
 use App\Http\Validation\Validators\Auth\EmailValidator;
 use App\UseCases\Api\v1\VerifyEmailUseCase;
-use App\UseCases\EmailVerification\NotifyUseCase;
+use App\UseCases\Shared\NotifyUseCase;
 use Core\Enums\HttpMethod;
 use Core\Http\Response\BaseResponse;
 use Core\Http\Routing\Attributes\Route;

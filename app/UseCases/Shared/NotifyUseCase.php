@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace App\UseCases\EmailVerification;
+namespace App\UseCases\Shared;
 
 use App\Database\Models\Token;
 use App\Enums\TokenDescription;
