@@ -37,7 +37,9 @@ class Application
         Observer::load();
 
         try {
-            Router::dispatch();
+            $response = Router::dispatch();
+
+            $response->send();
         } catch (Throwable $e) {
             if ($e instanceof Reportable) {
                 $e->report();

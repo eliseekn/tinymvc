@@ -98,7 +98,7 @@ class Router
         throw new CoreException('Invalid route handler');
     }
 
-    public static function dispatch(): void
+    public static function dispatch(): BaseResponse
     {
         $routes = Route::getAll();
 
@@ -126,21 +126,17 @@ class Router
 
                 $bindings = resolve_route_binding($route, $options['parameters'] ?? [], $options['bindings'] ?? []);
 
-                $handler = self::executeHandler($options['handler'], $params, $bindings);
-
-                if ($handler instanceof BaseResponse) {
-                    $handler->send();
-                }
+                return self::executeHandler($options['handler'], $params, $bindings);
             }
         }
 
         if (request()->isJson()) {
-            new JsonResponse([
+            return new JsonResponse([
                 'status' => ResponseStatus::ERROR,
                 'message' => 'Not found',
-            ], HttpCode::NOT_FOUND)->send();
+            ], HttpCode::NOT_FOUND);
         }
 
-        new ViewResponse(config('errors.views.404'), []);
+        return new ViewResponse(config('errors.views.404'), []);
     }
 }
