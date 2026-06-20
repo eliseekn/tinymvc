@@ -11,15 +11,15 @@ declare(strict_types=1);
 
 namespace App\Helpers;
 
-use Core\Support\Uploader;
+use Core\Support\UploadedFile;
 
 final class FileUploadHelper
 {
     public string $filename;
 
-    public function handle(Uploader $file): bool
+    public function handle(UploadedFile $file): bool
     {
-        if (! $file->isEmpty() || ! $file->isUploaded() || ! $file->isAllowed()) {
+        if (! $file->isUploaded()) {
             return false;
         }
 

@@ -17,15 +17,11 @@ use Core\Enums\UploadFileError;
 /**
  * Manage uploaded files.
  */
-class Uploader
+final class UploadedFile
 {
     public string $filename = '';
 
-    public function __construct(
-        private readonly array $file = [],
-        private readonly array $allowed_extensions = []
-    ) {
-    }
+    public function __construct(private readonly array $file = []) {}
 
     public function getOriginalFilename(): string
     {
@@ -55,11 +51,6 @@ class Uploader
     public function getFileExtension(): string
     {
         return File::getExtension($this->getOriginalFilename());
-    }
-
-    public function isAllowed(): bool
-    {
-        return empty($this->allowed_extensions) || in_array(strtolower($this->getFileExtension()), $this->allowed_extensions);
     }
 
     public function isEmpty(): bool
