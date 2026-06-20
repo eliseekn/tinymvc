@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Core\Http\Response;
 
+use Core\Enums\Alert\MessageType;
 use Core\Enums\AppEnv;
 use Core\Enums\HttpCode;
 use Core\Exceptions\CoreException;
@@ -116,14 +117,24 @@ class BaseResponse
 
     public function withAlert(string $type, string|array $message, bool $dismiss = true): self
     {
-        Alert::default($message, $dismiss)->$type();
+        match ($type) {
+            MessageType::ERROR => Alert::default($message, $dismiss)->error(),
+            MessageType::INFO => Alert::default($message, $dismiss)->info(),
+            MessageType::WARNING => Alert::default($message, $dismiss)->warning(),
+            default => Alert::default($message, $dismiss)->success()
+        };
 
         return $this;
     }
 
     public function withToast(string $type, string|array $message, bool $dismiss = true): self
     {
-        Alert::toast($message, $dismiss)->$type();
+        match ($type) {
+            MessageType::ERROR => Alert::toast($message, $dismiss)->error(),
+            MessageType::INFO => Alert::toast($message, $dismiss)->info(),
+            MessageType::WARNING => Alert::toast($message, $dismiss)->warning(),
+            default => Alert::toast($message, $dismiss)->success()
+        };
 
         return $this;
     }
