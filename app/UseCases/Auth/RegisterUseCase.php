@@ -13,7 +13,7 @@ namespace App\UseCases\Auth;
 
 use App\Database\Models\User;
 use App\Events\UserRegistered\UserRegisteredEvent;
-use App\UseCases\EmailVerification\NotifyUseCase;
+use App\UseCases\Shared\NotifyUseCase;
 
 final class RegisterUseCase
 {

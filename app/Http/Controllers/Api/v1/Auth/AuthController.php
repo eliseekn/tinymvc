@@ -15,7 +15,7 @@ use App\Http\Validation\Validators\Auth\LoginValidator;
 use App\Http\Validation\Validators\Auth\RegisterValidator;
 use App\UseCases\Api\v1\Auth\LoginUseCase;
 use App\UseCases\Auth\RegisterUseCase;
-use App\UseCases\EmailVerification\NotifyUseCase;
+use App\UseCases\Shared\NotifyUseCase;
 use Core\Enums\HttpCode;
 use Core\Enums\ResponseStatus;
 use Core\Http\Auth;
