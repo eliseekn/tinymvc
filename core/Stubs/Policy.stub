@@ -14,7 +14,7 @@ namespace App\Policies;
 use Core\Database\Model;
 use Core\Policy\PolicyInterface;
 
-class CLASSNAME implements PolicyInterface
+final class CLASSNAME implements PolicyInterface
 {
     public function index(): bool
     {

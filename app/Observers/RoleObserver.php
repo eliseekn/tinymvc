@@ -15,7 +15,7 @@ use Core\Cache\Cache;
 use Core\Database\Model;
 use Core\Observer\ObserverInterface;
 
-class RoleObserver implements ObserverInterface
+abstract class RoleObserver implements ObserverInterface
 {
     public static $table = 'roles';
 

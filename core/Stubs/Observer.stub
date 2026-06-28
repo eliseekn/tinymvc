@@ -14,7 +14,7 @@ namespace NAMESPACE;
 use Core\Database\Model;
 use Core\Observer\ObserverInterface;
 
-class CLASSNAME implements ObserverInterface
+abstract class CLASSNAME implements ObserverInterface
 {
     public static $table = 'TABLE_NAME';
 
