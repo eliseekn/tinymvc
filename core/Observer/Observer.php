@@ -14,7 +14,7 @@ namespace Core\Observer;
 use Core\Database\Model;
 use Spatie\StructureDiscoverer\Discover;
 
-class Observer
+abstract class Observer
 {
     protected static array $observers = [];
 
@@ -26,7 +26,7 @@ class Observer
     public static function created(Model $model): void
     {
         foreach (self::$observers as $observer) {
-            if ($observer::$table === $model->getTable() && method_exists($observer, 'created')) {
+            if ($observer::$table === $model->getTable()) {
                 $observer::created($model);
             }
         }
