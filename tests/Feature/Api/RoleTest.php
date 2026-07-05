@@ -36,7 +36,7 @@ class RoleTest extends FeatureTestCase
             ->assertStatusOk()
             ->assertJsonContains([
                 [
-                    'name' => $role->get('name'),
+                    'name' => $role->getAttributes('name'),
                 ],
             ]);
     }

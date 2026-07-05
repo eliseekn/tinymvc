@@ -29,24 +29,24 @@ final class VerifyEmailUseCase
         $email = request()->queries()->get('email');
         $token = Token::findByDescription($email, TokenDescription::EMAIL_VERIFICATION->value);
 
-        if (! $token || $token->get('value') !== request()->queries()->get('token')) {
+        if (! $token || $token->getAttributes('value') !== request()->queries()->get('token')) {
             throw new InvalidDataException(__('alert.invalid_password_reset_link'));
         }
 
-        if (carbon($token->get('expires_at'))->lt(carbon())) {
+        if (carbon($token->getAttributes('expires_at'))->lt(carbon())) {
             throw new InvalidDataException(__('alert.expired_password_reset_link'));
         }
 
         $token->delete();
 
         $user = User::findByEmail($email)
-            ->set(['email_verified_at' => carbon()->toDateTimeString()])
+            ->setAttributes(['email_verified_at' => carbon()->toDateTimeString()])
             ->save();
 
         if (! $user) {
             throw new InvalidDataException(__('alert.account_not_found'));
         }
 
-        Notification::send(new WelcomeMail($user->get('name')))->to($email);
+        Notification::send(new WelcomeMail($user->getAttributes('name')))->to($email);
     }
 }

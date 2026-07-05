@@ -20,7 +20,7 @@ class RoleResource extends Resource
     {
         return [
             'id' => $model->getId(),
-            'name' => $model->get('name'),
+            'name' => $model->getAttributes('name'),
         ];
     }
 }

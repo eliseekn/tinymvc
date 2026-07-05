@@ -20,11 +20,11 @@ class UserResource extends Resource
     {
         return [
             'id' => $model->getId(),
-            'name' => $model->get('name'),
-            'email' => $model->get('email'),
-            'avatar' => is_null($model->get('avatar')) ? null : storage_url('uploads/'.$model->get('avatar')),
-            'role' => $model->belongsTo('roles')->get('name'),
-            'created_at' => carbon($model->get('created_at'))->locale(config('app.lang'))->isoFormat('Do MMM YYYY'),
+            'name' => $model->getAttributes('name'),
+            'email' => $model->getAttributes('email'),
+            'avatar' => is_null($model->getAttributes('avatar')) ? null : storage_url('uploads/'.$model->getAttributes('avatar')),
+            'role' => $model->belongsTo('roles')->getAttributes('name'),
+            'created_at' => carbon($model->getAttributes('created_at'))->locale(config('app.lang'))->isoFormat('Do MMM YYYY'),
         ];
     }
 }

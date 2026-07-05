@@ -40,7 +40,7 @@ class Pagination
 
     public function getItemsAsArray(): array
     {
-        $items = array_map(fn (Model $model) => $model->get(), $this->items);
+        $items = array_map(fn (Model $model) => $model->getAttributes(), $this->items);
 
         return [
             'data' => $items,

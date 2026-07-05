@@ -33,7 +33,7 @@ class AuthenticationTest extends FeatureTestCase
         $user = User::factory()->make(['password' => 'password']);
 
         $this
-            ->post('/login', $user->get(['email', 'password']))
+            ->post('/login', $user->getAttributes(['email', 'password']))
             ->assertSessionHasErrors()
             ->assertRedirectedToUrl('/login');
     }
@@ -44,11 +44,11 @@ class AuthenticationTest extends FeatureTestCase
 
         $this
             ->post('/login', [
-                'email' => $user->get('email'),
+                'email' => $user->getAttributes('email'),
                 'password' => 'P@ssw0rd',
             ])
             ->assertSessionDoesNotHaveErrors()
-            ->assertSessionHas('user', $user->get());
+            ->assertSessionHas('user', $user->getAttributes());
     }
 
     public function test_user_can_register(): void
@@ -58,9 +58,9 @@ class AuthenticationTest extends FeatureTestCase
         $user = User::factory()->make(['password' => 'P@ssw0rd']);
 
         $this
-            ->post('/register', $user->get())
+            ->post('/register', $user->getAttributes())
             ->assertSessionDoesNotHaveErrors()
-            ->assertDatabaseHas('users', $user->get(['name', 'email']));
+            ->assertDatabaseHas('users', $user->getAttributes(['name', 'email']));
 
         Event::assertDispatched(UserRegisteredEvent::class);
     }
@@ -70,7 +70,7 @@ class AuthenticationTest extends FeatureTestCase
         $user = User::factory()->create();
 
         $this->post('/login', [
-            'email' => $user->get('email'),
+            'email' => $user->getAttributes('email'),
             'password' => 'P@ssw0rd',
         ]);
 
@@ -78,7 +78,7 @@ class AuthenticationTest extends FeatureTestCase
             ->auth($user)
             ->post('/logout')
             ->assertRedirectedToUrl(config('app.home'))
-            ->assertSessionDoesNotHave('user', $user->get());
+            ->assertSessionDoesNotHave('user', $user->getAttributes());
     }
 
     public function test_user_can_not_register_twice(): void
@@ -86,7 +86,7 @@ class AuthenticationTest extends FeatureTestCase
         $user = User::factory()->create(['password' => 'P@ssw0rd']);
 
         $this
-            ->post('/register', $user->get(['name', 'email', 'password']))
+            ->post('/register', $user->getAttributes(['name', 'email', 'password']))
             ->assertSessionHasErrors();
     }
 }

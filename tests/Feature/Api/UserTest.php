@@ -48,14 +48,14 @@ class UserTest extends FeatureTestCase
 
         $this
             ->auth(Fixtures::createAdmin())
-            ->postJson('/api/v1/users', $user->get())
+            ->postJson('/api/v1/users', $user->getAttributes())
             ->assertStatusEquals(HttpCode::CREATED)
             ->assertJsonContains([
                 'status' => ResponseStatus::SUCCESS,
                 'message' => 'User created',
-                'data' => $user->get(),
+                'data' => $user->getAttributes(),
             ])
-            ->assertDatabaseHas('users', ['name' => $user->get('name')]);
+            ->assertDatabaseHas('users', ['name' => $user->getAttributes('name')]);
     }
 
     public function test_can_get_collection(): void
@@ -83,8 +83,8 @@ class UserTest extends FeatureTestCase
             ->getJson('/api/v1/users/'.$user->getId())
             ->assertStatusOk()
             ->assertJsonContains([
-                'name' => $user->get('name'),
-                'email' => $user->get('email'),
+                'name' => $user->getAttributes('name'),
+                'email' => $user->getAttributes('email'),
             ]);
     }
 
@@ -99,7 +99,7 @@ class UserTest extends FeatureTestCase
             ->auth(Fixtures::createAdmin())
             ->patchJson('/api/v1/users/'.$user->getId(), ['name' => $name])
             ->assertStatusOk()
-            ->assertJsonContains(['data' => $user->set(['name' => $name])->get()])
+            ->assertJsonContains(['data' => array_merge(['name' => $name], $user->getAttributes())])
             ->assertDatabaseHas('users', ['name' => $name]);
     }
 
@@ -112,6 +112,6 @@ class UserTest extends FeatureTestCase
             ->deleteJson('/api/v1/users/'.$user->getId())
             ->assertStatusEquals(HttpCode::NO_CONTENT)
             ->assertJsonContains(['status' => ResponseStatus::SUCCESS])
-            ->assertDatabaseDoesNotHave('users', ['name' => $user->get('name')]);
+            ->assertDatabaseDoesNotHave('users', ['name' => $user->getAttributes('name')]);
     }
 }

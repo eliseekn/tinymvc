@@ -112,7 +112,7 @@ class Model
             ->when(! is_null($subQuery), $subQuery)
             ->get();
 
-        return ! $data ? 0 : $data->get('value');
+        return ! $data ? 0 : $data->getAttributes('value');
     }
 
     public function sum(string $column, ?Closure $subQuery = null): string|array|int
@@ -122,7 +122,7 @@ class Model
             ->when(! is_null($subQuery), $subQuery)
             ->get();
 
-        return ! $data ? 0 : $data->get('value');
+        return ! $data ? 0 : $data->getAttributes('value');
     }
 
     public function average(string $column, ?Closure $subQuery = null): string|int|array
@@ -132,7 +132,7 @@ class Model
             ->when(! is_null($subQuery), $subQuery)
             ->get();
 
-        return ! $data ? 0 : $data->get('value');
+        return ! $data ? 0 : $data->getAttributes('value');
     }
 
     public function max(string $column, ?Closure $subQuery = null): string|int|array
@@ -142,7 +142,7 @@ class Model
             ->when(! is_null($subQuery), $subQuery)
             ->get();
 
-        return ! $data ? 0 : $data->get('value');
+        return ! $data ? 0 : $data->getAttributes('value');
     }
 
     public function min(string $column, ?Closure $subQuery = null): string|int|array
@@ -152,7 +152,7 @@ class Model
             ->when(! is_null($subQuery), $subQuery)
             ->get();
 
-        return ! $data ? 0 : $data->get('value');
+        return ! $data ? 0 : $data->getAttributes('value');
     }
 
     public function metrics(): Metrics
@@ -183,7 +183,7 @@ class Model
 
     public function getId(): int
     {
-        return (int) $this->get('id');
+        return (int) $this->getAttributes('id');
     }
 
     /**
@@ -246,7 +246,7 @@ class Model
             ->getAll();
     }
 
-    public function set(array $attributes): self
+    public function setAttributes(array $attributes): self
     {
         foreach ($attributes as $key => $value) {
             if (isset($this->attributes[$key])) {
@@ -259,7 +259,7 @@ class Model
         return $this;
     }
 
-    public function get(string|array|null $attributes = null): int|string|array|null
+    public function getAttributes(string|array|null $attributes = null): int|string|array|null
     {
         if (is_null($attributes)) {
             return $this->attributes;

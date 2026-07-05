@@ -11,7 +11,7 @@ final class UpdatePasswordUseCase
     public function handle(array $data): bool
     {
         return User::findByEmail($data['email'])
-            ->set(['password' => bcrypt($data['password'])])
+            ->setAttributes(['password' => bcrypt($data['password'])])
             ->save();
     }
 }

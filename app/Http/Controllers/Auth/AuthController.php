@@ -18,7 +18,7 @@ use App\Http\Validation\Validators\Auth\LoginValidator;
 use App\Http\Validation\Validators\Auth\RegisterValidator;
 use App\UseCases\Auth\LoginUseCase;
 use App\UseCases\Auth\RegisterUseCase;
-use App\UseCases\EmailVerification\NotifyUseCase;
+use App\UseCases\Shared\NotifyUseCase;
 use Core\Enums\Alert\MessageType;
 use Core\Enums\HttpMethod;
 use Core\Http\Auth;
@@ -47,7 +47,7 @@ class AuthController extends Controller
             ->redirectResponse()
             ->toUrl('/dashboard')
             ->withToast(MessageType::SUCCESS, __('alert.welcome', [
-                'name' => $user?->get('name'),
+                'name' => $user?->getAttributes('name'),
             ]));
     }
 

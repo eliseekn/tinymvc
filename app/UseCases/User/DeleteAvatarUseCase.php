@@ -21,14 +21,14 @@ final class DeleteAvatarUseCase
     {
         $user->isAuthorized(new ProfilePolicy)->onDelete();
 
-        if (! storage(config('storage.uploads'))->deleteFile($user->get('avatar'))) {
+        if (! storage(config('storage.uploads'))->deleteFile($user->getAttributes('avatar'))) {
             throw new InternalServerException('Failed to delete avatar');
         }
 
-        if (! $user->set(['avatar' => null])->save()) {
+        if (! $user->setAttributes(['avatar' => null])->save()) {
             throw new InternalServerException('Failed to update profile');
         }
 
-        session()->create('user', $user->get());
+        session()->create('user', $user->getAttributes());
     }
 }

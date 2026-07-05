@@ -34,14 +34,14 @@ class PasswordForgotTest extends FeatureTestCase
         $user = User::factory()->create();
 
         $token = Token::factory()->create([
-            'identifier' => $user->get('email'),
+            'identifier' => $user->getAttributes('email'),
             'description' => TokenDescription::PASSWORD_RESET->value,
         ]);
 
         $this
-            ->get('/password/reset?email='.$user->get('email').'&token='.$token->get('value'))
+            ->get('/password/reset?email='.$user->getAttributes('email').'&token='.$token->getAttributes('value'))
             ->assertStatusOk()
-            ->assertDatabaseDoesNotHave('tokens', $token->get(['identifier', 'value']));
+            ->assertDatabaseDoesNotHave('tokens', $token->getAttributes(['identifier', 'value']));
     }
 
     public function test_can_update_password(): void
@@ -50,10 +50,10 @@ class PasswordForgotTest extends FeatureTestCase
 
         $this
             ->post('/password/update', [
-                'email' => $user->get('email'),
+                'email' => $user->getAttributes('email'),
                 'password' => 'new_P@ssw0rd',
             ])
             ->assertRedirectedToUrl('/login')
-            ->assertTrue(Encryption::check('new_P@ssw0rd', User::find($user->getId())->get('password')));
+            ->assertTrue(Encryption::check('new_P@ssw0rd', User::find($user->getId())->getAttributes('password')));
     }
 }

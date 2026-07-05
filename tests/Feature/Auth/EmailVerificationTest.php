@@ -42,15 +42,15 @@ class EmailVerificationTest extends FeatureTestCase
         $user = User::factory()->make(['password' => 'P@ssw0rd']);
 
         Event::fake(UserRegisteredEvent::class);
-        Notification::fake(VerificationMail::class, $user->get('email'));
+        Notification::fake(VerificationMail::class, $user->getAttributes('email'));
 
         $this
-            ->post('/register', $user->get())
+            ->post('/register', $user->getAttributes())
             ->assertSessionDoesNotHaveErrors()
-            ->assertDatabaseHas('users', $user->get(['name', 'email']));
+            ->assertDatabaseHas('users', $user->getAttributes(['name', 'email']));
 
         Event::assertDispatched(UserRegisteredEvent::class);
-        Notification::assertSent(VerificationMail::class, $user->get('email'));
+        Notification::assertSent(VerificationMail::class, $user->getAttributes('email'));
 
         Config::updateEnv(['AUTH_EMAIL_VERIFICATION' => $emailVerification]);
     }
@@ -60,13 +60,13 @@ class EmailVerificationTest extends FeatureTestCase
         $user = User::factory()->create(['email_verified_at' => null]);
 
         $token = Token::factory()->create([
-            'identifier' => $user->get('email'),
+            'identifier' => $user->getAttributes('email'),
             'description' => TokenDescription::EMAIL_VERIFICATION->value,
         ]);
 
         $this
-            ->get('/email/verify?email='.$user->get('email').'&token='.$token->get('value'))
+            ->get('/email/verify?email='.$user->getAttributes('email').'&token='.$token->getAttributes('value'))
             ->assertRedirectedToUrl('/login')
-            ->assertDatabaseDoesNotHave('tokens', $token->get(['identifier', 'value']));
+            ->assertDatabaseDoesNotHave('tokens', $token->getAttributes(['identifier', 'value']));
     }
 }

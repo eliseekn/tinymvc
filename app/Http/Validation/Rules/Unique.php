@@ -54,7 +54,7 @@ class Unique extends Rule implements RuleInterface
             ->where($field, $value)
             ->get();
 
-        if (! $existing || $model->get($column) === $existing->get($column)) {
+        if (! $existing || $model->getAttributes($column) === $existing->getAttributes($column)) {
             return true;
         }
 

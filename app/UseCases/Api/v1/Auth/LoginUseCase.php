@@ -22,13 +22,13 @@ final class LoginUseCase
     {
         $user = User::findByEmail($data['email']);
 
-        if (! $user || ! Encryption::check($data['password'], $user->get('password'))) {
+        if (! $user || ! Encryption::check($data['password'], $user->getAttributes('password'))) {
             throw new InvalidCredentialsException;
         }
 
         return [
             'token' => Auth::createToken($user),
-            'user' => $user->get(),
+            'user' => $user->getAttributes(),
         ];
     }
 }

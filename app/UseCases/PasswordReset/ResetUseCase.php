@@ -19,11 +19,11 @@ final class ResetUseCase
         $email = request()->queries()->get('email');
         $token = Token::findByDescription($email, TokenDescription::PASSWORD_RESET->value);
 
-        if (! $token || $token->get('value') !== request()->queries()->get('token')) {
+        if (! $token || $token->getAttributes('value') !== request()->queries()->get('token')) {
             throw new InvalidDataException(__('alert.invalid_password_reset_link'));
         }
 
-        if (carbon($token->get('expires_at'))->lt(carbon())) {
+        if (carbon($token->getAttributes('expires_at'))->lt(carbon())) {
             throw new InvalidDataException(__('alert.expired_password_reset_link'));
         }
     }

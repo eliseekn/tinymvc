@@ -22,7 +22,7 @@ final class DeleteExpiredToken implements TaskInterface
         Token::query()
             ->select(['id', 'expires_at'])
             ->chunk(100, function (Model $token) {
-                if (carbon($token->get('expires_at'))->addHour()->gte(carbon()->toDateTimeString())) {
+                if (carbon($token->getAttributes('expires_at'))->addHour()->gte(carbon()->toDateTimeString())) {
                     $token->delete();
                 }
             });

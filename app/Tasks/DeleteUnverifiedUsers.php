@@ -24,7 +24,7 @@ final class DeleteUnverifiedUsers implements TaskInterface
                 ->select(['id', 'email_verified_at', 'created_at'])
                 ->whereNull('email_verified_at')
                 ->chunk(100, function (Model $user) {
-                    if (carbon($user->get('created_at'))->addWeek()->lte(carbon()->toDateTimeString())) {
+                    if (carbon($user->getAttributes('created_at'))->addWeek()->lte(carbon()->toDateTimeString())) {
                         $user->delete();
                     }
                 });

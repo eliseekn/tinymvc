@@ -26,6 +26,6 @@ final class UpdateUseCase
             unset($data['password']);
         }
 
-        return $user->set($data)->save();
+        return $user->setAttributes($data)->save();
     }
 }

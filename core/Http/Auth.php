@@ -47,10 +47,10 @@ class Auth
 
         session()->forget(['auth_attempts', 'auth_attempts_timeout']);
         session()->regenerate();
-        session()->create('user', $user->get());
+        session()->create('user', $user->getAttributes());
 
         if (request()->inputs()->has('remember')) {
-            cookies()->create('user', $user->get('email'), 3600 * 24 * 365);
+            cookies()->create('user', $user->getAttributes('email'), 3600 * 24 * 365);
         }
 
         return true;
@@ -60,7 +60,7 @@ class Auth
     {
         $user = User::findByIdentifier($identifier);
 
-        return $user && Encryption::check($password, $user->get('password'));
+        return $user && Encryption::check($password, $user->getAttributes('password'));
     }
 
     public static function checkToken(string $token, ?Model &$user): bool
@@ -73,7 +73,7 @@ class Auth
             return false;
         }
 
-        $user = User::findByIdentifier($token->get('identifier'));
+        $user = User::findByIdentifier($token->getAttributes('identifier'));
 
         return ! is_null($user);
     }
@@ -81,12 +81,12 @@ class Auth
     public static function createToken(Model $user): string
     {
         $token = Token::factory()->create([
-            'identifier' => $user->get(config('security.auth.identifier')),
+            'identifier' => $user->getAttributes(config('security.auth.identifier')),
             'value' => generate_token(),
             'description' => TokenDescription::AUTHENTICATION->value,
         ]);
 
-        return encrypt($token->get('value'));
+        return encrypt($token->getAttributes('value'));
     }
 
     public static function deleteToken(): bool
@@ -147,7 +147,7 @@ class Auth
             return null;
         }
 
-        return User::findByIdentifier($token->get('identifier'));
+        return User::findByIdentifier($token->getAttributes('identifier'));
     }
 
     public static function forget(): void

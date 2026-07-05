@@ -21,10 +21,10 @@ final class DeleteAvatarUseCase
     {
         $user->isAuthorized(new ProfilePolicy)->onDelete();
 
-        if (! storage(config('storage.uploads'))->deleteFile($user->get('avatar'))) {
+        if (! storage(config('storage.uploads'))->deleteFile($user->getAttributes('avatar'))) {
             Logger::error('Failed to delete avatar');
         }
 
-        return $user->set(['avatar' => null])->save();
+        return $user->setAttributes(['avatar' => null])->save();
     }
 }

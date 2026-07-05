@@ -33,13 +33,13 @@ class AuthenticationTest extends FeatureTestCase
 
         $this
             ->postJson('/api/v1/login', [
-                'email' => $user->get('email'),
+                'email' => $user->getAttributes('email'),
                 'password' => 'P@ssw0rd',
             ])
             ->assertStatusOk()
             ->assertJsonContains([
                 'status' => ResponseStatus::SUCCESS,
-                'user' => $user->get(),
+                'user' => $user->getAttributes(),
             ]);
     }
 

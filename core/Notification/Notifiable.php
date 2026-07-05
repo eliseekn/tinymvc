@@ -15,6 +15,6 @@ trait Notifiable
 {
     public function notify(NotificationInterface $notification, string $attribute = 'email'): void
     {
-        Notification::send($notification)->to($this->get($attribute));
+        Notification::send($notification)->to($this->getAttributes($attribute));
     }
 }

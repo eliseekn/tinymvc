@@ -50,7 +50,7 @@ class CreateUserTest extends BrowserTestCase
             $this->crawler
                 ->selectButton('Submit')
                 ->form([
-                    'email' => $admin->get('email'),
+                    'email' => $admin->getAttributes('email'),
                     'password' => 'P@ssw0rd',
                 ])
         );

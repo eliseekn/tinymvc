@@ -26,7 +26,7 @@ final class RegisterUseCase
         dispatch(new UserRegisteredEvent($user));
 
         if (config('security.auth.email_verification')) {
-            $notifyUseCase->handle($user->get('email'));
+            $notifyUseCase->handle($user->getAttributes('email'));
         }
     }
 }

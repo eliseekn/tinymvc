@@ -18,6 +18,7 @@ use Core\Database\Model;
  */
 class Factory
 {
+    /** @var Model[] */
     protected array $class;
 
     public function __construct(public string $model, int $count)
@@ -35,13 +36,13 @@ class Factory
     public function make(array $data = []): Model|false|array
     {
         if (count($this->class) === 1) {
-            $this->class[0]->set(array_merge($this->data(), $data));
+            $this->class[0]->setAttributes(array_merge($this->data(), $data));
 
             return $this->class[0];
         }
 
         return array_map(function ($model) use ($data) {
-            $model->set(array_merge($this->data(), $data));
+            $model->setAttributes(array_merge($this->data(), $data));
 
             return $model;
         }, $this->class);
@@ -52,9 +53,9 @@ class Factory
         $class = $this->make($data);
 
         if (! is_array($class)) {
-            return $class->create($class->get(), $withoutEvent);
+            return $class->create($class->getAttributes(), $withoutEvent);
         }
 
-        return array_map(fn ($c) => $c->create($c->get(), $withoutEvent), $class);
+        return array_map(fn ($c) => $c->create($c->getAttributes(), $withoutEvent), $class);
     }
 }

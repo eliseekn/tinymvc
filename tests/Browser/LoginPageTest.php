@@ -46,7 +46,7 @@ class LoginPageTest extends BrowserTestCase
             $this->crawler
                 ->selectButton('Submit')
                 ->form([
-                    'email' => $user->get('email'),
+                    'email' => $user->getAttributes('email'),
                     'password' => 'P@ssw0rd',
                 ])
         );
