@@ -18,18 +18,18 @@ use Core\Database\Model;
  */
 class Pagination
 {
-    protected array $pagination = [];
+    protected array $data = [];
 
     protected array $items = [];
 
-    public function __construct(int $total_items, int $items_per_page, int $page = 1)
+    public function __construct(int $totalItems, int $itemsPerPage, int $page = 1)
     {
-        $this->pagination = [
+        $this->data = [
             'current_page' => $page,
-            'first_item' => ($page - 1) * $items_per_page,
-            'total_items' => $total_items,
-            'items_per_page' => $items_per_page,
-            'total_pages' => $items_per_page > 0 ? ceil($total_items / $items_per_page) : 1,
+            'first_item' => ($page - 1) * $itemsPerPage,
+            'total_items' => $totalItems,
+            'items_per_page' => $itemsPerPage,
+            'total_pages' => $itemsPerPage > 0 ? ceil($totalItems / $itemsPerPage) : 1,
         ];
     }
 
@@ -51,10 +51,10 @@ class Pagination
     public function getMeta(): array
     {
         return array_merge(
-            $this->pagination, [
+            $this->data, [
                 'first_page_url' => $this->firstPageUrl(),
                 'last_page_url' => $this->lastPageUrl(),
-                'current_page_url' => $this->pageUrl($this->pagination['current_page']),
+                'current_page_url' => $this->pageUrl($this->data['current_page']),
                 'next_page_url' => $this->nextPageUrl(),
                 'previous_page_url' => $this->previousPageUrl(),
             ]
@@ -70,12 +70,12 @@ class Pagination
 
     public function getFirstItem(): int
     {
-        return $this->pagination['first_item'];
+        return $this->data['first_item'];
     }
 
     public function getTotalItems(): int
     {
-        return $this->pagination['total_items'];
+        return $this->data['total_items'];
     }
 
     public function getPageTotalItems(): int
@@ -85,20 +85,20 @@ class Pagination
 
     public function getItemsPerPage(): int
     {
-        return $this->pagination['items_per_page'];
+        return $this->data['items_per_page'];
     }
 
     public function currentPage(): int
     {
-        if ($this->pagination['current_page'] < 1) {
+        if ($this->data['current_page'] < 1) {
             return 1;
         }
 
-        if ($this->pagination['current_page'] > $this->totalPages()) {
+        if ($this->data['current_page'] > $this->totalPages()) {
             return $this->totalPages();
         }
 
-        return $this->pagination['current_page'];
+        return $this->data['current_page'];
     }
 
     public function previousPage(): int
@@ -137,7 +137,7 @@ class Pagination
 
     public function totalPages(): int
     {
-        return (int) $this->pagination['total_pages'];
+        return (int) $this->data['total_pages'];
     }
 
     public function firstPageUrl(): string
