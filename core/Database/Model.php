@@ -25,16 +25,11 @@ class Model
 {
     use Notifiable;
 
-    protected readonly Repository $repository;
+    public readonly Repository $repository;
 
-    public function __construct(protected readonly string $table, protected array $attributes = [], protected array $updatedAttributes = [])
+    public function __construct(public readonly string $table, public array $attributes = [], public array $updatedAttributes = [])
     {
         $this->repository = new Repository($this->table);
-    }
-
-    public function getTable(): string
-    {
-        return $this->table;
     }
 
     public function wasUpdated(string|array $attributes): bool
@@ -281,7 +276,7 @@ class Model
         }
 
         if (! $withoutEvent) {
-            Observer::updated(new self($this->getTable(), $this->attributes, empty($this->updatedAttributes) ? $data : $this->updatedAttributes));
+            Observer::updated(new self($this->table, $this->attributes, empty($this->updatedAttributes) ? $data : $this->updatedAttributes));
         }
 
         return true;

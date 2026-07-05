@@ -171,7 +171,7 @@ class Repository
             return null;
         }
 
-        $id = Connection::getInstance()->lastInsertedId($this->getTable());
+        $id = Connection::getInstance()->lastInsertedId($this->table);
 
         return (int) $id ?: null;
     }
