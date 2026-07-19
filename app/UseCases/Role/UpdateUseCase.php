@@ -11,14 +11,14 @@ declare(strict_types=1);
 
 namespace App\UseCases\Role;
 
+use App\Database\Entities\Role;
 use App\Exceptions\InternalServerException;
-use Core\Database\Model;
 
 final class UpdateUseCase
 {
-    public function handle(Model $role, array $data): void
+    public function handle(Role $role, array $data): void
     {
-        if (! $role->update($data)) {
+        if (! $role->toModel($data)->save()) {
             throw new InternalServerException('Failed to update role');
         }
     }

@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace App\Http\Resources;
 
+use App\Database\Entities\User;
 use Core\Database\Model;
 use Core\Http\Resource;
 
@@ -18,13 +19,16 @@ class UserResource extends Resource
 {
     public function toArray(Model $model): array
     {
+        $user = $model->toEntity(User::class);
+
         return [
-            'id' => $model->getId(),
-            'name' => $model->getAttributes('name'),
-            'email' => $model->getAttributes('email'),
-            'avatar' => is_null($model->getAttributes('avatar')) ? null : storage_url('uploads/'.$model->getAttributes('avatar')),
-            'role' => $model->belongsTo('roles')->getAttributes('name'),
-            'created_at' => carbon($model->getAttributes('created_at'))->locale(config('app.lang'))->isoFormat('Do MMM YYYY'),
+            'id' => $user->getId(),
+            'name' => $user->getName(),
+            'email' => $user->getEmail(),
+            'avatar' => is_null($user->getAvatar()) ? null : storage_url('uploads/'.$user->getAvatar()),
+            'role' => $user->role()?->getName(),
+            'created_at' => $user->getCreatedAt()?->locale(config('app.lang'))->isoFormat('Do MMM YYYY'),
+            'updated_at' => $user->getUpdatedAt()?->locale(config('app.lang'))->isoFormat('Do MMM YYYY'),
         ];
     }
 }

@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace App\Events\UserRegistered;
 
-use App\Database\Models\User;
+use App\Database\Models\UserModel;
 use App\Enums\UserRole;
 use App\Notifications\Mails\NewUserRegisteredMail;
 
@@ -19,10 +19,10 @@ class SendAdminNotification
 {
     public function __invoke(UserRegisteredEvent $event): void
     {
-        $admins = User::findAllByRole(UserRole::ADMIN->value);
+        $admins = UserModel::findAllByRole(UserRole::ADMIN->value);
 
         foreach ($admins as $admin) {
-            $admin->notify(new NewUserRegisteredMail($event->user, url('/login')));
+            $admin->toModel()->notify(new NewUserRegisteredMail($event->user, url('/login')));
         }
     }
 }

@@ -11,12 +11,12 @@ declare(strict_types=1);
 
 namespace App\Notifications\Mails;
 
-use Core\Database\Model;
+use App\Database\Entities\User;
 use Core\Notification\Mail\Mail;
 
 class NewUserRegisteredMail extends Mail
 {
-    public function __construct(public Model $user, public string $url)
+    public function __construct(public User $user, public string $url)
     {
         parent::__construct();
     }

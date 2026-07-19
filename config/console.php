@@ -24,6 +24,7 @@ use Core\Console\Database\Query;
 use Core\Console\Database\Seed;
 use Core\Console\Make\Console;
 use Core\Console\Make\Controller;
+use Core\Console\Make\Entity;
 use Core\Console\Make\Enum;
 use Core\Console\Make\Event;
 use Core\Console\Make\Exception;
@@ -76,6 +77,7 @@ return [
 
         new Migration,
         new Model,
+        new Entity,
         new Controller,
         new Validator,
         new Rule,

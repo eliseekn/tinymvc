@@ -11,14 +11,13 @@ declare(strict_types=1);
 
 namespace Core\Http;
 
+use Core\Database\Entity;
 use Core\Database\Model;
 use Core\Support\Pagination;
 
 class Resource
 {
-    public function __construct(protected Model|Pagination|array $resource)
-    {
-    }
+    public function __construct(protected Model|Pagination|array $resource) {}
 
     public function toArray(Model $model): array
     {
@@ -27,7 +26,7 @@ class Resource
 
     public function handle(): array
     {
-        if ($this->resource instanceof Model) {
+        if ($this->resource instanceof Entity) {
             return $this->toArray($this->resource);
         }
 

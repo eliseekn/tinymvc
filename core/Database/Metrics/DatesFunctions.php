@@ -212,7 +212,7 @@ trait DatesFunctions
         if (! empty($this->missingDataLabels)) {
             $missingDataLabels = $this->missingDataLabels;
         } else {
-            $labels = $this->qb->select($labelColumn)->groupBy($labelColumn)->fetchAll();
+            $labels = $this->query->select($labelColumn)->groupBy($labelColumn)->fetchAll();
             $missingDataLabels = array_map(fn ($label) => $label->$labelColumn, $labels);
         }
 

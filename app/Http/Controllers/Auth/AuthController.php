@@ -47,7 +47,7 @@ class AuthController extends Controller
             ->redirectResponse()
             ->toUrl('/dashboard')
             ->withToast(MessageType::SUCCESS, __('alert.welcome', [
-                'name' => $user?->getAttributes('name'),
+                'name' => $user?->get('name'),
             ]));
     }
 

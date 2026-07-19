@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\UseCases\PasswordReset;
 
-use App\Database\Models\Token;
+use App\Database\Models\TokenModel;
 use App\Enums\TokenDescription;
 use App\Exceptions\InvalidDataException;
 
@@ -17,13 +17,13 @@ final class ResetUseCase
         }
 
         $email = request()->queries()->get('email');
-        $token = Token::findByDescription($email, TokenDescription::PASSWORD_RESET->value);
+        $token = TokenModel::findByDescription($email, TokenDescription::PASSWORD_RESET->value);
 
-        if (! $token || $token->getAttributes('value') !== request()->queries()->get('token')) {
+        if (! $token || $token->getValue() !== request()->queries()->get('token')) {
             throw new InvalidDataException(__('alert.invalid_password_reset_link'));
         }
 
-        if (carbon($token->getAttributes('expires_at'))->lt(carbon())) {
+        if ($token->isExpired()) {
             throw new InvalidDataException(__('alert.expired_password_reset_link'));
         }
     }

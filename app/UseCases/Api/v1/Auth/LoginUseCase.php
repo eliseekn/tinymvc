@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace App\UseCases\Api\v1\Auth;
 
-use App\Database\Models\User;
+use App\Database\Models\UserModel;
 use App\Exceptions\InvalidCredentialsException;
 use Core\Http\Auth;
 use Core\Support\Encryption;
@@ -20,15 +20,15 @@ final class LoginUseCase
 {
     public function handle(array $data): array
     {
-        $user = User::findByEmail($data['email']);
+        $user = UserModel::findByEmail($data['email']);
 
-        if (! $user || ! Encryption::check($data['password'], $user->getAttributes('password'))) {
+        if (! $user || ! Encryption::check($data['password'], $user->getPassword())) {
             throw new InvalidCredentialsException;
         }
 
         return [
             'token' => Auth::createToken($user),
-            'user' => $user->getAttributes(),
+            'user' => $user->toArray(),
         ];
     }
 }

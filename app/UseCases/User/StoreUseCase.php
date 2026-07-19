@@ -11,7 +11,8 @@ declare(strict_types=1);
 
 namespace App\UseCases\User;
 
-use App\Database\Models\User;
+use App\Database\Entities\User;
+use App\Database\Models\UserModel;
 use App\Events\UserCreated\UserCreatedEvent;
 use App\Exceptions\InternalServerException;
 
@@ -22,9 +23,9 @@ final class StoreUseCase
         $password = $data['password'];
         $data['password'] = bcrypt($password);
 
-        $user = User::factory()->create($data);
+        $user = UserModel::factory()->create($data);
 
-        if (! $user) {
+        if (! $user instanceof User) {
             throw new InternalServerException('Failed to create user');
         }
 

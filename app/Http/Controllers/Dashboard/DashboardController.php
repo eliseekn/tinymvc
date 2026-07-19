@@ -31,7 +31,7 @@ class DashboardController extends Controller
         middlewares: [Authenticated::class, EmailVerified::class],
         name: 'dashboard.index')
     ]
-    public function __invoke(User $user): BaseResponse
+    public function __invoke(User $users): BaseResponse
     {
         $period = request()->queries()->get('period', 'day');
 
@@ -40,11 +40,11 @@ class DashboardController extends Controller
         }
 
         return $this->viewResponse('dashboard.index', [
-            'totalUsers' => $this->metrics($user->metrics(), $period),
-            'totalUsersToday' => $user->metrics()->countByDay(count: 1)->metricsWithVariations(1, Period::DAY->value),
-            'usersTrends' => $this->trends($user->metrics()->fillMissingData(), $period),
+            'totalUsers' => $this->metrics($users->metrics(), $period),
+            'totalUsersToday' => $users->metrics()->countByDay(count: 1)->metricsWithVariations(1, Period::DAY->value),
+            'usersTrends' => $this->trends($users->metrics()->fillMissingData(), $period),
             'usersRolesTrends' => $this->trendsByRoles(
-                $user
+                $users
                     ->metrics()
                     ->subQuery(function (QueryBuilder $q) {
                         $q->addJoin('roles', 'users.role_id', '=', 'roles.id');

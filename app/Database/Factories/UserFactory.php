@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace App\Database\Factories;
 
-use App\Database\Models\Role;
-use App\Database\Models\User;
+use App\Database\Models\RoleModel;
+use App\Database\Models\UserModel;
 use App\Enums\UserRole;
 use Core\Database\Factory\Factory;
 
@@ -20,7 +20,7 @@ class UserFactory extends Factory
 {
     public function __construct(int $count = 1)
     {
-        parent::__construct(User::class, $count);
+        parent::__construct(UserModel::class, $count);
     }
 
     public function data(): array
@@ -30,7 +30,7 @@ class UserFactory extends Factory
             'email' => faker()->unique()->safeEmail(),
             'password' => bcrypt('P@ssw0rd'),
             'email_verified_at' => null,
-            'role_id' => Role::findByName(UserRole::USER->value)?->getId(),
+            'role_id' => RoleModel::findByName(UserRole::USER->value)?->getId(),
             'avatar' => null,
         ];
     }

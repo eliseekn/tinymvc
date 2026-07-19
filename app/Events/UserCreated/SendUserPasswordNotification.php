@@ -17,6 +17,6 @@ class SendUserPasswordNotification
 {
     public function __invoke(UserCreatedEvent $event): void
     {
-        $event->user->notify(new AccountCreatedMail($event->password, url('/login')));
+        $event->user->toModel()->notify(new AccountCreatedMail($event->password, url('/login')));
     }
 }

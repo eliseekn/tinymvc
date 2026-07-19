@@ -11,15 +11,15 @@ declare(strict_types=1);
 
 namespace App\UseCases\User;
 
+use App\Database\Entities\User;
 use App\Exceptions\InternalServerException;
 use App\Helpers\FileUploadHelper;
-use Core\Database\Model;
 
 final class UpdateUseCase
 {
     public function __construct(private readonly FileUploadHelper $fileUploadHelper) {}
 
-    public function handle(array $data, Model $user): void
+    public function handle(array $data, User $user): void
     {
         $files = request()->files('avatar');
 
@@ -37,7 +37,7 @@ final class UpdateUseCase
             unset($data['password']);
         }
 
-        if (! $user->update($data)) {
+        if (! $user->toModel($data)->save()) {
             throw new InternalServerException('Failed to update profile');
         }
     }

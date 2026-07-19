@@ -11,15 +11,15 @@ declare(strict_types=1);
 
 namespace App\UseCases\Api\v1\User;
 
-use App\Database\Models\User;
-use Core\Database\Model;
+use App\Database\Entities\User;
+use App\Database\Models\UserModel;
 
 final class StoreUseCase
 {
-    public function handle(array $data): Model|false
+    public function handle(array $data): ?User
     {
         $data['password'] = bcrypt($data['password']);
 
-        return User::factory()->create($data);
+        return UserModel::factory()->create($data)->toEntity(User::class);
     }
 }

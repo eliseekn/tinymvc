@@ -11,42 +11,41 @@ declare(strict_types=1);
 
 namespace App\Database\Models;
 
+use App\Database\Entities\Role;
 use Core\Database\Factory\HasFactory;
 use Core\Database\Model;
 use Core\Enums\JoinMethod;
 use Core\Support\Pagination;
 
-class Role extends Model
+class RoleModel extends Model
 {
     use HasFactory;
 
-    public function __construct(public array $attributes = [])
+    protected static function defaultTable(): string
     {
-        parent::__construct('roles', $attributes);
+        return 'roles';
     }
 
-    public static function query(): Model
+    public static function query(): self
     {
         return new self;
     }
 
-    public static function findByName(string $name): ?Model
+    public static function find(int $id): ?Role
     {
-        return self::query()->findBy('name', $name);
+        return self::query()->findBy('id', $id)?->toEntity(Role::class);
+    }
+
+    public static function findByName(string $name): ?Role
+    {
+        return self::query()->findBy('name', $name)?->toEntity(Role::class);
     }
 
     public static function findAll(): array
     {
-        return self::query()
-            ->select('*')
-            ->getAll();
-    }
+        $roles = self::query()->select('*')->getAll();
 
-    public static function findAllByName(): array
-    {
-        return self::query()
-            ->select('name')
-            ->getAll();
+        return array_map(fn (self $role) => $role->toEntity(Role::class), $roles);
     }
 
     public static function findAllPaginate(): Pagination
@@ -54,10 +53,14 @@ class Role extends Model
         $perPage = (int) request()->queries()->get('per_page', 10);
         $page = (int) request()->queries()->get('page', 1);
 
-        return self::query()
+        $pagination = self::query()
             ->select(['roles.*', 'COUNT(users.id) AS users'])
             ->join('users', 'users.role_id', '=', 'roles.id', JoinMethod::LEFT)
             ->groupBy('roles.id')
             ->paginate($perPage, $page);
+
+        return $pagination->setItems(
+            array_map(fn (self $role) => $role->toEntity(Role::class), $pagination->getItems())
+        );
     }
 }

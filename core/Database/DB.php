@@ -25,6 +25,5 @@ final class DB
         public ?string $collation = null,
         public ?string $encoding = null,
         public ?string $engine = null,
-    ) {
-    }
+    ) {}
 }

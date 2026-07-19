@@ -11,14 +11,14 @@ declare(strict_types=1);
 
 namespace App\UseCases\Api\v1\User;
 
+use App\Database\Entities\User;
 use App\Policies\ProfilePolicy;
-use Core\Database\Model;
 
 final class UpdateUseCase
 {
-    public function handle(array $data, Model $user): bool
+    public function handle(array $data, User $user): bool
     {
-        $user->isAuthorized(new ProfilePolicy)->onUpdate();
+        $user->toModel()->isAuthorized(new ProfilePolicy)->onUpdate();
 
         if (! empty($data['password'])) {
             $data['password'] = bcrypt($data['password']);
@@ -26,6 +26,6 @@ final class UpdateUseCase
             unset($data['password']);
         }
 
-        return $user->setAttributes($data)->save();
+        return (bool) $user->toModel($data)->save();
     }
 }

@@ -11,8 +11,9 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Auth;
 
-use App\Database\Models\Token;
-use App\Database\Models\User;
+use App\Database\Entities\Token;
+use App\Database\Entities\User;
+use App\Database\Models\User as UserModel;
 use App\Enums\TokenDescription;
 use Core\Support\Encryption;
 use Core\Testing\FeatureTestCase;
@@ -32,28 +33,31 @@ class PasswordForgotTest extends FeatureTestCase
     public function test_can_reset_password(): void
     {
         $user = User::factory()->create();
+        assert($user instanceof User);
 
         $token = Token::factory()->create([
-            'identifier' => $user->getAttributes('email'),
+            'identifier' => $user->getEmail(),
             'description' => TokenDescription::PASSWORD_RESET->value,
         ]);
+        assert($token instanceof Token);
 
         $this
-            ->get('/password/reset?email='.$user->getAttributes('email').'&token='.$token->getAttributes('value'))
+            ->get('/password/reset?email='.$user->getEmail().'&token='.$token->getValue())
             ->assertStatusOk()
-            ->assertDatabaseDoesNotHave('tokens', $token->getAttributes(['identifier', 'value']));
+            ->assertDatabaseDoesNotHave('tokens', $token->only(['identifier', 'value']));
     }
 
     public function test_can_update_password(): void
     {
         $user = User::factory()->create();
+        assert($user instanceof User);
 
         $this
             ->post('/password/update', [
-                'email' => $user->getAttributes('email'),
+                'email' => $user->getEmail(),
                 'password' => 'new_P@ssw0rd',
             ])
             ->assertRedirectedToUrl('/login')
-            ->assertTrue(Encryption::check('new_P@ssw0rd', User::find($user->getId())->getAttributes('password')));
+            ->assertTrue(Encryption::check('new_P@ssw0rd', UserModel::find((int) $user->getId())?->get('password')));
     }
 }

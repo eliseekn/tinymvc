@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace App\Database\Seeders;
 
-use App\Database\Models\Role;
+use App\Database\Models\RoleModel;
 use App\Enums\UserRole;
 
 class RoleSeeder
@@ -24,7 +24,7 @@ class RoleSeeder
         ];
 
         foreach ($roles as $role) {
-            Role::factory()->create(['name' => $role], true);
+            RoleModel::factory()->create(['name' => $role], true);
         }
     }
 }

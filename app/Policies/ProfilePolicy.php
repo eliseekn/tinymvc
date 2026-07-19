@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use Core\Database\Model;
+use Core\Database\Entity;
 use Core\Policy\PolicyInterface;
 
 final class ProfilePolicy implements PolicyInterface
@@ -31,23 +31,23 @@ final class ProfilePolicy implements PolicyInterface
         return true;
     }
 
-    public function update(Model $model): bool
+    public function update(Entity $model): bool
     {
-        return auth()->getId() === $model->getId();
+        return auth()?->getId() === $model->getId();
     }
 
-    public function edit(Model $model): bool
+    public function edit(Entity $model): bool
     {
         return true;
     }
 
-    public function show(Model $model): bool
+    public function show(Entity $model): bool
     {
         return true;
     }
 
-    public function delete(Model $model): bool
+    public function delete(Entity $model): bool
     {
-        return auth()->getId() === $model->getId();
+        return auth()?->getId() === $model->getId();
     }
 }

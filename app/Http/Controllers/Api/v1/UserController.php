@@ -11,7 +11,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Database\Models\User;
+use App\Database\Entities\User;
+use App\Database\Models\User as UserModel;
 use App\Http\Middlewares\ApiAuth;
 use App\Http\Middlewares\CheckIfUserAdmin;
 use App\Http\Resources\UserResource;
@@ -19,7 +20,6 @@ use App\Http\Validation\Validators\User\StoreValidator;
 use App\Http\Validation\Validators\User\UpdateValidator;
 use App\UseCases\Api\v1\User\StoreUseCase;
 use App\UseCases\Api\v1\User\UpdateUseCase;
-use Core\Database\Model;
 use Core\Enums\HttpCode;
 use Core\Enums\HttpMethod;
 use Core\Enums\RouteParameter;
@@ -32,7 +32,7 @@ class UserController extends Controller
     #[Route(HttpMethod::GET, '/api/v1/users', [ApiAuth::class])]
     public function index(): BaseResponse
     {
-        $data = User::findAllPaginate();
+        $data = UserModel::findAllPaginate();
 
         return $this->successJsonResponse(new UserResource($data)->handle());
     }
@@ -44,7 +44,7 @@ class UserController extends Controller
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
-    public function show(Model $user): BaseResponse
+    public function show(User $user): BaseResponse
     {
         return $this->successJsonResponse(new UserResource($user)->handle());
     }
@@ -71,7 +71,7 @@ class UserController extends Controller
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
-    public function update(UpdateUseCase $useCase, UpdateValidator $validator, Model $user): BaseResponse
+    public function update(UpdateUseCase $useCase, UpdateValidator $validator, User $user): BaseResponse
     {
         if (! $useCase->handle($validator->validated(), $user)) {
             return $this->errorJsonResponse('Failed to update profile');
@@ -90,7 +90,7 @@ class UserController extends Controller
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
-    public function delete(Model $user): BaseResponse
+    public function delete(User $user): BaseResponse
     {
         if (! $user->delete()) {
             return $this->errorJsonResponse('Failed to delete user');

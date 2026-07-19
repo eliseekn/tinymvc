@@ -20,6 +20,6 @@ if (! function_exists('is_admin')) {
      */
     function is_admin(): bool
     {
-        return auth()?->belongsTo('roles')->getAttributes('name') === UserRole::ADMIN->value;
+        return auth()->role()?->getName() === UserRole::ADMIN->value;
     }
 }

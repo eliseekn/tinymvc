@@ -11,11 +11,12 @@ declare(strict_types=1);
 
 namespace App\UseCases\Api\v1;
 
-use App\Database\Models\Token;
-use App\Database\Models\User;
+use App\Database\Models\TokenModel;
+use App\Database\Models\UserModel;
 use App\Enums\TokenDescription;
 use App\Exceptions\Api\InvalidDataException;
 use App\Notifications\Mails\WelcomeMail;
+use Carbon\Carbon;
 use Core\Notification\Notification;
 
 final class VerifyEmailUseCase
@@ -27,26 +28,30 @@ final class VerifyEmailUseCase
         }
 
         $email = request()->queries()->get('email');
-        $token = Token::findByDescription($email, TokenDescription::EMAIL_VERIFICATION->value);
+        $token = TokenModel::findByDescription($email, TokenDescription::EMAIL_VERIFICATION->value);
 
-        if (! $token || $token->getAttributes('value') !== request()->queries()->get('token')) {
+        if (! $token || $token->getValue() !== request()->queries()->get('token')) {
             throw new InvalidDataException(__('alert.invalid_password_reset_link'));
         }
 
-        if (carbon($token->getAttributes('expires_at'))->lt(carbon())) {
+        if ($token->isExpired()) {
             throw new InvalidDataException(__('alert.expired_password_reset_link'));
         }
 
-        $token->delete();
+        $token->toModel()->delete();
 
-        $user = User::findByEmail($email)
-            ->setAttributes(['email_verified_at' => carbon()->toDateTimeString()])
-            ->save();
+        $user = UserModel::findByEmail($email);
 
-        if (! $user) {
+        if (is_null($user)) {
             throw new InvalidDataException(__('alert.account_not_found'));
         }
 
-        Notification::send(new WelcomeMail($user->getAttributes('name')))->to($email);
+        $user->setEmailVerifiedAt(Carbon::now());
+
+        if ($token->toModel()->save()) {
+            throw new InvalidDataException(__('alert.account_not_found'));
+        }
+
+        Notification::send(new WelcomeMail($user->getName()))->to($email);
     }
 }

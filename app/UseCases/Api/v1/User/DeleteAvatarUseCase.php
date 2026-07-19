@@ -11,20 +11,22 @@ declare(strict_types=1);
 
 namespace App\UseCases\Api\v1\User;
 
+use App\Database\Entities\User;
 use App\Policies\ProfilePolicy;
-use Core\Database\Model;
 use Core\Support\Logger;
 
 final class DeleteAvatarUseCase
 {
-    public function handle(Model $user): bool
+    public function handle(User $user): bool
     {
-        $user->isAuthorized(new ProfilePolicy)->onDelete();
+        $user->toModel()->isAuthorized(new ProfilePolicy)->onDelete();
 
-        if (! storage(config('storage.uploads'))->deleteFile($user->getAttributes('avatar'))) {
+        if (! storage(config('storage.uploads'))->deleteFile($user->getAvatar())) {
             Logger::error('Failed to delete avatar');
         }
 
-        return $user->setAttributes(['avatar' => null])->save();
+        $user->setAvatar(null);
+
+        return (bool) $user->toModel()->save();
     }
 }

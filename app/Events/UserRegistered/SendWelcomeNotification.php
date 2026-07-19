@@ -17,6 +17,6 @@ class SendWelcomeNotification
 {
     public function __invoke(UserRegisteredEvent $event): void
     {
-        $event->user->notify(new WelcomeMail($event->user->getAttributes('name')));
+        $event->user->toModel()->notify(new WelcomeMail($event->user->getName()));
     }
 }

@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace App\Http\Resources;
 
+use App\Database\Entities\Role;
 use Core\Database\Model;
 use Core\Http\Resource;
 
@@ -18,9 +19,11 @@ class RoleResource extends Resource
 {
     public function toArray(Model $model): array
     {
+        $role = $model->toEntity(Role::class);
+
         return [
-            'id' => $model->getId(),
-            'name' => $model->getAttributes('name'),
+            'id' => $role->getId(),
+            'name' => $role->getName(),
         ];
     }
 }

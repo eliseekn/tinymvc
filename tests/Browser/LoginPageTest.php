@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Tests\Browser;
 
-use App\Database\Models\User;
+use App\Database\Entities\User;
 use App\Database\Seeders\RoleSeeder;
 use Core\Testing\BrowserTestCase;
 use Core\Testing\Traits\RefreshDatabase;
@@ -37,6 +37,7 @@ class LoginPageTest extends BrowserTestCase
     public function test_can_authenticate(): void
     {
         $user = User::factory()->create();
+        assert($user instanceof User);
 
         $this
             ->visit('/login')
@@ -46,7 +47,7 @@ class LoginPageTest extends BrowserTestCase
             $this->crawler
                 ->selectButton('Submit')
                 ->form([
-                    'email' => $user->getAttributes('email'),
+                    'email' => $user->getEmail(),
                     'password' => 'P@ssw0rd',
                 ])
         );

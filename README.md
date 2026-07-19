@@ -64,6 +64,65 @@ For more console commands :
 php console list
 ```
 
+## Database layer
+
+TinyMVC mixes the Laravel and Symfony approaches : the model is the query gateway, the entity is the typed result.
+
+### Models (query gateway)
+
+A model is a table-oriented query gateway built on the query builder :
+
+```
+php console make:model post
+```
+
+### Entities (typed results)
+
+An entity is a typed class mapped to a table row. Generate one with :
+
+```
+php console make:entity post
+```
+
+The command prompts you for fields interactively, or you can pass them directly :
+
+```
+php console make:entity post --fields="title:string, views:int, published:bool, published_at:datetime" -m
+```
+
+Options : `--fields` to define typed properties (`string`, `text`, `int`, `float`, `bool`, `datetime`, ...) and `-m` to create the migration.
+
+### Querying and persisting
+
+Query through the model, get entities back using `toEntity()`, and persist through the entity itself :
+
+```php
+use App\Database\Entities\Post as PostEntity;
+use App\Database\Models\Post;
+
+class Post extends Model
+{
+    public static function findByTitle(string $title): ?PostEntity
+    {
+        return self::query()->findBy('title', $title)?->toEntity(PostEntity::class);
+    }
+}
+
+// query using the model, get a typed entity as result
+$post = Post::findByTitle('Hello TinyMVC');
+$post->getTitle();
+$post->getPublishedAt(); // Carbon instance
+
+// persist using the entity
+$post->setTitle('Updated title')->save();
+$post->delete();
+
+// create using the entity factory
+$post = PostEntity::factory()->create(['title' => 'Hello TinyMVC']);
+```
+
+Entity properties are automatically hydrated from database columns (`published_at` becomes `publishedAt`) and cast to their declared types, including `Carbon` dates and backed enums. Columns without a matching property (from a join for example) stay available through `$entity->get('column')`. You can bridge both worlds at any time with `$model->toEntity(Post::class)`, `Entity::fromModel($model)` and `$entity->toModel()`.
+
 ## License
 
 [MIT](https://opensource.org/licenses/MIT)

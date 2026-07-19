@@ -11,14 +11,14 @@ declare(strict_types=1);
 
 namespace App\Database\Factories;
 
-use App\Database\Models\Role;
+use App\Database\Models\RoleModel;
 use Core\Database\Factory\Factory;
 
 class RoleFactory extends Factory
 {
     public function __construct(int $count = 1)
     {
-        parent::__construct(Role::class, $count);
+        parent::__construct(RoleModel::class, $count);
     }
 
     public function data(): array

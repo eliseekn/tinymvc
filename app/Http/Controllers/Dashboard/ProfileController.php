@@ -11,12 +11,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Database\Entities\User;
 use App\Http\Middlewares\Authenticated;
 use App\Http\Middlewares\EmailVerified;
 use App\Http\Validation\Validators\UpdateProfileValidator;
 use App\UseCases\User\DeleteAvatarUseCase;
 use App\UseCases\User\UpdateUseCase;
-use Core\Database\Model;
 use Core\Enums\Alert\MessageType;
 use Core\Enums\HttpMethod;
 use Core\Enums\RouteParameter;
@@ -45,7 +45,7 @@ class ProfileController extends Controller
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
-    public function update(UpdateUseCase $useCase, UpdateProfileValidator $validator, Model $user): BaseResponse
+    public function update(UpdateUseCase $useCase, UpdateProfileValidator $validator, User $user): BaseResponse
     {
         $useCase->handle($validator->validated(), $user);
 
@@ -63,7 +63,7 @@ class ProfileController extends Controller
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
-    public function deleteAvatar(DeleteAvatarUseCase $useCase, Model $user): BaseResponse
+    public function deleteAvatar(DeleteAvatarUseCase $useCase, User $user): BaseResponse
     {
         $useCase->handle($user);
 

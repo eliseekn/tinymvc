@@ -24,9 +24,9 @@ use PDOStatement;
  */
 class Repository
 {
-    protected QueryBuilder $qb;
+    protected QueryBuilder $query;
 
-    public function __construct(protected readonly string $table) {}
+    public function __construct(protected readonly string $table, protected readonly string $modelClass = Model::class) {}
 
     public function getTable(): string
     {
@@ -35,21 +35,21 @@ class Repository
 
     public function select(array|string $columns): self
     {
-        $this->qb = QueryBuilder::table($this->table)->select($columns);
+        $this->query = QueryBuilder::table($this->table)->select($columns);
 
         return $this;
     }
 
     public function addSelect(array|string $columns): self
     {
-        $this->qb->addSelect($columns);
+        $this->query->addSelect($columns);
 
         return $this;
     }
 
     public function addWhere(string $column, $operator = null, $value = null): self
     {
-        $this->qb->addWhere($column, $operator, $value);
+        $this->query->addWhere($column, $operator, $value);
 
         return $this;
     }
@@ -66,7 +66,7 @@ class Repository
 
     public function selectRaw(string $query): self
     {
-        $this->qb = QueryBuilder::table($this->table)->selectRaw($query);
+        $this->query = QueryBuilder::table($this->table)->selectRaw($query);
 
         return $this;
     }
@@ -178,7 +178,7 @@ class Repository
 
     public function update(array $items): self
     {
-        $this->qb = QueryBuilder::table($this->table)->update($items);
+        $this->query = QueryBuilder::table($this->table)->update($items);
 
         return $this;
     }
@@ -212,7 +212,7 @@ class Repository
 
     public function delete(): self
     {
-        $this->qb = QueryBuilder::table($this->table)->delete();
+        $this->query = QueryBuilder::table($this->table)->delete();
 
         return $this;
     }
@@ -269,23 +269,23 @@ class Repository
 
         if (! is_null($operator) && is_null($value)) {
             if (! is_string($operator)) {
-                $this->qb->where($column, $operator);
+                $this->query->where($column, $operator);
             } else {
                 match (strtolower($operator)) {
-                    'null' => $this->qb->whereColumn($column)->isNull(),
-                    '!null' => $this->qb->whereColumn($column)->notNull(),
-                    default => $this->qb->where($column, $operator),
+                    'null' => $this->query->whereColumn($column)->isNull(),
+                    '!null' => $this->query->whereColumn($column)->notNull(),
+                    default => $this->query->where($column, $operator),
                 };
             }
         } elseif (! is_null($operator) && ! is_null($value)) {
             match (strtolower($operator)) {
-                'in' => $this->qb->whereColumn($column)->in($value),
-                '!in' => $this->qb->whereColumn($column)->notIn($value),
-                'like' => $this->qb->whereColumn($column)->like($value),
-                '!like' => $this->qb->whereColumn($column)->notLike($value),
-                'between' => is_array($value) ? $this->qb->whereColumn($column)->between($value[0], $value[1]) : null,
-                '!between' => is_array($value) ? $this->qb->whereColumn($column)->notBetween($value[0], $value[1]) : null,
-                default => $this->qb->where($column, $operator, $value),
+                'in' => $this->query->whereColumn($column)->in($value),
+                '!in' => $this->query->whereColumn($column)->notIn($value),
+                'like' => $this->query->whereColumn($column)->like($value),
+                '!like' => $this->query->whereColumn($column)->notLike($value),
+                'between' => is_array($value) ? $this->query->whereColumn($column)->between($value[0], $value[1]) : null,
+                '!between' => is_array($value) ? $this->query->whereColumn($column)->notBetween($value[0], $value[1]) : null,
+                default => $this->query->where($column, $operator, $value),
             };
         }
 
@@ -300,23 +300,23 @@ class Repository
 
         if (! is_null($operator) && is_null($value)) {
             if (! is_string($operator)) {
-                $this->qb->and($column, $operator);
+                $this->query->and($column, $operator);
             } else {
                 match (strtolower($operator)) {
-                    'null' => $this->qb->andColumn($column)->isNull(),
-                    '!null' => $this->qb->andColumn($column)->notNull(),
-                    default => $this->qb->and($column, $operator),
+                    'null' => $this->query->andColumn($column)->isNull(),
+                    '!null' => $this->query->andColumn($column)->notNull(),
+                    default => $this->query->and($column, $operator),
                 };
             }
         } elseif (! is_null($operator) && ! is_null($value)) {
             match (strtolower($operator)) {
-                'in' => $this->qb->andColumn($column)->in($value),
-                '!in' => $this->qb->andColumn($column)->notIn($value),
-                'like' => $this->qb->andColumn($column)->like($value),
-                '!like' => $this->qb->andColumn($column)->notLike($value),
-                'between' => is_array($value) ? $this->qb->andColumn($column)->between($value[0], $value[1]) : null,
-                '!between' => is_array($value) ? $this->qb->andColumn($column)->notBetween($value[0], $value[1]) : null,
-                default => $this->qb->and($column, $operator, $value),
+                'in' => $this->query->andColumn($column)->in($value),
+                '!in' => $this->query->andColumn($column)->notIn($value),
+                'like' => $this->query->andColumn($column)->like($value),
+                '!like' => $this->query->andColumn($column)->notLike($value),
+                'between' => is_array($value) ? $this->query->andColumn($column)->between($value[0], $value[1]) : null,
+                '!between' => is_array($value) ? $this->query->andColumn($column)->notBetween($value[0], $value[1]) : null,
+                default => $this->query->and($column, $operator, $value),
             };
         }
 
@@ -331,23 +331,23 @@ class Repository
 
         if (! is_null($operator) && is_null($value)) {
             if (! is_string($operator)) {
-                $this->qb->or($column, $operator);
+                $this->query->or($column, $operator);
             } else {
                 match (strtolower($operator)) {
-                    'null' => $this->qb->orColumn($column)->isNull(),
-                    '!null' => $this->qb->orColumn($column)->notNull(),
-                    default => $this->qb->or($column, $operator),
+                    'null' => $this->query->orColumn($column)->isNull(),
+                    '!null' => $this->query->orColumn($column)->notNull(),
+                    default => $this->query->or($column, $operator),
                 };
             }
         } elseif (! is_null($operator) && ! is_null($value)) {
             match (strtolower($operator)) {
-                'in' => $this->qb->orColumn($column)->in($value),
-                '!in' => $this->qb->orColumn($column)->notIn($value),
-                'like' => $this->qb->orColumn($column)->like($value),
-                '!like' => $this->qb->orColumn($column)->notLike($value),
-                'between' => is_array($value) ? $this->qb->orColumn($column)->between($value[0], $value[1]) : null,
-                '!between' => is_array($value) ? $this->qb->orColumn($column)->notBetween($value[0], $value[1]) : null,
-                default => $this->qb->or($column, $operator, $value),
+                'in' => $this->query->orColumn($column)->in($value),
+                '!in' => $this->query->orColumn($column)->notIn($value),
+                'like' => $this->query->orColumn($column)->like($value),
+                '!like' => $this->query->orColumn($column)->notLike($value),
+                'between' => is_array($value) ? $this->query->orColumn($column)->between($value[0], $value[1]) : null,
+                '!between' => is_array($value) ? $this->query->orColumn($column)->notBetween($value[0], $value[1]) : null,
+                default => $this->query->or($column, $operator, $value),
             };
         }
 
@@ -356,28 +356,28 @@ class Repository
 
     public function whereNotEquals(string $column, mixed $value): self
     {
-        $this->qb->where($column, '<>', $value);
+        $this->query->where($column, '<>', $value);
 
         return $this;
     }
 
     public function andNotEquals(string $column, mixed $value): self
     {
-        $this->qb->and($column, '<>', $value);
+        $this->query->and($column, '<>', $value);
 
         return $this;
     }
 
     public function orNotEquals(string $column, mixed $value): self
     {
-        $this->qb->or($column, '<>', $value);
+        $this->query->or($column, '<>', $value);
 
         return $this;
     }
 
     public function whereNot(string $query, array $args = []): self
     {
-        $this->qb->whereNot($query, $args);
+        $this->query->whereNot($query, $args);
 
         return $this;
     }
@@ -444,21 +444,21 @@ class Repository
 
     public function whereRaw(string $query, array $args = []): self
     {
-        $this->qb->whereRaw($query, $args);
+        $this->query->whereRaw($query, $args);
 
         return $this;
     }
 
     public function andRaw(string $query, array $args = []): self
     {
-        $this->qb->andRaw($query, $args);
+        $this->query->andRaw($query, $args);
 
         return $this;
     }
 
     public function orRaw(string $query, array $args = []): self
     {
-        $this->qb->orRaw($query, $args);
+        $this->query->orRaw($query, $args);
 
         return $this;
     }
@@ -466,9 +466,9 @@ class Repository
     public function having(string $column, $operator = null, $value = null): self
     {
         if (is_null($operator) && ! is_null($value)) {
-            $this->qb->having($column, $value);
+            $this->query->having($column, $value);
         } else {
-            $this->qb->having($column, $operator, $value);
+            $this->query->having($column, $operator, $value);
         }
 
         return $this;
@@ -476,91 +476,91 @@ class Repository
 
     public function havingRaw(string $query, array $args = []): self
     {
-        $this->qb->havingRaw($query, $args);
+        $this->query->havingRaw($query, $args);
 
         return $this;
     }
 
     public function whereBetween(string $column, mixed $start, mixed $end): self
     {
-        $this->qb->whereColumn($column)->between($start, $end);
+        $this->query->whereColumn($column)->between($start, $end);
 
         return $this;
     }
 
     public function whereNotBetween(string $column, mixed $start, mixed $end): self
     {
-        $this->qb->whereColumn($column)->notBetween($start, $end);
+        $this->query->whereColumn($column)->notBetween($start, $end);
 
         return $this;
     }
 
     public function whereNull(string $column): self
     {
-        $this->qb->whereColumn($column)->isNull();
+        $this->query->whereColumn($column)->isNull();
 
         return $this;
     }
 
     public function whereNotNull(string $column): self
     {
-        $this->qb->whereColumn($column)->notNull();
+        $this->query->whereColumn($column)->notNull();
 
         return $this;
     }
 
     public function whereLike(string $column, mixed $value): self
     {
-        $this->qb->whereColumn($column)->like($value);
+        $this->query->whereColumn($column)->like($value);
 
         return $this;
     }
 
     public function whereNotLike(string $column, mixed $value): self
     {
-        $this->qb->whereColumn($column)->notLike($value);
+        $this->query->whereColumn($column)->notLike($value);
 
         return $this;
     }
 
     public function whereIn(string $column, array $values): self
     {
-        $this->qb->whereColumn($column)->in($values);
+        $this->query->whereColumn($column)->in($values);
 
         return $this;
     }
 
     public function whereNotIn(string $column, mixed $value): self
     {
-        $this->qb->whereColumn($column)->notIn($value);
+        $this->query->whereColumn($column)->notIn($value);
 
         return $this;
     }
 
     public function join(string $table, string $first_column, string $operator, string $second_column, string $method = JoinMethod::INNER): self
     {
-        $this->qb->join($table, $second_column, $operator, $first_column, $method);
+        $this->query->join($table, $second_column, $operator, $first_column, $method);
 
         return $this;
     }
 
     public function addJoin(string $table, string $first_column, string $operator, string $second_column, string $method = JoinMethod::INNER): self
     {
-        $this->qb->addJoin($table, $first_column, $operator, $second_column.$method);
+        $this->query->addJoin($table, $first_column, $operator, $second_column.$method);
 
         return $this;
     }
 
     public function crossJoin(string $table): self
     {
-        $this->qb->crossJoin($table);
+        $this->query->crossJoin($table);
 
         return $this;
     }
 
     public function orderBy(array|string $columns, string $direction): self
     {
-        $this->qb->orderBy($columns, $direction);
+        $this->query->orderBy($columns, $direction);
 
         return $this;
     }
@@ -587,19 +587,19 @@ class Repository
 
     public function groupBy(array|string $columns): self
     {
-        $this->qb->groupBy($columns);
+        $this->query->groupBy($columns);
 
         return $this;
     }
 
     public function exists(): bool
     {
-        return $this->qb->exists();
+        return $this->query->exists();
     }
 
     public function notExists(): bool
     {
-        return $this->qb->notExists();
+        return $this->query->notExists();
     }
 
     public function first(): ?Model
@@ -618,14 +618,21 @@ class Repository
 
     public function take(int $count): array
     {
-        $this->qb->limit($count);
+        $this->query->limit($count);
 
         return $this->getAll();
     }
 
+    public function limit(int $count, ?int $offset = null): self
+    {
+        $this->query->limit($count, $offset);
+
+        return $this;
+    }
+
     public function paginate(int $perPage, int $page = 1): Pagination
     {
-        [$query, $args] = $this->qb->toSQL();
+        [$query, $args] = $this->query->toSQL();
 
         $countQuery = preg_replace('/\s+(ORDER BY|LIMIT|OFFSET)\s+.+$/i', '', $query);
         $countQuery = "SELECT COUNT(*) as total FROM ({$countQuery}) as count_wrapper";
@@ -637,7 +644,7 @@ class Repository
             ? QueryBuilder::setQuery($query, $args)->limit($perPage, $pagination->getFirstItem())->fetchAll()
             : QueryBuilder::setQuery($query, $args)->fetchAll();
 
-        $items = array_map(fn ($item) => new Model($this->table, (array) $item), $items);
+        $items = array_map(fn ($item) => $this->newModel((array) $item), $items);
 
         return $pagination->setItems($items);
     }
@@ -646,19 +653,19 @@ class Repository
     {
         $row = $this->execute()->fetch();
 
-        return ! $row ? null : new Model($this->table, (array) $row);
+        return ! $row ? null : $this->newModel((array) $row);
     }
 
     public function getAll(): array
     {
         $rows = $this->execute()->fetchAll();
 
-        return ! $rows ? [] : array_map(fn ($row) => new Model($this->table, (array) $row), $rows);
+        return ! $rows ? [] : array_map(fn ($row) => $this->newModel((array) $row), $rows);
     }
 
     public function chunk(int $count, Closure $callback): void
     {
-        [$query, $args] = $this->qb->toSQL();
+        [$query, $args] = $this->query->toSQL();
 
         $offset = 0;
 
@@ -672,28 +679,33 @@ class Repository
             }
 
             foreach ($rows as $row) {
-                $callback(new Model($this->table, (array) $row));
+                $callback($this->newModel((array) $row));
             }
 
             $offset += $count;
         }
     }
 
+    protected function newModel(array $attributes): Model
+    {
+        return new $this->modelClass($this->table, $attributes);
+    }
+
     public function toSQL(): array
     {
-        return $this->qb->toSQL();
+        return $this->query->toSQL();
     }
 
     public function rawQuery(string $query, array $args = []): self
     {
-        $this->qb->rawQuery($query, $args);
+        $this->query->rawQuery($query, $args);
 
         return $this;
     }
 
     public function setQuery(string $query, array $args = []): self
     {
-        $this->qb = QueryBuilder::setQuery($query, $args);
+        $this->query = QueryBuilder::setQuery($query, $args);
 
         return $this;
     }
@@ -716,7 +728,7 @@ class Repository
 
     public function execute(): false|PDOStatement
     {
-        return $this->qb->execute();
+        return $this->query->execute();
     }
 
     public function dd(): void

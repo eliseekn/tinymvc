@@ -16,10 +16,7 @@ use Core\Database\Factory\Factory;
 
 class CLASSNAME extends Factory
 {
-    public function __construct(int $count = 1)
-    {
-        parent::__construct(MODEL_NAME::class, $count);
-    }
+    public string $model = MODEL_NAME::class;
 
     public function data(): array
     {

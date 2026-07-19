@@ -11,8 +11,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Database\Models\Role;
-use App\Database\Models\User;
+use App\Database\Entities\User;
+use App\Database\Models\Role as RoleModel;
+use App\Database\Models\User as UserModel;
 use App\Http\Middlewares\Authenticated;
 use App\Http\Middlewares\CheckIfUserAdmin;
 use App\Http\Middlewares\EmailVerified;
@@ -20,7 +21,6 @@ use App\Http\Validation\Validators\User\StoreValidator;
 use App\Http\Validation\Validators\User\UpdateValidator;
 use App\UseCases\User\StoreUseCase;
 use App\UseCases\User\UpdateUseCase;
-use Core\Database\Model;
 use Core\Enums\Alert\MessageType;
 use Core\Enums\HttpMethod;
 use Core\Enums\RouteParameter;
@@ -39,7 +39,7 @@ class UserController extends Controller
     public function index(): BaseResponse
     {
         return $this->viewResponse('dashboard.users.index', [
-            'users' => User::findAllPaginate(),
+            'users' => UserModel::findAllPaginate(),
         ]);
     }
 
@@ -52,7 +52,7 @@ class UserController extends Controller
     public function create(): BaseResponse
     {
         return $this->viewResponse('dashboard.users.create', [
-            'roles' => Role::findAll(),
+            'roles' => RoleModel::findAll(),
         ]);
     }
 
@@ -80,11 +80,11 @@ class UserController extends Controller
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
-    public function edit(Model $user): BaseResponse
+    public function edit(User $user): BaseResponse
     {
         return $this->viewResponse('dashboard.users.edit', [
             'user' => $user,
-            'roles' => Role::findAll(),
+            'roles' => RoleModel::findAll(),
         ]);
     }
 
@@ -96,7 +96,7 @@ class UserController extends Controller
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
-    public function update(UpdateUseCase $useCase, UpdateValidator $validator, Model $user): BaseResponse
+    public function update(UpdateUseCase $useCase, UpdateValidator $validator, User $user): BaseResponse
     {
         $useCase->handle($validator->validated(), $user);
 
@@ -114,7 +114,7 @@ class UserController extends Controller
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
-    public function delete(Model $user): BaseResponse
+    public function delete(User $user): BaseResponse
     {
         if (! $user->delete()) {
             return $this

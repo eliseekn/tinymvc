@@ -11,10 +11,11 @@ declare(strict_types=1);
 
 namespace Core\Http;
 
-use App\Database\Models\Token;
-use App\Database\Models\User;
+use App\Database\Entities\User;
+use App\Database\Models\TokenModel;
+use App\Database\Models\UserModel;
 use App\Enums\TokenDescription;
-use Core\Database\Model;
+use Core\Database\Entity;
 use Core\Enums\AppEnv;
 use Core\Enums\HttpAuthMethod;
 use Core\Support\Encryption;
@@ -29,7 +30,7 @@ class Auth
         return session()->get('auth_attempts', 0);
     }
 
-    public static function attempt(?Model &$user): bool
+    public static function attempt(?User &$user): bool
     {
         session()->push('auth_attempts', 1, 0);
         $credentials = request()->inputs()->only([config('security.auth.identifier'), 'password']);
@@ -47,25 +48,25 @@ class Auth
 
         session()->forget(['auth_attempts', 'auth_attempts_timeout']);
         session()->regenerate();
-        session()->create('user', $user->getAttributes());
+        session()->create('user', $user->toArray());
 
         if (request()->inputs()->has('remember')) {
-            cookies()->create('user', $user->getAttributes('email'), 3600 * 24 * 365);
+            cookies()->create('user', $user->getEmail(), 3600 * 24 * 365);
         }
 
         return true;
     }
 
-    public static function checkCredentials(string $identifier, string $password, ?Model &$user): bool
+    public static function checkCredentials(string $identifier, string $password, ?Entity &$user): bool
     {
-        $user = User::findByIdentifier($identifier);
+        $user = UserModel::findByIdentifier($identifier);
 
-        return $user && Encryption::check($password, $user->getAttributes('password'));
+        return $user && Encryption::check($password, $user->getPassword());
     }
 
-    public static function checkToken(string $token, ?Model &$user): bool
+    public static function checkToken(string $token, ?Entity &$user): bool
     {
-        $token = Token::findByValue($token);
+        $token = TokenModel::findByValue($token);
 
         if (! $token) {
             $user = null;
@@ -73,27 +74,29 @@ class Auth
             return false;
         }
 
-        $user = User::findByIdentifier($token->getAttributes('identifier'));
+        $user = UserModel::findByIdentifier($token->getIdentifier());
 
         return ! is_null($user);
     }
 
-    public static function createToken(Model $user): string
+    public static function createToken(User $user): string
     {
-        $token = Token::factory()->create([
-            'identifier' => $user->getAttributes(config('security.auth.identifier')),
-            'value' => generate_token(),
-            'description' => TokenDescription::AUTHENTICATION->value,
-        ]);
+        $identifier = $user->toModel()->getAttributes(config('security.auth.identifier'));
 
-        return encrypt($token->getAttributes('value'));
+        $token = TokenModel::generate(
+            $identifier,
+            TokenDescription::AUTHENTICATION->value,
+            generate_token()
+        );
+
+        return is_null($token) ? '' : encrypt($token->getValue());
     }
 
     public static function deleteToken(): bool
     {
-        $token = Token::findByValue(self::getToken());
+        $token = TokenModel::findByValue(self::getToken());
 
-        return $token && $token->delete();
+        return $token && $token->toModel()->delete();
     }
 
     public static function getToken(): string
@@ -125,7 +128,7 @@ class Auth
         return cookies()->has('user');
     }
 
-    public static function user(): ?Model
+    public static function user(): ?User
     {
         if (session()->has('user')) {
             $user = session()->get('user');
@@ -134,20 +137,20 @@ class Auth
                 return null;
             }
 
-            return User::findByIdentifier($user[config('security.auth.identifier')]);
+            return UserModel::findByIdentifier($user[config('security.auth.identifier')]);
         }
 
         if (empty(request()->getHttpAuth())) {
             return null;
         }
 
-        $token = Token::findByValue(self::getToken());
+        $token = TokenModel::findByValue(self::getToken());
 
         if (! $token) {
             return null;
         }
 
-        return User::findByIdentifier($token->getAttributes('identifier'));
+        return UserModel::findByIdentifier($token->getIdentifier());
     }
 
     public static function forget(): void

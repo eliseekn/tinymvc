@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api;
 
-use App\Database\Models\Role;
+use App\Database\Entities\Role;
 use Core\Testing\FeatureTestCase;
 use Core\Testing\Traits\RefreshDatabase;
 
@@ -29,6 +29,7 @@ class RoleTest extends FeatureTestCase
     public function test_can_get_collection(): void
     {
         $role = Role::factory()->create();
+        assert($role instanceof Role);
         Role::factory()->create();
 
         $this
@@ -36,7 +37,7 @@ class RoleTest extends FeatureTestCase
             ->assertStatusOk()
             ->assertJsonContains([
                 [
-                    'name' => $role->getAttributes('name'),
+                    'name' => $role->getName(),
                 ],
             ]);
     }

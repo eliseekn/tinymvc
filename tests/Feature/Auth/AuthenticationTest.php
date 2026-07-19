@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Auth;
 
-use App\Database\Models\User;
+use App\Database\Entities\User;
 use App\Events\UserRegistered\UserRegisteredEvent;
 use Core\Event\Event;
 use Core\Testing\FeatureTestCase;
@@ -31,9 +31,10 @@ class AuthenticationTest extends FeatureTestCase
     public function test_unregistered_user_can_not_login(): void
     {
         $user = User::factory()->make(['password' => 'password']);
+        assert($user instanceof User);
 
         $this
-            ->post('/login', $user->getAttributes(['email', 'password']))
+            ->post('/login', $user->only(['email', 'password']))
             ->assertSessionHasErrors()
             ->assertRedirectedToUrl('/login');
     }
@@ -41,14 +42,15 @@ class AuthenticationTest extends FeatureTestCase
     public function test_user_can_login(): void
     {
         $user = User::factory()->create();
+        assert($user instanceof User);
 
         $this
             ->post('/login', [
-                'email' => $user->getAttributes('email'),
+                'email' => $user->getEmail(),
                 'password' => 'P@ssw0rd',
             ])
             ->assertSessionDoesNotHaveErrors()
-            ->assertSessionHas('user', $user->getAttributes());
+            ->assertSessionHas('user', $user->toArray());
     }
 
     public function test_user_can_register(): void
@@ -56,11 +58,12 @@ class AuthenticationTest extends FeatureTestCase
         Event::fake(UserRegisteredEvent::class);
 
         $user = User::factory()->make(['password' => 'P@ssw0rd']);
+        assert($user instanceof User);
 
         $this
-            ->post('/register', $user->getAttributes())
+            ->post('/register', $user->toArray())
             ->assertSessionDoesNotHaveErrors()
-            ->assertDatabaseHas('users', $user->getAttributes(['name', 'email']));
+            ->assertDatabaseHas('users', $user->only(['name', 'email']));
 
         Event::assertDispatched(UserRegisteredEvent::class);
     }
@@ -68,9 +71,10 @@ class AuthenticationTest extends FeatureTestCase
     public function test_user_can_logout(): void
     {
         $user = User::factory()->create();
+        assert($user instanceof User);
 
         $this->post('/login', [
-            'email' => $user->getAttributes('email'),
+            'email' => $user->getEmail(),
             'password' => 'P@ssw0rd',
         ]);
 
@@ -78,15 +82,16 @@ class AuthenticationTest extends FeatureTestCase
             ->auth($user)
             ->post('/logout')
             ->assertRedirectedToUrl(config('app.home'))
-            ->assertSessionDoesNotHave('user', $user->getAttributes());
+            ->assertSessionDoesNotHave('user', $user->toArray());
     }
 
     public function test_user_can_not_register_twice(): void
     {
         $user = User::factory()->create(['password' => 'P@ssw0rd']);
+        assert($user instanceof User);
 
         $this
-            ->post('/register', $user->getAttributes(['name', 'email', 'password']))
+            ->post('/register', $user->only(['name', 'email', 'password']))
             ->assertSessionHasErrors();
     }
 }

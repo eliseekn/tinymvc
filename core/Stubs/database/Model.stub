@@ -11,54 +11,63 @@ declare(strict_types=1);
 
 namespace NAMESPACE;
 
-use Core\Database\Model;
+use App\Database\Entities\ENTITY_NAME;
 use Core\Database\Factory\HasFactory;
+use Core\Database\Model;
 use Core\Support\Pagination;
 
 class CLASSNAME extends Model
 {
     use HasFactory;
 
-    public function __construct(public array $attributes = [])
+    protected static function defaultTable(): string
     {
-        parent::__construct('TABLE_NAME', $attributes);
+        return 'TABLE_NAME';
     }
 
-    public static function query(): Model
+    public static function query(): self
     {
         return new self;
     }
 
-    public static function find(int $id): ?Model
+    public static function find(int $id): ?ENTITY_NAME
     {
-        return self::query()->findBy('id', $id);
+        return self::query()->findBy('id', $id)?->toEntity(ENTITY_NAME::class);
     }
 
-    public static function findByColumn(string $column): ?Model
+    public static function findByColumn(string $column): ?ENTITY_NAME
     {
-        return self::query()->findBy('column', $column);
+        return self::query()->findBy('column', $column)?->toEntity(ENTITY_NAME::class);
     }
 
     public static function findAll(): array
     {
-        return self::query()->getAll('*');
+        $data = self::query()->getAll('*');
+
+        return array_map(fn (self $datum) => $datum->toEntity(ENTITY_NAME::class), $data);
     }
 
     public static function findAllByColumn(string $column): array
     {
-        return self::query()
+        $data = self::query()
             ->select('*')
             ->where('column', $column)
             ->getAll();
+
+        return array_map(fn (self $datum) => $datum->toEntity(ENTITY_NAME::class), $data);
     }
 
     public static function findAllPaginate(): Pagination
     {
-        $perPage = (int) request()->queries('perPage', 10);
-        $page = (int) request()->queries('page', 1);
+        $perPage = (int) request()->queries()->get('per_page', 10);
+        $page = (int) request()->queries()->get('page', 1);
 
-        return self::query()
+        $pagination = self::query()
             ->select('*')
             ->paginate($perPage, $page);
+
+        return $pagination->setItems(
+            array_map(fn (self $datum) => $datum->toEntity(ENTITY_NAME::class), $pagination->getItems())
+        );
     }
 }

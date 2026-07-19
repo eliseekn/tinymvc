@@ -21,7 +21,7 @@ class EmailVerified
 {
     public function handle(): void
     {
-        if (config('security.auth.email_verification') && is_null(auth()->getAttributes('email_verified_at'))) {
+        if (config('security.auth.email_verification') && is_null(auth()?->getEmailVerifiedAt())) {
             new RedirectResponse()
                 ->toUrl('/email/notify')
                 ->intended(request()->fullUri())

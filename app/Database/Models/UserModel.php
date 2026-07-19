@@ -11,55 +11,51 @@ declare(strict_types=1);
 
 namespace App\Database\Models;
 
+use App\Database\Entities\User;
 use Core\Database\Factory\HasFactory;
 use Core\Database\Model;
 use Core\Database\Repository;
+use Core\Notification\Notifiable;
 use Core\Support\Pagination;
 
-class User extends Model
+class UserModel extends Model
 {
-    use HasFactory;
+    use HasFactory, Notifiable;
 
-    public function __construct(public array $attributes = [])
+    protected static function defaultTable(): string
     {
-        parent::__construct('users', $attributes);
+        return 'users';
     }
 
-    public static function query(): Model
+    public static function query(): self
     {
         return new self;
     }
 
-    public static function find(int $id): ?Model
+    public static function find(int $id): ?User
     {
-        return self::query()->findBy('id', $id);
+        return self::query()->findBy('id', $id)?->toEntity(User::class);
     }
 
-    public static function findByEmail(string $email): ?Model
+    public static function findByEmail(string $email): ?User
     {
-        return self::query()->findBy('email', $email);
+        return self::query()->findBy('email', $email)?->toEntity(User::class);
     }
 
-    public static function findAllByEmailVerifiedAt(string $column): array
+    public static function findByIdentifier(string $value): ?User
     {
-        return self::query()
-            ->select('*')
-            ->where('column', $column)
-            ->getAll();
-    }
-
-    public static function findByIdentifier(string $value): ?Model
-    {
-        return self::query()->findBy(config('security.auth.identifier'), $value);
+        return self::query()->findBy(config('security.auth.identifier'), $value)?->toEntity(User::class);
     }
 
     public static function findAllByRole(string $role): array
     {
-        return self::query()
-            ->select(['users.email', 'roles.name'])
+        $users = self::query()
+            ->select('users.*')
             ->join('roles', 'users.role_id', '=', 'roles.id')
             ->where('roles.name', $role)
             ->getAll();
+
+        return array_map(fn (self $user) => $user->toEntity(User::class), $users);
     }
 
     public static function findAllPaginate(): Pagination
@@ -69,14 +65,18 @@ class User extends Model
         $page = (int) request()->queries()->get('page', 1);
         $search = request()->queries()->get('search');
 
-        return self::query()
+        $pagination = self::query()
             ->select(['users.*', 'roles.name AS role'])
             ->join('roles', 'roles.id', '=', 'users.role_id')
             ->where('users.id', '<>', $userId)
             ->when(! is_null($search), function (Repository $r) use ($search) {
-                $r->andRaw("(users.name LIKE '%$search%' OR users.email LIKE '%$search%')");
+                $r->andRaw('(users.name LIKE ? OR users.email LIKE ?)', ["%$search%", "%$search%"]);
             })
             ->orderDesc('users.created_at')
             ->paginate($perPage, $page);
+
+        return $pagination->setItems(
+            array_map(fn (self $user) => $user->toEntity(User::class), $pagination->getItems())
+        );
     }
 }

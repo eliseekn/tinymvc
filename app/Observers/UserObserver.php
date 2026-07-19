@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace App\Observers;
 
+use App\Database\Models\UserModel;
 use App\Notifications\Mails\PasswordUpdatedMail;
 use Core\Database\Model;
 use Core\Observer\ObserverInterface;
@@ -23,7 +24,7 @@ abstract class UserObserver implements ObserverInterface
 
     public static function updated(Model $model): void
     {
-        if ($model->wasUpdated('password')) {
+        if ($model instanceof UserModel && $model->wasUpdated('password')) {
             $model->notify(new PasswordUpdatedMail);
         }
     }

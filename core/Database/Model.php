@@ -13,7 +13,7 @@ namespace Core\Database;
 
 use Closure;
 use Core\Database\Metrics\Metrics;
-use Core\Notification\Notifiable;
+use Core\Exceptions\CoreException;
 use Core\Observer\Observer;
 use Core\Policy\Policy;
 use Core\Policy\PolicyInterface;
@@ -23,13 +23,31 @@ use Core\Policy\PolicyInterface;
  */
 class Model
 {
-    use Notifiable;
+    public readonly string $table;
 
     public readonly Repository $repository;
 
-    public function __construct(public readonly string $table, public array $attributes = [], public array $updatedAttributes = [])
+    /**
+     * Final so that `new static(...)` (used internally to keep the correct
+     * subclass on query results and dispatched events) is always safe to call.
+     */
+    final public function __construct(?string $table = null, public array $attributes = [], public array $updatedAttributes = [])
     {
-        $this->repository = new Repository($this->table);
+        $this->table = $table ?? static::defaultTable();
+        $this->repository = new Repository($this->table, static::class);
+    }
+
+    /**
+     * Table used when a model subclass is instantiated without an explicit table name.
+     */
+    protected static function defaultTable(): string
+    {
+        throw new CoreException(sprintf('No table defined for the "%s" model.', static::class));
+    }
+
+    public function getTable(): string
+    {
+        return $this->table;
     }
 
     public function wasUpdated(string|array $attributes): bool
@@ -267,6 +285,19 @@ class Model
         return array_intersect_key($this->attributes, array_flip($attributes));
     }
 
+    /**
+     * Convert model to an entity.
+     *
+     * @template T of Entity
+     *
+     * @param  class-string<T>  $entity
+     * @return T
+     */
+    public function toEntity(string $entity): Entity
+    {
+        return $entity::fromModel($this);
+    }
+
     public function update(array $data, bool $withoutEvent = false): bool
     {
         $result = $this->repository->updateIfExists($this->getId(), $data);
@@ -276,7 +307,7 @@ class Model
         }
 
         if (! $withoutEvent) {
-            Observer::updated(new self($this->table, $this->attributes, empty($this->updatedAttributes) ? $data : $this->updatedAttributes));
+            Observer::updated(new static($this->table, $this->attributes, empty($this->updatedAttributes) ? $data : $this->updatedAttributes));
         }
 
         return true;
@@ -322,13 +353,10 @@ class Model
 
     protected function getColumnFromTable(string $table): string
     {
-        if ($table[-3] === 'ies') {
-            $table = rtrim($table, 'ies');
-            $table .= 'y';
-        }
-
-        if ($table[-1] === 's') {
-            $table = rtrim($table, 's');
+        if (str_ends_with($table, 'ies')) {
+            $table = substr($table, 0, -3).'y';
+        } elseif ($table[-1] === 's') {
+            $table = substr($table, 0, -1);
         }
 
         return $table.'_id';

@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace App\UseCases\Shared;
 
-use App\Database\Models\Token;
+use App\Database\Models\TokenModel;
 use App\Enums\TokenDescription;
 use App\Notifications\Mails\VerificationMail;
 use Core\Notification\Notification;
@@ -21,7 +21,7 @@ final class NotifyUseCase
     public function handle(string $email): void
     {
         $tokenValue = generate_token(15);
-        Token::generate($email, TokenDescription::EMAIL_VERIFICATION->value, $tokenValue);
+        TokenModel::generate($email, TokenDescription::EMAIL_VERIFICATION->value, $tokenValue);
 
         Notification::send(new VerificationMail($email, $tokenValue))->to($email);
     }

@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace App\Database\Factories;
 
-use App\Database\Models\Token;
+use App\Database\Models\TokenModel;
 use App\Enums\TokenDescription;
 use Core\Database\Factory\Factory;
 
@@ -19,7 +19,7 @@ class TokenFactory extends Factory
 {
     public function __construct(int $count = 1)
     {
-        parent::__construct(Token::class, $count);
+        parent::__construct(TokenModel::class, $count);
     }
 
     public function data(): array

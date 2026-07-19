@@ -11,13 +11,13 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\Database\Entities\User;
 use App\Http\Middlewares\ApiAuth;
 use App\Http\Middlewares\CheckIfUserAdmin;
 use App\Http\Resources\UserResource;
 use App\Http\Validation\Validators\UpdateProfileValidator;
 use App\UseCases\Api\v1\User\DeleteAvatarUseCase;
 use App\UseCases\Api\v1\User\UpdateUseCase;
-use Core\Database\Model;
 use Core\Enums\HttpMethod;
 use Core\Enums\RouteParameter;
 use Core\Http\Response\BaseResponse;
@@ -33,7 +33,7 @@ class ProfileController extends Controller
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
-    public function update(UpdateUseCase $useCase, UpdateProfileValidator $validator, Model $user): BaseResponse
+    public function update(UpdateUseCase $useCase, UpdateProfileValidator $validator, User $user): BaseResponse
     {
         return $this->processUpdatedProfile($user, $useCase->handle($validator->validated(), $user));
     }
@@ -45,12 +45,12 @@ class ProfileController extends Controller
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
-    public function delete(DeleteAvatarUseCase $useCase, Model $user): BaseResponse
+    public function delete(DeleteAvatarUseCase $useCase, User $user): BaseResponse
     {
         return $this->processUpdatedProfile($user, $useCase->handle($user));
     }
 
-    protected function processUpdatedProfile(Model $user, bool $updated): BaseResponse
+    protected function processUpdatedProfile(User $user, bool $updated): BaseResponse
     {
         if (! $updated) {
             return $this->errorJsonResponse('Failed to update profile');

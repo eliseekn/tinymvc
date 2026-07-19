@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
+ * @license MIT (https://opensource.org/licenses/MIT)
+ *
+ * @link https://github.com/eliseekn/tinymvc
+ */
+
+declare(strict_types=1);
+
+namespace NAMESPACE;
+
+use App\Database\Models\MODEL_NAME;
+use Core\Database\Entity;
+use Core\Database\Model;
+
+final class CLASSNAME extends Entity
+{
+    // PROPERTIES
+    public static function table(): string
+    {
+        return 'TABLE_NAME';
+    }
+
+    /**
+     * @return class-string<Model>
+     */
+    protected static function model(): string
+    {
+        return MODEL_NAME::class;
+    }
+
+    public function toModel(array $data = []): MODEL_NAME
+    {
+        // @phpstan-ignore-next-line return.type (model() above guarantees a MODEL_NAME)
+        return parent::toModel($data);
+    }
+    // METHODS
+}

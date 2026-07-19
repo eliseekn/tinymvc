@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace App\Http\Middlewares;
 
-use App\Database\Models\User;
+use App\Database\Models\UserModel;
 
 /**
  * Check for stored user cookie.
@@ -21,10 +21,10 @@ class RememberUser
     public function handle(): void
     {
         if (cookies()->has('user')) {
-            $user = User::findByEmail(cookies()->get('user'));
+            $user = UserModel::findByEmail(cookies()->get('user'));
 
-            if (! $user) {
-                session()->create('user', $user);
+            if ($user) {
+                session()->create('user', $user->toArray());
             }
         }
     }

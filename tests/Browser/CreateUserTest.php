@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Tests\Browser;
 
+use App\Database\Entities\User;
 use App\Database\Seeders\RoleSeeder;
 use App\Events\UserCreated\UserCreatedEvent;
 use Core\Event\Event;
@@ -41,6 +42,7 @@ class CreateUserTest extends BrowserTestCase
         Event::fake(UserCreatedEvent::class);
 
         $admin = Fixtures::createAdmin();
+        assert($admin instanceof User);
 
         $this
             ->visit('/login')
@@ -50,7 +52,7 @@ class CreateUserTest extends BrowserTestCase
             $this->crawler
                 ->selectButton('Submit')
                 ->form([
-                    'email' => $admin->getAttributes('email'),
+                    'email' => $admin->getEmail(),
                     'password' => 'P@ssw0rd',
                 ])
         );

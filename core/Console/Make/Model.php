@@ -32,7 +32,7 @@ class Model extends Command
         $this->addOption('controller', 'c', InputOption::VALUE_NONE, 'Create new controller');
         $this->addOption('factory', 'f', InputOption::VALUE_NONE, 'Create new factory');
         $this->addOption('seed', 's', InputOption::VALUE_NONE, 'Create new seed');
-        $this->addOption('actions', 'a', InputOption::VALUE_NONE, 'Create new actions');
+        $this->addOption('entity', 'e', InputOption::VALUE_NONE, 'Create new entity');
         $this->addOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Specify namespace (base: App\Database\Models)');
     }
 
@@ -41,12 +41,14 @@ class Model extends Command
         $models = $input->getArgument('model');
 
         foreach ($models as $model) {
-            [$name, $class] = Maker::generateClass($model);
+            [$name, $class] = Maker::generateClass($model, 'model', true, true);
 
             if (! $this->createModel($name, $input->getOption('namespace'))) {
                 $output->writeln('<bg=red;options=bold> ERROR </>  Failed to create model <options=bold>'.Maker::fixPlural($class, true).'</>.');
             } else {
                 $output->writeln('<bg=blue;options=bold> INFO </> Model <options=bold>'.Maker::fixPlural($class, true).'</> has been created.');
+
+                $this->getApplication()->find('make:entity')->run(new ArrayInput(['entity' => [$model]]), $output);
 
                 if ($input->getOption('migration')) {
                     $this->getApplication()->find('make:migration')->run(new ArrayInput(['migration' => [$model]]), $output);
@@ -66,13 +68,6 @@ class Model extends Command
                 if ($input->getOption('seed')) {
                     $this->getApplication()->find('make:seeder')->run(new ArrayInput(['seeder' => [$model]]), $output);
                 }
-
-                if ($input->getOption('actions')) {
-                    $this->getApplication()->find('make:actions')->run(new ArrayInput([
-                        'model' => [$model],
-                        '--namespace' => $input->getOption('namespace'),
-                    ]), $output);
-                }
             }
         }
 
@@ -81,12 +76,13 @@ class Model extends Command
 
     public function createModel(string $model, ?string $namespace = null): bool
     {
-        [$name, $class] = Maker::generateClass($model);
+        [$name, $class] = Maker::generateClass($model, 'model', true, true);
 
         $data = Maker::stubs()->addPath('database')->readFile('Model.stub');
         $data = Maker::addNamespace($data, 'App\Database\Models', $namespace);
         $data = str_replace('CLASSNAME', Maker::fixPlural($class, true), $data);
         $data = str_replace('TABLE_NAME', $name, $data);
+        $data = str_replace('ENTITY_NAME', ucfirst($model), $data);
 
         $storage = storage(config('storage.models'));
 

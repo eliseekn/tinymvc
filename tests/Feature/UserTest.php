@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Database\Models\User;
+use App\Database\Entities\User;
 use Core\Support\File;
 use Core\Testing\FeatureTestCase;
 use Core\Testing\Traits\RefreshDatabase;

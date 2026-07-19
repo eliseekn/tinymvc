@@ -11,14 +11,14 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use App\Database\Entities\User;
 use App\Database\Models\Role;
-use App\Database\Models\User;
 use App\Enums\UserRole;
-use Core\Database\Model;
+use Core\Database\Entity;
 
 abstract class Fixtures
 {
-    public static function createAdmin(array $attributes = []): Model|false|array
+    public static function createAdmin(array $attributes = []): Entity|false|array
     {
         return User::factory()->create(array_merge($attributes, [
             'role_id' => Role::findByName(UserRole::ADMIN->value)?->getId(),

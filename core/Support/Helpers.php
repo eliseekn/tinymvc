@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
+use App\Database\Entities\User;
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
-use Core\Database\Model;
 use Core\Event\EventInterface;
 use Core\Exceptions\CoreException;
 use Core\Http\Auth;
@@ -114,7 +114,7 @@ if (! function_exists('auth')) {
     /**
      * Get authenticated user data.
      */
-    function auth(): ?Model
+    function auth(): ?User
     {
         return Auth::user();
     }

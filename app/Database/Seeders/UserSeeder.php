@@ -11,22 +11,22 @@ declare(strict_types=1);
 
 namespace App\Database\Seeders;
 
-use App\Database\Models\Role;
-use App\Database\Models\User;
+use App\Database\Models\RoleModel;
+use App\Database\Models\UserModel;
 use App\Enums\UserRole;
 
 class UserSeeder
 {
     public static function run(): void
     {
-        User::factory()->create([
+        UserModel::factory()->create([
             'name' => 'Admin',
             'email' => 'admin@tiny.mvc',
-            'role_id' => Role::findByName(UserRole::ADMIN->value)->getId(),
+            'role_id' => RoleModel::findByName(UserRole::ADMIN->value)?->getId(),
             'email_verified_at' => carbon()->toDateTimeString(),
         ], true);
 
-        User::factory(10)->create([
+        UserModel::factory(10)->create([
             'created_at' => carbon(faker()->dateTimeBetween('-24 months'))->toDateTimeString(),
         ], true);
     }

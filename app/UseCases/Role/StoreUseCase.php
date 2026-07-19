@@ -11,14 +11,14 @@ declare(strict_types=1);
 
 namespace App\UseCases\Role;
 
-use App\Database\Models\Role;
+use App\Database\Models\RoleModel;
 use App\Exceptions\InternalServerException;
 
 final class StoreUseCase
 {
     public function handle(array $data): void
     {
-        if (! Role::factory()->create($data)) {
+        if (! RoleModel::factory()->create($data)) {
             throw new InternalServerException('Failed to create role');
         }
     }

@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace App\Events\UserRegistered;
 
-use Core\Database\Model;
+use App\Database\Entities\User;
 use Core\Event\Dispatchable;
 use Core\Event\EventInterface;
 
@@ -19,5 +19,7 @@ class UserRegisteredEvent implements EventInterface
 {
     use Dispatchable;
 
-    public function __construct(public Model $user) {}
+    public function __construct(public User $user)
+    {
+    }
 }

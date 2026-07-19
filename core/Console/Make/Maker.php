@@ -51,21 +51,17 @@ class Maker
     {
         if (! $remove) {
             if ($word[-1] === 'y') {
-                $word = rtrim($word, 'y');
-                $word .= 'ies';
+                $word = substr($word, 0, -1).'ies';
             }
 
             if ($word[-1] !== 's') {
                 $word .= 's';
             }
         } else {
-            if ($word[-3] === 'ies') {
-                $word = rtrim($word, 'ies');
-                $word .= 'y';
-            }
-
-            if ($word[-1] === 's') {
-                $word = rtrim($word, 's');
+            if (str_ends_with($word, 'ies')) {
+                $word = substr($word, 0, -3).'y';
+            } elseif ($word[-1] === 's') {
+                $word = substr($word, 0, -1);
             }
         }
 

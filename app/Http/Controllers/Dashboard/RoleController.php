@@ -11,7 +11,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Database\Models\Role;
+use App\Database\Entities\Role;
+use App\Database\Models\Role as RoleModel;
 use App\Http\Middlewares\Authenticated;
 use App\Http\Middlewares\CheckIfUserAdmin;
 use App\Http\Middlewares\EmailVerified;
@@ -20,7 +21,6 @@ use App\Http\Validation\Validators\Role\UpdateValidator;
 use App\UseCases\Role\StoreUseCase;
 use App\UseCases\Role\UpdateUseCase;
 use Core\Cache\Cache;
-use Core\Database\Model;
 use Core\Enums\Alert\MessageType;
 use Core\Enums\HttpMethod;
 use Core\Enums\RouteParameter;
@@ -40,7 +40,7 @@ class RoleController extends Controller
     {
         $data = Cache::read(
             'roles.dashboard',
-            Role::findAllPaginate(),
+            RoleModel::findAllPaginate(),
             carbon()->addDay()->timestamp
         );
 
@@ -56,7 +56,7 @@ class RoleController extends Controller
     public function create(): BaseResponse
     {
         return $this->viewResponse('dashboard.roles.create', [
-            'roles' => Role::findAll(),
+            'roles' => RoleModel::findAll(),
         ]);
     }
 
@@ -84,11 +84,11 @@ class RoleController extends Controller
         parameters: ['role' => RouteParameter::NUMBER],
         bindings: ['role' => ['roles', 'id']]
     )]
-    public function edit(Model $role): BaseResponse
+    public function edit(Role $role): BaseResponse
     {
         return $this->viewResponse('dashboard.roles.edit', [
             'role' => $role,
-            'roles' => Role::findAll(),
+            'roles' => RoleModel::findAll(),
         ]);
     }
 
@@ -100,7 +100,7 @@ class RoleController extends Controller
         parameters: ['role' => RouteParameter::NUMBER],
         bindings: ['role' => ['roles', 'id']]
     )]
-    public function update(UpdateUseCase $useCase, UpdateValidator $validator, Model $role): BaseResponse
+    public function update(UpdateUseCase $useCase, UpdateValidator $validator, Role $role): BaseResponse
     {
         $useCase->handle($role, $validator->validated());
 
@@ -118,7 +118,7 @@ class RoleController extends Controller
         parameters: ['role' => RouteParameter::NUMBER],
         bindings: ['role' => ['roles', 'id']]
     )]
-    public function delete(Model $role): BaseResponse
+    public function delete(Role $role): BaseResponse
     {
         if (! $role->delete()) {
             return $this

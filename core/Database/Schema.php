@@ -21,20 +21,20 @@ use PDOStatement;
  */
 class Schema
 {
-    protected static QueryBuilder $qb;
+    protected static QueryBuilder $query;
 
     protected static bool $alterMode;
 
     public function query(string $query, ?string $dbConnection = null): self
     {
-        static::$qb = QueryBuilder::setQuery(query: $query, dbConnection: $dbConnection);
+        static::$query = QueryBuilder::setQuery(query: $query, dbConnection: $dbConnection);
 
         return new self;
     }
 
     public static function createTable(string $name): self
     {
-        static::$qb = QueryBuilder::createTable($name);
+        static::$query = QueryBuilder::createTable($name);
         static::$alterMode = false;
 
         return new self;
@@ -47,7 +47,7 @@ class Schema
 
     public static function alterTable(string $table): self
     {
-        static::$qb = QueryBuilder::alter($table);
+        static::$query = QueryBuilder::alter($table);
         static::$alterMode = true;
 
         return new self;
@@ -55,7 +55,7 @@ class Schema
 
     public function renameColumn(string $old, string $new): self
     {
-        static::$qb->renameColumn($old, $new);
+        static::$query->renameColumn($old, $new);
 
         return $this;
     }
@@ -67,7 +67,7 @@ class Schema
 
     public function dropColumn(string $column): self
     {
-        static::$qb->dropColumn($column);
+        static::$query->dropColumn($column);
 
         return $this;
     }
@@ -106,28 +106,28 @@ class Schema
 
     public function after(string $column): self
     {
-        static::$qb->after($column);
+        static::$query->after($column);
 
         return $this;
     }
 
     public function first(): self
     {
-        static::$qb->first();
+        static::$query->first();
 
         return $this;
     }
 
     public function addReal(string $name): self
     {
-        static::$qb->column($this->getColumnName($name), 'REAL');
+        static::$query->column($this->getColumnName($name), 'REAL');
 
         return $this;
     }
 
     private function addInteger(string $name): self
     {
-        static::$qb->column($this->getColumnName($name), 'INTEGER');
+        static::$query->column($this->getColumnName($name), 'INTEGER');
 
         return $this;
     }
@@ -138,7 +138,7 @@ class Schema
             return $this->addInteger($name);
         }
 
-        static::$qb->column($this->getColumnName($name), "INT($size)".($unsigned ? ' UNSIGNED' : ''));
+        static::$query->column($this->getColumnName($name), "INT($size)".($unsigned ? ' UNSIGNED' : ''));
 
         return $this;
     }
@@ -146,11 +146,11 @@ class Schema
     public function addTinyInt(string $name, int $size = 4, bool $unsigned = false): self
     {
         if (Connection::getInstance()->getDriver() === DatabaseDriver::PGSQL) {
-            static::$qb->column($this->getColumnName($name), 'SMALLINT');
+            static::$query->column($this->getColumnName($name), 'SMALLINT');
         } elseif (Connection::getInstance()->getDriver() === DatabaseDriver::SQLITE) {
-            static::$qb->column($this->getColumnName($name), 'INTEGER');
+            static::$query->column($this->getColumnName($name), 'INTEGER');
         } else {
-            static::$qb->column($this->getColumnName($name), "TINYINT($size)".($unsigned ? ' UNSIGNED' : ''));
+            static::$query->column($this->getColumnName($name), "TINYINT($size)".($unsigned ? ' UNSIGNED' : ''));
         }
 
         return $this;
@@ -159,11 +159,11 @@ class Schema
     public function addSmallInt(string $name, int $size = 6, bool $unsigned = false): self
     {
         if (Connection::getInstance()->getDriver() === DatabaseDriver::PGSQL) {
-            static::$qb->column($this->getColumnName($name), 'SMALLINT');
+            static::$query->column($this->getColumnName($name), 'SMALLINT');
         } elseif (Connection::getInstance()->getDriver() === DatabaseDriver::SQLITE) {
-            static::$qb->column($this->getColumnName($name), 'INTEGER');
+            static::$query->column($this->getColumnName($name), 'INTEGER');
         } else {
-            static::$qb->column($this->getColumnName($name), "SMALLINT($size)".($unsigned ? ' UNSIGNED' : ''));
+            static::$query->column($this->getColumnName($name), "SMALLINT($size)".($unsigned ? ' UNSIGNED' : ''));
         }
 
         return $this;
@@ -175,7 +175,7 @@ class Schema
             return $this->addInteger($name);
         }
 
-        static::$qb->column($this->getColumnName($name), "MEDIUMINT($size)".($unsigned ? ' UNSIGNED' : ''));
+        static::$query->column($this->getColumnName($name), "MEDIUMINT($size)".($unsigned ? ' UNSIGNED' : ''));
 
         return $this;
     }
@@ -183,11 +183,11 @@ class Schema
     public function addBigInt(string $name, int $size = 20, bool $unsigned = false): self
     {
         if (Connection::getInstance()->getDriver() === DatabaseDriver::PGSQL) {
-            static::$qb->column($this->getColumnName($name), 'BIGINT');
+            static::$query->column($this->getColumnName($name), 'BIGINT');
         } elseif (Connection::getInstance()->getDriver() === DatabaseDriver::SQLITE) {
-            static::$qb->column($this->getColumnName($name), 'INTEGER');
+            static::$query->column($this->getColumnName($name), 'INTEGER');
         } else {
-            static::$qb->column($this->getColumnName($name), "BIGINT($size)".($unsigned ? ' UNSIGNED' : ''));
+            static::$query->column($this->getColumnName($name), "BIGINT($size)".($unsigned ? ' UNSIGNED' : ''));
         }
 
         return $this;
@@ -195,14 +195,14 @@ class Schema
 
     public function addSerial(string $name): self
     {
-        static::$qb->column($this->getColumnName($name), 'SERIAL');
+        static::$query->column($this->getColumnName($name), 'SERIAL');
 
         return $this;
     }
 
     public function addBigSerial(string $name): self
     {
-        static::$qb->column($this->getColumnName($name), 'BIGSERIAL');
+        static::$query->column($this->getColumnName($name), 'BIGSERIAL');
 
         return $this;
     }
@@ -210,11 +210,11 @@ class Schema
     public function addFloat(string $name, int $size = 10, int $precision = 2): self
     {
         if (Connection::getInstance()->getDriver() === DatabaseDriver::PGSQL) {
-            static::$qb->column($this->getColumnName($name), "NUMERIC($size, $precision)");
+            static::$query->column($this->getColumnName($name), "NUMERIC($size, $precision)");
         } elseif (Connection::getInstance()->getDriver() === DatabaseDriver::SQLITE) {
-            static::$qb->column($this->getColumnName($name), 'REAL');
+            static::$query->column($this->getColumnName($name), 'REAL');
         } else {
-            static::$qb->column($this->getColumnName($name), "FLOAT($size, $precision)");
+            static::$query->column($this->getColumnName($name), "FLOAT($size, $precision)");
         }
 
         return $this;
@@ -222,49 +222,49 @@ class Schema
 
     public function addDouble(string $name, int $size = 10, int $precision = 2): self
     {
-        static::$qb->column($this->getColumnName($name), "DOUBLE($size, $precision)");
+        static::$query->column($this->getColumnName($name), "DOUBLE($size, $precision)");
 
         return $this;
     }
 
     public function addDecimal(string $name, int $size = 10, int $precision = 2): self
     {
-        static::$qb->column($this->getColumnName($name), "DECIMAL($size, $precision)");
+        static::$query->column($this->getColumnName($name), "DECIMAL($size, $precision)");
 
         return $this;
     }
 
     public function addChar(string $name): self
     {
-        static::$qb->column($this->getColumnName($name), 'CHAR(1)');
+        static::$query->column($this->getColumnName($name), 'CHAR(1)');
 
         return $this;
     }
 
     public function addVarChar(string $name, int $size = 255): self
     {
-        static::$qb->column($this->getColumnName($name), "VARCHAR($size)");
+        static::$query->column($this->getColumnName($name), "VARCHAR($size)");
 
         return $this;
     }
 
     public function addText(string $name): self
     {
-        static::$qb->column($this->getColumnName($name), 'TEXT');
+        static::$query->column($this->getColumnName($name), 'TEXT');
 
         return $this;
     }
 
     public function addTinyText(string $name): self
     {
-        static::$qb->column($this->getColumnName($name), 'TINYTEXT');
+        static::$query->column($this->getColumnName($name), 'TINYTEXT');
 
         return $this;
     }
 
     public function addMediumText(string $name): self
     {
-        static::$qb->column($this->getColumnName($name), 'MEDIUMTEXT');
+        static::$query->column($this->getColumnName($name), 'MEDIUMTEXT');
 
         return $this;
     }
@@ -272,40 +272,40 @@ class Schema
     public function addLongText(string $name): self
     {
         if (Connection::getInstance()->getDriver() !== DatabaseDriver::MYSQL) {
-            static::$qb->column($this->getColumnName($name), 'TEXT');
+            static::$query->column($this->getColumnName($name), 'TEXT');
 
             return $this;
         }
 
-        static::$qb->column($this->getColumnName($name), 'LONGTEXT');
+        static::$query->column($this->getColumnName($name), 'LONGTEXT');
 
         return $this;
     }
 
     public function addBlob(string $name): self
     {
-        static::$qb->column($this->getColumnName($name), 'BLOB');
+        static::$query->column($this->getColumnName($name), 'BLOB');
 
         return $this;
     }
 
     public function addTinyBlob(string $name): self
     {
-        static::$qb->column($this->getColumnName($name), 'TINYBLOB');
+        static::$query->column($this->getColumnName($name), 'TINYBLOB');
 
         return $this;
     }
 
     public function addMediumBlob(string $name): self
     {
-        static::$qb->column($this->getColumnName($name), 'MEDIUMBLOB');
+        static::$query->column($this->getColumnName($name), 'MEDIUMBLOB');
 
         return $this;
     }
 
     public function addLongBlob(string $name): self
     {
-        static::$qb->column($this->getColumnName($name), 'LONGBLOB');
+        static::$query->column($this->getColumnName($name), 'LONGBLOB');
 
         return $this;
     }
@@ -316,7 +316,7 @@ class Schema
             return $this->addText($name);
         }
 
-        static::$qb->column($this->getColumnName($name), 'DATE');
+        static::$query->column($this->getColumnName($name), 'DATE');
 
         return $this;
     }
@@ -327,7 +327,7 @@ class Schema
             return $this->addText($name);
         }
 
-        static::$qb->column($this->getColumnName($name), 'TIME');
+        static::$query->column($this->getColumnName($name), 'TIME');
 
         return $this;
     }
@@ -339,7 +339,7 @@ class Schema
         } elseif (Connection::getInstance()->getDriver() === DatabaseDriver::SQLITE) {
             return $this->addText($name);
         } else {
-            static::$qb->column($this->getColumnName($name), 'DATETIME');
+            static::$query->column($this->getColumnName($name), 'DATETIME');
         }
 
         return $this;
@@ -347,7 +347,7 @@ class Schema
 
     public function addTimestamp(string $name): self
     {
-        static::$qb->column($this->getColumnName($name), 'TIMESTAMP');
+        static::$query->column($this->getColumnName($name), 'TIMESTAMP');
 
         return $this;
     }
@@ -357,7 +357,7 @@ class Schema
      */
     public function addDefaultTimestamps(): self
     {
-        static::$qb->timestamps();
+        static::$query->timestamps();
 
         return $this;
     }
@@ -368,7 +368,7 @@ class Schema
             return $this->addSmallInt($name);
         }
 
-        static::$qb->column($this->getColumnName($name), 'YEAR');
+        static::$query->column($this->getColumnName($name), 'YEAR');
 
         return $this;
     }
@@ -379,28 +379,28 @@ class Schema
             return $this->addTinyInt($name, 1);
         }
 
-        static::$qb->column($this->getColumnName($name), 'BOOLEAN');
+        static::$query->column($this->getColumnName($name), 'BOOLEAN');
 
         return $this;
     }
 
     public function constraint(string $name): self
     {
-        static::$qb->constraint('fk_'.$name);
+        static::$query->constraint('fk_'.$name);
 
         return $this;
     }
 
     public function addConstraint(string $name): self
     {
-        static::$qb->addConstraint('fk_'.$name);
+        static::$query->addConstraint('fk_'.$name);
 
         return $this;
     }
 
     public function foreignKey(string $column): self
     {
-        static::$qb->foreignKey($column);
+        static::$query->foreignKey($column);
 
         return $this;
     }
@@ -417,42 +417,42 @@ class Schema
 
     public function references(string $table, string $column): self
     {
-        static::$qb->references($table, $column);
+        static::$query->references($table, $column);
 
         return $this;
     }
 
     public function onUpdateCascade(): self
     {
-        static::$qb->onUpdateCascade();
+        static::$query->onUpdateCascade();
 
         return $this;
     }
 
     public function onDeleteCascade(): self
     {
-        static::$qb->onDeleteCascade();
+        static::$query->onDeleteCascade();
 
         return $this;
     }
 
     public function onUpdateSetNull(): self
     {
-        static::$qb->onUpdateSetNull();
+        static::$query->onUpdateSetNull();
 
         return $this;
     }
 
     public function onDeleteSetNull(): self
     {
-        static::$qb->onDeleteSetNull();
+        static::$query->onDeleteSetNull();
 
         return $this;
     }
 
     public function autoIncrement(): self
     {
-        static::$qb->autoIncrement();
+        static::$query->autoIncrement();
 
         return $this;
     }
@@ -465,7 +465,7 @@ class Schema
             default => $this->addBigSerial($column)
         };
 
-        static::$qb->primaryKey();
+        static::$query->primaryKey();
 
         if ($autoIncrement) {
             $self->autoIncrement();
@@ -476,46 +476,46 @@ class Schema
 
     public function null(): self
     {
-        static::$qb->null();
+        static::$query->null();
 
         return $this;
     }
 
     public function notNull(): self
     {
-        static::$qb->notNull();
+        static::$query->notNull();
 
         return $this;
     }
 
     public function unique(): self
     {
-        static::$qb->unique();
+        static::$query->unique();
 
         return $this;
     }
 
     public function default(string|int $default): self
     {
-        static::$qb->default($default);
+        static::$query->default($default);
 
         return $this;
     }
 
     public function run(): bool|PDOStatement
     {
-        if (str_contains(static::$qb->toSQL()[0], 'CREATE TABLE')) {
-            return static::$qb->migrate();
+        if (str_contains(static::$query->toSQL()[0], 'CREATE TABLE')) {
+            return static::$query->migrate();
         }
 
         if (
-            str_contains(static::$qb->toSQL()[0], 'ADD CONSTRAINT') &&
+            str_contains(static::$query->toSQL()[0], 'ADD CONSTRAINT') &&
             Connection::getInstance()->getDriver() === DatabaseDriver::SQLITE
         ) {
             return true;
         }
 
-        return static::$qb->flush()->execute();
+        return static::$query->flush()->execute();
     }
 
     protected function getColumnName(string $name): string

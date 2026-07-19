@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api;
 
-use App\Database\Models\User;
+use App\Database\Entities\User;
 use Core\Enums\ResponseStatus;
 use Core\Testing\FeatureTestCase;
 use Core\Testing\Traits\RefreshDatabase;
@@ -30,22 +30,24 @@ class AuthenticationTest extends FeatureTestCase
     public function test_can_login(): void
     {
         $user = User::factory()->create();
+        assert($user instanceof User);
 
         $this
             ->postJson('/api/v1/login', [
-                'email' => $user->getAttributes('email'),
+                'email' => $user->getEmail(),
                 'password' => 'P@ssw0rd',
             ])
             ->assertStatusOk()
             ->assertJsonContains([
                 'status' => ResponseStatus::SUCCESS,
-                'user' => $user->getAttributes(),
+                'user' => $user->toArray(),
             ]);
     }
 
     public function test_can_logout(): void
     {
         $user = User::factory()->create();
+        assert($user instanceof User);
 
         $this
             ->auth($user)
