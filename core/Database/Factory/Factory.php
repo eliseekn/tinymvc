@@ -12,20 +12,49 @@ declare(strict_types=1);
 namespace Core\Database\Factory;
 
 use Core\Database\Model;
+use Core\Exceptions\CoreException;
+use ReflectionClass;
+use Spatie\StructureDiscoverer\Discover;
 
 /**
  * Manage models factories.
  */
 class Factory
 {
+    /**
+     * Model class the factory produces. Every subclass must set this.
+     *
+     * @var class-string<Model>
+     */
+    public string $model;
+
     /** @var Model[] */
     protected array $class;
 
-    public function __construct(public string $model, int $count)
+    public function __construct(int $count = 1)
     {
         for ($i = 1; $i <= $count; $i++) {
-            $this->class[] = new $model;
+            $this->class[] = new $this->model;
         }
+    }
+
+    /**
+     * Resolve the factory registered for a model.
+     */
+    public static function for(string $model, int $count = 1): static
+    {
+        $factories = Discover::in(config('storage.factories'))->classes()->get();
+        $factories = array_values(array_filter(
+            $factories,
+            fn ($factory) => is_a($factory, static::class, true)
+                && (new ReflectionClass($factory))->getDefaultProperties()['model'] === $model
+        ));
+
+        if (empty($factories)) {
+            throw new CoreException(sprintf('No factory found for the "%s" model.', $model));
+        }
+
+        return new $factories[0]($count);
     }
 
     public function data(): array

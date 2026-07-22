@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace App\Database\Entities;
 
+use App\Database\Models\RoleModel;
 use App\Database\Models\UserModel;
 use Carbon\Carbon;
 use Core\Database\Entity;
@@ -132,6 +133,6 @@ class User extends Entity
             return null;
         }
 
-        return $this->toModel()->belongsTo('roles')->toEntity(Role::class);
+        return $this->toModel()->belongsTo(RoleModel::class)->toEntity(Role::class);
     }
 }

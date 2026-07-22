@@ -21,7 +21,9 @@ final class UploadedFile
 {
     public string $filename = '';
 
-    public function __construct(private readonly array $file = []) {}
+    public function __construct(private readonly array $file = [])
+    {
+    }
 
     public function getOriginalFilename(): string
     {

@@ -66,8 +66,7 @@ class UserModel extends Model
         $search = request()->queries()->get('search');
 
         $pagination = self::query()
-            ->select(['users.*', 'roles.name AS role'])
-            ->join('roles', 'roles.id', '=', 'users.role_id')
+            ->select('*')
             ->where('users.id', '<>', $userId)
             ->when(! is_null($search), function (Repository $r) use ($search) {
                 $r->andRaw('(users.name LIKE ? OR users.email LIKE ?)', ["%$search%", "%$search%"]);

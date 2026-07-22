@@ -14,7 +14,6 @@ namespace App\Database\Models;
 use App\Database\Entities\Role;
 use Core\Database\Factory\HasFactory;
 use Core\Database\Model;
-use Core\Enums\JoinMethod;
 use Core\Support\Pagination;
 
 class RoleModel extends Model
@@ -54,9 +53,7 @@ class RoleModel extends Model
         $page = (int) request()->queries()->get('page', 1);
 
         $pagination = self::query()
-            ->select(['roles.*', 'COUNT(users.id) AS users'])
-            ->join('users', 'users.role_id', '=', 'roles.id', JoinMethod::LEFT)
-            ->groupBy('roles.id')
+            ->select('*')
             ->paginate($perPage, $page);
 
         return $pagination->setItems(

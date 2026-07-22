@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Core\Testing;
 
 use Core\Database\Entity;
-use Core\Database\Model;
 use Core\Enums\HttpAuthMethod;
 use Core\Enums\HttpCode;
 use Core\Http\Auth;
@@ -89,7 +88,7 @@ abstract class FeatureTestCase extends TestCase
         return strtolower(config('app.name')).'_'.$name;
     }
 
-    public function auth(Model|Entity $user): self
+    public function auth(Entity $user): self
     {
         $this->token = Auth::createToken($user);
         $this->headers = array_merge($this->headers, ['Authorization' => HttpAuthMethod::BEARER.' '.$this->token]);

@@ -29,7 +29,8 @@ class BaseResponse
         public mixed $data = null,
         public array $headers = [],
         public int $statusCode = HttpCode::FOUND
-    ) {}
+    ) {
+    }
 
     public function addHeaders(array $headers): self
     {

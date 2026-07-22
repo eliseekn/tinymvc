@@ -26,7 +26,9 @@ class Repository
 {
     protected QueryBuilder $query;
 
-    public function __construct(protected readonly string $table, protected readonly string $modelClass = Model::class) {}
+    public function __construct(protected readonly string $table, protected readonly string $modelClass = Model::class)
+    {
+    }
 
     public function getTable(): string
     {

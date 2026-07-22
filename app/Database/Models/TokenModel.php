@@ -13,10 +13,13 @@ namespace App\Database\Models;
 
 use App\Database\Entities\Token;
 use Carbon\Carbon;
+use Core\Database\Factory\HasFactory;
 use Core\Database\Model;
 
 class TokenModel extends Model
 {
+    use HasFactory;
+
     protected static function defaultTable(): string
     {
         return 'tokens';

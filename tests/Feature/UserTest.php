@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Database\Entities\User;
+use App\Database\Models\UserModel;
 use Core\Support\File;
 use Core\Testing\FeatureTestCase;
 use Core\Testing\Traits\RefreshDatabase;
@@ -33,7 +34,7 @@ class UserTest extends FeatureTestCase
 
     public function test_can_update_profile(): void
     {
-        $user = User::factory()->create();
+        $user = UserModel::factory()->create()->toEntity(User::class);
         $avatar = storage(config('storage.tmp'))->file('avatar.jpg');
 
         if (! File::generateImage($avatar, 100, 100)) {

@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace App\Database\Entities;
 
 use App\Database\Models\RoleModel;
+use App\Database\Models\UserModel;
 use Core\Database\Entity;
 use Core\Database\Model;
 
@@ -48,5 +49,12 @@ class Role extends Entity
         $this->name = $name;
 
         return $this;
+    }
+
+    public function users(): array
+    {
+        $users = $this->toModel()->hasMany(UserModel::class);
+
+        return array_map(fn (UserModel $user) => $user->toEntity(User::class), $users);
     }
 }

@@ -17,7 +17,9 @@ use Core\Support\Pagination;
 
 class Resource
 {
-    public function __construct(protected Model|Pagination|array $resource) {}
+    public function __construct(protected Model|Pagination|array $resource)
+    {
+    }
 
     public function toArray(Model $model): array
     {

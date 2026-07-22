@@ -17,7 +17,9 @@ use App\Helpers\FileUploadHelper;
 
 final class UpdateUseCase
 {
-    public function __construct(private readonly FileUploadHelper $fileUploadHelper) {}
+    public function __construct(private readonly FileUploadHelper $fileUploadHelper)
+    {
+    }
 
     public function handle(array $data, User $user): void
     {

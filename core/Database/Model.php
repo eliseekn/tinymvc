@@ -202,13 +202,13 @@ class Model
     /**
      * Get relationship of the model.
      */
-    public function hasOne(string $table, ?string $column = null): ?Model
+    public function hasOne(string $model, ?string $column = null): ?Model
     {
         if (is_null($column)) {
-            $column = $this->getColumnFromTable($table);
+            $column = $this->getColumnFromTable($this->getTable());
         }
 
-        return $this->repository
+        return (new Repository($model::defaultTable(), $model))
             ->select('*')
             ->where($column, $this->getId())
             ->get();
@@ -217,13 +217,13 @@ class Model
     /**
      * Get relationship of the model.
      */
-    public function hasMany(string $table, ?string $column = null): array
+    public function hasMany(string $model, ?string $column = null): array
     {
         if (is_null($column)) {
-            $column = $this->getColumnFromTable($table);
+            $column = $this->getColumnFromTable($this->getTable());
         }
 
-        return $this->repository
+        return (new Repository($model::defaultTable(), $model))
             ->select('*')
             ->where($column, $this->getId())
             ->getAll();
@@ -232,13 +232,13 @@ class Model
     /**
      * Get relationship belongs to the model.
      */
-    public function belongsTo(string $table, ?string $column = null): ?Model
+    public function belongsTo(string $model, ?string $column = null): ?Model
     {
         if (is_null($column)) {
-            $column = $this->getColumnFromTable($table);
+            $column = $this->getColumnFromTable($model::defaultTable());
         }
 
-        return (new Repository($table))
+        return (new Repository($model::defaultTable(), $model))
             ->select('*')
             ->where('id', $this->attributes[$column])
             ->get();

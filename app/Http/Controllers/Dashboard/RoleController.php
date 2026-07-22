@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Dashboard;
 
 use App\Database\Entities\Role;
-use App\Database\Models\Role as RoleModel;
+use App\Database\Models\RoleModel;
 use App\Http\Middlewares\Authenticated;
 use App\Http\Middlewares\CheckIfUserAdmin;
 use App\Http\Middlewares\EmailVerified;
@@ -120,7 +120,7 @@ class RoleController extends Controller
     )]
     public function delete(Role $role): BaseResponse
     {
-        if (! $role->delete()) {
+        if (! $role->toModel()->delete()) {
             return $this
                 ->redirectResponse()
                 ->toBack()

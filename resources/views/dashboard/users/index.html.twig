@@ -43,21 +43,21 @@
 				{% for user in users.getItems() %}
 					<tr>
 						<td>
-							{% if user.get('avatar') is not null %}
-								<img src="{{ storage_url('uploads/' . user.get('avatar')) }}" alt="avatar" width="100">
+							{% if user.getAvatar() is not null %}
+								<img src="{{ storage_url('uploads/' . user.getAvatar()) }}" alt="avatar" width="100">
 							{% endif %}
 
-							<span>{{ user.get('name') }}</span>
+							<span>{{ user.getName() }}</span>
 						</td>
-						<td>{{ user.get('email') }}</td>
+						<td>{{ user.getEmail() }}</td>
 						<td>
-							{% if user.get('role') == enum("\\App\\Enums\\UserRole").USER.value %}
-								<span class="badge text-bg-info">{{ user.get('role') }}</span>
+							{% if user.role().getName() == enum("\\App\\Enums\\UserRole").USER.value %}
+								<span class="badge text-bg-info">{{ user.role().getName() }}</span>
 							{% else %}
-								<span class="badge text-bg-danger">{{ user.get('role') }}</span>
+								<span class="badge text-bg-danger">{{ user.role().getName() }}</span>
 							{% endif %}
 						</td>
-						<td>{{ carbon(user.get('created_at')).locale(config('app.lang')).isoFormat('Do MMM YYYY') }}</td>
+						<td>{{ user.getCreatedAt().locale(config('app.lang')).isoFormat('Do MMM YYYY') }}</td>
 						<td>
 							<div class="d-flex align-items-center">
 								<a class="btn btn-sm" href="{{ route('users.edit', {'user': user.getId()}) }}">

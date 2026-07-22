@@ -12,8 +12,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Dashboard;
 
 use App\Database\Entities\User;
-use App\Database\Models\Role as RoleModel;
-use App\Database\Models\User as UserModel;
+use App\Database\Models\RoleModel;
+use App\Database\Models\UserModel;
 use App\Http\Middlewares\Authenticated;
 use App\Http\Middlewares\CheckIfUserAdmin;
 use App\Http\Middlewares\EmailVerified;
@@ -116,7 +116,7 @@ class UserController extends Controller
     )]
     public function delete(User $user): BaseResponse
     {
-        if (! $user->delete()) {
+        if (! $user->toModel()->delete()) {
             return $this
                 ->redirectResponse()
                 ->toBack()

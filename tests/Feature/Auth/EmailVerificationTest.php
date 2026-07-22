@@ -13,6 +13,8 @@ namespace Tests\Feature\Auth;
 
 use App\Database\Entities\Token;
 use App\Database\Entities\User;
+use App\Database\Models\TokenModel;
+use App\Database\Models\UserModel;
 use App\Enums\TokenDescription;
 use App\Events\UserRegistered\UserRegisteredEvent;
 use App\Notifications\Mails\VerificationMail;
@@ -39,8 +41,7 @@ class EmailVerificationTest extends FeatureTestCase
 
         Config::updateEnv(['AUTH_EMAIL_VERIFICATION' => true]);
 
-        $user = User::factory()->make(['password' => 'P@ssw0rd']);
-        assert($user instanceof User);
+        $user = UserModel::factory()->make(['password' => 'P@ssw0rd'])->toEntity(User::class);
 
         Event::fake(UserRegisteredEvent::class);
         Notification::fake(VerificationMail::class, $user->getEmail());
@@ -48,7 +49,10 @@ class EmailVerificationTest extends FeatureTestCase
         $this
             ->post('/register', $user->toArray())
             ->assertSessionDoesNotHaveErrors()
-            ->assertDatabaseHas('users', $user->only(['name', 'email']));
+            ->assertDatabaseHas('users', [
+                'name' => $user->getName(),
+                'email' => $user->getEmail(),
+            ]);
 
         Event::assertDispatched(UserRegisteredEvent::class);
         Notification::assertSent(VerificationMail::class, $user->getEmail());
@@ -58,18 +62,19 @@ class EmailVerificationTest extends FeatureTestCase
 
     public function test_can_verify_email(): void
     {
-        $user = User::factory()->create(['email_verified_at' => null]);
-        assert($user instanceof User);
+        $user = UserModel::factory()->create(['email_verified_at' => null])->toEntity(User::class);
 
-        $token = Token::factory()->create([
+        $token = TokenModel::factory()->create([
             'identifier' => $user->getEmail(),
             'description' => TokenDescription::EMAIL_VERIFICATION->value,
-        ]);
-        assert($token instanceof Token);
+        ])->toEntity(Token::class);
 
         $this
             ->get('/email/verify?email='.$user->getEmail().'&token='.$token->getValue())
             ->assertRedirectedToUrl('/login')
-            ->assertDatabaseDoesNotHave('tokens', $token->only(['identifier', 'value']));
+            ->assertDatabaseDoesNotHave('tokens', [
+                'identifier' => $token->getIdentifier(),
+                'value' => $token->getValue(),
+            ]);
     }
 }

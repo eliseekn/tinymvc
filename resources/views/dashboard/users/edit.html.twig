@@ -22,7 +22,7 @@
 			<div class="modal-body">
 				<div class="mb-3">
 					<label for="name" class="form-label">{{ __('form.name') }}</label>
-					<input type="text" class="form-control {{ errors.name ? 'is-invalid' }}" value="{{ inputs.name ?: user.get('name') }}" aria-describedby="name-error" name="name" id="name" autofocus>
+					<input type="text" class="form-control {{ errors.name ? 'is-invalid' }}" value="{{ inputs.name ?: user.getName() }}" aria-describedby="name-error" name="name" id="name" autofocus>
 
 					{% if errors.name is not empty %}
 						<div id="name-error" class="invalid-feedback">
@@ -33,7 +33,7 @@
 
 				<div class="mb-3">
 					<label for="email" class="form-label">{{ __('form.email') }}</label>
-					<input type="email" id="email" name="email" class="form-control {{ errors.email ? 'is-invalid' }}" value="{{ inputs.email ?: user.get('email') }}" aria-describedby="email-error">
+					<input type="email" id="email" name="email" class="form-control {{ errors.email ? 'is-invalid' }}" value="{{ inputs.email ?: user.getEmail() }}" aria-describedby="email-error">
 
 					{% if errors.email is not empty %}
 						<div id="email-error" class="invalid-feedback">
@@ -47,8 +47,8 @@
 
 					<select name="role_id" id="role" class="form-select {{ errors.role_id ? 'is-invalid' }}" aria-describedby="role_id-error">
 						{% for role in roles %}
-							<option value="{{ role.get('id') }}" {{ role.get('id') == user.get('role_id') ? 'selected' : '' }}>
-								{{ role.get('name') }}
+							<option value="{{ role.getId() }}" {{ role.getId() == user.role().getId() ? 'selected' : '' }}>
+								{{ role.getName() }}
 							</option>
 						{% endfor %}
 					</select>

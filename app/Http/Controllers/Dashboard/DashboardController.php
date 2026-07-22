@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Database\Models\User;
+use App\Database\Entities\User;
 use App\Enums\UserRole;
 use App\Http\Middlewares\Authenticated;
 use App\Http\Middlewares\EmailVerified;
@@ -39,13 +39,14 @@ class DashboardController extends Controller
             $period = explode('~', $period, 2);
         }
 
+        $metrics = $users->toModel()->metrics();
+
         return $this->viewResponse('dashboard.index', [
-            'totalUsers' => $this->metrics($users->metrics(), $period),
-            'totalUsersToday' => $users->metrics()->countByDay(count: 1)->metricsWithVariations(1, Period::DAY->value),
-            'usersTrends' => $this->trends($users->metrics()->fillMissingData(), $period),
+            'totalUsers' => $this->metrics($metrics, $period),
+            'totalUsersToday' => $metrics->countByDay(count: 1)->metricsWithVariations(1, Period::DAY->value),
+            'usersTrends' => $this->trends($metrics->fillMissingData(), $period),
             'usersRolesTrends' => $this->trendsByRoles(
-                $users
-                    ->metrics()
+                $metrics
                     ->subQuery(function (QueryBuilder $q) {
                         $q->addJoin('roles', 'users.role_id', '=', 'roles.id');
                     })

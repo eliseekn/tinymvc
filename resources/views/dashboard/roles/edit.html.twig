@@ -22,7 +22,7 @@
 			<div class="modal-body">
 				<div class="mb-3">
 					<label for="name" class="form-label">{{ __('form.name') }}</label>
-					<input type="text" class="form-control {{ errors.name ? 'is-invalid' }}" value="{{ inputs.name ?: role.get('name') }}" aria-describedby="name-error" name="name" id="name" autofocus>
+					<input type="text" class="form-control {{ errors.name ? 'is-invalid' }}" value="{{ inputs.name ?: role.getName() }}" aria-describedby="name-error" name="name" id="name" autofocus>
 
 					{% if errors.name is not empty %}
 						<div id="name-error" class="invalid-feedback">

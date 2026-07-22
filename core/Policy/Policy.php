@@ -20,7 +20,9 @@ use Core\Http\Response\ViewResponse;
 
 final class Policy
 {
-    public function __construct(private PolicyInterface $policy, private Model $model) {}
+    public function __construct(private PolicyInterface $policy, private Model $model)
+    {
+    }
 
     public static function authorize(PolicyInterface $policy, Model $model): self
     {

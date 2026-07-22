@@ -18,10 +18,7 @@ use Core\Database\Factory\Factory;
 
 class UserFactory extends Factory
 {
-    public function __construct(int $count = 1)
-    {
-        parent::__construct(UserModel::class, $count);
-    }
+    public string $model = UserModel::class;
 
     public function data(): array
     {

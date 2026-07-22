@@ -15,7 +15,9 @@ use PHPUnit\Framework\Assert;
 
 class Notification
 {
-    public function __construct(public NotificationInterface $notifiable) {}
+    public function __construct(public NotificationInterface $notifiable)
+    {
+    }
 
     public static function send(NotificationInterface $notifiable): self
     {

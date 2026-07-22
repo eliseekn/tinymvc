@@ -12,9 +12,11 @@ declare(strict_types=1);
 namespace Tests\Feature\Api;
 
 use App\Database\Entities\User;
-use App\Database\Models\Role;
+use App\Database\Models\RoleModel;
+use App\Database\Models\UserModel;
 use App\Database\Seeders\RoleSeeder;
 use App\Enums\UserRole;
+use Core\Database\Factory\Factory;
 use Core\Enums\HttpCode;
 use Core\Enums\ResponseStatus;
 use Core\Testing\FeatureTestCase;
@@ -41,11 +43,10 @@ class UserTest extends FeatureTestCase
 
     public function test_can_store(): void
     {
-        $user = User::factory()->make([
+        $user = UserModel::factory()->make([
             'password' => 'P@ssw0rd',
-            'role_id' => Role::findByName(UserRole::USER->value)?->getId(),
-        ]);
-        assert($user instanceof User);
+            'role_id' => RoleModel::findByName(UserRole::USER->value)?->getId(),
+        ])->toEntity(User::class);
 
         $this
             ->auth(Fixtures::createAdmin())
@@ -61,8 +62,8 @@ class UserTest extends FeatureTestCase
 
     public function test_can_get_collection(): void
     {
-        $users = User::factory(10)->create();
-        assert(is_array($users));
+        $users = Factory::for(UserModel::class, 10)->create();
+        $users = array_map(fn (UserModel $u) => $u->toEntity(User::class), $users);
 
         $this
             ->auth(Fixtures::createAdmin())
@@ -70,16 +71,15 @@ class UserTest extends FeatureTestCase
             ->assertStatusOk()
             ->assertJsonContains([
                 [
-                    'name' => $users[0]->get('name'),
-                    'email' => $users[0]->get('email'),
+                    'name' => $users[0]->getName(),
+                    'email' => $users[0]->getEmail(),
                 ],
             ]);
     }
 
     public function test_can_get_item(): void
     {
-        $user = User::factory()->create();
-        assert($user instanceof User);
+        $user = UserModel::factory()->create()->toEntity(User::class);
 
         $this
             ->auth(Fixtures::createAdmin())
@@ -93,10 +93,7 @@ class UserTest extends FeatureTestCase
 
     public function test_can_update(): void
     {
-        $user = User::factory()->create([
-            'role_id' => Role::findByName(UserRole::USER->value)?->getId(),
-        ]);
-        assert($user instanceof User);
+        $user = UserModel::factory()->create()->toEntity(User::class);
         $name = faker()->name();
 
         $this
@@ -109,8 +106,7 @@ class UserTest extends FeatureTestCase
 
     public function test_can_delete(): void
     {
-        $user = User::factory()->create();
-        assert($user instanceof User);
+        $user = UserModel::factory()->create()->toEntity(User::class);
 
         $this
             ->auth(Fixtures::createAdmin())
