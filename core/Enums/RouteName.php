@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2019-2025 n'guessan kouadio elisée <eliseekn@gmail.com>
+ * @copyright 2019-2026 n'guessan kouadio elisée <eliseekn@gmail.com>
  * @license mit (https://opensource.org/licenses/mit)
  *
  * @link https://github.com/eliseekn/tinymvc
