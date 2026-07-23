@@ -62,6 +62,17 @@ abstract class Docs
             );
     }
 
+    private static function multipartBody(Schema $schema): RequestBody
+    {
+        return RequestBody::create()
+            ->required(true)
+            ->content(
+                MediaType::create()
+                    ->mediaType('multipart/form-data')
+                    ->schema($schema)
+            );
+    }
+
     private static function jsonResponse(int $statusCode, string $description, Schema $schema): Response
     {
         return Response::create()
@@ -80,6 +91,32 @@ abstract class Docs
             Schema::string('status'),
             Schema::string('message'),
         ));
+    }
+
+    private static function forbiddenResponse(): Response
+    {
+        return self::errorResponse(403, 'Only administrators can perform this action');
+    }
+
+    /**
+     * @return Schema[]
+     */
+    private static function userProperties(): array
+    {
+        return [
+            Schema::integer('id'),
+            Schema::string('name'),
+            Schema::string('email'),
+            Schema::string('avatar')->nullable(true),
+            Schema::string('role'),
+            Schema::string('created_at'),
+            Schema::string('updated_at'),
+        ];
+    }
+
+    private static function userSchema(?string $objectId = null): Schema
+    {
+        return Schema::object($objectId)->properties(...self::userProperties());
     }
 
     private static function login(): PathItem
@@ -305,7 +342,23 @@ abstract class Docs
                         Parameter::query()->name('search')->schema(Schema::string())->description('Search term')->required(false),
                     )
                     ->responses(
-                        Response::create()->statusCode(200)->description('OK'),
+                        self::jsonResponse(200, 'OK', Schema::object()->properties(
+                            Schema::string('status'),
+                            Schema::array('data')->items(self::userSchema()),
+                            Schema::object('meta')->properties(
+                                Schema::integer('current_page'),
+                                Schema::integer('first_item'),
+                                Schema::integer('total_items'),
+                                Schema::integer('items_per_page'),
+                                Schema::integer('total_pages'),
+                                Schema::string('first_page_url')->nullable(true),
+                                Schema::string('last_page_url')->nullable(true),
+                                Schema::string('current_page_url')->nullable(true),
+                                Schema::string('next_page_url')->nullable(true),
+                                Schema::string('previous_page_url')->nullable(true),
+                            ),
+                        )),
+                        self::errorResponse(401, 'Authentication required'),
                     ),
                 Operation::post()
                     ->operationId('storeUser')
@@ -324,12 +377,14 @@ abstract class Docs
                         )
                     )
                     ->responses(
-                        self::jsonResponse(201, 'User created', Schema::object()->properties(
+                        self::jsonResponse(200, 'User created', Schema::object()->properties(
                             Schema::string('status'),
                             Schema::string('message'),
-                            Schema::object('data'),
+                            self::userSchema('data'),
                         )),
-                        self::errorResponse(500, 'Server error'),
+                        self::forbiddenResponse(),
+                        self::errorResponse(422, 'Validation error'),
+                        self::errorResponse(500, 'Failed to create user'),
                     )
             );
     }
@@ -342,6 +397,25 @@ abstract class Docs
             ->schema(Schema::integer())
             ->description('User ID');
 
+        $updateRequestBody = self::jsonBody(
+            Schema::object()->properties(
+                Schema::string('name'),
+                Schema::string('email'),
+                Schema::integer('role_id'),
+            )
+        );
+
+        $updateResponses = [
+            self::jsonResponse(200, 'Profile updated', Schema::object()->properties(
+                Schema::string('status'),
+                Schema::string('message'),
+                self::userSchema('data'),
+            )),
+            self::forbiddenResponse(),
+            self::errorResponse(422, 'Validation error'),
+            self::errorResponse(500, 'Failed to update profile'),
+        ];
+
         return PathItem::create()
             ->route('/users/{user}')
             ->operations(
@@ -351,7 +425,11 @@ abstract class Docs
                     ->security(self::bearerAuth())
                     ->parameters($param)
                     ->responses(
-                        Response::create()->statusCode(200)->description('OK'),
+                        self::jsonResponse(200, 'OK', Schema::object()->properties(
+                            Schema::string('status'),
+                            ...self::userProperties(),
+                        )),
+                        self::errorResponse(401, 'Authentication required'),
                         self::errorResponse(404, 'Not found'),
                     ),
                 Operation::patch()
@@ -359,35 +437,27 @@ abstract class Docs
                     ->tags('Users')
                     ->security(self::bearerAuth())
                     ->parameters($param)
-                    ->requestBody(
-                        self::jsonBody(
-                            Schema::object()->properties(
-                                Schema::string('name'),
-                                Schema::string('email'),
-                                Schema::integer('role_id'),
-                            )
-                        )
-                    )
-                    ->responses(
-                        self::jsonResponse(200, 'User updated', Schema::object()->properties(
-                            Schema::string('status'),
-                            Schema::string('message'),
-                            Schema::object('data'),
-                        )),
-                        self::errorResponse(500, 'Server error'),
-                    ),
+                    ->requestBody($updateRequestBody)
+                    ->responses(...$updateResponses),
+                Operation::put()
+                    ->operationId('replaceUser')
+                    ->tags('Users')
+                    ->security(self::bearerAuth())
+                    ->parameters($param)
+                    ->requestBody($updateRequestBody)
+                    ->responses(...$updateResponses),
                 Operation::delete()
                     ->operationId('deleteUser')
                     ->tags('Users')
                     ->security(self::bearerAuth())
                     ->parameters($param)
                     ->responses(
-                        self::jsonResponse(200, 'User deleted', Schema::object()->properties(
+                        self::jsonResponse(204, 'User deleted', Schema::object()->properties(
                             Schema::string('status'),
                             Schema::string('message'),
                         )),
-                        self::errorResponse(404, 'Not found'),
-                        self::errorResponse(500, 'Server error'),
+                        self::forbiddenResponse(),
+                        self::errorResponse(500, 'Failed to delete user'),
                     )
             );
     }
@@ -400,6 +470,27 @@ abstract class Docs
             ->schema(Schema::integer())
             ->description('User ID');
 
+        $requestBody = self::multipartBody(
+            Schema::object()->properties(
+                Schema::string('name'),
+                Schema::string('email'),
+                Schema::string('password')->format(Schema::FORMAT_PASSWORD),
+                Schema::string('avatar')->format(Schema::FORMAT_BINARY)->description('png, jpg or jpeg file'),
+            )
+        );
+
+        $responses = [
+            self::jsonResponse(200, 'Profile updated', Schema::object()->properties(
+                Schema::string('status'),
+                Schema::string('message'),
+                self::userSchema('data'),
+            )),
+            self::forbiddenResponse(),
+            self::errorResponse(404, 'Not found'),
+            self::errorResponse(422, 'Validation error'),
+            self::errorResponse(500, 'Failed to update profile'),
+        ];
+
         return PathItem::create()
             ->route('/account/{user}/profile')
             ->operations(
@@ -408,24 +499,15 @@ abstract class Docs
                     ->tags('Profile')
                     ->security(self::bearerAuth())
                     ->parameters($param)
-                    ->requestBody(
-                        self::jsonBody(
-                            Schema::object()->properties(
-                                Schema::string('name'),
-                                Schema::string('email'),
-                                Schema::integer('role_id'),
-                            )
-                        )
-                    )
-                    ->responses(
-                        self::jsonResponse(200, 'Profile updated', Schema::object()->properties(
-                            Schema::string('status'),
-                            Schema::string('message'),
-                            Schema::object('data'),
-                        )),
-                        self::errorResponse(404, 'Not found'),
-                        self::errorResponse(500, 'Server error'),
-                    )
+                    ->requestBody($requestBody)
+                    ->responses(...$responses),
+                Operation::put()
+                    ->operationId('replaceProfile')
+                    ->tags('Profile')
+                    ->security(self::bearerAuth())
+                    ->parameters($param)
+                    ->requestBody($requestBody)
+                    ->responses(...$responses)
             );
     }
 
@@ -446,12 +528,14 @@ abstract class Docs
                     ->security(self::bearerAuth())
                     ->parameters($param)
                     ->responses(
-                        self::jsonResponse(200, 'Avatar deleted', Schema::object()->properties(
+                        self::jsonResponse(200, 'Profile updated, avatar cleared', Schema::object()->properties(
                             Schema::string('status'),
                             Schema::string('message'),
+                            self::userSchema('data'),
                         )),
+                        self::forbiddenResponse(),
                         self::errorResponse(404, 'Not found'),
-                        self::errorResponse(500, 'Server error'),
+                        self::errorResponse(500, 'Failed to update profile'),
                     )
             );
     }
@@ -465,7 +549,19 @@ abstract class Docs
                     ->operationId('getRolesCollection')
                     ->tags('Roles')
                     ->responses(
-                        Response::create()->statusCode(200)->description('OK'),
+                        self::jsonResponse(
+                            200,
+                            'OK. The role objects are merged at the top level of the response '.
+                            'alongside "status", keyed by their numeric list index (e.g. "0", "1", ...).',
+                            Schema::object()->properties(
+                                Schema::string('status'),
+                            )->additionalProperties(
+                                Schema::object()->properties(
+                                    Schema::integer('id'),
+                                    Schema::string('name'),
+                                )
+                            )
+                        ),
                     ),
             );
     }
