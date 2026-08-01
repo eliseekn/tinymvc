@@ -13,20 +13,13 @@ namespace Tests\Browser;
 
 use App\Database\Entities\User;
 use App\Database\Models\UserModel;
-use App\Database\Seeders\RoleSeeder;
+use Core\Support\Config;
 use Core\Testing\BrowserTestCase;
 use Core\Testing\Traits\RefreshDatabase;
 
 class LoginPageTest extends BrowserTestCase
 {
     use RefreshDatabase;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        RoleSeeder::run();
-    }
 
     protected function tearDown(): void
     {
@@ -37,6 +30,10 @@ class LoginPageTest extends BrowserTestCase
 
     public function test_can_authenticate(): void
     {
+        $emailVerification = config('security.auth.email_verification');
+
+        Config::updateEnv(['AUTH_EMAIL_VERIFICATION' => false]);
+
         $user = UserModel::factory()->create()->toEntity(User::class);
 
         $this
@@ -58,5 +55,7 @@ class LoginPageTest extends BrowserTestCase
         $this->crawler = $this->client->refreshCrawler();
 
         $this->assertEquals($dashboard, $this->crawler->filter('h1')->text());
+
+        Config::updateEnv(['AUTH_EMAIL_VERIFICATION' => $emailVerification]);
     }
 }

@@ -133,6 +133,8 @@ class User extends Entity
             return null;
         }
 
-        return $this->toModel()->belongsTo(RoleModel::class)->toEntity(Role::class);
+        return $this->toModel()
+            ->belongsTo(RoleModel::class)
+            ->toEntity(Role::class);
     }
 }

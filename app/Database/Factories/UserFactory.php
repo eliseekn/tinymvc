@@ -13,7 +13,6 @@ namespace App\Database\Factories;
 
 use App\Database\Models\RoleModel;
 use App\Database\Models\UserModel;
-use App\Enums\UserRole;
 use Core\Database\Factory\Factory;
 
 class UserFactory extends Factory
@@ -27,7 +26,7 @@ class UserFactory extends Factory
             'email' => faker()->unique()->safeEmail(),
             'password' => bcrypt('P@ssw0rd'),
             'email_verified_at' => null,
-            'role_id' => RoleModel::findByName(UserRole::USER->value)?->getId(),
+            'role_id' => RoleModel::factory()->create()->getId(),
             'avatar' => null,
         ];
     }

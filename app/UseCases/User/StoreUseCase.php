@@ -23,7 +23,9 @@ final class StoreUseCase
         $password = $data['password'];
         $data['password'] = bcrypt($password);
 
-        $user = UserModel::factory()->create($data);
+        $user = UserModel::factory()
+            ->create($data)
+            ->toEntity(User::class);
 
         if (! $user instanceof User) {
             throw new InternalServerException('Failed to create user');

@@ -22,24 +22,23 @@ class FakeNotification
 
     public static function load(string $name, string|array $recipient): void
     {
+        $data = static::notifications();
         $data[$name] = parse_array($recipient);
 
         static::storage()->writeFile('notifications.json', json_encode($data));
         static::storage()->writeFile('sent_notifications.json', '');
     }
 
-    public static function send(string|array $name, string|array $recipient): void
+    public static function send(string $name, string|array $recipient): void
     {
-        $names = parse_array($name);
-        $sent = static::sentNotifications();
-
-        foreach ($names as $_name) {
-            if (array_key_exists($_name, static::notifications())) {
-                $sent[$_name] = $recipient;
-            }
+        if (! array_key_exists($name, static::notifications())) {
+            return;
         }
 
-        static::storage()->writeFile('sent_notifications.json', json_encode($sent), true);
+        $sent = static::sentNotifications();
+        $sent[$name] = $recipient;
+
+        static::storage()->writeFile('sent_notifications.json', json_encode($sent));
     }
 
     public static function notifications(): array
@@ -54,7 +53,7 @@ class FakeNotification
             return [];
         }
 
-        return json_decode($data, true);
+        return json_decode($data, true) ?? [];
     }
 
     public static function sentNotifications(): array
@@ -69,12 +68,19 @@ class FakeNotification
             return [];
         }
 
-        return json_decode($data, true);
+        return json_decode($data, true) ?? [];
     }
 
     public static function clear(): void
     {
-        static::storage()->deleteFile('notifications.json');
-        static::storage()->deleteFile('sent_notifications.json');
+        $storage = static::storage();
+
+        if ($storage->isFile('notifications.json')) {
+            $storage->deleteFile('notifications.json');
+        }
+
+        if ($storage->isFile('sent_notifications.json')) {
+            $storage->deleteFile('sent_notifications.json');
+        }
     }
 }

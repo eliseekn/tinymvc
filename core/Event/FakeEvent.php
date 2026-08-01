@@ -22,7 +22,9 @@ class FakeEvent
 
     public static function load(string|array $name): void
     {
-        static::storage()->writeFile('events.json', json_encode(parse_array($name)));
+        $events = array_values(array_unique(array_merge(static::events(), parse_array($name))));
+
+        static::storage()->writeFile('events.json', json_encode($events));
         static::storage()->writeFile('dispatched_events.json', '');
     }
 
@@ -32,12 +34,12 @@ class FakeEvent
         $dispatched = static::dispatchedEvents();
 
         foreach ($names as $_name) {
-            if (in_array($name, static::events())) {
-                $dispatched[] = $name;
+            if (in_array($_name, static::events(), true)) {
+                $dispatched[] = $_name;
             }
         }
 
-        static::storage()->writeFile('dispatched_events.json', json_encode($dispatched), true);
+        static::storage()->writeFile('dispatched_events.json', json_encode($dispatched));
     }
 
     public static function events(): array
@@ -52,7 +54,7 @@ class FakeEvent
             return [];
         }
 
-        return json_decode($data, true);
+        return json_decode($data, true) ?? [];
     }
 
     public static function dispatchedEvents(): array
@@ -67,12 +69,19 @@ class FakeEvent
             return [];
         }
 
-        return json_decode($data, true);
+        return json_decode($data, true) ?? [];
     }
 
     public static function clear(): void
     {
-        static::storage()->deleteFile('events.json');
-        static::storage()->deleteFile('dispatched_events.json');
+        $storage = static::storage();
+
+        if ($storage->isFile('events.json')) {
+            $storage->deleteFile('events.json');
+        }
+
+        if ($storage->isFile('dispatched_events.json')) {
+            $storage->deleteFile('dispatched_events.json');
+        }
     }
 }

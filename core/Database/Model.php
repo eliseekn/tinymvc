@@ -247,13 +247,13 @@ class Model
     /**
      * Get relationship belongs to many the model.
      */
-    public function belongsToMany(string $table, ?string $column = null): array
+    public function belongsToMany(string $model, ?string $column = null): array
     {
         if (is_null($column)) {
-            $column = $this->getColumnFromTable($table);
+            $column = $this->getColumnFromTable($model::defaultTable());
         }
 
-        return (new Repository($table))
+        return (new Repository($model::defaultTable(), $model))
             ->select('*')
             ->where('id', $this->attributes[$column])
             ->getAll();
@@ -328,13 +328,13 @@ class Model
         return true;
     }
 
-    public function save(): self|false
+    public function save(bool $withoutEvent = false): self|false
     {
         if (empty($this->getId())) {
-            return $this->create($this->attributes);
+            return $this->create($this->attributes, $withoutEvent);
         }
 
-        if ($this->update($this->attributes)) {
+        if ($this->update($this->attributes, $withoutEvent)) {
             return $this->findBy('id', $this->getId());
         }
 

@@ -108,6 +108,10 @@ class QueryBuilder
 
     public function insert(array $items): self
     {
+        if (array_key_exists('created_at', $items)) {
+            unset($items['created_at']);
+        }
+
         static::$query = 'INSERT INTO '.static::$table.' (';
 
         foreach ($items as $key => $value) {

@@ -36,7 +36,7 @@ class Event
 
     public static function dispatch(string $name, object $event): void
     {
-        if (in_array($name, FakeEvent::events())) {
+        if (in_array($name, FakeEvent::events(), true)) {
             FakeEvent::dispatch($name);
 
             return;
@@ -58,7 +58,7 @@ class Event
 
         foreach ($names as $_name) {
             Assert::assertTrue(
-                in_array($name, FakeEvent::dispatchedEvents()),
+                in_array($_name, FakeEvent::dispatchedEvents(), true),
             );
         }
 
@@ -71,7 +71,7 @@ class Event
 
         foreach ($names as $_name) {
             Assert::assertFalse(
-                in_array($name, FakeEvent::dispatchedEvents()),
+                in_array($_name, FakeEvent::dispatchedEvents(), true),
             );
         }
 

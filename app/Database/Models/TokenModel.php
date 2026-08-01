@@ -63,8 +63,6 @@ class TokenModel extends Model
 
         $token->setValue($value);
 
-        $saved = self::query()->setAttributes($token->toArray())->save();
-
-        return $saved ? $token : null;
+        return self::query()->setAttributes($token->toArray())->save() ? $token : null;
     }
 }

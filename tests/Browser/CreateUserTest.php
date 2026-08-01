@@ -11,10 +11,9 @@ declare(strict_types=1);
 
 namespace Tests\Browser;
 
-use App\Database\Entities\User;
-use App\Database\Seeders\RoleSeeder;
 use App\Events\UserCreated\UserCreatedEvent;
 use Core\Event\Event;
+use Core\Support\Config;
 use Core\Testing\BrowserTestCase;
 use Core\Testing\Traits\RefreshDatabase;
 use Tests\Fixtures;
@@ -22,13 +21,6 @@ use Tests\Fixtures;
 class CreateUserTest extends BrowserTestCase
 {
     use RefreshDatabase;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        RoleSeeder::run();
-    }
 
     protected function tearDown(): void
     {
@@ -39,10 +31,13 @@ class CreateUserTest extends BrowserTestCase
 
     public function test_can_create(): void
     {
+        $emailVerification = config('security.auth.email_verification');
+
+        Config::updateEnv(['AUTH_EMAIL_VERIFICATION' => false]);
+
         Event::fake(UserCreatedEvent::class);
 
         $admin = Fixtures::createAdmin();
-        assert($admin instanceof User);
 
         $this
             ->visit('/login')
@@ -91,5 +86,7 @@ class CreateUserTest extends BrowserTestCase
         $this->assertDatabaseHas('users', ['email' => $data['email']]);
 
         Event::assertDispatched(UserCreatedEvent::class);
+
+        Config::updateEnv(['AUTH_EMAIL_VERIFICATION' => $emailVerification]);
     }
 }

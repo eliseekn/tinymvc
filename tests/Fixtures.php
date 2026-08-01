@@ -18,10 +18,63 @@ use App\Enums\UserRole;
 
 abstract class Fixtures
 {
-    public static function createAdmin(array $attributes = []): ?User
+    public static function makeAdmin(array $attributes = [], int $count = 1): User|array
     {
-        return UserModel::factory()->create(array_merge($attributes, [
-            'role_id' => RoleModel::findByName(UserRole::ADMIN->value)?->getId(),
-        ]), true)?->toEntity(User::class);
+        $role = RoleModel::factory()->create(['name' => UserRole::ADMIN->value], true);
+        $attributes['role_id'] = $role->getId();
+        $result = UserModel::factory($count)->make($attributes);
+
+        if (is_array($result)) {
+            return array_map(fn (UserModel $user) => $user->toEntity(User::class), $result);
+        }
+
+        return $result->toEntity(User::class);
+    }
+
+    public static function createAdmin(array $attributes = [], int $count = 1): User|array
+    {
+        $result = self::makeUser($attributes, $count);
+
+        if (is_array($result)) {
+            foreach ($result as $r) {
+                $r->toModel()->save(false);
+            }
+
+            return $result;
+        }
+
+        $result->toModel()->save(false);
+
+        return $result;
+    }
+
+    public static function makeUser(array $attributes = [], int $count = 1): User|array
+    {
+        $role = RoleModel::factory()->create(['name' => UserRole::USER->value], true);
+        $attributes['role_id'] = $role->getId();
+        $result = UserModel::factory($count)->make($attributes);
+
+        if (is_array($result)) {
+            return array_map(fn (UserModel $user) => $user->toEntity(User::class), $result);
+        }
+
+        return $result->toEntity(User::class);
+    }
+
+    public static function createUser(array $attributes = [], int $count = 1): User|array
+    {
+        $result = self::makeUser($attributes, $count);
+
+        if (is_array($result)) {
+            foreach ($result as $r) {
+                $r->toModel()->save(false);
+            }
+
+            return $result;
+        }
+
+        $result->toModel()->save(false);
+
+        return $result;
     }
 }
