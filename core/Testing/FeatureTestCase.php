@@ -171,63 +171,63 @@ abstract class FeatureTestCase extends TestCase
         return $this;
     }
 
-    public function assertStatusEquals(int $expected): self
+    public function assertHttpStatusEquals(int $expected): self
     {
         $this->assertEquals($expected, $this->getStatusCode());
 
         return $this;
     }
 
-    public function assertStatusOk(): self
+    public function assertHttpStatusOk(): self
     {
-        $this->assertStatusEquals(HttpCode::OK);
+        $this->assertHttpStatusEquals(HttpCode::OK);
 
         return $this;
     }
 
-    public function assertStatusForbidden(): self
+    public function assertHttpStatusForbidden(): self
     {
-        $this->assertStatusEquals(HttpCode::FORBIDDEN);
+        $this->assertHttpStatusEquals(HttpCode::FORBIDDEN);
 
         return $this;
     }
 
-    public function assertStatusUnauthenticated(): self
+    public function assertHttpStatusUnauthenticated(): self
     {
-        $this->assertStatusEquals(HttpCode::UNAUTHORIZED);
+        $this->assertHttpStatusEquals(HttpCode::UNAUTHORIZED);
 
         return $this;
     }
 
-    public function assertStatusNotFound(): self
+    public function assertHttpStatusNotFound(): self
     {
-        $this->assertStatusEquals(HttpCode::NOT_FOUND);
+        $this->assertHttpStatusEquals(HttpCode::NOT_FOUND);
 
         return $this;
     }
 
-    public function assertStatusFound(): self
+    public function assertHttpStatusFound(): self
     {
-        $this->assertStatusEquals(HttpCode::FOUND);
+        $this->assertHttpStatusEquals(HttpCode::FOUND);
 
         return $this;
     }
 
-    public function assertStatusBadRequest(): self
+    public function assertHttpStatusBadRequest(): self
     {
-        $this->assertStatusEquals(HttpCode::BAD_REQUEST);
+        $this->assertHttpStatusEquals(HttpCode::BAD_REQUEST);
 
         return $this;
     }
 
-    public function assertStatusServerError(): self
+    public function assertHttpStatusServerError(): self
     {
-        $this->assertStatusEquals(HttpCode::INTERNAL_SERVER_ERROR);
+        $this->assertHttpStatusEquals(HttpCode::INTERNAL_SERVER_ERROR);
 
         return $this;
     }
 
-    public function assertStatusDoesNotEquals(int $expected): self
+    public function assertHttpStatusDoesNotEquals(int $expected): self
     {
         $this->assertNotEquals($expected, $this->getStatusCode());
 

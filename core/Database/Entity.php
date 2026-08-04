@@ -11,11 +11,9 @@ declare(strict_types=1);
 
 namespace Core\Database;
 
-use BackedEnum;
 use Carbon\Carbon;
 use DateTimeInterface;
 use ReflectionClass;
-use ReflectionEnum;
 use ReflectionNamedType;
 use ReflectionProperty;
 
@@ -112,7 +110,7 @@ abstract class Entity
      */
     public function toModel(array $data = []): Model
     {
-        $data = empty($data) ? $this->toArray() : $data;
+        $data = array_merge($this->toArray(), $data);
         $modelClass = static::model();
 
         return new $modelClass(static::table(), $data);
@@ -145,25 +143,14 @@ abstract class Entity
             $name === 'float' => (float) $value,
             $name === 'bool' => (bool) $value,
             $name === 'string' => (string) $value,
-            is_subclass_of($name, BackedEnum::class) => self::castToEnum($name, $value),
             is_a($name, DateTimeInterface::class, true) => carbon(is_string($value) ? $value : $value->format('Y-m-d H:i:s')),
             default => $value,
         };
     }
 
-    protected static function castToEnum(string $enum, mixed $value): BackedEnum
-    {
-        $backingType = (new ReflectionEnum($enum))->getBackingType();
-
-        return $backingType?->getName() === 'int'
-            ? $enum::from((int) $value)
-            : $enum::from((string) $value);
-    }
-
     protected static function castToColumn(mixed $value): mixed
     {
         return match (true) {
-            $value instanceof BackedEnum => $value->value,
             $value instanceof DateTimeInterface => $value->format('Y-m-d H:i:s'),
             is_bool($value) => (int) $value,
             default => $value,

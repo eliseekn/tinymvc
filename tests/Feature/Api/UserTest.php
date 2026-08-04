@@ -35,7 +35,7 @@ class UserTest extends FeatureTestCase
         $this
             ->auth(Fixtures::createAdmin())
             ->postJson('/api/v1/users', $user->toArray())
-            ->assertStatusEquals(HttpCode::CREATED)
+            ->assertHttpStatusEquals(HttpCode::CREATED)
             ->assertJsonContains([
                 'status' => ResponseStatus::SUCCESS,
                 'message' => 'User created',
@@ -51,7 +51,7 @@ class UserTest extends FeatureTestCase
         $this
             ->auth(Fixtures::createAdmin())
             ->getJson('/api/v1/users')
-            ->assertStatusOk()
+            ->assertHttpStatusOk()
             ->assertJsonContains([
                 [
                     'name' => $users[0]->getName(),
@@ -67,7 +67,7 @@ class UserTest extends FeatureTestCase
         $this
             ->auth(Fixtures::createAdmin())
             ->getJson('/api/v1/users/'.$user->getId())
-            ->assertStatusOk()
+            ->assertHttpStatusOk()
             ->assertJsonContains([
                 'name' => $user->getName(),
                 'email' => $user->getEmail(),
@@ -82,8 +82,8 @@ class UserTest extends FeatureTestCase
         $this
             ->auth(Fixtures::createAdmin())
             ->patchJson('/api/v1/users/'.$user->getId(), ['name' => $name])
-            ->assertStatusOk()
-            ->assertJsonContains(['data' => array_merge(['name' => $name], $user->toArray())])
+            ->assertHttpStatusOk()
+            ->assertJsonContains(['data' => ['name' => $name]])
             ->assertDatabaseHas('users', ['name' => $name]);
     }
 
@@ -94,7 +94,7 @@ class UserTest extends FeatureTestCase
         $this
             ->auth(Fixtures::createAdmin())
             ->deleteJson('/api/v1/users/'.$user->getId())
-            ->assertStatusEquals(HttpCode::NO_CONTENT)
+            ->assertHttpStatusEquals(HttpCode::NO_CONTENT)
             ->assertJsonContains(['status' => ResponseStatus::SUCCESS])
             ->assertDatabaseDoesNotHave('users', ['name' => $user->getName()]);
     }

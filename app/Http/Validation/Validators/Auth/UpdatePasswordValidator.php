@@ -25,7 +25,7 @@ class UpdatePasswordValidator extends Validator
         return Rules::add('email', [Rules::required(), Rules::email()])
             ->add('password', [
                 Rules::required(),
-                Rules::between(8, 10),
+                Rules::between(8, 15),
                 Rules::custom(new Password),
             ])
             ->make();

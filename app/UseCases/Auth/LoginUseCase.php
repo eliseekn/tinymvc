@@ -22,7 +22,7 @@ final class LoginUseCase
     {
         $user = UserModel::findByEmail($data['email']);
 
-        if (! Auth::attempt($user)) {
+        if (! $user || ! Auth::attempt($user)) {
             throw new InvalidCredentialsException;
         }
     }

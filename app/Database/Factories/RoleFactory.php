@@ -21,7 +21,7 @@ class RoleFactory extends Factory
     public function data(): array
     {
         return [
-            'name' => faker()->word(),
+            'name' => faker()->unique()->word(),
         ];
     }
 }

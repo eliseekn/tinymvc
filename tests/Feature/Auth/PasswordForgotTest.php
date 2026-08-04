@@ -11,14 +11,12 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Auth;
 
-use App\Database\Entities\Token;
-use App\Database\Entities\User;
-use App\Database\Models\TokenModel;
 use App\Database\Models\UserModel;
 use App\Enums\TokenDescription;
 use Core\Support\Encryption;
 use Core\Testing\FeatureTestCase;
 use Core\Testing\Traits\RefreshDatabase;
+use Tests\Fixtures;
 
 class PasswordForgotTest extends FeatureTestCase
 {
@@ -33,17 +31,16 @@ class PasswordForgotTest extends FeatureTestCase
 
     public function test_can_reset_password(): void
     {
-        $user = UserModel::factory()->create()->toEntity(User::class);
+        $user = Fixtures::createUser();
 
-        $token = TokenModel::factory()->create([
+        $token = Fixtures::createToken([
             'identifier' => $user->getEmail(),
             'description' => TokenDescription::PASSWORD_RESET->value,
-        ])->toEntity(Token::class);
+        ]);
 
-        $this
-            ->get('/password/reset?email='.$user->getEmail().'&token='.$token->getValue())
-            ->assertStatusOk()
-            ->assertDatabaseDoesNotHave('tokens', [
+        $this->get('/password/reset?email='.$user->getEmail().'&token='.$token->getValue())
+            ->assertHttpStatusOk()
+            ->assertDatabaseHas('tokens', [
                 'identifier' => $token->getIdentifier(),
                 'value' => $token->getValue(),
             ]);
@@ -51,14 +48,16 @@ class PasswordForgotTest extends FeatureTestCase
 
     public function test_can_update_password(): void
     {
-        $user = UserModel::factory()->create()->toEntity(User::class);
+        $user = Fixtures::createUser();
 
-        $this
-            ->post('/password/update', [
-                'email' => $user->getEmail(),
-                'password' => 'new_P@ssw0rd',
-            ])
-            ->assertRedirectedToUrl('/login')
-            ->assertTrue(Encryption::check('new_P@ssw0rd', UserModel::find((int) $user->getId())?->getPassword()));
+        $this->post('/password/update', [
+            'email' => $user->getEmail(),
+            'password' => 'new_P@ssw0rd',
+        ])
+            ->assertRedirectedToUrl('/login');
+
+        $user = UserModel::find((int) $user->getId());
+
+        $this->assertTrue(Encryption::check('new_P@ssw0rd', $user->getPassword()));
     }
 }

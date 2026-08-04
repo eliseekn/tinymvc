@@ -81,7 +81,7 @@ class User extends Entity
 
     public function setPassword(?string $password): self
     {
-        $this->password = $password;
+        $this->password = bcrypt($password);
 
         return $this;
     }
@@ -135,6 +135,6 @@ class User extends Entity
 
         return $this->toModel()
             ->belongsTo(RoleModel::class)
-            ->toEntity(Role::class);
+            ?->toEntity(Role::class);
     }
 }

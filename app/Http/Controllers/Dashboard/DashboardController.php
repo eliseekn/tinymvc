@@ -31,7 +31,7 @@ class DashboardController extends Controller
         middlewares: [Authenticated::class, EmailVerified::class],
         name: 'dashboard.index')
     ]
-    public function __invoke(User $users): BaseResponse
+    public function __invoke(): BaseResponse
     {
         $period = request()->queries()->get('period', 'day');
 
@@ -39,7 +39,7 @@ class DashboardController extends Controller
             $period = explode('~', $period, 2);
         }
 
-        $metrics = $users->toModel()->metrics();
+        $metrics = (new User)->toModel()->metrics();
 
         return $this->viewResponse('dashboard.index', [
             'totalUsers' => $this->metrics($metrics, $period),

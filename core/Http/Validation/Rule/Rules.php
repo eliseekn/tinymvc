@@ -100,16 +100,6 @@ class Rules
         return 'integer';
     }
 
-    public static function digitsConst(): string
-    {
-        return 'digits';
-    }
-
-    public static function digitsBetweenConst(): string
-    {
-        return 'digits_between';
-    }
-
     public static function url(): string
     {
         return 'url';
@@ -118,51 +108,6 @@ class Rules
     public static function json(): string
     {
         return 'json';
-    }
-
-    public static function maxConst(): string
-    {
-        return 'max';
-    }
-
-    public static function minConst(): string
-    {
-        return 'min';
-    }
-
-    public static function inConst(): string
-    {
-        return 'in';
-    }
-
-    public static function notInConst(): string
-    {
-        return 'not_in';
-    }
-
-    public static function lengthConst(): string
-    {
-        return 'length';
-    }
-
-    public static function betweenConst(): string
-    {
-        return 'between';
-    }
-
-    public static function dateConst(): string
-    {
-        return 'date';
-    }
-
-    public static function extensionConst(): string
-    {
-        return 'extension';
-    }
-
-    public static function regexConst(): string
-    {
-        return 'regex';
     }
 
     public static function nullable(): string
@@ -205,16 +150,6 @@ class Rules
         return 'ipv6';
     }
 
-    public static function afterConst(): string
-    {
-        return 'after';
-    }
-
-    public static function beforeConst(): string
-    {
-        return 'before';
-    }
-
     public static function present(): string
     {
         return 'present';
@@ -228,16 +163,6 @@ class Rules
     public static function rejected(): string
     {
         return 'rejected';
-    }
-
-    public static function sameConst(): string
-    {
-        return 'same';
-    }
-
-    public static function differentConst(): string
-    {
-        return 'different';
     }
 
     public static function float(): string

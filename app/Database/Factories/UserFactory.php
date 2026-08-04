@@ -26,7 +26,7 @@ class UserFactory extends Factory
             'email' => faker()->unique()->safeEmail(),
             'password' => bcrypt('P@ssw0rd'),
             'email_verified_at' => null,
-            'role_id' => RoleModel::factory()->create()->getId(),
+            'role_id' => 1, // RoleModel::factory()->create()?->getId(),
             'avatar' => null,
         ];
     }

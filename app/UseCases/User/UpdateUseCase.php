@@ -17,9 +17,7 @@ use App\Helpers\FileUploadHelper;
 
 final class UpdateUseCase
 {
-    public function __construct(private readonly FileUploadHelper $fileUploadHelper)
-    {
-    }
+    public function __construct(private readonly FileUploadHelper $fileUploadHelper) {}
 
     public function handle(array $data, User $user): void
     {
@@ -39,7 +37,7 @@ final class UpdateUseCase
             unset($data['password']);
         }
 
-        if (! $user->toModel($data)->save()) {
+        if (! (bool) $user->toModel($data)->save()) {
             throw new InternalServerException('Failed to update profile');
         }
     }

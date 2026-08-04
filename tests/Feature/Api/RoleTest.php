@@ -35,7 +35,7 @@ class RoleTest extends FeatureTestCase
 
         $this
             ->getJson('/api/v1/roles')
-            ->assertStatusOk()
+            ->assertHttpStatusOk()
             ->assertJsonContains([
                 [
                     'name' => $role->getName(),

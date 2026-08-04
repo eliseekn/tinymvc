@@ -43,13 +43,13 @@ final class VerifyUseCase
 
         $user = UserModel::findByEmail($email);
 
-        if (is_null($user)) {
+        if (! $user) {
             throw new VerifyEmailException;
         }
 
         $user->setEmailVerifiedAt(Carbon::now());
 
-        if (! $user->toModel()->save()) {
+        if (! (bool) $user->toModel()->save()) {
             throw new VerifyEmailException;
         }
 

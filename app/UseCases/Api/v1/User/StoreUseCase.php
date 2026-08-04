@@ -12,14 +12,22 @@ declare(strict_types=1);
 namespace App\UseCases\Api\v1\User;
 
 use App\Database\Entities\User;
-use App\Database\Models\UserModel;
 
 final class StoreUseCase
 {
     public function handle(array $data): ?User
     {
-        $data['password'] = bcrypt($data['password']);
+        $user = (new User)
+            ->setEmail($data['email'])
+            ->setName($data['name'])
+            ->setRoleId((int) $data['role_id'])
+            ->setPassword($data['password']);
 
-        return UserModel::factory()->create($data)->toEntity(User::class);
+        if ($user->toModel()->save()) {
+            return $user;
+        }
+
+        return null;
+
     }
 }

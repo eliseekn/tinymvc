@@ -32,8 +32,7 @@ class PasswordForgotController extends Controller
     {
         $useCase->handle($validator->validated('email'));
 
-        return $this
-            ->redirectResponse()
+        return $this->redirectResponse()
             ->toBack()
             ->withAlert(MessageType::SUCCESS, __('alert.password_reset_link_sent'));
     }
@@ -52,14 +51,12 @@ class PasswordForgotController extends Controller
     public function update(UpdatePasswordUseCase $useCase, UpdatePasswordValidator $validator): BaseResponse
     {
         if (! $useCase->handle($validator->validated())) {
-            return $this
-                ->redirectResponse()
+            return $this->redirectResponse()
                 ->toBack()
                 ->withAlert(MessageType::ERROR, __('alert.password_not_reset'));
         }
 
-        return $this
-            ->redirectResponse()
+        return $this->redirectResponse()
             ->toUrl('/login')
             ->withAlert(MessageType::SUCCESS, __('alert.password_reset'));
     }

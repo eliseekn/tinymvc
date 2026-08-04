@@ -58,7 +58,7 @@ class ProfileController extends Controller
 
         return $this->successJsonResponse([
             'message' => 'Profile updated',
-            'data' => new UserResource($user)->handle(),
+            'data' => new UserResource($user->toModel())->handle(),
         ]);
     }
 }

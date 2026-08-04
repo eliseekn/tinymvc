@@ -30,7 +30,7 @@ class InvalidCredentialsException extends Exception implements HasCustomHttpResp
     {
         return $this
             ->redirectResponse()
-            ->toBack()
+            ->toUrl('/login')
             ->withInputs(request()->inputs()->get())
             ->withErrors([__('alert.login_failed')])
             ->withAlert(MessageType::ERROR, __('alert.login_failed'));

@@ -11,8 +11,10 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use App\Database\Entities\Token;
 use App\Database\Entities\User;
 use App\Database\Models\RoleModel;
+use App\Database\Models\TokenModel;
 use App\Database\Models\UserModel;
 use App\Enums\UserRole;
 
@@ -33,19 +35,13 @@ abstract class Fixtures
 
     public static function createAdmin(array $attributes = [], int $count = 1): User|array
     {
-        $result = self::makeUser($attributes, $count);
+        $result = self::makeAdmin($attributes, $count);
 
         if (is_array($result)) {
-            foreach ($result as $r) {
-                $r->toModel()->save(false);
-            }
-
-            return $result;
+            return array_map(fn (User $r) => $r->toModel()->save(false)?->toEntity(User::class), $result);
         }
 
-        $result->toModel()->save(false);
-
-        return $result;
+        return $result->toModel()->save(false)?->toEntity(User::class);
     }
 
     public static function makeUser(array $attributes = [], int $count = 1): User|array
@@ -66,15 +62,31 @@ abstract class Fixtures
         $result = self::makeUser($attributes, $count);
 
         if (is_array($result)) {
-            foreach ($result as $r) {
-                $r->toModel()->save(false);
-            }
-
-            return $result;
+            return array_map(fn (User $r) => $r->toModel()->save(false)?->toEntity(User::class), $result);
         }
 
-        $result->toModel()->save(false);
+        return $result->toModel()->save(false)?->toEntity(User::class);
+    }
 
-        return $result;
+    public static function makeToken(array $attributes = [], int $count = 1): Token|array
+    {
+        $result = TokenModel::factory($count)->make($attributes);
+
+        if (is_array($result)) {
+            return array_map(fn (TokenModel $user) => $user->toEntity(Token::class), $result);
+        }
+
+        return $result->toEntity(Token::class);
+    }
+
+    public static function createToken(array $attributes = [], int $count = 1): Token|array
+    {
+        $result = self::makeToken($attributes, $count);
+
+        if (is_array($result)) {
+            return array_map(fn (User $r) => $r->toModel()->save(false)?->toEntity(Token::class), $result);
+        }
+
+        return $result->toModel()->save(false)?->toEntity(Token::class);
     }
 }

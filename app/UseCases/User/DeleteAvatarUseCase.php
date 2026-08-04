@@ -27,7 +27,7 @@ final class DeleteAvatarUseCase
 
         $user->setAvatar(null);
 
-        if (! $user->toModel()->save()) {
+        if (! (bool) $user->toModel()->save()) {
             throw new InternalServerException('Failed to update profile');
         }
 

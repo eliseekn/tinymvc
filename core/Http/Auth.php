@@ -30,7 +30,7 @@ class Auth
         return session()->get('auth_attempts', 0);
     }
 
-    public static function attempt(?User &$user): bool
+    public static function attempt(User $user): bool
     {
         session()->push('auth_attempts', 1, 0);
         $credentials = request()->inputs()->only([config('security.auth.identifier'), 'password']);

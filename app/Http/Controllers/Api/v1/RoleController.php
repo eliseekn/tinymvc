@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Database\Models\Role;
+use App\Database\Models\RoleModel;
 use App\Http\Resources\RoleResource;
 use Core\Cache\Cache;
 use Core\Enums\HttpMethod;
@@ -26,7 +26,7 @@ class RoleController extends Controller
     {
         $data = Cache::read(
             'roles',
-            Role::findAll(),
+            RoleModel::findAll(),
             carbon()->addDay()->timestamp
         );
 

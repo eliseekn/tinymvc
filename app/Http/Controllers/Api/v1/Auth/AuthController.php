@@ -46,6 +46,6 @@ class AuthController extends Controller
     {
         $useCase->handle($valitator->validated(), $notifyUseCase);
 
-        return $this->successJsonResponse(__('alert.account_created'), HttpCode::OK);
+        return $this->successJsonResponse(__('alert.account_created'), HttpCode::CREATED);
     }
 }

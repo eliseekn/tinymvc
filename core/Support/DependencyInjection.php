@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Core\Support;
 
 use Closure;
+use Core\Database\Entity;
 use Core\Database\Model;
 use Core\Event\Events\ModelNotFound\ModelNotFoundEvent;
 use Core\Http\Validation\Validator\Validator;
@@ -97,11 +98,13 @@ class DependencyInjection
 
                 // @phpstan-ignore-next-line
                 if (! $dependency->isBuiltin()) {
+
                     if (is_subclass_of($class, Validator::class)) {
                         $class = $class::make()->validate();
-                    } elseif ($class === Model::class) {
+                    } elseif (is_subclass_of($class, Entity::class)) {
                         [$table, $column, $value] = array_values($bindings[$bindingKey]);
-                        $class = (new $class($table))->findBy($column, $value);
+                        $model = (new Model($table))->findBy($column, $value);
+                        $class = $model->toEntity($class);
 
                         if (is_null($class)) {
                             dispatch(new ModelNotFoundEvent($table, $column, $value));

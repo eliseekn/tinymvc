@@ -62,7 +62,7 @@ class Factory
         return [];
     }
 
-    public function make(array $data = []): Model|false|array
+    public function make(array $data = []): Model|array|null
     {
         if (count($this->class) === 1) {
             $this->class[0]->setAttributes(array_merge($this->data(), $data));
@@ -77,7 +77,7 @@ class Factory
         }, $this->class);
     }
 
-    public function create(array $data = [], bool $withoutEvent = false): Model|false|array
+    public function create(array $data = [], bool $withoutEvent = false): Model|array|null
     {
         $class = $this->make($data);
 

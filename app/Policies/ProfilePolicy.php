@@ -11,7 +11,8 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use Core\Database\Entity;
+use App\Enums\UserRole;
+use Core\Database\Model;
 use Core\Policy\PolicyInterface;
 
 final class ProfilePolicy implements PolicyInterface
@@ -31,22 +32,22 @@ final class ProfilePolicy implements PolicyInterface
         return true;
     }
 
-    public function update(Entity $model): bool
+    public function update(Model $model): bool
     {
-        return auth()?->getId() === $model->getId();
+        return auth()?->role()->getName() === UserRole::ADMIN->value || auth()?->getId() === $model->getId();
     }
 
-    public function edit(Entity $model): bool
-    {
-        return true;
-    }
-
-    public function show(Entity $model): bool
+    public function edit(Model $model): bool
     {
         return true;
     }
 
-    public function delete(Entity $model): bool
+    public function show(Model $model): bool
+    {
+        return true;
+    }
+
+    public function delete(Model $model): bool
     {
         return auth()?->getId() === $model->getId();
     }

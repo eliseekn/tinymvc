@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api\v1;
 
 use App\Database\Entities\User;
-use App\Database\Models\User as UserModel;
+use App\Database\Models\UserModel;
 use App\Http\Middlewares\ApiAuth;
 use App\Http\Middlewares\CheckIfUserAdmin;
 use App\Http\Resources\UserResource;
@@ -46,7 +46,7 @@ class UserController extends Controller
     )]
     public function show(User $user): BaseResponse
     {
-        return $this->successJsonResponse(new UserResource($user)->handle());
+        return $this->successJsonResponse(new UserResource($user->toModel())->handle());
     }
 
     #[Route(HttpMethod::POST, '/api/v1/users', [ApiAuth::class, CheckIfUserAdmin::class])]
@@ -60,8 +60,8 @@ class UserController extends Controller
 
         return $this->successJsonResponse([
             'message' => 'User created',
-            'data' => new UserResource($user)->handle(),
-        ]);
+            'data' => new UserResource($user->toModel())->handle(),
+        ], HttpCode::CREATED);
     }
 
     #[Route(
@@ -79,7 +79,7 @@ class UserController extends Controller
 
         return $this->successJsonResponse([
             'message' => 'Profile updated',
-            'data' => new UserResource($user)->handle(),
+            'data' => new UserResource($user->toModel())->handle(),
         ]);
     }
 
@@ -92,7 +92,7 @@ class UserController extends Controller
     )]
     public function delete(User $user): BaseResponse
     {
-        if (! $user->delete()) {
+        if (! $user->toModel()->delete()) {
             return $this->errorJsonResponse('Failed to delete user');
         }
 

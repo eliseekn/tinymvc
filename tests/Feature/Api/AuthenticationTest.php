@@ -37,7 +37,7 @@ class AuthenticationTest extends FeatureTestCase
                 'email' => $user->getEmail(),
                 'password' => 'P@ssw0rd',
             ])
-            ->assertStatusOk()
+            ->assertHttpStatusOk()
             ->assertJsonContains([
                 'status' => ResponseStatus::SUCCESS,
                 'user' => $user->toArray(),
@@ -51,7 +51,7 @@ class AuthenticationTest extends FeatureTestCase
         $this
             ->auth($user)
             ->postJson('/api/v1/logout')
-            ->assertStatusOk()
+            ->assertHttpStatusOk()
             ->assertJsonContains([
                 'status' => ResponseStatus::SUCCESS,
                 'message' => 'Logout successfully',

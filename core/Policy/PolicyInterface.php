@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Core\Policy;
 
-use Core\Database\Entity;
+use Core\Database\Model;
 
 interface PolicyInterface
 {
@@ -21,11 +21,11 @@ interface PolicyInterface
 
     public function store();
 
-    public function update(Entity $model);
+    public function update(Model $model);
 
-    public function edit(Entity $model);
+    public function edit(Model $model);
 
-    public function show(Entity $model);
+    public function show(Model $model);
 
-    public function delete(Entity $model);
+    public function delete(Model $model);
 }

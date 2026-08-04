@@ -12,11 +12,11 @@ final class UpdatePasswordUseCase
     {
         $user = UserModel::findByEmail($data['email']);
 
-        if (is_null($user)) {
+        if (! $user) {
             return false;
         }
 
-        $user->setPassword(bcrypt($data['password']));
+        $user->setPassword($data['password']);
 
         return (bool) $user->toModel()->save();
     }

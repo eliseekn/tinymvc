@@ -173,18 +173,18 @@ class Model
         return $this->repository->metrics();
     }
 
-    public function create(array $data, bool $withoutEvent = false): self|false
+    public function create(array $data, bool $withoutEvent = false): ?self
     {
         $id = $this->repository->insertGetId($data);
 
         if (is_null($id)) {
-            return false;
+            return null;
         }
 
         $model = $this->findBy('id', $id);
 
         if (is_null($model)) {
-            return false;
+            return null;
         }
 
         if (! $withoutEvent) {
@@ -202,7 +202,7 @@ class Model
     /**
      * Get relationship of the model.
      */
-    public function hasOne(string $model, ?string $column = null): ?Model
+    public function hasOne(string $model, ?string $column = null): ?self
     {
         if (is_null($column)) {
             $column = $this->getColumnFromTable($this->getTable());
@@ -232,7 +232,7 @@ class Model
     /**
      * Get relationship belongs to the model.
      */
-    public function belongsTo(string $model, ?string $column = null): ?Model
+    public function belongsTo(string $model, ?string $column = null): ?self
     {
         if (is_null($column)) {
             $column = $this->getColumnFromTable($model::defaultTable());
@@ -328,17 +328,13 @@ class Model
         return true;
     }
 
-    public function save(bool $withoutEvent = false): self|false
+    public function save(bool $withoutEvent = false): self|bool|null
     {
         if (empty($this->getId())) {
             return $this->create($this->attributes, $withoutEvent);
         }
 
-        if ($this->update($this->attributes, $withoutEvent)) {
-            return $this->findBy('id', $this->getId());
-        }
-
-        return false;
+        return $this->update($this->attributes, $withoutEvent);
     }
 
     public function increment(string $column, int $value = 1): void
