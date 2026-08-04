@@ -87,6 +87,19 @@ class UserTest extends FeatureTestCase
             ->assertDatabaseHas('users', ['name' => $name]);
     }
 
+    public function test_can_update_with_put(): void
+    {
+        $user = Fixtures::createUser();
+        $name = faker()->name();
+
+        $this
+            ->auth(Fixtures::createAdmin())
+            ->putJson('/api/v1/users/'.$user->getId(), ['name' => $name])
+            ->assertHttpStatusOk()
+            ->assertJsonContains(['data' => ['name' => $name]])
+            ->assertDatabaseHas('users', ['name' => $name]);
+    }
+
     public function test_can_delete(): void
     {
         $user = Fixtures::createUser();

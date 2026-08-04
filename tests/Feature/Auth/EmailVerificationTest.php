@@ -35,6 +35,13 @@ class EmailVerificationTest extends FeatureTestCase
         $this->refreshDatabase();
     }
 
+    public function test_can_view_notify_page(): void
+    {
+        $this
+            ->get('/email/notify')
+            ->assertHttpStatusOk();
+    }
+
     public function test_can_send_vetification_email(): void
     {
         $emailVerification = config('security.auth.email_verification');

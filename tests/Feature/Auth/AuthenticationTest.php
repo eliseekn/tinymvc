@@ -28,6 +28,13 @@ class AuthenticationTest extends FeatureTestCase
         $this->refreshDatabase();
     }
 
+    public function test_can_view_signup_page(): void
+    {
+        $this
+            ->get('/register')
+            ->assertHttpStatusOk();
+    }
+
     public function test_unregistered_user_can_not_login(): void
     {
         $user = Fixtures::makeUser(['password' => 'password']);

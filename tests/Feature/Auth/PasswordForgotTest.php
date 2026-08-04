@@ -13,6 +13,8 @@ namespace Tests\Feature\Auth;
 
 use App\Database\Models\UserModel;
 use App\Enums\TokenDescription;
+use App\Notifications\Mails\PasswordResetMail;
+use Core\Notification\Notification;
 use Core\Support\Encryption;
 use Core\Testing\FeatureTestCase;
 use Core\Testing\Traits\RefreshDatabase;
@@ -27,6 +29,26 @@ class PasswordForgotTest extends FeatureTestCase
         parent::tearDown();
 
         $this->refreshDatabase();
+    }
+
+    public function test_can_view_forgot_password_page(): void
+    {
+        $this
+            ->get('/password/forgot')
+            ->assertHttpStatusOk();
+    }
+
+    public function test_can_notify(): void
+    {
+        $user = Fixtures::createUser();
+
+        Notification::fake(PasswordResetMail::class, $user->getEmail());
+
+        $this
+            ->post('/password/notify', ['email' => $user->getEmail()])
+            ->assertHttpStatusFound();
+
+        Notification::assertSent(PasswordResetMail::class, $user->getEmail());
     }
 
     public function test_can_reset_password(): void
