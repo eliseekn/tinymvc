@@ -26,6 +26,6 @@ final class UpdateUseCase
             unset($data['password']);
         }
 
-        return $user->toModel($data)->save();
+        return (bool) $user->toModel($data)->save();
     }
 }
