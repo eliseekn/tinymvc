@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use App\Database\Entities\Role;
 use App\Database\Entities\Token;
 use App\Database\Entities\User;
 use App\Database\Models\RoleModel;
@@ -20,9 +21,14 @@ use App\Enums\UserRole;
 
 abstract class Fixtures
 {
+    private static function findOrCreateRole(string $name): Role
+    {
+        return RoleModel::findByName($name) ?? RoleModel::factory()->create(['name' => $name], true)->toEntity(Role::class);
+    }
+
     public static function makeAdmin(array $attributes = [], int $count = 1): User|array
     {
-        $role = RoleModel::factory()->create(['name' => UserRole::ADMIN->value], true);
+        $role = self::findOrCreateRole(UserRole::ADMIN->value);
         $attributes['role_id'] = $role->getId();
         $result = UserModel::factory($count)->make($attributes);
 
@@ -46,7 +52,7 @@ abstract class Fixtures
 
     public static function makeUser(array $attributes = [], int $count = 1): User|array
     {
-        $role = RoleModel::factory()->create(['name' => UserRole::USER->value], true);
+        $role = self::findOrCreateRole(UserRole::USER->value);
         $attributes['role_id'] = $role->getId();
         $result = UserModel::factory($count)->make($attributes);
 
