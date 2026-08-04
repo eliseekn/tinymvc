@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace App\Database\Factories;
 
-use App\Database\Models\RoleModel;
 use App\Database\Models\UserModel;
 use Core\Database\Factory\Factory;
 
@@ -26,7 +25,7 @@ class UserFactory extends Factory
             'email' => faker()->unique()->safeEmail(),
             'password' => bcrypt('P@ssw0rd'),
             'email_verified_at' => null,
-            'role_id' => 1, // RoleModel::factory()->create()?->getId(),
+            'role_id' => 1,
             'avatar' => null,
         ];
     }
