@@ -159,7 +159,7 @@ abstract class FeatureTestCase extends TestCase
 
     public function putJson(string $uri, array $data = [], array $headers = []): self
     {
-        $this->client = Client::put($this->url($uri), $this->setHeaders($headers), $data, true);
+        $this->client = Client::put($this->url($uri), $data, $this->setHeaders($headers), true);
 
         return $this;
     }
