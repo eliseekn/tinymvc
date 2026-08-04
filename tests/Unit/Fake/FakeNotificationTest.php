@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit;
+namespace Tests\Unit\Fake;
 
 use Core\Notification\FakeNotification;
 use Core\Notification\Notification;
@@ -29,7 +29,7 @@ class FakeNotificationTest extends TestCase
     {
         Notification::fake(ExampleMail::class, 'user@example.com');
 
-        Notification::send(new ExampleMail())->to('user@example.com');
+        Notification::send(new ExampleMail)->to('user@example.com');
 
         $this->assertSame(
             [ExampleMail::class => 'user@example.com'],
@@ -57,7 +57,7 @@ class FakeNotificationTest extends TestCase
     {
         Notification::fake(ExampleMail::class, 'user@example.com');
 
-        Notification::send(new AnotherMail())->to('admin@example.com');
+        Notification::send(new AnotherMail)->to('admin@example.com');
 
         $this->assertSame([], FakeNotification::sentNotifications());
     }
@@ -77,9 +77,7 @@ class ExampleMail implements NotificationInterface
         return $this;
     }
 
-    public function send(?string $message = null)
-    {
-    }
+    public function send(?string $message = null) {}
 }
 
 class AnotherMail implements NotificationInterface
@@ -89,7 +87,5 @@ class AnotherMail implements NotificationInterface
         return $this;
     }
 
-    public function send(?string $message = null)
-    {
-    }
+    public function send(?string $message = null) {}
 }

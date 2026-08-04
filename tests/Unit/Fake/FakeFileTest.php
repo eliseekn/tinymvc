@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit;
+namespace Tests\Unit\Fake;
 
 use Core\Support\File;
 use PHPUnit\Framework\TestCase;

@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit;
+namespace Tests\Unit\Fake;
 
 use Core\Event\Event;
 use Core\Event\FakeEvent;
@@ -28,7 +28,7 @@ class FakeEventTest extends TestCase
     {
         Event::fake('App\\Events\\UserCreated\\UserCreatedEvent');
 
-        Event::dispatch('App\\Events\\UserCreated\\UserCreatedEvent', new \stdClass());
+        Event::dispatch('App\\Events\\UserCreated\\UserCreatedEvent', new \stdClass);
 
         $this->assertSame(
             ['App\\Events\\UserCreated\\UserCreatedEvent'],
@@ -45,8 +45,8 @@ class FakeEventTest extends TestCase
             'App\\Events\\UserRegistered\\UserRegisteredEvent',
         ]);
 
-        Event::dispatch('App\\Events\\UserCreated\\UserCreatedEvent', new \stdClass());
-        Event::dispatch('App\\Events\\UserRegistered\\UserRegisteredEvent', new \stdClass());
+        Event::dispatch('App\\Events\\UserCreated\\UserCreatedEvent', new \stdClass);
+        Event::dispatch('App\\Events\\UserRegistered\\UserRegisteredEvent', new \stdClass);
 
         Event::assertDispatched([
             'App\\Events\\UserCreated\\UserCreatedEvent',
