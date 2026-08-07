@@ -33,9 +33,7 @@ class Route
 
     public static array $routes = [];
 
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     private static function add(string $route, Closure|array|string $handler): self
     {
@@ -80,36 +78,52 @@ class Route
         return self::add(HttpMethod::ANY.' '.$uri, $handler);
     }
 
-    public static function all(string $name, string $controller, string $identifier = 'id', array $excepts = []): self
-    {
-        return self::group(function () use ($name, $identifier, $excepts) {
+    public static function all(
+        string $name,
+        string $controller,
+        string $identifier = 'id',
+        array $bindParameters = [],
+        array $excepts = []
+    ): self {
+        return self::group(function () use ($bindParameters, $name, $identifier, $excepts) {
             if (! in_array(RouteName::INDEX, $excepts)) {
-                self::get('/'.$name, RouteName::INDEX)->name(RouteName::INDEX);
+                self::get('/'.$name, RouteName::INDEX)
+                    ->name(RouteName::INDEX);
             }
-            if (! in_array(RouteName::CREATE, $excepts)) {
+
+            if (in_array(RouteName::CREATE, $excepts)) {
                 self::get('/'.$name, RouteName::CREATE)->name(RouteName::CREATE);
             }
+
             if (! in_array(RouteName::STORE, $excepts)) {
                 self::post('/'.$name, RouteName::STORE)->name(RouteName::STORE);
             }
+
             if (! in_array(RouteName::UPDATE, $excepts)) {
                 self::match(HttpMethod::group([HttpMethod::PATCH, HttpMethod::PUT]), '/'.$name."/{$identifier}", RouteName::UPDATE)
                     ->whereParameters([$identifier => RouteParameter::NUMBER])
+                    ->bindParameters($bindParameters)
                     ->name(RouteName::UPDATE);
             }
+
             if (! in_array(RouteName::SHOW, $excepts)) {
                 self::get('/'.$name."/{$identifier}", RouteName::SHOW)
                     ->whereParameters([$identifier => RouteParameter::NUMBER])
+                    ->bindParameters($bindParameters)
                     ->name(RouteName::SHOW);
             }
-            if (! in_array(RouteName::EDIT, $excepts)) {
+
+            if (in_array(RouteName::EDIT, $excepts)) {
                 self::get('/'.$name."/{$identifier}/".RouteName::EDIT, RouteName::EDIT)
                     ->whereParameters([$identifier => RouteParameter::NUMBER])
+                    ->bindParameters($bindParameters)
                     ->name(RouteName::EDIT);
             }
+
             if (! in_array(RouteName::DELETE, $excepts)) {
                 self::delete('/'.$name."/{$identifier}", RouteName::DELETE)
                     ->whereParameters([$identifier => RouteParameter::NUMBER])
+                    ->bindParameters($bindParameters)
                     ->name(RouteName::DELETE);
             }
         })->byController($controller)->byName($name);
@@ -313,7 +327,7 @@ class Route
         }
 
         if (! empty(config('routes'))) {
-            $paths = array_map(function ($path) {
+            $paths = array_map(function (string $path) {
                 $path = $path === DIRECTORY_SEPARATOR
                     ? config('storage.routes')
                     : storage(config('storage.routes'))->addPath($path)->getPath();
@@ -322,7 +336,7 @@ class Route
             }, config('routes'));
 
             foreach ($paths as $path) {
-                $routes = storage($path)->addPath('')->getFiles();
+                $routes = storage($path)->addPath()->getFiles();
 
                 foreach ($routes as $route) {
                     require_once $path.$route;
