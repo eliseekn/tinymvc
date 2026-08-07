@@ -15,7 +15,7 @@ use App\Database\Models\MODEL_NAME;
 
 final class CLASSNAME
 {
-    public function handle(): array|false
+    public function handle(): array
     {
         return MODEL_NAME::findAll();
     }

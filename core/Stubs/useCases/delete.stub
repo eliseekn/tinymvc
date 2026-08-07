@@ -11,13 +11,12 @@ declare(strict_types=1);
 
 namespace NAMESPACE;
 
-use App\Database\Models\MODEL_NAME;
+use App\Database\Entities\ENTITY_NAME;
 
 final class CLASSNAME
 {
-    public function handle(int $id): bool
+    public function handle(ENTITY_NAME $ENTITY_NAME): bool
     {
-        $MODEL_NAME = MODEL_NAME::find($id);
-        return $MODEL_NAME && $MODEL_NAME->delete();
+        return $ENTITY_NAME->toModel()->delete();
     }
 }

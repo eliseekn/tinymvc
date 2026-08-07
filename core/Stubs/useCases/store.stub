@@ -11,13 +11,18 @@ declare(strict_types=1);
 
 namespace NAMESPACE;
 
-use App\Database\Models\MODEL_NAME;
-use Core\Database\Model;
+use App\Database\Entities\ENTITY_NAME;
 
 final class CLASSNAME
 {
-    public function handle(array $data): Model|false
+    public function handle(array $data): ?ENTITY_NAME
     {
-        return MODEL_NAME::factory()->create($data);
+        $entity = (new ENTITY_NAME);
+
+        if ((bool) $entity->toModel($data)->save()) {
+            return $entity;
+        }
+
+        return null;
     }
 }

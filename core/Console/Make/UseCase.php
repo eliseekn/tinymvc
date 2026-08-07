@@ -68,8 +68,8 @@ class UseCase extends Command
         if (! is_null($model)) {
             [$name] = Maker::generateClass($model, 'use_case', true, true);
             $namespace = is_null($namespace) ? ucfirst($name) : $namespace.'\\'.ucfirst($name);
-            $data = str_replace('$MODEL_NAME', '$'.Maker::fixPlural($name, true), $data);
-            $data = str_replace('MODEL_NAME', Maker::fixPlural(ucfirst($name), true), $data);
+            $data = str_replace('$ENTITY_NAME', '$'.Maker::fixPlural($name, true), $data);
+            $data = str_replace('ENTITY_NAME', Maker::fixPlural(ucfirst($name), true), $data);
         }
 
         $data = Maker::addNamespace($data, 'App\UseCases', $namespace);
