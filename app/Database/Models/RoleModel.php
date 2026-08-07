@@ -12,18 +12,18 @@ declare(strict_types=1);
 namespace App\Database\Models;
 
 use App\Database\Entities\Role;
+use App\Database\Factories\RoleFactory;
+use Core\Database\Attributes\UseFactory;
+use Core\Database\Attributes\UseTable;
 use Core\Database\Factory\HasFactory;
 use Core\Database\Model;
 use Core\Support\Pagination;
 
+#[UseTable('roles')]
+#[UseFactory(RoleFactory::class)]
 class RoleModel extends Model
 {
     use HasFactory;
-
-    protected static function defaultTable(): string
-    {
-        return 'roles';
-    }
 
     public static function query(): self
     {

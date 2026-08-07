@@ -12,12 +12,12 @@ declare(strict_types=1);
 namespace App\Database\Factories;
 
 use App\Database\Models\UserModel;
+use Core\Database\Attributes\UseModel;
 use Core\Database\Factory\Factory;
 
+#[UseModel(UserModel::class)]
 class UserFactory extends Factory
 {
-    public string $model = UserModel::class;
-
     public function data(): array
     {
         return [

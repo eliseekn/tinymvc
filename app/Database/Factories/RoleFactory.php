@@ -12,12 +12,12 @@ declare(strict_types=1);
 namespace App\Database\Factories;
 
 use App\Database\Models\RoleModel;
+use Core\Database\Attributes\UseModel;
 use Core\Database\Factory\Factory;
 
+#[UseModel(RoleModel::class)]
 class RoleFactory extends Factory
 {
-    public string $model = RoleModel::class;
-
     public function data(): array
     {
         return [

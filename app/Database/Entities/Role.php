@@ -13,29 +13,19 @@ namespace App\Database\Entities;
 
 use App\Database\Models\RoleModel;
 use App\Database\Models\UserModel;
+use Core\Database\Attributes\UseModel;
+use Core\Database\Attributes\UseTable;
 use Core\Database\Entity;
-use Core\Database\Model;
 
+#[UseTable('roles')]
+#[UseModel(RoleModel::class)]
 class Role extends Entity
 {
     protected ?string $name = null;
 
-    public static function table(): string
-    {
-        return 'roles';
-    }
-
-    /**
-     * @return class-string<Model>
-     */
-    protected static function model(): string
-    {
-        return RoleModel::class;
-    }
-
     public function toModel(array $data = []): RoleModel
     {
-        // @phpstan-ignore-next-line return.type (model() above guarantees a RoleModel)
+        // @phpstan-ignore-next-line
         return parent::toModel($data);
     }
 

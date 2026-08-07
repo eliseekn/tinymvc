@@ -13,12 +13,12 @@ namespace App\Database\Factories;
 
 use App\Database\Models\TokenModel;
 use App\Enums\TokenDescription;
+use Core\Database\Attributes\UseModel;
 use Core\Database\Factory\Factory;
 
+#[UseModel(TokenModel::class)]
 class TokenFactory extends Factory
 {
-    public string $model = TokenModel::class;
-
     public function data(): array
     {
         return [

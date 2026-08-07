@@ -14,9 +14,12 @@ namespace App\Database\Entities;
 use App\Database\Models\RoleModel;
 use App\Database\Models\UserModel;
 use Carbon\Carbon;
+use Core\Database\Attributes\UseModel;
+use Core\Database\Attributes\UseTable;
 use Core\Database\Entity;
-use Core\Database\Model;
 
+#[UseTable('users')]
+#[UseModel(UserModel::class)]
 class User extends Entity
 {
     protected ?string $name = null;
@@ -31,22 +34,9 @@ class User extends Entity
 
     protected ?int $roleId = null;
 
-    public static function table(): string
-    {
-        return 'users';
-    }
-
-    /**
-     * @return class-string<Model>
-     */
-    protected static function model(): string
-    {
-        return UserModel::class;
-    }
-
     public function toModel(array $data = []): UserModel
     {
-        // @phpstan-ignore-next-line return.type (model() above guarantees a UserModel)
+        // @phpstan-ignore-next-line
         return parent::toModel($data);
     }
 

@@ -12,20 +12,20 @@ declare(strict_types=1);
 namespace App\Database\Models;
 
 use App\Database\Entities\User;
+use App\Database\Factories\UserFactory;
+use Core\Database\Attributes\UseFactory;
+use Core\Database\Attributes\UseTable;
 use Core\Database\Factory\HasFactory;
 use Core\Database\Model;
 use Core\Database\Repository;
 use Core\Notification\Notifiable;
 use Core\Support\Pagination;
 
+#[UseTable('users')]
+#[UseFactory(UserFactory::class)]
 class UserModel extends Model
 {
     use HasFactory, Notifiable;
-
-    protected static function defaultTable(): string
-    {
-        return 'users';
-    }
 
     public static function query(): self
     {

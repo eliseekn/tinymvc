@@ -12,18 +12,18 @@ declare(strict_types=1);
 namespace App\Database\Models;
 
 use App\Database\Entities\Token;
+use App\Database\Factories\TokenFactory;
 use Carbon\Carbon;
+use Core\Database\Attributes\UseFactory;
+use Core\Database\Attributes\UseTable;
 use Core\Database\Factory\HasFactory;
 use Core\Database\Model;
 
+#[UseTable('tokens')]
+#[UseFactory(TokenFactory::class)]
 class TokenModel extends Model
 {
     use HasFactory;
-
-    protected static function defaultTable(): string
-    {
-        return 'tokens';
-    }
 
     public static function query(): self
     {

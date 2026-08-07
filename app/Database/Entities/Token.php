@@ -13,9 +13,12 @@ namespace App\Database\Entities;
 
 use App\Database\Models\TokenModel;
 use Carbon\Carbon;
+use Core\Database\Attributes\UseModel;
+use Core\Database\Attributes\UseTable;
 use Core\Database\Entity;
-use Core\Database\Model;
 
+#[UseTable('tokens')]
+#[UseModel(TokenModel::class)]
 class Token extends Entity
 {
     protected ?string $identifier = null;
@@ -26,22 +29,9 @@ class Token extends Entity
 
     protected ?string $description = null;
 
-    public static function table(): string
-    {
-        return 'tokens';
-    }
-
-    /**
-     * @return class-string<Model>
-     */
-    protected static function model(): string
-    {
-        return TokenModel::class;
-    }
-
     public function toModel(array $data = []): TokenModel
     {
-        // @phpstan-ignore-next-line return.type (model() above guarantees a TokenModel)
+        // @phpstan-ignore-next-line
         return parent::toModel($data);
     }
 
