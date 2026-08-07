@@ -12,11 +12,13 @@ declare(strict_types=1);
 namespace Core\Database;
 
 use Closure;
+use Core\Database\Attributes\UseTable;
 use Core\Database\Metrics\Metrics;
 use Core\Exceptions\CoreException;
 use Core\Observer\Observer;
 use Core\Policy\Policy;
 use Core\Policy\PolicyInterface;
+use ReflectionClass;
 
 /**
  * Manage database models.
@@ -42,7 +44,13 @@ class Model
      */
     protected static function defaultTable(): string
     {
-        throw new CoreException(sprintf('No table defined for the "%s" model.', static::class));
+        $table = (new ReflectionClass(static::class))->getAttributes(UseTable::class);
+
+        if (empty($table)) {
+            throw new CoreException(sprintf('No table defined for the "%s" model.', static::class));
+        }
+
+        return $table[0]->newInstance()->name;
     }
 
     public function getTable(): string

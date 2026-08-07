@@ -12,6 +12,9 @@ declare(strict_types=1);
 namespace Core\Database;
 
 use Carbon\Carbon;
+use Core\Database\Attributes\UseModel;
+use Core\Database\Attributes\UseTable;
+use Core\Exceptions\CoreException;
 use DateTimeInterface;
 use ReflectionClass;
 use ReflectionNamedType;
@@ -27,11 +30,6 @@ abstract class Entity
     protected ?Carbon $createdAt = null;
 
     protected ?Carbon $updatedAt = null;
-
-    /**
-     * Get the database table associated with the entity.
-     */
-    abstract public static function table(): string;
 
     public function getId(): ?int
     {
@@ -110,22 +108,22 @@ abstract class Entity
      */
     public function toModel(array $data = []): Model
     {
+        $model = (new ReflectionClass($this))->getAttributes(UseModel::class);
+
+        if (empty($table)) {
+            throw new CoreException(sprintf('No model defined for the "%s" entity.', $this));
+        }
+
+        $table = (new ReflectionClass($this))->getAttributes(UseTable::class);
+
+        if (empty($table)) {
+            throw new CoreException(sprintf('No table defined for the "%s" entity.', $this));
+        }
+
         $data = array_merge($this->toArray(), $data);
-        $modelClass = static::model();
+        $modelClass = $model[0]->newInstance()->name;
 
-        return new $modelClass(static::table(), $data);
-    }
-
-    /**
-     * Model class associated with the entity. Override to bind the entity
-     * to a specific Model subclass (e.g. for model-specific behavior like
-     * notifications); defaults to the generic Model.
-     *
-     * @return class-string<Model>
-     */
-    protected static function model(): string
-    {
-        return Model::class;
+        return new $modelClass($table[0]->newInstance()->name, $data);
     }
 
     protected static function castToProperty(ReflectionProperty $reflectionProperty, mixed $value): mixed

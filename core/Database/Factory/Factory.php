@@ -11,30 +11,32 @@ declare(strict_types=1);
 
 namespace Core\Database\Factory;
 
+use Core\Database\Attributes\UseFactory;
+use Core\Database\Attributes\UseModel;
 use Core\Database\Model;
 use Core\Exceptions\CoreException;
 use ReflectionClass;
-use Spatie\StructureDiscoverer\Discover;
 
 /**
  * Manage models factories.
  */
 class Factory
 {
-    /**
-     * Model class the factory produces. Every subclass must set this.
-     *
-     * @var class-string<Model>
-     */
-    public string $model;
-
     /** @var Model[] */
     protected array $class;
 
     public function __construct(int $count = 1)
     {
+        $model = (new ReflectionClass(static::class))->getAttributes(UseModel::class);
+
+        if (empty($model)) {
+            throw new CoreException(sprintf('No model defined for the "%s" factory.', static::class));
+        }
+
+        $modelClass = $model[0]->newInstance()->name;
+
         for ($i = 1; $i <= $count; $i++) {
-            $this->class[] = new $this->model;
+            $this->class[] = new $modelClass;
         }
     }
 
@@ -43,18 +45,15 @@ class Factory
      */
     public static function for(string $model, int $count = 1): static
     {
-        $factories = Discover::in(config('storage.factories'))->classes()->get();
-        $factories = array_values(array_filter(
-            $factories,
-            fn ($factory) => is_a($factory, static::class, true)
-                && (new ReflectionClass($factory))->getDefaultProperties()['model'] === $model
-        ));
+        $factory = (new ReflectionClass($model))->getAttributes(UseFactory::class);
 
-        if (empty($factories)) {
-            throw new CoreException(sprintf('No factory found for the "%s" model.', $model));
+        if (empty($factory)) {
+            throw new CoreException(sprintf('No factory defined for the "%s" model.', $model));
         }
 
-        return new $factories[0]($count);
+        $factoryClass = $factory[0]->newInstance()->name;
+
+        return new $factoryClass($count);
     }
 
     public function data(): array
