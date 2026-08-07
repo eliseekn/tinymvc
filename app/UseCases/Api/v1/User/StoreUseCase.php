@@ -28,6 +28,5 @@ final class StoreUseCase
         }
 
         return null;
-
     }
 }
