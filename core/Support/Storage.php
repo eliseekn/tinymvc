@@ -62,7 +62,7 @@ class Storage
         return self::$path;
     }
 
-    public function addPath(string $path, string $trailing_slash = DIRECTORY_SEPARATOR): self
+    public function addPath(string $path = '', string $trailing_slash = DIRECTORY_SEPARATOR): self
     {
         self::$path .= real_path($path).$trailing_slash;
 
