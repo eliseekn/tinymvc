@@ -12,12 +12,12 @@ declare(strict_types=1);
 namespace NAMESPACE;
 
 use App\Database\Models\MODEL_NAME;
+use Core\Database\Attributes\UseModel;
 use Core\Database\Factory\Factory;
 
+#[UseModel(MODEL_NAME)]
 class CLASSNAME extends Factory
 {
-    public string $model = MODEL_NAME::class;
-
     public function data(): array
     {
         return [

@@ -12,18 +12,15 @@ declare(strict_types=1);
 namespace NAMESPACE;
 
 use App\Database\Entities\ENTITY_NAME;
+use Core\Database\Attributes\UseTable;
 use Core\Database\Factory\HasFactory;
 use Core\Database\Model;
 use Core\Support\Pagination;
 
+#[UseTable('TABLE_NAME')]
 class CLASSNAME extends Model
 {
     use HasFactory;
-
-    protected static function defaultTable(): string
-    {
-        return 'TABLE_NAME';
-    }
 
     public static function query(): self
     {

@@ -12,28 +12,19 @@ declare(strict_types=1);
 namespace NAMESPACE;
 
 use App\Database\Models\MODEL_NAME;
+use Core\Database\Attributes\UseModel;
+use Core\Database\Attributes\UseTable;
 use Core\Database\Entity;
 use Core\Database\Model;
 
-final class CLASSNAME extends Entity
+#[UseTable('TABLE_NAME')]
+#[UseModel(MODEL_NAME)]
+class CLASSNAME extends Entity
 {
     // PROPERTIES
-    public static function table(): string
-    {
-        return 'TABLE_NAME';
-    }
-
-    /**
-     * @return class-string<Model>
-     */
-    protected static function model(): string
-    {
-        return MODEL_NAME::class;
-    }
-
     public function toModel(array $data = []): MODEL_NAME
     {
-        // @phpstan-ignore-next-line return.type (model() above guarantees a MODEL_NAME)
+        // @phpstan-ignore-next-line
         return parent::toModel($data);
     }
     // METHODS
