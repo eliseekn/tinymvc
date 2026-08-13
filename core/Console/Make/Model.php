@@ -83,6 +83,7 @@ class Model extends Command
         $data = str_replace('CLASSNAME', Maker::fixPlural($class, true), $data);
         $data = str_replace('TABLE_NAME', $name, $data);
         $data = str_replace('ENTITY_NAME', ucfirst($model), $data);
+        $data = str_replace('FACTORY_NAME', ucfirst($model).'Factory', $data);
 
         $storage = storage(config('storage.models'));
 
