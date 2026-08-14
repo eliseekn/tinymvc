@@ -53,7 +53,7 @@ class Controller extends Command
 
         $data = Maker::stubs()->readFile('Controller.stub');
         $data = Maker::addNamespace($data, 'App\Http\Controllers', $namespace);
-        $data = str_replace('CLASSNAME', $class, $data);
+        $data = str_replace('CLASS_NAME', $class, $data);
 
         $storage = storage(config('storage.controllers'));
 

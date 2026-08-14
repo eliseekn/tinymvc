@@ -50,7 +50,7 @@ class Helper extends Command
         [, $class] = Maker::generateClass($helper, 'helper', true);
 
         $data = Maker::stubs()->readFile('Helper.stub');
-        $data = str_replace('CLASSNAME', $class, $data);
+        $data = str_replace('CLASS_NAME', $class, $data);
 
         return storage(config('storage.helpers'))->writeFile($class.'.php', $data);
     }

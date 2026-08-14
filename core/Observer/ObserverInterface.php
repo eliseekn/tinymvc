@@ -11,13 +11,15 @@ declare(strict_types=1);
 
 namespace Core\Observer;
 
-use Core\Database\Model;
-
 interface ObserverInterface
 {
-    public static function created(Model $model);
+    public function onCreated();
 
-    public static function updated(Model $model);
+    public function onUpdated();
 
-    public static function deleted(Model $model);
+    public function onDeleted();
+
+    public function onSoftDeleted();
+
+    public function onForceDeleted();
 }

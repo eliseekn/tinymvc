@@ -51,7 +51,7 @@ class Exception extends Command
         [, $class] = Maker::generateClass($exception, 'exception');
 
         $data = Maker::stubs()->readFile('Exception.stub');
-        $data = str_replace('CLASSNAME', $class, $data);
+        $data = str_replace('CLASS_NAME', $class, $data);
         $data = str_replace('MESSAGE', $message, $data);
 
         return storage(config('storage.exceptions'))->writeFile($class.'.php', $data);

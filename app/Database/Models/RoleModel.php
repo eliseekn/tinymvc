@@ -13,14 +13,17 @@ namespace App\Database\Models;
 
 use App\Database\Entities\Role;
 use App\Database\Factories\RoleFactory;
+use App\Observers\RoleObserver;
 use Core\Database\Attributes\UseFactory;
 use Core\Database\Attributes\UseTable;
 use Core\Database\Factory\HasFactory;
 use Core\Database\Model;
+use Core\Observer\ObservedBy;
 use Core\Support\Pagination;
 
 #[UseTable('roles')]
 #[UseFactory(RoleFactory::class)]
+#[ObservedBy(RoleObserver::class)]
 class RoleModel extends Model
 {
     use HasFactory;

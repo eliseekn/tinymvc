@@ -29,10 +29,10 @@ class Token extends Entity
 
     protected ?string $description = null;
 
-    public function toModel(array $data = []): TokenModel
+    public function toModel(): TokenModel
     {
         // @phpstan-ignore-next-line
-        return parent::toModel($data);
+        return parent::toModel();
     }
 
     public function getIdentifier(): ?string

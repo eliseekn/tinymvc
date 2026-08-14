@@ -18,7 +18,7 @@ final class StoreUseCase
 {
     public function handle(array $data): void
     {
-        if (! RoleModel::factory()->create($data)) {
+        if (! RoleModel::query()->create($data)) {
             throw new InternalServerException('Failed to create role');
         }
     }

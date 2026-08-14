@@ -62,7 +62,7 @@ class Test extends Command
         [, $class] = Maker::generateClass($test, 'test', true);
 
         $data = Maker::stubs()->addPath('tests')->readFile('FeatureTest.stub');
-        $data = str_replace('CLASSNAME', $class, $data);
+        $data = str_replace('CLASS_NAME', $class, $data);
         $data = Maker::addNamespace($data, 'Tests\Feature', $namespace);
 
         return storage(config('storage.tests'))
@@ -75,7 +75,7 @@ class Test extends Command
         [, $class] = Maker::generateClass($test, 'test', true);
 
         $data = Maker::stubs()->addPath('tests')->readFile('UnitTest.stub');
-        $data = str_replace('CLASSNAME', $class, $data);
+        $data = str_replace('CLASS_NAME', $class, $data);
         $data = Maker::addNamespace($data, 'Tests\Unit', $namespace);
 
         return storage(config('storage.tests'))
@@ -88,7 +88,7 @@ class Test extends Command
         [, $class] = Maker::generateClass($test, 'test', true);
 
         $data = Maker::stubs()->addPath('tests')->readFile('BrowserTest.stub');
-        $data = str_replace('CLASSNAME', $class, $data);
+        $data = str_replace('CLASS_NAME', $class, $data);
         $data = Maker::addNamespace($data, 'Tests\Browser', $namespace);
 
         return storage(config('storage.tests'))

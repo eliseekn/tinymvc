@@ -23,10 +23,10 @@ class Role extends Entity
 {
     protected ?string $name = null;
 
-    public function toModel(array $data = []): RoleModel
+    public function toModel(): RoleModel
     {
         // @phpstan-ignore-next-line
-        return parent::toModel($data);
+        return parent::toModel();
     }
 
     public function getName(): ?string

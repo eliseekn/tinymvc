@@ -73,7 +73,7 @@ class UseCase extends Command
         }
 
         $data = Maker::addNamespace($data, 'App\UseCases', $namespace);
-        $data = str_replace('CLASSNAME', $class, $data);
+        $data = str_replace('CLASS_NAME', $class, $data);
 
         $storage = storage(config('storage.useCases'));
 

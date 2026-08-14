@@ -17,7 +17,6 @@ use App\Enums\TokenDescription;
 use App\Exceptions\InvalidDataException;
 use App\Exceptions\VerifyEmailException;
 use App\Notifications\Mails\WelcomeMail;
-use Carbon\Carbon;
 use Core\Notification\Notification;
 
 final class VerifyUseCase
@@ -47,7 +46,7 @@ final class VerifyUseCase
             throw new VerifyEmailException;
         }
 
-        $user->setEmailVerifiedAt(Carbon::now());
+        $user->setEmailVerifiedAt(carbon()->now());
 
         if (! (bool) $user->toModel()->save()) {
             throw new VerifyEmailException;

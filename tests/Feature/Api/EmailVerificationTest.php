@@ -12,15 +12,14 @@ declare(strict_types=1);
 namespace Tests\Feature\Api;
 
 use App\Database\Entities\Token;
-use App\Database\Entities\User;
 use App\Database\Models\TokenModel;
-use App\Database\Models\UserModel;
 use App\Enums\TokenDescription;
 use App\Notifications\Mails\VerificationMail;
 use Core\Enums\HttpCode;
 use Core\Notification\Notification;
 use Core\Testing\FeatureTestCase;
 use Core\Testing\Traits\RefreshDatabase;
+use Tests\Fixtures;
 
 class EmailVerificationTest extends FeatureTestCase
 {
@@ -35,7 +34,7 @@ class EmailVerificationTest extends FeatureTestCase
 
     public function test_can_notify(): void
     {
-        $user = UserModel::factory()->create()->toEntity(User::class);
+        $user = Fixtures::createUser();
 
         Notification::fake(VerificationMail::class, $user->getEmail());
 
@@ -48,7 +47,7 @@ class EmailVerificationTest extends FeatureTestCase
 
     public function test_can_verify(): void
     {
-        $user = UserModel::factory()->create(['email_verified_at' => null])->toEntity(User::class);
+        $user = Fixtures::createUser(['email_verified_at' => null]);
 
         $token = TokenModel::factory()->create([
             'identifier' => $user->getEmail(),
@@ -66,7 +65,7 @@ class EmailVerificationTest extends FeatureTestCase
 
     public function test_verify_fails_with_invalid_token(): void
     {
-        $user = UserModel::factory()->create(['email_verified_at' => null])->toEntity(User::class);
+        $user = Fixtures::createUser(['email_verified_at' => null]);
 
         $this
             ->getJson('/api/v1/email/verify?email='.$user->getEmail().'&token=invalid-token')

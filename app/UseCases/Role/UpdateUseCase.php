@@ -18,7 +18,7 @@ final class UpdateUseCase
 {
     public function handle(Role $role, array $data): void
     {
-        if (! $role->toModel($data)->save()) {
+        if (! $role->toModel()->update($data)) {
             throw new InternalServerException('Failed to update role');
         }
     }

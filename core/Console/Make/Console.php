@@ -56,7 +56,7 @@ class Console extends Command
 
         $data = Maker::stubs()->readFile('Console.stub');
         $data = Maker::addNamespace($data, 'App\Console', $namespace);
-        $data = str_replace('CLASSNAME', $class, $data);
+        $data = str_replace('CLASS_NAME', $class, $data);
         $data = str_replace('COMMAND_NAME', $command, $data);
         $data = str_replace('COMMAND_DESCRIPTION', $description, $data);
 

@@ -308,9 +308,9 @@ class QueryBuilder
     public function timestamps(): self
     {
         static::$query .= match (static::$connection->getDriver()) {
-            DatabaseDriver::MYSQL => ' created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP NULL, ',
-            DatabaseDriver::PGSQL => ' created_at TIMESTAMP NOT NULL DEFAULT NOW(), updated_at TIMESTAMP NULL, ',
-            default => " created_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')), updated_at TIMESTAMP NULL, ",
+            DatabaseDriver::MYSQL => ' created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP NULL, deleted_at TIMESTAMP NULL, ',
+            DatabaseDriver::PGSQL => ' created_at TIMESTAMP NOT NULL DEFAULT NOW(), updated_at TIMESTAMP NULL, deleted_at TIMESTAMP NULL,  ',
+            default => " created_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')), updated_at TIMESTAMP NULL, deleted_at TIMESTAMP NULL,  ",
         };
 
         return $this;

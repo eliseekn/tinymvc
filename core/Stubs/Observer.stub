@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
+ * @copyright 2019-2026 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
  *
  * @link https://github.com/eliseekn/tinymvc
@@ -9,18 +9,22 @@
 
 declare(strict_types=1);
 
-namespace NAMESPACE;
+namespace App\Observers;
 
-use Core\Database\Model;
 use Core\Observer\ObserverInterface;
+use App\Database\Models\MODEL_NAME;
 
-abstract class CLASSNAME implements ObserverInterface
+final class CLASS_NAME implements ObserverInterface
 {
-    public static $table = 'TABLE_NAME';
+    public function __construct(public MODEL_NAME $model) {}
 
-    public static function created(Model $model): void {}
+    public function onCreated(): void {}
 
-    public static function updated(Model $model): void {}
+    public function onUpdated(): void {}
 
-    public static function deleted(Model $model): void {}
+    public function onDeleted(): void {}
+
+    public function onSoftDeleted(): void {}
+
+    public function onForceDeleted(): void {}
 }

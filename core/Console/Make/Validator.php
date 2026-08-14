@@ -53,7 +53,7 @@ class Validator extends Command
 
         $data = Maker::stubs()->addPath('validators')->readFile('Validator.stub');
         $data = Maker::addNamespace($data, 'App\Http\Validation\Validators', $namespace);
-        $data = str_replace('CLASSNAME', $class, $data);
+        $data = str_replace('CLASS_NAME', $class, $data);
 
         $storage = storage(config('storage.validators'));
 

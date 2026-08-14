@@ -50,7 +50,7 @@ class Middleware extends Command
         [, $class] = Maker::generateClass($middleware, singular: true);
 
         $data = Maker::stubs()->readFile('Middleware.stub');
-        $data = str_replace('CLASSNAME', $class, $data);
+        $data = str_replace('CLASS_NAME', $class, $data);
 
         return storage(config('storage.middlewares'))->writeFile($class.'.php', $data);
     }

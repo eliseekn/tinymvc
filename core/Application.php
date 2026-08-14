@@ -16,7 +16,6 @@ use Core\Exceptions\CoreException;
 use Core\Exceptions\Interfaces\HasCustomHttpResponse;
 use Core\Exceptions\Interfaces\Reportable;
 use Core\Http\Routing\Router;
-use Core\Observer\Observer;
 use Core\Support\Whoops;
 use Core\Task\Task;
 use Throwable;
@@ -34,7 +33,6 @@ class Application
         Whoops::register();
         Event::load();
         Task::load();
-        Observer::load();
 
         try {
             $response = Router::dispatch();

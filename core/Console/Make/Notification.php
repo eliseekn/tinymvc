@@ -54,7 +54,7 @@ class Notification extends Command
         [, $class] = Maker::generateClass($notification, $type, force_singular: true);
 
         $data = Maker::stubs()->addPath('notifications')->readFile(ucfirst($type).'.stub');
-        $data = str_replace('CLASSNAME', $class, $data);
+        $data = str_replace('CLASS_NAME', $class, $data);
         $data = str_replace('RESOURCE_NAME', $notification, $data);
 
         if ($type === NotificationType::SMS) {

@@ -30,6 +30,8 @@ abstract class Fixtures
     {
         $role = self::findOrCreateRole(UserRole::ADMIN->value);
         $attributes['role_id'] = $role->getId();
+        $attributes['email_verified_at'] = carbon()->now();
+
         $result = UserModel::factory($count)->make($attributes);
 
         if (is_array($result)) {
@@ -54,6 +56,11 @@ abstract class Fixtures
     {
         $role = self::findOrCreateRole(UserRole::USER->value);
         $attributes['role_id'] = $role->getId();
+
+        if (! isset($attributes['email_verified_at'])) {
+            $attributes['email_verified_at'] = carbon()->now();
+        }
+
         $result = UserModel::factory($count)->make($attributes);
 
         if (is_array($result)) {

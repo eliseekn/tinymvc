@@ -53,7 +53,7 @@ class Policy extends Command
         $className = Maker::fixPlural($class.'Policy', true);
 
         $data = Maker::stubs()->readFile('Policy.stub');
-        $data = str_replace('CLASSNAME', $className, $data);
+        $data = str_replace('CLASS_NAME', $className, $data);
 
         $storage = storage(config('storage.policies'));
 

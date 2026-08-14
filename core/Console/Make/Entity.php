@@ -69,7 +69,7 @@ class Entity extends Command
 
         $data = Maker::stubs()->addPath('database')->readFile('Entity.stub');
         $data = Maker::addNamespace($data, 'App\Database\Entities');
-        $data = str_replace('CLASSNAME', Maker::fixPlural($class, true), $data);
+        $data = str_replace('CLASS_NAME', Maker::fixPlural($class, true), $data);
         $data = str_replace('TABLE_NAME', $name, $data);
         $data = str_replace('MODEL_NAME', $modelClass, $data);
         $data = str_replace('    // PROPERTIES'.PHP_EOL, $this->generateProperties($fields), $data);

@@ -11,11 +11,9 @@ declare(strict_types=1);
 
 namespace Tests\Browser;
 
-use App\Database\Entities\User;
-use App\Database\Models\UserModel;
-use Core\Support\Config;
 use Core\Testing\BrowserTestCase;
 use Core\Testing\Traits\RefreshDatabase;
+use Tests\Fixtures;
 
 class LoginPageTest extends BrowserTestCase
 {
@@ -30,11 +28,7 @@ class LoginPageTest extends BrowserTestCase
 
     public function test_can_authenticate(): void
     {
-        $emailVerification = config('security.auth.email_verification');
-
-        Config::updateEnv(['AUTH_EMAIL_VERIFICATION' => false]);
-
-        $user = UserModel::factory()->create()->toEntity(User::class);
+        $user = Fixtures::createUser(['email_verified_at' => carbon()->now()]);
 
         $this
             ->visit('/login')
@@ -55,7 +49,5 @@ class LoginPageTest extends BrowserTestCase
         $this->crawler = $this->client->refreshCrawler();
 
         $this->assertEquals($dashboard, $this->crawler->filter('h1')->text());
-
-        Config::updateEnv(['AUTH_EMAIL_VERIFICATION' => $emailVerification]);
     }
 }

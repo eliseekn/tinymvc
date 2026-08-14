@@ -51,7 +51,7 @@ class Rule extends Command
 
         $data = Maker::stubs()->addPath('validators')->readFile('Rule.stub');
         $data = Maker::addNamespace($data, 'App\Http\Validation\Rules');
-        $data = str_replace('CLASSNAME', $class, $data);
+        $data = str_replace('CLASS_NAME', $class, $data);
         $data = str_replace('RULE_NAME', strtolower($name), $data);
 
         $storage = storage(config('storage.rules'));

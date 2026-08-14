@@ -27,17 +27,17 @@ class Observer extends Command
         $this->setName('make:observer');
         $this->setDescription('Create new model observer');
         $this->addArgument('observer', InputArgument::REQUIRED, 'The name of observer');
-        $this->addOption('table', null, InputOption::VALUE_REQUIRED, 'The name of the model\'s table');
+        $this->addOption('model', null, InputOption::VALUE_REQUIRED, 'The name of the model');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $observer = $input->getArgument('observer');
-        $table = $input->getOption('table');
+        $model = $input->getOption('model');
 
         [, $class] = Maker::generateClass($observer, singular: true, force_singular: true);
 
-        if (! $this->createObserver($observer, $table)) {
+        if (! $this->createObserver($observer, $model)) {
             $output->writeln('<bg=red;options=bold> ERROR </> Failed to create observer <options=bold>'.Maker::fixPlural($class.'Observer', true).'</>.');
         } else {
             $output->writeln('<bg=blue;options=bold> INFO </> Observer <options=bold>'.Maker::fixPlural($class.'Observer', true).'</> has been created.');
@@ -46,15 +46,14 @@ class Observer extends Command
         return Command::SUCCESS;
     }
 
-    public function createObserver(string $observer, string $table): bool
+    public function createObserver(string $observer, string $model): bool
     {
         [, $class] = Maker::generateClass($observer, singular: true, force_singular: true);
         $className = Maker::fixPlural($class.'Observer', true);
 
         $data = Maker::stubs()->readFile('Observer.stub');
-        $data = Maker::addNamespace($data, "App\Observers");
-        $data = str_replace('CLASSNAME', $className, $data);
-        $data = str_replace('TABLE_NAME', $table, $data);
+        $data = str_replace('CLASS_NAME', $className, $data);
+        $data = str_replace('MODEL_NAME', $model, $data);
 
         $storage = storage(config('storage.observers'));
 

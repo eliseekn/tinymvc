@@ -15,7 +15,8 @@ use Closure;
 use Core\Database\Attributes\UseTable;
 use Core\Database\Metrics\Metrics;
 use Core\Exceptions\CoreException;
-use Core\Observer\Observer;
+use Core\Observer\ObservedBy;
+use Core\Observer\ObserverInterface;
 use Core\Policy\Policy;
 use Core\Policy\PolicyInterface;
 use ReflectionClass;
@@ -51,6 +52,24 @@ class Model
         }
 
         return $table[0]->newInstance()->name;
+    }
+
+    public function observe(self $model): ?ObserverInterface
+    {
+        $observer = (new ReflectionClass(static::class))->getAttributes(ObservedBy::class);
+
+        if (empty($observer)) {
+            return null;
+        }
+
+        $observerClass = $observer[0]->newInstance()->name;
+
+        if ($model::class !== static::class) {
+            return null;
+        }
+
+        return new $observerClass($model);
+
     }
 
     public function getTable(): string
@@ -196,7 +215,7 @@ class Model
         }
 
         if (! $withoutEvent) {
-            Observer::created($model);
+            $this->observe($model)?->onCreated();
         }
 
         return $model;
@@ -315,7 +334,7 @@ class Model
         }
 
         if (! $withoutEvent) {
-            Observer::updated(new static($this->table, $this->attributes, empty($this->updatedAttributes) ? $data : $this->updatedAttributes));
+            $this->observe(new static($this->table, $this->attributes, empty($this->updatedAttributes) ? $data : $this->updatedAttributes))?->onUpdated();
         }
 
         return true;
@@ -330,7 +349,41 @@ class Model
         }
 
         if (! $withoutEvent) {
-            Observer::deleted($this);
+            $this->observe(new static($this->table, $this->attributes, $this->updatedAttributes))?->onDeleted();
+        }
+
+        return true;
+    }
+
+    public function softDelete(bool $withoutEvent = false): bool
+    {
+        $result = $this->repository->updateIfExists($this->getId(), ['deleted_at' => carbon()->toDateTimeString()]);
+
+        if (! $result) {
+            return false;
+        }
+
+        if (! $withoutEvent) {
+            $this->observe(new static($this->table, $this->attributes, $this->updatedAttributes))?->onSoftDeleted();
+        }
+
+        return true;
+    }
+
+    public function forceDelete(bool $withoutEvent = false): bool
+    {
+        if ($this->getAttributes('deleted_at') === null) {
+            throw new CoreException('This model has not been soft deleted.');
+        }
+
+        $result = $this->repository->deleteIfExists($this->getId());
+
+        if (! $result) {
+            return false;
+        }
+
+        if (! $withoutEvent) {
+            $this->observe(new static($this->table, $this->attributes, $this->updatedAttributes))->onForceDeleted();
         }
 
         return true;

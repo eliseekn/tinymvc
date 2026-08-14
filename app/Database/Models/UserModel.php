@@ -13,16 +13,19 @@ namespace App\Database\Models;
 
 use App\Database\Entities\User;
 use App\Database\Factories\UserFactory;
+use App\Observers\UserObserver;
 use Core\Database\Attributes\UseFactory;
 use Core\Database\Attributes\UseTable;
 use Core\Database\Factory\HasFactory;
 use Core\Database\Model;
 use Core\Database\Repository;
 use Core\Notification\Notifiable;
+use Core\Observer\ObservedBy;
 use Core\Support\Pagination;
 
 #[UseTable('users')]
 #[UseFactory(UserFactory::class)]
+#[ObservedBy(UserObserver::class)]
 class UserModel extends Model
 {
     use HasFactory, Notifiable;

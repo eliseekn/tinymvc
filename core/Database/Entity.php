@@ -31,6 +31,8 @@ abstract class Entity
 
     protected ?Carbon $updatedAt = null;
 
+    protected ?Carbon $deletedAt = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -44,6 +46,11 @@ abstract class Entity
     public function getUpdatedAt(): ?Carbon
     {
         return $this->updatedAt;
+    }
+
+    public function getDeletedAt(): ?Carbon
+    {
+        return $this->deletedAt;
     }
 
     /**
@@ -106,11 +113,11 @@ abstract class Entity
     /**
      * Convert entity to a model.
      */
-    public function toModel(array $data = []): Model
+    public function toModel(): Model
     {
         $model = (new ReflectionClass($this))->getAttributes(UseModel::class);
 
-        if (empty($table)) {
+        if (empty($model)) {
             throw new CoreException(sprintf('No model defined for the "%s" entity.', $this));
         }
 
@@ -120,10 +127,9 @@ abstract class Entity
             throw new CoreException(sprintf('No table defined for the "%s" entity.', $this));
         }
 
-        $data = array_merge($this->toArray(), $data);
         $modelClass = $model[0]->newInstance()->name;
 
-        return new $modelClass($table[0]->newInstance()->name, $data);
+        return new $modelClass($table[0]->newInstance()->name, $this->toArray());
     }
 
     protected static function castToProperty(ReflectionProperty $reflectionProperty, mixed $value): mixed

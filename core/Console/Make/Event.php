@@ -52,7 +52,7 @@ class Event extends Command
 
         $data = Maker::stubs()->addPath('events')->readFile('Event.stub');
         $data = Maker::addNamespace($data, "App\Events\\".Maker::fixPlural($class, true));
-        $data = str_replace('CLASSNAME', $className, $data);
+        $data = str_replace('CLASS_NAME', $className, $data);
 
         $storage = storage(config('storage.events'));
         $storage = $storage->addPath(Maker::fixPlural($class, true));

@@ -59,7 +59,7 @@ class Migration extends Command
         [$name, $class] = Maker::generateClass($migration, 'migration');
 
         $data = Maker::stubs()->addPath('database')->readFile('Migration.stub');
-        $data = str_replace('CLASSNAME', $class, $data);
+        $data = str_replace('CLASS_NAME', $class, $data);
         $data = str_replace('TABLE_NAME', $name, $data);
 
         return storage(config('storage.migrations'))->writeFile($class.'.php', $data);

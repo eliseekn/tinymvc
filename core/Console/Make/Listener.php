@@ -48,7 +48,7 @@ class Listener extends Command
     {
         $data = Maker::stubs()->addPath('events')->readFile('Listener.stub');
         $data = Maker::addNamespace($data, "App\Events\\".$event);
-        $data = str_replace('CLASSNAME', $listener, $data);
+        $data = str_replace('CLASS_NAME', $listener, $data);
         $data = str_replace('EVENT', $event.'Event', $data);
 
         $storage = storage(config('storage.events'));

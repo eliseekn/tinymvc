@@ -28,6 +28,7 @@ class UserSeeder
 
         UserModel::factory(10)->create([
             'created_at' => carbon(faker()->dateTimeBetween('-24 months'))->toDateTimeString(),
+            'role_id' => RoleModel::findByName(UserRole::USER->value)?->getId(),
         ], true);
     }
 }

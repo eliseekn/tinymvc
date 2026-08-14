@@ -80,7 +80,7 @@ class Model extends Command
 
         $data = Maker::stubs()->addPath('database')->readFile('Model.stub');
         $data = Maker::addNamespace($data, 'App\Database\Models', $namespace);
-        $data = str_replace('CLASSNAME', Maker::fixPlural($class, true), $data);
+        $data = str_replace('CLASS_NAME', Maker::fixPlural($class, true), $data);
         $data = str_replace('TABLE_NAME', $name, $data);
         $data = str_replace('ENTITY_NAME', ucfirst($model), $data);
         $data = str_replace('FACTORY_NAME', ucfirst($model).'Factory', $data);

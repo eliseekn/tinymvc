@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
+ * @copyright 2019-2026 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
  *
  * @link https://github.com/eliseekn/tinymvc
@@ -15,11 +15,10 @@ use App\Database\Models\MODEL_NAME;
 use Core\Database\Attributes\UseModel;
 use Core\Database\Attributes\UseTable;
 use Core\Database\Entity;
-use Core\Database\Model;
 
 #[UseTable('TABLE_NAME')]
 #[UseModel(MODEL_NAME)]
-class CLASSNAME extends Entity
+class CLASS_NAME extends Entity
 {
     // PROPERTIES
     public function toModel(array $data = []): MODEL_NAME

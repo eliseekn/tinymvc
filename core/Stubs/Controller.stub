@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2019-2025 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
+ * @copyright 2019-2026 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
  * @license MIT (https://opensource.org/licenses/MIT)
  *
  * @link https://github.com/eliseekn/tinymvc
@@ -13,10 +13,10 @@ namespace NAMESPACE;
 
 use Core\Http\Routing\Controller;
 
-class CLASSNAME extends Controller
+class CLASS_NAME extends Controller
 {
     public function __invoke(): void
     {
-        $this->response('Hello from CLASSNAME');
+        $this->response('Hello from CLASS_NAME');
     }
 }

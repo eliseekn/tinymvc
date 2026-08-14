@@ -34,10 +34,10 @@ class User extends Entity
 
     protected ?int $roleId = null;
 
-    public function toModel(array $data = []): UserModel
+    public function toModel(): UserModel
     {
         // @phpstan-ignore-next-line
-        return parent::toModel($data);
+        return parent::toModel();
     }
 
     public function getName(): ?string

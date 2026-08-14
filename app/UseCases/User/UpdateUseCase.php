@@ -14,6 +14,7 @@ namespace App\UseCases\User;
 use App\Database\Entities\User;
 use App\Exceptions\InternalServerException;
 use App\Helpers\FileUploadHelper;
+use Core\Support\UploadedFile;
 
 final class UpdateUseCase
 {
@@ -21,9 +22,10 @@ final class UpdateUseCase
 
     public function handle(array $data, User $user): void
     {
+        /** @var array<int, UploadedFile> $files */
         $files = request()->files('avatar');
 
-        if (! empty($files)) {
+        if (! empty($files) && ! $files[0]->isEmpty()) {
             if (! $this->fileUploadHelper->handle($files[0])) {
                 throw new InternalServerException('Failed to upload avatar image');
             }
@@ -37,7 +39,7 @@ final class UpdateUseCase
             unset($data['password']);
         }
 
-        if (! (bool) $user->toModel($data)->save()) {
+        if (! (bool) $user->toModel()->update($data)) {
             throw new InternalServerException('Failed to update profile');
         }
     }

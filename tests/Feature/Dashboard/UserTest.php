@@ -31,7 +31,7 @@ class UserTest extends FeatureTestCase
     public function test_can_view_users_index(): void
     {
         $this
-            ->auth(Fixtures::createUser())
+            ->auth(Fixtures::createAdmin())
             ->get('/dashboard/users')
             ->assertHttpStatusOk();
     }

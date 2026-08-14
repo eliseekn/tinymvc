@@ -27,9 +27,7 @@ final class StoreUseCase
             ->setRoleId((int) $data['role_id'])
             ->setPassword($data['password']);
 
-        $user->toModel()->save();
-
-        if (! $user) {
+        if (! $user->toModel()->save()) {
             throw new InternalServerException('Failed to create user');
         }
 

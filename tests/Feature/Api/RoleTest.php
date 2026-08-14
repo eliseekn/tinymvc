@@ -13,7 +13,6 @@ namespace Tests\Feature\Api;
 
 use App\Database\Entities\Role;
 use App\Database\Models\RoleModel;
-use Core\Database\Factory\Factory;
 use Core\Testing\FeatureTestCase;
 use Core\Testing\Traits\RefreshDatabase;
 
@@ -30,8 +29,8 @@ class RoleTest extends FeatureTestCase
 
     public function test_can_get_collection(): void
     {
-        $role = Factory::for(RoleModel::class)->create()->toEntity(Role::class);
-        Factory::for(RoleModel::class)->create()->toEntity(Role::class);
+        $role = RoleModel::factory()->create()->toEntity(Role::class);
+        RoleModel::factory()->create()->toEntity(Role::class);
 
         $this
             ->getJson('/api/v1/roles')
