@@ -13,25 +13,24 @@ namespace App\Observers;
 
 use App\Database\Models\UserModel;
 use App\Notifications\Mails\PasswordUpdatedMail;
-use Core\Database\Model;
 use Core\Observer\ObserverInterface;
 
-abstract class UserObserver implements ObserverInterface
+final class UserObserver implements ObserverInterface
 {
-    public static $table = 'users';
+    public function __construct(public UserModel $model) {}
 
-    public static function created(Model $model): void
-    {
-    }
+    public function onCreated(): void {}
 
-    public static function updated(Model $model): void
+    public function onUpdated(): void
     {
-        if ($model instanceof UserModel && $model->wasUpdated('password')) {
-            $model->notify(new PasswordUpdatedMail);
+        if ($this->model->wasUpdated('password')) {
+            $this->model->notify(new PasswordUpdatedMail);
         }
     }
 
-    public static function deleted(Model $model): void
-    {
-    }
+    public function onDeleted(): void {}
+
+    public function onSoftDeleted(): void {}
+
+    public function onForceDeleted(): void {}
 }

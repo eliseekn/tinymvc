@@ -11,26 +11,30 @@ declare(strict_types=1);
 
 namespace App\Observers;
 
+use App\Database\Models\RoleModel;
 use Core\Cache\Cache;
-use Core\Database\Model;
 use Core\Observer\ObserverInterface;
 
-abstract class RoleObserver implements ObserverInterface
+final class RoleObserver implements ObserverInterface
 {
-    public static $table = 'roles';
+    public function __construct(public RoleModel $model) {}
 
-    public static function created(Model $model): void
+    public function onCreated(): void
     {
         Cache::forget(['roles', 'roles.dashboard']);
     }
 
-    public static function updated(Model $model): void
+    public function onUpdated(): void
     {
         Cache::forget(['roles', 'roles.dashboard']);
     }
 
-    public static function deleted(Model $model): void
+    public function onDeleted(): void
     {
         Cache::forget(['roles', 'roles.dashboard']);
     }
+
+    public function onSoftDeleted(): void {}
+
+    public function onForceDeleted(): void {}
 }
