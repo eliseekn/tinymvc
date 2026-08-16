@@ -12,9 +12,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Auth;
 
 use App\Database\Entities\Token;
-use App\Database\Entities\User;
 use App\Database\Models\TokenModel;
-use App\Database\Models\UserModel;
 use App\Enums\TokenDescription;
 use App\Events\UserRegistered\UserRegisteredEvent;
 use App\Notifications\Mails\VerificationMail;
@@ -23,6 +21,7 @@ use Core\Notification\Notification;
 use Core\Support\Config;
 use Core\Testing\FeatureTestCase;
 use Core\Testing\Traits\RefreshDatabase;
+use Tests\Fixtures;
 
 class EmailVerificationTest extends FeatureTestCase
 {
@@ -48,7 +47,7 @@ class EmailVerificationTest extends FeatureTestCase
 
         Config::updateEnv(['AUTH_EMAIL_VERIFICATION' => true]);
 
-        $user = UserModel::factory()->make(['password' => 'P@ssw0rd'])->toEntity(User::class);
+        $user = Fixtures::makeUser(['password' => 'P@ssw0rd']);
 
         Event::fake(UserRegisteredEvent::class);
         Notification::fake(VerificationMail::class, $user->getEmail());
@@ -69,7 +68,11 @@ class EmailVerificationTest extends FeatureTestCase
 
     public function test_can_verify_email(): void
     {
-        $user = UserModel::factory()->create(['email_verified_at' => null])->toEntity(User::class);
+        $emailVerification = config('security.auth.email_verification');
+
+        Config::updateEnv(['AUTH_EMAIL_VERIFICATION' => true]);
+
+        $user = Fixtures::createUser();
 
         $token = TokenModel::factory()->create([
             'identifier' => $user->getEmail(),
@@ -83,5 +86,7 @@ class EmailVerificationTest extends FeatureTestCase
                 'identifier' => $token->getIdentifier(),
                 'value' => $token->getValue(),
             ]);
+
+        Config::updateEnv(['AUTH_EMAIL_VERIFICATION' => $emailVerification]);
     }
 }
