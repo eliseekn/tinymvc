@@ -15,7 +15,7 @@ use Core\Enums\Alert\MessageType;
 use Core\Enums\AppEnv;
 use Core\Enums\HttpCode;
 use Core\Exceptions\CoreException;
-use Core\Http\Auth;
+use Core\Http\Auth\Auth;
 use Core\Support\Alert;
 use Exception;
 
@@ -164,9 +164,9 @@ class BaseResponse
         return $this;
     }
 
-    public function forgetAuth(): self
+    public function forgetAuth(?string $provider = null): self
     {
-        Auth::forget();
+        Auth::forget($provider);
 
         return $this;
     }

@@ -26,6 +26,7 @@ class TokenFactory extends Factory
             'value' => generate_token(),
             'expires_at' => carbon()->addHour()->toDateTimeString(),
             'description' => TokenDescription::PASSWORD_RESET->value,
+            'auth_provider' => 'user',
         ];
     }
 }

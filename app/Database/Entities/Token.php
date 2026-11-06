@@ -29,6 +29,8 @@ class Token extends Entity
 
     protected ?string $description = null;
 
+    protected ?string $authProvider = null;
+
     public function toModel(): TokenModel
     {
         // @phpstan-ignore-next-line
@@ -86,5 +88,17 @@ class Token extends Entity
         $this->description = $description;
 
         return $this;
+    }
+
+    public function setAuthProvider(?string $authProvider): self
+    {
+        $this->authProvider = $authProvider;
+
+        return $this;
+    }
+
+    public function getAuthProvider(): ?string
+    {
+        return $this->authProvider;
     }
 }

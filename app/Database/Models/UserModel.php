@@ -28,7 +28,8 @@ use Core\Support\Pagination;
 #[ObservedBy(UserObserver::class)]
 class UserModel extends Model
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
+    use Notifiable;
 
     public static function query(): self
     {
@@ -47,7 +48,7 @@ class UserModel extends Model
 
     public static function findByIdentifier(string $value): ?User
     {
-        return self::query()->findBy(config('security.auth.identifier'), $value)?->toEntity(User::class);
+        return self::query()->findBy(config('security.auth.providers.user.identifier'), $value)?->toEntity(User::class);
     }
 
     public static function findAllByRole(string $role): array
@@ -63,16 +64,14 @@ class UserModel extends Model
 
     public static function findAllPaginate(): Pagination
     {
-        $userId = auth()?->getId();
         $perPage = (int) request()->queries()->get('per_page', 10);
         $page = (int) request()->queries()->get('page', 1);
         $search = request()->queries()->get('search');
 
         $pagination = self::query()
             ->select('*')
-            ->where('users.id', '<>', $userId)
             ->when(! is_null($search), function (Repository $r) use ($search) {
-                $r->andRaw('(users.name LIKE ? OR users.email LIKE ?)', ["%$search%", "%$search%"]);
+                $r->whereRaw('(users.name LIKE ? OR users.email LIKE ?)', ["%$search%", "%$search%"]);
             })
             ->orderDesc('users.created_at')
             ->paginate($perPage, $page);

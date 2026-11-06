@@ -40,25 +40,27 @@ class TokenModel extends Model
         return self::query()->findBy('value', $value)?->toEntity(Token::class);
     }
 
-    public static function findByDescription(string $identifier, string $description): ?Token
+    public static function findByDescription(string $identifier, string $description, string $authProvider = 'user'): ?Token
     {
         return self::query()
             ->select('*')
             ->where('identifier', $identifier)
             ->and('description', $description)
+            ->andRaw('(auth_provider = ? OR auth_provider IS NULL)', [$authProvider])
             ->first()
             ?->toEntity(Token::class);
     }
 
-    public static function generate(string $identifier, string $description, string $value): ?Token
+    public static function generate(string $identifier, string $description, string $value, string $authProvider = 'user'): ?Token
     {
-        $token = self::findByDescription($identifier, $description);
+        $token = self::findByDescription($identifier, $description, $authProvider);
 
         if (is_null($token)) {
             $token = (new Token)
                 ->setIdentifier($identifier)
                 ->setDescription($description)
-                ->setExpiresAt(Carbon::now()->addHour());
+                ->setExpiresAt(Carbon::now()->addHour())
+                ->setAuthProvider($authProvider);
         }
 
         $token->setValue($value);

@@ -1,0 +1,28 @@
+<?php
+
+/**
+ * @copyright 2019-2026 N'Guessan Kouadio Elisée <eliseekn@gmail.com>
+ * @license MIT (https://opensource.org/licenses/MIT)
+ *
+ * @link https://github.com/eliseekn/tinymvc
+ */
+
+declare(strict_types=1);
+
+namespace Core\Http\Auth;
+
+/**
+ * Authenticable interface.
+ */
+interface Authenticable
+{
+    public function getProviderName(): string;
+
+    public function getProviderEntity(): string;
+
+    public function getProviderIdentifier(): string;
+
+    public function getIdentifierValue(): string;
+
+    public function getEntity(string $identifier): mixed;
+}

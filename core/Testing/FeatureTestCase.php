@@ -11,10 +11,10 @@ declare(strict_types=1);
 
 namespace Core\Testing;
 
-use Core\Database\Entity;
 use Core\Enums\HttpAuthMethod;
 use Core\Enums\HttpCode;
-use Core\Http\Auth;
+use Core\Http\Auth\Auth;
+use Core\Http\Auth\Authenticable;
 use Core\Http\Client\Client;
 use Core\Testing\Traits\DatabaseTestCase;
 use PHPUnit\Framework\TestCase;
@@ -88,9 +88,9 @@ abstract class FeatureTestCase extends TestCase
         return strtolower(config('app.name')).'_'.$name;
     }
 
-    public function auth(Entity $user): self
+    public function auth(Authenticable $auth, ?string $identifier = null): self
     {
-        $this->token = Auth::createToken($user);
+        $this->token = Auth::createToken($auth, $identifier);
         $this->headers = array_merge($this->headers, ['Authorization' => HttpAuthMethod::BEARER.' '.$this->token]);
 
         return $this;

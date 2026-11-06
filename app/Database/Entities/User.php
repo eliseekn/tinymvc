@@ -16,11 +16,11 @@ use App\Database\Models\UserModel;
 use Carbon\Carbon;
 use Core\Database\Attributes\UseModel;
 use Core\Database\Attributes\UseTable;
-use Core\Database\Entity;
+use Core\Http\Auth\AuthEntity;
 
 #[UseTable('users')]
 #[UseModel(UserModel::class)]
-class User extends Entity
+class User extends AuthEntity
 {
     protected ?string $name = null;
 
