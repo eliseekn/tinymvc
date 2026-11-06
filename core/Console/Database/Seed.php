@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Core\Console\Database;
 
-use App\Database\Seeders\Seeders;
+use App\Database\Seeders\Seeder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -33,7 +33,7 @@ class Seed extends Command
     {
         $seeders = ! empty($input->getArgument('seeder'))
             ? $input->getArgument('seeder')
-            : Seeders::get();
+            : Seeder::get();
 
         foreach ($seeders as $seeder) {
             $this->seed($output, $seeder);

@@ -9,12 +9,14 @@
 
 declare(strict_types=1);
 
+use App\Database\Entities\Admin;
 use App\Database\Entities\User;
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
+use Core\Database\Entity;
 use Core\Event\EventInterface;
 use Core\Exceptions\CoreException;
-use Core\Http\Auth;
+use Core\Http\Auth\Auth;
 use Core\Http\Cookies;
 use Core\Http\Request;
 use Core\Http\Response\BaseResponse;
@@ -112,11 +114,14 @@ if (! function_exists('auth_attempts_exceeded')) {
 
 if (! function_exists('auth')) {
     /**
-     * Get authenticated user data.
+     * Get authenticated user data of an auth provider.
+     *
+     * @return ($provider is 'admin' ? Admin|null : User|null)
      */
-    function auth(): ?User
+    function auth(string $provider = 'user'): ?Entity
     {
-        return Auth::user();
+        // @phpstan-ignore-next-line
+        return Auth::user(Auth::provider($provider));
     }
 }
 

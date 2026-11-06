@@ -25,7 +25,7 @@ class QueryBuilder
 {
     protected static string $query;
 
-    protected static array $args;
+    protected static mixed $args;
 
     protected static string $table;
 

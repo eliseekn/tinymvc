@@ -47,9 +47,8 @@ class Config extends Command
             new TableSeparator,
             ['Cache encryption', config('security.encryption.cache') ? '<fg=green>Yes</>' : '<fg=red>No</>'],
             ['Cookies encryption', config('security.encryption.cookies') ? '<fg=green>Yes</>' : '<fg=red>No</>'],
-            ['Session lifetime', config('security.session.lifetime').'s'],
+            ['Session lifetime', config('security.session.lifetime').' seconds'],
             new TableSeparator,
-            ['Auth identifier', config('security.auth.identifier')],
             ['Email verification', config('security.auth.email_verification') ? '<fg=green>Yes</>' : '<fg=red>No</>'],
         ];
 
