@@ -76,12 +76,12 @@ class Model extends Command
 
     public function createModel(string $model, ?string $namespace = null): bool
     {
-        [$name, $class] = Maker::generateClass($model, 'model', true, true);
+        [, $class] = Maker::generateClass($model, 'model', true, true);
 
         $data = Maker::stubs()->addPath('database')->readFile('Model.stub');
         $data = Maker::addNamespace($data, 'App\Database\Models', $namespace);
         $data = str_replace('CLASS_NAME', Maker::fixPlural($class, true), $data);
-        $data = str_replace('TABLE_NAME', $name, $data);
+        $data = str_replace('TABLE_NAME', Maker::fixPlural($class), $data);
         $data = str_replace('ENTITY_NAME', ucfirst($model), $data);
         $data = str_replace('FACTORY_NAME', ucfirst($model).'Factory', $data);
 

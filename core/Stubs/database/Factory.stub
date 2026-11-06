@@ -15,7 +15,7 @@ use App\Database\Models\MODEL_NAME;
 use Core\Database\Attributes\UseModel;
 use Core\Database\Factory\Factory;
 
-#[UseModel(MODEL_NAME)]
+#[UseModel(MODEL_NAME::class)]
 class CLASS_NAME extends Factory
 {
     public function data(): array

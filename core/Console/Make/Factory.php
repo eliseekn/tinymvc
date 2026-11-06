@@ -54,7 +54,7 @@ class Factory extends Command
         $data = Maker::stubs()->addPath('database')->readFile('Factory.stub');
         $data = Maker::addNamespace($data, 'App\Database\Factories', $namespace);
         $data = str_replace('CLASS_NAME', Maker::fixPlural($class, true), $data);
-        $data = str_replace('MODEL_NAME', Maker::fixPlural(ucfirst($name), true), $data);
+        $data = str_replace('MODEL_NAME', Maker::fixPlural(ucfirst($name).'Model', true), $data);
 
         $storage = storage(config('storage.factories'));
 

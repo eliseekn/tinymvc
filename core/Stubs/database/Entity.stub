@@ -17,14 +17,14 @@ use Core\Database\Attributes\UseTable;
 use Core\Database\Entity;
 
 #[UseTable('TABLE_NAME')]
-#[UseModel(MODEL_NAME)]
+#[UseModel(MODEL_NAME::class)]
 class CLASS_NAME extends Entity
 {
     // PROPERTIES
-    public function toModel(array $data = []): MODEL_NAME
+    public function toModel(): MODEL_NAME
     {
         // @phpstan-ignore-next-line
-        return parent::toModel($data);
+        return parent::toModel();
     }
     // METHODS
 }

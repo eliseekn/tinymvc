@@ -51,7 +51,7 @@ class Seeder extends Command
 
         $data = Maker::stubs()->addPath('database')->readFile('Seeder.stub');
         $data = str_replace('CLASS_NAME', Maker::fixPlural($class, true), $data);
-        $data = str_replace('MODEL_NAME', Maker::fixPlural(ucfirst($name), true), $data);
+        $data = str_replace('MODEL_NAME', Maker::fixPlural(ucfirst($name).'Model', true), $data);
 
         return storage(config('storage.seeders'))->writeFile(Maker::fixPlural($class, true).'.php', $data);
     }
