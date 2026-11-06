@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use App\Enums\UserRole;
 use Core\Database\Model;
 use Core\Policy\PolicyInterface;
 
@@ -34,7 +33,7 @@ final class ProfilePolicy implements PolicyInterface
 
     public function update(Model $model): bool
     {
-        return auth()?->role()->getName() === UserRole::ADMIN->value || auth()?->getId() === $model->getId();
+        return is_admin() || auth()?->getId() === $model->getId();
     }
 
     public function edit(Model $model): bool

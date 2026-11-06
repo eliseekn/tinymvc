@@ -11,9 +11,11 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use App\Database\Entities\Admin;
 use App\Database\Entities\Role;
 use App\Database\Entities\Token;
 use App\Database\Entities\User;
+use App\Database\Models\AdminModel;
 use App\Database\Models\RoleModel;
 use App\Database\Models\TokenModel;
 use App\Database\Models\UserModel;
@@ -26,33 +28,31 @@ abstract class Fixtures
         return RoleModel::findByName($name) ?? RoleModel::factory()->create(['name' => $name], true)->toEntity(Role::class);
     }
 
-    public static function makeAdmin(array $attributes = [], int $count = 1): User|array
+    public static function makeAdmin(array $attributes = [], int $count = 1): Admin|array
     {
-        $role = self::findOrCreateRole(UserRole::ADMIN->value);
-        $attributes['role_id'] = $role->getId();
-        $result = UserModel::factory($count)->make($attributes);
+        $result = AdminModel::factory($count)->make($attributes);
 
         if (is_array($result)) {
-            return array_map(fn (UserModel $user) => $user->toEntity(User::class), $result);
+            return array_map(fn (AdminModel $admin) => $admin->toEntity(Admin::class), $result);
         }
 
-        return $result->toEntity(User::class);
+        return $result->toEntity(Admin::class);
     }
 
-    public static function createAdmin(array $attributes = [], int $count = 1): User|array
+    public static function createAdmin(array $attributes = [], int $count = 1): Admin|array
     {
         $result = self::makeAdmin($attributes, $count);
 
         if (is_array($result)) {
-            return array_map(fn (User $r) => $r->toModel()->save(false)?->toEntity(User::class), $result);
+            return array_map(fn (Admin $r) => $r->toModel()->save(false)?->toEntity(Admin::class), $result);
         }
 
-        return $result->toModel()->save(false)?->toEntity(User::class);
+        return $result->toModel()->save(false)?->toEntity(Admin::class);
     }
 
     public static function makeUser(array $attributes = [], int $count = 1): User|array
     {
-        $role = self::findOrCreateRole(UserRole::USER->value);
+        $role = self::findOrCreateRole(UserRole::default()->value);
         $attributes['role_id'] = $role->getId();
         $result = UserModel::factory($count)->make($attributes);
 

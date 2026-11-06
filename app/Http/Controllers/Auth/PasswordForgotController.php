@@ -30,7 +30,9 @@ class PasswordForgotController extends Controller
     #[Route(HttpMethod::POST, '/password/notify')]
     public function notify(EmailValidator $validator, NotifyUseCase $useCase): BaseResponse
     {
-        $useCase->handle($validator->validated('email'));
+        $data = $validator->validated();
+
+        $useCase->handle($data['email'], $data['provider'] ?? 'user');
 
         return $this->redirectResponse()
             ->toBack()
@@ -44,20 +46,24 @@ class PasswordForgotController extends Controller
 
         return $this->viewResponse('auth.password.new', [
             'email' => request()->queries()->get('email'),
+            'token' => request()->queries()->get('token'),
+            'provider' => request()->queries()->get('provider', 'user'),
         ]);
     }
 
     #[Route(HttpMethod::POST, '/password/update')]
     public function update(UpdatePasswordUseCase $useCase, UpdatePasswordValidator $validator): BaseResponse
     {
-        if (! $useCase->handle($validator->validated())) {
+        $data = $validator->validated();
+
+        if (! $useCase->handle($data)) {
             return $this->redirectResponse()
                 ->toBack()
                 ->withAlert(MessageType::ERROR, __('alert.password_not_reset'));
         }
 
         return $this->redirectResponse()
-            ->toUrl('/login')
+            ->toUrl(($data['provider'] ?? 'user') === 'admin' ? '/admin/login' : '/login')
             ->withAlert(MessageType::SUCCESS, __('alert.password_reset'));
     }
 }

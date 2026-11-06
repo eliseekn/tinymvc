@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace App\Http\Middlewares;
 
 use Core\Enums\Alert\MessageType;
-use Core\Http\Auth;
+use Core\Http\Auth\Auth;
 use Core\Http\Response\RedirectResponse;
 
 /**
@@ -28,7 +28,7 @@ class Authenticated
                 ->intended(request()->fullUri())
                 ->withErrors([__('alert.not_logged')])
                 ->withAlert(MessageType::ERROR, __('alert.not_logged'))
-                ->forgetAuth()
+                ->forgetAuth('user')
                 ->send();
         }
     }

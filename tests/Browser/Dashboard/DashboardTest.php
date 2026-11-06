@@ -37,17 +37,17 @@ class DashboardTest extends BrowserTestCase
 
     private function login(): void
     {
-        $admin = Fixtures::createAdmin(['email_verified_at' => carbon()->now()]);
+        $admin = Fixtures::createAdmin();
 
         $this
-            ->visit('/login')
+            ->visit('/admin/login')
             ->assertPageTitleSame(__('form.login'));
 
         $this->client->submit(
             $this->crawler
                 ->selectButton('Submit')
                 ->form([
-                    'email' => $admin->getEmail(),
+                    'username' => $admin->getUsername(),
                     'password' => 'P@ssw0rd',
                 ])
         );
@@ -78,7 +78,7 @@ class DashboardTest extends BrowserTestCase
     public function test_guest_can_not_view_dashboard(): void
     {
         $this
-            ->visit('/dashboard')
+            ->visit('/admin/dashboard')
             ->assertPageTitleSame(__('form.login'));
     }
 
@@ -87,7 +87,7 @@ class DashboardTest extends BrowserTestCase
     {
         $this->login();
 
-        $this->visit('/dashboard?period='.$period);
+        $this->visit('/admin/dashboard?period='.$period);
 
         $this->assertSelectorTextContains('h1', __('app.dashboard'));
         $this->assertEquals($period, $this->selectedPeriod());

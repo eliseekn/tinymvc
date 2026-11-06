@@ -12,17 +12,14 @@ declare(strict_types=1);
 namespace App\UseCases\Auth;
 
 use App\Database\Entities\User;
-use App\Database\Models\UserModel;
 use App\Exceptions\InvalidCredentialsException;
-use Core\Http\Auth;
+use Core\Http\Auth\Auth;
 
 final class LoginUseCase
 {
     public function handle(array $data, ?User &$user): void
     {
-        $user = UserModel::findByEmail($data['email']);
-
-        if (! $user || ! Auth::attempt($user)) {
+        if (! Auth::attempt(new User, $user)) {
             throw new InvalidCredentialsException;
         }
     }

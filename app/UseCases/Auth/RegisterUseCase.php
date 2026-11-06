@@ -25,7 +25,7 @@ final class RegisterUseCase
         $user = (new User)
             ->setEmail($data['email'])
             ->setName($data['name'])
-            ->setRoleId((int) RoleModel::findByName(UserRole::USER->value)->getId())
+            ->setRoleId((int) RoleModel::findByName(UserRole::default()->value)->getId())
             ->setPassword($data['password']);
 
         if (! $user->toModel()->save()) {

@@ -9,13 +9,11 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Dashboard;
+namespace App\Http\Controllers\Dashboard\Admin;
 
 use App\Database\Entities\Role;
 use App\Database\Models\RoleModel;
-use App\Http\Middlewares\Authenticated;
-use App\Http\Middlewares\CheckIfUserAdmin;
-use App\Http\Middlewares\EmailVerified;
+use App\Http\Middlewares\AuthenticatedAdmin;
 use App\Http\Validation\Validators\Role\StoreValidator;
 use App\Http\Validation\Validators\Role\UpdateValidator;
 use App\UseCases\Role\StoreUseCase;
@@ -32,9 +30,9 @@ class RoleController extends Controller
 {
     #[Route(
         methods: HttpMethod::GET,
-        uri: '/dashboard/roles',
-        middlewares: [Authenticated::class, EmailVerified::class],
-        name: 'roles.index'
+        uri: '/admin/roles',
+        middlewares: [AuthenticatedAdmin::class],
+        name: 'admin.roles.index'
     )]
     public function index(): BaseResponse
     {
@@ -44,27 +42,27 @@ class RoleController extends Controller
             carbon()->addDay()->timestamp
         );
 
-        return $this->viewResponse('dashboard.roles.index', ['roles' => $data]);
+        return $this->viewResponse('admin.roles.index', ['roles' => $data]);
     }
 
     #[Route(
         methods: HttpMethod::GET,
-        uri: '/dashboard/roles/create',
-        middlewares: [Authenticated::class, EmailVerified::class, CheckIfUserAdmin::class],
-        name: 'roles.create'
+        uri: '/admin/roles/create',
+        middlewares: [AuthenticatedAdmin::class],
+        name: 'admin.roles.create'
     )]
     public function create(): BaseResponse
     {
-        return $this->viewResponse('dashboard.roles.create', [
+        return $this->viewResponse('admin.roles.create', [
             'roles' => RoleModel::findAll(),
         ]);
     }
 
     #[Route(
         methods: HttpMethod::POST,
-        uri: '/dashboard/roles',
-        middlewares: [Authenticated::class, EmailVerified::class, CheckIfUserAdmin::class],
-        name: 'roles.store'
+        uri: '/admin/roles',
+        middlewares: [AuthenticatedAdmin::class],
+        name: 'admin.roles.store'
     )]
     public function store(StoreUseCase $useCase, StoreValidator $validator): BaseResponse
     {
@@ -78,15 +76,15 @@ class RoleController extends Controller
 
     #[Route(
         methods: HttpMethod::GET,
-        uri: '/dashboard/roles/{role}/edit',
-        middlewares: [Authenticated::class, EmailVerified::class, CheckIfUserAdmin::class],
-        name: 'roles.edit',
+        uri: '/admin/roles/{role}/edit',
+        middlewares: [AuthenticatedAdmin::class],
+        name: 'admin.roles.edit',
         parameters: ['role' => RouteParameter::NUMBER],
         bindings: ['role' => ['roles', 'id']]
     )]
     public function edit(Role $role): BaseResponse
     {
-        return $this->viewResponse('dashboard.roles.edit', [
+        return $this->viewResponse('admin.roles.edit', [
             'role' => $role,
             'roles' => RoleModel::findAll(),
         ]);
@@ -94,9 +92,9 @@ class RoleController extends Controller
 
     #[Route(
         methods: HttpMethod::PATCH,
-        uri: '/dashboard/roles/{role}',
-        middlewares: [Authenticated::class, EmailVerified::class, CheckIfUserAdmin::class],
-        name: 'roles.update',
+        uri: '/admin/roles/{role}',
+        middlewares: [AuthenticatedAdmin::class],
+        name: 'admin.roles.update',
         parameters: ['role' => RouteParameter::NUMBER],
         bindings: ['role' => ['roles', 'id']]
     )]
@@ -112,9 +110,9 @@ class RoleController extends Controller
 
     #[Route(
         methods: HttpMethod::DELETE,
-        uri: '/dashboard/roles/{role}/delete',
-        middlewares: [Authenticated::class, EmailVerified::class, CheckIfUserAdmin::class],
-        name: 'roles.delete',
+        uri: '/admin/roles/{role}/delete',
+        middlewares: [AuthenticatedAdmin::class],
+        name: 'admin.roles.delete',
         parameters: ['role' => RouteParameter::NUMBER],
         bindings: ['role' => ['roles', 'id']]
     )]

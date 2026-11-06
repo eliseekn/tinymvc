@@ -72,9 +72,15 @@ class PasswordForgotTest extends FeatureTestCase
     {
         $user = Fixtures::createUser();
 
+        $token = Fixtures::createToken([
+            'identifier' => $user->getEmail(),
+            'description' => TokenDescription::PASSWORD_RESET->value,
+        ]);
+
         $this
             ->postJson('/api/v1/password/update', [
                 'email' => $user->getEmail(),
+                'token' => $token->getValue(),
                 'password' => 'new_P@ssw0rd',
             ])
             ->assertHttpStatusOk();
@@ -89,6 +95,7 @@ class PasswordForgotTest extends FeatureTestCase
         $this
             ->postJson('/api/v1/password/update', [
                 'email' => faker()->unique()->safeEmail(),
+                'token' => 'invalid-token',
                 'password' => 'new_P@ssw0rd',
             ])
             ->assertHttpStatusServerError();

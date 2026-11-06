@@ -19,8 +19,9 @@ use Core\Http\Routing\Route;
 
 Route::group(fn () => Route::group(function () {
     Route::post('/login', 'login');
+    Route::post('/admin/login', 'loginAsAdmin');
     Route::post('/logout', 'logout')->middleware(ApiAuth::class);
     Route::post('/register', 'register');
 })->byController(AuthController::class))
-    ->byPrefix('/api/v1')
+    ->byPrefix('/api/v1/auth')
     ->register();

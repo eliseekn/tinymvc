@@ -15,6 +15,7 @@ declare(strict_types=1);
 
 return [
     'name' => 'Nom',
+    'username' => "Nom d'utilisateur",
     'login' => 'Connexion',
     'logout' => 'Déconnexion',
     'email' => 'Adresse email',

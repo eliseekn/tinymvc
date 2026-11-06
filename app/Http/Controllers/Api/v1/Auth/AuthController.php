@@ -11,14 +11,16 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\v1\Auth;
 
+use App\Http\Validation\Validators\Auth\AdminLoginValidator;
 use App\Http\Validation\Validators\Auth\LoginValidator;
 use App\Http\Validation\Validators\Auth\RegisterValidator;
+use App\UseCases\Api\v1\Auth\AdminLoginUseCase;
 use App\UseCases\Api\v1\Auth\LoginUseCase;
 use App\UseCases\Auth\RegisterUseCase;
 use App\UseCases\Shared\NotifyUseCase;
 use Core\Enums\HttpCode;
 use Core\Enums\ResponseStatus;
-use Core\Http\Auth;
+use Core\Http\Auth\Auth;
 use Core\Http\Response\BaseResponse;
 use Core\Http\Routing\Controller;
 
@@ -32,6 +34,17 @@ class AuthController extends Controller
             'status' => ResponseStatus::SUCCESS,
             'token' => $data['token'],
             'user' => $data['user'],
+        ], HttpCode::OK);
+    }
+
+    public function loginAsAdmin(AdminLoginUseCase $useCase, AdminLoginValidator $validator): BaseResponse
+    {
+        $data = $useCase->handle($validator->validated());
+
+        return $this->jsonResponse([
+            'status' => ResponseStatus::SUCCESS,
+            'token' => $data['token'],
+            'admin' => $data['admin'],
         ], HttpCode::OK);
     }
 

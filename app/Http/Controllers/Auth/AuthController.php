@@ -21,7 +21,7 @@ use App\UseCases\Auth\RegisterUseCase;
 use App\UseCases\Shared\NotifyUseCase;
 use Core\Enums\Alert\MessageType;
 use Core\Enums\HttpMethod;
-use Core\Http\Auth;
+use Core\Http\Auth\Auth;
 use Core\Http\Response\BaseResponse;
 use Core\Http\Routing\Attributes\Route;
 use Core\Http\Routing\Controller;
@@ -61,7 +61,7 @@ class AuthController extends Controller
         return $this
             ->redirectResponse()
             ->toUrl(config('app.home'))
-            ->forgetAuth()
+            ->forgetAuth('user')
             ->withToast(MessageType::SUCCESS, __('alert.logged_out'));
     }
 

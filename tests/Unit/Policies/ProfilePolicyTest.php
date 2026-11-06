@@ -13,7 +13,8 @@ namespace Tests\Unit\Policies;
 
 use App\Database\Entities\User;
 use App\Policies\ProfilePolicy;
-use Core\Http\Auth;
+use Core\Http\Auth\Auth;
+use Core\Http\Auth\AuthEntity;
 use Core\Testing\Traits\RefreshDatabase;
 use PHPUnit\Framework\TestCase;
 use Tests\Fixtures;
@@ -39,9 +40,9 @@ class ProfilePolicyTest extends TestCase
         $this->refreshDatabase();
     }
 
-    private function actingAs(User $user): void
+    private function actingAs(AuthEntity $entity): void
     {
-        session()->create('user', $user->toArray());
+        session()->create(Auth::sessionKey($entity), Auth::sessionData($entity));
     }
 
     public function test_index_create_store_edit_and_show_are_always_allowed(): void

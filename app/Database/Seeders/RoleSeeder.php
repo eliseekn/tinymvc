@@ -18,12 +18,7 @@ class RoleSeeder
 {
     public static function run(): void
     {
-        $roles = [
-            UserRole::ADMIN->value,
-            UserRole::USER->value,
-        ];
-
-        foreach ($roles as $role) {
+        foreach (UserRole::values() as $role) {
             RoleModel::factory()->create(['name' => $role], true);
         }
     }

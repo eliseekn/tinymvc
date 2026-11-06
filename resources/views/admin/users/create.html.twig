@@ -1,4 +1,4 @@
-{% extends "layouts/dashboard.html.twig" %}
+{% extends "layouts/admin.html.twig" %}
 
 {% block title %}
 	Users | Create
@@ -14,7 +14,7 @@
 </div>
 
 <div class="card shadow">
-	<form method="post" action="{{ url('/dashboard/users') }}" id="add-form">
+	<form method="post" action="{{ url('/admin/users') }}" id="add-form">
 		{{ csrf_token_input()|raw }}
 
 		<div class="card-body">
@@ -84,7 +84,7 @@
 
 		<div class="card-footer">
 			<button type="submit" class="btn btn-primary spinner me-3">Submit</button>
-			<a href="{{ url('dashboard/users') }}" class="btn btn-secondary">Cancel</a>
+			<a href="{{ url('admin/users') }}" class="btn btn-secondary">Cancel</a>
 		</div>
 	</form>
 </div>

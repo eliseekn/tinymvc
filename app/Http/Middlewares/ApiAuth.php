@@ -14,7 +14,7 @@ namespace App\Http\Middlewares;
 use Core\Enums\HttpAuthMethod;
 use Core\Enums\HttpCode;
 use Core\Enums\ResponseStatus;
-use Core\Http\Auth;
+use Core\Http\Auth\Auth;
 use Core\Http\Response\JsonResponse;
 
 /**

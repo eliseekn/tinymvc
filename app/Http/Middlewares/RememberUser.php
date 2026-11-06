@@ -11,21 +11,23 @@ declare(strict_types=1);
 
 namespace App\Http\Middlewares;
 
-use App\Database\Models\UserModel;
+use Core\Http\Auth\Auth;
 
 /**
- * Check for stored user cookie.
+ * Check for stored user cookies.
  */
 class RememberUser
 {
     public function handle(): void
     {
-        if (cookies()->has('user')) {
-            $user = UserModel::findByEmail(cookies()->get('user'));
+        if (! Auth::remember('user')) {
+            return;
+        }
 
-            if ($user) {
-                session()->create('user', $user->toArray());
-            }
+        $user = Auth::provider('user')->getEntity((string) cookies()->get(Auth::sessionKey('user')));
+
+        if ($user) {
+            Auth::setSession($user);
         }
     }
 }

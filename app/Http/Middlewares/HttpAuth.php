@@ -14,7 +14,7 @@ namespace App\Http\Middlewares;
 use Core\Enums\HttpAuthMethod;
 use Core\Enums\HttpCode;
 use Core\Enums\ResponseStatus;
-use Core\Http\Auth;
+use Core\Http\Auth\Auth;
 use Core\Http\Response\JsonResponse;
 
 /**
@@ -43,7 +43,7 @@ class HttpAuth
         $credentials = base64_decode($credentials);
         [$email, $password] = explode(':', $credentials);
 
-        if (! Auth::checkCredentials($email, $password, $user)) {
+        if (! Auth::checkCredentials(Auth::provider(), $email, $password, $user)) {
             new JsonResponse([
                 'status' => ResponseStatus::ERROR,
                 'message' => __('alert.invalid_credentials'),

@@ -9,14 +9,12 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Dashboard;
+namespace App\Http\Controllers\Dashboard\Admin;
 
 use App\Database\Entities\User;
 use App\Database\Models\RoleModel;
 use App\Database\Models\UserModel;
-use App\Http\Middlewares\Authenticated;
-use App\Http\Middlewares\CheckIfUserAdmin;
-use App\Http\Middlewares\EmailVerified;
+use App\Http\Middlewares\AuthenticatedAdmin;
 use App\Http\Validation\Validators\User\StoreValidator;
 use App\Http\Validation\Validators\User\UpdateValidator;
 use App\UseCases\User\StoreUseCase;
@@ -32,35 +30,35 @@ class UserController extends Controller
 {
     #[Route(
         methods: HttpMethod::GET,
-        uri: '/dashboard/users',
-        middlewares: [Authenticated::class, EmailVerified::class],
-        name: 'users.index'
+        uri: '/admin/users',
+        middlewares: [AuthenticatedAdmin::class],
+        name: 'admin.users.index'
     )]
     public function index(): BaseResponse
     {
-        return $this->viewResponse('dashboard.users.index', [
+        return $this->viewResponse('admin.users.index', [
             'users' => UserModel::findAllPaginate(),
         ]);
     }
 
     #[Route(
         methods: HttpMethod::GET,
-        uri: '/dashboard/users/create',
-        middlewares: [Authenticated::class, EmailVerified::class, CheckIfUserAdmin::class],
-        name: 'users.create'
+        uri: '/admin/users/create',
+        middlewares: [AuthenticatedAdmin::class],
+        name: 'admin.users.create'
     )]
     public function create(): BaseResponse
     {
-        return $this->viewResponse('dashboard.users.create', [
+        return $this->viewResponse('admin.users.create', [
             'roles' => RoleModel::findAll(),
         ]);
     }
 
     #[Route(
         methods: HttpMethod::POST,
-        uri: '/dashboard/users',
-        middlewares: [Authenticated::class, EmailVerified::class, CheckIfUserAdmin::class],
-        name: 'users.store'
+        uri: '/admin/users',
+        middlewares: [AuthenticatedAdmin::class],
+        name: 'admin.users.store'
     )]
     public function store(StoreUseCase $useCase, StoreValidator $validator): BaseResponse
     {
@@ -74,15 +72,15 @@ class UserController extends Controller
 
     #[Route(
         methods: HttpMethod::GET,
-        uri: '/dashboard/users/{user}/edit',
-        middlewares: [Authenticated::class, EmailVerified::class, CheckIfUserAdmin::class],
-        name: 'users.edit',
+        uri: '/admin/users/{user}/edit',
+        middlewares: [AuthenticatedAdmin::class],
+        name: 'admin.users.edit',
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
     public function edit(User $user): BaseResponse
     {
-        return $this->viewResponse('dashboard.users.edit', [
+        return $this->viewResponse('admin.users.edit', [
             'user' => $user,
             'roles' => RoleModel::findAll(),
         ]);
@@ -90,9 +88,9 @@ class UserController extends Controller
 
     #[Route(
         methods: HttpMethod::PATCH,
-        uri: '/dashboard/users/{user}',
-        middlewares: [Authenticated::class, EmailVerified::class, CheckIfUserAdmin::class],
-        name: 'users.update',
+        uri: '/admin/users/{user}',
+        middlewares: [AuthenticatedAdmin::class],
+        name: 'admin.users.update',
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
@@ -108,9 +106,9 @@ class UserController extends Controller
 
     #[Route(
         methods: HttpMethod::DELETE,
-        uri: '/dashboard/users/{user}/delete',
-        middlewares: [Authenticated::class, EmailVerified::class, CheckIfUserAdmin::class],
-        name: 'users.delete',
+        uri: '/admin/users/{user}/delete',
+        middlewares: [AuthenticatedAdmin::class],
+        name: 'admin.users.delete',
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]

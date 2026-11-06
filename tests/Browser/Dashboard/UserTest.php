@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Tests\Browser\Dashboard;
 
+use App\Database\Entities\Admin;
 use App\Database\Entities\User;
 use Core\Testing\BrowserTestCase;
 use Core\Testing\Traits\RefreshDatabase;
@@ -34,7 +35,26 @@ class UserTest extends BrowserTestCase
         $this->refreshDatabase();
     }
 
-    private function login(User $user): void
+    private function login(Admin $admin): void
+    {
+        $this
+            ->visit('/admin/login')
+            ->assertPageTitleSame(__('form.login'));
+
+        $this->client->submit(
+            $this->crawler
+                ->selectButton('Submit')
+                ->form([
+                    'username' => $admin->getUsername(),
+                    'password' => 'P@ssw0rd',
+                ])
+        );
+
+        $this->client->waitForElementToContain('h1', __('app.dashboard'));
+        $this->crawler = $this->client->refreshCrawler();
+    }
+
+    private function loginAsUser(User $user): void
     {
         $this
             ->visit('/login')
@@ -55,7 +75,7 @@ class UserTest extends BrowserTestCase
 
     public function test_can_view_users_index(): void
     {
-        $this->login(Fixtures::createAdmin(['email_verified_at' => carbon()->now()]));
+        $this->login(Fixtures::createAdmin());
 
         $this->client->click(
             $this->crawler->selectLink('Users')->link()
@@ -70,28 +90,28 @@ class UserTest extends BrowserTestCase
     public function test_guest_can_not_view_users_index(): void
     {
         $this
-            ->visit('/dashboard/users')
+            ->visit('/admin/users')
             ->assertPageTitleSame(__('form.login'));
     }
 
     public function test_non_admin_can_not_access_create_user_page(): void
     {
-        $this->login(Fixtures::createUser(['email_verified_at' => carbon()->now()]));
+        $this->loginAsUser(Fixtures::createUser(['email_verified_at' => carbon()->now()]));
 
-        $this->visit('/dashboard/users/create');
+        $this->visit('/admin/users/create');
 
-        $this->assertSelectorTextContains('h1', 'Forbidden');
+        $this->assertPageTitleSame(__('form.login'));
     }
 
     public function test_admin_can_delete_user(): void
     {
-        $this->login(Fixtures::createAdmin(['email_verified_at' => carbon()->now()]));
+        $this->login(Fixtures::createAdmin());
 
         $user = Fixtures::createUser();
 
-        $this->visit('/dashboard/users');
+        $this->visit('/admin/users');
 
-        $this->findElement('form[action$="/dashboard/users/'.$user->getId().'/delete"] button.delete')->click();
+        $this->findElement('form[action$="/admin/users/'.$user->getId().'/delete"] button.delete')->click();
 
         $this->client->waitForVisibility('.swal2-popup');
         $this->findElement('.swal2-confirm')->click();

@@ -44,13 +44,13 @@ class ProfileTest extends FeatureTestCase
         return $avatar;
     }
 
-    public function test_admin_can_update_own_profile(): void
+    public function test_user_can_update_own_profile(): void
     {
-        $admin = Fixtures::createAdmin();
+        $user = Fixtures::createUser();
         $name = faker()->name();
 
-        $this->auth($admin)
-            ->patchJson('/api/v1/account/'.$admin->getId().'/profile', ['name' => $name])
+        $this->auth($user)
+            ->patchJson('/api/v1/account/'.$user->getId().'/profile', ['name' => $name])
             ->assertHttpStatusOk()
             ->assertDatabaseHas('users', ['name' => $name]);
     }
@@ -67,12 +67,13 @@ class ProfileTest extends FeatureTestCase
             ->assertDatabaseHas('users', ['name' => $name]);
     }
 
-    public function test_non_admin_can_not_update_profile(): void
+    public function test_user_can_not_update_another_users_profile(): void
     {
         $user = Fixtures::createUser();
+        $otherUser = Fixtures::createUser();
 
         $this->auth($user)
-            ->patchJson('/api/v1/account/'.$user->getId().'/profile', ['name' => faker()->name()])
+            ->patchJson('/api/v1/account/'.$otherUser->getId().'/profile', ['name' => faker()->name()])
             ->assertHttpStatusForbidden();
     }
 
@@ -85,17 +86,17 @@ class ProfileTest extends FeatureTestCase
             ->assertHttpStatusUnauthenticated();
     }
 
-    public function test_admin_can_delete_own_avatar(): void
+    public function test_user_can_delete_own_avatar(): void
     {
-        $admin = Fixtures::createAdmin(['avatar' => 'avatar.jpg']);
+        $user = Fixtures::createUser(['avatar' => 'avatar.jpg']);
         $avatar = $this->generateAvatar();
 
-        $this->auth($admin)
-            ->deleteJson('/api/v1/account/'.$admin->getId().'/profile/avatar')
+        $this->auth($user)
+            ->deleteJson('/api/v1/account/'.$user->getId().'/profile/avatar')
             ->assertHttpStatusOk();
 
         $this->assertFileDoesNotExist($avatar);
-        $this->assertNull(UserModel::find((int) $admin->getId())->getAvatar());
+        $this->assertNull(UserModel::find((int) $user->getId())->getAvatar());
     }
 
     public function test_admin_can_not_delete_another_users_avatar(): void

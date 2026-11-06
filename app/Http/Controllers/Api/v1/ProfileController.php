@@ -13,7 +13,6 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Database\Entities\User;
 use App\Http\Middlewares\ApiAuth;
-use App\Http\Middlewares\CheckIfUserAdmin;
 use App\Http\Resources\UserResource;
 use App\Http\Validation\Validators\UpdateProfileValidator;
 use App\UseCases\Api\v1\User\DeleteAvatarUseCase;
@@ -29,7 +28,7 @@ class ProfileController extends Controller
     #[Route(
         methods: [HttpMethod::PATCH, HttpMethod::PUT],
         uri: '/api/v1/account/{user}/profile',
-        middlewares: [ApiAuth::class, CheckIfUserAdmin::class],
+        middlewares: [ApiAuth::class],
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]
@@ -41,7 +40,7 @@ class ProfileController extends Controller
     #[Route(
         methods: HttpMethod::DELETE,
         uri: '/api/v1/account/{user}/profile/avatar',
-        middlewares: [ApiAuth::class, CheckIfUserAdmin::class],
+        middlewares: [ApiAuth::class],
         parameters: ['user' => RouteParameter::NUMBER],
         bindings: ['user' => ['users', 'id']]
     )]

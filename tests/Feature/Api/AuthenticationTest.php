@@ -39,7 +39,7 @@ class AuthenticationTest extends FeatureTestCase
         $user = Fixtures::makeUser(['password' => 'P@ssw0rd']);
 
         $this
-            ->postJson('/api/v1/register', [
+            ->postJson('/api/v1/auth/register', [
                 'name' => $user->getName(),
                 'email' => $user->getEmail(),
                 'password' => $user->getPassword(),
@@ -55,7 +55,7 @@ class AuthenticationTest extends FeatureTestCase
         $user = Fixtures::createUser(['password' => 'P@ssw0rd']);
 
         $this
-            ->postJson('/api/v1/register', [
+            ->postJson('/api/v1/auth/register', [
                 'name' => $user->getName(),
                 'email' => $user->getEmail(),
                 'password' => 'P@ssw0rd',
@@ -68,15 +68,43 @@ class AuthenticationTest extends FeatureTestCase
         $user = UserModel::factory()->create()->toEntity(User::class);
 
         $this
-            ->postJson('/api/v1/login', [
+            ->postJson('/api/v1/auth/login', [
                 'email' => $user->getEmail(),
                 'password' => 'P@ssw0rd',
             ])
             ->assertHttpStatusOk()
             ->assertJsonContains([
                 'status' => ResponseStatus::SUCCESS,
-                'user' => $user->toArray(),
+                'user' => $user->toPublicArray(),
             ]);
+    }
+
+    public function test_admin_can_login(): void
+    {
+        $admin = Fixtures::createAdmin();
+
+        $this
+            ->postJson('/api/v1/auth/admin/login', [
+                'username' => $admin->getUsername(),
+                'password' => 'P@ssw0rd',
+            ])
+            ->assertHttpStatusOk()
+            ->assertJsonContains([
+                'status' => ResponseStatus::SUCCESS,
+                'admin' => $admin->toPublicArray(),
+            ]);
+    }
+
+    public function test_admin_can_not_login_with_user_credentials(): void
+    {
+        $user = Fixtures::createUser();
+
+        $this
+            ->postJson('/api/v1/auth/admin/login', [
+                'username' => $user->getEmail(),
+                'password' => 'P@ssw0rd',
+            ])
+            ->assertHttpStatusEquals(HttpCode::UNAUTHORIZED);
     }
 
     public function test_can_logout(): void
@@ -85,7 +113,7 @@ class AuthenticationTest extends FeatureTestCase
 
         $this
             ->auth($user)
-            ->postJson('/api/v1/logout')
+            ->postJson('/api/v1/auth/logout')
             ->assertHttpStatusOk()
             ->assertJsonContains([
                 'status' => ResponseStatus::SUCCESS,

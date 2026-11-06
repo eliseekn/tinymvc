@@ -1,4 +1,4 @@
-{% extends "layouts/dashboard.html.twig" %}
+{% extends "layouts/admin.html.twig" %}
 
 {% block title %}
 	Users | Edit
@@ -14,7 +14,7 @@
 </div>
 
 <div class="card shadow">
-  <form method="post" action="{{ route('users.update', {user: user.getId()}) }}">
+  <form method="post" action="{{ route('admin.users.update', {user: user.getId()}) }}">
 		{{ csrf_token_input()|raw }}
 		{{ method_input('patch')|raw }}
 
@@ -64,7 +64,7 @@
 
 		<div class="card-footer">
 			<button type="submit" class="btn btn-primary spinner me-3">Submit</button>
-			<a href="{{ url('dashboard/users') }}" class="btn btn-secondary">Cancel</a>
+			<a href="{{ url('admin/users') }}" class="btn btn-secondary">Cancel</a>
 		</div>
 	</form>
 </div>

@@ -23,6 +23,8 @@ class UpdatePasswordValidator extends Validator
     public function rules(): array
     {
         return Rules::add('email', [Rules::required(), Rules::email()])
+            ->add('token', Rules::required())
+            ->add('provider', [Rules::sometimes(), Rules::in(array_keys(array_diff_key(config('security.auth.providers'), ['default' => 0])))])
             ->add('password', [
                 Rules::required(),
                 Rules::between(8, 15),

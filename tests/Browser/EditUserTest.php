@@ -32,21 +32,21 @@ class EditUserTest extends BrowserTestCase
         $user = Fixtures::createUser();
 
         $this
-            ->visit('/login')
+            ->visit('/admin/login')
             ->assertPageTitleSame(__('form.login'));
 
         $this->client->submit(
             $this->crawler
                 ->selectButton('Submit')
                 ->form([
-                    'email' => $admin->getEmail(),
+                    'username' => $admin->getUsername(),
                     'password' => 'P@ssw0rd',
                 ])
         );
 
         $this->client->waitForElementToContain('h1', __('app.dashboard'));
 
-        $this->visit('/dashboard/users/'.$user->getId().'/edit');
+        $this->visit('/admin/users/'.$user->getId().'/edit');
 
         $this->assertSelectorWillContain('h1', 'Edit user');
 

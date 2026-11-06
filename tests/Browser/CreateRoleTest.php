@@ -31,14 +31,14 @@ class CreateRoleTest extends BrowserTestCase
         $admin = Fixtures::createAdmin();
 
         $this
-            ->visit('/login')
+            ->visit('/admin/login')
             ->assertPageTitleSame(__('form.login'));
 
         $this->client->submit(
             $this->crawler
                 ->selectButton('Submit')
                 ->form([
-                    'email' => $admin->getEmail(),
+                    'username' => $admin->getUsername(),
                     'password' => 'P@ssw0rd',
                 ])
         );

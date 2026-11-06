@@ -1,0 +1,79 @@
+{% extends "layouts/auth.html.twig" %}
+
+{% block title %}
+	{{ __('form.login') }}
+{% endblock %}
+
+{% block description %}
+	{{ __('form.login') }}
+{% endblock %}
+
+{% block content %}
+{% if auth_attempts_exceeded() %}
+	{% include "partials/alert.html.twig" with {
+		alert: {
+			type: 'danger',
+			message: __('auth_attempts_exceeded', {'timeout': config('security.auth.unlock_timeout')}),
+			dismiss: false,
+			display: 'default'
+		}
+	} %}
+{% endif %}
+
+<div class="card shadow p-4">
+	<form method="post" action="{{ url('admin/login') }}">
+		{{ csrf_token_input()|raw }}
+
+		<div class="mb-3">
+			<label for="username" class="form-label">{{ __('form.username') }}</label>
+			<input type="text" id="username" name="username" class="form-control {{ errors.username ? 'is-invalid' }}" value="{{ inputs.username ?: '' }}" aria-describedby="username-error" autofocus>
+
+			{% if errors.username is not empty %}
+			<div id="username-error" class="invalid-feedback">
+				{{ errors.username|raw }}
+			</div>
+			{% endif %}
+		</div>
+
+		<div class="mb-3">
+			<label for="password" class="form-label">{{ __('form.password') }}</label>
+
+			<div class="input-group">
+				<input type="password" id="password" name="password" class="form-control {{ errors.password ? 'is-invalid' }}" value="{{ inputs.password ?: '' }}" aria-describedby="password-error">
+
+				<span class="input-group-text" id="password-toggle" title="Toggle display" style="cursor: pointer">
+					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+					  <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+					  <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
+					</svg>
+				</span>
+			</div>
+
+			{% if errors.password is not empty %}
+			<div id="password-error" class="invalid-feedback d-block">
+				{{ errors.password|raw }}
+			</div>
+			{% endif %}
+		</div>
+
+		<div class="d-flex flex-column flex-lg-row justify-content-lg-between justify-content-center mb-3 mb-lg-0 mx-auto">
+			<div class="mb-3 form-check form-switch">
+				<input type="checkbox" class="form-check-input" id="remember" name="remember">
+				<label class="form-check-label" for="remember">{{ __('form.remember') }}</label>
+			</div>
+
+			<a href="{{ url('password/forgot?provider=admin') }}">
+				{{ __('form.forgot_password') }}
+			</a>
+
+		</div>
+
+		<div class="d-grid gap-2">
+			<button type="submit" class="btn btn-primary spinner" {{ auth_attempts_exceeded() ? 'disabled' }}>
+				{{ __('form.submit') }}
+			</button>
+		</div>
+	</form>
+
+</div>
+{% endblock %}

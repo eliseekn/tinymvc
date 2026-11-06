@@ -14,6 +14,7 @@ namespace App\UseCases\User;
 use App\Database\Entities\User;
 use App\Exceptions\InternalServerException;
 use App\Policies\ProfilePolicy;
+use Core\Http\Auth\Auth;
 
 final class DeleteAvatarUseCase
 {
@@ -31,6 +32,6 @@ final class DeleteAvatarUseCase
             throw new InternalServerException('Failed to update profile');
         }
 
-        session()->create('user', $user->toArray());
+        Auth::setSession($user);
     }
 }

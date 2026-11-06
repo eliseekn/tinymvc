@@ -29,7 +29,9 @@ class PasswordForgotController extends Controller
     #[Route(HttpMethod::POST, '/api/v1/password/notify')]
     public function notify(EmailValidator $validator, NotifyUseCase $useCase): BaseResponse
     {
-        $useCase->handle($validator->validated('email'));
+        $data = $validator->validated();
+
+        $useCase->handle($data['email'], $data['provider'] ?? 'user');
 
         return $this->successJsonResponse(__('alert.password_reset_link_sent'));
     }

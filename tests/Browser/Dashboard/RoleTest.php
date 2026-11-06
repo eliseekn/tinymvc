@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Tests\Browser\Dashboard;
 
+use App\Database\Entities\Admin;
 use App\Database\Entities\Role;
 use App\Database\Entities\User;
 use App\Database\Models\RoleModel;
@@ -39,7 +40,26 @@ class RoleTest extends BrowserTestCase
         $this->refreshDatabase();
     }
 
-    private function login(User $user): void
+    private function login(Admin $admin): void
+    {
+        $this
+            ->visit('/admin/login')
+            ->assertPageTitleSame(__('form.login'));
+
+        $this->client->submit(
+            $this->crawler
+                ->selectButton('Submit')
+                ->form([
+                    'username' => $admin->getUsername(),
+                    'password' => 'P@ssw0rd',
+                ])
+        );
+
+        $this->client->waitForElementToContain('h1', __('app.dashboard'));
+        $this->crawler = $this->client->refreshCrawler();
+    }
+
+    private function loginAsUser(User $user): void
     {
         $this
             ->visit('/login')
@@ -60,7 +80,7 @@ class RoleTest extends BrowserTestCase
 
     public function test_can_view_roles_index(): void
     {
-        $this->login(Fixtures::createAdmin(['email_verified_at' => carbon()->now()]));
+        $this->login(Fixtures::createAdmin());
 
         $this->client->click(
             $this->crawler->selectLink('Roles')->link()
@@ -75,26 +95,26 @@ class RoleTest extends BrowserTestCase
     public function test_guest_can_not_view_roles_index(): void
     {
         $this
-            ->visit('/dashboard/roles')
+            ->visit('/admin/roles')
             ->assertPageTitleSame(__('form.login'));
     }
 
     public function test_non_admin_can_not_access_create_role_page(): void
     {
-        $this->login(Fixtures::createUser(['email_verified_at' => carbon()->now()]));
+        $this->loginAsUser(Fixtures::createUser(['email_verified_at' => carbon()->now()]));
 
-        $this->visit('/dashboard/roles/create');
+        $this->visit('/admin/roles/create');
 
-        $this->assertSelectorTextContains('h1', 'Forbidden');
+        $this->assertPageTitleSame(__('form.login'));
     }
 
     public function test_admin_can_update_role(): void
     {
-        $this->login(Fixtures::createAdmin(['email_verified_at' => carbon()->now()]));
+        $this->login(Fixtures::createAdmin());
 
         $role = RoleModel::factory()->create()->toEntity(Role::class);
 
-        $this->visit('/dashboard/roles/'.$role->getId().'/edit');
+        $this->visit('/admin/roles/'.$role->getId().'/edit');
 
         $this->assertSelectorWillContain('h1', 'Edit role');
 
@@ -113,13 +133,13 @@ class RoleTest extends BrowserTestCase
 
     public function test_admin_can_delete_role(): void
     {
-        $this->login(Fixtures::createAdmin(['email_verified_at' => carbon()->now()]));
+        $this->login(Fixtures::createAdmin());
 
         $role = RoleModel::factory()->create()->toEntity(Role::class);
 
-        $this->visit('/dashboard/roles');
+        $this->visit('/admin/roles');
 
-        $this->findElement('form[action$="/dashboard/roles/'.$role->getId().'/delete"] button.delete')->click();
+        $this->findElement('form[action$="/admin/roles/'.$role->getId().'/delete"] button.delete')->click();
 
         $this->client->waitForVisibility('.swal2-popup');
         $this->findElement('.swal2-confirm')->click();

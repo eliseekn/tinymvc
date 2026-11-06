@@ -12,6 +12,8 @@
 <div class="card shadow p-4">
 	<form method="post" action="{{ url('password/update') }}">
 		{{ csrf_token_input()|raw }}
+		<input type="hidden" name="token" value="{{ token }}">
+		<input type="hidden" name="provider" value="{{ provider }}">
 
 		<div class="mb-3">
 			<label for="email" class="form-label">{{ __('form.email') }}</label>

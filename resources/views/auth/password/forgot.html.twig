@@ -20,6 +20,7 @@
 <div class="card shadow p-4">
 	<form method="post" action="{{ url('password/notify') }}">
 		{{ csrf_token_input()|raw }}
+		<input type="hidden" name="provider" value="{{ request().queries.get('provider', 'user') }}">
 
 		<div class="mb-3">
 			<label for="email" class="form-label">{{ __('form.email') }}</label>

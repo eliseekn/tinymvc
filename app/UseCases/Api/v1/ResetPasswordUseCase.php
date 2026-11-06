@@ -14,6 +14,7 @@ namespace App\UseCases\Api\v1;
 use App\Database\Models\TokenModel;
 use App\Enums\TokenDescription;
 use App\Exceptions\Api\InvalidDataException;
+use Core\Http\Auth\Auth;
 
 final class ResetPasswordUseCase
 {
@@ -24,7 +25,13 @@ final class ResetPasswordUseCase
         }
 
         $email = request()->queries()->get('email');
-        $token = TokenModel::findByDescription($email, TokenDescription::PASSWORD_RESET->value);
+        $provider = (string) request()->queries()->get('provider', 'user');
+
+        if (! Auth::hasProvider($provider)) {
+            throw new InvalidDataException(__('alert.bad_request'));
+        }
+
+        $token = TokenModel::findByDescription($email, TokenDescription::PASSWORD_RESET->value, $provider);
 
         if (! $token || $token->getValue() !== request()->queries()->get('token')) {
             throw new InvalidDataException(__('alert.invalid_password_reset_link'));

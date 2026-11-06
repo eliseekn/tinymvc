@@ -26,6 +26,7 @@ class EmailValidator extends Validator
             Rules::email(),
             Rules::max(255),
         ])
+            ->add('provider', [Rules::sometimes(), Rules::in(array_keys(array_diff_key(config('security.auth.providers'), ['default' => 0])))])
             ->make();
     }
 }

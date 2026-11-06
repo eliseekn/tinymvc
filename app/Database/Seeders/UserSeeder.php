@@ -19,16 +19,9 @@ class UserSeeder
 {
     public static function run(): void
     {
-        UserModel::factory()->create([
-            'name' => 'Admin',
-            'email' => 'admin@tiny.mvc',
-            'role_id' => RoleModel::findByName(UserRole::ADMIN->value)?->getId(),
-            'email_verified_at' => carbon()->toDateTimeString(),
-        ], true);
-
         UserModel::factory(10)->create([
             'created_at' => carbon(faker()->dateTimeBetween('-24 months'))->toDateTimeString(),
-            'role_id' => RoleModel::findByName(UserRole::USER->value)?->getId(),
-        ], true);
+            'role_id' => RoleModel::findByName(UserRole::default()->value)?->getId(),
+        ], withoutEvent: true);
     }
 }

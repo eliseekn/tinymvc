@@ -15,7 +15,7 @@ use Core\Notification\Mail\Mail;
 
 class PasswordResetMail extends Mail
 {
-    public function __construct(public string $email, public string $token)
+    public function __construct(public string $email, public string $token, public string $provider = 'user')
     {
         parent::__construct();
     }
@@ -29,6 +29,7 @@ class PasswordResetMail extends Mail
             ->html('emails.password_reset', [
                 'email' => $this->email,
                 'token' => $this->token,
+                'provider' => $this->provider,
             ])
             ->send();
     }

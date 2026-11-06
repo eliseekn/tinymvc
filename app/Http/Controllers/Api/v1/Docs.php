@@ -26,6 +26,7 @@ abstract class Docs
     {
         return [
             self::login(),
+            self::loginAsAdmin(),
             self::logout(),
             self::register(),
 
@@ -122,7 +123,7 @@ abstract class Docs
     private static function login(): PathItem
     {
         return PathItem::create()
-            ->route('/login')
+            ->route('/auth/login')
             ->operations(
                 Operation::post()
                     ->operationId('login')
@@ -149,10 +150,40 @@ abstract class Docs
             );
     }
 
+    private static function loginAsAdmin(): PathItem
+    {
+        return PathItem::create()
+            ->route('/auth/admin/login')
+            ->operations(
+                Operation::post()
+                    ->operationId('loginAsAdmin')
+                    ->tags('Auth')
+                    ->requestBody(
+                        self::jsonBody(
+                            Schema::object()
+                                ->properties(
+                                    Schema::string('username'),
+                                    Schema::string('password')->format(Schema::FORMAT_PASSWORD),
+                                )
+                                ->required('username', 'password')
+                        )
+                    )
+                    ->responses(
+                        self::jsonResponse(200, 'Login successful', Schema::object()->properties(
+                            Schema::string('status'),
+                            Schema::string('token'),
+                            Schema::object('admin'),
+                        )),
+                        self::errorResponse(401, 'Invalid credentials'),
+                        self::errorResponse(422, 'Validation error'),
+                    )
+            );
+    }
+
     private static function logout(): PathItem
     {
         return PathItem::create()
-            ->route('/logout')
+            ->route('/auth/logout')
             ->operations(
                 Operation::post()
                     ->operationId('logout')
@@ -171,7 +202,7 @@ abstract class Docs
     private static function register(): PathItem
     {
         return PathItem::create()
-            ->route('/register')
+            ->route('/auth/register')
             ->operations(
                 Operation::post()
                     ->operationId('register')
