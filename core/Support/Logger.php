@@ -53,6 +53,5 @@ abstract class Logger
             $e->getLine(),
             $e->getTraceAsString()
         ));
-
     }
 }

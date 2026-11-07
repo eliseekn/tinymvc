@@ -28,7 +28,7 @@ class Authenticated
                 ->intended(request()->fullUri())
                 ->withErrors([__('alert.not_logged')])
                 ->withAlert(MessageType::ERROR, __('alert.not_logged'))
-                ->forgetAuth('user')
+                ->forgetAuth()
                 ->send();
         }
     }
