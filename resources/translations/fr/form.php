@@ -32,5 +32,6 @@ return [
     'have_account' => 'Déjà inscris?',
     'signup_here' => 'Inscrivez-vous ici',
     'login_here' => 'Connectez-vous ici',
+    'admin_space' => 'Espace admin',
     'signup' => 'Inscription',
 ];
