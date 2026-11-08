@@ -26,7 +26,7 @@ class Resource extends Command
     {
         $this->setName('make:resource');
         $this->setDescription('Create new resource');
-        $this->addArgument('resource', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'The name of resource (separated by space if many)');
+        $this->addArgument('resource', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'The name of entity (separated by space if many)');
         $this->addOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Specify namespace (base: App\Http\Resources)');
     }
 
@@ -50,10 +50,13 @@ class Resource extends Command
     public function createResource(string $resource, ?string $namespace = null): bool
     {
         [, $class] = Maker::generateClass($resource, 'resource', true, true);
+        $entity ??= ucfirst($resource);
 
         $data = Maker::stubs()->readFile('Resource.stub');
         $data = Maker::addNamespace($data, 'App\Http\Resources', $namespace);
         $data = str_replace('CLASS_NAME', $class, $data);
+        $data = str_replace('ENTITY_NAME', $entity, $data);
+        $data = str_replace('ENTITY', lcfirst($entity), $data);
 
         $storage = storage(config('storage.resources'));
 
