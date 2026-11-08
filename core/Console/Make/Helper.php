@@ -36,7 +36,7 @@ class Helper extends Command
             [, $class] = Maker::generateClass($helper, 'helper', true);
 
             if (! $this->createHelper($helper)) {
-                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create helper <options=bold>'.$class.'</>.');
+                Maker::error($output, 'Failed to create helper <options=bold>'.$class.'</>.');
             } else {
                 $output->writeln('<bg=blue;options=bold> INFO </> Helper <options=bold>'.$class.'</> has been created.');
             }
@@ -52,6 +52,6 @@ class Helper extends Command
         $data = Maker::stubs()->readFile('Helper.stub');
         $data = str_replace('CLASS_NAME', $class, $data);
 
-        return storage(config('storage.helpers'))->writeFile($class.'.php', $data);
+        return Maker::writeFile(storage(config('storage.helpers')), $class.'.php', $data);
     }
 }

@@ -51,7 +51,7 @@ class Entity extends Command
             $class = Maker::fixPlural($class, true);
 
             if (! $this->createEntity($entity, $fields)) {
-                $output->writeln('<bg=red;options=bold> ERROR </>  Failed to create entity <options=bold>'.$class.'</>.');
+                Maker::error($output, ' Failed to create entity <options=bold>'.$class.'</>.');
 
                 continue;
             }
@@ -75,8 +75,11 @@ class Entity extends Command
         $data = str_replace('    // PROPERTIES'.PHP_EOL, $this->generateProperties($fields), $data);
         $data = str_replace('    // METHODS'.PHP_EOL, $this->generateMethods($fields), $data);
 
-        return storage(config('storage.entities'))
-            ->writeFile(Maker::fixPlural($class, true).'.php', $data);
+        return Maker::writeFile(
+            storage(config('storage.entities')),
+            Maker::fixPlural($class, true).'.php',
+            $data
+        );
     }
 
     protected function getFields(InputInterface $input, OutputInterface $output): array

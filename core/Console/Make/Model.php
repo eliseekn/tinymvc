@@ -44,7 +44,7 @@ class Model extends Command
             [$name, $class] = Maker::generateClass($model, 'model', true, true);
 
             if (! $this->createModel($name, $input->getOption('namespace'))) {
-                $output->writeln('<bg=red;options=bold> ERROR </>  Failed to create model <options=bold>'.Maker::fixPlural($class, true).'</>.');
+                Maker::error($output, ' Failed to create model <options=bold>'.Maker::fixPlural($class, true).'</>.');
             } else {
                 $output->writeln('<bg=blue;options=bold> INFO </> Model <options=bold>'.Maker::fixPlural($class, true).'</> has been created.');
 
@@ -91,6 +91,6 @@ class Model extends Command
             $storage = $storage->addPath(str_replace('\\', '/', $namespace));
         }
 
-        return $storage->writeFile(Maker::fixPlural($class, true).'.php', $data);
+        return Maker::writeFile($storage, Maker::fixPlural($class, true).'.php', $data);
     }
 }

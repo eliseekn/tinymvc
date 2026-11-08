@@ -13,7 +13,7 @@
  * Application command line interface
  */
 
-use Symfony\Component\Console\Application;
+use Core\Console\Application;
 
 require 'vendor/autoload.php';
 require_once 'bootstrap.php';

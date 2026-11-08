@@ -38,7 +38,7 @@ class Observer extends Command
         [, $class] = Maker::generateClass($observer, singular: true, force_singular: true);
 
         if (! $this->createObserver($observer, $model)) {
-            $output->writeln('<bg=red;options=bold> ERROR </> Failed to create observer <options=bold>'.Maker::fixPlural($class.'Observer', true).'</>.');
+            Maker::error($output, 'Failed to create observer <options=bold>'.Maker::fixPlural($class.'Observer', true).'</>.');
         } else {
             $output->writeln('<bg=blue;options=bold> INFO </> Observer <options=bold>'.Maker::fixPlural($class.'Observer', true).'</> has been created.');
         }
@@ -57,6 +57,6 @@ class Observer extends Command
 
         $storage = storage(config('storage.observers'));
 
-        return $storage->writeFile($className.'.php', $data);
+        return Maker::writeFile($storage, $className.'.php', $data);
     }
 }

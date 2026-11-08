@@ -45,7 +45,7 @@ class UseCase extends Command
             $class = str_replace(['Index', 'Show'], ['GetCollection', 'GetItem'], $class);
 
             if (! $this->createUseCase($type, $input->getOption('model'), $input->getOption('namespace'))) {
-                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create use case <options=bold>'.$class.'</>.');
+                Maker::error($output, 'Failed to create use case <options=bold>'.$class.'</>.');
             } else {
                 $output->writeln('<bg=blue;options=bold> INFO </> Use case <options=bold>'.$class.'</> has been created.');
             }
@@ -81,6 +81,6 @@ class UseCase extends Command
             $storage = $storage->addPath(str_replace('\\', '/', $namespace));
         }
 
-        return $storage->writeFile($class.'.php', $data);
+        return Maker::writeFile($storage, $class.'.php', $data);
     }
 }

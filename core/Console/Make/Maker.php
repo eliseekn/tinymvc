@@ -12,12 +12,78 @@ declare(strict_types=1);
 namespace Core\Console\Make;
 
 use Core\Support\Storage;
+use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * Helper that generates stubs files.
  */
 class Maker
 {
+    private static ?InputInterface $input = null;
+
+    private static ?OutputInterface $output = null;
+
+    private static bool $skipped = false;
+
+    /**
+     * Set console input/output used to prompt before overwriting files.
+     */
+    public static function setIo(?InputInterface $input, ?OutputInterface $output): void
+    {
+        self::$input = $input;
+        self::$output = $output;
+    }
+
+    /**
+     * Write generated file, asking confirmation if it already exists.
+     * Without an interactive console, existing files are overwritten.
+     */
+    public static function writeFile(Storage $storage, string $filename, string $data): bool
+    {
+        self::$skipped = false;
+
+        if ($storage->isFile($filename) && ! self::confirmOverwrite($storage->getPath().$filename)) {
+            self::$skipped = true;
+
+            return false;
+        }
+
+        return $storage->writeFile($filename, $data);
+    }
+
+    /**
+     * Print an error message, unless the file was skipped by the user.
+     */
+    public static function error(OutputInterface $output, string $message): void
+    {
+        if (self::$skipped) {
+            $output->writeln('<bg=yellow;options=bold> SKIPPED </> Existing file was left unchanged.');
+            self::$skipped = false;
+
+            return;
+        }
+
+        $output->writeln('<bg=red;options=bold> ERROR </> '.$message);
+    }
+
+    private static function confirmOverwrite(string $path): bool
+    {
+        if (is_null(self::$input) || is_null(self::$output) || ! self::$input->isInteractive()) {
+            return true;
+        }
+
+        $relative = str_starts_with($path, APP_ROOT) ? substr($path, strlen(APP_ROOT)) : $path;
+
+        return (new QuestionHelper)->ask(
+            self::$input,
+            self::$output,
+            new ConfirmationQuestion('<bg=yellow;options=bold> WARNING </> File <options=bold>'.$relative.'</> already exists. Overwrite? (yes/no) [<fg=red>no</>] ', false)
+        );
+    }
+
     /**
      * Get stubs storage path.
      */

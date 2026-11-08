@@ -30,7 +30,7 @@ class Task extends Command
         [, $class] = Maker::generateClass($input->getArgument('task'), '', true);
 
         if (! $this->createTask($input->getArgument('task'))) {
-            $output->writeln('<bg=red;options=bold> ERROR </> Failed to create task <options=bold>'.$class.'</>.');
+            Maker::error($output, 'Failed to create task <options=bold>'.$class.'</>.');
 
             return Command::FAILURE;
         }
@@ -47,6 +47,6 @@ class Task extends Command
         $data = Maker::stubs()->readFile('Task.stub');
         $data = str_replace('CLASS_NAME', $class, $data);
 
-        return storage(config('storage.tasks'))->writeFile($class.'.php', $data);
+        return Maker::writeFile(storage(config('storage.tasks')), $class.'.php', $data);
     }
 }

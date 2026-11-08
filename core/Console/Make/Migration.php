@@ -39,7 +39,7 @@ class Migration extends Command
             [, $class] = Maker::generateClass($migration, 'migration');
 
             if (! $this->createMigration($migration)) {
-                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create migration <options=bold>'.$class.'</>.');
+                Maker::error($output, 'Failed to create migration <options=bold>'.$class.'</>.');
             } else {
                 $output->writeln('<bg=blue;options=bold> INFO </> Migration <options=bold>'.$class.'</> has been created.');
             }
@@ -62,6 +62,6 @@ class Migration extends Command
         $data = str_replace('CLASS_NAME', $class, $data);
         $data = str_replace('TABLE_NAME', $name, $data);
 
-        return storage(config('storage.migrations'))->writeFile($class.'.php', $data);
+        return Maker::writeFile(storage(config('storage.migrations')), $class.'.php', $data);
     }
 }

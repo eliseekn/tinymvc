@@ -40,7 +40,7 @@ class Notification extends Command
             [, $class] = Maker::generateClass($notification, $type, force_singular: true);
 
             if (! $this->createNotification($notification, $type)) {
-                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create notification <options=bold>'.$class.'</>.');
+                Maker::error($output, 'Failed to create notification <options=bold>'.$class.'</>.');
             } else {
                 $output->writeln('<bg=blue;options=bold> INFO </> Notification <options=bold>'.$class.'</> has been created.');
             }
@@ -58,17 +58,19 @@ class Notification extends Command
         $data = str_replace('RESOURCE_NAME', $notification, $data);
 
         if ($type === NotificationType::SMS) {
-            return storage(config('storage.sms'))->writeFile($class.'.php', $data);
+            return Maker::writeFile(storage(config('storage.sms')), $class.'.php', $data);
         }
 
-        if (! storage(config('storage.mails'))->writeFile($class.'.php', $data)) {
+        if (! Maker::writeFile(storage(config('storage.mails')), $class.'.php', $data)) {
             return false;
         }
 
         $data = Maker::stubs()->addPath('views')->readFile('email.stub');
 
-        return storage(config('storage.views'))
-            ->addPath('emails')
-            ->writeFile($notification.'.html.twig', $data);
+        return Maker::writeFile(
+            storage(config('storage.views'))->addPath('emails'),
+            $notification.'.html.twig',
+            $data
+        );
     }
 }

@@ -36,7 +36,7 @@ class Rule extends Command
             [, $class] = Maker::generateClass($rule, singular: true);
 
             if (! $this->createRule($rule)) {
-                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create request rule <options=bold>'.$class.'</>.');
+                Maker::error($output, 'Failed to create request rule <options=bold>'.$class.'</>.');
             } else {
                 $output->writeln('<bg=blue;options=bold> INFO </> Request rule <options=bold>'.$class.'</> has been created.');
             }
@@ -56,6 +56,6 @@ class Rule extends Command
 
         $storage = storage(config('storage.rules'));
 
-        return $storage->writeFile($class.'.php', $data);
+        return Maker::writeFile($storage, $class.'.php', $data);
     }
 }

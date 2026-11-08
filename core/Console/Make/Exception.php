@@ -38,7 +38,7 @@ class Exception extends Command
         [, $class] = Maker::generateClass($exception, 'exception');
 
         if (! $this->createException($exception, $message)) {
-            $output->writeln('<bg=red;options=bold> ERROR </> Failed to create exception <options=bold>'.$class.'</>.');
+            Maker::error($output, 'Failed to create exception <options=bold>'.$class.'</>.');
         } else {
             $output->writeln('<bg=blue;options=bold> INFO </> Exception <options=bold>'.$class.'</> has been created.');
         }
@@ -54,6 +54,6 @@ class Exception extends Command
         $data = str_replace('CLASS_NAME', $class, $data);
         $data = str_replace('MESSAGE', $message, $data);
 
-        return storage(config('storage.exceptions'))->writeFile($class.'.php', $data);
+        return Maker::writeFile(storage(config('storage.exceptions')), $class.'.php', $data);
     }
 }

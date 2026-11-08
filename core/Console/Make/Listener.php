@@ -36,7 +36,7 @@ class Listener extends Command
         $event = $input->getArgument('event');
 
         if (! $this->createListener($listener, $event)) {
-            $output->writeln('<bg=red;options=bold> ERROR </> Failed to create listener <options=bold>'.$listener.'</>.');
+            Maker::error($output, 'Failed to create listener <options=bold>'.$listener.'</>.');
         } else {
             $output->writeln('<bg=blue;options=bold> INFO </> Listener <options=bold>'.$listener.'</> has been created.');
         }
@@ -54,6 +54,6 @@ class Listener extends Command
         $storage = storage(config('storage.events'));
         $storage = $storage->addPath($event);
 
-        return $storage->writeFile($listener.'.php', $data);
+        return Maker::writeFile($storage, $listener.'.php', $data);
     }
 }

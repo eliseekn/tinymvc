@@ -48,7 +48,7 @@ class Test extends Command
             }
 
             if (! $result) {
-                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create test <options=bold>'.$class.'</>.');
+                Maker::error($output, 'Failed to create test <options=bold>'.$class.'</>.');
             } else {
                 $output->writeln('<bg=blue;options=bold> INFO </> Test <options=bold>'.$class.'</> has been created.');
             }
@@ -65,9 +65,11 @@ class Test extends Command
         $data = str_replace('CLASS_NAME', $class, $data);
         $data = Maker::addNamespace($data, 'Tests\Feature', $namespace);
 
-        return storage(config('storage.tests'))
-            ->addPath('Feature')->addPath($namespace ?? '')
-            ->writeFile($class.'.php', $data);
+        return Maker::writeFile(
+            storage(config('storage.tests'))->addPath('Feature')->addPath($namespace??''),
+            $class.'.php',
+            $data
+        );
     }
 
     public function createUnitTest(string $test, ?string $namespace = null): bool
@@ -78,9 +80,11 @@ class Test extends Command
         $data = str_replace('CLASS_NAME', $class, $data);
         $data = Maker::addNamespace($data, 'Tests\Unit', $namespace);
 
-        return storage(config('storage.tests'))
-            ->addPath('Unit')->addPath($namespace ?? '')
-            ->writeFile($class.'.php', $data);
+        return Maker::writeFile(
+            storage(config('storage.tests'))->addPath('Unit')->addPath($namespace??''),
+            $class.'.php',
+            $data
+        );
     }
 
     public function createBrowserTest(string $test, ?string $namespace = null): bool
@@ -91,8 +95,10 @@ class Test extends Command
         $data = str_replace('CLASS_NAME', $class, $data);
         $data = Maker::addNamespace($data, 'Tests\Browser', $namespace);
 
-        return storage(config('storage.tests'))
-            ->addPath('Browser')->addPath($namespace ?? '')
-            ->writeFile($class.'.php', $data);
+        return Maker::writeFile(
+            storage(config('storage.tests'))->addPath('Browser')->addPath($namespace??''),
+            $class.'.php',
+            $data
+        );
     }
 }

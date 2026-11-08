@@ -37,7 +37,7 @@ class Policy extends Command
             [, $class] = Maker::generateClass($policy, singular: true, force_singular: true);
 
             if (! $this->createPolicy($policy)) {
-                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create policy <options=bold>'.Maker::fixPlural($class.'Policy', true).'</>.');
+                Maker::error($output, 'Failed to create policy <options=bold>'.Maker::fixPlural($class.'Policy', true).'</>.');
             } else {
                 $output->writeln('<bg=blue;options=bold> INFO </> Policy <options=bold>'.Maker::fixPlural($class.'Policy', true).'</> has been created.');
             }
@@ -57,6 +57,6 @@ class Policy extends Command
 
         $storage = storage(config('storage.policies'));
 
-        return $storage->writeFile($className.'.php', $data);
+        return Maker::writeFile($storage, $className.'.php', $data);
     }
 }

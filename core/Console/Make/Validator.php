@@ -38,7 +38,7 @@ class Validator extends Command
             [, $class] = Maker::generateClass($validator, 'validator', true);
 
             if (! $this->createValidator($validator, $input->getOption('namespace'))) {
-                $output->writeln('<bg=red;options=bold> ERROR </> Failed to create request validator <options=bold>'.$class.'</>.');
+                Maker::error($output, 'Failed to create request validator <options=bold>'.$class.'</>.');
             } else {
                 $output->writeln('<bg=blue;options=bold> INFO </> Request validator <options=bold>'.$class.'</> has been created.');
             }
@@ -61,6 +61,6 @@ class Validator extends Command
             $storage = $storage->addPath(str_replace('\\', '/', $namespace));
         }
 
-        return $storage->writeFile($class.'.php', $data);
+        return Maker::writeFile($storage, $class.'.php', $data);
     }
 }

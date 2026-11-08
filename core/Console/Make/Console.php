@@ -42,7 +42,7 @@ class Console extends Command
             $input->getOption('description'),
             $input->getOption('namespace')
         )) {
-            $output->writeln('<bg=red;options=bold> ERROR </> Failed to create command <options=bold>'.$class.'</>.');
+            Maker::error($output, 'Failed to create command <options=bold>'.$class.'</>.');
         } else {
             $output->writeln('<bg=blue;options=bold> INFO </> Command <options=bold>'.$class.'</> has been created.');
         }
@@ -66,6 +66,6 @@ class Console extends Command
             $storage = $storage->addPath(str_replace('\\', '/', $namespace));
         }
 
-        return $storage->writeFile($class.'.php', $data);
+        return Maker::writeFile($storage, $class.'.php', $data);
     }
 }
