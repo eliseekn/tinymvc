@@ -75,7 +75,7 @@ class AuthenticationTest extends FeatureTestCase
             ->assertHttpStatusOk()
             ->assertJsonContains([
                 'status' => ResponseStatus::SUCCESS,
-                'user' => $user->toPublicArray(),
+                'user' => $user->toArray(),
             ]);
     }
 
@@ -91,7 +91,7 @@ class AuthenticationTest extends FeatureTestCase
             ->assertHttpStatusOk()
             ->assertJsonContains([
                 'status' => ResponseStatus::SUCCESS,
-                'admin' => $admin->toPublicArray(),
+                'admin' => $admin->toArray(),
             ]);
     }
 

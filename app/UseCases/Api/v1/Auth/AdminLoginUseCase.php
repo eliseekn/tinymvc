@@ -13,6 +13,7 @@ namespace App\UseCases\Api\v1\Auth;
 
 use App\Database\Models\AdminModel;
 use App\Exceptions\InvalidCredentialsException;
+use App\Http\Resources\AdminResource;
 use Core\Http\Auth\Auth;
 use Core\Support\Encryption;
 
@@ -28,7 +29,7 @@ final class AdminLoginUseCase
 
         return [
             'token' => Auth::createToken($admin),
-            'admin' => $admin->toPublicArray(),
+            'admin' => new AdminResource($admin->toModel())->handle(),
         ];
     }
 }

@@ -41,14 +41,6 @@ abstract class AuthEntity extends Entity implements Authenticable
         return (string) $this->{'get'.ucfirst($this->getProviderIdentifier())}();
     }
 
-    /**
-     * Entity data that is safe to expose (session, api responses).
-     */
-    public function toPublicArray(): array
-    {
-        return array_diff_key($this->toArray(), ['password' => true]);
-    }
-
     public function getEntity(string $identifier): ?Entity
     {
         $entity = $this->getProviderEntity();

@@ -13,6 +13,7 @@ namespace App\UseCases\Api\v1\Auth;
 
 use App\Database\Models\UserModel;
 use App\Exceptions\InvalidCredentialsException;
+use App\Http\Resources\UserResource;
 use Core\Http\Auth\Auth;
 use Core\Support\Encryption;
 
@@ -28,7 +29,7 @@ final class LoginUseCase
 
         return [
             'token' => Auth::createToken($user),
-            'user' => $user->toPublicArray(),
+            'user' => new UserResource($user->toModel())->handle(),
         ];
     }
 }
