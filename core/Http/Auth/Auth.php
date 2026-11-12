@@ -28,12 +28,11 @@ class Auth
         return session()->get('auth_attempts', 0);
     }
 
-    public static function attempt(Authenticable $auth, mixed &$user = null): bool
+    public static function attempt(Authenticable $auth, array $credentials, mixed &$user = null): bool
     {
-        $identifier = $auth->getProviderIdentifier();
-
         session()->push('auth_attempts', 1, 0);
-        $credentials = request()->inputs()->only([$identifier, 'password']);
+
+        $identifier = $auth->getProviderIdentifier();
 
         if (! self::checkCredentials($auth, (string) ($credentials[$identifier] ?? ''), (string) ($credentials['password'] ?? ''), $user)) {
             if (config('security.auth.max_attempts') > 0 && self::getAttempts() >= config('security.auth.max_attempts')) {

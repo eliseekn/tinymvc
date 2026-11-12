@@ -17,9 +17,9 @@ use Core\Http\Auth\Auth;
 
 final class LoginUseCase
 {
-    public function handle(?Admin &$admin): void
+    public function handle(array $data, ?Admin &$admin): void
     {
-        if (! Auth::attempt(new Admin, $admin)) {
+        if (! Auth::attempt(new Admin, $data, $admin)) {
             throw new InvalidCredentialsException;
         }
     }
